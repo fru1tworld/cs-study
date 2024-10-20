@@ -1,0 +1,53 @@
+{
+  "namespace": "org.kafkainaction",
+  "type": "record",
+  "name": "Account",
+  "fields": [
+    {
+      "name": "number",
+      "type": "int",
+      "doc": "doc"
+    },
+    {
+      "name": "firstName",
+      "type": "string",
+      "doc": "doc"
+    },
+    {
+      "name": "lastName",
+      "type": "string",
+      "doc": "doc"
+    },
+    {
+      "name": "streetAddress",
+      "type": "string",
+      "doc": "doc"
+    },
+    {
+      "name": "numberAddress",
+      "type": "string",
+      "doc": "doc"
+    },
+    {
+      "name": "cityAddress",
+      "type": "string",
+      "doc": "City"
+    },
+    {
+      "name": "countryAddress",
+      "type": "string",
+      "doc": "Country"
+    },
+    {
+      "name": "creationDate",
+      "type": "long",
+      "doc": "account creation date"
+    },
+    {
+      "name": "updateDate",
+      "type": "long",
+      "doc": "account creation date"
+    }
+
+  ]
+}

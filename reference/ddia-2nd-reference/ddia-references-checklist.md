@@ -1,0 +1,1140 @@
+# DDIA (Designing Data-Intensive Applications) 2nd Edition - References Checklist
+
+> 출처: https://github.com/ept/ddia2-references
+
+---
+
+## Chapter 1: Foundations of Data Systems
+
+- [ ] 1. "The Changing Paradigm of Data-Intensive Computing" - Kouzes et al.
+- [ ] 2. "Local-first software: you own your data, in spite of the cloud" - Kleppmann et al.
+- [ ] 3. *Fundamentals of Data Engineering* - Reis & Housley
+- [ ] 4. *Analytics Engineering with SQL and dbt* - Machado & Russa
+- [ ] 5. "Providing OLAP to User-Analysts: An IT Mandate" - Codd et al.
+- [ ] 6. "Comparing Three Real-Time OLAP Databases: Apache Pinot, Apache Druid, and ClickHouse" - Soman & Pawar
+- [ ] 7. "An Overview of Data Warehousing and OLAP Technology" - Chaudhuri & Dayal
+- [ ] 8. "Hybrid Transactional/Analytical Processing: A Survey" - Özcan et al.
+- [ ] 9. "Cloud-Native Transactions and Analytics in SingleStore" - Prout et al.
+- [ ] 10. "HTAP Databases: A Survey" - Zhang et al.
+- [ ] 11. "'One Size Fits All': An Idea Whose Time Has Come and Gone" - Stonebraker & Çetintemel
+- [ ] 12. "MAD Skills: New Analysis Practices for Big Data" - Cohen et al.
+- [ ] 13. "The Relational Data Borg is Learning" - Olteanu
+- [ ] 14. "Emerging Architectures for Modern Data Infrastructure: 2020" - Bornstein et al.
+- [ ] 15. "Data Lakes: A Survey of Functions and Systems" - Hai et al.
+- [ ] 16. "DataLake" - Fowler
+- [ ] 17. "The Sushi Principle: Raw Data Is Better" - Johnson & Adler
+- [ ] 18. "The DataOps Manifesto" - DataKitchen, Inc.
+- [ ] 19. "What is Reverse ETL: A Definition & Why It's Taking Off" - Manohar
+- [ ] 20. "Why is it so hard to decide to buy?" - Fournier
+- [ ] 21. "Why we're leaving the cloud" - Hansson
+- [ ] 22. "Use One Big Server" - Badizadegan
+- [ ] 23. "Dear Google Cloud: Your Deprecation Policy is Killing You" - Yegge
+- [ ] 24. "Amazon Aurora: Design Considerations for High Throughput Cloud-Native Relational Databases" - Verbitski et al.
+- [ ] 25. "Socrates: The New SQL Server in the Cloud" - Antonopoulos et al.
+- [ ] 26. "Building An Elastic Query Engine on Disaggregated Storage" - Vuppalapati et al.
+- [ ] 27. "The Real Failure Rate of EBS" - Van Wiggeren
+- [ ] 28. "Predicting the Future of Distributed Systems" - Breck
+- [ ] 29. "Compute-Storage Separation Explained" - Shapira
+- [ ] 30. "AlloyDB for PostgreSQL under the hood: Intelligent, database-aware storage" - Murthy & Goindi
+- [ ] 31. "The Architecture of Serverless Data Systems" - Vanlightly
+- [ ] 32. "Cloud Programming Simplified: A Berkeley View on Serverless Computing" - Jonas et al.
+- [ ] 33. *Site Reliability Engineering: How Google Runs Production Systems* - Beyer et al.
+- [ ] 34. "The Time I Stole $10,000 from Bell Labs" - Limoncelli
+- [ ] 35. "The Future of Ops Jobs" - Majors
+- [ ] 36. "(Over)Pay As You Go for Your Datastore" - Cherkasky
+- [ ] 37. "Serverless Doesn't Mean DevOpsLess or NoOps" - Kushchi
+- [ ] 38. "Storm in the stratosphere: how the cloud will be reshuffled" - Bernhardsson
+- [ ] 39. "The data OS" - Stancil
+- [ ] 40. "Data residency laws pushing companies toward residency as a service" - Korolov
+- [ ] 41. "Can Data Centers Flex Their Power Demand?" - Borenstein
+- [ ] 42. "Carbon Dependencies in Datacenter Design and Management" - Acun et al.
+- [ ] 43. "These are the numbers every computer engineer should know" - Nath
+- [ ] 44. "Serverless Computing: One Step Forward, Two Steps Back" - Hellerstein et al.
+- [ ] 45. "Scalability! But at What COST?" - McSherry et al.
+- [ ] 46. *Distributed Systems Observability: A Guide to Building Robust Systems* - Sridharan
+- [ ] 47. "Observability — A 3-Year Retrospective" - Majors
+- [ ] 48. "Dapper, a Large-Scale Distributed Systems Tracing Infrastructure" - Sigelman et al.
+- [ ] 49. "Data management in microservices: State of the practice, challenges, and research directions" - Laigner et al.
+- [ ] 50. "Big Data is Dead" - Tigani
+- [ ] 51. *Building Microservices*, second edition - Newman
+- [ ] 52. "Microservices: Decomposing Applications for Deployability and Scalability" - Richardson
+- [ ] 53. "Serverless in the Wild: Characterizing and Optimizing the Serverless Workload at a Large Cloud Provider" - Shahrad et al.
+- [ ] 54. *The Datacenter as a Computer: Designing Warehouse-Scale Machines*, third edition - Barroso et al.
+- [ ] 55. "Detection and Correction of Silent Data Corruption for Large-Scale High-Performance Computing" - Fiala et al.
+- [ ] 56. "Securing RDMA for High-Performance Datacenter Storage Systems" - Kornfeld Simpson et al.
+- [ ] 57. "Jupiter Rising: A Decade of Clos Topologies and Centralized Control in Google's Datacenter Network" - Singh et al.
+- [ ] 58. "Hadoop's Uncomfortable Fit in HPC" - Lockwood
+- [ ] 59. *Weapons of Math Destruction: How Big Data Increases Inequality and Threatens Democracy* - O'Neil
+- [ ] 60. "Understanding and Benchmarking the Impact of GDPR on Database Systems" - Shastri et al.
+- [ ] 61. "Datensparsamkeit" - Fowler
+- [ ] 62. Regulation (EU) 2016/679 (General Data Protection Regulation)
+
+---
+
+## Chapter 2: Reliability, Scalability, and Maintainability
+
+- [ ] 1. "How We Learned to Stop Worrying and Love Fan-In at Twitter"
+- [ ] 2. "Timelines at Scale"
+- [ ] 3. "Twitter's Recommendation Algorithm"
+- [ ] 4. "New Tweets per second record, and how!"
+- [ ] 5. "When Imperfect Systems are Good, Actually: Bluesky's Lossy Timelines"
+- [ ] 6. "3% of Twitter's Servers Dedicated to Justin Bieber"
+- [ ] 7. "Metastable Failures in Distributed Systems"
+- [ ] 8. "Metastability and Distributed Systems"
+- [ ] 9. "Metastable Failures in the Wild"
+- [ ] 10. "Exponential Backoff And Jitter"
+- [ ] 11. "What is Backoff For?"
+- [ ] 12. *Release It!* (2nd Edition)
+- [ ] 13. "Slowing Down to Speed Up – Circuit Breakers for Slack's CI/CD"
+- [ ] 14. "Fixing retries with token buckets and circuit breakers"
+- [ ] 15. "Using load shedding to avoid overload"
+- [ ] 16. "Pushing Back"
+- [ ] 17. "Meet Bandaid, the Dropbox service proxy"
+- [ ] 18. "Fail-Slow at Scale: Evidence of Hardware Performance Faults in Large Production Systems"
+- [ ] 19. "Is the Mean Really Useless?"
+- [ ] 20. "Dynamo: Amazon's Highly Available Key-Value Store"
+- [ ] 21. "The Need for Speed, 23 Years Later"
+- [ ] 22. "Marissa Mayer at Web 2.0"
+- [ ] 23. "Speed Matters for Google Web Search"
+- [ ] 24. "Performance Related Changes and their User Impact"
+- [ ] 25. "The State of Online Retail Performance"
+- [ ] 26. "Understanding and Leveraging the Impact of Response Latency on User Behaviour in Web Search"
+- [ ] 27. "The Tail at Scale"
+- [ ] 28. *Implementing Service Level Objectives: A Practical Guide to SLIs, SLOs, and Error Budgets*
+- [ ] 29. "Nines are Not Enough: Meaningful Metrics for Clouds"
+- [ ] 30. "Meaningful Availability"
+- [ ] 31. "The t-digest: Efficient estimates of distributions"
+- [ ] 32. "How percentile approximation works (and why it's more useful than averages)"
+- [ ] 33. "Circllhist — A Log-Linear Histogram Data Structure for IT Infrastructure Monitoring"
+- [ ] 34. "DDSketch: A Fast and Fully-Mergeable Quantile Sketch with Relative-Error Guarantees"
+- [ ] 35. "Why Percentiles Don't Work the Way You Think"
+- [ ] 36. "A Conceptual Framework for System Fault Tolerance"
+- [ ] 37. "Fundamentals of fault-tolerant distributed computing in asynchronous environments"
+- [ ] 38. "Basic Concepts and Taxonomy of Dependable and Secure Computing"
+- [ ] 39. "Simple Testing Can Prevent Most Critical Failures: An Analysis of Production Failures in Distributed Data-Intensive Systems"
+- [ ] 40. "Chaos Engineering"
+- [ ] 41. "Failure Trends in a Large Disk Drive Population"
+- [ ] 42. "Disk failures in the real world: What does an MTTF of 1,000,000 hours mean to you?"
+- [ ] 43. "Backblaze Drive Stats for Q2 2021"
+- [ ] 44. "SSD Failures in Datacenters: What? When? and Why?"
+- [ ] 45. "Storage System Design Analysis: Factors Affecting NVMe SSD Performance (1)"
+- [ ] 46. "Flash Reliability in Production: The Expected and the Unexpected"
+- [ ] 47. "SSD failures in the field: symptoms, causes, and prediction models"
+- [ ] 48. "Availability in Globally Distributed Storage Systems"
+- [ ] 49. "Characterizing Cloud Computing Hardware Reliability"
+- [ ] 50. "Cores that don't count"
+- [ ] 51. "Silent Data Corruptions at Scale"
+- [ ] 52. "Scalable Error Isolation for Distributed Systems"
+- [ ] 53. "DRAM Errors in the Wild: A Large-Scale Field Study"
+- [ ] 54. "Flipping Bits in Memory Without Accessing Them: An Experimental Study of DRAM Disturbance Errors"
+- [ ] 55. "Worst Case"
+- [ ] 56. "Solar Superstorms: Planning for an Internet Apocalypse"
+- [ ] 57. "Failure Modes and Continuous Resilience"
+- [ ] 58. "An In-Depth Study of Correlated Failures in Production SSD-Based Data Centers"
+- [ ] 59. "Cycles, Cells and Platters: An Empirical Analysis of Hardware Failures on a Million Consumer PCs"
+- [ ] 60. "What Bugs Live in the Cloud?"
+- [ ] 61. "Getting Real About Distributed System Reliability"
+- [ ] 62. "Leap Second Crashes Half the Internet"
+- [ ] 63. "Support Alerts – Customer Bulletin a00092491en_us"
+- [ ] 64. "awesome limits"
+- [ ] 65. "Clients Are Jerks: AKA How Halo 4 DoSed the Services at Launch & How We Survived"
+- [ ] 66. "Fail through the Cracks: Cross-System Interaction Failures in Modern Cloud Systems"
+- [ ] 67. "Addressing Cascading Failures"
+- [ ] 68. "Cascading failures in large-scale distributed systems"
+- [ ] 69. "How Complex Systems Fail"
+- [ ] 70. "STELLA: Report from the SNAFUcatchers Workshop on Coping With Complexity"
+- [ ] 71. "Why Do Internet Services Fail, and What Can Be Done About It?"
+- [ ] 72. *The Field Guide to Understanding 'Human Error'*, 3rd Edition
+- [ ] 73. *Drift into Failure: From Hunting Broken Components to Understanding Complex Systems*
+- [ ] 74. "Blameless PostMortems and a Just Culture"
+- [ ] 75. "Uptime Guarantees — A Pragmatic Perspective"
+- [ ] 76. "The Human Impact of Bugs"
+- [ ] 77. "How Software Bugs led to 'One of the Greatest Miscarriages of Justice' in British History"
+- [ ] 78. "The legal rule that computers are presumed to be operating correctly – unforeseen and unjust consequences"
+- [ ] 79. "Choose Boring Technology"
+- [ ] 80. "Building and operating a pretty big storage system called S3"
+- [ ] 81. "Surprising Scalability of Multitenancy"
+- [ ] 82. "Shared Nothing vs. Shared Disk Architectures: An Independent View"
+- [ ] 83. "The Case for Shared Nothing"
+- [ ] 84. "Socrates: The New SQL Server in the Cloud"
+- [ ] 85. *Building Microservices* (second edition)
+- [ ] 86. "When Good Software Goes Bad: The Surprising Durability of an Ephemeral Technology"
+- [ ] 87. *Facts and Fallacies of Software Engineering*
+- [ ] 88. *Kill It with Fire*
+- [ ] 89. "Ironies of automation"
+- [ ] 90. "On Designing and Deploying Internet-Scale Services"
+- [ ] 91. "Open Source for Better Observability"
+- [ ] 92. "Big Ball of Mud"
+- [ ] 93. "What is a simple system?"
+- [ ] 94. "No Silver Bullet – Essence and Accident in Software Engineering"
+- [ ] 95. "Against essential and accidental complexity"
+- [ ] 96. *Design Patterns: Elements of Reusable Object-Oriented Software*
+- [ ] 97. *Domain-Driven Design: Tackling Complexity in the Heart of Software*
+- [ ] 98. "Analyzing Software Evolvability"
+- [ ] 99. "From X programming to the X organisation"
+
+---
+
+## Chapter 3: Data Models and Query Languages
+
+- [ ] 1. "Unexplanations: query optimization works because sql is declarative" - Jamie Brandon
+- [ ] 2. "What Declarative Languages Are" - Neel Krishnaswami
+- [ ] 3. "The Declarative Imperative: Experiences and Conjectures in Distributed Logic" - Joseph M. Hellerstein
+- [ ] 4. "A Relational Model of Data for Large Shared Data Banks" - Edgar F. Codd
+- [ ] 5. "What Goes Around Comes Around" - Michael Stonebraker and Joseph M. Hellerstein
+- [ ] 6. "Modern SQL: Beyond Relational" - Markus Winand
+- [ ] 7. "OrmHate" - Martin Fowler
+- [ ] 8. "N+1 query problem with JPA and Hibernate" - Vlad Mihalcea
+- [ ] 9. "This is the Beginning of the End of the N+1 Problem: Introducing Single Query Loading" - Jens Schauder
+- [ ] 10. "SQL needed structure" - Jamie Brandon
+- [ ] 11. "6 Rules of Thumb for MongoDB Schema Design" - William Zola
+- [ ] 12. "Data modeling in Azure Cosmos DB" - Sidney Andrews and Christopher McClister
+- [ ] 13. "Timelines at Scale" - Raffi Krikorian
+- [ ] 14. *The Data Warehouse Toolkit: The Definitive Guide to Dimensional Modeling* - Ralph Kimball and Margy Ross
+- [ ] 15. "Data warehouse modeling: Star schema vs. OBT" - Michael Kaminsky
+- [ ] 16. "User-defined Order in SQL" - Joe Nelson
+- [ ] 17. "Realtime Editing of Ordered Sequences" - Evan Wallace
+- [ ] 18. "Implementing Fractional Indexing" - David Greenspan
+- [ ] 19. "Schemaless Data Structures" - Martin Fowler
+- [ ] 20. "Schema-on-Read vs. Schema-on-Write" - Amr Awadallah
+- [ ] 21. "The Trouble with Types" - Martin Odersky
+- [ ] 22. "MongoDB—Confessions of a PostgreSQL Lover" - Conrad Irwin
+- [ ] 23. "Percona Toolkit Documentation: pt-online-schema-change" - Percona
+- [ ] 24. "gh-ost: GitHub's Online Schema Migration Tool for MySQL" - Shlomi Noach
+- [ ] 25. "pg-osc: Zero downtime schema changes in PostgreSQL" - Shayon Mukherjee
+- [ ] 26. "Introducing pgroll: zero-downtime, reversible, schema migrations for Postgres" - Carlos Pérez-Aradros Herce
+- [ ] 27. "Spanner: Google's Globally-Distributed Database" - James C. Corbett et al.
+- [ ] 28. "Reduce I/O with Oracle Cluster Tables" - Donald K. Burleson
+- [ ] 29. "Bigtable: A Distributed Storage System for Structured Data" - Fay Chang et al.
+- [ ] 30. *XQuery, 2nd Edition* - Priscilla Walmsley
+- [ ] 31. "JavaScript Object Notation (JSON) Pointer" - Paul C. Bryan, Kris Zyp, and Mark Nottingham
+- [ ] 32. "JSONPath: Query Expressions for JSON" - Stefan Gössner, Glyn Normington, and Carsten Bormann
+- [ ] 33. "What Goes Around Comes Around… And Around…" - Michael Stonebraker and Andrew Pavlo
+- [ ] 34. "The PageRank Citation Ranking: Bringing Order to the Web" - Lawrence Page et al.
+- [ ] 35. "TAO: Facebook's Distributed Data Store for the Social Graph" - Nathan Bronson et al.
+- [ ] 36. "Industry-Scale Knowledge Graphs: Lessons and Challenges" - Natasha Noy et al.
+- [ ] 37. "KÙZU Graph Database Management System" - Xiyang Feng et al.
+- [ ] 38. "Demystifying Graph Databases: Analysis and Taxonomy of Data Organization, System Designs, and Graph Queries" - Maciej Besta et al.
+- [ ] 39. "Apache TinkerPop 3.6.3 Documentation" - Apache
+- [ ] 40. "Cypher: An Evolving Query Language for Property Graphs" - Nadime Francis et al.
+- [ ] 41. "Twitter correspondence" - Emil Eifrem
+- [ ] 42. "Explore the new SEARCH and CYCLE features in PostgreSQL® 14" - Francesco Tisiot
+- [ ] 43. "Understanding Hierarchies in Oracle" - Gaurav Goel
+- [ ] 44. "Seamless Syntactic and Semantic Integration of Query Primitives over Relational and Graph Data in GSQL" - Alin Deutsch, Yu Xu, and Mingxi Wu
+- [ ] 45. "PGQL: a property graph query language" - Oskar van Rest et al.
+- [ ] 46. "GQL: The ISO standard for graphs has arrived" - Philip Rathle and Brad Bebee
+- [ ] 47. "Graph Pattern Matching in GQL and SQL/PGQ" - Alin Deutsch et al.
+- [ ] 48. "SQL... and now GQL" - Alastair Green
+- [ ] 49. "Neptune Graph Data Model" - Amazon Web Services
+- [ ] 50. "Datomic Data Model" - Cognitect
+- [ ] 51. "Turtle – Terse RDF Triple Language" - David Beckett and Tim Berners-Lee
+- [ ] 52. "Whatever Happened to the Semantic Web?" - Sinclair Target
+- [ ] 53. "The Semantic Web is Dead – Long Live the Semantic Web!" - Gavin Mendel-Gleason
+- [ ] 54. "JSON-LD and Why I Hate the Semantic Web" - Manu Sporny
+- [ ] 55. "Biomedical Ontologies and Controlled Vocabularies" - University of Michigan Library
+- [ ] 56. "The Open Graph protocol" - Facebook
+- [ ] 57. "Everything you ever wanted to know about unfurling but were afraid to ask" - Matt Haughey
+- [ ] 58. "Resource Description Framework (RDF)" - W3C RDF Working Group
+- [ ] 59. "SPARQL 1.1 Query Language" - Steve Harris, Andy Seaborne, and Eric Prud'hommeaux
+- [ ] 60. "Datalog and Recursive Query Processing" - Todd J. Green et al.
+- [ ] 61. "What You Always Wanted to Know About Datalog (And Never Dared to Ask)" - Stefano Ceri, Georg Gottlob, and Letizia Tanca
+- [ ] 62. *Foundations of Databases* - Serge Abiteboul, Richard Hull, and Victor Vianu
+- [ ] 63. "LIquid: The soul of a new graph database, Part 2" - Scott Meyer, Andrew Carter, and Andrew Rodriguez
+- [ ] 64. "Why, after 6 years, I'm over GraphQL" - Matt Bessey
+- [ ] 65. "Exploring CQRS and Event Sourcing" - Dominic Betts et al.
+- [ ] 66. "CQRS and Event Sourcing" - Greg Young
+- [ ] 67. "CQRS Documents" - Greg Young
+- [ ] 68. "Crypto shredding: How it can solve modern data retention challenges" - Brent Robinson
+- [ ] 69. "Towards Scalable Dataframe Systems" - Devin Petersohn et al.
+- [ ] 70. "The TileDB Array Data Storage Manager" - Stavros Papadopoulos et al.
+- [ ] 71. "Multidimensional Array Data Management" - Florin Rusu
+- [ ] 72. "Bloomberg, Man Group team up to develop open source 'ArcticDB' database" - Ed Targett
+- [ ] 73. "GenBank" - Dennis A. Benson et al.
+
+---
+
+## Chapter 4: Storage and Retrieval
+
+- [ ] 1. "How partial, covering, and multicolumn indexes may slow down UPDATEs in PostgreSQL" - Nikolay Samokhvalov
+- [ ] 2. "Modern B-Tree Techniques" - Goetz Graefe
+- [ ] 3. "Why databases use ordered indexes but programming uses hash tables" - Evan Jones
+- [ ] 4. "CEP-25: Trie-indexed SSTable format" - Branimir Lambov
+- [ ] 5. *Introduction to Algorithms*, 3rd edition - Thomas H. Cormen et al.
+- [ ] 6. "Trie Memtables in Cassandra" - Branimir Lambov
+- [ ] 7. "The History of RocksDB" - Dhruba Borthakur
+- [ ] 8. "Apache HBase I/O – HFile" - Matteo Bertozzi
+- [ ] 9. "Bigtable: A Distributed Storage System for Structured Data" - Fay Chang et al.
+- [ ] 10. "The Log-Structured Merge-Tree (LSM-Tree)" - Patrick O'Neil et al.
+- [ ] 11. "The Design and Implementation of a Log-Structured File System" - Mendel Rosenblum and John K. Ousterhout
+- [ ] 12. "Delta Lake: High-Performance ACID Table Storage over Cloud Object Stores" - Michael Armbrust et al.
+- [ ] 13. "Space/Time Trade-offs in Hash Coding with Allowable Errors" - Burton H. Bloom
+- [ ] 14. "Less Hashing, Same Performance: Building a Better Bloom Filter" - Adam Kirsch and Michael Mitzenmacher
+- [ ] 15. "Bloom Filter Calculator" - Thomas Hurst
+- [ ] 16. "LSM-based storage techniques: a survey" - Chen Luo and Michael J. Carey
+- [ ] 17. "Dissecting, Designing, and Optimizing LSM-based Data Stores" - Subhadeep Sarkar and Manos Athanassoulis
+- [ ] 18. "Name that compaction algorithm" - Mark Callaghan
+- [ ] 19. "Embedded databases (1): The harmony of DuckDB, KùzuDB and LanceDB" - Prashanth Rao
+- [ ] 20. "Bluesky migrates to single-tenant SQLite" - Hacker News discussion
+- [ ] 21. "Organization and Maintenance of Large Ordered Indices" - Rudolf Bayer and Edward M. McCreight
+- [ ] 22. "The Ubiquitous B-Tree" - Douglas Comer
+- [ ] 23. "Torn Write Detection and Protection" - Alex Miller
+- [ ] 24. "ARIES/IM: An Efficient and High Concurrency Index Management Method Using Write-Ahead Logging" - C. Mohan and Frank Levine
+- [ ] 25. "The Internals of PostgreSQL" - Hironobu Suzuki
+- [ ] 26. "LDAP at Lightning Speed" - Howard Chu
+- [ ] 27. "Designing Access Methods: The RUM Conjecture" - Manos Athanassoulis et al.
+- [ ] 28. "Log Structured Merge Trees" - Ben Stopford
+- [ ] 29. "The Advantages of an LSM vs a B-Tree" - Mark Callaghan
+- [ ] 30. "SILK: Preventing Latency Spikes in Log-Structured Merge Key-Value Stores" - Oana Balmau et al.
+- [ ] 31. "RocksDB Tuning Guide" - Igor Canadi, Siying Dong, Mark Callaghan, et al.
+- [ ] 32. "What Modern NVMe Storage Can Do, and How to Exploit it" - Gabriel Haas and Viktor Leis
+- [ ] 33. "Coding for SSDs" - Emmanuel Goossaert
+- [ ] 34. "Is sequential IO dead in the era of the NVMe drive?" - Jack Vanlightly
+- [ ] 35. "Storage System Design Analysis: Factors Affecting NVMe SSD Performance (2)" - Alibaba Cloud Storage Team
+- [ ] 36. "The Fundamental Limit of Flash Random Write Performance" - Xiao-Yu Hu and Robert Haas
+- [ ] 37. "WiscKey: Separating Keys from Values in SSD-conscious Storage" - Lanyue Lu et al.
+- [ ] 38. "Innodb Double Write" - Peter Zaitsev
+- [ ] 39. "On the Impact of Full-Page Writes" - Tomas Vondra
+- [ ] 40. "Read, write & space amplification - B-Tree vs LSM" - Mark Callaghan
+- [ ] 41. "Choosing Between Efficiency and Performance with RocksDB" - Mark Callaghan
+- [ ] 42. "Enabling Timely and Persistent Deletion in LSM-Engines" - Subhadeep Sarkar et al.
+- [ ] 43. "Postgres vs. SQL Server: B-Tree Index Differences & the Benefit of Deduplication" - Lukas Fittl
+- [ ] 44. "How Postgres stores data on disk – this one's a page turner" - Drew Silcock
+- [ ] 45. "Using Covering Indexes to Improve Query Performance" - Joe Webb
+- [ ] 46. "The End of an Architectural Era (It's Time for a Complete Rewrite)" - Michael Stonebraker et al.
+- [ ] 47. "VoltDB Technical Overview White Paper"
+- [ ] 48. "Log-Structured Memory for DRAM-Based Storage" - Stephen M. Rumble, Ankita Kejriwal, and John K. Ousterhout
+- [ ] 49. "OLTP Through the Looking Glass, and What We Found There" - Stavros Harizopoulos et al.
+- [ ] 50. "Enhancements to SQL Server Column Stores" - Per-Åke Larson et al.
+- [ ] 51. "The SAP HANA Database – An Architecture Overview" - Franz Färber et al.
+- [ ] 52. "The Traditional RDBMS Wisdom Is (Almost Certainly) All Wrong" - Michael Stonebraker
+- [ ] 53. "Cloud-Native Transactions and Analytics in SingleStore" - Adam Prout et al.
+- [ ] 54. "BigQuery under the hood" - Tino Tereshko and Jordan Tigani
+- [ ] 55. "The Road to Composable Data Systems: Thoughts on the Last 15 Years and the Future" - Wes McKinney
+- [ ] 56. "C-Store: A Column-oriented DBMS" - Michael Stonebraker et al.
+- [ ] 57. "Dremel Made Simple with Parquet" - Julien Le Dem
+- [ ] 58. "Dremel: Interactive Analysis of Web-Scale Datasets" - Sergey Melnik et al.
+- [ ] 59. "Understanding Record Shredding: storing nested data in columns" - Joe Kearney
+- [ ] 60. "A shallow survey of OLAP and HTAP query engines" - Jamie Brandon
+- [ ] 61. "The Snowflake Elastic Data Warehouse" - Benoit Dageville et al.
+- [ ] 62. "Data Management for Data Science Towards Embedded Analytics" - Mark Raasveldt and Hannes Mühleisen
+- [ ] 63. "Pinot: Realtime OLAP for 530 Million Users" - Jean-François Im et al.
+- [ ] 64. "Druid: A Real-time Analytical Data Store" - Fangjin Yang et al.
+- [ ] 65. "Deep Dive into Common Open Formats for Analytical DBMSs" - Chunwei Liu et al.
+- [ ] 66. "An Empirical Evaluation of Columnar Storage Formats" - Xinyu Zeng et al.
+- [ ] 67. "Lance v2: A columnar container format for modern data" - Weston Pace
+- [ ] 68. "Nimble, A New Columnar File Format" - Yoav Helfman
+- [ ] 69. "Apache Arrow: High-Performance Columnar Data Framework" - Wes McKinney
+- [ ] 70. *Python for Data Analysis*, 3rd Edition - Wes McKinney
+- [ ] 71. "The Design of InfluxDB IOx: An In-Memory Columnar Database Written in Rust with Apache Arrow" - Paul Dix
+- [ ] 72. "Building Columnar Compression for Large PostgreSQL Databases" - Carlota Soto and Mike Freedman
+- [ ] 73. "Consistently faster and smaller compressed bitmaps with Roaring" - Daniel Lemire et al.
+- [ ] 74. "An entire Social Network in 1.6GB (GraphD Part 2)" - Jaz Volpert
+- [ ] 75. "The Design and Implementation of Modern Column-Oriented Database Systems" - Daniel J. Abadi et al.
+- [ ] 76. "The Vertica Analytic Database: C-Store 7 Years Later" - Andrew Lamb et al.
+- [ ] 77. "Everything You Always Wanted to Know About Compiled and Vectorized Queries But Were Afraid to Ask" - Timo Kersten et al.
+- [ ] 78. "Memory Bandwidth Napkin Math" - Forrest Smith
+- [ ] 79. "MonetDB/X100: Hyper-Pipelining Query Execution" - Peter Boncz, Marcin Zukowski, and Niels Nes
+- [ ] 80. "Implementing Database Operations Using SIMD Instructions" - Jingren Zhou and Kenneth A. Ross
+- [ ] 81. "OLTP Queries: Transfer Expensive Workloads to Materialize" - Kevin Bartley
+- [ ] 82. "Data Cube: A Relational Aggregation Operator Generalizing Group-By, Cross-Tab, and Sub-Totals" - Jim Gray et al.
+- [ ] 83. "Integrating the UB-Tree into a Database System Kernel" - Frank Ramsak et al.
+- [ ] 84. "Bkd-Tree: A Dynamic Scalable kd-Tree" - Octavian Procopiuc et al.
+- [ ] 85. "Generalized Search Trees for Database Systems" - Joseph M. Hellerstein, Jeffrey F. Naughton, and Avi Pfeffer
+- [ ] 86. "H3: Uber's Hexagonal Hierarchical Spatial Index" - Isaac Brodsky
+- [ ] 87. "HyperDex: A Distributed, Searchable Key-Value Store" - Robert Escriva, Bernard Wong, and Emin Gün Sirer
+- [ ] 88. *Introduction to Information Retrieval* - Christopher D. Manning, Prabhakar Raghavan, and Hinrich Schütze
+- [ ] 89. "An Experimental Study of Bitmap Compression vs. Inverted List Compression" - Jianguo Wang et al.
+- [ ] 90. "What is in a Lucene Index?" - Adrien Grand
+- [ ] 91. "Visualizing Lucene's Segment Merges" - Michael McCandless
+- [ ] 92. "Understanding Postgres GIN Indexes: The Good and the Bad" - Lukas Fittl
+- [ ] 93. "The State of (Full) Text Search in PostgreSQL 12" - Jimmy Angelakos
+- [ ] 94. "Index support for regular expression search" - Alexander Korotkov
+- [ ] 95. "Lucene's FuzzyQuery Is 100 Times Faster in 4.0" - Michael McCandless
+- [ ] 96. "Burst Tries: A Fast, Efficient Data Structure for String Keys" - Steffen Heinz, Justin Zobel, and Hugh E. Williams
+- [ ] 97. "Fast String Correction with Levenshtein Automata" - Klaus U. Schulz and Stoyan Mihov
+- [ ] 98. "Efficient Estimation of Word Representations in Vector Space" - Tomas Mikolov et al.
+- [ ] 99. "BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding" - Jacob Devlin et al.
+- [ ] 100. "Improving Language Understanding by Generative Pre-Training" - Alec Radford et al.
+- [ ] 101. "Faiss indexes" - Matthijs Douze, Maria Lomeli, and Lucas Hosseini
+- [ ] 102. "Understanding pgvector's HNSW Index Storage in Postgres" - Varik Matevosyan
+- [ ] 103. "Revisiting the Inverted Indices for Billion-Scale Approximate Nearest Neighbors" - Dmitry Baranchuk, Artem Babenko, and Yury Malkov
+- [ ] 104. "Efficient and robust approximate nearest neighbor search using Hierarchical Navigable Small World graphs" - Yury A. Malkov and Dmitry A. Yashunin
+
+---
+
+## Chapter 5: Encoding and Evolution
+
+- [ ] 1. "CWE-502: Deserialization of Untrusted Data"
+- [ ] 2. "What Do WebLogic, WebSphere, JBoss, Jenkins, OpenNMS, and Your Application Have in Common? This Vulnerability"
+- [ ] 3. "What the Rails Security Issue Means for Your Startup"
+- [ ] 4. "Towards Better Serialization"
+- [ ] 5. "jvm-serializers wiki"
+- [ ] 6. "XML Is a Poor Copy of S-Expressions"
+- [ ] 7. "Examples of floating point problems"
+- [ ] 8. "Snowflake: An Update and Some Very Important Information"
+- [ ] 9. "RFC 4180: Common Format and MIME Type for Comma-Separated Values (CSV) Files"
+- [ ] 10. "Evolving JSON Schemas - Part I and Part II"
+- [ ] 11. "Ensuring Query Compatibility with Evolving XML Schemas"
+- [ ] 12. "Bits On the Wire"
+- [ ] 13. "Thrift: Scalable Cross-Language Services Implementation"
+- [ ] 14. "Schema Evolution in Avro, Protocol Buffers and Thrift"
+- [ ] 15. "[PROPOSAL] New Subproject: Avro"
+- [ ] 16. "Apache Avro 1.12.0 Specification"
+- [ ] 17. "Avro schemas as LL(1) CFG definitions"
+- [ ] 18. "Null References: The Billion Dollar Mistake"
+- [ ] 19. "Schema Registry Overview"
+- [ ] 20. "Introducing Espresso—LinkedIn's Hot New Distributed Document Store"
+- [ ] 21. "Putting Apache Kafka to Use: A Practical Guide to Building a Stream Data Platform (Part 2)"
+- [ ] 22. "The Problem of Managing Schemas"
+- [ ] 23. "ASN.1 Complete"
+- [ ] 24. "A Layman's Guide to a Subset of ASN.1, BER, and DER"
+- [ ] 25. "A Warm Welcome to ASN.1 and DER"
+- [ ] 26. "Question: Extensibility and Dropping Fields"
+- [ ] 27. "Online migrations at scale"
+- [ ] 28. "Project Cambria: Translate your data with lenses"
+- [ ] 29. "Data on the Outside Versus Data on the Inside"
+- [ ] 30. "Architectural Styles and the Design of Network-Based Software Architectures"
+- [ ] 31. "REST APIs must be hypertext-driven"
+- [ ] 32. "OpenAPI Specification Version 3.1.0"
+- [ ] 33. "The Rise and Fall of CORBA"
+- [ ] 34. "The S Stands for Simple"
+- [ ] 35. "Interview: Pete Lacey Criticizes Web Services"
+- [ ] 36. "The Loyal WS-Opposition"
+- [ ] 37. "Implementing Remote Procedure Calls"
+- [ ] 38. "A Note on Distributed Computing"
+- [ ] 39. "Convenience over Correctness"
+- [ ] 40. "Designing robust and predictable APIs with idempotency"
+- [ ] 41. "Load Balancing"
+- [ ] 42. "Your API versioning is wrong, which is why I decided to do it 3 different wrong ways"
+- [ ] 43. "APIs as infrastructure: future-proofing Stripe with versioning"
+- [ ] 44. "Web Services Business Process Execution Language Version 2.0"
+- [ ] 45. "What is a Temporal Service?"
+- [ ] 46. "Why we built Restate"
+- [ ] 47. "Idempotency and Durable Execution"
+- [ ] 48. "What is a Temporal Workflow?"
+- [ ] 49. "Solving durable execution's immutability problem"
+- [ ] 50. "Exploring Event-Driven Architecture: A Beginner's Guide for Cloud Native Developers"
+- [ ] 51. "Orleans: Distributed Virtual Actors for Programmability and Scalability"
+
+---
+
+## Chapter 6: Replication
+
+- [ ] 1. "Notes on Distributed Databases"
+- [ ] 2. "MySQL Terminology Updates"
+- [ ] 3. "Oracle (Active) Data Guard 19c: Real-Time Data Protection and Availability"
+- [ ] 4. "What is an Always On availability group?"
+- [ ] 5. "Amazon DynamoDB: A Scalable, Predictably Performant, and Fully Managed NoSQL Database Service"
+- [ ] 6. "CockroachDB: The Resilient Geo-Distributed SQL Database"
+- [ ] 7. "TiDB: a Raft-based HTAP database"
+- [ ] 8. "Terminology, Power, and Inclusive Language in Internet-Drafts and RFCs"
+- [ ] 9. "Postmortem: VSTS 4 September 2018"
+- [ ] 10. "Leader Election With S3 Conditional Writes"
+- [ ] 11. "SlateDB Manifest Design"
+- [ ] 12. "Why does Neon use Paxos instead of Raft, and what's the difference?"
+- [ ] 13. "An introduction to the pg_auto_failover project"
+- [ ] 14. "GitHub availability this week"
+- [ ] 15. "Downtime last Saturday"
+- [ ] 16. "'All In' with Determinism for Performance and Testing in Distributed Systems"
+- [ ] 17. "The Internals of PostgreSQL"
+- [ ] 18. "WAL Internals of PostgreSQL"
+- [ ] 19. "Evolution of Logical Replication"
+- [ ] 20. "Upgrade your Amazon RDS for PostgreSQL or Amazon Aurora PostgreSQL database, Part 2: Using the pglogical extension"
+- [ ] 21. "Wormhole: Reliable Pub-Sub to Support Geo-Replicated Internet Services"
+- [ ] 22. "Replicated Data Consistency Explained Through Baseball"
+- [ ] 23. "Session Guarantees for Weakly Consistent Replicated Data"
+- [ ] 24. "Eventually Consistent"
+- [ ] 25. "Reply to: 'My thoughts about Fly.io (so far) and other newish technology I'm getting into'"
+- [ ] 26. "Scaling Bitbucket's Database"
+- [ ] 27. *Reaper Man: A Discworld Novel*
+- [ ] 28. "Coordination Avoidance in Database Systems"
+- [ ] 29. "PostgreSQL bi-directional replication using pglogical"
+- [ ] 30. "If You *Must* Deploy Multi-Master Replication, Read This First"
+- [ ] 31. "HBASE-7709: Infinite Loop Possible in Master/Master Replication"
+- [ ] 32. "What's Different About the New Google Docs: Making Collaboration Fast"
+- [ ] 33. "How Figma's multiplayer technology works"
+- [ ] 34. "Scaling the Linear Sync Engine"
+- [ ] 35. "Why Sync Engines Might Be the Future of Web Applications"
+- [ ] 36. "Are Sync Engines The Future of Web Applications?"
+- [ ] 37. "A Map of Sync"
+- [ ] 38. "Designing Offline-First Web Apps"
+- [ ] 39. "Local-first software: You own your data, in spite of the cloud"
+- [ ] 40. "The past, present, and future of local-first"
+- [ ] 41. "API Calling is to Sync Engines as jQuery is to React"
+- [ ] 42. "PushPin: Towards Production-Quality Peer-to-Peer Collaboration"
+- [ ] 43. "Replicated document management in a group communication system"
+- [ ] 44. "Explaining how fighting games use delay-based and rollback netcode"
+- [ ] 45. "Dynamo: Amazon's Highly Available Key-Value Store"
+- [ ] 46. "Conflict-free Replicated Data Types"
+- [ ] 47. "Operational Transformation in Real-Time Group Editors: Issues, Algorithms, and Achievements"
+- [ ] 48. "Collaborative Text Editing with Eg-walker: Better, Faster, Smaller"
+- [ ] 49. "Azure Cosmos DB: Pushing the frontier of globally distributed databases"
+- [ ] 50. "Eventual Consistency – Detecting Conflicts"
+- [ ] 51. "Weighted Voting for Replicated Data"
+- [ ] 52. "Dynamo, DynamoDB, and Aurora DSQL"
+- [ ] 53. "Flexible Paxos: Quorum Intersection Revisited"
+- [ ] 54. "Bringing Consistency to Riak"
+- [ ] 55. "Quantifying eventual consistency with PBS"
+- [ ] 56. "Shared-Nothing Architectures for Server Replication and Synchronization"
+- [ ] 57. "The Tail at Scale"
+- [ ] 58. "Gray Failure: The Achilles' Heel of Cloud-Scale Systems"
+- [ ] 59. "Time, Clocks, and the Ordering of Events in a Distributed System"
+- [ ] 60. "Detection of Mutual Inconsistency in Distributed Systems"
+- [ ] 61. "Dotted Version Vectors: Logical Clocks for Optimistic Replication"
+- [ ] 62. "Clocks and Causality - Ordering Events in Distributed Systems"
+- [ ] 63. "A Brief History of Time in Riak"
+- [ ] 64. "Vector Clocks Revisited Part 2: Dotted Version Vectors"
+- [ ] 65. "Version Vectors Are Not Vector Clocks"
+- [ ] 66. "Detecting Causal Relationships in Distributed Computations: In Search of the Holy Grail"
+
+---
+
+## Chapter 7: Partitioning
+
+- [ ] 1. "Understanding partitioning and sharding in Postgres and Citus"
+- [ ] 2. "Partitioning in Postgres, 2022 edition"
+- [ ] 3. "Database 'sharding' came from UO?"
+- [ ] 4. "Herding elephants: Lessons learned from sharding Postgres at Notion"
+- [ ] 5. "What Every Programmer Should Know About Memory"
+- [ ] 6. "FoundationDB: A Distributed Unbundled Transactional Key Value Store"
+- [ ] 7. "Citus 12: Schema-based sharding for PostgreSQL"
+- [ ] 8. "Reducing the Scope of Impact with Cell-Based Architecture"
+- [ ] 9. "Things DBs Don't Do - But Should"
+- [ ] 10. "Position: GDPR Compliance by Construction"
+- [ ] 11. "Introducing pg_karnak: Transactional schema migration across tenant databases"
+- [ ] 12. "Scaling Datastores at Slack with Vitess"
+- [ ] 13. "App Engine Datastore Tip: Monotonically Increasing Values Are Bad"
+- [ ] 14. "Apache HBase Region Splitting and Merging"
+- [ ] 15. "Rethinking Topology in Cassandra"
+- [ ] 16. "Java's hashCode Is Not Safe for Distributed Systems"
+- [ ] 17. "Amazon DynamoDB: A Scalable, Predictably Performant, and Fully Managed NoSQL Database Service"
+- [ ] 18. "Virtual Nodes in Cassandra 19.2"
+- [ ] 19. "New Token Allocation Algorithm in Cassandra 3.0"
+- [ ] 20. "Consistent Hashing and Random Trees: Distributed Caching Protocols for Relieving Hot Spots on the World Wide Web"
+- [ ] 21. "Consistent Hashing: Algorithmic Tradeoffs"
+- [ ] 22. "Using name-based mappings to increase hit rates"
+- [ ] 23. "A Fast, Minimal Memory, Consistent Hash Algorithm"
+- [ ] 24. "3% of Twitter's Servers Dedicated to Justin Bieber"
+- [ ] 25. "Scaling services with Shard Manager"
+- [ ] 26. "Shard Manager: A Generic Shard Management Framework for Geo-distributed Applications"
+- [ ] 27. "A Critique of Resizable Hash Tables: Riak Core & Random Slicing"
+- [ ] 28. "Building and operating a pretty big storage system called S3"
+- [ ] 29. "DynamoDB adaptive capacity: smooth performance for chaotic workloads (DAT327)"
+- [ ] 30. "ScyllaDB's Safe Topology and Schema Changes on Raft"
+- [ ] 31. *Introduction to Information Retrieval*
+- [ ] 32. "Earlybird: Real-Time Search at Twitter"
+- [ ] 33. "Indexing in Cassandra 3"
+- [ ] 34. "Customizing Your Document Routing"
+- [ ] 35. "H-Store Frequently Asked Questions"
+
+---
+
+## Chapter 8: Transactions
+
+- [ ] 1. "What went wrong with Horizon: learning from the Post Office Trial" - Steven J. Murdoch
+- [ ] 2. "A History and Evaluation of System R" - Donald D. Chamberlin et al.
+- [ ] 3. "Granularity of Locks and Degrees of Consistency in a Shared Data Base" - Jim N. Gray et al.
+- [ ] 4. "The Notions of Consistency and Predicate Locks in a Database System" - Kapali P. Eswaran et al.
+- [ ] 5. "CockroachDB: The Resilient Geo-Distributed SQL Database" - Rebecca Taft et al.
+- [ ] 6. "TiDB: a Raft-based HTAP database" - Dongxu Huang et al.
+- [ ] 7. "Spanner: Google's Globally-Distributed Database" - James C. Corbett et al.
+- [ ] 8. "FoundationDB: A Distributed Unbundled Transactional Key Value Store" - Jingyu Zhou et al.
+- [ ] 9. "Principles of Transaction-Oriented Database Recovery" - Theo Härder and Andreas Reuter
+- [ ] 10. "HAT, not CAP: Towards Highly Available Transactions" - Peter Bailis et al.
+- [ ] 11. "Cluster-Based Scalable Network Services" - Armando Fox et al.
+- [ ] 12. "Enforcing Complex Constraints in Oracle" - Tony Andrews
+- [ ] 13. *Concurrency Control and Recovery in Database Systems* - Philip A. Bernstein et al.
+- [ ] 14. "Making Snapshot Isolation Serializable" - Alan Fekete et al.
+- [ ] 15. "Understanding the Robustness of SSDs Under Power Fault" - Mai Zheng et al.
+- [ ] 16. "SSDs: A Gift and a Curse" - Laurie Denness
+- [ ] 17. "When Solid State Drives Are Not That Solid" - Adam Surak
+- [ ] 18. "Bulletin: HPE SAS Solid State Drives - Critical Firmware Upgrade Required" - Hewlett Packard Enterprise
+- [ ] 19. "PostgreSQL's handling of fsync() errors is unsafe and risks data loss" - Craig Ringer et al.
+- [ ] 20. "Can Applications Recover from fsync Failures?" - Anthony Rebello et al.
+- [ ] 21. "Crash Consistency: Rethinking the Fundamental Abstractions" - Thanumalayan Sankaranarayana Pillai et al.
+- [ ] 22. "All File Systems Are Not Created Equal" - Thanumalayan Sankaranarayana Pillai et al.
+- [ ] 23. "Unix's File Durability Problem" - Chris Siebenmann
+- [ ] 24. "Redundancy Does Not Imply Fault Tolerance" - Aishwarya Ganesan et al.
+- [ ] 25. "An Analysis of Data Corruption in the Storage Stack" - Lakshmi N. Bairavasundaram et al.
+- [ ] 26. "How we discovered, and recovered from, Postgres corruption on matrix.org" - Richard van der Hoff
+- [ ] 27. "Flash Reliability in Production: The Expected and the Unexpected" - Bianca Schroeder et al.
+- [ ] 28. "SSD Storage – Ignorance of Technology Is No Excuse" - Don Allison
+- [ ] 29. "Debunked: Your SSD won't lose data if left unplugged after all" - Gordon Mah Ung
+- [ ] 30. "Hermitage: Testing the 'I' in ACID" - Martin Kleppmann
+- [ ] 31. "The race condition that led to Flexcoin bankruptcy" - Vlad Mihalcea
+- [ ] 32. "ACIDRain: Concurrency-Related Attacks on Database-Backed Web Applications" - Todd Warszawski and Peter Bailis
+- [ ] 33. "BTC Stolen from Poloniex" - Tristan D'Agosta
+- [ ] 34. "How I Stole Roughly 100 BTC from an Exchange and How I Could Have Stolen More!" - bitcointhief2
+- [ ] 35. "Automating the Detection of Snapshot Isolation Anomalies" - Sudhir Jorwekar et al.
+- [ ] 36. "Transactions: The Limits of Isolation" - Michael Melanson
+- [ ] 37. "How ACH works: A developer perspective — Part 1" - Edward Kim
+- [ ] 38. "A Critique of ANSI SQL Isolation Levels" - Hal Berenson et al.
+- [ ] 39. "Weak Consistency: A Generalized Theory and Optimistic Implementations for Distributed Transactions" - Atul Adya
+- [ ] 40. "Highly Available Transactions: Virtues and Limitations" - Peter Bailis et al.
+- [ ] 41. "Seeing is Believing: A Client-Centric Specification of Database Isolation" - Natacha Crooks et al.
+- [ ] 42. "MVCC Unmasked" - Bruce Momjian
+- [ ] 43. "MySQL 8.0.34" - Peter Alvaro and Kyle Kingsbury
+- [ ] 44. "PostgreSQL 14 Internals" - Egor Rogov
+- [ ] 45. "The Internals of PostgreSQL" - Hironobu Suzuki
+- [ ] 46. "Internals of MVCC in Postgres: Hidden costs of Updates vs Inserts" - Rohan Reddy Alleti
+- [ ] 47. "The Part of PostgreSQL We Hate the Most" - Andy Pavlo and Bohan Zhang
+- [ ] 48. "An empirical evaluation of in-memory multi-version concurrency control" - Yingjun Wu et al.
+- [ ] 49. "Unofficial Guide to Datomic Internals" - Nikita Prokopov
+- [ ] 50. "A Practical Guide to Taming Postgres Isolation Anomalies" - Daniil Svetlov
+- [ ] 51. "An Atomic Rant" - Nate Wiger
+- [ ] 52. "Reading and writing, part 3: web applications" - James Coglan
+- [ ] 53. "Feral Concurrency Control: An Empirical Investigation of Modern Application Integrity" - Peter Bailis et al.
+- [ ] 54. "Things I Wished More Developers Knew About Databases" - Jaana Dogan
+- [ ] 55. "Serializable Isolation for Snapshot Databases" - Michael J. Cahill et al.
+- [ ] 56. "Serializable Snapshot Isolation in PostgreSQL" - Dan R. K. Ports and Kevin Grittner
+- [ ] 57. "Managing Update Conflicts in Bayou, a Weakly Connected Replicated Storage System" - Douglas B. Terry et al.
+- [ ] 58. "Constraints over multiple rows in PostgreSQL" - Hans-Jürgen Schönig
+- [ ] 59. "The End of an Architectural Era (It's Time for a Complete Rewrite)" - Michael Stonebraker et al.
+- [ ] 60. "H-Store/VoltDB Architecture vs. CEP Systems and Newer Streaming Architectures" - John Hugg
+- [ ] 61. "H-Store: A High-Performance, Distributed Main Memory Transaction Processing System" - Robert Kallman et al.
+- [ ] 62. "The Architecture of Datomic" - Rich Hickey
+- [ ] 63. "Debunking Myths About the VoltDB In-Memory Database" - John Hugg
+- [ ] 64. "OLTP Through the Looking Glass 16 Years Later: Communication is the New Bottleneck" - Xinjing Zhou et al.
+- [ ] 65. "Lotus: scalable multi-partition transactions on single-threaded partitioned databases" - Xinjing Zhou et al.
+- [ ] 66. "Architecture of a Database System" - Joseph M. Hellerstein et al.
+- [ ] 67. "Serializable Isolation for Snapshot Databases" (PhD Thesis) - Michael J. Cahill
+- [ ] 68. "Hekaton: SQL Server's Memory-Optimized OLTP Engine" - Cristian Diaconu et al.
+- [ ] 69. "Fast Serializable Multi-Version Concurrency Control for Main-Memory Database Systems" - Thomas Neumann et al.
+- [ ] 70. "Correctness of Concurrency Control and Implications in Distributed Databases" - D. Z. Badal
+- [ ] 71. "Concurrency Control Performance Modeling: Alternatives and Implications" - Rakesh Agrawal et al.
+- [ ] 72. "Snapshot Isolation vs Serializability" - Marc Brooker
+- [ ] 73. "Notes on Distributed Databases" - B. G. Lindsay et al.
+- [ ] 74. "Transaction Management in the R* Distributed Database Management System" - C. Mohan et al.
+- [ ] 75. "Distributed Transaction Processing: The XA Specification" - X/Open Company Ltd.
+- [ ] 76. "Lessons Learned from Implementing WS-Coordination and WS-AtomicTransaction" - Ivan Silva Neto and Francisco Reverbel
+- [ ] 77. "Formal Specification of a Web Services Protocol" - James E. Johnson et al.
+- [ ] 78. "The Transaction Concept: Virtues and Limitations" - Jim Gray
+- [ ] 79. "Nonblocking Commit Protocols" - Dale Skeen
+- [ ] 80. "Your Coffee Shop Doesn't Use Two-Phase Commit" - Gregor Hohpe
+- [ ] 81. "Life Beyond Distributed Transactions: An Apostate's Opinion" - Pat Helland
+- [ ] 82. "My Beef with MSDTC and Two-Phase Commits" - Jonathan Oliver
+- [ ] 83. "The Fallacy of Distributed Transactions" - Oren Eini
+- [ ] 84. "Transactions in Windows Azure (with Service Bus) – An Email Discussion" - Clemens Vasters
+- [ ] 85. "Orphaned MSDTC Transactions (-2 spids)" - Ajmer Dhariwal
+- [ ] 86. "Real World Story of DBCC PAGE Saving the Day" - Paul Randal
+- [ ] 87. "Consistency and Completeness: Rethinking Distributed Stream Processing in Apache Kafka" - Guozhang Wang et al.
+
+---
+
+## Chapter 9: The Trouble with Distributed Systems
+
+- [ ] 1. "There's Just No Getting Around It: You're Building a Distributed System" - Mark Cavage
+- [ ] 2. "Getting Real About Distributed System Reliability" - Jay Kreps
+- [ ] 3. "You Can't Sacrifice Partition Tolerance" - Coda Hale
+- [ ] 4. "Notes on Distributed Systems for Young Bloods" - Jeff Hodges
+- [ ] 5. "Congestion Avoidance and Control" - Van Jacobson
+- [ ] 6. "The Ultimate SO_LINGER Page, or: Why Is My TCP Not Reliable" - Bert Hubert
+- [ ] 7. "End-To-End Arguments in System Design" - Jerome H. Saltzer, David P. Reed, David D. Clark
+- [ ] 8. "The Network Is Reliable" - Peter Bailis, Kyle Kingsbury
+- [ ] 9. "Taming Uncertainty in Distributed Systems with Help from the Network" - Joshua B. Leners et al.
+- [ ] 10. "Understanding Network Failures in Data Centers: Measurement, Analysis, and Implications" - Phillipa Gill et al.
+- [ ] 11. Cow fiber-link incident post - Urs Hölzle
+- [ ] 12. "Hundreds lose internet service in northern B.C. after beaver chews through cable" - CBC News
+- [ ] 13. "The Global Internet Is Being Attacked by Sharks, Google Confirms" - Will Oremus
+- [ ] 14. "Down to the wire: The ship fixing our internet" - Jess Auerbach Jahajeeah
+- [ ] 15. "More details about the October 4 outage" - Santosh Janardhan
+- [ ] 16. "Georgian woman cuts off web access to whole of Armenia" - Tom Parfitt
+- [ ] 17. "'Shadow fleets' and subaquatic sabotage: are Europe's undersea internet cables under attack?" - Antonio Voce et al.
+- [ ] 18. "XFT: Practical Fault Tolerance beyond Crashes" - Shengyun Liu et al.
+- [ ] 19. "Downtime last Saturday" - Mark Imbriaco
+- [ ] 20. "A Byzantine failure in the real world" - Tom Lianza, Chris Snook
+- [ ] 21. "Toward a Generic Fault Tolerance Technique for Partial Network Partitioning" - Mohammed Alfatafta et al.
+- [ ] 22. "Re: bnx2 cards Intermittantly Going Offline" - Marc A. Donges
+- [ ] 23. "Inside a CODE RED: Network Edition" - Troy Toman
+- [ ] 24. "Call Me Maybe: Elasticsearch" - Kyle Kingsbury
+- [ ] 25. "A Few Arguments About Redis Sentinel Properties and Fail Scenarios" - Salvatore Sanfilippo
+- [ ] 26. "CAP: If All You Have Is a Timeout, Everything Looks Like a Partition" - Nicolas Liochon
+- [ ] 27. "Queues Don't Matter When You Can JUMP Them!" - Matthew P. Grosvenor et al.
+- [ ] 28. "Debugging network stalls on Kubernetes" - Theo Julienne
+- [ ] 29. "The Impact of Virtualization on Network Performance of Amazon EC2 Data Center" - Guohui Wang, T. S. Eugene Ng
+- [ ] 30. "etcd: Distributed Locking and Service Discovery" - Brandon Philips
+- [ ] 31. "A Systematic Look at EC2 I/O" - Steve Newman
+- [ ] 32. "The ϕ Accrual Failure Detector" - Naohiro Hayashibara et al.
+- [ ] 33. "Phi Accrual Failure Detector" - Jeffrey Wang
+- [ ] 34. *An Engineering Approach to Computer Networking: ATM Networks, the Internet, and the Telephone Network* - Srinivasan Keshav
+- [ ] 35. *ATM Networks* - Othmar Kyas
+- [ ] 36. "InfiniBand FAQ, Rev 1.3" - Mellanox Technologies
+- [ ] 37. "End-to-End Congestion Control for InfiniBand" - Jose Renato Santos et al.
+- [ ] 38. "Tales of the Tail: Hardware, OS, and Application-level Sources of Tail Latency" - Jialin Li et al.
+- [ ] 39. "The NTP FAQ and HOWTO" - Ulrich Windl et al.
+- [ ] 40. "How and why the leap second affected Cloudflare DNS" - John Graham-Cumming
+- [ ] 41. "Inside the Hotspot VM: Clocks, Timers and Scheduling Events – Part I – Windows" - David Holmes
+- [ ] 42. "Three Clocks are Better than One" - Joran Dirk Greef
+- [ ] 43. "Pitfalls of TSC usage" - Oliver Yang
+- [ ] 44. "Time on Multi-Core, Multi-Socket Servers" - Steve Loughran
+- [ ] 45. "Spanner: Google's Globally-Distributed Database" - James C. Corbett et al.
+- [ ] 46. "How Closely Can a Personal Computer Clock Track the UTC Timescale Via the Internet?" - M. Caporaloni, R. Ambrosini
+- [ ] 47. "A Survey of the NTP Network" - Nelson Minar
+- [ ] 48. "Synchronizing Clocks in a Cassandra Cluster Pt. 1 – The Problem" - Viliam Holub
+- [ ] 49. "The One-Second War (What Time Will You Die?)" - Poul-Henning Kamp
+- [ ] 50. "Leap Second Crashes Half the Internet" - Nelson Minar
+- [ ] 51. "Time, Technology and Leaping Seconds" - Christopher Pascoe
+- [ ] 52. "Look Before You Leap – The Coming Leap Second and AWS" - Mingxue Zhao, Jeff Barr
+- [ ] 53. "Network Timing and the 2015 Leap Second" - Darryl Veitch, Kanthaiah Vijayalayan
+- [ ] 54. "Timekeeping in VMware Virtual Machines" - VMware, Inc.
+- [ ] 55. "Clock Synchronization in Finance and Beyond" - Victor Yodaiken
+- [ ] 56. "Where the Wild Warnings Are: Root Causes of Chrome HTTPS Certificate Errors" - Mustafa Emre Acer et al.
+- [ ] 57. "MiFID II / MiFIR: Regulatory Technical and Implementing Standards – Annex I" - European Securities and Markets Authority
+- [ ] 58. "Solving MiFID II Clock Synchronisation With Minimum Spend (Part 1)" - Luke Bigum
+- [ ] 59. "How Precision Time Protocol is being deployed at Meta" - Oleg Obleukhov, Ahmad Byagowi
+- [ ] 60. gpsjam.org - John Wiseman
+- [ ] 61. "It's About Time: Microsecond-Accurate Clocks on Amazon EC2 Instances" - Josh Levinson et al.
+- [ ] 62. "Call Me Maybe: Cassandra" - Kyle Kingsbury
+- [ ] 63. "Clocks Are Bad, or, Welcome to the Wonderful World of Distributed Systems" - John Daily
+- [ ] 64. "It's About Time!" - Marc Brooker
+- [ ] 65. "The Trouble with Timestamps" - Kyle Kingsbury
+- [ ] 66. "Time, Clocks, and the Ordering of Events in a Distributed System" - Leslie Lamport
+- [ ] 67. "There Is No Now: Problems With Simultaneity in Distributed Systems" - Justin Sheehy
+- [ ] 68. "Spanner: Google's Globally-Distributed Database" - Murat Demirbas
+- [ ] 69. "Spanner's Concurrency Control" - Dahlia Malkhi, Jean-Philippe Martin
+- [ ] 70. "Achieving Precise Clock Synchronization on AWS" - Franck Pachot
+- [ ] 71. "Living Without Atomic Clocks: Where CockroachDB and Spanner diverge" - Spencer Kimball
+- [ ] 72. "Use of Time in Distributed Databases (part 4): Synchronized clocks in production databases" - Murat Demirbas
+- [ ] 73. "Leases: An Efficient Fault-Tolerant Mechanism for Distributed File Cache Consistency" - Cary G. Gray, David R. Cheriton
+- [ ] 74. "Roblox Return to Service" - Daniel Sturman et al.
+- [ ] 75. "Avoiding Full GCs with MemStore-Local Allocation Buffers" - Todd Lipcon
+- [ ] 76. "Live Migration of Virtual Machines" - Christopher Clark et al.
+- [ ] 77. "fsyncers and Curveballs" - Mike Shaver
+- [ ] 78. "Eliminating Large JVM GC Pauses Caused by Background IO Traffic" - Zhenyun Zhuang, Cuong Tran
+- [ ] 79. "Java Garbage Collection Distilled" - Martin Thompson
+- [ ] 80. "Blade: A Data Center Garbage Collector" - David Terei, Amit Levy
+- [ ] 81. "Trash Day: Coordinating Garbage Collection in Distributed Systems" - Martin Maas et al.
+- [ ] 82. "The LMAX Architecture" - Martin Fowler
+- [ ] 83. "Knowledge and common knowledge in a distributed environment" - Joseph Y. Halpern, Yoram Moses
+- [ ] 84. "Ad Hoc Transactions in Web Applications: The Good, the Bad, and the Ugly" - Chuzhe Tang et al.
+- [ ] 85. *ZooKeeper: Distributed Process Coordination* - Flavio P. Junqueira, Benjamin Reed
+- [ ] 86. "HBase and HDFS: Understanding Filesystem Usage in HBase" - Enis Söztutar
+- [ ] 87. "SUSE Linux Enterprise High Availability 15 SP6 Administration Guide, Section 12: Fencing and STONITH" - SUSE LLC
+- [ ] 88. "The Chubby Lock Service for Loosely-Coupled Distributed Systems" - Mike Burrows
+- [ ] 89. "etcd 3.4.3" - Kyle Kingsbury
+- [ ] 90. "Distributed Locks are Dead; Long Live Distributed Locks!" - Ensar Basri Kahveci
+- [ ] 91. "How to do distributed locking" - Martin Kleppmann
+- [ ] 92. "Is Redlock safe?" - Salvatore Sanfilippo
+- [ ] 93. "Leader Election With S3 Conditional Writes" - Gunnar Morling
+- [ ] 94. "The Byzantine Generals Problem" - Leslie Lamport et al.
+- [ ] 95. "Notes on Data Base Operating Systems" - Jim N. Gray
+- [ ] 96. "How Complicated Was the Byzantine Empire?" - Brian Palmer
+- [ ] 97. "My Writings" - Leslie Lamport
+- [ ] 98. "Bus Architectures for Safety-Critical Embedded Systems" - John Rushby
+- [ ] 99. "ELC: SpaceX Lessons Learned" - Jake Edge
+- [ ] 100. "SoK: Consensus in the Age of Blockchains" - Shehar Bano et al.
+- [ ] 101. "Why we should train AI in space" - Ezra Feilden et al.
+- [ ] 102. "The Saddest Moment" - James Mickens
+- [ ] 103. "Byzantine Eventual Consistency and the Fundamental Limits of Peer-to-Peer Databases" - Martin Kleppmann, Heidi Howard
+- [ ] 104. "Making CRDTs Byzantine Fault Tolerant" - Martin Kleppmann
+- [ ] 105. "The Discovery of Apache ZooKeeper's Poison Packet" - Evan Gilman
+- [ ] 106. "When the CRC and TCP Checksum Disagree" - Jonathan Stone, Craig Partridge
+- [ ] 107. "How Both TCP and Ethernet Checksums Fail" - Evan Jones
+- [ ] 108. "Consensus in the Presence of Partial Synchrony" - Cynthia Dwork et al.
+- [ ] 109. "Fail-stop processors: an approach to designing fault-tolerant computing systems" - Richard D. Schlichting, Fred B. Schneider
+- [ ] 110. "Limplock: Understanding the Impact of Limpware on Scale-out Cloud Systems" - Thanh Do et al.
+- [ ] 111. "Garbage collecting unhealthy JVMs, a proactive approach" - Josh Snyder, Joseph Lynch
+- [ ] 112. "Fail-Slow at Scale: Evidence of Hardware Performance Faults in Large Production Systems" - Haryadi S. Gunawi et al.
+- [ ] 113. "Gray Failure: The Achilles' Heel of Cloud-Scale Systems" - Peng Huang et al.
+- [ ] 114. "Understanding, Detecting and Localizing Partial Failures in Large System Software" - Chang Lou et al.
+- [ ] 115. "Eventual Consistency Today: Limitations, Extensions, and Beyond" - Peter Bailis, Ali Ghodsi
+- [ ] 116. "Defining Liveness" - Bowen Alpern, Fred B. Schneider
+- [ ] 117. "Dude, Where's My Metadata?" - Flavio P. Junqueira
+- [ ] 118. "January 28th Incident Report" - Scott Sanders
+- [ ] 119. "A Few Notes on Kafka and Jepsen" - Jay Kreps
+- [ ] 120. "Systems Correctness Practices at AWS" - Marc Brooker, Ankush Desai
+- [ ] 121. "Testing Distributed Systems: Curated list of resources on testing distributed systems" - Andrey Satarin
+- [ ] 122. "We Put a Distributed Database In the Browser – And Made a Game of It!" - Phil Eaton, Joran Dirk Greef
+- [ ] 123. "FoundationDB - Simulation and Testing" - Apple, Inc. & FoundationDB project authors
+- [ ] 124. "Verifying Kafka transactions - Diary entry 2 - Writing an initial TLA+ spec" - Jack Vanlightly
+- [ ] 125. "From Chaos to Order — Tools and Techniques for Testing TiDB, A Distributed NewSQL Database" - Siddon Tang
+- [ ] 126. "Parallel Commits: An atomic commit protocol for globally distributed transactions" - Nathan VanBenschoten
+- [ ] 127. "Paper: VR Revisited - State Transfer (part 3)" - Jack Vanlightly
+- [ ] 128. "What if the spec doesn't match the code?" - Hillel Wayne
+- [ ] 129. "Multi-Grained Specifications for Distributed System Model Checking and Verification" - Lingzhi Ouyang et al.
+- [ ] 130. "The Netflix Simian Army" - Yury Izrailevsky, Ariel Tseitlin
+- [ ] 131. "Jepsen: On the perils of network partitions" - Kyle Kingsbury
+- [ ] 132. "Jepsen Analyses" - Kyle Kingsbury
+- [ ] 133. "Why is random testing effective for partition tolerance bugs?" - Rupak Majumdar, Filip Niksic
+- [ ] 134. "Simulation and Testing" - FoundationDB project authors
+- [ ] 135. "Simulation Testing For Liveness" - Alex Kladov
+- [ ] 136. "(Mostly) Deterministic Simulation Testing in Go" - Alfonso Subiotto Marqués
+
+---
+
+## Chapter 10: Consistency and Consensus
+
+- [ ] 1. "Linearizability: A Correctness Condition for Concurrent Objects"
+- [ ] 2. "On interprocess communication"
+- [ ] 3. "Information Storage in a Decentralized Computer System"
+- [ ] 4. "Please Stop Calling Databases CP or AP"
+- [ ] 5. "Call Me Maybe: MongoDB Stale Reads"
+- [ ] 6. "Computational Techniques in Knossos"
+- [ ] 7. "Elle: Inferring Isolation Anomalies from Experimental Observations"
+- [ ] 8. "Consistency in Non-Transactional Distributed Storage Systems"
+- [ ] 9. "Linearizability Versus Serializability"
+- [ ] 10. "Correctness Anomalies Under Serializable Isolation"
+- [ ] 11. "Highly Available Transactions: Virtues and Limitations"
+- [ ] 12. *Concurrency Control and Recovery in Database Systems*
+- [ ] 13. "CockroachDB's consistency model"
+- [ ] 14. "Strict-serializability, but at what cost, for what purpose?"
+- [ ] 15. "Spanner under the hood: Understanding strict serializability and external consistency"
+- [ ] 16. "Developer Guide"
+- [ ] 17. "How to talk about consistency and isolation in distributed DBs"
+- [ ] 18. "An explanation of the difference between Isolation levels vs. Consistency levels"
+- [ ] 19. "The Chubby Lock Service for Loosely-Coupled Distributed Systems"
+- [ ] 20. *ZooKeeper: Distributed Process Coordination*
+- [ ] 21. "Oracle 10g RAC Grid, Services & Clustering"
+- [ ] 22. "Coordination Avoidance in Database Systems"
+- [ ] 23. "Call Me Maybe: etcd and Consul"
+- [ ] 24. "Zab: High-Performance Broadcast for Primary-Backup Systems"
+- [ ] 25. "In Search of an Understandable Consensus Algorithm"
+- [ ] 26. "Sharing Memory Robustly in Message-Passing Systems"
+- [ ] 27. "Robust Emulation of Shared Memory Using Dynamic Quorum-Acknowledged Broadcasts"
+- [ ] 28. *Introduction to Reliable and Secure Distributed Programming*
+- [ ] 29. "Possible Issue with Read Repair?"
+- [ ] 30. "Wait-Free Synchronization"
+- [ ] 31. "Harvest, Yield, and Scalable Tolerant Systems"
+- [ ] 32. "Brewer's Conjecture and the Feasibility of Consistent, Available, Partition-Tolerant Web Services"
+- [ ] 33. "Perspectives on the CAP Theorem"
+- [ ] 34. "CAP Twelve Years Later: How the 'Rules' Have Changed"
+- [ ] 35. "Consistency in Partitioned Networks"
+- [ ] 36. "RFC 677: The Maintenance of Duplicate Databases"
+- [ ] 37. "Sacrificing Serializability to Attain High Availability of Data in an Unreliable Network"
+- [ ] 38. "NoSQL: Past, Present, Future"
+- [ ] 39. "Migrating to Microservices"
+- [ ] 40. "A Critique of the CAP Theorem"
+- [ ] 41. "Problems with CAP, and Yahoo's little known NoSQL system"
+- [ ] 42. "Hazelcast and the Mythical PA/EC System"
+- [ ] 43. "Spanner, TrueTime & The CAP Theorem"
+- [ ] 44. "Consistency Tradeoffs in Modern Distributed Database System Design"
+- [ ] 45. "A Hundred Impossibility Proofs for Distributed Computing"
+- [ ] 46. "Consistency, Availability, and Convergence"
+- [ ] 47. "Limitations of Highly-Available Eventually-Consistent Data Stores"
+- [ ] 48. "x86-TSO: A Rigorous and Usable Programmer's Model for x86 Multiprocessors"
+- [ ] 49. "Memory Barriers/Fences"
+- [ ] 50. "What Every Programmer Should Know About Memory"
+- [ ] 51. "Sequential Consistency Versus Linearizability"
+- [ ] 52. "Universally Unique IDentifiers (UUIDs)"
+- [ ] 53. "Announcing Snowflake"
+- [ ] 54. "Universally Unique Lexicographically Sortable Identifier"
+- [ ] 55. "A Better ID Generator for PostgreSQL"
+- [ ] 56. "Time, Clocks, and the Ordering of Events in a Distributed System"
+- [ ] 57. "Logical Physical Clocks"
+- [ ] 58. "On the use of Clocks to Enforce Consistency in the Cloud"
+- [ ] 59. "Large-Scale Incremental Processing Using Distributed Transactions and Notifications"
+- [ ] 60. "Paxos Made Live – An Engineering Perspective"
+- [ ] 61. "Lessons Learned from Implementing Paxos"
+- [ ] 62. "Viewstamped Replication: A New Primary Copy Method to Support Highly-Available Distributed Systems"
+- [ ] 63. "Viewstamped Replication Revisited"
+- [ ] 64. "The Part-Time Parliament"
+- [ ] 65. "Paxos Made Simple"
+- [ ] 66. "Paxos Made Moderately Complex"
+- [ ] 67. "Consensus: Bridging Theory and Practice"
+- [ ] 68. "Raft Refloated: Do We Have Consensus?"
+- [ ] 69. "ZooKeeper's Atomic Broadcast Protocol: Theory and Practice"
+- [ ] 70. "Vive La Différence: Paxos vs. Viewstamped Replication vs. Zab"
+- [ ] 71. "Paxos vs Raft: Have we reached consensus on distributed consensus?"
+- [ ] 72. "Practical Byzantine Fault Tolerance and Proactive Recovery"
+- [ ] 73. "SoK: Consensus in the Age of Blockchains"
+- [ ] 74. "Impossibility of Distributed Consensus with One Faulty Process"
+- [ ] 75. "Unreliable Failure Detectors for Reliable Distributed Systems"
+- [ ] 76. "Another Advantage of Free Choice: Completely Asynchronous Agreement Protocols"
+- [ ] 77. "Consensus in the Presence of Partial Synchrony"
+- [ ] 78. "Total Order Broadcast and Multicast Algorithms: Taxonomy and Survey"
+- [ ] 79. *Distributed Computing: Fundamentals, Simulations and Advanced Topics*
+- [ ] 80. "Revisiting the Relationship Between Non-Blocking Atomic Commitment and Consensus"
+- [ ] 81. "Consensus on Transaction Commit"
+- [ ] 82. "Implementing Fault-Tolerant Services Using the State Machine Approach: A Tutorial"
+- [ ] 83. "Calvin: Fast Distributed Transactions for Partitioned Database Systems"
+- [ ] 84. "Tango: Distributed Data Structures over a Shared Log"
+- [ ] 85. "CORFU: A Shared Log Design for Flash Clusters"
+- [ ] 86. "There is more consensus in Egalitarian parliaments"
+- [ ] 87. "Odyssey: the impact of modern hardware on strongly-consistent replication protocols"
+- [ ] 88. "Flexible Paxos: Quorum Intersection Revisited"
+- [ ] 89. "Distributed Systems lecture notes"
+- [ ] 90. "Call Me Maybe: Elasticsearch 1.5.0"
+- [ ] 91. "Coracle: Evaluating Consensus at the Internet Edge"
+- [ ] 92. "A Byzantine failure in the real world"
+- [ ] 93. "BookKeeper Tutorial"
+- [ ] 94. "Apache BookKeeper Insights Part 1 — External Consensus and Dynamic Membership"
+
+---
+
+## Chapter 11: Batch Processing
+
+- [ ] 1. "How to Beat the CAP Theorem" - Nathan Marz
+- [ ] 2. "Agile Architecture" - Molly Bartlett Dishman and Martin Fowler
+- [ ] 3. "MapReduce: Simplified Data Processing on Large Clusters" - Jeffrey Dean and Sanjay Ghemawat
+- [ ] 4. "Massively Parallel Databases and MapReduce Systems" - Shivnath Babu and Herodotos Herodotou
+- [ ] 5. "MapReduce: A Major Step Backwards" - David J. DeWitt and Michael Stonebraker
+- [ ] 6. "The Elephant Was a Trojan Horse: On the Death of Map-Reduce at Google" - Henry Robinson
+- [ ] 7. "R.I.P. MapReduce" - Urs Hölzle
+- [ ] 8. "Command-Line Tools Can Be 235x Faster than Your Hadoop Cluster" - Adam Drake
+- [ ] 9. "sort: Sort text files" - GNU Coreutils
+- [ ] 10. "The Quantcast File System" - Michael Ovsiannikov et al.
+- [ ] 11. "Introduction to HDFS Erasure Coding in Apache Hadoop" - Andrew Wang et al.
+- [ ] 12. "Building and operating a pretty big storage system called S3" - Andy Warfield
+- [ ] 13. "Apache Hadoop YARN: Yet Another Resource Negotiator" - Vinod Kumar Vavilapalli et al.
+- [ ] 14. "Reducibility Among Combinatorial Problems" - Richard M. Karp
+- [ ] 15. "NP-Complete Scheduling Problems" - J. D. Ullman
+- [ ] 16. "The complete guide to spot instances on AWS, Azure and GCP" - Gilad David Maayan
+- [ ] 17. "Large-Scale Cluster Management at Google with Borg" - Abhishek Verma et al.
+- [ ] 18. "Resilient Distributed Datasets: A Fault-Tolerant Abstraction for In-Memory Cluster Computing" - Matei Zaharia et al.
+- [ ] 19. "Apache Flink™: Stream and Batch Processing in a Single Engine" - Paris Carbone et al.
+- [ ] 20. *Hadoop Application Architectures* - Mark Grover et al.
+- [ ] 21. *Learning Spark*, 2nd Edition - Jules S. Damji et al.
+- [ ] 22. "Dryad: Distributed Data-Parallel Programs from Sequential Building Blocks" - Michael Isard et al.
+- [ ] 23. "Nephele: Efficient Parallel Data Processing in the Cloud" - Daniel Warneke and Odej Kao
+- [ ] 24. "In-memory query execution in Google BigQuery" - Hossein Ahmadi
+- [ ] 25. *Hadoop: The Definitive Guide* - Tom White
+- [ ] 26. "Peeking into Apache Flink's Engine Room" - Fabian Hüske
+- [ ] 27. "Hive 0.14 Cost Based Optimizer (CBO) Technical Overview" - Mostafa Mokhtar
+- [ ] 28. "Spark SQL: Relational Data Processing in Spark" - Michael Armbrust et al.
+- [ ] 29. "Spark vs Pandas, part 2 – Spark" - Kaya Kupferschmidt
+- [ ] 30. "Tracking payments at scale" - Ammar Chalifah
+- [ ] 31. "Demand forecasting at Getir built with Amazon Forecast" - Nafi Ahmet Turgut et al.
+- [ ] 32. "Enhancing homepage feed relevance by harnessing the power of large corpus sparse ID embeddings" - Jason (Siyu) Zhu
+- [ ] 33. "Apache Spark @Scale: A 60 TB+ production use case" - Avery Ching, Sital Kedia, and Shuojie Wang
+- [ ] 34. "How ACH works: A developer perspective — Part 1" - Edward Kim
+- [ ] 35. "How to Move Beyond a Monolithic Data Lake to a Distributed Data Mesh" - Zhamak Dehghani
+- [ ] 36. "What the Heck is a Data Mesh?!" - Chris Riccomini
+- [ ] 37. *Data Contracts* - Chad Sanderson, Mark Freeman, B. E. Schmidt
+- [ ] 38. "Data Fabric vs. Data Mesh: What's the Difference?" - Daniel Abadi
+- [ ] 39. "Lakehouse: A New Generation of Open Platforms that Unify Data Warehousing and Advanced Analytics" - Michael Armbrust et al.
+- [ ] 40. "A Bridging Model for Parallel Computation" - Leslie G. Valiant
+- [ ] 41. "Spinning Fast Iterative Data Flows" - Stephan Ewen et al.
+- [ ] 42. "Pregel: A System for Large-Scale Graph Processing" - Grzegorz Malewicz et al.
+- [ ] 43. "OpenAI Chats about Scaling LLMs at Anyscale's Ray Summit" - Richard MacManus
+- [ ] 44. "Why Local State is a Fundamental Primitive in Stream Processing" - Jay Kreps
+- [ ] 45. "Open Sourcing Venice – LinkedIn's Derived Data Platform" - Félix GV
+
+---
+
+## Chapter 12: Stream Processing
+
+- [ ] 1. "The Dataflow Model: A Practical Approach to Balancing Correctness, Latency, and Cost in Massive-Scale, Unbounded, Out-of-Order Data Processing"
+- [ ] 2. *Structure and Interpretation of Computer Programs*
+- [ ] 3. "The Many Faces of Publish/Subscribe"
+- [ ] 4. "Monitoring Streams – A New Class of Data Management Applications"
+- [ ] 5. "Pushing Back"
+- [ ] 6. "how (not) to write a pipeline"
+- [ ] 7. "Brubeck, a statsd-Compatible Metrics Aggregator"
+- [ ] 8. "MoldUDP64 Protocol Specification V 1.00"
+- [ ] 9. "Measure Anything, Measure Everything"
+- [ ] 10. "25 Graphite, Grafana and statsd Gotchas"
+- [ ] 11. "Web Hooks to Revolutionize the Web"
+- [ ] 12. "Queues Are Databases"
+- [ ] 13. "JSR-343 Java Message Service (JMS) 2.0 Specification"
+- [ ] 14. "AMQP: Advanced Message Queuing Protocol Specification"
+- [ ] 15. "Architectural overview of Pub/Sub"
+- [ ] 16. "Lessons from scaling PostgreSQL queues to 100k events per second"
+- [ ] 17. "Kafka Connect Deep Dive – Error Handling and Dead Letter Queues"
+- [ ] 18. "Message reprocessing: How to implement the dead letter queue"
+- [ ] 19. "KIP-1034: Dead letter queue in Kafka Streams"
+- [ ] 20. "Kafka: A Distributed Messaging System for Log Processing"
+- [ ] 21. "Benchmarking Apache Kafka: 2 Million Writes Per Second (On Three Cheap Machines)"
+- [ ] 22. "How We're Improving and Advancing Kafka at LinkedIn"
+- [ ] 23. "Kafka versus RabbitMQ: A comparative study of two industry reference publish/subscribe implementations"
+- [ ] 24. "Why Message Queues Endure: A History"
+- [ ] 25. "KIP-932: Queues for Kafka"
+- [ ] 26. "The advantages of queues on logs"
+- [ ] 27. "The Log: What Every Software Engineer Should Know About Real-Time Data's Unifying Abstraction"
+- [ ] 28. "Change Data Capture is having a moment. Why?"
+- [ ] 29. "Streaming MySQL Tables in Real-Time to Kafka"
+- [ ] 30. "DBLog: A Watermark Based Change-Data-Capture Framework"
+- [ ] 31. "Percolator"
+- [ ] 32. "Debezium Connector for Cassandra"
+- [ ] 33. "Announcing Kafka Connect: Building Large-Scale Low-Latency Data Pipelines"
+- [ ] 34. "Kafka change data capture breaks database encapsulation"
+- [ ] 35. "'Change Data Capture Breaks Encapsulation'. Does it, though?"
+- [ ] 36. "Revisiting the Outbox Pattern"
+- [ ] 37. "Maintenance of Materialized Views: Problems, Techniques, and Applications"
+- [ ] 38. "DBSP: Incremental Computation on Streams and Its Applications to Databases"
+- [ ] 39. *Transaction Processing: Concepts and Techniques*
+- [ ] 40. "Accounting for Computer Scientists"
+- [ ] 41. "Immutability Changes Everything"
+- [ ] 42. "Making Sense of Stream Processing"
+- [ ] 43. "Stream Processing Hard Problems – Part 1: Killing Lambda"
+- [ ] 44. "CQRS: What? Why? How?"
+- [ ] 45. "Immutability, MVCC, and Garbage Collection"
+- [ ] 46. "Re: Turning the Database Inside-out with Apache Samza"
+- [ ] 47. "Datomic Documentation: Excision"
+- [ ] 48. "Fossil Documentation: Deleting Content from Fossil"
+- [ ] 49. "The irony of distributed systems is that data loss is really easy but deleting data is surprisingly hard"
+- [ ] 50. "Crypto shredding: How it can solve modern data retention challenges"
+- [ ] 51. "Forward Secure Asynchronous Messaging from Puncturable Encryption"
+- [ ] 52. "What's the Difference Between ESP and CEP?"
+- [ ] 53. "The CQL Continuous Query Language: Semantic Foundations and Query Execution"
+- [ ] 54. "Data in Flight: How Streaming SQL Technology Can Help Solve the Web 2.0 Data Crunch"
+- [ ] 55. "HyperLogLog: The Analysis of a Near-Optimal Cardinality Estimation Algorithm"
+- [ ] 56. "Questioning the Lambda Architecture"
+- [ ] 57. "An Overview of Apache Streaming Technologies"
+- [ ] 58. "Why Local State is a Fundamental Primitive in Stream Processing"
+- [ ] 59. "Deep Dive Into the RisingWave Stream Processing Engine - Part 2: Computational Model"
+- [ ] 60. "Differential dataflow"
+- [ ] 61. "Incremental Computation in the Database"
+- [ ] 62. "Percolator"
+- [ ] 63. "Real-Time Full-Text Search with Luwak and Samza"
+- [ ] 64. "The World Beyond Batch: Streaming 102"
+- [ ] 65. "Streaming Analytics with Apache Flink"
+- [ ] 66. "MillWheel: Fault-Tolerant Stream Processing at Internet Scale"
+- [ ] 67. "Improving Snowplow's Understanding of Time"
+- [ ] 68. "Azure Stream Analytics: Windowing functions"
+- [ ] 69. "Photon: Fault-Tolerant and Scalable Joining of Continuous Data Streams"
+- [ ] 70. "Doing the Impossible: Exactly-Once Messaging Patterns in Kafka"
+- [ ] 71. "Data on the Outside Versus Data on the Inside"
+- [ ] 72. *The Data Warehouse Toolkit: The Definitive Guide to Dimensional Modeling*
+- [ ] 73. "I'm coining the phrase 'effectively-once' for message processing with at-least-once + idempotent operations"
+- [ ] 74. "Discretized Streams: An Efficient and Fault-Tolerant Model for Stream Processing on Large Clusters"
+- [ ] 75. "High-Throughput, Low-Latency, and Exactly-Once Stream Processing with Apache Flink"
+- [ ] 76. "Lightweight Asynchronous Snapshots for Distributed Dataflows"
+- [ ] 77. "Fast Data: Smart and at Scale"
+- [ ] 78. "Exactly-Once Semantics Are Possible: Here's How Kafka Does It"
+- [ ] 79. "KIP-98 – Exactly Once Delivery and Transactional Messaging"
+- [ ] 80. "Idempotence Is Not a Medical Condition"
+- [ ] 81. "Re: Trying to Achieve Deterministic Behavior on Recovery/Rewind"
+- [ ] 82. "A Survey of Rollback-Recovery Protocols in Message-Passing Systems"
+- [ ] 83. "Kafka Streams – How Does It Fit the Stream Processing Landscape?"
+- [ ] 84. "Batch as a Special Case of Streaming and Alibaba's contribution of Blink"
+
+---
+
+## Chapter 13: The Future of Data Systems
+
+- [ ] 1. "Postgres Full-Text Search is Good Enough!"
+- [ ] 2. "Challenges to Adopting Stronger Consistency at Scale"
+- [ ] 3. "Building on Quicksand"
+- [ ] 4. "Provenance and Causality in Distributed Systems"
+- [ ] 5. "The Log: What Every Software Engineer Should Know About Real-Time Data's Unifying Abstraction"
+- [ ] 6. "Life Beyond Distributed Transactions: An Apostate's Opinion"
+- [ ] 7. "The Broad Gauge Story"
+- [ ] 8. "Online Migrations At Scale"
+- [ ] 9. "Changing the Wheels on a Moving Bus — Spotify's Event Delivery Migration"
+- [ ] 10. "Agile Architecture"
+- [ ] 11. *Big Data: Principles and Best Practices of Scalable Real-Time Data Systems*
+- [ ] 12. "Questioning the Lambda Architecture"
+- [ ] 13. "Liquid: Unifying Nearline and Offline Big Data Integration"
+- [ ] 14. "The UNIX Time-Sharing System"
+- [ ] 15. "The Road to Composable Data Systems: Thoughts on the Last 15 Years and the Future"
+- [ ] 16. "CS262a: Advanced Topics in Computer Systems"
+- [ ] 17. "The Case for Polystores"
+- [ ] 18. "The BigDAWG Polystore System"
+- [ ] 19. "Unbundling Transaction Services in the Cloud"
+- [ ] 20. "Kafka, Samza and the Unix Philosophy of Distributed Data"
+- [ ] 21. "Winning Now and in the Future: Where Volt Active Data Shines"
+- [ ] 22. "Spreadsheets Are Code"
+- [ ] 23. "VisiCalc: Information from Its Creators"
+- [ ] 24. "Machine Learning: The High-Interest Credit Card of Technical Debt"
+- [ ] 25. "Feral Concurrency Control: An Empirical Investigation of Modern Application Integrity"
+- [ ] 26. "Re: Need for Macros (Was Re: Icon)"
+- [ ] 27. "Microservices in a Streaming World"
+- [ ] 28. *Building Event-Driven Microservices*, 2nd Edition
+- [ ] 29. "Why Microservices Should Be Event Driven: Autonomy vs Authority"
+- [ ] 30. "Designing Offline-First Web Apps"
+- [ ] 31. "Turning the Database Inside-out with Apache Samza"
+- [ ] 32. "Global Sequence Protocol: A Robust Abstraction for Replicated Shared State"
+- [ ] 33. "Asynchronous Functional Reactive Programming for GUIs"
+- [ ] 34. "Unifying Stream Processing and Interactive Queries in Apache Kafka"
+- [ ] 35. "Dataflow as Database"
+- [ ] 36. "I See What You Mean"
+- [ ] 37. "Trident: A High-Level Abstraction for Realtime Computation"
+- [ ] 38. "Low Latency Web Scale Fraud Prevention with Apache Samza, Kafka and Friends"
+- [ ] 39. "The Accidental DBA"
+- [ ] 40. "Semantic Conditions for Correctness at Different Isolation Levels"
+- [ ] 41. "Automating the Detection of Snapshot Isolation Anomalies"
+- [ ] 42. "Jespen: Distributed Systems Safety Research"
+- [ ] 43. "Redirect After Post"
+- [ ] 44. "End-to-End Arguments in System Design"
+- [ ] 45. "Coordination Avoidance in Database Systems"
+- [ ] 46. "Strong Consistency in Manhattan"
+- [ ] 47. "Online Event Processing: Achieving consistency where distributed transactions have failed"
+- [ ] 48. "The Transaction Concept: Virtues and Limitations"
+- [ ] 49. "Sagas"
+- [ ] 50. "Bug #73170: Duplicates in Unique Secondary Index Because of Fix of Bug#68021"
+- [ ] 51. "Postgres Serializability Bug"
+- [ ] 52. "HDFS DataNode Scanners and Disk Checker Explained"
+- [ ] 53. "How does Ceph scrubbing work?"
+- [ ] 54. "Getting Real About Distributed System Reliability"
+- [ ] 55. "The LMAX Architecture"
+- [ ] 56. "Move Fast with Confidence"
+- [ ] 57. "A Digital Signature Based on a Conventional Encryption Function"
+- [ ] 58. "Certificate Transparency"
+- [ ] 59. "Enhanced Certificate Transparency and End-to-End Encrypted Mail"
+
+---
+
+## Chapter 14: Ethics and Data
+
+- [ ] 1. "What If Data Is a Bad Idea?" - David Schmudde
+- [ ] 2. "ACM Code of Ethics and Professional Conduct"
+- [ ] 3. "Making Hard Choices: The Quest for Ethics in Machine Learning" - Igor Perisic
+- [ ] 4. "Algorithm Writers Need a Code of Conduct" - John Naughton
+- [ ] 5. "'Good' isn't good enough" - Ben Green
+- [ ] 6. "Ethical AI is Not about AI" - Deborah G. Johnson and Mario Verdicchio
+- [ ] 7. "Ethics as a Participatory and Iterative Process" - Marc Steen
+- [ ] 8. "What Happens When Big Data Blunders?" - Logan Kugler
+- [ ] 9. "Algorithms and the criminal justice system: promises and challenges in deployment and research" - Miri Zilka
+- [ ] 10. "Welcome to Algorithmic Prison" - Bill Davidow
+- [ ] 11. "They're Watching You at Work" - Don Peck
+- [ ] 12. "Is an Algorithm Any Less Racist Than a Human?" - Leigh Alexander
+- [ ] 13. "How a Machine Learns Prejudice" - Jesse Emspak
+- [ ] 14. "Joint Statement on Enforcement Efforts Against Discrimination and Bias in Automated Systems" - Rohit Chopra et al.
+- [ ] 15. "The Moral Economy of Tech" - Maciej Cegłowski
+- [ ] 16. "Artificial Intelligence in healthcare is racist" - Greg Nichols
+- [ ] 17. *Weapons of Math Destruction: How Big Data Increases Inequality and Threatens Democracy* - Cathy O'Neil
+- [ ] 18. "Make Algorithms Accountable" - Julia Angwin
+- [ ] 19. "European Union Regulations on Algorithmic Decision-Making and a 'Right to Explanation'" - Bryce Goodman and Seth Flaxman
+- [ ] 20. "A Review of the Data Broker Industry: Collection, Use, and Sale of Consumer Data for Marketing Purposes"
+- [ ] 21. "Algorithmic Pricing and Competition: Empirical Evidence from the German Retail Gasoline Market" - Stephanie Assad et al.
+- [ ] 22. *Thinking in Systems: A Primer* - Donella H. Meadows and Diana Wright
+- [ ] 23. "[Twitter post on surveillance and data science]" - Daniel J. Bernstein
+- [ ] 24. "Why Software Is Eating the World" - Marc Andreessen
+- [ ] 25. "'Internet of Things' Security Is Hilariously Broken and Getting Worse" - J. M. Porup
+- [ ] 26. *Data and Goliath: The Hidden Battles to Collect Your Data and Control Your World* - Bruce Schneier
+- [ ] 27. "Nothing to Hide" - The Grugq
+- [ ] 28. "FTC Takes Action Against General Motors for Sharing Drivers' Precise Location and Driving Behavior Data Without Consent" - Federal Trade Commission
+- [ ] 29. "Deep-Spying: Spying Using Smartwatch and Deep Learning" - Tony Beltramelli
+- [ ] 30. "Big Other: Surveillance Capitalism and the Prospects of an Information Civilization" - Shoshana Zuboff
+- [ ] 31. "Beyond Consent: Improving Data Protection Through Consumer Protection Law" - Michiel Rhoen
+- [ ] 32. "Regulation (EU) 2016/679 of the European Parliament and of the Council of 27 April 2016"
+- [ ] 33. "What is the 'legitimate interests' basis?" - UK Information Commissioner's Office
+- [ ] 34. "[TED talk on tech company control of attention]" - Tristan Harris
+- [ ] 35. "Consequences of an Insightful Algorithm" - Carina C. Zona
+- [ ] 36. "Should We Treat Data as Labor? Moving Beyond 'Free'" - Imanol Arrieta Ibarra et al.
+- [ ] 37. "Data Is a Toxic Asset, So Why Not Throw It Out?" - Bruce Schneier
+- [ ] 38. "[Twitter post on data as hazardous material]" - Cory Scott
+- [ ] 39. "Data is the new uranium – incredibly powerful and amazingly dangerous" - Mark Pesce
+- [ ] 40. "Mission Creep: When Everything Is Terrorism" - Bruce Schneier
+- [ ] 41. "Big Data: Big Power Shifts?" - Lena Ulbricht and Maximilian von Grafenstein
+- [ ] 42. "Facebook and Google: Most Powerful and Secretive Empires We've Ever Known" - Ellen P. Goodman and Julia Powles
+- [ ] 43. "The World Is Choking on Digital Pollution" - Judy Estrin and Sam Gill
+- [ ] 44. "Regulating Mass Surveillance as Privacy Pollution: Learning from Environmental Impact Statements" - A. Michael Froomkin
+- [ ] 45. "The Early Impact of GDPR Compliance on Display Advertising: The Case of an Ad Publisher" - Pengyuan Wang, Li Jiang, and Jian Yang
+- [ ] 46. "Don't be fooled by Meta's fine for data breaches" - Johnny Ryan
+- [ ] 47. "Your Data Footprint Is Affecting Your Life in Ways You Can't Even Imagine" - Jessica Leber
+- [ ] 48. "Haunted by Data" - Maciej Cegłowski
+- [ ] 49. "You Are Not What You Read: Librarians Purge User Data to Protect Privacy" - Sam Thielman
+- [ ] 50. "[Twitter post on tech's societal impact]" - Jez Humble
+
+---
+
+## Statistics
+
+| Chapter | References |
+|---------|-----------|
+| Chapter 1 | 62 |
+| Chapter 2 | 99 |
+| Chapter 3 | 73 |
+| Chapter 4 | 104 |
+| Chapter 5 | 51 |
+| Chapter 6 | 66 |
+| Chapter 7 | 35 |
+| Chapter 8 | 87 |
+| Chapter 9 | 136 |
+| Chapter 10 | 94 |
+| Chapter 11 | 45 |
+| Chapter 12 | 84 |
+| Chapter 13 | 59 |
+| Chapter 14 | 50 |
+| **Total** | **1045** |

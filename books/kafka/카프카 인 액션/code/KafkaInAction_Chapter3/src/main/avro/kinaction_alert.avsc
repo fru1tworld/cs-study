@@ -1,0 +1,31 @@
+{
+  "namespace": "org.kafkainaction",
+  "type": "record",
+  "name": "Alert",
+  "fields": [
+    {
+      "name": "sensor_id",
+      "type": "long",
+      "doc": "The unique id that identifies the sensor"
+    },
+    {
+      "name": "time",
+      "type": "long",
+      "doc": "Time the alert was generated as UTC milliseconds from the epoch"
+    },
+    {
+      "name": "status",
+      "type": {
+        "type": "enum",
+        "name": "AlertStatus",
+        "symbols": [
+          "Critical",
+          "Major",
+          "Minor",
+          "Warning"
+        ]
+      },
+      "doc": "The allowed values that our sensors will use to emit current status"
+    }
+  ]
+}
