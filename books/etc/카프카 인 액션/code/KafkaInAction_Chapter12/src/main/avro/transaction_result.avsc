@@ -1,0 +1,41 @@
+{
+  "namespace": "org.kafkainaction",
+  "type": "record",
+  "name": "TransactionResult",
+  "includeSchemas": [
+    {
+      "name": "Transaction"
+    },
+    {
+      "name": "Funds"
+    }
+  ],
+  "fields": [
+    {
+      "name": "transaction",
+      "type": "Transaction"
+    },
+    {
+      "name": "funds",
+      "type": "Funds"
+    },
+    {
+      "name": "success",
+      "type": "boolean",
+      "doc": "success"
+    },
+    {
+      "name": "errorType",
+      "type": [
+        "null",
+        {
+          "type": "enum",
+          "name": "ErrorType",
+          "symbols": [
+            "INSUFFICIENT_FUNDS"
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    ":dependencyDashboard"
+  ],
+  "packageRules": [
+    {
+      "matchCategories": [
+        "java"
+      ],
+      "enabled": true
+    },
+    {
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      "groupName": "all non-major dependencies",
+      "groupSlug": "all-minor-patch",
+      "matchPackageNames": [
+        "*"
+      ]
+    },
+    {
+      "groupName": "Kafka dependencies",
+      "groupSlug": "kafka",
+      "matchPackageNames": [
+        "/^org\\.apache\\.kafka/"
+      ]
+    },
+    {
+      "groupName": "Avro dependencies",
+      "groupSlug": "avro",
+      "matchPackageNames": [
+        "/^org\\.apache\\.avro/"
+      ]
+    },
+    {
+      "groupName": "Confluent dependencies",
+      "groupSlug": "confluent",
+      "matchPackageNames": [
+        "/^io\\.confluent/"
+      ]
+    },
+    {
+      "groupName": "Logback dependencies",
+      "groupSlug": "logback",
+      "matchPackageNames": [
+        "/^ch\\.qos\\.logback/"
+      ]
+    },
+    {
+      "groupName": "JUnit dependencies",
+      "groupSlug": "junit",
+      "matchPackageNames": [
+        "/^org\\.junit/"
+      ]
+    }
+  ],
+  "labels": [
+    "dependencies"
+  ],
+  "prHourlyLimit": 0,
+  "prConcurrentLimit": 0,
+  "rangeStrategy": "bump",
+  "semanticCommits": "enabled",
+  "dependencyDashboard": true,
+  "dependencyDashboardTitle": "Dependency Dashboard",
+  "schedule": [
+    "every weekend"
+  ],
+  "maven": {
+    "enabled": true
+  }
+}
