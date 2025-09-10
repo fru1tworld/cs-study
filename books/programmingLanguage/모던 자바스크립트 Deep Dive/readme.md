@@ -156,11 +156,11 @@
 
 ### 37
 
-[chapter37 - 디스트럭처링 할당](./chapter37s/chapter37.md)
+[chapter37 - 디스트럭처링 할당](./chapters/31-40/chapter37.md)
 
 ### 38
 
-[chapter38 - 브라우저의 렌더링 과정](./chapter38s/chapter38.md)
+[chapter38 - 브라우저의 렌더링 과정](./chapters/31-40/chapter38.md)
 
 ### 39
 
@@ -182,11 +182,11 @@
 
 ### 43
 
-[chapter43 Ajax](./chapters/41-49/chapter43.md)
+[chapter43 - Ajax](./chapters/41-49/chapter43.md)
 
 ### 44
 
-[chapter44 REST API](./chapters/41-49/chapter44.md)
+[chapter44 - REST API](./chapters/41-49/chapter44.md)
 
 ### 45
 

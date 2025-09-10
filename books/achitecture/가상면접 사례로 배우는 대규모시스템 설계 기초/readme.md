@@ -8,15 +8,15 @@
 
 ### chapter1
 
-[text](chapters/book1/chapter01.md)
+[01 사용자 수에 따른 규모 확장성](chapters/book1/01 사용자 수에 따른 규모 확장성.md)
 
 ### chapter2
 
-[text](chapters/book1/chapter02.md)
+[02 개략적인 규모 추정](chapters/book1/02 개략적인 규모 추정.md)
 
 ### chapter3
 
-[text](chapters/book1/chapter03.md)
+[03 시스템 설계 면접 공략법](chapters/book1/03 시스템 설계 면접 공략법.md)
 
 ### chapter4
 
