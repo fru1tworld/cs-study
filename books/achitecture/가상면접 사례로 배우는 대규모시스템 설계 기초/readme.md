@@ -20,55 +20,51 @@
 
 ### chapter4
 
-[text](chapters/book1/chapter04.md)
+[04 처리율 제한 장치의 설계](chapters/book1/04 처리율 제한 장치의 설계.md)
 
 ### chapter5
 
-[text](chapters/book1/chapter05.md)
+[05 안정 해시 설계](chapters/book1/05 안정 해시 설계.md)
 
 ### chapter6
 
-[text](chapters/book1/chapter06.md)
+[06 키-값 저장소 설계](chapters/book1/06 키-값 저장소 설계.md)
 
 ### chapter7
 
-[text](chapters/book1/chapter07.md)
+[07 분산 시스템을 위한 유일 ID 생성기 설계](chapters/book1/07 분산 시스템을 위한 유일 ID 생성기 설계.md)
 
 ### chapter8
 
-[text](chapters/book1/chapter08.md)
+[08 URL단축기 설계](chapters/book1/08 URL단축기 설계.md)
 
 ### chapter9
 
-[text](chapters/book1/chapter09.md)
+[09 웹 크롤러 설계](chapters/book1/09 웹 크롤러 설계.md)
 
 ### chapter10
 
-[text](chapters/book1/chapter10.md)
+[10 알림 시스템 설계](chapters/book1/10 알림 시스템 설계.md)
 
 ### chapter11
 
-[text](chapters/book1/chapter11.md)
+[11 뉴스 피드 시스템 설계](chapters/book1/11 뉴스 피드 시스템 설계.md)
 
 ### chapter12
 
-[text](chapters/book1/chapter12.md)
+[12 채팅 시스템 설계](chapters/book1/12 채팅 시스템 설계.md)
 
 ### chapter13
 
-[text](chapters/book1/chapter13.md)
+[13 검색어 자동완성 시스템](chapters/book1/13 검색어 자동완성 시스템.md)
 
 ### chapter14
 
-[text](chapters/book1/chapter14.md)
+[14 유튜브 설계](chapters/book1/14 유튜브 설계.md)
 
 ### chapter15
 
-[text](chapters/book1/chapter15.md)
-
-### chapter16
-
-[text](chapters/book1/chapter16.md)
+[15 구글 드라이브 설계](chapters/book1/15 구글 드라이브 설계.md)
 
 ## book 2
 

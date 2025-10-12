@@ -1,1 +1,0 @@
-# chapter32 - String
