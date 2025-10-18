@@ -53,6 +53,7 @@
 - [상태: 완독] [소프트웨어 장인](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=66925855)
 - [상태: 읽는 중] [리팩터링 2판](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=236186172)
 - [상태: 읽는 중] [맨먼스 미신](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=54124435)
+- [상태: 읽는 중] [도메인 주도 설계](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=12174216&srsltid=AfmBOopO7-rLRfyQL71PJcX7jcF2NxcVEpXhIsI-JaMN1wzMU5h90Du4)
 
 ## 자격증
 
