@@ -82,7 +82,7 @@
 - Python의 GIL(Global Interpreter Lock)이란 무엇인가요?
 - Python의 데이터 타입과 가변/불변 객체를 설명해주세요.
 - Python의 얕은 복사와 깊은 복사의 차이점은 무엇인가요?
-- Python의 *args와 **kwargs에 대해 설명해주세요.
+- Python의 \*args와 \*\*kwargs에 대해 설명해주세요.
 - Python의 데코레이터(Decorator)란 무엇이고 어떻게 동작하나요?
 - Python의 제너레이터(Generator)와 이터레이터(Iterator)를 설명해주세요.
 - Python의 컨텍스트 매니저(Context Manager)란 무엇인가요?
@@ -90,7 +90,7 @@
 - Python의 람다 함수의 특징과 제한사항은 무엇인가요?
 - Python의 클로저(Closure)와 nonlocal 키워드에 대해 설명해주세요.
 - Python의 클래스 변수와 인스턴스 변수의 차이점은 무엇인가요?
-- Python의 매직 메서드(__init__, __str__, __repr__ 등)에 대해 설명해주세요.
+- Python의 매직 메서드(**init**, **str**, **repr** 등)에 대해 설명해주세요.
 - Python의 프로퍼티(Property)와 디스크립터(Descriptor)를 설명해주세요.
 - Python의 다중 상속과 MRO(Method Resolution Order)에 대해 설명해주세요.
 - Python의 추상 클래스(ABC)와 인터페이스 구현 방법은 무엇인가요?
@@ -101,7 +101,7 @@
 - Python 2와 Python 3의 주요 차이점은 무엇인가요?
 - Python의 패키지 관리 도구(pip, pipenv, poetry)를 비교해주세요.
 - Python의 가상 환경(venv, virtualenv)이 필요한 이유는 무엇인가요?
-- Python의 모듈 import 방식과 __init__.py의 역할을 설명해주세요.
+- Python의 모듈 import 방식과 **init**.py의 역할을 설명해주세요.
 - Python의 성능 최적화 방법에는 어떤 것들이 있나요?
 
 ## Go
@@ -139,4 +139,3 @@
 - 강타입과 약타입 언어의 차이점은 무엇인가요?
 - Call by Value와 Call by Reference의 차이점을 설명해주세요.
 - 메모리 누수(Memory Leak)가 발생하는 원인과 방지 방법은 무엇인가요?
-
