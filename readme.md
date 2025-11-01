@@ -35,6 +35,7 @@
 
 - [상태: 완독] [가상 면접 사례로 배우는 대규모 시스템 설계 기초 1](https://www.aladin.co.kr/shop/UsedShop/wuseditemall.aspx?ItemId=276041776)
 - [상태: 완독] [가상 면접 사례로 배우는 대규모 시스템 설계 기초 2](https://www.aladin.co.kr/shop/UsedShop/wuseditemall.aspx?ItemId=330404121)
+- [상태 : 완독] [요즘 개발자를 위한 시스템 설계 수업](https://www.aladin.co.kr/shop/UsedShop/wuseditemall.aspx?ItemId=330404121)
 - [상태: 완독] [데이터 중심 애플리케이션 설계](https://www.aladin.co.kr/shop/UsedShop/wuseditemall.aspx?ItemId=140018308)
 - [상태: 완독] [오브젝트](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=193681076)
 - [상태: 완독] [토비의 스프링 3.1 1부](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=19505561)
