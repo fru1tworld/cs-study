@@ -153,6 +153,19 @@ fru1tworld의 CS 학습 정리를 위한 모의 면접 질문 리스트입니다
 - 인덱스 관리, ILM
 - 성능 튜닝
 
+#### MongoDB
+
+📄 **[MongoDB 질문 보기](./mongodb/mongodb.md)**
+
+- NoSQL vs SQL, 문서 지향 데이터베이스
+- BSON, Collection, Document
+- 인덱싱, Compound Index
+- Aggregation Pipeline
+- Replication, Replica Set
+- Sharding, 분산 처리
+- Transaction, ACID
+- 성능 최적화, Schema Design
+
 ---
 
 ### 5️⃣ 메시징 & 이벤트 스트리밍
@@ -207,9 +220,9 @@ fru1tworld의 CS 학습 정리를 위한 모의 면접 질문 리스트입니다
 
 ## 📊 통계
 
-- **총 카테고리**: 16개
-- **총 질문 파일**: 16개
-- **예상 총 질문 수**: 약 850개 이상
+- **총 카테고리**: 17개
+- **총 질문 파일**: 17개
+- **예상 총 질문 수**: 약 930개 이상
 
 ---
 

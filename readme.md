@@ -3,6 +3,10 @@
 - 책으로 공부하는 CS 스터디
 - 그 외 CS 내용을 별도 문서로 정리
 
+## 📚 별도 문서
+
+- **[CS 모의 면접 질문 목록](./Interview/interview.md)**: 자료구조, 네트워크, 데이터베이스, 운영체제 등 CS 기초부터 Spring, NestJS, Kafka, Redis, Elasticsearch, MongoDB 등 기술 스택까지 약 930개 이상의 면접 질문 모음
+
 ## DevOps
 
 - [상태: 완독] [쿠버네티스 교과서](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=323404818)
