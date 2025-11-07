@@ -1,7 +1,7 @@
 # Operating System (운영체제)
 
 > 카테고리: CS 기초 > 운영체제
-> [← 면접 질문 목록으로 돌아가기](../../Interview.md)
+> [← 면접 질문 목록으로 돌아가기](../../interview.md)
 
 ---
 

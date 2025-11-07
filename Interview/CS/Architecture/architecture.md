@@ -1,7 +1,7 @@
 # Computer Architecture (컴퓨터 구조)
 
 > 카테고리: CS 기초 > 컴퓨터 구조
-> [← 면접 질문 목록으로 돌아가기](../../Interview.md)
+> [← 면접 질문 목록으로 돌아가기](../../interview.md)
 
 ---
 

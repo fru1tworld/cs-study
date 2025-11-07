@@ -1,7 +1,7 @@
 # Elasticsearch / 엘라스틱서치
 
 > 카테고리: 검색 엔진
-> [← 면접 질문 목록으로 돌아가기](../Interview.md)
+> [← 면접 질문 목록으로 돌아가기](../interview.md)
 
 ---
 

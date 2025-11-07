@@ -1,7 +1,7 @@
 # Programming Language (프로그래밍 언어)
 
 > 카테고리: 프로그래밍 언어
-> [← 면접 질문 목록으로 돌아가기](../Interview.md)
+> [← 면접 질문 목록으로 돌아가기](../interview.md)
 
 ---
 
