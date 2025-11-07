@@ -235,4 +235,4 @@ fru1tworld의 CS 학습 정리를 위한 모의 면접 질문 리스트입니다
 
 ---
 
-⬅️ **[README로 돌아가기](./README.md)**
+⬅️ **[README로 돌아가기](../readme.md)**

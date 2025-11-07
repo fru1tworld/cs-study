@@ -12,7 +12,7 @@ fru1tworld의 CS 학습 정리를 위한 모의 면접 질문 리스트입니다
 
 전체 카테고리별 질문 목록을 확인하려면 아래 링크를 참고하세요:
 
-👉 **[Interview.md - 전체 질문 목록 보기](./Interview.md)**
+👉 **[Interview.md - 전체 질문 목록 보기](./interview.md)**
 
 ---
 
