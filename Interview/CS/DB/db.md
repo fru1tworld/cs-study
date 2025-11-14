@@ -342,3 +342,6 @@ SQL Injection에 대해 설명해 주세요.
 ### DB-070
 
 우리가 서버 개발 과정에서 사용하는 수많은 DB 라이브러리(e.g., ORM, JDBC)들은 이 SQL Injection 문제를 어떻게 해결할까요? (e.g., Prepared Statement)
+
+
+총 질문 70개
