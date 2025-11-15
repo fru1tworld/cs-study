@@ -6,6 +6,10 @@ fru1tworld의 CS 학습 정리를 위한 모의 면접 질문 리스트입니다
 
 다만 제가 학습을 하기 위해 정리한 레포지토리이므로 활용하신다면 참고만 해주세요.
 
+아래 깃헙 레포도 참고해주세요 
+
+[면접 질문 모음집](https://github.com/4z7l/tech_interview.zip?tab=readme-ov-file)
+
 ---
 
 ## 📖 전체 질문 목록
@@ -41,6 +45,16 @@ fru1tworld의 CS 학습 정리를 위한 모의 면접 질문 리스트입니다
 - WebSocket
 - CDC (Debezium)
 - CRDT (Yjs)
+
+### 시스템 디자인
+- 이벤트, 메시지, 그리고 EDA (Event-Driven Architecture)
+- 분산 트랜잭션, SAGA, 그리고 이벤트 소싱
+- CQRS (Command Query Responsibility Segregation)
+- 데이터베이스 샤딩 (Sharding)
+- 분산 시스템 이론 (CAP, Consensus)
+- 리더십과 복제 (Replication & Leadership)
+
+👉 **[시스템 디자인 전체 질문 보기](./system_design/system_design.md)**
 
 ---
 
