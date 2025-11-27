@@ -76,7 +76,6 @@
 ## 사고 싶은 책 목록
 
 - [GoF 디자인 패턴](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=56051596)
-- [헤드 퍼스트 디자인 패턴](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=290892473)
 - [깃 프로 2](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=79232604)
 - [네트워킹과 웹 성능 최적화 기법](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=69380520)
 - [필독! 개발자 온보딩 가이드](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=317252868)
