@@ -39,7 +39,7 @@
 
 - [상태: 완독] [가상 면접 사례로 배우는 대규모 시스템 설계 기초 1](https://www.aladin.co.kr/shop/UsedShop/wuseditemall.aspx?ItemId=276041776)
 - [상태: 완독] [가상 면접 사례로 배우는 대규모 시스템 설계 기초 2](https://www.aladin.co.kr/shop/UsedShop/wuseditemall.aspx?ItemId=330404121)
-- [상태: 완독] [요즘 개발자를 위한 시스템 설계 수업](https://www.aladin.co.kr/shop/UsedShop/wuseditemall.aspx?ItemId=330404121)
+- [상태: 완독] [요즘 개발자를 위한 시스템 설계 수업](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=372314289)
 - [상태: 완독] [데이터 중심 애플리케이션 설계](https://www.aladin.co.kr/shop/UsedShop/wuseditemall.aspx?ItemId=140018308)
 - [상태: 완독] [오브젝트](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=193681076)
 - [상태: 완독] [토비의 스프링 3.1 1부](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=19505561)
@@ -53,7 +53,7 @@
 
 ## 기타
 
-- [상태: 완독] [클린코드](https://www.aladin.co.kr/search/wsearchresult.aspx?SearchTarget=Book&SearchWord=%ED%81%B4%EB%A6%B0%EC%BD%94%EB%93%9C)
+- [상태: 완독] [클린코드](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=34083680)
 - [상태: 완독] [소프트웨어 엔지니어 가이드북](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=350106414)
 - [상태: 완독] [함께 자라기 애자일로 가는 길](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=175977462)
 - [상태: 완독] [리드 개발자로 가는 길](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=373457249&srsltid=AfmBOorCeJEJtPaPicdeX0fHCF2cGJLu-shcJ7dcSDr_wyuaMpjAq5sV)
