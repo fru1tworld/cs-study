@@ -83,7 +83,7 @@ perf record -F 999 ./my_program
 perf record -F 49 ./my_program
 ```
 
-**권장 주파수**:
+** 권장 주파수**:
 - 일반 프로파일링: 99Hz
 - 상세 분석: 999Hz
 - 낮은 오버헤드: 49Hz
@@ -110,8 +110,8 @@ perf record -g ./my_program
 perf record --call-graph fp ./my_program
 ```
 
-- **장점**: 가장 빠름, 낮은 오버헤드
-- **단점**: `-fno-omit-frame-pointer`로 컴파일 필요
+- ** 장점**: 가장 빠름, 낮은 오버헤드
+- ** 단점**: `-fno-omit-frame-pointer`로 컴파일 필요
 
 ### DWARF
 
@@ -122,8 +122,8 @@ perf record --call-graph dwarf ./my_program
 perf record --call-graph dwarf,16384 ./my_program
 ```
 
-- **장점**: 최적화된 바이너리에서도 동작
-- **단점**: 더 큰 데이터 파일, 약간의 오버헤드
+- ** 장점**: 최적화된 바이너리에서도 동작
+- ** 단점**: 더 큰 데이터 파일, 약간의 오버헤드
 
 ### LBR (Last Branch Record)
 
@@ -131,8 +131,8 @@ perf record --call-graph dwarf,16384 ./my_program
 perf record --call-graph lbr ./my_program
 ```
 
-- **장점**: 하드웨어 기반, 매우 낮은 오버헤드
-- **단점**: Intel CPU 전용, 제한된 스택 깊이 (8-32 프레임)
+- ** 장점**: 하드웨어 기반, 매우 낮은 오버헤드
+- ** 단점**: Intel CPU 전용, 제한된 스택 깊이 (8-32 프레임)
 
 ---
 

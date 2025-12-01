@@ -8,12 +8,12 @@ DB 인스턴스는 클라우드에서 실행되는 격리된 데이터베이스 
 
 각 DB 인스턴스는 고유한 식별자를 가지며, 이는 DNS 엔드포인트에 포함됩니다.
 
-**엔드포인트 형식:**
+** 엔드포인트 형식:**
 ```
 <db-instance-identifier>.<random-string>.<region>.rds.amazonaws.com
 ```
 
-**예시:**
+** 예시:**
 ```
 mydb.abcdefghijkl.us-east-1.rds.amazonaws.com
 ```

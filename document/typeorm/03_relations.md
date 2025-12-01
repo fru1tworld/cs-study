@@ -157,7 +157,7 @@ export class User {
 }
 ```
 
-> **중요**: `@ManyToOne`은 독립적으로 사용 가능하지만, `@OneToMany`는 반드시 `@ManyToOne`과 함께 사용해야 합니다.
+> ** 중요**: `@ManyToOne`은 독립적으로 사용 가능하지만, `@OneToMany`는 반드시 `@ManyToOne`과 함께 사용해야 합니다.
 
 ### 외래 키만 있는 관계
 
@@ -357,7 +357,7 @@ cascade: ["recover"]
 cascade: ["insert", "update"]
 ```
 
-**주의**: cascade는 강력하지만 보안 위험과 예상치 못한 버그를 유발할 수 있습니다.
+** 주의**: cascade는 강력하지만 보안 위험과 예상치 못한 버그를 유발할 수 있습니다.
 
 ### onDelete 옵션
 
@@ -438,7 +438,7 @@ export class Question {
 const questions = await questionRepository.find()
 ```
 
-> **주의**: eager는 관계의 한 쪽에만 설정 가능합니다. QueryBuilder에서는 작동하지 않습니다.
+> ** 주의**: eager는 관계의 한 쪽에만 설정 가능합니다. QueryBuilder에서는 작동하지 않습니다.
 
 ### Lazy Loading (지연 로딩)
 
@@ -459,7 +459,7 @@ const question = await questionRepository.findOne({
 const categories = await question.categories  // 이 시점에 로드
 ```
 
-**주의**: Lazy loading은 실험적 기능입니다.
+** 주의**: Lazy loading은 실험적 기능입니다.
 
 ## Self-referencing Relations
 

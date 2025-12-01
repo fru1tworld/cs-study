@@ -60,7 +60,7 @@ CREATE INDEX idx_users_created ON users(created_at);
 CREATE INDEX idx_users_created ON users USING BTREE(created_at);
 ```
 
-**지원 연산자:**
+** 지원 연산자:**
 - `<`, `<=`, `=`, `>=`, `>`
 - `BETWEEN`, `IN`
 - `IS NULL`, `IS NOT NULL`
@@ -82,7 +82,7 @@ SELECT * FROM users WHERE name LIKE '%John';  -- 인덱스 미사용!
 CREATE INDEX idx_users_email_hash ON users USING HASH(email);
 ```
 
-**사용 시기:**
+** 사용 시기:**
 - 동등 비교만 필요한 경우
 - 범위 검색이 필요 없는 경우
 
@@ -107,7 +107,7 @@ CREATE INDEX idx_reservations_period ON reservations USING GIST(period);
 CREATE INDEX idx_articles_content ON articles USING GIST(to_tsvector('english', content));
 ```
 
-**사용 시기:**
+** 사용 시기:**
 - 기하학적 데이터 (point, polygon 등)
 - 범위 타입 (tsrange, daterange 등)
 - 전문 검색 (tsvector)
@@ -128,7 +128,7 @@ LIMIT 10;
 CREATE INDEX idx_data ON table_name USING SPGIST(column);
 ```
 
-**사용 시기:**
+** 사용 시기:**
 - quadtree, k-d tree, radix tree가 효율적인 데이터
 - 전화번호, IP 주소 등 계층적 데이터
 
@@ -148,7 +148,7 @@ CREATE INDEX idx_articles_search ON articles
 USING GIN(to_tsvector('english', title || ' ' || content));
 ```
 
-**사용 시기:**
+** 사용 시기:**
 - 배열 컬럼
 - JSONB 데이터
 - 전문 검색 (tsvector)
@@ -168,12 +168,12 @@ SELECT * FROM articles WHERE to_tsvector('english', content) @@ to_tsquery('post
 CREATE INDEX idx_logs_created ON logs USING BRIN(created_at);
 ```
 
-**특징:**
+** 특징:**
 - 매우 작은 인덱스 크기
 - 시계열 데이터에 최적
 - 물리적 순서와 값의 상관관계가 높은 경우 효과적
 
-**사용 시기:**
+** 사용 시기:**
 - 시간순 로그 데이터
 - 순차적으로 증가하는 ID
 - 대용량 테이블에서 저장 공간 절약이 필요한 경우
@@ -205,7 +205,7 @@ WHERE created_at BETWEEN '2024-01-01' AND '2024-01-31';
 CREATE INDEX idx_users_name_email ON users(last_name, first_name);
 ```
 
-**컬럼 순서가 중요:**
+** 컬럼 순서가 중요:**
 
 ```sql
 -- 이 인덱스 사용 가능
@@ -216,7 +216,7 @@ SELECT * FROM users WHERE last_name = 'Kim' AND first_name = 'John';
 SELECT * FROM users WHERE first_name = 'John';
 ```
 
-**순서 결정 기준:**
+** 순서 결정 기준:**
 1. 자주 검색되는 컬럼을 앞에
 2. 선택도(cardinality)가 높은 컬럼을 앞에
 3. 범위 조건 컬럼은 뒤에
@@ -241,7 +241,7 @@ CREATE INDEX idx_pending_orders ON orders(created_at)
 WHERE status = 'pending';
 ```
 
-**장점:**
+** 장점:**
 - 인덱스 크기 감소
 - 인덱스 유지 비용 감소
 - 자주 조회되는 데이터에 집중
@@ -263,7 +263,7 @@ CREATE INDEX idx_orders_year ON orders(EXTRACT(YEAR FROM created_at));
 CREATE INDEX idx_products_category ON products((data->>'category'));
 ```
 
-**사용 예시:**
+** 사용 예시:**
 
 ```sql
 -- 표현식 인덱스 활용
@@ -319,7 +319,7 @@ CREATE INDEX CONCURRENTLY idx_users_email ON users(email);
 -- - 실패 시 INVALID 상태의 인덱스가 남을 수 있음
 ```
 
-**유효하지 않은 인덱스 확인:**
+** 유효하지 않은 인덱스 확인:**
 
 ```sql
 SELECT indexrelid::regclass, indisvalid

@@ -4,7 +4,7 @@
 
 ### 동기 메서드를 비동기 메서드로 변환
 
-**동기 버전:**
+** 동기 버전:**
 
 ```java
 public class Shop {
@@ -27,7 +27,7 @@ public class Shop {
 }
 ```
 
-**비동기 버전:**
+** 비동기 버전:**
 
 ```java
 public Future<Double> getPriceAsync(String product) {
@@ -79,12 +79,12 @@ public List<String> findPricesParallel(String product) {
 }
 ```
 
-**장점:**
+** 장점:**
 
 - 간결한 코드
 - 내부적으로 공통 ForkJoinPool 사용
 
-**단점:**
+** 단점:**
 
 - 블로킹 I/O에 비효율적
 - 스레드 풀 크기 조정 어려움
@@ -113,7 +113,7 @@ public List<String> findPricesAsync(String product) {
 }
 ```
 
-**장점:**
+** 장점:**
 
 - 커스텀 Executor 사용 가능
 - I/O 바운드 작업에 최적
@@ -431,8 +431,8 @@ future.cancel(true);
 ## 정리
 
 1. **CompletableFuture로 비동기 API를 쉽게 구현할 수 있다**
-2. **커스텀 Executor로 스레드 풀을 세밀하게 제어할 수 있다**
+2. ** 커스텀 Executor로 스레드 풀을 세밀하게 제어할 수 있다**
 3. **thenCompose와 thenCombine으로 비동기 작업을 조합할 수 있다**
 4. **allOf와 anyOf로 여러 Future를 효율적으로 처리할 수 있다**
-5. **타임아웃과 예외 처리로 안정성을 높일 수 있다**
-6. **스트림과 결합하여 더 반응성 좋은 애플리케이션을 만들 수 있다**
+5. ** 타임아웃과 예외 처리로 안정성을 높일 수 있다**
+6. ** 스트림과 결합하여 더 반응성 좋은 애플리케이션을 만들 수 있다**

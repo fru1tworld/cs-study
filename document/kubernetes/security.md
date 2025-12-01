@@ -493,7 +493,7 @@ securityContext:
     - SYS_TIME          # 시스템 시간 변경
 ```
 
-**주요 Capabilities:**
+** 주요 Capabilities:**
 
 | Capability | 설명 |
 |------------|------|

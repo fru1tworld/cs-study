@@ -37,7 +37,7 @@ EXPLAIN ANALYZE SELECT * FROM users WHERE email = 'test@example.com';
 -- Execution Time: 0.050 ms
 ```
 
-**주요 지표:**
+** 주요 지표:**
 
 | 항목 | 설명 |
 |------|------|

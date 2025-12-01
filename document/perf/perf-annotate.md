@@ -200,12 +200,12 @@ sudo perf annotate -k /boot/vmlinux-$(uname -r) -s do_syscall_64 --stdio
 
 ### 소스 코드 주석을 위해 필요한 것
 
-1. **컴파일 시 `-g` 옵션**
+1. ** 컴파일 시 `-g` 옵션**
    ```bash
    gcc -g -O2 program.c -o program
    ```
 
-2. **디버그 패키지 설치**
+2. ** 디버그 패키지 설치**
    ```bash
    # Ubuntu/Debian
    sudo apt install libc6-dbg

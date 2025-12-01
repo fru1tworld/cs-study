@@ -4,9 +4,9 @@
 
 ### 1. 타겟 헬스 체크 실패
 
-**증상:** 타겟이 unhealthy 상태
+** 증상:** 타겟이 unhealthy 상태
 
-**원인 및 해결:**
+** 원인 및 해결:**
 
 | 원인 | 확인 방법 | 해결 |
 |------|----------|------|
@@ -17,7 +17,7 @@
 | 응답 타임아웃 | 애플리케이션 성능 확인 | 타임아웃 증가 또는 최적화 |
 | 인스턴스 상태 이상 | EC2 상태 확인 | 인스턴스 재시작 |
 
-**디버깅:**
+** 디버깅:**
 ```bash
 # 타겟 헬스 상태 확인
 aws elbv2 describe-target-health \
@@ -29,9 +29,9 @@ curl -v http://<target-ip>:<port>/health
 
 ### 2. 클라이언트 연결 실패
 
-**증상:** 클라이언트가 ALB에 연결할 수 없음
+** 증상:** 클라이언트가 ALB에 연결할 수 없음
 
-**원인 및 해결:**
+** 원인 및 해결:**
 
 | 원인 | 확인 방법 | 해결 |
 |------|----------|------|
@@ -40,7 +40,7 @@ curl -v http://<target-ip>:<port>/health
 | IGW 없음 | VPC 라우팅 테이블 확인 | 인터넷 게이트웨이 연결 |
 | DNS 미해석 | DNS 조회 테스트 | Route 53/DNS 설정 확인 |
 
-**디버깅:**
+** 디버깅:**
 ```bash
 # DNS 확인
 dig <alb-dns-name>
@@ -56,9 +56,9 @@ aws elbv2 describe-load-balancers \
 
 ### 3. HTTPS 인증서 오류
 
-**증상:** SSL/TLS 핸드셰이크 실패, 인증서 경고
+** 증상:** SSL/TLS 핸드셰이크 실패, 인증서 경고
 
-**원인 및 해결:**
+** 원인 및 해결:**
 
 | 원인 | 확인 방법 | 해결 |
 |------|----------|------|
@@ -67,7 +67,7 @@ aws elbv2 describe-load-balancers \
 | 기본 DNS 사용 | 요청 URL 확인 | 커스텀 도메인 사용 |
 | 보안 정책 불일치 | TLS 버전 확인 | 보안 정책 업데이트 |
 
-**디버깅:**
+** 디버깅:**
 ```bash
 # 인증서 확인
 openssl s_client -connect <alb-dns>:443 -servername <domain>
@@ -209,7 +209,7 @@ aws elbv2 describe-listener-certificates \
 ## 리소스 맵 활용
 
 ### 리소스 맵이란?
-ALB 콘솔에서 제공하는 **시각적 문제 진단 도구**입니다.
+ALB 콘솔에서 제공하는 ** 시각적 문제 진단 도구** 입니다.
 
 ### 기능
 - 타겟 그룹 및 타겟 상태 시각화
@@ -227,7 +227,7 @@ ALB 콘솔에서 제공하는 **시각적 문제 진단 도구**입니다.
 
 ### 높은 지연 시간
 
-**확인 사항:**
+** 확인 사항:**
 ```yaml
 CloudWatch 메트릭:
   - TargetResponseTime: 타겟 처리 시간
@@ -240,7 +240,7 @@ CloudWatch 메트릭:
   - response_processing_time
 ```
 
-**해결 방법:**
+** 해결 방법:**
 ```yaml
 타겟 측 최적화:
   - 애플리케이션 성능 개선
@@ -254,7 +254,7 @@ ALB 측 최적화:
 
 ### 높은 에러율
 
-**확인 사항:**
+** 확인 사항:**
 ```yaml
 CloudWatch 메트릭:
   - HTTPCode_ELB_5XX_Count
@@ -266,7 +266,7 @@ CloudWatch 메트릭:
   - target_status_code
 ```
 
-**해결 방법:**
+** 해결 방법:**
 ```yaml
 5xx 에러:
   - 타겟 로그 확인

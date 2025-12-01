@@ -186,19 +186,19 @@ pg_basebackup -D /backup/base_backup --checkpoint=fast
 
 ### PITR 복구
 
-1. **기존 데이터 디렉토리 비우기**
+1. ** 기존 데이터 디렉토리 비우기**
 
 ```bash
 rm -rf /var/lib/postgresql/data/*
 ```
 
-2. **베이스 백업 복원**
+2. ** 베이스 백업 복원**
 
 ```bash
 tar -xzf /backup/base_backup/base.tar.gz -C /var/lib/postgresql/data/
 ```
 
-3. **복구 설정**
+3. ** 복구 설정**
 
 **postgresql.conf 또는 postgresql.auto.conf:**
 
@@ -218,13 +218,13 @@ recovery_target_time = '2024-12-25 14:30:00'
 recovery_target_action = 'promote'
 ```
 
-4. **복구 시그널 파일 생성**
+4. ** 복구 시그널 파일 생성**
 
 ```bash
 touch /var/lib/postgresql/data/recovery.signal
 ```
 
-5. **서버 시작**
+5. ** 서버 시작**
 
 ```bash
 pg_ctl start -D /var/lib/postgresql/data
@@ -246,7 +246,7 @@ pg_basebackup \
     --wal-method=stream
 ```
 
-**옵션 설명:**
+** 옵션 설명:**
 - `-R`: 스탠바이 설정 자동 생성
 - `--wal-method=stream`: WAL을 스트리밍으로 수집
 
@@ -406,13 +406,13 @@ pg_dump -Fc dbname | gsutil cp - gs://bucket/backup.dump
 
 ### 백업 전략
 
-1. **일일 논리 백업** (pg_dump)
+1. ** 일일 논리 백업** (pg_dump)
    - 빠른 복구, 특정 테이블 복원
 
-2. **주간 베이스 백업** (pg_basebackup)
+2. ** 주간 베이스 백업** (pg_basebackup)
    - PITR 기반
 
-3. **지속적 WAL 아카이빙**
+3. ** 지속적 WAL 아카이빙**
    - 최소 데이터 손실
 
 ### 체크리스트

@@ -85,7 +85,7 @@ aws rds create-db-instance-read-replica \
 └───────────┘  └───────────┘  └───────────┘
 ```
 
-**적합한 경우:**
+** 적합한 경우:**
 - 읽기 비율이 높은 워크로드
 - 리포팅/분석 쿼리 분리
 - 읽기 성능 향상 필요
@@ -103,7 +103,7 @@ aws rds create-db-instance-read-replica \
 └─────────────────────┘     └─────────────────────┘
 ```
 
-**장점:**
+** 장점:**
 - 리전 장애 대비
 - 수동 승격으로 독립 인스턴스 전환
 - RTO 단축
@@ -115,7 +115,7 @@ aws rds create-db-instance-read-replica \
 리포팅/분석 워크로드 → 읽기 복제본
 ```
 
-**장점:**
+** 장점:**
 - 프로덕션 성능 영향 없음
 - 대용량 쿼리 분리 실행
 
@@ -181,7 +181,7 @@ aws cloudwatch get-metric-statistics \
               └──▶ 복제본 1-2
 ```
 
-**지원 엔진:**
+** 지원 엔진:**
 - MySQL ✅
 - MariaDB ✅
 - PostgreSQL ✅

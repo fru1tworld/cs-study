@@ -336,7 +336,7 @@ fun fail(message: String): Nothing {
 }
 ```
 
-**참고:** Kotlin에는 checked exception이 없습니다. 모든 예외는 unchecked입니다.
+** 참고:** Kotlin에는 checked exception이 없습니다. 모든 예외는 unchecked입니다.
 
 ---
 

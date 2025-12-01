@@ -2,7 +2,7 @@
 
 ## 개요
 
-ALB 액세스 로그는 로드 밸런서로 전송된 **모든 요청에 대한 상세 정보**를 캡처합니다. 트래픽 패턴 분석, 문제 해결, 보안 감사에 활용됩니다.
+ALB 액세스 로그는 로드 밸런서로 전송된 ** 모든 요청에 대한 상세 정보** 를 캡처합니다. 트래픽 패턴 분석, 문제 해결, 보안 감사에 활용됩니다.
 
 ## 특징
 
@@ -134,7 +134,7 @@ https 2024-01-15T12:00:00.123456Z app/my-alb/1234567890abcdef 203.0.113.1:54321 
 
 ### Amazon Athena 활용
 
-**테이블 생성:**
+** 테이블 생성:**
 ```sql
 CREATE EXTERNAL TABLE IF NOT EXISTS alb_logs (
     type string,
@@ -176,7 +176,7 @@ WITH SERDEPROPERTIES (
 LOCATION 's3://my-log-bucket/alb-logs/AWSLogs/123456789012/elasticloadbalancing/us-east-1/';
 ```
 
-**쿼리 예시:**
+** 쿼리 예시:**
 
 ```sql
 -- 상위 10개 클라이언트 IP

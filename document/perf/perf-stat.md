@@ -126,7 +126,7 @@ perf stat -e cycles:u,cycles:k ./my_program
 
 ## 멀티플렉싱과 스케일링
 
-PMU(Performance Monitoring Unit)의 카운터 수는 제한되어 있습니다 (일반적으로 4-8개). 측정할 이벤트가 카운터 수보다 많으면 **시분할 멀티플렉싱**이 발생합니다.
+PMU(Performance Monitoring Unit)의 카운터 수는 제한되어 있습니다 (일반적으로 4-8개). 측정할 이벤트가 카운터 수보다 많으면 ** 시분할 멀티플렉싱** 이 발생합니다.
 
 ```
 final_count = raw_count × (time_enabled / time_running)

@@ -132,7 +132,7 @@ spec:
     image: myapp:1.0
 ```
 
-**특징:**
+** 특징:**
 - 순차적으로 실행 (이전 완료 후 다음 시작)
 - 모든 init container가 완료되어야 앱 컨테이너 시작
 - 실패 시 Pod가 다시 시작됨
@@ -158,7 +158,7 @@ spec:
       mountPath: /var/log/app
 ```
 
-**일반적인 Sidecar 패턴:**
+** 일반적인 Sidecar 패턴:**
 - 로그 수집기 (Fluentd, Filebeat)
 - 프록시 (Envoy, Istio sidecar)
 - 설정 동기화
@@ -249,7 +249,7 @@ strategy:
     maxUnavailable: 25%  # 원하는 Pod 수 대비 최대 비가용 Pod
 ```
 
-**동작 예시 (replicas: 4):**
+** 동작 예시 (replicas: 4):**
 - maxSurge: 1 → 최대 5개 Pod 동시 실행
 - maxUnavailable: 0 → 항상 4개 이상 가용
 
@@ -309,7 +309,7 @@ spec:
         image: nginx:1.25
 ```
 
-**중요:** 일반적으로 ReplicaSet을 직접 생성하지 않고 Deployment를 사용합니다.
+** 중요:** 일반적으로 ReplicaSet을 직접 생성하지 않고 Deployment를 사용합니다.
 
 ---
 
@@ -390,12 +390,12 @@ web-2.nginx-headless.default.svc.cluster.local
 
 ### 배포/삭제 순서
 
-**배포 (Scale Up):**
+** 배포 (Scale Up):**
 ```
 web-0 (Ready) → web-1 (Ready) → web-2 (Ready)
 ```
 
-**삭제 (Scale Down):**
+** 삭제 (Scale Down):**
 ```
 web-2 (Terminated) → web-1 (Terminated) → web-0 (Terminated)
 ```
@@ -621,7 +621,7 @@ spec:
 * * * * *
 ```
 
-**예시:**
+** 예시:**
 
 | 스케줄 | 설명 |
 |--------|------|
@@ -631,7 +631,7 @@ spec:
 | `0 0 * * 0` | 매주 일요일 자정 |
 | `0 0 1 * *` | 매월 1일 자정 |
 
-**매크로:**
+** 매크로:**
 
 | 매크로 | 동등한 표현 |
 |--------|-------------|

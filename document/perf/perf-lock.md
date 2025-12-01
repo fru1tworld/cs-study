@@ -6,7 +6,7 @@
 
 `perf lock`은 커널 락의 동작과 경합 상황을 분석합니다. 스핀락, 뮤텍스, rwlock 등 다양한 커널 락 유형의 대기 시간과 경합 패턴을 추적할 수 있습니다.
 
-> **참고**: `perf lock`은 **커널 락만** 추적합니다. 유저 스페이스 락(pthread_mutex 등)은 추적하지 않습니다.
+> ** 참고**: `perf lock`은 ** 커널 락만** 추적합니다. 유저 스페이스 락(pthread_mutex 등)은 추적하지 않습니다.
 
 ---
 
@@ -273,7 +273,7 @@ sudo perf lock contention -abto -Y mutex sleep 5
 sudo perf lock contention -ab sleep 5
 ```
 
-**장점**:
+** 장점**:
 - 실시간 분석
 - 낮은 오버헤드
 - 심볼 해석
@@ -289,7 +289,7 @@ sudo perf lock record -a sleep 5
 perf lock report
 ```
 
-**장점**:
+** 장점**:
 - BPF 미지원 시스템에서 사용 가능
 - 일관된 결과 (저장된 데이터 기반)
 

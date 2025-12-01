@@ -383,7 +383,7 @@ fun <T : Any> List<T>.firstOrThrow(): T {
 
 ## 플랫폼 타입 (Java 상호 운용)
 
-Java에서 온 타입은 **플랫폼 타입**으로, nullable 여부가 불명확합니다.
+Java에서 온 타입은 ** 플랫폼 타입** 으로, nullable 여부가 불명확합니다.
 
 ```kotlin
 // Java 코드

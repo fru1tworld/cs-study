@@ -2,7 +2,7 @@
 
 ## 개요
 
-ECS Exec는 **실행 중인 컨테이너와 직접 상호작용**할 수 있는 기능입니다. SSH 키 관리나 인바운드 포트 개방 없이 컨테이너에 접속할 수 있습니다.
+ECS Exec는 ** 실행 중인 컨테이너와 직접 상호작용** 할 수 있는 기능입니다. SSH 키 관리나 인바운드 포트 개방 없이 컨테이너에 접속할 수 있습니다.
 
 ## 사용 사례
 
@@ -64,7 +64,7 @@ sudo dpkg -i session-manager-plugin.deb
 }
 ```
 
-**사용자 IAM 정책:**
+** 사용자 IAM 정책:**
 
 ```json
 {
@@ -85,7 +85,7 @@ sudo dpkg -i session-manager-plugin.deb
 
 ### 3. 서비스에서 활성화
 
-**서비스 생성 시:**
+** 서비스 생성 시:**
 
 ```bash
 aws ecs create-service \
@@ -96,7 +96,7 @@ aws ecs create-service \
     --enable-execute-command
 ```
 
-**기존 서비스 업데이트:**
+** 기존 서비스 업데이트:**
 
 ```bash
 aws ecs update-service \
@@ -106,7 +106,7 @@ aws ecs update-service \
     --force-new-deployment
 ```
 
-**독립 태스크 실행 시:**
+** 독립 태스크 실행 시:**
 
 ```bash
 aws ecs run-task \

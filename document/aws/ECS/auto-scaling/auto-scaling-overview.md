@@ -30,7 +30,7 @@ Amazon ECS는 두 가지 레벨의 Auto Scaling을 제공합니다:
 
 ### 개요
 
-Application Auto Scaling 서비스를 통해 **태스크 수를 자동으로 조정**합니다.
+Application Auto Scaling 서비스를 통해 ** 태스크 수를 자동으로 조정** 합니다.
 
 ### 스케일링 유형
 
@@ -45,7 +45,7 @@ Application Auto Scaling 서비스를 통해 **태스크 수를 자동으로 조
 
 목표 메트릭 값을 설정하면 자동으로 태스크 수를 조정합니다.
 
-**설정:**
+** 설정:**
 
 ```bash
 aws application-autoscaling register-scalable-target \
@@ -75,7 +75,7 @@ aws application-autoscaling put-scaling-policy \
     }'
 ```
 
-**사전 정의 메트릭:**
+** 사전 정의 메트릭:**
 
 | 메트릭 | 설명 |
 |--------|------|
@@ -83,7 +83,7 @@ aws application-autoscaling put-scaling-policy \
 | ECSServiceAverageMemoryUtilization | 평균 메모리 사용률 |
 | ALBRequestCountPerTarget | 대상당 ALB 요청 수 |
 
-**커스텀 메트릭:**
+** 커스텀 메트릭:**
 
 ```json
 {
@@ -136,7 +136,7 @@ aws application-autoscaling put-scaling-policy \
     }'
 ```
 
-**조정 유형:**
+** 조정 유형:**
 
 | 유형 | 설명 |
 |------|------|
@@ -189,7 +189,7 @@ aws application-autoscaling put-scheduled-action \
 
 ### 개요
 
-Capacity Provider의 관리형 스케일링을 통해 **EC2 인스턴스 수를 자동으로 조정**합니다.
+Capacity Provider의 관리형 스케일링을 통해 **EC2 인스턴스 수를 자동으로 조정** 합니다.
 
 ### 핵심 메트릭: CapacityProviderReservation
 
@@ -289,7 +289,7 @@ aws ecs create-capacity-provider \
 }
 ```
 
-**권장:**
+** 권장:**
 - Scale Out: 짧게 (60초) - 빠른 대응
 - Scale In: 길게 (300초) - 안정성 확보
 

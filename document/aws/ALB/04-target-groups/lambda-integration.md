@@ -2,7 +2,7 @@
 
 ## 개요
 
-Application Load Balancer는 Lambda 함수를 타겟으로 등록하여 **HTTP 요청을 직접 Lambda 함수로 라우팅**할 수 있습니다. 서버리스 아키텍처에서 API Gateway의 대안으로 사용됩니다.
+Application Load Balancer는 Lambda 함수를 타겟으로 등록하여 **HTTP 요청을 직접 Lambda 함수로 라우팅** 할 수 있습니다. 서버리스 아키텍처에서 API Gateway의 대안으로 사용됩니다.
 
 ## 특징
 
@@ -205,7 +205,7 @@ aws elbv2 register-targets \
 
 ### 설정
 
-Lambda 타겟에 대한 헬스 체크는 **선택 사항**입니다.
+Lambda 타겟에 대한 헬스 체크는 ** 선택 사항** 입니다.
 
 ```bash
 aws elbv2 modify-target-group \

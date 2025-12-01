@@ -205,7 +205,7 @@ volumes:
 | 볼륨 마운트 | ✅ (kubelet 동기화 주기에 따라) |
 | subPath 마운트 | ❌ |
 
-**업데이트 지연:**
+** 업데이트 지연:**
 - kubelet 동기화 주기 (기본 1분)
 - ConfigMap 캐시 전파 지연
 - 총 지연: 동기화 주기 + 캐시 TTL
@@ -224,11 +224,11 @@ data:
   key: value
 ```
 
-**장점:**
+** 장점:**
 - API 서버 부하 감소 (watch 불필요)
 - 실수로 인한 설정 변경 방지
 
-**주의:** immutable 설정 후에는 수정 불가, 삭제 후 재생성 필요
+** 주의:** immutable 설정 후에는 수정 불가, 삭제 후 재생성 필요
 
 ### 제한 사항
 
@@ -442,7 +442,7 @@ data:
 
 #### 1. etcd 암호화
 
-기본적으로 Secret은 etcd에 **암호화되지 않은 상태**로 저장됩니다.
+기본적으로 Secret은 etcd에 ** 암호화되지 않은 상태** 로 저장됩니다.
 
 ```yaml
 # EncryptionConfiguration 예시

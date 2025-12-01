@@ -4,7 +4,7 @@
 
 ### 1. VPC 구성
 
-- 최소 **2개의 가용 영역(AZ)**에 서브넷 구성
+- 최소 **2개의 가용 영역(AZ)** 에 서브넷 구성
 - 각 서브넷은 최소 `/27` CIDR 블록 필요 (8개 이상의 여유 IP 주소)
 - Internet-facing ALB의 경우 퍼블릭 서브넷 필요
 
@@ -34,7 +34,7 @@
 1. EC2 콘솔 → **Load Balancers** → **Create load balancer**
 2. **Application Load Balancer** 선택
 
-**기본 구성:**
+** 기본 구성:**
 | 설정 | 설명 |
 |------|------|
 | 이름 | 고유한 로드 밸런서 이름 |
@@ -58,7 +58,7 @@ VPC: 대상 VPC 선택
 
 ### Step 4: 리스너 구성
 
-**기본 리스너 설정:**
+** 기본 리스너 설정:**
 
 ```yaml
 Protocol: HTTP
@@ -77,7 +77,7 @@ Default action: Forward to target group
 
 ### Step 5: 타겟 그룹 생성
 
-**타겟 그룹 설정:**
+** 타겟 그룹 설정:**
 
 ```yaml
 Target type: Instances | IP addresses | Lambda function
@@ -141,10 +141,10 @@ my-alb-1234567890.us-east-1.elb.amazonaws.com
 
 ALB 생성 후 추가로 구성할 수 있는 항목:
 
-1. **리스너 규칙 추가**: 경로/호스트 기반 라우팅
+1. ** 리스너 규칙 추가**: 경로/호스트 기반 라우팅
 2. **HTTPS 설정**: SSL/TLS 인증서 및 보안 정책
-3. **로깅 활성화**: 액세스 로그를 S3에 저장
-4. **모니터링 설정**: CloudWatch 알람 구성
+3. ** 로깅 활성화**: 액세스 로그를 S3에 저장
+4. ** 모니터링 설정**: CloudWatch 알람 구성
 5. **WAF 연동**: 웹 애플리케이션 방화벽 적용
 
 ## 참고 자료

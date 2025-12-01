@@ -20,7 +20,7 @@ await dataSource.manager.transaction(async (transactionalEntityManager) => {
 });
 ```
 
-> **중요**: 트랜잭션 내에서는 반드시 전달받은 `transactionalEntityManager`만 사용해야 합니다. 글로벌 EntityManager를 사용하면 안 됩니다.
+> ** 중요**: 트랜잭션 내에서는 반드시 전달받은 `transactionalEntityManager`만 사용해야 합니다. 글로벌 EntityManager를 사용하면 안 됩니다.
 
 ### 격리 수준 (Isolation Level)
 
@@ -150,7 +150,7 @@ export class User {
 | `@BeforeRecover`    | 복구 전        |
 | `@AfterRecover`     | 복구 후        |
 
-> **주의**: 리스너 내에서는 데이터베이스 작업을 하지 마세요. 대신 Subscriber를 사용하세요.
+> ** 주의**: 리스너 내에서는 데이터베이스 작업을 하지 마세요. 대신 Subscriber를 사용하세요.
 
 ### Subscriber
 
@@ -504,7 +504,7 @@ export class User {
 }
 ```
 
-> **주의**: 동시 생성 시 `migrationsTransactionMode: "none"` 설정 필요
+> ** 주의**: 동시 생성 시 `migrationsTransactionMode: "none"` 설정 필요
 
 ## Active Record vs Data Mapper
 

@@ -2,7 +2,7 @@
 
 ## 개요
 
-Service Connect는 ECS 서비스 간 통신을 관리하는 기능입니다. **Service Discovery와 Service Mesh를 Amazon ECS에 통합**하여 VPC DNS 구성에 의존하지 않고 서비스를 연결할 수 있습니다.
+Service Connect는 ECS 서비스 간 통신을 관리하는 기능입니다. **Service Discovery와 Service Mesh를 Amazon ECS에 통합** 하여 VPC DNS 구성에 의존하지 않고 서비스를 연결할 수 있습니다.
 
 ## 작동 방식
 
@@ -324,9 +324,9 @@ WordPress 컨테이너에서 `mysql --host=mysql`로 접속 가능.
 
 ## 제한 사항
 
-1. **네임스페이스 범위**: 같은 네임스페이스 내 서비스만 연결 가능
-2. **외부 연결**: 네임스페이스 외부 서비스는 로드 밸런서 필요
-3. **지원 플랫폼**: Fargate 및 EC2 (Linux/Windows)
+1. ** 네임스페이스 범위**: 같은 네임스페이스 내 서비스만 연결 가능
+2. ** 외부 연결**: 네임스페이스 외부 서비스는 로드 밸런서 필요
+3. ** 지원 플랫폼**: Fargate 및 EC2 (Linux/Windows)
 
 ## 모니터링
 
@@ -360,7 +360,7 @@ Service Connect 프록시는 다음 메트릭을 자동 수집:
 
 - **Service Connect 자체**: 추가 비용 없음
 - **AWS Cloud Map**: 추가 비용 없음
-- **컴퓨팅 리소스**: 프록시 컨테이너의 vCPU/메모리 비용만 발생
+- ** 컴퓨팅 리소스**: 프록시 컨테이너의 vCPU/메모리 비용만 발생
 
 ## 참고 자료
 

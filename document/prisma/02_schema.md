@@ -4,7 +4,7 @@
 
 ## 개요
 
-Prisma Schema는 Prisma ORM의 중앙 구성 파일로, **Prisma Schema Language(PSL)**를 사용합니다.
+Prisma Schema는 Prisma ORM의 중앙 구성 파일로, **Prisma Schema Language(PSL)** 를 사용합니다.
 
 ---
 
@@ -101,7 +101,7 @@ datasource db {
 
 ### 주의사항
 
-- **단일 데이터 소스만 허용**: 하나의 스키마에는 하나의 `datasource`만 정의 가능
+- ** 단일 데이터 소스만 허용**: 하나의 스키마에는 하나의 `datasource`만 정의 가능
 - **Prisma v7 변경사항**: `url`, `directUrl`, `shadowDatabaseUrl` 필드가 deprecated됨
 
 ---
@@ -286,7 +286,7 @@ model User {
 }
 ```
 
-**사용 가능한 함수:**
+** 사용 가능한 함수:**
 
 | 함수 | 설명 |
 |-----|------|

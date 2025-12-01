@@ -100,7 +100,7 @@ Cluster → Service → Task → Container
 
 단일 명령으로 고가용성, 확장 가능한 컨테이너 애플리케이션을 배포합니다.
 
-**특징:**
+** 특징:**
 - 도메인, 네트워킹, 로드 밸런싱, 오토 스케일링 자동 설정
 - 최대 25개 서비스가 하나의 ALB 공유 (비용 절감)
 - 추가 비용 없음
@@ -203,7 +203,7 @@ ALB → Listener → Rules → Target Group → Targets
 ALB → Target Group (type: ip) → ECS Tasks (awsvpc mode)
 ```
 
-**중요 사항:**
+** 중요 사항:**
 - `awsvpc` 네트워크 모드 사용 시 Target Type은 `ip`로 설정
 - Dynamic Host Port Mapping 지원
 - 서비스 연결을 위한 IAM 서비스 링크 역할 필요

@@ -214,7 +214,7 @@ spec:
         averageValue: 100
 ```
 
-**다중 메트릭 동작:** 각 메트릭에서 계산된 복제본 수 중 가장 큰 값을 선택합니다.
+** 다중 메트릭 동작:** 각 메트릭에서 계산된 복제본 수 중 가장 큰 값을 선택합니다.
 
 ### 스케일링 알고리즘
 
@@ -222,7 +222,7 @@ spec:
 desiredReplicas = ceil(currentReplicas × (currentMetric / desiredMetric))
 ```
 
-**예시:**
+** 예시:**
 - 현재 복제본: 3
 - 현재 CPU: 90%
 - 목표 CPU: 60%
@@ -403,9 +403,9 @@ Recommendation:
 
 ### VPA와 HPA 함께 사용
 
-**주의:** 동일한 메트릭(CPU/Memory)으로 VPA와 HPA를 함께 사용하면 충돌이 발생합니다.
+** 주의:** 동일한 메트릭(CPU/Memory)으로 VPA와 HPA를 함께 사용하면 충돌이 발생합니다.
 
-**권장 조합:**
+** 권장 조합:**
 - HPA: CPU/Memory 외 커스텀 메트릭
 - VPA: CPU/Memory
 

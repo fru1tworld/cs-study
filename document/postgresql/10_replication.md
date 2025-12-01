@@ -59,7 +59,7 @@ hot_standby = on
 host    replication     repl_user       192.168.1.0/24    scram-sha-256
 ```
 
-**복제 사용자 생성:**
+** 복제 사용자 생성:**
 
 ```sql
 CREATE ROLE repl_user WITH REPLICATION LOGIN PASSWORD 'password';
@@ -67,13 +67,13 @@ CREATE ROLE repl_user WITH REPLICATION LOGIN PASSWORD 'password';
 
 ### Standby 서버 설정
 
-**베이스 백업 생성:**
+** 베이스 백업 생성:**
 
 ```bash
 pg_basebackup -h primary_host -U repl_user -D /var/lib/postgresql/data -Fp -Xs -P -R
 ```
 
-**옵션 설명:**
+** 옵션 설명:**
 - `-R`: standby.signal 및 연결 정보 자동 생성
 - `-Xs`: WAL 스트리밍
 - `-Fp`: plain 포맷
@@ -159,7 +159,7 @@ synchronous_commit = on
 synchronous_standby_names = 'FIRST 1 (standby1, standby2)'
 ```
 
-**동기화 옵션:**
+** 동기화 옵션:**
 
 | 옵션 | 설명 |
 |------|------|
@@ -186,7 +186,7 @@ SET synchronous_commit = 'remote_apply'; -- 원격 적용
 
 논리 복제는 테이블 수준에서 데이터 변경사항을 복제합니다.
 
-**특징:**
+** 특징:**
 - 특정 테이블만 복제 가능
 - 다른 버전 간 복제 가능
 - 양방향 복제 가능
@@ -331,7 +331,7 @@ postgresql:
 
 Standby 서버가 다른 Standby의 소스가 됩니다.
 
-**구조:**
+** 구조:**
 ```
 Primary -> Standby1 -> Standby2
                    -> Standby3

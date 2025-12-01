@@ -20,7 +20,7 @@ Amazon RDS는 저장 데이터와 전송 데이터 모두에 대해 암호화를
 | 키 유형 | 설명 | 사용 사례 |
 |--------|------|----------|
 | **AWS 관리형 키** | AWS가 생성 및 관리 | 간편한 설정, 추가 비용 없음 |
-| **고객 관리형 키** | 고객이 생성 및 관리 | 세부 제어, 규정 준수 요구 |
+| ** 고객 관리형 키** | 고객이 생성 및 관리 | 세부 제어, 규정 준수 요구 |
 
 #### 고객 관리형 키 생성
 
@@ -52,7 +52,7 @@ aws rds create-db-instance \
 
 ### 중요 제한사항
 
-⚠️ **주의사항:**
+⚠️ ** 주의사항:**
 - 암호화는 DB 인스턴스 생성 시에만 활성화 가능
 - 이미 생성된 인스턴스에서 암호화 활성화/비활성화 불가
 - 암호화된 인스턴스의 KMS 키 변경 불가
@@ -61,14 +61,14 @@ aws rds create-db-instance \
 
 기존 비암호화 인스턴스를 암호화하려면:
 
-1. **스냅샷 생성**
+1. ** 스냅샷 생성**
 ```bash
 aws rds create-db-snapshot \
     --db-instance-identifier mydb \
     --db-snapshot-identifier mydb-snapshot
 ```
 
-2. **암호화된 스냅샷 복사**
+2. ** 암호화된 스냅샷 복사**
 ```bash
 aws rds copy-db-snapshot \
     --source-db-snapshot-identifier mydb-snapshot \
@@ -77,7 +77,7 @@ aws rds copy-db-snapshot \
     --copy-tags
 ```
 
-3. **암호화된 스냅샷에서 복원**
+3. ** 암호화된 스냅샷에서 복원**
 ```bash
 aws rds restore-db-instance-from-db-snapshot \
     --db-instance-identifier mydb-encrypted \
@@ -219,7 +219,7 @@ aws rds modify-db-parameter-group \
 
 대부분의 현재 세대 인스턴스 클래스에서 암호화를 지원합니다.
 
-**미지원 인스턴스 클래스 (레거시):**
+** 미지원 인스턴스 클래스 (레거시):**
 - db.m1.*
 - db.m2.*
 - db.t1.*

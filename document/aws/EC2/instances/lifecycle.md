@@ -85,10 +85,10 @@ aws ec2 start-instances --instance-ids i-xxxxxxxxx
 | 프라이빗 IPv4 | 유지 |
 | 퍼블릭 IPv4 | 새로 할당 |
 | Elastic IP | 유지 |
-| 인스턴스 스토어 | **데이터 손실** |
+| 인스턴스 스토어 | ** 데이터 손실** |
 | EBS 볼륨 | 유지 |
 
-> **중요**: 인스턴스 스토어 기반 인스턴스는 중지할 수 없습니다. EBS 기반 인스턴스만 중지/시작이 가능합니다.
+> ** 중요**: 인스턴스 스토어 기반 인스턴스는 중지할 수 없습니다. EBS 기반 인스턴스만 중지/시작이 가능합니다.
 
 ### 휴면화(Hibernate)
 
@@ -103,9 +103,9 @@ aws ec2 stop-instances --instance-ids i-xxxxxxxxx --hibernate
 | 실행 중인 프로세스 | 재개 시 복원 |
 | 프라이빗 IPv4 | 유지 |
 | 퍼블릭 IPv4 | 새로 할당 |
-| 인스턴스 스토어 | **데이터 손실** |
+| 인스턴스 스토어 | ** 데이터 손실** |
 
-**휴면화 요구사항:**
+** 휴면화 요구사항:**
 - EBS 루트 볼륨에 충분한 공간
 - EBS 볼륨 암호화 필수
 - 지원되는 인스턴스 타입 (M3, M4, M5, C3, C4, C5, R3, R4, R5 등)
@@ -123,7 +123,7 @@ aws ec2 terminate-instances --instance-ids i-xxxxxxxxx
 | 프라이빗 IPv4 | 해제 |
 | 퍼블릭 IPv4 | 해제 |
 | Elastic IP | 연결 해제 (삭제 아님) |
-| 인스턴스 스토어 | **데이터 손실** |
+| 인스턴스 스토어 | ** 데이터 손실** |
 | EBS 볼륨 | 설정에 따라 삭제 또는 유지 |
 
 ## 종료 보호(Termination Protection)

@@ -2,7 +2,7 @@
 
 ## 개요
 
-Task Definition은 **애플리케이션의 청사진**입니다. JSON 형식의 텍스트 파일로, 컨테이너 실행에 필요한 모든 파라미터를 정의합니다.
+Task Definition은 ** 애플리케이션의 청사진** 입니다. JSON 형식의 텍스트 파일로, 컨테이너 실행에 필요한 모든 파라미터를 정의합니다.
 
 ## Task Definition 구조
 
@@ -181,7 +181,7 @@ Task Definition은 **애플리케이션의 청사진**입니다. JSON 형식의 
 }
 ```
 
-**지원 로그 드라이버:**
+** 지원 로그 드라이버:**
 - `awslogs`: CloudWatch Logs
 - `splunk`: Splunk
 - `awsfirelens`: FireLens (Fluentd/Fluent Bit)
@@ -314,7 +314,7 @@ Task Definition은 **애플리케이션의 청사진**입니다. JSON 형식의 
 
 ### Task Role (태스크 역할)
 
-**컨테이너 내 애플리케이션이 사용하는 역할**
+** 컨테이너 내 애플리케이션이 사용하는 역할**
 
 예시: S3 접근 권한
 

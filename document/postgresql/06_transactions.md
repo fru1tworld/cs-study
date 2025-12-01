@@ -89,7 +89,7 @@ PostgreSQL은 MVCC를 사용하여 동시성을 관리합니다.
 
 ### MVCC 원리
 
-- 각 트랜잭션은 데이터의 **스냅샷**을 봅니다
+- 각 트랜잭션은 데이터의 ** 스냅샷** 을 봅니다
 - 읽기가 쓰기를 차단하지 않습니다
 - 쓰기가 읽기를 차단하지 않습니다
 - 데이터 수정 시 새 버전을 생성합니다
@@ -175,7 +175,7 @@ SELECT balance FROM accounts WHERE id = 1;  -- 1000 (여전히 동일!)
 COMMIT;
 ```
 
-**직렬화 실패:**
+** 직렬화 실패:**
 
 ```sql
 -- 세션 A
@@ -279,7 +279,7 @@ UPDATE accounts SET balance = 200 WHERE id = 1;
 
 ### 데드락 방지 전략
 
-1. **일관된 순서로 접근**
+1. ** 일관된 순서로 접근**
 ```sql
 -- 항상 낮은 ID 먼저 잠금
 BEGIN;
@@ -289,7 +289,7 @@ UPDATE accounts SET balance = 200 WHERE id = 2;
 COMMIT;
 ```
 
-2. **락 타임아웃 설정**
+2. ** 락 타임아웃 설정**
 ```sql
 SET deadlock_timeout = '1s';
 ```
@@ -315,7 +315,7 @@ SELECT pg_try_advisory_lock(12345);  -- true/false 반환
 SELECT pg_advisory_lock(1, 100);  -- (namespace, key)
 ```
 
-**사용 예시:**
+** 사용 예시:**
 
 ```sql
 -- 작업 큐에서 단일 작업자만 처리하도록

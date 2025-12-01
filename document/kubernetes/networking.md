@@ -97,7 +97,7 @@ spec:
     targetPort: 8080
 ```
 
-**접근:**
+** 접근:**
 ```
 http://backend-service.default.svc.cluster.local:80
 http://backend-service.default:80
@@ -123,7 +123,7 @@ spec:
     nodePort: 30080  # 30000-32767 범위
 ```
 
-**접근:**
+** 접근:**
 ```
 http://<NodeIP>:30080
 ```
@@ -150,7 +150,7 @@ spec:
     targetPort: 8080
 ```
 
-**상태 확인:**
+** 상태 확인:**
 ```bash
 kubectl get svc my-loadbalancer
 # EXTERNAL-IP 컬럼에서 로드 밸런서 IP 확인
@@ -170,7 +170,7 @@ spec:
   externalName: database.example.com
 ```
 
-**사용:**
+** 사용:**
 ```
 # 클러스터 내에서 external-db로 접근하면
 # database.example.com으로 리다이렉트
@@ -208,7 +208,7 @@ spec:
 nslookup headless-service.default.svc.cluster.local
 ```
 
-**사용 사례:**
+** 사용 사례:**
 - StatefulSet과 함께 사용
 - 클라이언트 측 로드밸런싱
 - 서비스 디스커버리
@@ -337,9 +337,9 @@ spec:
 
 ### Ingress Controller
 
-**중요:** Ingress 리소스만으로는 동작하지 않습니다. 반드시 Ingress Controller가 필요합니다.
+** 중요:** Ingress 리소스만으로는 동작하지 않습니다. 반드시 Ingress Controller가 필요합니다.
 
-**주요 Ingress Controller:**
+** 주요 Ingress Controller:**
 
 | Controller | 설명 |
 |------------|------|
@@ -407,7 +407,7 @@ spec:
               number: 80
 ```
 
-**주의:** `*.example.com`은 `api.example.com`과 일치하지만, `foo.bar.example.com`과는 일치하지 않습니다.
+** 주의:** `*.example.com`은 `api.example.com`과 일치하지만, `foo.bar.example.com`과는 일치하지 않습니다.
 
 ### TLS 설정
 
@@ -503,7 +503,7 @@ NetworkPolicy를 지원하는 CNI 플러그인이 필요합니다:
 - Weave Net
 - Romana
 
-**주의:** Flannel은 NetworkPolicy를 지원하지 않습니다.
+** 주의:** Flannel은 NetworkPolicy를 지원하지 않습니다.
 
 ### 기본 구조
 
@@ -703,7 +703,7 @@ spec:
 
 ### 정책 평가 규칙
 
-1. 정책은 **가산적(Additive)**으로 적용
+1. 정책은 ** 가산적(Additive)** 으로 적용
 2. 정책 간 충돌 없음 - 하나라도 허용하면 트래픽 통과
 3. 연결이 허용되려면:
    - 송신 Pod의 Egress 정책 통과

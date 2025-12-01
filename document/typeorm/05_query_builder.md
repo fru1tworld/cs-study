@@ -196,7 +196,7 @@ qb.limit(5)
   .offset(10)
 ```
 
-> **주의**: JOIN이 있는 쿼리에서 `limit`/`offset`은 예상과 다르게 동작할 수 있습니다. `take`/`skip`을 사용하세요.
+> ** 주의**: JOIN이 있는 쿼리에서 `limit`/`offset`은 예상과 다르게 동작할 수 있습니다. `take`/`skip`을 사용하세요.
 
 ## JOIN
 

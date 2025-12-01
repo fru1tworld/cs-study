@@ -45,7 +45,7 @@ npx prisma init --output ./src/prisma
 npx prisma init --db
 ```
 
-**생성되는 파일:**
+** 생성되는 파일:**
 - `prisma/schema.prisma` - Prisma 스키마 파일
 - `.env` - 환경 변수 파일
 
@@ -120,7 +120,7 @@ npx prisma db push --skip-generate
 npx prisma db push --force-reset
 ```
 
-**사용 케이스:**
+** 사용 케이스:**
 - 프로토타이핑
 - 로컬 개발
 - MongoDB (Migrate 미지원)
@@ -155,7 +155,7 @@ npx prisma db pull --print
 npx prisma db seed
 ```
 
-**설정 (package.json):**
+** 설정 (package.json):**
 ```json
 {
   "prisma": {
@@ -200,7 +200,7 @@ npx prisma migrate dev --skip-seed
 npx prisma migrate dev --skip-generate
 ```
 
-**동작:**
+** 동작:**
 1. Shadow Database에서 마이그레이션 검증
 2. 새 마이그레이션 파일 생성
 3. 마이그레이션 적용
@@ -217,7 +217,7 @@ npx prisma migrate dev --skip-generate
 npx prisma migrate deploy
 ```
 
-**특징:**
+** 특징:**
 - 대기 중인 마이그레이션만 적용
 - 새 마이그레이션 생성 안 함
 - Shadow Database 사용 안 함
@@ -240,7 +240,7 @@ npx prisma migrate reset --force
 npx prisma migrate reset --skip-seed
 ```
 
-**동작:**
+** 동작:**
 1. 데이터베이스 삭제 (또는 스키마)
 2. 데이터베이스 재생성
 3. 모든 마이그레이션 적용
@@ -256,7 +256,7 @@ npx prisma migrate reset --skip-seed
 npx prisma migrate status
 ```
 
-**출력 정보:**
+** 출력 정보:**
 - 적용된 마이그레이션
 - 대기 중인 마이그레이션
 - 실패한 마이그레이션
@@ -276,7 +276,7 @@ npx prisma migrate resolve --applied 20231128000000_migration_name
 npx prisma migrate resolve --rolled-back 20231128000000_migration_name
 ```
 
-**사용 케이스:**
+** 사용 케이스:**
 - 베이스라인 마이그레이션 설정
 - 실패한 마이그레이션 처리
 - 수동 마이그레이션 후 상태 동기화

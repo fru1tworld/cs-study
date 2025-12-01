@@ -3,7 +3,7 @@
 ## 시스템 요구사항
 
 - **Node.js**: v18.12 이상 (독립 실행형 설치 제외)
-- **지원 OS**: Windows, macOS, Linux
+- ** 지원 OS**: Windows, macOS, Linux
 
 ## 설치 방법
 
@@ -98,7 +98,7 @@ pnpm self-update --version <version>
 npm rm -g pnpm
 ```
 
-**독립 실행형으로 설치한 경우:**
+** 독립 실행형으로 설치한 경우:**
 
 1. pnpm 홈 디렉터리 삭제:
    ```bash
@@ -132,7 +132,7 @@ Set-Alias -Name pn -Value pnpm
 
 Microsoft Defender가 pnpm 설치 속도를 저하시킬 수 있다.
 
-**해결책:**
+** 해결책:**
 Windows 보안 설정에서 pnpm 저장소 경로를 제외 목록에 추가:
 ```
 %LOCALAPPDATA%\pnpm\store

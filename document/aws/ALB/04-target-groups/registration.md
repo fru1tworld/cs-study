@@ -4,7 +4,7 @@
 
 ### 등록 요구사항
 
-**인스턴스 타겟:**
+** 인스턴스 타겟:**
 ```yaml
 조건:
   - 인스턴스 상태: running
@@ -85,7 +85,7 @@ aws elbv2 register-targets \
 
 ### 연결 드레이닝 (Connection Draining)
 
-타겟 해제 시 **진행 중인 요청이 완료될 때까지 대기**합니다.
+타겟 해제 시 ** 진행 중인 요청이 완료될 때까지 대기** 합니다.
 
 ```yaml
 동작:
@@ -101,7 +101,7 @@ aws elbv2 register-targets \
 |------|-------|------|
 | `deregistration_delay.timeout_seconds` | 300초 | 0-3600초 |
 
-**설정 변경:**
+** 설정 변경:**
 ```bash
 aws elbv2 modify-target-group-attributes \
     --target-group-arn <arn> \
@@ -142,7 +142,7 @@ aws elbv2 describe-target-health \
 
 ## Slow Start 모드
 
-새로 등록된 타겟에 **점진적으로 트래픽을 증가**시킵니다.
+새로 등록된 타겟에 ** 점진적으로 트래픽을 증가** 시킵니다.
 
 ### 설정
 
@@ -150,7 +150,7 @@ aws elbv2 describe-target-health \
 |------|-------|------|
 | `slow_start.duration_seconds` | 0 (비활성화) | 30-900초 |
 
-**활성화:**
+** 활성화:**
 ```bash
 aws elbv2 modify-target-group-attributes \
     --target-group-arn <arn> \
@@ -209,7 +209,7 @@ aws elbv2 modify-target-group-attributes \
 ## 가용 영역별 타겟 배치
 
 ### 권장 사항
-- 각 활성화된 가용 영역에 **최소 1개 이상**의 타겟 등록
+- 각 활성화된 가용 영역에 ** 최소 1개 이상** 의 타겟 등록
 - 균등 분포로 크로스 존 트래픽 최소화
 
 ### 예시

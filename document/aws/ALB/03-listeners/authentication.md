@@ -86,7 +86,7 @@ IdP에 다음 리다이렉트 URI를 등록:
 https://<ALB-DNS-name>/oauth2/idpresponse
 ```
 
-**중요:** URL은 **소문자**로 작성해야 합니다.
+** 중요:** URL은 ** 소문자** 로 작성해야 합니다.
 
 ## 인증 흐름
 
@@ -122,7 +122,7 @@ JWT 헤더:
   URL: https://public-keys.auth.elb.<region>.amazonaws.com/<kid>
 ```
 
-**중요:** 애플리케이션에서 반드시 JWT 서명을 검증해야 합니다.
+** 중요:** 애플리케이션에서 반드시 JWT 서명을 검증해야 합니다.
 
 ## 타임아웃 설정
 

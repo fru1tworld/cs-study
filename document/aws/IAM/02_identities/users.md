@@ -10,9 +10,9 @@ AWS는 IAM 사용자를 세 가지 방식으로 식별합니다:
 
 | 식별자 | 설명 | 예시 |
 |--------|------|------|
-| **친화적 이름** | 생성 시 지정한 읽기 쉬운 이름 | `johndoe`, `admin-user` |
+| ** 친화적 이름** | 생성 시 지정한 읽기 쉬운 이름 | `johndoe`, `admin-user` |
 | **ARN** | AWS 전체에서 고유한 리소스 이름 | `arn:aws:iam::123456789012:user/johndoe` |
-| **고유 ID** | API/CLI로 생성 시 반환되는 ID | `AIDAJQABLZS4A3QDU576Q` |
+| ** 고유 ID** | API/CLI로 생성 시 반환되는 ID | `AIDAJQABLZS4A3QDU576Q` |
 
 ## 사용자 생성
 

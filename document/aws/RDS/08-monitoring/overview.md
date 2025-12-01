@@ -114,8 +114,8 @@ aws cloudwatch put-metric-alarm \
 데이터베이스 로드를 시각화하고 대기, SQL 문, 호스트 또는 사용자별로 필터링할 수 있습니다.
 
 ### 주요 기능
-- **데이터베이스 로드 차트**: 시간에 따른 로드 시각화
-- **대기 이벤트 분석**: 병목 현상 식별
+- ** 데이터베이스 로드 차트**: 시간에 따른 로드 시각화
+- ** 대기 이벤트 분석**: 병목 현상 식별
 - **Top SQL**: 가장 많은 리소스를 사용하는 쿼리
 - **Top Hosts/Users**: 부하를 유발하는 클라이언트
 
@@ -128,7 +128,7 @@ aws rds modify-db-instance \
     --performance-insights-retention-period 7
 ```
 
-⚠️ **중요**: 2026년 6월 30일 이후 Performance Insights는 CloudWatch Database Insights로 대체될 예정
+⚠️ ** 중요**: 2026년 6월 30일 이후 Performance Insights는 CloudWatch Database Insights로 대체될 예정
 
 ## Enhanced Monitoring
 

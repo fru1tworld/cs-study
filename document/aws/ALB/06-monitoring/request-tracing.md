@@ -2,7 +2,7 @@
 
 ## 개요
 
-Application Load Balancer는 `X-Amzn-Trace-Id` 헤더를 사용하여 **요청을 추적**합니다. 이를 통해 분산 시스템에서 요청의 흐름을 파악하고 문제를 진단할 수 있습니다.
+Application Load Balancer는 `X-Amzn-Trace-Id` 헤더를 사용하여 ** 요청을 추적** 합니다. 이를 통해 분산 시스템에서 요청의 흐름을 파악하고 문제를 진단할 수 있습니다.
 
 ## X-Amzn-Trace-Id 헤더
 
