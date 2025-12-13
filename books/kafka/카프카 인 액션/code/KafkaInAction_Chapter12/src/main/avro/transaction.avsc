@@ -1,0 +1,48 @@
+{
+  "namespace": "org.kafkainaction",
+  "type": "record",
+  "name": "Transaction",
+  "fields": [
+    {
+      "name": "guid",
+      "type": "string",
+      "doc": "The unique transaction guid"
+    },
+    {
+      "name": "account",
+      "type": "string",
+      "avro.java.string": "java.lang.String",
+      "doc": "Account name"
+    },
+    {
+      "name": "amount",
+      "type": {
+        "type": "bytes",
+        "logicalType": "decimal",
+        "precision": 9,
+        "scale": 2
+      }
+    },
+    {
+      "name": "type",
+      "type": {
+        "type": "enum",
+        "name": "TransactionType",
+        "symbols": [
+          "DEPOSIT",
+          "WITHDRAW"
+        ]
+      }
+    },
+    {
+      "name": "currency",
+      "type": "string",
+      "doc": "Transaction currency"
+    },
+    {
+      "name": "country",
+      "type": "string",
+      "doc": "Transaction country"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "namespace": "org.kafkainaction",
+  "type": "record",
+  "name": "Funds",
+  "fields": [
+    {
+      "name": "account",
+      "type": "string",
+      "doc": "Account name"
+    },
+    {
+      "name": "balance",
+      "type": {
+        "type": "bytes",
+        "logicalType": "decimal",
+        "precision": 9,
+        "scale": 2
+      }
+    }
+  ]
+}
