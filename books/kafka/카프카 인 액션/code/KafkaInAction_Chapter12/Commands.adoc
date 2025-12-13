@@ -1,0 +1,111 @@
+= Commands used in Chapter 12
+
+== start or components of the Confluent Platform
+
+docker-compose up -d
+
+== Create an interactive session with ksqlDB
+
+docker exec -it ksqldb-cli ksql http://ksqldb-server:8088
+
+== Start ksqlDB in headless mode
+
+bin/ksql-server-start.sh etc/ksql/ksql-server.properties \
+--queries-file Ksql.sql
+
+== running a new version of Streams app
+
+. start Confluent Platform
++
+
+`confluent local services ksql-server start`
+. Build and run an app
++
+
+`./gradlew run`
+
+. produce some data using `kafka-avro-console-producer`
++
+
+[source,shell script]
+.test-data
+----
+kafka-avro-console-producer --topic transaction-request --bootstrap-server localhost:9092 --property value.schema="$(< src/main/avro/transaction.avsc)"
+      
+{"guid":"220acb8b-9353-4f63-950b-02e030902b2a","account":"1","amount":"'\u0010","type":"DEPOSIT","currency":"CAD","country":"CA"}
+{"guid":"987ec7c5-878c-438a-a33b-d48c142479dd","account":"1","amount":"N ","type":"DEPOSIT","currency":"CAD","country":"CA"}
+{"guid":"a7b99a64-851f-4886-8505-b99d2f74851c","account":"1","amount":"u0","type":"DEPOSIT","currency":"CAD","country":"CA"}
+{"guid":"0625d34b-e523-41f6-b015-4a3994684cb1","account":"1","amount":"u0","type":"WITHDRAW","currency":"CAD","country":"CA"}
+{"guid":"af92438d-ce6e-4c90-b957-75846f83183a","account":"1","amount":"\u0001 ","type":"WITHDRAW","currency":"CAD","country":"CA"}
+{"guid":"a2124811-de5c-4dca-8a85-912d098ea72f","account":"2","amount":"'\u0010","type":"DEPOSIT","currency":"USD","country":"USA"}
+{"guid":"78fcb5f2-64f7-4c15-8891-29caddc9bb90","account":"2","amount":"\u0013","type":"DEPOSIT","currency":"USD","country":"USA"}
+{"guid":"7bb790ec-96b9-47f6-b2b2-ebf36cb41da7","account":"2","amount":"u0","type":"DEPOSIT","currency":"USD","country":"USA"}
+----
+
+. consume result from
++
+
+[source,shell script]
+.consume
+----
+kafka-avro-console-consumer --bootstrap-server localhost:9092 --from-beginning --topic transaction-failed --property schema.registry.url=http://localhost:8081 #<1>
+
+{"transaction":{"guid":"af92438d-ce6e-4c90-b957-75846f83183a","account":"1","amount":"\u0001 ","type":"WITHDRAW","currency":"CAD","country":"CA"},"funds":{"account":"1","balance":"u0"},"success":false,"errorType":{"org.kafkainaction.ErrorType":"INSUFFICIENT_FUNDS"}}
+
+kafka-avro-console-consumer --bootstrap-server localhost:9092 --from-beginning --topic transaction-success --property schema.registry.url=http://localhost:8081 #<2>
+
+{"transaction":{"guid":"220acb8b-9353-4f63-950b-02e030902b2a","account":"1","amount":"'\u0010","type":"DEPOSIT","currency":"CAD","country":"CA"},"funds":{"account":"1","balance":"'\u0010"},"success":true,"errorType":null}
+{"transaction":{"guid":"987ec7c5-878c-438a-a33b-d48c142479dd","account":"1","amount":"N ","type":"DEPOSIT","currency":"CAD","country":"CA"},"funds":{"account":"1","balance":"u0"},"success":true,"errorType":null}
+{"transaction":{"guid":"a7b99a64-851f-4886-8505-b99d2f74851c","account":"1","amount":"u0","type":"DEPOSIT","currency":"CAD","country":"CA"},"funds":{"account":"1","balance":"\u0000ê`"},"success":true,"errorType":null}
+{"transaction":{"guid":"0625d34b-e523-41f6-b015-4a3994684cb1","account":"1","amount":"u0","type":"WITHDRAW","currency":"CAD","country":"CA"},"funds":{"account":"1","balance":"u0"},"success":true,"errorType":null}
+{"transaction":{"guid":"a2124811-de5c-4dca-8a85-912d098ea72f","account":"2","amount":"'\u0010","type":"DEPOSIT","currency":"USD","country":"USA"},"funds":{"account":"2","balance":"'\u0010"},"success":true,"errorType":null}
+{"transaction":{"guid":"78fcb5f2-64f7-4c15-8891-29caddc9bb90","account":"2","amount":"\u0013","type":"DEPOSIT","currency":"USD","country":"USA"},"funds":{"account":"2","balance":":"},"success":true,"errorType":null}
+{"transaction":{"guid":"7bb790ec-96b9-47f6-b2b2-ebf36cb41da7","account":"2","amount":"u0","type":"DEPOSIT","currency":"USD","country":"USA"},"funds":{"account":"2","balance":"\u0000¯È"},"success":true,"errorType":null}
+----
+<1> Failed transactions
+<2> Successful transactions
+
+[source,sql]
+.account.sql
+----
+CREATE TABLE ACCOUNT (
+  numkey string PRIMARY KEY,
+  number INT,
+  firstName STRING,
+  lastName STRING,
+  numberAddress STRING,
+  streetAddress STRING,
+  cityAddress STRING,
+  countryAddress STRING,
+  creationDate BIGINT,
+  updateDate BIGINT
+) WITH (KAFKA_TOPIC = 'account', VALUE_FORMAT='avro', PARTITIONS=6, REPLICAS=1);
+----
+
+CREATE TABLE ACCOUNT (number INT PRIMARY KEY) WITH (KAFKA_TOPIC = 'account', VALUE_FORMAT='avro', PARTITIONS=6, REPLICAS=1);
+
+[source,sql]
+----
+CREATE STREAM TRANSACTION_SUCCESS (
+  numkey string KEY,
+  transaction STRUCT<guid STRING, account STRING, amount DECIMAL(9, 2), type STRING, currency STRING, country STRING>,
+  funds STRUCT<account STRING, balance DECIMAL(9, 2)>,
+  success boolean,
+  errorType STRING
+  --errorType STRUCT<type STRING>
+) WITH (KAFKA_TOPIC='transaction-success', VALUE_FORMAT='avro');
+----
+
+[source,sql]
+----
+CREATE STREAM TRANSACTION_STATEMENT AS
+  SELECT *
+  FROM TRANSACTION_SUCCESS
+  LEFT JOIN ACCOUNT ON TRANSACTION_SUCCESS.numkey = ACCOUNT.numkey
+  EMIT CHANGES;
+----
+
+
+# More examples link
+KGlobalTable and Processor API examples are at:
+https://github.com/Kafka-In-Action-Book/Kafka-In-Action-Source-Code/tree/master/KafkaInAction_Chapter12
