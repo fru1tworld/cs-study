@@ -20,6 +20,7 @@ RFC 문서 한국어 번역/요약 모음입니다.
 | [RFC 1918](./Layer3-Network/RFC1918-Private-Address.md) | Private Address | 사설 IP 주소 대역 |
 | [RFC 3022](./Layer3-Network/RFC3022-NAT.md) | NAT | 사설-공인 IP 주소 변환 |
 | [RFC 4632](./Layer3-Network/RFC4632-CIDR.md) | CIDR | 클래스리스 주소 체계 |
+| [RFC 9568](./Layer3-Network/RFC9568-VRRP.md) | VRRP v3 | 가상 라우터 이중화 프로토콜 |
 
 ### Layer 4 - Transport (전송 계층)
 | RFC | 제목 | 설명 |
@@ -32,6 +33,8 @@ RFC 문서 한국어 번역/요약 모음입니다.
 |-----|------|------|
 | [RFC 1034](./Layer7-Application/RFC1034-DNS-Concepts.md) | DNS - Concepts | 도메인 네임 시스템 개념 |
 | [RFC 1035](./Layer7-Application/RFC1035-DNS-Implementation.md) | DNS - Implementation | DNS 구현 명세 |
+| [RFC 8484](./Layer7-Application/RFC8484-DoH.md) | DNS over HTTPS (DoH) | HTTPS 통한 암호화된 DNS |
+| [RFC 9250](./Layer7-Application/RFC9250-DoQ.md) | DNS over QUIC (DoQ) | QUIC 통한 암호화된 DNS |
 | [RFC 2131](./Layer7-Application/RFC2131-DHCP.md) | DHCP | IP 주소 자동 할당 (DORA) |
 | [RFC 9110](./Layer7-Application/RFC9110-HTTP-Semantics.md) | HTTP Semantics | HTTP 의미론 |
 | [RFC 9112](./Layer7-Application/RFC9112-HTTP1.1.md) | HTTP/1.1 | HTTP/1.1 메시지 문법 |
