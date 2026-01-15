@@ -31,7 +31,7 @@ Docker를 사용하면 개발이나 테스트 목적으로 Elasticsearch와 Kiba
 
 Docker가 설치되어 있지 않다면 먼저 [Docker Desktop](https://www.docker.com/products/docker-desktop)을 설치하세요. Windows를 사용하는 경우 WSL(Windows Subsystem for Linux)도 설치해야 합니다.
 
-Docker Desktop을 사용하는 경우 최소 4GB의 메모리를 할당해야 합니다. **Settings > Resources**에서 메모리 사용량을 조정할 수 있습니다.
+Docker Desktop을 사용하는 경우 최소 4GB의 메모리를 할당해야 합니다. **Settings > Resources** 에서 메모리 사용량을 조정할 수 있습니다.
 
 #### 단일 노드 클러스터 시작
 
@@ -176,7 +176,7 @@ curl -H "Authorization: ApiKey ${ES_API_KEY}" https://localhost:9200
 
 ### Kibana Dev Tools Console 사용하기
 
-Kibana의 개발자 콘솔은 요청을 실험하고 테스트하는 쉬운 방법을 제공합니다. 콘솔에 접근하려면 Kibana를 열고 **Management > Dev Tools**로 이동합니다.
+Kibana의 개발자 콘솔은 요청을 실험하고 테스트하는 쉬운 방법을 제공합니다. 콘솔에 접근하려면 Kibana를 열고 **Management > Dev Tools** 로 이동합니다.
 
 Dev Tools Console에서는 간소화된 구문을 사용할 수 있습니다:
 

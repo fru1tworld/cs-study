@@ -627,7 +627,7 @@ include_labels = ["com.docker.compose.project=myproject"]
 
 ### 필터링 동작
 
-- **exclude가 우선**: 컨테이너가 include와 exclude 모두와 일치하면 **제외**됩니다.
+- **exclude가 우선**: 컨테이너가 include와 exclude 모두와 일치하면 **제외** 됩니다.
 - **접두사 매칭**: 옵션들은 접두사 매칭을 사용합니다. `foo`는 `foo`, `foobar`, `foo-123` 등과 일치합니다.
 - **기본 동작**: 구성 없이 Vector는 모든 컨테이너에서 로그를 수집합니다.
 

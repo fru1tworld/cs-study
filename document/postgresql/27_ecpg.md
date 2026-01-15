@@ -304,7 +304,7 @@ EXEC SQL SELECT foo INTO :FooBar FROM table1 WHERE ascii = 'doodad';
 EXEC SQL SHOW search_path INTO :var;
 ```
 
-> **참고:** `:something`과 같은 토큰은 C 프로그램 변수를 참조하는 **호스트 변수**입니다.
+> **참고:** `:something`과 같은 토큰은 C 프로그램 변수를 참조하는 **호스트 변수** 입니다.
 
 ### 4.2 커서 사용
 
@@ -393,7 +393,7 @@ EXEC SQL DEALLOCATE PREPARE name;
 
 ### 5.1 개요
 
-호스트 변수(Host Variables)는 C 프로그램과 PostgreSQL 간에 데이터를 교환하기 위해 내장 SQL 문에서 사용되는 C 프로그램 변수입니다. SQL 문은 C 프로그램 코드("호스트 언어") 내의 "손님"으로 간주되므로 C 변수를 **호스트 변수**라고 합니다.
+호스트 변수(Host Variables)는 C 프로그램과 PostgreSQL 간에 데이터를 교환하기 위해 내장 SQL 문에서 사용되는 C 프로그램 변수입니다. SQL 문은 C 프로그램 코드("호스트 언어") 내의 "손님"으로 간주되므로 C 변수를 **호스트 변수** 라고 합니다.
 
 #### 기본 구문
 
@@ -737,7 +737,7 @@ EXEC SQL EXECUTE mystmt INTO :v1, :v2, :v3 USING 37;
 
 #### 여러 결과 행
 
-여러 행을 반환하는 쿼리에는 **커서**를 사용합니다:
+여러 행을 반환하는 쿼리에는 **커서** 를 사용합니다:
 
 ```c
 EXEC SQL BEGIN DECLARE SECTION;
@@ -822,7 +822,7 @@ EXEC SQL WHENEVER SQLERROR STOP;
 
 #### 중요 참고사항
 
-`EXEC SQL WHENEVER`는 C 문이 아닌 **전처리기 지시문**입니다. 오류 핸들러는 C 제어 흐름에 관계없이 설정된 위치 **아래**의 모든 내장 SQL 문에 적용됩니다. 다음 패턴은 **작동하지 않습니다**:
+`EXEC SQL WHENEVER`는 C 문이 아닌 **전처리기 지시문** 입니다. 오류 핸들러는 C 제어 흐름에 관계없이 설정된 위치 **아래** 의 모든 내장 SQL 문에 적용됩니다. 다음 패턴은 **작동하지 않습니다**:
 
 ```c
 /* 잘못됨 - if 블록 내부의 핸들러 */
@@ -1216,7 +1216,7 @@ ECPG = ecpg
 
 ### 9.5 스레딩 지원
 
-`libecpg` 라이브러리는 **기본적으로 스레드 안전**하지만, 클라이언트 코드를 컴파일할 때 스레딩 컴파일러 플래그를 추가해야 할 수 있습니다.
+`libecpg` 라이브러리는 **기본적으로 스레드 안전** 하지만, 클라이언트 코드를 컴파일할 때 스레딩 컴파일러 플래그를 추가해야 할 수 있습니다.
 
 ---
 

@@ -872,7 +872,7 @@ SELECT 'super:*'::tsquery;
 
 ## UUID 타입
 
-`uuid` 데이터 타입은 RFC 9562, ISO/IEC 9834-8:2005에 정의된 **Universally Unique Identifiers (UUID)**를 저장합니다.
+`uuid` 데이터 타입은 RFC 9562, ISO/IEC 9834-8:2005에 정의된 **Universally Unique Identifiers (UUID)** 를 저장합니다.
 
 ### 특징
 
@@ -921,7 +921,7 @@ INSERT INTO users (name) VALUES ('John Doe');
 
 ## XML 타입
 
-PostgreSQL의 `xml` 데이터 타입은 XML 데이터를 저장할 수 있으며, 텍스트 필드와 달리 **입력값의 well-formedness를 검사**하고 타입 안전 연산을 지원합니다.
+PostgreSQL의 `xml` 데이터 타입은 XML 데이터를 저장할 수 있으며, 텍스트 필드와 달리 **입력값의 well-formedness를 검사** 하고 타입 안전 연산을 지원합니다.
 
 ### XML 값 생성 방법
 
@@ -968,7 +968,7 @@ XMLSERIALIZE ( { DOCUMENT | CONTENT } value AS type [[ NO ] INDENT] )
 
 ## JSON 타입
 
-PostgreSQL은 JSON 데이터 저장을 위해 **`json`**과 **`jsonb`** 두 가지 타입을 제공합니다.
+PostgreSQL은 JSON 데이터 저장을 위해 **`json`** 과 **`jsonb`** 두 가지 타입을 제공합니다.
 
 ### json vs jsonb 비교
 

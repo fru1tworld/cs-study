@@ -1139,8 +1139,8 @@ POST /_query
 
 ### 6.1 Discover에서 ES|QL 시작하기
 
-1. Kibana에서 **Discover**로 이동합니다.
-2. 애플리케이션 메뉴 바에서 **Try ES|QL**을 선택합니다.
+1. Kibana에서 **Discover** 로 이동합니다.
+2. 애플리케이션 메뉴 바에서 **Try ES|QL** 을 선택합니다.
 3. ES|QL 편집기가 활성화되어 쿼리를 작성할 수 있습니다.
 
 ### 6.2 ES|QL 편집기 기능

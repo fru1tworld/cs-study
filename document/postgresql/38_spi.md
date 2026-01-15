@@ -17,7 +17,7 @@
 
 ## 개요
 
-**서버 프로그래밍 인터페이스(Server Programming Interface, SPI)**는 C 언어로 작성된 사용자 정의 함수가 PostgreSQL 서버 내부에서 SQL 명령을 실행할 수 있도록 해주는 인터페이스입니다.
+**서버 프로그래밍 인터페이스(Server Programming Interface, SPI)** 는 C 언어로 작성된 사용자 정의 함수가 PostgreSQL 서버 내부에서 SQL 명령을 실행할 수 있도록 해주는 인터페이스입니다.
 
 ### SPI의 주요 목적
 

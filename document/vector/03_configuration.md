@@ -86,7 +86,7 @@ vector convert-config --input vector.toml --output vector.yaml
 
 ### YAML 및 JSON의 추가 이점
 
-YAML과 JSON을 지원하면 **ytt**, **Jsonnet**, **Cue**와 같은 데이터 템플릿 언어를 사용할 수 있습니다.
+YAML과 JSON을 지원하면 **ytt**, **Jsonnet**, **Cue** 와 같은 데이터 템플릿 언어를 사용할 수 있습니다.
 
 ---
 

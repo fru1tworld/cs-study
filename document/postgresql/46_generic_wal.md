@@ -18,7 +18,7 @@ Generic WAL Records(일반 WAL 레코드)는 PostgreSQL 확장(Extension)이 커
 
 ### 중요 사항
 
-> **주의:** Generic WAL 레코드는 **논리적 디코딩(Logical Decoding)** 과정에서 무시됩니다. 만약 논리적 디코딩이 필요한 경우에는 대신 **커스텀 WAL 리소스 매니저(Custom WAL Resource Manager)**를 사용해야 합니다.
+> **주의:** Generic WAL 레코드는 **논리적 디코딩(Logical Decoding)** 과정에서 무시됩니다. 만약 논리적 디코딩이 필요한 경우에는 대신 **커스텀 WAL 리소스 매니저(Custom WAL Resource Manager)** 를 사용해야 합니다.
 
 ### API 위치
 

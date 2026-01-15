@@ -487,7 +487,7 @@ WHERE name = 'beautiful image';
 
 ### 4.3 loread / lowrite - 서버측 읽기/쓰기
 
-서버측에서 `lo_read`와 `lo_write`는 언더스코어 없이 **loread**, **lowrite**로 사용됩니다.
+서버측에서 `lo_read`와 `lo_write`는 언더스코어 없이 **loread**, **lowrite** 로 사용됩니다.
 
 ```sql
 -- 대용량 객체 열기

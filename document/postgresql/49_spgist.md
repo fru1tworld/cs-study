@@ -15,7 +15,7 @@ PostgreSQL 18 공식 문서 번역
 
 ## 69.1. 소개 (Introduction)
 
-SP-GiST는 **Space-Partitioned GiST**의 약자로, 분할 검색 트리(partitioned search trees)를 지원하는 인덱스 접근 방법입니다. SP-GiST를 사용하면 다음과 같은 다양한 비균형(non-balanced) 디스크 기반 데이터 구조를 구현할 수 있습니다:
+SP-GiST는 **Space-Partitioned GiST** 의 약자로, 분할 검색 트리(partitioned search trees)를 지원하는 인덱스 접근 방법입니다. SP-GiST를 사용하면 다음과 같은 다양한 비균형(non-balanced) 디스크 기반 데이터 구조를 구현할 수 있습니다:
 
 - **쿼드 트리 (Quad-trees)**: 2차원 공간을 4개의 사분면으로 재귀적으로 분할
 - **k-d 트리 (K-d trees)**: k차원 점 데이터를 이진 분할
@@ -23,7 +23,7 @@ SP-GiST는 **Space-Partitioned GiST**의 약자로, 분할 검색 트리(partiti
 
 ### SP-GiST의 특징
 
-SP-GiST는 검색 공간을 **동일하지 않은 크기의 파티션으로 반복적으로 분할**하는 구조를 지원합니다. 쿼리가 분할 규칙과 잘 일치하면 매우 빠른 검색이 가능합니다.
+SP-GiST는 검색 공간을 **동일하지 않은 크기의 파티션으로 반복적으로 분할** 하는 구조를 지원합니다. 쿼리가 분할 규칙과 잘 일치하면 매우 빠른 검색이 가능합니다.
 
 전통적인 메모리 기반 검색 트리에서 발생하는 주요 문제는 노드를 디스크 페이지에 효율적으로 매핑하는 것입니다. SP-GiST는 이 문제를 해결하기 위해 설계되었습니다:
 
@@ -37,7 +37,7 @@ SP-GiST 트리는 두 가지 유형의 튜플로 구성됩니다:
 
 #### 내부 튜플 (Inner Tuples)
 
-검색 트리의 분기점(branch points)으로, 하나 이상의 **노드(nodes)**를 포함합니다:
+검색 트리의 분기점(branch points)으로, 하나 이상의 **노드(nodes)** 를 포함합니다:
 
 ```
 내부 튜플 구조:
@@ -395,7 +395,7 @@ typedef struct spgPickSplitOut
 ```
 
 **중요 요구사항:**
-- 여러 리프 튜플을 **2개 이상의 노드로 분류**해야 함
+- 여러 리프 튜플을 **2개 이상의 노드로 분류** 해야 함
 - 모든 튜플이 단일 노드에 할당되면 SP-GiST 코어가 결과를 무시함
 
 #### 4. inner_consistent 메서드

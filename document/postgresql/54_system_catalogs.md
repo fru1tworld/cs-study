@@ -22,7 +22,7 @@
 
 ### 핵심 특징
 
-PostgreSQL의 시스템 카탈로그는 **일반 테이블**입니다. 기술적으로는 삭제, 재생성, 수정이 가능하지만, 정상적인 상황에서는 **직접 수정하지 않는 것이 좋습니다**.
+PostgreSQL의 시스템 카탈로그는 **일반 테이블** 입니다. 기술적으로는 삭제, 재생성, 수정이 가능하지만, 정상적인 상황에서는 **직접 수정하지 않는 것이 좋습니다**.
 
 > **주의사항**: 시스템 카탈로그에 컬럼을 추가하거나, 값을 직접 삽입/수정하면 시스템에 심각한 문제가 발생할 수 있습니다.
 
@@ -321,7 +321,7 @@ PostgreSQL은 50개 이상의 시스템 카탈로그를 제공합니다. 주요 
 
 ### pg_namespace
 
-`pg_namespace` 카탈로그는 **네임스페이스(Namespaces)**를 저장합니다. 네임스페이스는 SQL 스키마의 기반이 되는 구조입니다.
+`pg_namespace` 카탈로그는 **네임스페이스(Namespaces)** 를 저장합니다. 네임스페이스는 SQL 스키마의 기반이 되는 구조입니다.
 
 #### 핵심 개념
 
@@ -443,7 +443,7 @@ PostgreSQL은 50개 이상의 시스템 카탈로그를 제공합니다. 주요 
 
 ### pg_database
 
-`pg_database` 카탈로그는 PostgreSQL 클러스터에서 사용 가능한 데이터베이스에 대한 정보를 저장합니다. 이것은 **공유 카탈로그(Shared Catalog)**입니다 - 데이터베이스마다 하나가 아니라 클러스터당 하나의 복사본만 존재합니다.
+`pg_database` 카탈로그는 PostgreSQL 클러스터에서 사용 가능한 데이터베이스에 대한 정보를 저장합니다. 이것은 **공유 카탈로그(Shared Catalog)** 입니다 - 데이터베이스마다 하나가 아니라 클러스터당 하나의 복사본만 존재합니다.
 
 #### 컬럼 정의
 
@@ -678,7 +678,7 @@ ORDER BY pg_database_size(datname) DESC;
 
 2. **지연된 플래그 갱신**: `relhasindex`, `relhasrules`, `relhastriggers`, `relhassubclass` 같은 불리언 플래그는 지연되어 갱신됩니다. 조건이 충족되면 true로 설정되지만, 조건이 해제되어도 즉시 false로 재설정되지 않을 수 있습니다.
 
-3. **추정값 이해**: `relpages`, `reltuples`, `relallvisible`, `relallfrozen`은 VACUUM, ANALYZE, 특정 DDL 명령에 의해 갱신되는 **추정값**입니다.
+3. **추정값 이해**: `relpages`, `reltuples`, `relallvisible`, `relallfrozen`은 VACUUM, ANALYZE, 특정 DDL 명령에 의해 갱신되는 **추정값** 입니다.
 
 4. **공유 카탈로그**: `pg_database`, `pg_authid`, `pg_tablespace` 같은 일부 카탈로그는 클러스터 전체에서 공유됩니다.
 

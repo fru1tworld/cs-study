@@ -184,7 +184,7 @@ DELETE FROM products WHERE price = 10;
 DELETE FROM products;
 ```
 
-테이블의 **모든 행이 삭제**됩니다! 프로그래머는 이 점을 주의해야 합니다(Caveat programmer).
+테이블의 **모든 행이 삭제** 됩니다! 프로그래머는 이 점을 주의해야 합니다(Caveat programmer).
 
 ---
 

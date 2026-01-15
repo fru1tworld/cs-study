@@ -21,7 +21,7 @@
 
 ## 개요
 
-PostgreSQL의 `TABLESAMPLE` 절은 표준으로 제공되는 `BERNOULLI`와 `SYSTEM` 메서드 외에도 **사용자 정의 테이블 샘플링 메서드**를 지원합니다. 샘플링 메서드는 `TABLESAMPLE` 절을 사용할 때 어떤 행이 선택될지를 결정합니다.
+PostgreSQL의 `TABLESAMPLE` 절은 표준으로 제공되는 `BERNOULLI`와 `SYSTEM` 메서드 외에도 **사용자 정의 테이블 샘플링 메서드** 를 지원합니다. 샘플링 메서드는 `TABLESAMPLE` 절을 사용할 때 어떤 행이 선택될지를 결정합니다.
 
 ### SQL 함수 시그니처
 
@@ -121,10 +121,10 @@ SampleScanGetSampleSize(PlannerInfo *root,
 
 #### 설명
 
-- 샘플 스캔 중 읽을 **릴레이션 페이지 수**를 추정
-- 선택될 **튜플 수**를 추정
+- 샘플 스캔 중 읽을 **릴레이션 페이지 수** 를 추정
+- 선택될 **튜플 수** 를 추정
 - 일반적으로 `baserel->pages`와 `baserel->tuples`에 샘플링 비율을 곱하여 계산
-- 결과는 반드시 **정수값으로 반올림**해야 함
+- 결과는 반드시 **정수값으로 반올림** 해야 함
 
 #### 파라미터
 
@@ -139,7 +139,7 @@ SampleScanGetSampleSize(PlannerInfo *root,
 #### 구현 시 주의사항
 
 - `estimate_expression_value()` 함수를 사용하여 표현식을 상수로 변환 시도
-- 값을 상수로 변환할 수 없거나 유효하지 않은 값이라도 **반드시 추정치를 제공**해야 함
+- 값을 상수로 변환할 수 없거나 유효하지 않은 값이라도 **반드시 추정치를 제공** 해야 함
 - 합리적인 기본값 사용 권장
 
 #### 예제 코드
@@ -220,7 +220,7 @@ if (eflags & EXEC_FLAG_EXPLAIN_ONLY)
 
 #### 선택 사항
 
-이 함수는 **선택 사항**입니다. `NULL`로 설정 시 `BeginSampleScan`이 모든 초기화를 수행해야 합니다.
+이 함수는 **선택 사항** 입니다. `NULL`로 설정 시 `BeginSampleScan`이 모든 초기화를 수행해야 합니다.
 
 ---
 
@@ -240,8 +240,8 @@ BeginSampleScan(SampleScanState *node,
 
 #### 설명
 
-- **첫 번째 튜플 가져오기 직전**에 호출
-- **스캔 재시작 시**에도 호출
+- **첫 번째 튜플 가져오기 직전** 에 호출
+- **스캔 재시작 시** 에도 호출
 - 테이블 정보는 `SampleScanState` 필드를 통해 접근 가능
 
 #### 파라미터
@@ -264,7 +264,7 @@ BeginSampleScan(SampleScanState *node,
 
 `repeatable_across_scans`가 `true`로 설정된 경우:
 
-- 재스캔 시 **동일한 튜플 집합**을 선택해야 함
+- 재스캔 시 **동일한 튜플 집합** 을 선택해야 함
 - `TABLESAMPLE` 파라미터와 시드가 변경되지 않으면 새 `BeginSampleScan` 호출도 동일한 튜플 선택
 
 #### 예제 코드
@@ -320,7 +320,7 @@ NextSampleBlock(SampleScanState *node,
 
 #### 설명
 
-- 스캔할 **다음 블록 번호**를 반환
+- 스캔할 **다음 블록 번호** 를 반환
 - 남은 페이지가 없으면 `InvalidBlockNumber` 반환
 
 #### 파라미터
@@ -332,7 +332,7 @@ NextSampleBlock(SampleScanState *node,
 
 #### 선택 사항
 
-이 함수는 **선택 사항**입니다. `NULL`로 설정 시:
+이 함수는 **선택 사항** 입니다. `NULL`로 설정 시:
 
 - 코어 코드가 **전체 릴레이션 순차 스캔** 수행
 - **동기화된 스캔(Synchronized Scanning)** 사용
@@ -453,7 +453,7 @@ EndSampleScan(SampleScanState *node);
 
 #### 선택 사항
 
-이 함수는 **선택 사항**입니다. 외부 리소스가 없다면 `NULL`로 설정 가능합니다.
+이 함수는 **선택 사항** 입니다. 외부 리소스가 없다면 `NULL`로 설정 가능합니다.
 
 #### 예제 코드
 
