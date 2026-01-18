@@ -784,7 +784,7 @@ ICMP 메시지는 IP 데이터그램 안에 캡슐화됩니다:
 ```
 
 - **IP Protocol 번호**: 1
-- **IP 헤더의 Protocol 필드**가 1이면 페이로드는 ICMP
+- **IP 헤더의 Protocol 필드** 가 1이면 페이로드는 ICMP
 
 ---
 

@@ -6,7 +6,7 @@
 
 ## 1. 개요
 
-RFC 8446은 TLS(Transport Layer Security) 프로토콜의 최신 버전인 **TLS 1.3**을 정의합니다. HTTPS의 핵심 보안 프로토콜로, 클라이언트-서버 간 통신의 **기밀성(confidentiality)**과 **무결성(integrity)**을 보장합니다.
+RFC 8446은 TLS(Transport Layer Security) 프로토콜의 최신 버전인 **TLS 1.3** 을 정의합니다. HTTPS의 핵심 보안 프로토콜로, 클라이언트-서버 간 통신의 **기밀성(confidentiality)** 과 **무결성(integrity)** 을 보장합니다.
 
 ### TLS가 제공하는 세 가지 보안 보장
 
@@ -30,7 +30,7 @@ TLS 1.2 대비 개선:
 
 ### 2.1 핸드셰이크 개요
 
-TLS 1.3 핸드셰이크는 **세 단계**로 구성됩니다:
+TLS 1.3 핸드셰이크는 **세 단계** 로 구성됩니다:
 
 ```
        Client                                           Server
@@ -81,7 +81,7 @@ Server → Client:
   - key_share (서버 DH 공개 키)
 ```
 
-> **중요**: 이 단계 이후 **모든 것이 암호화**됩니다.
+> **중요**: 이 단계 이후 **모든 것이 암호화** 됩니다.
 
 #### 2단계: Server Parameters (서버 파라미터)
 
@@ -107,7 +107,7 @@ Client → Server (암호화됨):
 
 ### 2.3 1-RTT 핸드셰이크
 
-TLS 1.3의 표준 핸드셰이크는 **1-RTT (1 Round Trip Time)**으로 완료됩니다:
+TLS 1.3의 표준 핸드셰이크는 **1-RTT (1 Round Trip Time)** 으로 완료됩니다:
 
 ```
 TLS 1.2: 2-RTT
@@ -183,7 +183,7 @@ ClientHello
 
 ### 3.1 TLS 1.3의 변화
 
-TLS 1.3은 **레거시 알고리즘을 모두 제거**했습니다:
+TLS 1.3은 **레거시 알고리즘을 모두 제거** 했습니다:
 
 ```
 제거된 알고리즘:
@@ -269,7 +269,7 @@ TLS 1.3: 모든 공개키 기반 교환이 (EC)DHE → Forward Secrecy 보장
 
 ### 4.4 키 유도 (Key Derivation)
 
-TLS 1.3은 **HKDF (HMAC-based Extract-and-Expand Key Derivation Function)**를 사용합니다:
+TLS 1.3은 **HKDF (HMAC-based Extract-and-Expand Key Derivation Function)** 를 사용합니다:
 
 ```
                               0
@@ -351,7 +351,7 @@ struct {
 
 ### 5.2 CertificateVerify 메시지
 
-인증서의 개인키로 **핸드셰이크 전체를 서명**합니다:
+인증서의 개인키로 **핸드셰이크 전체를 서명** 합니다:
 
 ```
 struct {
@@ -546,4 +546,4 @@ RFC 8446 TLS 1.3은 다음을 제공합니다:
 - **HKDF 키 유도**: 안전한 키 분리
 - **다운그레이드 방지**: 버전 협상 공격 차단
 
-TLS 1.3은 **보안을 강화하면서 성능을 개선**한 현대적인 보안 프로토콜입니다.
+TLS 1.3은 **보안을 강화하면서 성능을 개선** 한 현대적인 보안 프로토콜입니다.

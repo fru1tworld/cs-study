@@ -15,7 +15,7 @@
 
 ## 1. 개요
 
-이벤트 트리거(Event Trigger)는 PostgreSQL에서 일반 트리거 메커니즘을 보완하는 기능입니다. 이벤트 트리거는 **DDL(Data Definition Language) 이벤트**를 캡처하여 데이터베이스 수준에서 발생하는 스키마 변경 작업을 모니터링하고 제어할 수 있게 해줍니다.
+이벤트 트리거(Event Trigger)는 PostgreSQL에서 일반 트리거 메커니즘을 보완하는 기능입니다. 이벤트 트리거는 **DDL(Data Definition Language) 이벤트** 를 캡처하여 데이터베이스 수준에서 발생하는 스키마 변경 작업을 모니터링하고 제어할 수 있게 해줍니다.
 
 ### 주요 특징
 
@@ -43,7 +43,7 @@ PostgreSQL은 현재 5가지 이벤트 트리거 유형을 지원합니다.
 
 ### 3.1 ddl_command_start
 
-DDL 명령이 **실행되기 직전**에 발생합니다.
+DDL 명령이 **실행되기 직전** 에 발생합니다.
 
 #### 트리거가 발생하는 명령
 - `CREATE`, `ALTER`, `DROP`
@@ -74,7 +74,7 @@ CREATE EVENT TRIGGER ddl_start_logger
 
 ### 3.2 ddl_command_end
 
-DDL 명령이 **완료된 직후**에 발생합니다. 동작은 완료되었지만 트랜잭션이 아직 커밋되지 않은 상태입니다.
+DDL 명령이 **완료된 직후** 에 발생합니다. 동작은 완료되었지만 트랜잭션이 아직 커밋되지 않은 상태입니다.
 
 ```sql
 -- 예제: DDL 명령 완료 시 상세 정보 기록
@@ -101,7 +101,7 @@ CREATE EVENT TRIGGER ddl_end_logger
 
 ### 3.3 sql_drop
 
-객체가 삭제(DROP)되기 **직전**에 발생합니다. `ddl_command_end` 이벤트 전에 실행됩니다.
+객체가 삭제(DROP)되기 **직전** 에 발생합니다. `ddl_command_end` 이벤트 전에 실행됩니다.
 
 이 이벤트는 `DROP` 명령과 일부 `ALTER` 명령(예: `ALTER TABLE DROP COLUMN`)에서 발생합니다.
 
@@ -131,7 +131,7 @@ CREATE EVENT TRIGGER drop_logger
 
 ### 3.4 table_rewrite
 
-테이블이 **재작성(rewrite)되기 직전**에 발생합니다. `ALTER TABLE` 또는 `ALTER TYPE` 명령으로 인해 테이블이 물리적으로 재작성될 때 트리거됩니다.
+테이블이 **재작성(rewrite)되기 직전** 에 발생합니다. `ALTER TABLE` 또는 `ALTER TYPE` 명령으로 인해 테이블이 물리적으로 재작성될 때 트리거됩니다.
 
 **참고**: `CLUSTER`나 `VACUUM`에 의한 재작성에는 트리거되지 않습니다.
 
@@ -209,7 +209,7 @@ CREATE EVENT TRIGGER trigger_name
 
 1. 반환 타입이 `event_trigger`인 함수를 먼저 생성해야 합니다
 2. 함수는 값을 반환할 필요가 없습니다 (반환 타입은 신호 역할만)
-3. 동일 이벤트에 대한 여러 트리거는 **트리거 이름의 알파벳 순서**로 실행됩니다
+3. 동일 이벤트에 대한 여러 트리거는 **트리거 이름의 알파벳 순서** 로 실행됩니다
 
 ### 4.3 WHEN 조건 사용
 
@@ -756,7 +756,7 @@ CREATE EVENT TRIGGER fast_trigger
 ### 9.5 이벤트 트리거 실행 순서
 
 동일한 이벤트에 여러 트리거가 정의된 경우:
-- **트리거 이름의 알파벳 순서**로 실행됩니다
+- **트리거 이름의 알파벳 순서** 로 실행됩니다
 - 예: `a_trigger`가 `b_trigger`보다 먼저 실행
 
 ```sql

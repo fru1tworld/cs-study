@@ -2,7 +2,7 @@
 
 ## 개요
 
-RFC 6797은 2012년 11월에 발행되었으며, **HTTP Strict Transport Security (HSTS)** 메커니즘을 정의합니다. HSTS는 웹사이트가 **보안 연결(HTTPS)을 통해서만 접근 가능하다**고 선언할 수 있게 하며, User Agent(브라우저)가 이 정책을 강제하도록 합니다.
+RFC 6797은 2012년 11월에 발행되었으며, **HTTP Strict Transport Security (HSTS)** 메커니즘을 정의합니다. HSTS는 웹사이트가 **보안 연결(HTTPS)을 통해서만 접근 가능하다** 고 선언할 수 있게 하며, User Agent(브라우저)가 이 정책을 강제하도록 합니다.
 
 ### 핵심 기능
 1. **URI 변환**: UA가 HSTS 호스트에 대한 비보안 URI 참조를 보안 URI 참조로 변환
@@ -101,7 +101,7 @@ Strict-Transport-Security: max-age=0
 
 ### 5.1 헤더 필드 처리
 
-1. **보안 전송을 통해 수신**된 경우에만 STS 헤더 필드 처리
+1. **보안 전송을 통해 수신** 된 경우에만 STS 헤더 필드 처리
 2. 비보안 전송을 통해 수신된 HTTP 응답의 STS 헤더 필드는 **무시**
 3. 여러 STS 헤더 필드가 있는 경우 **첫 번째 것만 처리**
 
@@ -141,7 +141,7 @@ HSTS 정책은 반드시 HTTP 헤더에서 가져와야 합니다.
 
 ### 5.6 누락된 헤더 필드
 
-Known HSTS Host에서 보안 채널을 통해 HTTP 응답을 수신했지만 STS 헤더 필드가 누락된 경우, UA는 해당 호스트의 max-age 값에 도달할 때까지 **계속해서 HSTS Host로 처리**해야 합니다.
+Known HSTS Host에서 보안 채널을 통해 HTTP 응답을 수신했지만 STS 헤더 필드가 누락된 경우, UA는 해당 호스트의 max-age 값에 도달할 때까지 **계속해서 HSTS Host로 처리** 해야 합니다.
 
 ---
 
@@ -149,7 +149,7 @@ Known HSTS Host에서 보안 채널을 통해 HTTP 응답을 수신했지만 STS
 
 ### 6.1 비준수 User Agent
 
-비준수 UA는 Strict-Transport-Security 헤더 필드를 무시합니다. 웹 운영자는 HSTS 채택과 관계없이 **기존 보안 관행을 유지**해야 합니다.
+비준수 UA는 Strict-Transport-Security 헤더 필드를 무시합니다. 웹 운영자는 HSTS 채택과 관계없이 **기존 보안 관행을 유지** 해야 합니다.
 
 ### 6.2 만료 시간 고려사항
 

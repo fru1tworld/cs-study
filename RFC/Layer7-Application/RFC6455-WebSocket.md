@@ -2,7 +2,7 @@
 
 ## 개요
 
-RFC 6455는 2011년 12월에 발행되었으며, **WebSocket 프로토콜**을 정의합니다. 이 프로토콜은 브라우저 기반 애플리케이션이 여러 HTTP 연결에 의존하지 않고 서버와 **양방향 통신**을 할 수 있는 메커니즘을 제공합니다.
+RFC 6455는 2011년 12월에 발행되었으며, **WebSocket 프로토콜** 을 정의합니다. 이 프로토콜은 브라우저 기반 애플리케이션이 여러 HTTP 연결에 의존하지 않고 서버와 **양방향 통신** 을 할 수 있는 메커니즘을 제공합니다.
 
 ### 핵심 특징
 - 단일 TCP 연결을 통한 **전이중(full-duplex) 양방향 통신**
@@ -131,7 +131,7 @@ sec_websocket_accept = base64.b64encode(sha1_hash).decode('utf-8')
 
 ### 2.3 TLS 핸드셰이크 (wss의 경우)
 
-보안 연결(`wss`)의 경우, 클라이언트는 WebSocket 핸드셰이크 데이터를 전송하기 전에 **Server Name Indication(SNI)**을 사용하여 TLS 협상을 수행합니다.
+보안 연결(`wss`)의 경우, 클라이언트는 WebSocket 핸드셰이크 데이터를 전송하기 전에 **Server Name Indication(SNI)** 을 사용하여 TLS 협상을 수행합니다.
 
 ---
 
@@ -192,7 +192,7 @@ sec_websocket_accept = base64.b64encode(sha1_hash).decode('utf-8')
 transformed-octet-i = original-octet-i XOR masking-key-octet-(i MOD 4)
 ```
 
-- 마스킹 키는 **32비트 랜덤 값**으로, 강력한 엔트로피 소스에서 생성해야 합니다.
+- 마스킹 키는 **32비트 랜덤 값** 으로, 강력한 엔트로피 소스에서 생성해야 합니다.
 - 서버는 마스킹되지 않은 클라이언트 프레임을 거부하고 연결을 종료해야 합니다.
 - 서버는 프레임을 마스킹하지 않습니다.
 
@@ -311,13 +311,13 @@ Sec-WebSocket-Extensions: permessage-deflate
 
 ### 9.1 Origin 기반 보안
 
-- WebSocket은 브라우저 모델과 일치하는 **Origin 기반 보안**을 구현합니다
+- WebSocket은 브라우저 모델과 일치하는 **Origin 기반 보안** 을 구현합니다
 - 서버는 Origin 헤더를 검증하여 권한 없는 스크립트 컨텍스트로부터의 연결을 제한해야 합니다
 - 연결을 수락하지 않으려면 적절한 HTTP 오류 코드를 반환해야 합니다
 
 ### 9.2 비브라우저 클라이언트
 
-비브라우저 클라이언트가 WebSocket 서버에 접근할 때는 Origin 기반 보호를 우회합니다. 서버는 이러한 연결에 대해 **대체 인증 메커니즘**을 구현해야 합니다.
+비브라우저 클라이언트가 WebSocket 서버에 접근할 때는 Origin 기반 보호를 우회합니다. 서버는 이러한 연결에 대해 **대체 인증 메커니즘** 을 구현해야 합니다.
 
 ### 9.3 마스킹의 중요성
 

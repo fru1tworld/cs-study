@@ -2,7 +2,7 @@
 
 ## 개요
 
-**libpq**는 PostgreSQL의 C 애플리케이션 프로그래머 인터페이스(API)입니다. libpq는 클라이언트 프로그램이 PostgreSQL 백엔드 서버로 쿼리를 전달하고, 쿼리 결과를 수신하여 처리할 수 있게 해주는 라이브러리 함수들의 집합을 제공합니다.
+**libpq** 는 PostgreSQL의 C 애플리케이션 프로그래머 인터페이스(API)입니다. libpq는 클라이언트 프로그램이 PostgreSQL 백엔드 서버로 쿼리를 전달하고, 쿼리 결과를 수신하여 처리할 수 있게 해주는 라이브러리 함수들의 집합을 제공합니다.
 
 libpq는 C++, Perl, Python, Tcl, ECPG 등 여러 다른 PostgreSQL 애플리케이션 인터페이스의 기반 엔진으로도 사용됩니다.
 
@@ -24,7 +24,7 @@ libpq를 사용하는 클라이언트 프로그램은 헤더 파일 `libpq-fe.h`
 
 #### PQconnectdbParams
 
-파라미터 배열을 사용하여 새 데이터베이스 연결을 엽니다. **새로운 애플리케이션에 권장되는 방법**입니다.
+파라미터 배열을 사용하여 새 데이터베이스 연결을 엽니다. **새로운 애플리케이션에 권장되는 방법** 입니다.
 
 ```c
 PGconn *PQconnectdbParams(const char * const *keywords,
@@ -381,7 +381,7 @@ PGresult *PQexec(PGconn *conn, const char *command);
 
 **주요 특성:**
 - 명시적인 BEGIN/COMMIT가 없으면 단일 트랜잭션에서 여러 SQL 명령 처리
-- 실행된 **마지막 명령**의 결과만 설명하는 `PGresult` 반환
+- 실행된 **마지막 명령** 의 결과만 설명하는 `PGresult` 반환
 - 명령이 실패하면 처리가 중단되고 오류 정보 반환
 - 차단 호출(서버 응답을 기다림)
 
@@ -442,7 +442,7 @@ PGresult *PQexecParams(PGconn *conn,
 **주요 장점:**
 - 파라미터 값이 SQL 명령과 분리됨 (SQL 인젝션 방지)
 - 수동 인용 및 이스케이프 불필요
-- 호출당 **하나의 SQL 명령**만 지원 (기본 프로토콜의 제한)
+- 호출당 **하나의 SQL 명령** 만 지원 (기본 프로토콜의 제한)
 - 바이너리 형식으로 결과 요청 가능
 
 **예제:**

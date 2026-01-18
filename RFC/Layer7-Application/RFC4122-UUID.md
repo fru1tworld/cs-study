@@ -5,7 +5,7 @@
 
 ## 1. 개요
 
-UUID(Universally Unique Identifier)는 분산 시스템에서 **중앙 조정 기관 없이 고유한 식별자를 생성**할 수 있는 128비트 식별자입니다. GUID(Globally Unique Identifier)라고도 불립니다.
+UUID(Universally Unique Identifier)는 분산 시스템에서 **중앙 조정 기관 없이 고유한 식별자를 생성** 할 수 있는 128비트 식별자입니다. GUID(Globally Unique Identifier)라고도 불립니다.
 
 ### 핵심 특징
 
@@ -76,7 +76,7 @@ MSB 비트 패턴    Variant
 
 ### 2.4 Nil UUID
 
-**Nil UUID**는 모든 128비트가 0으로 설정된 특별한 UUID입니다:
+**Nil UUID** 는 모든 128비트가 0으로 설정된 특별한 UUID입니다:
 
 ```
 00000000-0000-0000-0000-000000000000
@@ -107,7 +107,7 @@ if str(my_uuid) == '00000000-0000-0000-0000-000000000000':
 
 ### 2.5 바이트 순서 (네트워크 바이트 오더)
 
-UUID는 **네트워크 바이트 오더 (Big-Endian)**를 사용합니다:
+UUID는 **네트워크 바이트 오더 (Big-Endian)** 를 사용합니다:
 
 ```
 바이트 0                                                바이트 15

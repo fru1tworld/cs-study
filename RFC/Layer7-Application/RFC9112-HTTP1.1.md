@@ -6,7 +6,7 @@
 
 ## 1. 개요
 
-RFC 9112는 HTTP/1.1의 **메시지 문법과 파싱**에 집중한 문서입니다. HTTP 의미론(RFC 9110)과 분리되어, HTTP/1.1 프로토콜의 전송 형식을 정의합니다.
+RFC 9112는 HTTP/1.1의 **메시지 문법과 파싱** 에 집중한 문서입니다. HTTP 의미론(RFC 9110)과 분리되어, HTTP/1.1 프로토콜의 전송 형식을 정의합니다.
 
 ## 2. 메시지 형식
 
@@ -215,7 +215,7 @@ Content-Length: 27
 
 ### 6.1 개요
 
-Transfer-Encoding은 **메시지 속성**이지 표현 특성이 아닙니다.
+Transfer-Encoding은 **메시지 속성** 이지 표현 특성이 아닙니다.
 
 ```http
 HTTP/1.1 200 OK
@@ -297,7 +297,7 @@ Checksum: abc123\r\n
 
 ### 7.1 지속 연결 (Persistent Connections)
 
-HTTP/1.1은 **기본적으로 지속 연결**을 사용합니다.
+HTTP/1.1은 **기본적으로 지속 연결** 을 사용합니다.
 
 ```
 HTTP/1.0: 기본 비지속, Connection: keep-alive로 유지

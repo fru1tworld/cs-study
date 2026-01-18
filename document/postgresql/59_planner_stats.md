@@ -52,7 +52,7 @@ WHERE relname LIKE 'tenk1%';
 
 ### 선택도 통계 (Selectivity Statistics)
 
-플래너는 `pg_statistic` 시스템 카탈로그에 저장된 데이터를 사용하여 WHERE 조건과 일치하는 행의 비율인 **선택도(Selectivity)**를 추정합니다. 이 데이터는 `ANALYZE`와 `VACUUM ANALYZE`에 의해 업데이트됩니다.
+플래너는 `pg_statistic` 시스템 카탈로그에 저장된 데이터를 사용하여 WHERE 조건과 일치하는 행의 비율인 **선택도(Selectivity)** 를 추정합니다. 이 데이터는 `ANALYZE`와 `VACUUM ANALYZE`에 의해 업데이트됩니다.
 
 **권장 대안:** 슈퍼유저 권한이 필요 없고 더 읽기 쉬운 `pg_stats` 뷰를 사용하세요.
 

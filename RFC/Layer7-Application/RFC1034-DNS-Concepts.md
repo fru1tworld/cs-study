@@ -42,7 +42,7 @@ www.example.com  →  DNS  →  93.184.216.34
 
 ### 2.1 트리 구조
 
-DNS는 **트리 구조**로 구성되어 있습니다:
+DNS는 **트리 구조** 로 구성되어 있습니다:
 
 ```
                            (root)
@@ -114,7 +114,7 @@ IP: 192.168.1.100
 
 ### 3.2 RRset (Resource Record Set)
 
-동일한 Owner Name, Type, Class를 가진 리소스 레코드들의 집합을 **RRset**이라고 합니다.
+동일한 Owner Name, Type, Class를 가진 리소스 레코드들의 집합을 **RRset** 이라고 합니다.
 
 ```
 예시: example.com의 A 레코드 RRset
