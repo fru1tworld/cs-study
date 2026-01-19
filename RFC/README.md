@@ -53,6 +53,7 @@ RFC 문서 한국어 번역/요약 모음입니다.
 |-----|------|------|
 | [RFC 2119](./Common/RFC2119-Key-Words.md) | Key Words | RFC 요구사항 키워드 (MUST, SHOULD, MAY) |
 | [RFC 1122](./Common/RFC1122-Internet-Host-Requirements.md) | Internet Host Requirements | 인터넷 호스트 통신 계층 요구사항 |
+| [RFC 9106](./Common/RFC9106-Argon2.md) | Argon2 | 패스워드 해싱용 메모리 하드 함수 |
 
 ---
 
