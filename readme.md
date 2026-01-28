@@ -3,9 +3,14 @@
 - 책으로 공부하는 CS 스터디
 - 그 외 CS 내용을 별도 문서로 정리
 
-## 별도 문서
+# interview 이사
 
-- **[CS 모의 면접 질문 목록](./Interview/interview.md)**: 자료구조, 네트워크, 데이터베이스, 운영체제 등 CS 기초부터 Spring, NestJS, Kafka, Redis, Elasticsearch, MongoDB 등 기술 스택까지 약 930개 이상의 면접 질문 모음
+[interview](https://github.com/fru1tworld/cs-basic)
+
+면접 질문지는 이사갔어요.
+
+
+# 읽은 책 리스트
 
 ## DevOps
 
@@ -72,12 +77,3 @@
 - [상태: 완독] [모던 자바 인 액션](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=200069290)
 - [상태: 완독] [JVM 밑바닥까지 파헤치기](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=338394581)
 - [상태: 읽는 중] [이펙티브 자바](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=171196410)
-
-## 사고 싶은 책 목록
-
-- [GoF 디자인 패턴](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=56051596)
-- [깃 프로 2](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=79232604)
-- [네트워킹과 웹 성능 최적화 기법](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=69380520)
-- [필독! 개발자 온보딩 가이드](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=317252868)
-- [구글 엔지니어는 이렇게 일한다](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=294146082)
-- [리눅스 커맨드라인 완벽 입문서]()
