@@ -135,7 +135,7 @@
 - 난이도: 2/5
 
 - [상태: 완독] [혼자 공부하는 네트워크](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=337483817)
-2 추천도: 3/5 
+- 추천도: 3/5 
 - 난이도: 1/5
 
 
