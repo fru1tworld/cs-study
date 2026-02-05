@@ -62,11 +62,11 @@
 ## DevOps
 ### container
 - [상태: 완독] [쿠버네티스 교과서](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=323404818)
-- 추천도: 4/5 
-- 난이도: 4/5
+- 추천도: 3/5 
+- 난이도: 2/5
 
 - [상태: 완독] [쿠버네티스 인 액션](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=235962702)
-- 추천도: 4/5 
+- 추천도: 3/5 
 - 난이도: 4/5
 
 - [상태: 완독] [한 권으로 배우는 도커 & 쿠버네티스](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=338403158)
@@ -141,11 +141,11 @@
 
 ## 알고리즘 및 자료구조
 - [상태: 완독] [프로그래밍 대회에서 배우는 알고리즘 문제 해결 전략 1](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=21089176)
-- 추천도: 4/5 
+- 추천도: 3/5 
 - 난이도: 4/5
 
 - [상태: 완독] [프로그래밍 대회에서 배우는 알고리즘 문제 해결 전략 2](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=21089176)
-- 추천도: 4/5 
+- 추천도: 3/5 
 - 난이도: 4/5
 
 
@@ -163,7 +163,7 @@
 - 난이도: 3/5
 
 - [상태: 완독] [모던 자바 인 액션](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=200069290)
-- 추천도: 4/5 
+- 추천도: 3/5 
 - 난이도: 3/5
 
 - [상태: 완독] [모던 자바스크립트 Deep Dive](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=251552545)
@@ -203,7 +203,7 @@
 - 난이도: 1/5
 
 - [상태: 완독] [리드 개발자로 가는 길](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=316733978)
-- 추천도: 3/5 
+- 추천도: 2/5 
 - 난이도: 1/5
 
 - [상태: 완독] [소프트웨어 장인](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=66925855)
