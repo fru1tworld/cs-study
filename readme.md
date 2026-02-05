@@ -35,6 +35,7 @@
 - [상태: 완독] [JVM 밑바닥 파헤치기](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=338394581)
 - [상태: 완독] [모니터링의 새로운 미래 관측가능성](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=329183979)
 - [상태: 완독] [사이트 신뢰성 엔지니어링](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=129407308)
+- [상태: 완독] [시스템 성능 엔지니어링](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=375158996)
 - [상태: 완독] [엔터프라이즈 데이터 플랫폼 구축](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=243220380)
 - [상태: 완독] [효율적인 리눅스 명령어 사용의 기술](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=329576773)
 
