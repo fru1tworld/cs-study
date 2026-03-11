@@ -61,6 +61,7 @@ RFC 문서 한국어 번역/요약 모음입니다.
 | [RFC 7636](./Layer7-Application/RFC7636-PKCE.md) | PKCE | OAuth 2.0 보안 강화 (모바일/SPA) |
 | [RFC 7519](./Layer7-Application/RFC7519-JWT.md) | JWT | JSON 기반 토큰 형식 |
 | [RFC 8725](./Layer7-Application/RFC8725-JWT-BCP.md) | JWT Best Practices | JWT 보안 권장사항 |
+| [RFC 9700](./Layer7-Application/RFC9700-OAuth2-Security-BCP.md) | OAuth 2.0 Security BCP | OAuth 2.0 보안 최선의 현행 관행 |
 | [RFC 6265](./Layer7-Application/RFC6265-HTTP-Cookies.md) | HTTP Cookies | Set-Cookie, 쿠키 보안 속성 |
 | [RFC 6454](./Layer7-Application/RFC6454-Web-Origin.md) | Web Origin | Same-Origin Policy 기반 |
 | [RFC 6797](./Layer7-Application/RFC6797-HSTS.md) | HSTS | HTTPS 강제 적용 |
