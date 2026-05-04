@@ -1,5 +1,7 @@
 # Kotlin/JS 실행하기
 
+> **원문:** https://kotlinlang.org/docs/running-kotlin-js.html
+
 이 문서는 Kotlin Multiplatform Gradle 플러그인을 사용하여 Kotlin/JS 프로젝트를 실행하는 방법을 다룹니다.
 
 ## 초기 설정

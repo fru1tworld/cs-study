@@ -1,5 +1,7 @@
 # 참조와 빌림
 
+> **원문:** https://doc.rust-lang.org/book/ch04-02-references-and-borrowing.html
+
 ## 개요
 
 참조는 소유권을 가져가지 않고 값을 참조할 수 있게 해줍니다. 참조는 해당 참조의 수명 동안 특정 타입의 유효한 값을 가리키도록 보장되는 포인터와 같습니다.

@@ -1,5 +1,7 @@
 # `panic!`을 사용할지 말지 결정하기
 
+> **원문:** https://doc.rust-lang.org/book/ch09-03-to-panic-or-not-to-panic.html
+
 ## 개요
 
 이 장에서는 Rust 오류 처리에서 `panic!`을 사용할지 `Result`를 반환할지 결정하는 방법을 설명합니다.

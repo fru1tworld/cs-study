@@ -1,5 +1,7 @@
 # Hello, Cargo!
 
+> **원문:** https://doc.rust-lang.org/book/ch01-03-hello-cargo.html
+
 Cargo는 Rust의 빌드 시스템이자 패키지 관리자입니다. 대부분의 Rustacean은 이 도구를 사용하여 Rust 프로젝트를 관리합니다. Cargo가 다음과 같은 많은 작업을 처리해 주기 때문입니다:
 
 - 코드 빌드

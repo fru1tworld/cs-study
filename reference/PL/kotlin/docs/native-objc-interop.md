@@ -1,5 +1,7 @@
 # Swift/Objective-C와의 상호운용성
 
+> **원문:** https://kotlinlang.org/docs/native-objc-interop.html
+
 ## 개요
 
 Kotlin/Native는 Objective-C를 통해 Swift와의 간접적인 상호운용성을 제공합니다. 이 문서는 Swift/Objective-C 코드에서 Kotlin 선언을 사용하는 것과 그 반대 경우를 다룹니다.

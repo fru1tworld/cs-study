@@ -1,5 +1,7 @@
 # 코루틴과 채널 튜토리얼
 
+> **원문:** https://kotlinlang.org/docs/coroutines-and-channels.html
+
 ## 개요
 
 이것은 스레드를 차단하거나 콜백을 사용하지 않고 네트워크 요청을 수행하기 위해 코루틴과 채널을 사용하는 포괄적인 Kotlin 튜토리얼입니다.

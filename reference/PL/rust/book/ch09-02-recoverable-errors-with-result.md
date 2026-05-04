@@ -1,5 +1,7 @@
 # Result로 복구 가능한 에러 처리하기
 
+> **원문:** https://doc.rust-lang.org/book/ch09-02-recoverable-errors-with-result.html
+
 ## 개요
 
 대부분의 에러는 프로그램을 완전히 중단시킬 만큼 심각하지 않습니다. `Result` 열거형(enum)은 함수가 성공 또는 실패를 반환하면서 호출 코드가 어떻게 응답할지 결정하게 합니다.

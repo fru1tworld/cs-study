@@ -1,5 +1,7 @@
 # Kotlin 기본 타입 개요
 
+> **원문:** https://kotlinlang.org/docs/basic-types.html
+
 Kotlin의 기본 타입은 다음과 같은 범주로 구성됩니다:
 
 ## 숫자 타입

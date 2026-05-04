@@ -1,5 +1,7 @@
 # 믹스인 (Mixins)
 
+> **원문:** https://www.typescriptlang.org/docs/handbook/mixins.html
+
 전통적인 OO 계층 구조와 함께, 재사용 가능한 컴포넌트로부터 클래스를 빌드하는 또 다른 인기 있는 방법은 더 간단한 부분 클래스를 결합하여 빌드하는 것입니다.
 Scala와 같은 언어에서 믹스인이나 트레이트 아이디어에 익숙할 수 있으며, 이 패턴은 JavaScript 커뮤니티에서도 인기를 얻고 있습니다.
 

@@ -1,5 +1,7 @@
 # Java/C# 프로그래머를 위한 TypeScript
 
+> **원문:** https://www.typescriptlang.org/docs/handbook/typescript-in-5-minutes-oop.html
+
 TypeScript는 C#이나 Java 같은 정적 타이핑을 가진 다른 언어에 익숙한 프로그래머들에게 인기 있는 선택입니다.
 
 TypeScript의 타입 시스템은 더 나은 코드 완성, 더 빠른 오류 감지, 프로그램 부분들 간의 더 명확한 통신 같은 많은 동일한 이점을 제공합니다.

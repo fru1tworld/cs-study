@@ -1,5 +1,7 @@
 # Kotlin 프로퍼티
 
+> **원문:** https://kotlinlang.org/docs/properties.html
+
 ## 개요
 
 Kotlin의 프로퍼티를 사용하면 데이터에 접근하거나 변경하기 위한 함수를 작성하지 않고도 데이터를 저장하고 관리할 수 있습니다. 모든 프로퍼티는 이름, 타입, 그리고 자동 생성된 `get()` 함수 (getter)를 가집니다. 가변 프로퍼티는 `set()` 함수 (setter)도 가집니다. getter와 setter를 접근자라고 합니다.

@@ -1,5 +1,7 @@
 # Kotlin 투어: null 안전성
 
+> **원문:** https://kotlinlang.org/docs/kotlin-tour-null-safety.html
+
 ## 개요
 
 Kotlin은 런타임이 아닌 컴파일 시점에 잠재적인 `null` 값 문제를 감지하는 내장 null 안전성 기능을 가지고 있습니다. 이는 일반적인 null 참조 오류를 방지합니다.

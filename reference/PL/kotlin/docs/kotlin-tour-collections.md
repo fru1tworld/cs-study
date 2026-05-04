@@ -1,5 +1,7 @@
 # Kotlin 투어: 컬렉션
 
+> **원문:** https://kotlinlang.org/docs/kotlin-tour-collections.html
+
 ## 개요
 
 컬렉션은 나중에 처리하기 위해 데이터를 그룹화하는 데 사용되는 구조입니다. Kotlin은 세 가지 주요 컬렉션 타입을 제공합니다: **List**, **Set**, **Map**. 각각은 가변 또는 읽기 전용일 수 있습니다.

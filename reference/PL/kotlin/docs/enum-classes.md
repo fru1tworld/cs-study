@@ -1,5 +1,7 @@
 # 열거형 클래스
 
+> **원문:** https://kotlinlang.org/docs/enum-classes.html
+
 ## 개요
 
 Kotlin의 열거형 클래스는 상수 집합을 정의하는 타입 안전한 방법을 제공합니다. 각 열거형 상수는 열거형 클래스의 객체 인스턴스입니다.

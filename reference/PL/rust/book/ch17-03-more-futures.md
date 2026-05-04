@@ -1,5 +1,7 @@
 # 여러 퓨처 다루기
 
+> **원문:** https://doc.rust-lang.org/book/ch17-03-more-futures.html
+
 ## 런타임에 제어 양보하기
 
 각 await 포인트에서 Rust는 런타임에 태스크를 일시 중지하고 await 중인 퓨처가 준비되지 않은 경우 다른 태스크로 전환할 기회를 줍니다. 반대로, Rust는 await 포인트에서**만** async 블록을 일시 중지합니다—await 포인트 사이의 모든 것은 동기적입니다.

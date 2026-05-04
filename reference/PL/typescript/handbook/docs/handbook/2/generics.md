@@ -1,3 +1,5 @@
+> **원문:** https://www.typescriptlang.org/docs/handbook/2/generics.html
+
 ---
 title: 제네릭
 layout: docs
@@ -430,7 +432,7 @@ const p = create(new HTMLParagraphElement());
 
 > 이것은 매우 특정한 문제를 해결하기 위한 고급 기능이며, 사용해야 할 이유를 식별한 상황에서만 사용해야 합니다
 
-[공변성과 반공변성](https://en.wikipedia.org/wiki/Covariance_and_contravariance_(computer_science))은 두 제네릭 타입 간의 관계를 설명하는 타입 이론 용어입니다.
+[공변성과 반공변성](https://en.wikipedia.org/wiki/Covariance_and_contravariance_%28computer_science%29)은 두 제네릭 타입 간의 관계를 설명하는 타입 이론 용어입니다.
 다음은 이 개념에 대한 간략한 입문서입니다.
 
 예를 들어, 특정 타입을 `make`할 수 있는 객체를 나타내는 인터페이스가 있다면:

@@ -1,5 +1,7 @@
 # 네임스페이스 (Namespaces)
 
+> **원문:** https://www.typescriptlang.org/docs/handbook/namespaces.html
+
 > **용어에 대한 참고:**
 > TypeScript 1.5에서 명명법이 변경되었다는 것을 주목하는 것이 중요합니다.
 > "내부 모듈"은 이제 "네임스페이스"입니다.

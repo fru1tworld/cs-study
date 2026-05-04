@@ -1,5 +1,7 @@
 # Kotlin 투어: 제어 흐름
 
+> **원문:** https://kotlinlang.org/docs/kotlin-tour-control-flow.html
+
 ## 개요
 
 Kotlin은 조건부 표현식에 기반한 결정을 내리고 루프를 생성하고 순회하는 메커니즘을 제공합니다. 이 페이지는 `if`/`when` 표현식, 범위, `for`/`while` 루프를 다룹니다.

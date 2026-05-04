@@ -1,5 +1,7 @@
 # 데이터 클래스
 
+> **원문:** https://kotlinlang.org/docs/data-classes.html
+
 Kotlin의 데이터 클래스는 주로 데이터를 보관하는 데 사용됩니다. 컴파일러는 인스턴스를 출력, 비교, 복사하는 등의 추가 멤버 함수를 자동으로 생성합니다. `data` 키워드로 표시됩니다.
 
 ```kotlin

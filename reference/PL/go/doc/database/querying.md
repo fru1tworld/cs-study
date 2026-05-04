@@ -1,5 +1,7 @@
 # 데이터 쿼리
 
+> **원문:** https://go.dev/doc/database/querying
+
 ## 개요
 
 데이터를 반환하는 SQL 문을 실행할 때 `database/sql` 패키지에서 제공하는 `Query` 메서드를 사용합니다. 각 메서드는 `Scan` 메서드를 사용하여 데이터를 변수에 복사할 수 있는 `Row` 또는 `Rows`를 반환합니다. 이러한 메서드는 `SELECT` 문을 실행합니다.

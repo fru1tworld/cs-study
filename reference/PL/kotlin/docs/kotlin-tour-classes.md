@@ -1,5 +1,7 @@
 # Kotlin 투어: 클래스
 
+> **원문:** https://kotlinlang.org/docs/kotlin-tour-classes.html
+
 ## 개요
 
 Kotlin은 클래스와 객체를 사용한 객체 지향 프로그래밍을 지원합니다. 클래스를 사용하면 객체의 특성 집합을 선언하여 반복적인 선언을 피함으로써 시간과 노력을 절약할 수 있습니다.

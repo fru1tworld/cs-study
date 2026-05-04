@@ -1,5 +1,7 @@
 # 심볼 (Symbols)
 
+> **원문:** https://www.typescriptlang.org/docs/handbook/symbols.html
+
 ECMAScript 2015부터 `symbol`은 `number`와 `string`처럼 원시 데이터 타입입니다.
 
 `symbol` 값은 `Symbol` 생성자를 호출하여 생성됩니다.

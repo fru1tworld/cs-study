@@ -1,5 +1,7 @@
 # 클래스
 
+> **원문:** https://www.typescriptlang.org/docs/handbook/2/classes.html
+
 TypeScript는 ES2015에서 도입된 `class` 키워드에 대한 완전한 지원을 제공합니다.
 
 다른 JavaScript 언어 기능과 마찬가지로 TypeScript는 클래스와 다른 타입 간의 관계를 표현할 수 있도록 타입 어노테이션 및 기타 구문을 추가합니다.

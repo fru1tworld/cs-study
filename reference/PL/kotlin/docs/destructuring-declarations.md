@@ -1,5 +1,7 @@
 # 구조 분해 선언
 
+> **원문:** https://kotlinlang.org/docs/destructuring-declarations.html
+
 ## 개요
 
 구조 분해 선언을 사용하면 객체를 한 번에 여러 변수로 분해할 수 있습니다:

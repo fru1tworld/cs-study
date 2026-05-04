@@ -1,5 +1,7 @@
 # Kotlin 투어: 기본 타입
 
+> **원문:** https://kotlinlang.org/docs/kotlin-tour-basic-types.html
+
 ## 개요
 
 Kotlin의 모든 변수와 데이터 구조는 타입을 가집니다. 타입은 컴파일러에게 해당 변수나 데이터 구조에서 어떤 연산이 허용되는지 알려줍니다. 즉, 어떤 함수와 프로퍼티를 가지고 있는지를 나타냅니다.

@@ -1,5 +1,7 @@
 # Kotlin/JS 프로젝트 설정
 
+> **원문:** https://kotlinlang.org/docs/js-project-setup.html
+
 이 문서는 Gradle과 Kotlin Multiplatform 플러그인을 사용하여 Kotlin/JS 프로젝트를 구성하고 관리하는 방법을 설명합니다.
 
 ## 개요

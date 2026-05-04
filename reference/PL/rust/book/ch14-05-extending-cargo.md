@@ -1,5 +1,7 @@
 # 사용자 정의 명령으로 Cargo 확장하기
 
+> **원문:** https://doc.rust-lang.org/book/ch14-05-extending-cargo.html
+
 Cargo는 수정 없이 새 하위 명령으로 확장할 수 있도록 설계되었습니다. `$PATH`에 있는 바이너리 이름이 `cargo-something`이면 `cargo something`을 실행하여 마치 Cargo 하위 명령인 것처럼 실행할 수 있습니다. 이와 같은 사용자 정의 명령은 `cargo --list`를 실행할 때도 나열됩니다. `cargo install`을 사용하여 확장을 설치한 다음 내장 Cargo 도구처럼 실행할 수 있는 것은 Cargo 디자인의 매우 편리한 이점입니다!
 
 ## 요약

@@ -1,5 +1,7 @@
 # JSDoc 참조
 
+> **원문:** https://www.typescriptlang.org/docs/handbook/jsdoc-supported-types.html
+
 아래 목록은 JavaScript 파일에서 타입 정보를 제공하기 위해 JSDoc 주석을 사용할 때 현재 지원되는 구조를 설명합니다.
 
 참고:

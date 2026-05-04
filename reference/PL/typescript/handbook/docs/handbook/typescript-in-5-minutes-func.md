@@ -1,5 +1,7 @@
 # 함수형 프로그래머를 위한 TypeScript
 
+> **원문:** https://www.typescriptlang.org/docs/handbook/typescript-in-5-minutes-func.html
+
 TypeScript는 전통적인 객체 지향 타입을 JavaScript에 가져와서 Microsoft의 프로그래머들이 전통적인 객체 지향 프로그램을 웹에 가져올 수 있도록 하려는 시도로 시작했습니다. TypeScript가 발전하면서, 타입 시스템은 네이티브 JavaScripter들이 작성하는 코드를 모델링하도록 진화했습니다. 결과적인 시스템은 강력하고, 흥미롭고, 복잡합니다.
 
 이 소개는 TypeScript를 배우고자 하는 Haskell이나 ML 프로그래머를 위해 설계되었습니다. TypeScript의 타입 시스템이 Haskell의 타입 시스템과 어떻게 다른지 설명합니다. 또한 JavaScript 코드 모델링에서 발생하는 TypeScript 타입 시스템의 고유한 특징도 설명합니다.

@@ -1,5 +1,7 @@
 # 데이터를 반환하지 않는 SQL 문 실행
 
+> **원문:** https://go.dev/doc/database/change-data
+
 ## 개요
 
 데이터를 반환하지 않는 데이터베이스 작업을 수행할 때 `database/sql` 패키지의 `Exec` 또는 `ExecContext` 메서드를 사용합니다. 이 방법으로 실행하는 SQL 문에는 `INSERT`, `DELETE`, `UPDATE`가 포함됩니다.

@@ -1,5 +1,7 @@
 # 중첩 및 내부 클래스
 
+> **원문:** https://kotlinlang.org/docs/nested-classes.html
+
 ## 개요
 
 Kotlin에서 클래스는 다른 클래스 내부에 중첩될 수 있습니다. 클래스와 인터페이스의 모든 조합이 중첩에 가능합니다.

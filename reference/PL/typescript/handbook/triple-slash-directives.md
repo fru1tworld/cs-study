@@ -1,5 +1,7 @@
 # 삼중 슬래시 지시어 (Triple-Slash Directives)
 
+> **원문:** https://www.typescriptlang.org/docs/handbook/triple-slash-directives.html
+
 삼중 슬래시 지시어는 단일 XML 태그를 포함하는 한 줄 주석입니다.
 주석의 내용은 컴파일러 지시어로 사용됩니다.
 

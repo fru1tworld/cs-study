@@ -1,5 +1,7 @@
 # 정렬
 
+> **원문:** https://kotlinlang.org/docs/collection-ordering.html
+
 요소의 순서는 특정 컬렉션 타입에서 중요한 측면입니다. 예를 들어, 동일한 요소를 가진 두 리스트는 요소가 다르게 정렬되면 같지 않습니다.
 
 Kotlin에서 객체의 순서는 여러 방식으로 정의할 수 있습니다.

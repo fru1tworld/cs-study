@@ -1,5 +1,7 @@
 # 가시성 수정자
 
+> **원문:** https://kotlinlang.org/docs/visibility-modifiers.html
+
 클래스, 객체, 인터페이스, 생성자, 함수, 프로퍼티 및 그 세터는 가시성 수정자를 가질 수 있습니다. 게터는 항상 해당 프로퍼티와 동일한 가시성을 갖습니다.
 
 ## Kotlin의 네 가지 가시성 수정자

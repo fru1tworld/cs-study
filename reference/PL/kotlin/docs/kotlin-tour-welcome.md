@@ -1,5 +1,7 @@
 # Kotlin 투어에 오신 것을 환영합니다
 
+> **원문:** https://kotlinlang.org/docs/kotlin-tour-welcome.html
+
 ## 개요
 
 이것은 공식 Kotlin 문서 투어의 메인 랜딩 페이지입니다. 브라우저 기반 인터랙티브 튜토리얼을 통해 Kotlin을 배울 수 있는 소개를 제공합니다.

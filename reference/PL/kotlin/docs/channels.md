@@ -1,5 +1,7 @@
 # Kotlin 채널
 
+> **원문:** https://kotlinlang.org/docs/channels.html
+
 ## 개요
 
 채널은 코루틴 간에 값의 스트림을 전송하는 방법을 제공하며, 단일 값을 전송하는 Deferred 값을 보완합니다.

@@ -1,5 +1,7 @@
 # Java에서 Kotlin 호출하기
 
+> **원문:** https://kotlinlang.org/docs/java-to-kotlin-interop.html
+
 이 포괄적인 가이드는 Java에서 Kotlin 코드를 원활하게 호출하는 방법을 설명하며, 상호운용성 기능과 모범 사례를 다룹니다.
 
 ## 프로퍼티

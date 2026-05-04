@@ -1,5 +1,7 @@
 # 데코레이터 (Decorators)
 
+> **원문:** https://www.typescriptlang.org/docs/handbook/decorators.html
+
 > **참고**&nbsp; 이 문서는 실험적인 stage 2 데코레이터 구현을 다룹니다. Stage 3 데코레이터 지원은 TypeScript 5.0부터 사용할 수 있습니다.
 > 참조: [TypeScript 5.0의 데코레이터](https://devblogs.microsoft.com/typescript/announcing-typescript-5-0/#decorators)
 

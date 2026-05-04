@@ -1,5 +1,7 @@
 # Kotlin/Native 개요
 
+> **원문:** https://kotlinlang.org/docs/native-overview.html
+
 ## Kotlin/Native란?
 
 **Kotlin/Native**는 Kotlin 코드를 가상 머신 없이 실행되는 네이티브 바이너리로 컴파일하는 기술입니다. 다음을 특징으로 합니다:

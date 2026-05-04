@@ -1,5 +1,7 @@
 # Kotlin 조건문과 루프
 
+> **원문:** https://kotlinlang.org/docs/control-flow.html
+
 ## 개요
 
 Kotlin은 `if`, `when`, 그리고 다양한 루프 구조를 사용하여 프로그램 흐름을 제어하는 유연한 도구를 제공합니다.

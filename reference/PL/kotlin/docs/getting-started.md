@@ -1,5 +1,7 @@
 # Kotlin 시작하기
 
+> **원문:** https://kotlinlang.org/docs/getting-started.html
+
 ## 개요
 
 Kotlin은 다음과 같은 특징을 가진 현대적인 언어입니다:
@@ -50,7 +52,7 @@ Android에서 Kotlin 시작에 대한 [Google의 권장 사항](https://develope
 2. 다음 도구로 데이터 탐색:
    - **DataFrame** - 데이터 분석 및 조작 라이브러리
    - **Kandy** - 데이터 시각화 플로팅 도구
-3. Twitter에서 [@KotlinForData](http://twitter.com/KotlinForData) 팔로우하기
+
 
 ---
 

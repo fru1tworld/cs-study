@@ -1,5 +1,7 @@
 # 모듈을 다른 파일로 분리하기
 
+> **원문:** https://doc.rust-lang.org/book/ch07-05-separating-modules-into-different-files.html
+
 ## 개요
 
 모듈이 커지면 코드 구성과 탐색을 개선하기 위해 정의를 별도의 파일로 이동하는 것이 좋습니다. 이 섹션에서는 단일 파일에서 모듈을 자체 파일로 추출하는 방법을 설명합니다.

@@ -1,5 +1,7 @@
 # Kotlin 문자
 
+> **원문:** https://kotlinlang.org/docs/characters.html
+
 ## 개요
 
 문자는 `Char` 타입으로 표현됩니다. 문자 리터럴은 작은따옴표로 작성합니다: `'1'`.

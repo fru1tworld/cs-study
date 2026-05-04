@@ -1,5 +1,7 @@
 # 리스트별 연산
 
+> **원문:** https://kotlinlang.org/docs/list-operations.html
+
 [`List`](collections-overview.md#list)는 Kotlin에서 가장 인기 있는 내장 컬렉션 타입입니다. 리스트 요소에 대한 인덱스 접근은 리스트에 강력한 연산 세트를 제공합니다.
 
 ## 인덱스로 요소 조회

@@ -1,5 +1,7 @@
 # Kotlin/JavaScript 개요
 
+> **원문:** https://kotlinlang.org/docs/js-overview.html
+
 ## Kotlin/JS란?
 
 **Kotlin/JavaScript (Kotlin/JS)**는 Kotlin 코드, Kotlin 표준 라이브러리 및 호환 가능한 의존성을 JavaScript로 트랜스파일할 수 있게 해줍니다. 이를 통해 JavaScript를 지원하는 모든 환경에서 Kotlin 애플리케이션을 실행할 수 있습니다.

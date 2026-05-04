@@ -1,5 +1,7 @@
 # 컬렉션 쓰기 연산
 
+> **원문:** https://kotlinlang.org/docs/collection-write.html
+
 [가변 컬렉션](collections-overview.md#collection-types)은 컬렉션 내용을 변경하는 연산, 예를 들어 요소 추가 또는 제거를 지원합니다. 이 페이지에서는 `MutableCollection`의 모든 구현에서 사용할 수 있는 쓰기 연산을 설명합니다. `List`와 `Map`에 사용할 수 있는 더 구체적인 연산은 각각 [리스트별 연산](list-operations.md)과 [맵별 연산](map-operations.md)에서 설명합니다.
 
 ## 요소 추가

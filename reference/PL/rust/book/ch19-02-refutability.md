@@ -1,5 +1,7 @@
 # 반박 가능성: 패턴이 매칭에 실패할 수 있는지 여부
 
+> **원문:** https://doc.rust-lang.org/book/ch19-02-refutability.html
+
 ## 개요
 
 Rust의 패턴은 두 가지 형태로 나뉩니다:

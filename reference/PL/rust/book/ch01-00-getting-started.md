@@ -1,5 +1,7 @@
 # 시작하기
 
+> **원문:** https://doc.rust-lang.org/book/ch01-00-getting-started.html
+
 이 챕터에서는 다음 내용을 다룹니다:
 
 - Linux, macOS, Windows에서 **Rust 설치하기**

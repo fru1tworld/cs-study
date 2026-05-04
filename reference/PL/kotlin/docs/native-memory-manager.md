@@ -1,5 +1,7 @@
 # Kotlin/Native 메모리 관리
 
+> **원문:** https://kotlinlang.org/docs/native-memory-manager.html
+
 ## 개요
 
 Kotlin/Native는 JVM, Go 및 기타 주류 기술과 유사한 현대적인 메모리 관리자를 사용하며 다음과 같은 주요 기능을 제공합니다:

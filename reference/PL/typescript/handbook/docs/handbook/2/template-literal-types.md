@@ -1,3 +1,5 @@
+> **원문:** https://www.typescriptlang.org/docs/handbook/2/template-literal-types.html
+
 ---
 title: 템플릿 리터럴 타입
 layout: docs

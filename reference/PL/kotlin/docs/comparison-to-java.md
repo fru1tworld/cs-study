@@ -1,5 +1,7 @@
 # Java와의 비교
 
+> **원문:** https://kotlinlang.org/docs/comparison-to-java.html
+
 이 페이지는 Kotlin과 Java를 종합적으로 비교하여 각각의 강점과 차이점을 강조합니다.
 
 ## Kotlin에서 해결된 Java의 일부 문제점

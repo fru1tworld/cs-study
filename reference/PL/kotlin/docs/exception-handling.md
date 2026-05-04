@@ -1,5 +1,7 @@
 # 코루틴 예외 처리
 
+> **원문:** https://kotlinlang.org/docs/exception-handling.html
+
 ## 개요
 
 이 문서는 Kotlin 코루틴에서의 예외 처리와 취소를 다룹니다. 취소된 코루틴이 일시 중단 지점에서 `CancellationException`을 던지는 방법과 취소 중 예외가 발생하거나 여러 자식이 예외를 던질 때 어떤 일이 발생하는지 설명합니다.

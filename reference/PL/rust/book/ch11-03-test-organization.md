@@ -1,5 +1,7 @@
 # 테스트 조직화
 
+> **원문:** https://doc.rust-lang.org/book/ch11-03-test-organization.html
+
 ## 개요
 
 Rust에서 테스트는 두 가지 주요 카테고리로 구성됩니다:

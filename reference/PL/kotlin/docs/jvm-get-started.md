@@ -1,5 +1,7 @@
 # 콘솔 앱 만들기 - Kotlin 튜토리얼
 
+> **원문:** https://kotlinlang.org/docs/jvm-get-started.html
+
 이 튜토리얼은 IntelliJ IDEA와 Kotlin을 사용하여 콘솔 애플리케이션을 만드는 방법을 안내합니다.
 
 ## 사전 준비

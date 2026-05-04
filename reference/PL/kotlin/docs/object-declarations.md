@@ -1,5 +1,7 @@
 # 객체 선언과 표현식
 
+> **원문:** https://kotlinlang.org/docs/object-declarations.html
+
 ## 개요
 
 Kotlin에서 객체는 클래스를 정의하고 인스턴스를 한 단계로 생성할 수 있게 합니다. 이는 싱글톤과 일회성 객체에 유용합니다. Kotlin은 두 가지 접근 방식을 제공합니다:

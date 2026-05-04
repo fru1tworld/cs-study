@@ -1,5 +1,7 @@
 # Go 다운로드 및 설치
 
+> **원문:** https://go.dev/doc/install
+
 ## 개요
 이 문서는 Linux, Mac, Windows 등 다양한 운영체제에서 Go를 다운로드하고 설치하는 방법을 설명합니다.
 

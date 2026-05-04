@@ -1,5 +1,7 @@
 # Kotlin 패키지와 임포트
 
+> **원문:** https://kotlinlang.org/docs/packages.html
+
 ## 개요
 
 소스 파일은 코드를 네임스페이스로 구성하기 위해 패키지 선언으로 시작할 수 있습니다.

@@ -1,5 +1,7 @@
 # 처음 프로그래밍을 배우는 사람을 위한 TypeScript
 
+> **원문:** https://www.typescriptlang.org/docs/handbook/typescript-from-scratch.html
+
 TypeScript를 첫 번째 언어 중 하나로 선택하신 것을 축하드립니다. 이미 좋은 결정을 내리고 계시네요!
 
 TypeScript가 JavaScript의 "변형" 또는 "파생형"이라는 말을 이미 들어보셨을 것입니다.

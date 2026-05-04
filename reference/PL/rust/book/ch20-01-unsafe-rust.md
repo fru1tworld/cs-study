@@ -1,5 +1,7 @@
 # 안전하지 않은 Rust (Unsafe Rust)
 
+> **원문:** https://doc.rust-lang.org/book/ch20-01-unsafe-rust.html
+
 ## 개요
 
 Unsafe Rust는 Rust 내부에 숨겨진 두 번째 언어로, 컴파일 타임에 메모리 안전성 보장을 강제하지 않습니다. 이것이 존재하는 이유:

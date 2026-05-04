@@ -1,5 +1,7 @@
 # 라이브러리 구조
 
+> **원문:** https://www.typescriptlang.org/docs/handbook/declaration-files/library-structures.html
+
 대체로 말해서, 선언 파일을 _구조화_하는 방법은 라이브러리가 어떻게 소비되는지에 따라 달라집니다. JavaScript에서 소비를 위해 라이브러리를 제공하는 방법은 많으며, 그에 맞게 선언 파일을 작성해야 합니다. 이 가이드는 일반적인 라이브러리 패턴을 식별하는 방법과 해당 패턴에 대응하는 선언 파일을 작성하는 방법을 다룹니다.
 
 주요 라이브러리 구조화 패턴의 각 유형에는 [템플릿](/docs/handbook/declaration-files/templates.html) 섹션에 해당하는 파일이 있습니다. 이 템플릿으로 시작하면 더 빠르게 진행할 수 있습니다.

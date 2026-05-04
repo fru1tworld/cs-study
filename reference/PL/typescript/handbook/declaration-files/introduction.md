@@ -1,5 +1,7 @@
 # 소개
 
+> **원문:** https://www.typescriptlang.org/docs/handbook/declaration-files/introduction.html
+
 선언 파일 섹션은 고품질의 TypeScript 선언 파일(Declaration File)을 작성하는 방법을 알려주기 위해 설계되었습니다. 시작하기 위해서는 TypeScript 언어에 대한 기본적인 친숙함이 필요합니다.
 
 아직 읽지 않았다면, [TypeScript 핸드북](/docs/handbook/2/basic-types.html)을 읽고 기본 개념, 특히 타입과 모듈에 대해 익숙해지시기 바랍니다.

@@ -1,5 +1,7 @@
 # 배포하기
 
+> **원문:** https://www.typescriptlang.org/docs/handbook/declaration-files/publishing.html
+
 이 가이드의 단계에 따라 선언 파일을 작성했으니, 이제 npm에 배포할 차례입니다. 선언 파일을 npm에 배포하는 두 가지 주요 방법이 있습니다:
 
 1. npm 패키지와 함께 번들링

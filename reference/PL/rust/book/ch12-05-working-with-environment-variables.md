@@ -1,5 +1,7 @@
 # 환경 변수로 작업하기
 
+> **원문:** https://doc.rust-lang.org/book/ch12-05-working-with-environment-variables.html
+
 ## 개요
 
 이 섹션에서는 환경 변수를 사용하여 `minigrep` 바이너리에 대소문자 구분 없는 검색 기능을 추가하는 방법을 설명합니다. 테스트 주도 개발(TDD) 원칙을 따라 진행합니다.

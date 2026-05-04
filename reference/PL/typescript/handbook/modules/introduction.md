@@ -1,5 +1,7 @@
 # 모듈 - 소개
 
+> **원문:** https://www.typescriptlang.org/docs/handbook/modules/introduction.html
+
 이 문서는 네 개의 섹션으로 나뉩니다:
 
 1. 첫 번째 섹션은 TypeScript가 모듈에 접근하는 방식 뒤의 [**이론**](/docs/handbook/modules/theory.html)을 개발합니다. 어떤 상황에서든 올바른 모듈 관련 컴파일러 옵션을 작성하고, TypeScript를 다른 도구와 통합하는 방법을 추론하거나, TypeScript가 의존성 패키지를 처리하는 방식을 이해하고 싶다면 여기서 시작하는 것이 좋습니다. 이러한 주제에 대한 가이드와 참조 페이지가 있지만, 이러한 기본 사항에 대한 이해를 쌓으면 가이드를 읽기가 더 쉬워지고, 여기서 구체적으로 다루지 않은 실제 문제를 다루기 위한 정신적 프레임워크를 제공합니다.

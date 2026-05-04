@@ -1,5 +1,7 @@
 # 좁히기
 
+> **원문:** https://www.typescriptlang.org/docs/handbook/2/narrowing.html
+
 좁히기는 TypeScript가 처음에 선언된 것보다 더 구체적인 타입으로 변수 타입을 정제하는 과정입니다. 이 문서는 타입을 좁히기 위한 다양한 TypeScript 메커니즘을 설명합니다.
 
 ## 타입 가드 메서드

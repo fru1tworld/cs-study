@@ -1,5 +1,7 @@
 # Kotlin/Native 시작하기 - 완전 가이드
 
+> **원문:** https://kotlinlang.org/docs/native-get-started.html
+
 ## 개요
 
 이 튜토리얼은 Kotlin/Native 애플리케이션을 만드는 세 가지 방법을 다룹니다:

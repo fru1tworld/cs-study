@@ -1,5 +1,7 @@
 # 집계 연산
 
+> **원문:** https://kotlinlang.org/docs/collection-aggregate.html
+
 Kotlin 컬렉션은 일반적으로 사용되는 _집계 연산_을 위한 함수를 포함합니다 - 컬렉션 내용을 기반으로 단일 값을 반환하는 연산입니다. 대부분은 잘 알려져 있으며 다른 언어에서와 동일하게 작동합니다:
 
 * [`minOrNull()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/min-or-null.html)과 [`maxOrNull()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/max-or-null.html)은 각각 가장 작은 요소와 가장 큰 요소를 반환합니다. 빈 컬렉션에서는 `null`을 반환합니다.

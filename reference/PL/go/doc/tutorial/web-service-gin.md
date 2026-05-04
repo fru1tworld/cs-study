@@ -1,5 +1,7 @@
 # 튜토리얼: Go와 Gin을 사용한 RESTful API 개발
 
+> **원문:** https://go.dev/doc/tutorial/web-service-gin
+
 ## 개요
 이 튜토리얼은 Go와 Gin 웹 프레임워크를 사용하여 RESTful 웹 서비스 API를 구축하는 방법을 소개합니다. 요청 라우팅, 요청 세부 정보 검색, JSON 응답 마샬링을 다룹니다.
 

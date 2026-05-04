@@ -1,3 +1,5 @@
+> **원문:** https://www.typescriptlang.org/docs/handbook/2/indexed-access-types.html
+
 ---
 title: 인덱스 접근 타입
 layout: docs

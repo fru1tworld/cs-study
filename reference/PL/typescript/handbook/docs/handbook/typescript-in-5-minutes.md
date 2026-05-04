@@ -1,5 +1,7 @@
 # JavaScript 프로그래머를 위한 TypeScript
 
+> **원문:** https://www.typescriptlang.org/docs/handbook/typescript-in-5-minutes.html
+
 TypeScript는 JavaScript와 특별한 관계에 있습니다. TypeScript는 JavaScript의 모든 기능을 제공하며, 그 위에 추가적인 계층인 TypeScript의 타입 시스템을 더합니다.
 
 예를 들어, JavaScript는 `string`과 `number` 같은 언어 원시 타입을 제공하지만, 이들을 일관되게 할당했는지 검사하지 않습니다. TypeScript는 검사합니다.

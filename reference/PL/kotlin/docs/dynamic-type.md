@@ -1,5 +1,7 @@
 # Kotlin의 Dynamic 타입
 
+> **원문:** https://kotlinlang.org/docs/dynamic-type.html
+
 ## 개요
 
 **dynamic 타입**은 정적 타입 검사를 비활성화하여 타입이 없거나 느슨하게 타입이 지정된 환경, 특히 JavaScript와의 상호운용성을 용이하게 하는 Kotlin 기능입니다. **참고:** dynamic 타입은 JVM을 타겟팅하는 코드에서는 지원되지 않습니다.

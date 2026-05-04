@@ -1,5 +1,7 @@
 # 커맨드 라인 인수 받기
 
+> **원문:** https://doc.rust-lang.org/book/ch12-01-accepting-command-line-arguments.html
+
 ## 개요
 
 이 섹션에서는 커맨드 라인 인수를 받아들이는 `minigrep` 프로젝트를 만드는 방법을 배웁니다. 목표는 다음과 같이 실행할 수 있는 프로그램을 만드는 것입니다:

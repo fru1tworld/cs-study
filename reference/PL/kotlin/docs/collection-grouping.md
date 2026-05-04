@@ -1,5 +1,7 @@
 # 그룹화
 
+> **원문:** https://kotlinlang.org/docs/collection-grouping.html
+
 Kotlin 표준 라이브러리는 컬렉션 요소를 그룹화하기 위한 확장 함수를 제공합니다. 기본 함수 [`groupBy()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/group-by.html)는 람다 함수를 받아 `Map`을 반환합니다. 이 맵에서 각 키는 람다 결과이고 해당 값은 이 결과가 반환되는 요소의 `List`입니다. 이 함수는 예를 들어 `String` 리스트를 첫 글자로 그룹화하는 데 사용할 수 있습니다.
 
 두 번째 람다 인수인 값 변환 함수와 함께 `groupBy()`를 호출할 수도 있습니다. 두 람다가 있는 결과 맵에서 `keySelector` 함수에 의해 생성된 키는 원래 요소 대신 값 변환 함수의 결과에 매핑됩니다.

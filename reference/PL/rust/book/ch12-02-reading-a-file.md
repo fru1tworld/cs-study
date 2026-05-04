@@ -1,5 +1,7 @@
 # 파일 읽기
 
+> **원문:** https://doc.rust-lang.org/book/ch12-02-reading-a-file.html
+
 ## 개요
 
 이 장에서는 커맨드라인 인수로 지정된 파일을 읽는 기능을 구현합니다. `minigrep` 검색 유틸리티 구축의 일부로, 파일 내용을 읽어 처리하는 방법을 배웁니다.

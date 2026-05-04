@@ -1,5 +1,7 @@
 # Kotlin 동등성
 
+> **원문:** https://kotlinlang.org/docs/equality.html
+
 ## 개요
 
 Kotlin에는 **두 가지 유형의 동등성**이 있습니다:

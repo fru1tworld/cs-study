@@ -1,5 +1,7 @@
 # 타입 선언
 
+> **원문:** https://www.typescriptlang.org/docs/handbook/2/type-declarations.html
+
 지금까지 읽은 섹션 전체에서 모든 JavaScript 런타임에 있는 내장 함수를 사용하여 기본 TypeScript 개념을 시연해 왔습니다.
 그러나 오늘날 거의 모든 JavaScript에는 일반적인 작업을 수행하기 위한 많은 라이브러리가 포함되어 있습니다.
 애플리케이션에서 _당신의_ 코드가 아닌 부분에 대한 타입을 갖는 것은 TypeScript 경험을 크게 향상시킬 것입니다.

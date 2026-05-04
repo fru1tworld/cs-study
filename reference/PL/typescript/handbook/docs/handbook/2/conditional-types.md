@@ -1,3 +1,5 @@
+> **원문:** https://www.typescriptlang.org/docs/handbook/2/conditional-types.html
+
 ---
 title: 조건부 타입
 layout: docs

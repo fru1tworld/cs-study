@@ -1,5 +1,7 @@
 # `use` 키워드로 경로를 스코프로 가져오기
 
+> **원문:** https://doc.rust-lang.org/book/ch07-04-bringing-paths-into-scope-with-the-use-keyword.html
+
 ## 개요
 
 `use` 키워드를 사용하면 경로에 대한 바로가기를 만들어, 함수를 호출하거나 항목에 접근하기 위해 전체 경로를 반복적으로 작성할 필요가 없습니다. 이는 코드를 단순화하고 반복을 줄입니다.

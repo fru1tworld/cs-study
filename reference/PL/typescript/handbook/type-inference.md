@@ -1,5 +1,7 @@
 # 타입 추론 (Type Inference)
 
+> **원문:** https://www.typescriptlang.org/docs/handbook/type-inference.html
+
 TypeScript에서 명시적인 타입 주석이 없을 때 타입 정보를 제공하기 위해 타입 추론이 사용되는 여러 곳이 있습니다. 예를 들어, 이 코드에서
 
 ```ts

@@ -1,5 +1,7 @@
 # Async로 동시성 적용하기
 
+> **원문:** https://doc.rust-lang.org/book/ch17-02-concurrency-with-async.html
+
 이 섹션에서는 16장에서 스레드로 해결했던 동시성 문제에 async/await 패턴을 적용하는 방법을 보여줍니다.
 
 ## `spawn_task`로 새 태스크 생성하기

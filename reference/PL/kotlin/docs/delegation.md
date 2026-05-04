@@ -1,5 +1,7 @@
 # 위임
 
+> **원문:** https://kotlinlang.org/docs/delegation.html
+
 ## 개요
 
 **위임 패턴**은 구현 상속의 좋은 대안이며, Kotlin은 보일러플레이트 코드 없이 기본적으로 이를 지원합니다.

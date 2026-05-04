@@ -1,5 +1,7 @@
 # TypeScript를 활용하는 JS 프로젝트
 
+> **원문:** https://www.typescriptlang.org/docs/handbook/intro-to-js-ts.html
+
 TypeScript의 타입 시스템은 코드베이스로 작업할 때 다양한 수준의 엄격함을 가집니다:
 
 - JavaScript 코드로만 추론에 기반한 타입 시스템

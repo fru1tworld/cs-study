@@ -1,5 +1,7 @@
 # Kotlin 스코프 함수
 
+> **원문:** https://kotlinlang.org/docs/scope-functions.html
+
 ## 개요
 
 스코프 함수는 객체의 컨텍스트 내에서 코드 블록을 실행하는 Kotlin 표준 라이브러리의 함수입니다. 이름을 직접 사용하지 않고도 객체에 접근할 수 있게 해줍니다. **5가지 스코프 함수**가 있습니다: `let`, `run`, `with`, `apply`, `also`.

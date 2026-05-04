@@ -1,5 +1,7 @@
 # Kotlin this 표현식
 
+> **원문:** https://kotlinlang.org/docs/this-expressions.html
+
 ## 개요
 
 this 표현식은 Kotlin에서 현재 수신자를 나타냅니다. `this` 키워드는 컨텍스트에 따라 다른 스코프를 참조하는 데 사용됩니다.

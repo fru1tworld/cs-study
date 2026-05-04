@@ -1,5 +1,7 @@
 # 컬렉션 생성하기
 
+> **원문:** https://kotlinlang.org/docs/constructing-collections.html
+
 ## 요소로부터 생성
 
 컬렉션을 생성하는 가장 일반적인 방법은 표준 라이브러리 함수 [`listOf<T>()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/list-of.html), [`setOf<T>()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/set-of.html), [`mutableListOf<T>()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/mutable-list-of.html), [`mutableSetOf<T>()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/mutable-set-of.html)를 사용하는 것입니다. 컬렉션 요소를 쉼표로 구분된 인수로 제공하면 컴파일러가 요소 타입을 자동으로 감지합니다. 빈 컬렉션을 생성할 때는 타입을 명시적으로 지정해야 합니다.

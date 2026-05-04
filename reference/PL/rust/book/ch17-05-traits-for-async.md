@@ -1,5 +1,7 @@
 # Async를 위한 트레이트 자세히 살펴보기
 
+> **원문:** https://doc.rust-lang.org/book/ch17-05-traits-for-async.html
+
 ## 개요
 
 이 장에서는 `Future`, `Stream`, `StreamExt` 트레이트와 `Pin` 타입 및 `Unpin` 트레이트를 심층적으로 살펴봅니다. 이러한 세부 사항은 async Rust가 내부적으로 어떻게 작동하는지 이해하는 데 필수적이지만, 일상적인 프로그래밍에는 필요하지 않습니다.

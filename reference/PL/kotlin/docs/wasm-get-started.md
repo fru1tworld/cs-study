@@ -1,5 +1,7 @@
 # Kotlin/Wasm 및 Compose Multiplatform 시작하기
 
+> **원문:** https://kotlinlang.org/docs/wasm-get-started.html
+
 이 튜토리얼은 IntelliJ IDEA에서 **Kotlin/Wasm**과 함께 **Compose Multiplatform** 앱을 실행하고 웹 게시용 아티팩트를 생성하는 방법을 보여줍니다.
 
 ## 프로젝트 생성

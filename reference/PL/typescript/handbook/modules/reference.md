@@ -1,5 +1,7 @@
 # 모듈 - 참조
 
+> **원문:** https://www.typescriptlang.org/docs/handbook/modules/reference.html
+
 ## 모듈 구문
 
 TypeScript 컴파일러는 TypeScript와 JavaScript 파일에서 표준 [ECMAScript 모듈 구문](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules)과 JavaScript 파일에서 많은 형태의 [CommonJS 구문](https://www.typescriptlang.org/docs/handbook/type-checking-javascript-files.html#commonjs-modules-are-supported)을 인식합니다.

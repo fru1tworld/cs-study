@@ -1,5 +1,7 @@
 # 이터레이터
 
+> **원문:** https://kotlinlang.org/docs/iterators.html
+
 컬렉션을 순회하기 위해 Kotlin 표준 라이브러리는 _이터레이터_의 일반적으로 사용되는 메커니즘을 지원합니다. 이터레이터는 기본 구조를 노출하지 않고 컬렉션 요소에 순차적으로 접근할 수 있게 해주는 객체입니다. 이터레이터는 모든 요소를 하나씩 처리해야 할 때 유용합니다. 예를 들어, 값을 출력하거나 유사한 업데이트를 수행하는 경우입니다.
 
 이터레이터는 [`Iterator<T>`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterator/index.html) 인터페이스의 `iterator()` 함수를 호출하여 `Set`과 `List`를 포함한 [`Iterable<T>`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/index.html) 인터페이스의 상속자에 대해 얻을 수 있습니다.

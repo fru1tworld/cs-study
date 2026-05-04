@@ -1,5 +1,7 @@
 # JavaScript 파일의 타입 검사
 
+> **원문:** https://www.typescriptlang.org/docs/handbook/type-checking-javascript-files.html
+
 `.ts` 파일과 비교하여 `.js` 파일에서 검사가 작동하는 방식에 대한 몇 가지 주목할 만한 차이점이 있습니다.
 
 ## 프로퍼티는 클래스 본문의 할당에서 추론됩니다

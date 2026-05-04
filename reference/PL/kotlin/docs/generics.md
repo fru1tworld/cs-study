@@ -1,5 +1,7 @@
 # 제네릭: in, out, where
 
+> **원문:** https://kotlinlang.org/docs/generics.html
+
 ## 개요
 
 Kotlin의 클래스는 Java와 유사하게 타입 매개변수를 가질 수 있습니다. 타입 인수는 문맥에서 추론될 수 있어 더 깔끔한 문법이 가능합니다.

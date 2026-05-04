@@ -1,5 +1,7 @@
 # 일상적인 타입
 
+> **원문:** https://www.typescriptlang.org/docs/handbook/2/everyday-types.html
+
 이 챕터에서는 JavaScript 코드에서 찾을 수 있는 가장 일반적인 값의 타입 중 일부를 다루고, TypeScript에서 해당 타입을 설명하는 방법을 설명합니다.
 이것은 완전한 목록이 아니며, 이후 챕터에서 다른 타입을 이름 짓고 사용하는 더 많은 방법을 설명할 것입니다.
 

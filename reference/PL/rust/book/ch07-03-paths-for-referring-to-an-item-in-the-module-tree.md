@@ -1,5 +1,7 @@
 # 모듈 트리의 항목을 참조하기 위한 경로
 
+> **원문:** https://doc.rust-lang.org/book/ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html
+
 ## 개요
 
 모듈 트리에서 항목을 찾을 위치를 Rust에 보여주기 위해, 파일 시스템을 탐색할 때 경로를 사용하는 것과 같은 방식으로 경로를 사용합니다. 함수를 호출하려면 경로를 알아야 합니다.

@@ -1,5 +1,7 @@
 # 공유 가변 상태와 동시성
 
+> **원문:** https://kotlinlang.org/docs/shared-mutable-state-and-concurrency.html
+
 ## 개요
 
 코루틴은 `Dispatchers.Default`와 같은 멀티스레드 디스패처를 사용하여 병렬로 실행될 수 있으며, 이는 표준 병렬 처리 문제를 야기합니다. 주요 과제는 공유 가변 상태에 대한 접근 동기화입니다.

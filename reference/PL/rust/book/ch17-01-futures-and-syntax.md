@@ -1,5 +1,7 @@
 # 퓨처와 Async 구문
 
+> **원문:** https://doc.rust-lang.org/book/ch17-01-futures-and-syntax.html
+
 Rust의 비동기 프로그래밍의 핵심 요소는 *퓨처*와 Rust의 `async` 및 `await` 키워드입니다.
 
 *퓨처*는 지금은 준비되지 않았지만 미래의 어느 시점에 준비될 값입니다. Rust는 이를 빌딩 블록으로 `Future` 트레이트를 제공하므로 다른 async 작업이 다른 데이터 구조로 구현될 수 있지만 공통 인터페이스를 가집니다. Rust에서 퓨처는 `Future` 트레이트를 구현하는 타입입니다.

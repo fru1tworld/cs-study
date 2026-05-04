@@ -1,5 +1,7 @@
 # 관계형 데이터베이스 접근
 
+> **원문:** https://go.dev/doc/database
+
 ## 개요
 
 Go를 사용하면 다양한 데이터베이스와 데이터 접근 방식을 애플리케이션에 통합할 수 있습니다. 표준 라이브러리의 [`database/sql`](https://pkg.go.dev/database/sql) 패키지는 관계형 데이터베이스에 접근하는 데 사용됩니다.

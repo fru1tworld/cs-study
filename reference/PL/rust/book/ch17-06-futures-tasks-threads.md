@@ -1,5 +1,7 @@
 # 퓨처, 태스크, 스레드
 
+> **원문:** https://doc.rust-lang.org/book/ch17-06-futures-tasks-threads.html
+
 ## 모든 것을 종합하기: 퓨처, 태스크, 스레드
 
 ### 개요

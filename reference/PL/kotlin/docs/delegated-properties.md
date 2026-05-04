@@ -1,5 +1,7 @@
 # 위임된 프로퍼티
 
+> **원문:** https://kotlinlang.org/docs/delegated-properties.html
+
 ## 개요
 
 위임된 프로퍼티를 사용하면 일반적인 프로퍼티 패턴을 한 번 구현하고 재사용할 수 있습니다. 문법:

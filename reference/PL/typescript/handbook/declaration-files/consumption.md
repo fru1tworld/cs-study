@@ -1,5 +1,7 @@
 # 사용하기
 
+> **원문:** https://www.typescriptlang.org/docs/handbook/declaration-files/consumption.html
+
 ## 다운로드
 
 타입 선언을 가져오는 데는 npm 외에 다른 도구가 필요하지 않습니다.

@@ -1,5 +1,7 @@
 # 설치
 
+> **원문:** https://doc.rust-lang.org/book/ch01-01-installation.html
+
 첫 번째 단계는 Rust를 설치하는 것입니다. Rust 버전과 관련 도구를 관리하는 커맨드 라인 도구인 `rustup`을 통해 Rust를 다운로드합니다. 다운로드를 위해 인터넷 연결이 필요합니다.
 
 > **참고:** 어떤 이유로 `rustup`을 사용하고 싶지 않다면, [다른 Rust 설치 방법 페이지](https://forge.rust-lang.org/infra/other-installation-methods.html)에서 더 많은 옵션을 확인하세요.

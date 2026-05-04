@@ -1,5 +1,7 @@
 # 선언 병합 (Declaration Merging)
 
+> **원문:** https://www.typescriptlang.org/docs/handbook/declaration-merging.html
+
 ## 소개
 
 TypeScript의 독특한 개념 중 일부는 타입 수준에서 JavaScript 객체의 형태를 설명합니다.

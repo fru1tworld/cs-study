@@ -1,5 +1,7 @@
 # `if let`과 `let...else`를 사용한 간결한 제어 흐름
 
+> **원문:** https://doc.rust-lang.org/book/ch06-03-if-let.html
+
 ## 개요
 
 `if let` 문법은 하나의 패턴과 일치하는 값을 처리하고 나머지는 무시하는 덜 장황한 방법을 제공합니다. `if`와 `let`을 패턴 매칭을 위한 간결한 구조로 결합합니다.

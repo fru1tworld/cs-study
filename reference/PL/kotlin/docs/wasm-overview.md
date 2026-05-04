@@ -1,5 +1,7 @@
 # Kotlin/Wasm 개요
 
+> **원문:** https://kotlinlang.org/docs/wasm-overview.html
+
 ## Kotlin/Wasm이란?
 
 Kotlin/Wasm은 Kotlin 코드를 **WebAssembly (Wasm)** 형식으로 컴파일할 수 있게 해주어 Wasm을 지원하는 다양한 환경과 장치에서 애플리케이션을 실행할 수 있게 합니다.

@@ -1,5 +1,7 @@
 # Kotlin 숫자
 
+> **원문:** https://kotlinlang.org/docs/numbers.html
+
 ## 개요
 
 이 페이지는 Kotlin의 내장 숫자 타입, 리터럴 상수, 연산, 그리고 부동 소수점 숫자에 대한 특별한 고려 사항을 다룹니다.

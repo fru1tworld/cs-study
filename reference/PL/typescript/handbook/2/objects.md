@@ -1,5 +1,7 @@
 # 객체 타입
 
+> **원문:** https://www.typescriptlang.org/docs/handbook/2/objects.html
+
 JavaScript에서 데이터를 그룹화하고 전달하는 기본적인 방법은 객체를 통해서입니다.
 TypeScript에서 이것들을 _객체 타입_으로 표현합니다.
 

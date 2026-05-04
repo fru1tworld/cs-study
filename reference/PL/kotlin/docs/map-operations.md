@@ -1,5 +1,7 @@
 # 맵별 연산
 
+> **원문:** https://kotlinlang.org/docs/map-operations.html
+
 [맵](collections-overview.md#map)에서 키와 값의 타입은 사용자가 정의합니다. 맵 엔트리에 대한 키 기반 접근은 키로 값 조회부터 키와 값의 별도 필터링까지 다양한 맵별 처리 기능을 가능하게 합니다. 이 페이지에서는 표준 라이브러리의 맵 처리 함수를 설명합니다.
 
 ## 키와 값 조회

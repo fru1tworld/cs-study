@@ -1,5 +1,7 @@
 # 테스트 작성하기
 
+> **원문:** https://doc.rust-lang.org/book/ch11-01-writing-tests.html
+
 ## 개요
 
 테스트는 비테스트 코드가 예상대로 작동하는지 검증하는 Rust 함수입니다. 테스트 함수는 일반적으로 세 가지 작업을 수행합니다:

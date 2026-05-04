@@ -1,5 +1,7 @@
 # 코루틴 컨텍스트와 디스패처
 
+> **원문:** https://kotlinlang.org/docs/coroutine-context-and-dispatchers.html
+
 ## 개요
 
 코루틴은 항상 Kotlin 표준 라이브러리에 정의된 `CoroutineContext` 타입으로 표현되는 컨텍스트에서 실행됩니다. 코루틴 컨텍스트는 다양한 요소들의 집합이며, 주요 요소는 코루틴의 `Job`과 디스패처입니다.

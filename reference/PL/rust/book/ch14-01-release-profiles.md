@@ -1,5 +1,7 @@
 # 릴리스 프로필로 빌드 사용자 정의하기
 
+> **원문:** https://doc.rust-lang.org/book/ch14-01-release-profiles.html
+
 Rust에서 *릴리스 프로필*은 프로그래머가 코드 컴파일을 위한 다양한 옵션을 더 많이 제어할 수 있도록 하는 다양한 구성을 가진 미리 정의된 사용자 정의 가능한 프로필입니다. 각 프로필은 다른 프로필과 독립적으로 구성됩니다.
 
 Cargo에는 두 가지 주요 프로필이 있습니다: `cargo build`를 실행할 때 Cargo가 사용하는 `dev` 프로필과 `cargo build --release`를 실행할 때 Cargo가 사용하는 `release` 프로필입니다. `dev` 프로필은 개발에 적합한 기본값으로 정의되고 `release` 프로필은 릴리스 빌드에 적합한 기본값을 가지고 있습니다.

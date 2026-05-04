@@ -1,5 +1,7 @@
 # Kotlin 널 안전성
 
+> **원문:** https://kotlinlang.org/docs/null-safety.html
+
 ## 개요
 
 널 안전성은 널 참조 (10억 달러의 실수)의 위험을 크게 줄이도록 설계된 Kotlin 기능입니다. Java와 달리 Kotlin은 타입 시스템에서 널 가능성을 명시적으로 지원하여 런타임이 아닌 컴파일 타임에 잠재적인 널 관련 문제를 잡습니다.

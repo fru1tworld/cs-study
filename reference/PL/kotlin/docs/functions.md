@@ -1,5 +1,7 @@
 # 함수
 
+> **원문:** https://kotlinlang.org/docs/functions.html
+
 ## 함수 선언
 
 **기본 문법:**

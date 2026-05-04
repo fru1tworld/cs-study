@@ -1,5 +1,7 @@
 # 유틸리티 타입 (Utility Types)
 
+> **원문:** https://www.typescriptlang.org/docs/handbook/utility-types.html
+
 TypeScript는 일반적인 타입 변환을 용이하게 하기 위한 여러 유틸리티 타입을 제공합니다. 이러한 유틸리티들은 전역적으로 사용할 수 있습니다.
 
 ## `Awaited<Type>`

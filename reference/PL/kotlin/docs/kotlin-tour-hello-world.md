@@ -1,5 +1,7 @@
 # Kotlin 투어: Hello World
 
+> **원문:** https://kotlinlang.org/docs/kotlin-tour-hello-world.html
+
 ## 개요
 
 이것은 기본 문법, 변수, 문자열 템플릿을 다루는 Kotlin 초보자 가이드입니다.

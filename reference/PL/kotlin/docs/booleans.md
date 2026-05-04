@@ -1,5 +1,7 @@
 # Kotlin 불리언
 
+> **원문:** https://kotlinlang.org/docs/booleans.html
+
 ## 개요
 
 Kotlin의 `Boolean` 타입은 두 가지 가능한 값을 가진 불리언 객체를 나타냅니다: `true`와 `false`. 또한 nullable 대응 타입인 `Boolean?`도 있습니다.

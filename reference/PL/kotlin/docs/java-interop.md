@@ -1,5 +1,7 @@
 # Kotlin에서 Java 호출하기
 
+> **원문:** https://kotlinlang.org/docs/java-interop.html
+
 Kotlin은 원활한 Java 상호운용성을 위해 설계되었습니다. Java 코드는 Kotlin에서 자연스럽게 호출할 수 있으며, 그 반대도 마찬가지입니다.
 
 ## 기본 Java 사용

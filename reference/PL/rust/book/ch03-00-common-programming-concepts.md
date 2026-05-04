@@ -1,5 +1,7 @@
 # 일반적인 프로그래밍 개념
 
+> **원문:** https://doc.rust-lang.org/book/ch03-00-common-programming-concepts.html
+
 ## 챕터 개요
 
 이 챕터에서는 거의 모든 프로그래밍 언어에 나타나는 기본 프로그래밍 개념과 그것들이 Rust에서 어떻게 작동하는지 다룹니다. 이러한 개념 중 Rust에 고유한 것은 없지만, Rust의 맥락에서 관례와 사용법을 논의할 것입니다.

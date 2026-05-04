@@ -1,5 +1,7 @@
 # go.mod 파일 레퍼런스
 
+> **원문:** https://go.dev/doc/modules/gomod-ref
+
 ## 개요
 
 각 Go 모듈은 모듈의 속성(다른 모듈과 Go 버전에 대한 의존성 포함)을 설명하는 `go.mod` 파일로 정의됩니다.

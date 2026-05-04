@@ -1,5 +1,7 @@
 # 반복자를 사용하여 I/O 프로젝트 개선하기
 
+> **원문:** https://doc.rust-lang.org/book/ch13-03-improving-our-io-project.html
+
 반복자에 대한 새로운 지식을 바탕으로 12장의 I/O 프로젝트를 반복자를 사용하여 코드의 여러 부분을 더 명확하고 간결하게 만들어 개선할 수 있습니다. `Config::build` 함수와 `search` 함수의 구현을 반복자가 어떻게 개선할 수 있는지 살펴보겠습니다.
 
 ## 반복자를 사용하여 `clone` 제거하기

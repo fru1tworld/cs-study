@@ -1,5 +1,7 @@
 # 기본 사항
 
+> **원문:** https://www.typescriptlang.org/docs/handbook/2/basic-types.html
+
 JavaScript의 모든 값은 다양한 연산을 실행하여 관찰할 수 있는 일련의 동작을 가지고 있습니다.
 이것이 추상적으로 들릴 수 있지만, 간단한 예로 `message`라는 변수에 대해 실행할 수 있는 몇 가지 연산을 고려해 보겠습니다.
 

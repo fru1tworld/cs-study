@@ -1,5 +1,7 @@
 # 타입 호환성 (Type Compatibility)
 
+> **원문:** https://www.typescriptlang.org/docs/handbook/type-compatibility.html
+
 TypeScript의 타입 호환성은 구조적 서브타이핑을 기반으로 합니다.
 구조적 타이핑은 멤버만을 기반으로 타입을 관련짓는 방법입니다.
 이것은 명목적 타이핑과 대조됩니다.

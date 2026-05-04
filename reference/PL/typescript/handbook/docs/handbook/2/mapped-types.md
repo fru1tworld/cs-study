@@ -1,3 +1,5 @@
+> **원문:** https://www.typescriptlang.org/docs/handbook/2/mapped-types.html
+
 ---
 title: 매핑된 타입
 layout: docs

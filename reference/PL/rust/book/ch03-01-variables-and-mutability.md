@@ -1,5 +1,7 @@
 # 변수와 가변성
 
+> **원문:** https://doc.rust-lang.org/book/ch03-01-variables-and-mutability.html
+
 ## 개요
 
 기본적으로 Rust에서 변수는 **불변(immutable)**입니다. 값이 이름에 바인딩되면 그 값을 변경할 수 없습니다. 이것은 Rust가 제공하는 안전 기능 중 하나이지만, 필요할 때 변수를 가변으로 만들 수 있는 옵션이 있습니다.

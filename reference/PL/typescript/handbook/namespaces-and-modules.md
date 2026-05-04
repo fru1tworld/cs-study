@@ -1,5 +1,7 @@
 # 네임스페이스와 모듈 (Namespaces and Modules)
 
+> **원문:** https://www.typescriptlang.org/docs/handbook/namespaces-and-modules.html
+
 이 글에서는 TypeScript에서 모듈과 네임스페이스를 사용하여 코드를 구성하는 다양한 방법을 설명합니다.
 또한 네임스페이스와 모듈 사용에 대한 고급 주제를 살펴보고, TypeScript에서 사용할 때 흔히 겪는 함정을 다룹니다.
 

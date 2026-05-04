@@ -1,5 +1,7 @@
 # 선언 참조
 
+> **원문:** https://www.typescriptlang.org/docs/handbook/declaration-files/by-example.html
+
 이 가이드의 목적은 고품질의 정의 파일을 작성하는 방법을 알려주는 것입니다. 이 가이드는 일부 API에 대한 문서와 해당 API의 샘플 사용법을 보여주고, 해당하는 선언을 작성하는 방법을 설명하는 방식으로 구성되어 있습니다.
 
 이 예제들은 대략적으로 복잡성이 증가하는 순서로 정렬되어 있습니다.

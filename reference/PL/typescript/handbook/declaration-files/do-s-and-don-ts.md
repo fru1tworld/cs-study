@@ -1,5 +1,7 @@
 # 해야 할 것과 하지 말아야 할 것
 
+> **원문:** https://www.typescriptlang.org/docs/handbook/declaration-files/do-s-and-don-ts.html
+
 ## 일반 타입
 
 ### `Number`, `String`, `Boolean`, `Symbol`, `Object`

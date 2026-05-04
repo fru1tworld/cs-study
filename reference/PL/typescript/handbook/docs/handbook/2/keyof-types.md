@@ -1,3 +1,5 @@
+> **원문:** https://www.typescriptlang.org/docs/handbook/2/keyof-types.html
+
 ---
 title: Keyof 타입 연산자
 layout: docs

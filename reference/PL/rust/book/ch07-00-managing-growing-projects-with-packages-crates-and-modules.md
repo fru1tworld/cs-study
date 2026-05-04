@@ -1,5 +1,7 @@
 # 패키지, 크레이트, 모듈
 
+> **원문:** https://doc.rust-lang.org/book/ch07-00-managing-growing-projects-with-packages-crates-and-modules.html
+
 ## 개요
 
 큰 프로그램을 작성할 때 코드를 체계화하는 것이 점점 더 중요해집니다. 관련 기능을 그룹화하고 별개의 기능을 가진 코드를 분리함으로써, 특정 기능을 구현하는 코드를 찾을 위치와 기능의 작동 방식을 변경할 위치를 명확히 할 수 있습니다.

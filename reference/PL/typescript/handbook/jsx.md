@@ -1,5 +1,7 @@
 # JSX
 
+> **원문:** https://www.typescriptlang.org/docs/handbook/jsx.html
+
 [JSX](https://facebook.github.io/jsx/)는 임베드 가능한 XML 유사 구문입니다.
 유효한 JavaScript로 변환되도록 의도되었지만, 해당 변환의 의미는 구현에 따라 다릅니다.
 JSX는 [React](https://reactjs.org/) 프레임워크와 함께 인기를 얻었지만, 이후 다른 구현도 등장했습니다.

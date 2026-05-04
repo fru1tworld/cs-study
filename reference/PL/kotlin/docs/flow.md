@@ -1,5 +1,7 @@
 # 비동기 Flow
 
+> **원문:** https://kotlinlang.org/docs/flow.html
+
 ## 개요
 
 일시 중단 함수는 단일 값을 비동기적으로 반환하지만, Kotlin Flow는 여러 개의 비동기적으로 계산된 값을 처리합니다. 이 포괄적인 가이드는 Flow 기본 사항, 연산자 및 패턴을 다룹니다.

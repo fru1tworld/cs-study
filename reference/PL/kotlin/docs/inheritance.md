@@ -1,5 +1,7 @@
 # 상속
 
+> **원문:** https://kotlinlang.org/docs/inheritance.html
+
 이 페이지는 Kotlin에서의 상속을 다루며, 클래스가 다른 클래스로부터 어떻게 상속받을 수 있는지와 이 메커니즘을 지배하는 규칙을 설명합니다.
 
 ## 개요

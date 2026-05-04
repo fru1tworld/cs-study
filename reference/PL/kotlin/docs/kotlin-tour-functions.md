@@ -1,5 +1,7 @@
 # Kotlin 투어: 함수
 
+> **원문:** https://kotlinlang.org/docs/kotlin-tour-functions.html
+
 ## 개요
 
 Kotlin에서 함수는 `fun` 키워드를 사용하여 선언합니다. 이 페이지는 함수 선언, 매개변수, 반환 타입, 그리고 람다 표현식 같은 고급 개념을 다룹니다.

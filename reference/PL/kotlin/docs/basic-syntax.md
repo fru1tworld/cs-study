@@ -1,5 +1,7 @@
 # Kotlin 기본 문법
 
+> **원문:** https://kotlinlang.org/docs/basic-syntax.html
+
 ## 패키지 정의와 임포트
 
 패키지 명세는 소스 파일 상단에 위치해야 합니다:

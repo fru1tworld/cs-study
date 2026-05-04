@@ -1,5 +1,7 @@
 # 열거형과 패턴 매칭
 
+> **원문:** https://doc.rust-lang.org/book/ch06-00-enums.html
+
 ## 챕터 개요
 
 이 챕터에서는 Rust의 열거형(enums)과 패턴 매칭을 다룹니다. 주요 주제는 다음과 같습니다:

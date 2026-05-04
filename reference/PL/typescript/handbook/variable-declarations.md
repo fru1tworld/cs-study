@@ -1,5 +1,7 @@
 # 변수 선언 (Variable Declaration)
 
+> **원문:** https://www.typescriptlang.org/docs/handbook/variable-declarations.html
+
 `let`과 `const`는 JavaScript에서 변수 선언에 대한 비교적 새로운 두 가지 개념입니다.
 [앞서 언급했듯이](/docs/handbook/basic-types.html#a-note-about-let), `let`은 일부 면에서 `var`와 유사하지만, 사용자가 JavaScript에서 겪는 일반적인 "함정"을 피할 수 있게 해줍니다.
 

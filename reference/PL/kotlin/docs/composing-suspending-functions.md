@@ -1,5 +1,7 @@
 # 일시 중단 함수 합성
 
+> **원문:** https://kotlinlang.org/docs/composing-suspending-functions.html
+
 이 섹션에서는 Kotlin 코루틴에서 일시 중단 함수를 합성하는 다양한 접근 방식을 다룹니다.
 
 ---

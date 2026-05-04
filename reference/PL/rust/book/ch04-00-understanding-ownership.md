@@ -1,5 +1,7 @@
 # 소유권 이해하기
 
+> **원문:** https://doc.rust-lang.org/book/ch04-00-understanding-ownership.html
+
 ## 챕터 개요
 
 **소유권(Ownership)**은 Rust의 가장 독특한 기능이며 언어의 나머지 부분에 깊은 영향을 미칩니다. 가비지 컬렉터 없이도 메모리 안전 보장을 가능하게 하므로 소유권이 어떻게 작동하는지 이해하는 것이 중요합니다.

@@ -1,5 +1,7 @@
 # `panic!`으로 복구 불가능한 에러 처리하기
 
+> **원문:** https://doc.rust-lang.org/book/ch09-01-unrecoverable-errors-with-panic.html
+
 ## 개요
 
 코드에서 처리할 수 없는 나쁜 일이 발생할 때가 있습니다. 이런 경우 Rust에는 `panic!` 매크로가 있습니다. 패닉을 발생시키는 방법은 두 가지가 있습니다:

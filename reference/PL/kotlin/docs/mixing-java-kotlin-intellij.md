@@ -1,5 +1,7 @@
 # Java 프로젝트에 Kotlin 추가하기 - 튜토리얼
 
+> **원문:** https://kotlinlang.org/docs/mixing-java-kotlin-intellij.html
+
 이 튜토리얼은 두 언어 간의 완전한 상호운용성을 활용하면서 기존 Java 프로젝트에 Kotlin을 점진적으로 도입하는 방법을 보여줍니다.
 
 ## 학습 목표

@@ -1,5 +1,7 @@
 # 셋별 연산
 
+> **원문:** https://kotlinlang.org/docs/set-operations.html
+
 Kotlin 컬렉션 패키지에는 셋에서 인기 있는 연산을 위한 확장 함수가 포함되어 있습니다: 교집합, 합집합 또는 컬렉션 간의 차집합을 찾는 것입니다.
 
 두 컬렉션을 하나로 병합하려면 [`union()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/union.html) 함수를 사용합니다. 중위 형태 `a union b`로도 사용할 수 있습니다. 순서가 있는 컬렉션의 경우 피연산자의 순서가 중요합니다: 결과 컬렉션에서 첫 번째 피연산자의 요소가 두 번째 피연산자의 요소 앞에 옵니다.

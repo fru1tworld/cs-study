@@ -1,5 +1,7 @@
 # 반환과 점프
 
+> **원문:** https://kotlinlang.org/docs/returns.html
+
 ## 개요
 
 Kotlin에는 세 가지 구조적 점프 표현식이 있습니다:

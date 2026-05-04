@@ -1,3 +1,5 @@
+> **원문:** https://www.typescriptlang.org/docs/handbook/2/typeof-types.html
+
 ---
 title: Typeof 타입 연산자
 layout: docs

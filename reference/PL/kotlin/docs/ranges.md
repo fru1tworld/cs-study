@@ -1,5 +1,7 @@
 # 범위와 진행
 
+> **원문:** https://kotlinlang.org/docs/ranges.html
+
 Kotlin에서는 `kotlin.ranges` 패키지의 [`.rangeTo()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.ranges/range-to.html)와 [`.rangeUntil()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.ranges/range-until.html) 함수를 사용하여 값의 범위를 쉽게 생성할 수 있습니다.
 
 예를 들어, 다음 범위에는 `1`부터 `4`까지의 숫자가 포함됩니다.

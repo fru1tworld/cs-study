@@ -1,5 +1,7 @@
 # Crates.io에 크레이트 게시하기
 
+> **원문:** https://doc.rust-lang.org/book/ch14-02-publishing-to-crates-io.html
+
 프로젝트의 의존성으로 [crates.io](https://crates.io/)의 패키지를 사용해 왔지만, 자신의 패키지를 게시하여 다른 사람들과 코드를 공유할 수도 있습니다. [crates.io](https://crates.io/)의 크레이트 레지스트리는 패키지의 소스 코드를 배포하므로 주로 오픈 소스인 코드를 호스팅합니다.
 
 Rust와 Cargo에는 게시된 패키지를 사람들이 더 쉽게 찾고 사용할 수 있도록 하는 기능이 있습니다. 이러한 기능 중 일부에 대해 다음에 이야기하고 그 다음에 패키지를 게시하는 방법을 설명하겠습니다.

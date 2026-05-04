@@ -1,5 +1,7 @@
 # 패턴을 사용할 수 있는 모든 곳
 
+> **원문:** https://doc.rust-lang.org/book/ch19-01-all-the-places-for-patterns.html
+
 ## 개요
 
 Rust에서 패턴은 언어 전반에 걸쳐 많은 곳에서 사용됩니다. 이 장에서는 패턴을 적용할 수 있는 모든 유효한 위치를 다룹니다.

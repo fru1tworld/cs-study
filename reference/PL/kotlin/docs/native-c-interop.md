@@ -1,5 +1,7 @@
 # C와의 상호운용성
 
+> **원문:** https://kotlinlang.org/docs/native-c-interop.html
+
 이 문서는 **cinterop** 도구를 사용한 Kotlin/Native의 C 라이브러리 상호운용성을 다룹니다.
 
 ## 개요

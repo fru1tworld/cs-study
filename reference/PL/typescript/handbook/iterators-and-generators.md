@@ -1,5 +1,7 @@
 # 이터레이터와 제너레이터 (Iterators and Generators)
 
+> **원문:** https://www.typescriptlang.org/docs/handbook/iterators-and-generators.html
+
 ## 이터러블
 
 객체가 [`Symbol.iterator`](symbols.html#symboliterator) 프로퍼티에 대한 구현을 가지고 있으면 이터러블로 간주됩니다.

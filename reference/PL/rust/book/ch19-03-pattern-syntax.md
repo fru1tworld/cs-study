@@ -1,5 +1,7 @@
 # 패턴 문법
 
+> **원문:** https://doc.rust-lang.org/book/ch19-03-pattern-syntax.html
+
 ## 개요
 
 이 섹션에서는 Rust에서 유효한 모든 패턴 문법을 다루고, 각 패턴을 언제 왜 사용하는지 설명합니다.

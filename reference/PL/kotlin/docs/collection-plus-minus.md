@@ -1,5 +1,7 @@
 # 플러스 및 마이너스 연산자
 
+> **원문:** https://kotlinlang.org/docs/collection-plus-minus.html
+
 Kotlin에서 [`plus`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/plus.html)(`+`)와 [`minus`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/minus.html)(`-`) 연산자는 컬렉션에 대해 정의되어 있습니다. 이들은 컬렉션을 첫 번째 피연산자로 받습니다; 두 번째 피연산자는 요소이거나 다른 컬렉션일 수 있습니다. 반환 값은 새로운 읽기 전용 컬렉션입니다:
 
 * `plus`의 결과는 원래 컬렉션의 요소 _및_ 두 번째 피연산자를 포함합니다.

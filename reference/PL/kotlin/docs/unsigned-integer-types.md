@@ -1,5 +1,7 @@
 # 부호 없는 정수 타입
 
+> **원문:** https://kotlinlang.org/docs/unsigned-integer-types.html
+
 ## 개요
 
 Kotlin은 표준 정수 타입 외에 네 가지 부호 없는 정수 타입을 제공합니다:

@@ -1,5 +1,7 @@
 # 시퀀스
 
+> **원문:** https://kotlinlang.org/docs/sequences.html
+
 컬렉션과 함께, Kotlin 표준 라이브러리에는 또 다른 타입인 _시퀀스_([`Sequence<T>`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.sequences/-sequence/index.html))가 있습니다. 컬렉션과 달리 시퀀스는 요소를 포함하지 않고, 반복하는 동안 요소를 생성합니다. 시퀀스는 [`Iterable`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/index.html)과 동일한 함수를 제공하지만 다단계 컬렉션 처리에 대해 다른 접근 방식을 구현합니다.
 
 `Iterable`의 처리가 여러 단계를 포함할 때, 즉시(eagerly) 실행됩니다: 각 처리 단계가 완료되고 그 결과인 중간 컬렉션을 반환합니다. 다음 단계는 이 컬렉션에서 실행됩니다. 반면, 시퀀스의 다단계 처리는 가능한 경우 지연(lazily) 실행됩니다: 실제 계산은 전체 처리 체인의 결과가 요청될 때만 발생합니다.

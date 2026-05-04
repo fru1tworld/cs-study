@@ -1,5 +1,7 @@
 # 패키지와 크레이트
 
+> **원문:** https://doc.rust-lang.org/book/ch07-01-packages-and-crates.html
+
 ## 개요
 
 모듈 시스템의 첫 번째 부분은 패키지와 크레이트입니다.

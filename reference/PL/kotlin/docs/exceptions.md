@@ -1,5 +1,7 @@
 # Kotlin 예외
 
+> **원문:** https://kotlinlang.org/docs/exceptions.html
+
 ## 개요
 
 Kotlin의 예외는 런타임 오류가 발생할 때 코드가 예측 가능하게 실행되도록 도와줍니다. Kotlin은 **모든 예외를 기본적으로 체크되지 않은 예외로 취급**하여 명시적 선언 없이도 예외 처리를 단순화합니다.

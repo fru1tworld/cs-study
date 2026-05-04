@@ -1,5 +1,7 @@
 # Kotlin/JS 시작하기 - 완전 가이드
 
+> **원문:** https://kotlinlang.org/docs/js-get-started.html
+
 ## 개요
 
 이 튜토리얼은 Kotlin/JavaScript (Kotlin/JS)를 사용하여 브라우저용 웹 애플리케이션을 만드는 방법을 설명합니다. 두 가지 접근 방식을 사용할 수 있습니다:

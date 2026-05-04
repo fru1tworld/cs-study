@@ -1,5 +1,7 @@
 # 열거형 (Enums)
 
+> **원문:** https://www.typescriptlang.org/docs/handbook/enums.html
+
 열거형은 TypeScript가 JavaScript의 타입 수준 확장이 아닌 몇 안 되는 기능 중 하나입니다.
 
 열거형을 사용하면 개발자가 명명된 상수 집합을 정의할 수 있습니다.

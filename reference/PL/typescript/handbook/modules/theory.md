@@ -1,5 +1,7 @@
 # 모듈 - 이론
 
+> **원문:** https://www.typescriptlang.org/docs/handbook/modules/theory.html
+
 ## JavaScript에서의 스크립트와 모듈
 
 JavaScript의 초기 시절, 언어가 브라우저에서만 실행되었을 때는 모듈이 없었지만, HTML의 여러 `script` 태그를 사용하여 웹 페이지의 JavaScript를 여러 파일로 분할할 수 있었습니다:

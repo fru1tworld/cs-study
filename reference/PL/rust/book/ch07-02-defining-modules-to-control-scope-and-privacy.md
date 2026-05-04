@@ -1,5 +1,7 @@
 # 모듈로 스코프와 프라이버시 제어하기
 
+> **원문:** https://doc.rust-lang.org/book/ch07-02-defining-modules-to-control-scope-and-privacy.html
+
 ## 개요
 
 이 섹션에서는 경로, `use` 키워드, `pub` 키워드를 포함한 Rust의 모듈과 모듈 시스템을 다룹니다.

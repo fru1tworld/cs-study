@@ -1,3 +1,5 @@
+> **원문:** https://www.typescriptlang.org/docs/handbook/2/types-from-types.html
+
 ---
 title: 타입으로부터 타입 만들기
 layout: docs

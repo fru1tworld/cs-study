@@ -1,5 +1,7 @@
 # 모듈
 
+> **원문:** https://www.typescriptlang.org/docs/handbook/2/modules.html
+
 JavaScript는 코드를 모듈화하는 다양한 방법의 오랜 역사를 가지고 있습니다.
 2012년부터 존재해 온 TypeScript는 이러한 형식 중 많은 것을 지원해 왔지만, 시간이 지나면서 커뮤니티와 JavaScript 명세는 ES Modules(또는 ES6 modules)라는 형식으로 수렴했습니다. `import`/`export` 구문으로 알고 있을 수 있습니다.
 

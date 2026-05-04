@@ -1,5 +1,7 @@
 # Kotlin 문자열
 
+> **원문:** https://kotlinlang.org/docs/strings.html
+
 ## 개요
 
 Kotlin에서 문자열은 `String` 타입으로 표현됩니다. JVM에서 문자열은 문자당 약 2바이트의 UTF-16 인코딩을 사용합니다. 문자열은 큰따옴표로 묶인 불변의 문자 시퀀스입니다.
