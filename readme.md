@@ -74,15 +74,15 @@
 - 난이도: 1/5
 
 ### Kafka
+- [상태: 완독] [카프카 인 액션](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=325372258)
+- 추천도: 2/5 
+- 난이도: 2/5
+
+### etc
 - [상태: 완독] [그림으로 배우는 AWS 구조](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=316395509)
 - 추천도: 1/5 
 - 난이도: 1/5
 
-- [상태: 완독] [카프카 인 액션](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=325372258)
-- 추천도: 4/5 
-- 난이도: 2/5
-
-### etc
 - [상태: 완독] [JVM 밑바닥 파헤치기](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=338394581)
 - 추천도: 3/5 
 - 난이도: 4/5
