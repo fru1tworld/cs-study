@@ -17,6 +17,9 @@ RFC 문서 한국어 번역/요약 모음입니다.
 | [RFC 791](./Layer3-Network/RFC791-IPv4.md) | IPv4 | 32비트 주소 체계 인터넷 프로토콜 |
 | [RFC 792](./Layer3-Network/RFC792-ICMP.md) | ICMP | 네트워크 오류 보고/진단 (ping, traceroute) |
 | [RFC 8200](./Layer3-Network/RFC8200-IPv6.md) | IPv6 | 128비트 주소 체계 차세대 프로토콜 |
+| [RFC 4291](./Layer3-Network/RFC4291-IPv6-Addressing.md) | IPv6 Addressing | IPv6 주소 아키텍처 |
+| [RFC 5952](./Layer3-Network/RFC5952-IPv6-Text-Representation.md) | IPv6 Text Representation | IPv6 주소 정규 텍스트 표현 |
+| [RFC 6164](./Layer3-Network/RFC6164-IPv6-127bit-Prefixes.md) | IPv6 /127 Prefixes | 라우터 간 P2P 링크 /127 프리픽스 권고 |
 | [RFC 1918](./Layer3-Network/RFC1918-Private-Address.md) | Private Address | 사설 IP 주소 대역 |
 | [RFC 3022](./Layer3-Network/RFC3022-NAT.md) | NAT | 사설-공인 IP 주소 변환 |
 | [RFC 4632](./Layer3-Network/RFC4632-CIDR.md) | CIDR | 클래스리스 주소 체계 |
