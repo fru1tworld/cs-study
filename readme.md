@@ -221,3 +221,4 @@
 - [상태: 완독] [함께 자라기 애자일](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=175977462)
 - 추천도: 2/5 
 - 난이도: 1/5
+
