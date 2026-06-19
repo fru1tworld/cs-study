@@ -53,6 +53,7 @@ RFC 문서 한국어 번역/요약 모음입니다.
 | [RFC 6585](./Layer7-Application/RFC6585-Additional-HTTP-Status-Codes.md) | Additional HTTP Status Codes | 428, 429, 431, 511 상태 코드 |
 | [RFC 7234](./Layer7-Application/RFC7234-HTTP-Caching.md) | HTTP Caching | Cache-Control, ETag, 조건부 요청 |
 | [RFC 7239](./Layer7-Application/RFC7239-Forwarded-Header.md) | Forwarded Header | X-Forwarded-For 표준화 |
+| [RFC 8941](./Layer7-Application/HTTP/RFC8941-Structured-Field-Values.md) | Structured Field Values | HTTP 필드 값 구조화 표현 (List, Dictionary, Item) |
 | [RFC 9457](./Layer7-Application/RFC9457-Problem-Details.md) | Problem Details | API 에러 응답 표준 형식 |
 
 #### 인증 & 보안
@@ -69,6 +70,7 @@ RFC 문서 한국어 번역/요약 모음입니다.
 | [RFC 6454](./Layer7-Application/RFC6454-Web-Origin.md) | Web Origin | Same-Origin Policy 기반 |
 | [RFC 6797](./Layer7-Application/RFC6797-HSTS.md) | HSTS | HTTPS 강제 적용 |
 | [RFC 8446](./Layer7-Application/RFC8446-TLS1.3.md) | TLS 1.3 | 전송 계층 보안 |
+| [RFC 4226](./Layer7-Application/Auth/RFC4226-HOTP.md) | HOTP | HMAC 기반 일회용 비밀번호 알고리즘 |
 
 #### 데이터 형식 & URI
 | RFC | 제목 | 설명 |
@@ -79,6 +81,7 @@ RFC 문서 한국어 번역/요약 모음입니다.
 | [RFC 3986](./Layer7-Application/RFC3986-URI.md) | URI | URI 구조 및 인코딩 규칙 |
 | [RFC 6570](./Layer7-Application/RFC6570-URI-Template.md) | URI Template | /users/{id} 같은 URI 템플릿 |
 | [RFC 4122](./Layer7-Application/RFC4122-UUID.md) | UUID | 128비트 고유 식별자 |
+| [RFC 4180](./Layer7-Application/RFC4180-CSV.md) | CSV | CSV 파일 공통 형식 및 MIME 타입 |
 
 #### 기타
 | RFC | 제목 | 설명 |
@@ -93,6 +96,7 @@ RFC 문서 한국어 번역/요약 모음입니다.
 | [RFC 1122](./Common/RFC1122-Internet-Host-Requirements.md) | Internet Host Requirements | 인터넷 호스트 통신 계층 요구사항 |
 | [RFC 4648](./Common/RFC4648-Base-Encodings.md) | Base Encodings | Base64, Base64URL, Base32, Base16 인코딩 |
 | [RFC 9106](./Common/RFC9106-Argon2.md) | Argon2 | 패스워드 해싱용 메모리 하드 함수 |
+| [RFC 7468](./Common/RFC7468-PEM-Textual-Encodings.md) | PEM Textual Encodings | PKIX/PKCS/CMS 구조의 PEM 텍스트 인코딩 |
 
 ---
 
