@@ -1,6 +1,5 @@
 # Pyroscope 배포 모드
 
-> 이 문서는 Pyroscope의 배포 옵션과 환경별 권장 구성을 다룹니다.
 > 원본: https://grafana.com/docs/pyroscope/latest/deploy/
 
 ---
@@ -27,13 +26,13 @@ Pyroscope는 단일 바이너리이며 실행 시 `-target` 플래그로 어떤 
 | Read/Write 분리 | `read`, `write` | 읽기/쓰기 경로만 분리 |
 | Microservices | `distributor`, `ingester`, ... | 컴포넌트별 독립 프로세스 |
 
-> 동일 바이너리를 다르게 실행하기 때문에 운영 자동화가 단순합니다. (Loki/Mimir와 동일 패턴)
+> 동일 바이너리를 다르게 실행하므로 운영 자동화가 단순합니다. (Loki/Mimir와 동일 패턴)
 
 ---
 
 ## Monolithic 모드
 
-**모든 컴포넌트가 단일 프로세스에서 실행** 됩니다.
+**모든 컴포넌트가 단일 프로세스에서 실행**됩니다.
 
 ### 적합한 환경
 
@@ -62,7 +61,7 @@ pyroscope -config.file=pyroscope.yaml -target=all
 
 ## Microservices 모드
 
-**각 컴포넌트를 독립 프로세스/디플로이먼트로 운영** 합니다. 대규모 운영의 표준 형태입니다.
+**각 컴포넌트를 독립 프로세스/디플로이먼트로 운영**합니다. 대규모 운영의 표준 형태입니다.
 
 ### 일반적인 구성
 
@@ -110,7 +109,7 @@ pyroscope:
     storage:
       backend: s3
       s3:
-        bucket_name: my-pyroscope
+        bucket: my-pyroscope
         endpoint: s3.amazonaws.com
         region: us-east-1
         access_key_id: ...
@@ -168,7 +167,7 @@ pyroscope:
 ### Ingress / Gateway
 
 - `gateway` (nginx 기반) 컴포넌트로 단일 진입점 제공 가능
-- 인증은 통상 외부 Gateway(예: Grafana Cloud, Auth Proxy)에서 처리
+- 인증은 일반적으로 외부 Gateway(예: Grafana Cloud, Auth Proxy)에서 처리
 
 ---
 
@@ -241,7 +240,7 @@ volumes:
 
 ## 용량 산정
 
-대략적인 가이드라인입니다. 실제 환경에서는 테스트가 필수입니다.
+대략적인 가이드라인이며, 실제 환경에서는 반드시 테스트가 필요합니다.
 
 ### 시리즈 카디널리티
 
@@ -262,7 +261,7 @@ volumes:
 ### 쿼리
 
 - Querier는 메모리에 블록 일부를 캐시
-- 캐시 미스 시 S3 다운로드 시간이 응답 시간 좌우
+- 캐시 미스 시 S3 다운로드 시간이 응답 시간을 좌우
 - 메모리 8GB+ 권장
 
 ---

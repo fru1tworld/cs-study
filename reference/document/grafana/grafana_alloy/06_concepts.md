@@ -1,6 +1,5 @@
 # Alloy 핵심 개념
 
-> 이 문서는 Grafana Alloy 공식 문서의 "Concepts" 섹션을 한국어로 정리한 것입니다.
 > 원본: https://grafana.com/docs/alloy/latest/concepts/
 
 ---
@@ -22,7 +21,7 @@
 
 ### 컴포넌트란?
 
-Alloy의 가장 기본적인 빌딩 블록. 각 컴포넌트는 특정 작업을 수행:
+Alloy의 가장 기본적인 빌딩 블록으로, 각 컴포넌트는 다음과 같은 특정 작업을 담당합니다:
 
 - 메트릭 스크래핑
 - 로그 파일 읽기
@@ -102,7 +101,7 @@ prometheus.scrape "node" {
 
 ### 역할
 
-Alloy의 핵심 엔진. 다음을 수행:
+Alloy의 핵심 엔진으로 다음을 수행합니다:
 
 - 구성 파일 파싱
 - 컴포넌트 그래프 생성 (DAG)
@@ -130,7 +129,7 @@ kill -HUP $(pgrep alloy)
 curl -X POST http://localhost:12345/-/reload
 ```
 
-평가 컨트롤러가:
+평가 컨트롤러는 다음 순서로 처리합니다:
 1. 새 구성 파싱
 2. 새 그래프 빌드
 3. 변경된 컴포넌트만 재시작
@@ -150,7 +149,7 @@ curl -X POST http://localhost:12345/-/reload
 
 ### 활성화
 
-기본은 `generally-available`만. 더 낮은 레벨 활성화:
+기본값은 `generally-available`만 활성화됩니다. 더 낮은 레벨을 활성화하려면:
 
 ```bash
 alloy run --stability.level=experimental config.alloy
@@ -166,7 +165,7 @@ alloy run --stability.level=experimental config.alloy
 
 ### 개념
 
-여러 Alloy 인스턴스를 클러스터로 묶어:
+여러 Alloy 인스턴스를 클러스터로 묶어 다음을 제공합니다:
 
 - **워크로드 분산**: 스크래핑 타겟을 인스턴스 간 자동 분배
 - **고가용성**: 인스턴스 다운 시 다른 인스턴스가 작업 인계
@@ -230,7 +229,7 @@ UI의 **Cluster** 페이지에서 노드 목록 확인.
 
 ### 개념
 
-재사용 가능한 구성 단위. 라이브러리 기능 제공.
+재사용 가능한 구성 단위로, 라이브러리처럼 활용할 수 있습니다.
 
 ### 정의
 
@@ -330,7 +329,7 @@ loki.source.file "app" {
 
 ### 정적 평가
 
-Alloy는 평가 시점에 모든 표현식을 즉시 계산. 동적 평가 없음.
+Alloy는 평가 시점에 모든 표현식을 즉시 계산하며, 지연 동적 평가는 지원하지 않습니다.
 
 ### 의존성 그래프 (DAG)
 
@@ -361,7 +360,7 @@ A → B → C 그래프에서 A의 출력이 변하면:
 
 ### Discovery 컴포넌트의 출력
 
-`discovery.*` 컴포넌트들은 **타겟 리스트**를 출력합니다.
+`discovery.*` 컴포넌트는 **타겟 리스트**를 출력합니다.
 
 각 타겟은:
 ```

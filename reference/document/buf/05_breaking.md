@@ -1,6 +1,5 @@
 # 호환성 깨짐 검출 (buf breaking)
 
-> 이 문서는 buf breaking의 사용법, 호환성 카테고리, --against 비교 대상 지정을 한국어로 정리한 것입니다.
 > 원본: https://buf.build/docs/breaking/
 
 ---
@@ -17,7 +16,7 @@
 
 ## 1. buf breaking 개요
 
-`buf breaking`은 현재 스키마를 이전 버전과 비교하여 클라이언트/서버/생성 코드를 깨뜨릴 수 있는 변경을 검출합니다. 예를 들어 필드 타입을 `int32`에서 `string`으로 바꾸면 wire 타입이 달라져 wire 호환성이 깨집니다.
+`buf breaking`은 현재 스키마를 이전 버전과 비교하여 클라이언트·서버·생성 코드를 깨뜨릴 수 있는 변경을 검출합니다. 예를 들어 필드 타입을 `int32`에서 `string`으로 바꾸면 wire 타입이 달라져 wire 호환성이 깨집니다.
 
 ```bash
 buf breaking --against <과거-버전-입력>
@@ -60,9 +59,9 @@ CI에서는 보통 머지 대상 브랜치(`main`)와 비교합니다.
 | **WIRE_JSON** | 바이너리 wire + JSON 인코딩 | wire 및 JSON 수준 비호환 검출 |
 | **WIRE** | 바이너리 wire 형식만 | 가장 관대 — JSON 변경 허용 |
 
-핵심 관계: **더 엄격한 카테고리를 통과하면 더 관대한 카테고리도 자동 통과**합니다. 즉 `FILE`을 통과하면 `PACKAGE`, `WIRE_JSON`, `WIRE`도 통과합니다.
+핵심 관계: **더 엄격한 카테고리를 통과하면 더 관대한 카테고리도 자동으로 통과**합니다. 즉 `FILE`을 통과하면 `PACKAGE`, `WIRE_JSON`, `WIRE`도 통과합니다.
 
-어떤 카테고리를 쓸지는 소비자가 코드 생성을 하는지(FILE/PACKAGE), 아니면 직렬화 호환성만 중요한지(WIRE/WIRE_JSON)에 따라 선택합니다.
+카테고리 선택은 소비자가 코드 생성을 필요로 하는지(FILE/PACKAGE), 직렬화 호환성만 중요한지(WIRE/WIRE_JSON)에 따라 결정합니다.
 
 ---
 
@@ -82,7 +81,7 @@ breaking:
   ignore_unstable_packages: true  # alpha/beta/test 패키지 자동 무시
 ```
 
-v2에서 모듈별로 다른 정책을 쓰려면 `modules[].breaking`에 작성하며, 워크스페이스 설정을 완전히 대체합니다.
+v2에서 모듈별로 다른 정책을 적용하려면 `modules[].breaking`에 작성하며, 이 설정은 워크스페이스 수준 설정을 완전히 대체합니다.
 
 규칙 목록은 다음으로 확인합니다.
 
@@ -97,9 +96,9 @@ buf config ls-breaking-rules --version v2
 
 호환성 검사는 세 시점에서 수행할 수 있습니다.
 
-1. **로컬**: 개발 중 CLI로 실행.
-2. **CI/CD**: GitHub Actions 등 파이프라인에서 PR마다 `--against` 비교.
-3. **BSR**: 레지스트리 측에서 push 시 breaking 정책을 강제하여, 깨진 push를 소비자에게 도달하기 전에 거부.
+1. **로컬**: 개발 중 CLI로 직접 실행합니다.
+2. **CI/CD**: GitHub Actions 등 파이프라인에서 PR마다 `--against`로 비교합니다.
+3. **BSR**: 레지스트리에서 push 시 breaking 정책을 강제하여, 호환성이 깨진 push를 소비자에게 전달되기 전에 거부합니다.
 
 GitHub Actions 예시(개념):
 

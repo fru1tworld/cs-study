@@ -1,6 +1,5 @@
 # gRPC 개요
 
-> 이 문서는 gRPC 공식 문서의 "What is gRPC - Introduction" 섹션을 한국어로 정리한 것입니다.
 > 원본: https://grpc.io/docs/what-is-grpc/introduction/
 
 ---
@@ -59,7 +58,7 @@ message Person {
 }
 ```
 
-`.proto` 파일을 `protoc` 컴파일러로 컴파일하면, 선택한 언어에 맞는 데이터 클래스(data class)와 직렬화/역직렬화 코드가 자동 생성됩니다. protobuf는 바이너리 포맷이라 JSON 같은 텍스트 포맷보다 빠르고 작습니다.
+`.proto` 파일을 `protoc` 컴파일러로 컴파일하면, 선택한 언어에 맞는 데이터 접근 클래스(data access class)와 직렬화/역직렬화 코드가 자동 생성됩니다. protobuf는 바이너리 포맷이라 JSON 같은 텍스트 포맷보다 빠르고 작습니다.
 
 gRPC와 함께 사용할 때는 proto3 버전을 사용하는 것이 권장됩니다. 모든 gRPC 지원 언어를 사용할 수 있고 호환성 문제를 피할 수 있기 때문입니다.
 
@@ -109,7 +108,7 @@ rpc LotsOfReplies(HelloRequest) returns (stream HelloReply);
 
 ### 클라이언트 스트리밍(Client Streaming) RPC
 
-클라이언트가 메시지 시퀀스를 스트림으로 써서 보내고, 서버는 모든 메시지를 받은 뒤 단일 응답을 반환합니다.
+클라이언트가 메시지 시퀀스를 스트림으로 전송하고, 서버는 모든 메시지를 수신한 뒤 단일 응답을 반환합니다.
 
 ```proto
 rpc LotsOfGreetings(stream HelloRequest) returns (HelloReply);
@@ -117,7 +116,7 @@ rpc LotsOfGreetings(stream HelloRequest) returns (HelloReply);
 
 ### 양방향 스트리밍(Bidirectional Streaming) RPC
 
-클라이언트와 서버가 각각 독립적으로 읽기/쓰기 스트림을 가집니다. 두 스트림은 독립적으로 동작하므로 읽기/쓰기 순서는 애플리케이션이 자유롭게 정합니다.
+클라이언트와 서버가 각각 읽기/쓰기 스트림을 독립적으로 갖습니다. 두 스트림은 독립적으로 동작하므로 읽기/쓰기 순서는 애플리케이션이 자유롭게 정합니다.
 
 ```proto
 rpc BidiHello(stream HelloRequest) returns (stream HelloReply);

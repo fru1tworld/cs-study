@@ -1,7 +1,6 @@
 # 14. 테스트 (testApplication)
 
 > 출처: https://ktor.io/docs/server-testing.html
-> 한국어 학습 노트입니다.
 
 ---
 
@@ -57,7 +56,7 @@ fun `custom config`() = testApplication {
 }
 ```
 
-`application.conf` / `application.yaml` 자체를 갈아끼우려면 `ApplicationConfig`를 만들어서 넣어주면 됩니다.
+`application.conf` / `application.yaml` 자체를 교체하려면 `ApplicationConfig`를 만들어서 넣어주면 됩니다.
 
 ---
 
@@ -92,7 +91,7 @@ val cookied = createClient { install(HttpCookies) }
 
 ## 외부 서비스 모킹
 
-`externalServices { hosts(...) { ... } }`로 외부 호스트로의 호출을 가짜 라우팅으로 받아낼 수 있습니다.
+`externalServices { hosts(...) { ... } }`로 외부 호스트로의 요청을 가짜 라우팅으로 가로챌 수 있습니다.
 
 ```kotlin
 testApplication {
@@ -131,6 +130,6 @@ fun `ws echo`() = testApplication {
 
 ## 패턴 메모
 
-- 단위 테스트는 핸들러를 직접 호출하기 어려우므로, 보통 `testApplication`을 사용한 **얇은 통합 테스트**로 라우트 단위 검증을 합니다.
+- 단위 테스트는 핸들러를 직접 호출하기 어려우므로, 보통 `testApplication`을 사용한 **경량 통합 테스트**로 라우트 단위 검증을 합니다.
 - 도메인 로직은 별도 모듈로 빼서 일반 Kotlin 단위 테스트로 검증하는 편이 빠릅니다.
 - 테스트마다 모듈 부팅 비용이 작지만 0은 아니므로, 한 클래스 안에서 같은 `testApplication { }` 블록을 공유하는 헬퍼를 만들어 쓰는 패턴도 흔합니다.

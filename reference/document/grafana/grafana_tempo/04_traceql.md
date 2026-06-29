@@ -1,6 +1,5 @@
 # TraceQL 쿼리 언어
 
-> 이 문서는 Grafana Tempo 공식 문서의 "Query with TraceQL" 섹션을 한국어로 정리한 것입니다.
 > 원본: https://grafana.com/docs/tempo/latest/traceql/
 
 ---
@@ -22,7 +21,7 @@
 
 ## TraceQL 개요
 
-**TraceQL**은 Tempo에서 트레이스를 선택하기 위한 쿼리 언어로, **PromQL/LogQL과 유사한 문법** 을 사용합니다.
+**TraceQL**은 Tempo에서 트레이스를 선택하기 위한 쿼리 언어로, **PromQL/LogQL과 유사한 문법**을 사용합니다.
 
 ### 기본 문법 구조
 
@@ -71,7 +70,7 @@
 
 ## Intrinsic 필드
 
-스팬의 내장 속성 (속성 접두사 없이 사용).
+스팬의 내장 속성으로, 별도의 접두사 없이 사용합니다.
 
 | 필드 | 설명 |
 |------|------|
@@ -103,7 +102,7 @@
 
 ## 속성(Attributes) 선택
 
-세 가지 스코프의 속성:
+속성 스코프는 다음 네 가지입니다.
 
 | 접두사 | 의미 |
 |--------|------|
@@ -132,7 +131,7 @@
 
 ### 동적 타입
 
-속성 타입은 자동 추론:
+속성 타입은 자동으로 추론됩니다.
 - 문자열: `"text"` 큰따옴표
 - 숫자: `200`, `1.5`
 - 불리언: `true`, `false`
@@ -186,7 +185,7 @@
 
 ## 구조적 연산자 (Structural)
 
-여러 spanset 간 관계를 표현.
+여러 spanset 간의 관계를 표현합니다.
 
 | 연산자 | 의미 |
 |--------|------|
@@ -215,11 +214,11 @@
 
 ## 집계자 (Aggregators)
 
-spanset에 대한 통계 함수.
+spanset에 대한 통계 함수입니다.
 
 ### `count()`
 
-매칭된 스팬 수.
+일치하는 스팬 수를 반환합니다.
 
 ```traceql
 { resource.service.name = "frontend" } | count() > 5
@@ -234,7 +233,7 @@ spanset에 대한 통계 함수.
 
 ### `by(<field>)`
 
-그룹화 (집계와 함께 사용).
+집계 결과를 그룹화합니다.
 
 ```traceql
 { resource.service.name = "api" } | by(.http.method) | count() > 10
@@ -242,7 +241,7 @@ spanset에 대한 통계 함수.
 
 ### `select()`
 
-추가로 표시할 필드 지정.
+결과에 추가로 표시할 필드를 지정합니다.
 
 ```traceql
 { resource.service.name = "api" && status = error }
@@ -253,11 +252,11 @@ spanset에 대한 통계 함수.
 
 ## TraceQL Metrics
 
-TraceQL을 사용해 트레이스 데이터에서 메트릭을 즉시 생성.
+TraceQL을 사용해 트레이스 데이터에서 메트릭을 즉시 생성합니다.
 
 ### `rate()`
 
-스팬 비율.
+초당 일치하는 스팬 수를 계산합니다.
 
 ```traceql
 { resource.service.name = "frontend" } | rate()
@@ -265,7 +264,7 @@ TraceQL을 사용해 트레이스 데이터에서 메트릭을 즉시 생성.
 
 ### `count_over_time()`
 
-시간 윈도우 내 스팬 수.
+시간 간격당 일치하는 스팬 수를 계산합니다.
 
 ```traceql
 { status = error } | count_over_time()
@@ -273,7 +272,7 @@ TraceQL을 사용해 트레이스 데이터에서 메트릭을 즉시 생성.
 
 ### `quantile_over_time()`
 
-분위수 통계.
+지정한 분위수를 계산합니다.
 
 ```traceql
 { resource.service.name = "api" } | quantile_over_time(duration, 0.95, 0.99)
@@ -281,7 +280,7 @@ TraceQL을 사용해 트레이스 데이터에서 메트릭을 즉시 생성.
 
 ### `histogram_over_time()`
 
-히스토그램.
+시간별 빈도 분포를 히스토그램으로 계산합니다.
 
 ```traceql
 { resource.service.name = "api" } | histogram_over_time(duration)
@@ -289,7 +288,7 @@ TraceQL을 사용해 트레이스 데이터에서 메트릭을 즉시 생성.
 
 ### `compare()`
 
-두 spanset 비교 (드릴다운에 유용).
+두 spanset을 비교하여 차이를 강조합니다. 드릴다운 분석에 유용합니다.
 
 ```traceql
 { status = error } | compare({ status = ok })
@@ -374,7 +373,7 @@ by (resource.service.name)
 
 ### 시간 범위
 
-쿼리는 항상 시간 범위와 함께 실행됩니다.
+쿼리는 항상 시간 범위와 함께 실행합니다.
 
 ```bash
 curl -G "http://tempo:3200/api/search" \

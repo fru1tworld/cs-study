@@ -1,6 +1,5 @@
 # Loki HTTP API 레퍼런스
 
-> 이 문서는 Grafana Loki 공식 문서의 HTTP API 섹션을 한국어로 정리한 것입니다.
 > 원본: https://grafana.com/docs/loki/latest/reference/loki-http-api/
 
 ---
@@ -38,7 +37,7 @@ Loki의 HTTP API는 두 카테고리로 나뉩니다.
 
 ### 인증 헤더
 
-멀티 테넌시 활성화 시:
+멀티 테넌시 활성화 시 헤더 추가:
 ```
 X-Scope-OrgID: <tenant-id>
 ```
@@ -112,7 +111,7 @@ Content-Type: application/x-protobuf
 Content-Encoding: snappy
 ```
 
-페이로드는 `logproto.PushRequest` 메시지를 snappy 압축한 바이트.
+페이로드는 `logproto.PushRequest` 메시지를 snappy로 압축한 바이트입니다.
 
 #### Structured Metadata 포함
 
@@ -143,7 +142,7 @@ Content-Encoding: snappy
 
 ### `POST /otlp/v1/logs`
 
-OTLP HTTP 형식 로그 푸시.
+OTLP HTTP 형식으로 로그를 푸시합니다.
 
 ```bash
 curl -H "Content-Type: application/x-protobuf" \
@@ -158,7 +157,7 @@ curl -H "Content-Type: application/x-protobuf" \
 
 ### `GET /loki/api/v1/query` (Instant Query)
 
-특정 시점 쿼리.
+특정 시점에 대한 즉시 쿼리입니다.
 
 ```bash
 curl -G "http://loki:3100/loki/api/v1/query" \
@@ -198,7 +197,7 @@ curl -G "http://loki:3100/loki/api/v1/query" \
 
 ### `GET /loki/api/v1/query_range` (Range Query)
 
-시간 범위 쿼리.
+지정한 시간 범위에 대한 쿼리입니다.
 
 ```bash
 curl -G "http://loki:3100/loki/api/v1/query_range" \
@@ -228,7 +227,7 @@ curl -G "http://loki:3100/loki/api/v1/query_range" \
 
 ### `GET /loki/api/v1/labels`
 
-모든 라벨 이름 목록.
+모든 라벨 이름 목록을 반환합니다.
 
 ```bash
 curl -G "http://loki:3100/loki/api/v1/labels" \
@@ -247,7 +246,7 @@ curl -G "http://loki:3100/loki/api/v1/labels" \
 
 ### `GET /loki/api/v1/label/<name>/values`
 
-특정 라벨의 값 목록.
+특정 라벨의 값 목록을 반환합니다.
 
 ```bash
 curl -G "http://loki:3100/loki/api/v1/label/app/values" \
@@ -269,7 +268,7 @@ curl -G "http://loki:3100/loki/api/v1/label/app/values" \
 
 ### `GET /loki/api/v1/series`
 
-매칭되는 스트림 목록.
+매칭되는 스트림의 라벨 조합 목록을 반환합니다.
 
 ```bash
 curl -G "http://loki:3100/loki/api/v1/series" \
@@ -298,7 +297,7 @@ curl -G "http://loki:3100/loki/api/v1/series" \
 
 ### `GET /loki/api/v1/tail` (WebSocket)
 
-실시간 로그 스트리밍.
+실시간 로그 스트리밍을 제공합니다.
 
 ```bash
 websocat "ws://loki:3100/loki/api/v1/tail?query={app=\"api\"}&start=1700000000&limit=100"
@@ -332,7 +331,7 @@ websocat "ws://loki:3100/loki/api/v1/tail?query={app=\"api\"}&start=1700000000&l
 
 ### `GET /loki/api/v1/index/stats`
 
-인덱스 통계 (스트림 수, 청크 수, 바이트 수).
+스트림 수, 청크 수, 바이트 수 등 인덱스 통계를 반환합니다.
 
 ```bash
 curl -G "http://loki:3100/loki/api/v1/index/stats" \
@@ -358,7 +357,7 @@ curl -G "http://loki:3100/loki/api/v1/index/stats" \
 
 ### `GET /loki/api/v1/index/volume`
 
-라벨별 데이터 볼륨.
+라벨 조합별 데이터 볼륨을 반환합니다.
 
 ```bash
 curl -G "http://loki:3100/loki/api/v1/index/volume" \
@@ -374,7 +373,7 @@ curl -G "http://loki:3100/loki/api/v1/index/volume" \
 
 ### `GET /loki/api/v1/index/volume_range`
 
-시간별 볼륨 변화.
+시간 범위에 따른 볼륨 변화를 반환합니다.
 
 | 파라미터 | 설명 |
 |----------|------|
@@ -389,7 +388,7 @@ curl -G "http://loki:3100/loki/api/v1/index/volume" \
 
 ### `GET /loki/api/v1/patterns`
 
-자주 발생하는 로그 패턴 (Pattern Ingester 활성화 필요).
+자주 발생하는 로그 패턴을 반환합니다. Pattern Ingester가 활성화되어 있어야 합니다.
 
 ```bash
 curl -G "http://loki:3100/loki/api/v1/patterns" \
@@ -419,11 +418,11 @@ curl -G "http://loki:3100/loki/api/v1/patterns" \
 
 ## Rules API
 
-Prometheus Rules API와 호환.
+Prometheus Rules API와 호환되는 엔드포인트들입니다.
 
 ### `GET /loki/api/v1/rules`
 
-룰 그룹 목록.
+모든 룰 그룹 목록을 반환합니다.
 
 ```bash
 curl -H "X-Scope-OrgID: tenant-1" \
@@ -432,15 +431,15 @@ curl -H "X-Scope-OrgID: tenant-1" \
 
 ### `GET /loki/api/v1/rules/<namespace>`
 
-특정 네임스페이스의 룰 그룹들.
+특정 네임스페이스에 속한 룰 그룹들을 반환합니다.
 
 ### `GET /loki/api/v1/rules/<namespace>/<group>`
 
-특정 룰 그룹.
+특정 룰 그룹을 반환합니다.
 
 ### `POST /loki/api/v1/rules/<namespace>`
 
-룰 그룹 생성/업데이트.
+룰 그룹을 생성하거나 업데이트합니다.
 
 ```bash
 curl -H "X-Scope-OrgID: tenant-1" \
@@ -451,19 +450,19 @@ curl -H "X-Scope-OrgID: tenant-1" \
 
 ### `DELETE /loki/api/v1/rules/<namespace>/<group>`
 
-룰 그룹 삭제.
+지정한 룰 그룹을 삭제합니다.
 
 ### `DELETE /loki/api/v1/rules/<namespace>`
 
-네임스페이스 전체 룰 삭제.
+해당 네임스페이스의 모든 룰 그룹을 삭제합니다.
 
 ### `GET /prometheus/api/v1/rules`
 
-룰 평가 상태 (Prometheus 호환).
+룰 평가 상태를 반환합니다 (Prometheus 호환).
 
 ### `GET /prometheus/api/v1/alerts`
 
-활성 알림 (Prometheus 호환).
+활성 알림 목록을 반환합니다 (Prometheus 호환).
 
 ---
 
@@ -471,7 +470,7 @@ curl -H "X-Scope-OrgID: tenant-1" \
 
 ### `POST /loki/api/v1/delete`
 
-삭제 요청 생성.
+로그 삭제 요청을 생성합니다.
 
 ```bash
 curl -G -XPOST "http://loki:3100/loki/api/v1/delete" \
@@ -483,7 +482,7 @@ curl -G -XPOST "http://loki:3100/loki/api/v1/delete" \
 
 ### `GET /loki/api/v1/delete`
 
-삭제 요청 목록.
+삭제 요청 목록을 조회합니다.
 
 ```bash
 curl -H "X-Scope-OrgID: tenant-1" \
@@ -511,7 +510,7 @@ curl -H "X-Scope-OrgID: tenant-1" \
 
 ### `DELETE /loki/api/v1/delete?request_id=<id>`
 
-삭제 요청 취소 (`processed` 전에만 가능).
+삭제 요청을 취소합니다 (`processed` 상태 이전에만 가능).
 
 ---
 
@@ -519,7 +518,7 @@ curl -H "X-Scope-OrgID: tenant-1" \
 
 ### `GET /ready`
 
-준비 상태 (모든 종속성 정상).
+준비 상태를 확인합니다. 모든 의존성이 정상이면 200을 반환합니다.
 
 ```bash
 curl http://loki:3100/ready
@@ -528,11 +527,11 @@ curl http://loki:3100/ready
 
 ### `GET /metrics`
 
-Prometheus 형식 자체 메트릭.
+Loki 자체 메트릭을 Prometheus 형식으로 노출합니다.
 
 ### `GET /config`
 
-현재 활성 구성. 일부 필드는 마스킹.
+현재 활성 구성을 반환합니다. 일부 민감 필드는 마스킹됩니다.
 
 ```bash
 curl http://loki:3100/config
@@ -540,7 +539,7 @@ curl http://loki:3100/config
 
 ### `GET /services`
 
-실행 중인 서비스 목록과 상태.
+실행 중인 서비스 목록과 각 서비스의 상태를 반환합니다.
 
 ```bash
 curl http://loki:3100/services
@@ -555,7 +554,7 @@ querier => Running
 
 ### `GET /memberlist`
 
-Memberlist 클러스터 상태.
+Memberlist 클러스터 상태를 반환합니다.
 
 ```bash
 curl http://loki:3100/memberlist
@@ -563,7 +562,7 @@ curl http://loki:3100/memberlist
 
 ### `GET /ring`
 
-해시 링 상태 (Ingester, Distributor 등).
+해시 링 상태를 반환합니다 (Ingester, Distributor 등 컴포넌트별).
 
 ```bash
 curl http://loki:3100/ring
@@ -574,7 +573,7 @@ curl http://loki:3100/compactor/ring
 
 ### `GET /loki/api/v1/format_query`
 
-LogQL 쿼리 포맷팅.
+LogQL 쿼리를 포맷팅하고 유효성을 검사합니다.
 
 ```bash
 curl -G "http://loki:3100/loki/api/v1/format_query" \
@@ -589,17 +588,17 @@ curl -G "http://loki:3100/loki/api/v1/format_query" \
 }
 ```
 
-### `GET /flush`
+### `POST /flush`
 
 Ingester 메모리 청크를 즉시 플러시 (테스트/디버깅).
 
 ### `POST /ingester/shutdown`
 
-Ingester 정상 종료 (청크 플러시 후 종료).
+Ingester를 정상 종료합니다 (청크를 플러시한 후 종료).
 
 ### `GET /debug/pprof/*`
 
-Go pprof 프로파일 (디버깅).
+Go pprof 프로파일 엔드포인트입니다 (디버깅용).
 
 ```bash
 curl http://loki:3100/debug/pprof/heap > heap.pprof

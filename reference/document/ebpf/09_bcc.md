@@ -1,6 +1,5 @@
 # bcc (BPF Compiler Collection)
 
-> 이 문서는 IO Visor의 bcc 프로젝트 사용법을 정리한 것입니다.
 > 원본: https://github.com/iovisor/bcc
 
 ---
@@ -164,7 +163,7 @@ bcc는 BPF 코드 안에서 자체 매크로를 제공:
 | `BPF_HISTOGRAM(name)` | 히스토그램 |
 | `BPF_PERF_OUTPUT(name)` | perf event array |
 
-이 매크로들은 컴파일 타임에 raw libbpf 선언으로 펼쳐집니다.
+이 매크로들은 컴파일 타임에 raw libbpf 선언으로 확장됩니다.
 
 ### Tracepoint
 
@@ -181,7 +180,7 @@ b = BPF(text=text)
 b.trace_print()
 ```
 
-`TRACEPOINT_PROBE` 매크로가 자동으로 적절한 SEC와 인자 구조체를 처리.
+`TRACEPOINT_PROBE` 매크로가 SEC 지정과 인자 구조체를 자동으로 처리합니다.
 
 ### Perf event 출력
 

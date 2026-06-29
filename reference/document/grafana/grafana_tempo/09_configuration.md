@@ -1,6 +1,5 @@
 # Tempo 구성 레퍼런스
 
-> 이 문서는 Grafana Tempo 공식 문서의 "Configure Tempo" 섹션을 한국어로 정리한 것입니다.
 > 원본: https://grafana.com/docs/tempo/latest/configuration/
 
 ---
@@ -232,7 +231,7 @@ storage:
     
     # 블록 설정
     block:
-      version: vParquet4           # vParquet, vParquet2, vParquet3, vParquet4
+      version: vParquet4           # vParquet3, vParquet4, vParquet5
       v2_encoding: zstd
       v2_index_downsample_bytes: 1000
       v2_index_page_size_bytes: 250000
@@ -250,8 +249,8 @@ storage:
     
     # 풀 (워커)
     pool:
-      max_workers: 100
-      queue_depth: 10000
+      max_workers: 400
+      queue_depth: 20000
     
     # 블록 목록 폴링
     blocklist_poll: 5m
@@ -348,7 +347,7 @@ query_frontend:
     concurrent_jobs: 1000
     max_duration: 168h               # 1주
     
-    # 검색 슬로
+    # 검색 SLO
     duration_slo: 5s
     throughput_bytes_slo: 1.073741824e+09
   
@@ -523,8 +522,8 @@ memberlist:
   packet_dial_timeout: 5s
   packet_write_timeout: 5s
   pull_push_interval: 30s
-  gossip_interval: 200ms
-  gossip_nodes: 3
+  gossip_interval: 1s
+  gossip_nodes: 2
   gossip_to_dead_nodes_time: 30s
   dead_node_reclaim_time: 0s
   
@@ -662,8 +661,8 @@ storage:
     wal:
       path: /var/tempo/wal
     pool:
-      max_workers: 100
-      queue_depth: 10000
+      max_workers: 400
+      queue_depth: 20000
 
 memberlist:
   join_members:

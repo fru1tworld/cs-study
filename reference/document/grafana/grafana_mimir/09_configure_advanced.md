@@ -1,6 +1,5 @@
 # Mimir 고급 구성
 
-> 이 문서는 Grafana Mimir 공식 문서의 Configure 고급 섹션을 한국어로 정리한 것입니다.
 > 원본: https://grafana.com/docs/mimir/latest/configure/
 
 ---
@@ -26,11 +25,11 @@
 
 ### 문제
 
-Prometheus를 HA 페어로 운영하면 동일 메트릭이 두 번 푸시되어 중복.
+Prometheus를 HA 페어로 운영하면 동일 메트릭이 두 번 푸시되어 중복이 발생한다.
 
 ### 해결: HA Tracker
 
-각 클러스터에서 한 시점에 한 replica만 활성화로 인식.
+각 클러스터에서 한 시점에 하나의 replica만 활성으로 인식한다.
 
 ### Distributor 설정
 
@@ -255,7 +254,7 @@ alertmanager_storage:
 
 ## TSDB 블록 업로드
 
-Compactor가 블록을 업로드 (또는 Ingester가 직접).
+Ingester가 블록을 오브젝트 스토리지에 직접 업로드하며, Compactor가 이후 압축을 담당한다.
 
 ### Ingester → Object Storage
 
@@ -307,9 +306,9 @@ mimirtool backfill \
 
 ## 비정렬(Out-of-Order) 샘플 수집
 
-### 기본: 거부
+### 기본 동작: 거부
 
-기본적으로 시간 순서가 어긋난 샘플은 거부.
+기본적으로 시간 순서가 어긋난 샘플은 거부된다.
 
 ### 활성화
 
@@ -331,9 +330,9 @@ ingester:
 
 ### 트레이드오프
 
-- 메모리 사용량 약간 증가
-- 쿼리 시 OOO 헤드 청크 추가 검색
-- 일반적으로 활성화 권장 (안전)
+- 메모리 사용량 소폭 증가
+- 쿼리 시 OOO 헤드 청크를 추가로 탐색
+- 일반적으로 활성화를 권장 (안전)
 
 ### 모니터링
 
@@ -355,7 +354,7 @@ sum(rate(cortex_ingester_tsdb_out_of_order_samples_rejected_total[5m]))
 limits:
   native_histograms_ingestion_enabled: true
   
-  # 한도
+  # 버킷 수 제한
   max_native_histogram_buckets: 160     # 0 = 무제한
 ```
 
@@ -370,9 +369,9 @@ ingester:
 
 ### 장점
 
-- **고해상도**: 자동으로 적절한 버킷 (Sparse Histograms)
-- **단일 시계열**: 클래식의 N개 vs 1개
-- **빠른 쿼리**: histogram_quantile 직접 계산
+- **고해상도**: 적절한 버킷을 자동으로 결정 (Sparse Histograms)
+- **단일 시계열**: 클래식 히스토그램의 N개 시계열 대신 1개
+- **빠른 쿼리**: `histogram_quantile`을 직접 계산 가능
 
 ### Prometheus 측 활성화
 
@@ -415,7 +414,7 @@ histogram_fraction(0, 100, rate(my_metric[5m]))
 
 ### 개요
 
-Distributor와 Ingester 사이에 Kafka를 두어 버퍼링/내구성 향상.
+Distributor와 Ingester 사이에 Kafka를 두어 버퍼링 및 내구성을 향상시킨다.
 
 ```
 [Distributor] → [Kafka] → [Ingester]
@@ -461,15 +460,15 @@ ingester:
 
 ### 장점
 
-- **내구성**: Kafka가 데이터 보장
-- **비동기**: Distributor와 Ingester 디커플링
-- **재처리 가능**: 오프셋 리셋으로 재수집
+- **내구성**: Kafka가 데이터 유실을 방지
+- **비동기**: Distributor와 Ingester를 디커플링
+- **재처리 가능**: 오프셋 리셋으로 재수집 가능
 
 ### 단점
 
-- 운영 복잡도 (Kafka 클러스터 추가)
-- 지연 약간 증가
-- 실험적 (프로덕션 신중)
+- 운영 복잡도 증가 (Kafka 클러스터 추가)
+- 지연 소폭 증가
+- 실험적 기능으로 프로덕션 적용 시 주의 필요
 
 ---
 
@@ -491,7 +490,7 @@ memberlist:
     - dns+mimir-gossip-ring.mimir.svc.cluster.local:7946
 ```
 
-`dns+` 접두사로 DNS A/AAAA 레코드의 모든 IP를 자동 검색.
+`dns+` 접두사를 사용하면 DNS A/AAAA 레코드의 모든 IP를 자동으로 검색한다.
 
 ### gRPC 클라이언트
 
@@ -510,7 +509,7 @@ ingester_client:
 
 ### 개요
 
-서버 부하에 반응하여 자동으로 한도 조정 (실험적).
+서버 부하에 반응하여 자동으로 한도를 조정하는 실험적 기능이다.
 
 ### 활성화
 
@@ -538,7 +537,7 @@ distributor:
 
 ### Ingester 회로 차단기
 
-Ingester가 과부하/장애 시 요청 거부.
+Ingester가 과부하 또는 장애 상태일 때 요청을 거부한다.
 
 ```yaml
 ingester:
@@ -562,8 +561,8 @@ ingester:
 
 ### 효과
 
-- 캐스케이드 실패 방지
-- 빠른 실패로 클라이언트 보호
+- 연쇄 장애(cascade failure) 방지
+- 빠른 실패(fast fail)로 클라이언트 보호
 - 자동 복구
 
 ---
@@ -572,11 +571,11 @@ ingester:
 
 ### 기존 방식
 
-각 Ingester가 무작위 토큰 → 데이터 분포 불균형 가능.
+각 Ingester가 무작위 토큰을 할당받아 데이터 분포 불균형이 발생할 수 있다.
 
 ### Spread-Minimizing
 
-토큰을 결정론적으로 할당하여 균등 분포.
+토큰을 결정론적으로 할당하여 균등하게 분포시킨다.
 
 ```yaml
 ingester:
@@ -594,8 +593,8 @@ ingester:
 
 ### 효과
 
-- Ingester 간 시계열 균등 분배
-- 메모리 사용 균일
+- Ingester 간 시계열을 균등하게 분배
+- 메모리 사용량 균일화
 - 핫스팟 방지
 
 ---
@@ -632,8 +631,8 @@ ingester:
 
 ### 효과
 
-- 한 Zone 장애 시 데이터 손실 없음
-- 같은 Zone 내 동시 업그레이드 가능 (다른 Zone에 복제본)
+- 특정 Zone 장애 시 데이터 손실 없음
+- 동일 Zone 내 동시 업그레이드 가능 (다른 Zone에 복제본 유지)
 - 롤아웃 속도 향상
 
 ### Store Gateway에도 적용

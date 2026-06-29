@@ -1,6 +1,5 @@
 # journalctl 사용법
 
-> 이 문서는 `man journalctl` 의 내용을 한국어로 정리한 것입니다.
 > 원본: https://www.freedesktop.org/software/systemd/man/journalctl.html
 
 ---
@@ -141,7 +140,7 @@ journalctl -k -p err                           # 커널 에러
 
 ## 필드 필터
 
-journal 레코드의 모든 필드로 필터링 가능. `KEY=VALUE` 형식:
+journal 레코드의 모든 필드를 `KEY=VALUE` 형식으로 필터링할 수 있다:
 
 ```bash
 journalctl _PID=1234
@@ -154,7 +153,7 @@ journalctl _EXE=/usr/bin/python3
 
 ### 여러 필터
 
-같은 키를 여러 번 쓰면 **OR**, 다른 키를 함께 쓰면 **AND**:
+같은 키를 여러 번 지정하면 **OR**, 다른 키를 함께 지정하면 **AND**로 동작한다:
 
 ```bash
 journalctl _SYSTEMD_UNIT=nginx _SYSTEMD_UNIT=apache2     # nginx OR apache2
@@ -188,7 +187,7 @@ journalctl --case-sensitive=false -g "out of memory"
 
 ## 출력 형식
 
-`-o` 또는 `--output` 으로 형식 지정.
+`-o` 또는 `--output` 으로 형식을 지정한다.
 
 | 형식 | 설명 |
 | --- | --- |
@@ -269,7 +268,7 @@ journalctl --verify
 journalctl --header
 ```
 
-각 journal 파일의 메타데이터 (생성 시각, 시퀀스 등).
+각 journal 파일의 메타데이터(생성 시각, 시퀀스 번호 등)를 출력한다.
 
 ### 다른 호스트의 journal 보기
 
@@ -280,7 +279,7 @@ journalctl --root=/mnt/recovered-disk
 journalctl --file=/var/log/journal/abc/system.journal
 ```
 
-복구 디스크나 컨테이너의 journal을 직접 볼 때 유용.
+복구 디스크나 컨테이너의 journal을 직접 확인할 때 유용하다.
 
 ---
 
@@ -308,7 +307,7 @@ journalctl _SYSTEMD_UNIT=myapp.service _PID=1234
 journalctl -fu myapp.service -p warning
 ```
 
-다른 터미널에서 trigger 하면서 실시간으로 확인.
+다른 터미널에서 이벤트를 발생시키며 실시간으로 확인할 수 있다.
 
 ### 보안 감사
 
@@ -324,7 +323,7 @@ journalctl _AUDIT_LOGINUID=1000 --since "1 hour ago"
 journalctl -b _SYSTEMD_UNIT=systemd-journald.service -o short-monotonic
 ```
 
-부팅 후 경과 시간 형식으로 출력.
+부팅 후 경과 시간 형식으로 출력한다.
 
 ### CSV/TSV로 export
 
@@ -341,7 +340,7 @@ journalctl -x                                  # MESSAGE_ID 기반 설명 추가
 journalctl -xeu nginx.service                  # 자주 쓰는 조합
 ```
 
-`-x` 는 잘 알려진 MESSAGE_ID에 대해 추가 설명·해결 힌트를 출력합니다.
+`-x` 는 잘 알려진 MESSAGE_ID에 대해 추가 설명과 해결 힌트를 함께 출력한다.
 
 ---
 

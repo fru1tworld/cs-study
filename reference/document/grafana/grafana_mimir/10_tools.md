@@ -1,6 +1,5 @@
 # Mimir Tools (mimirtool, 기타 도구)
 
-> 이 문서는 Grafana Mimir 공식 문서의 Tools 섹션을 한국어로 정리한 것입니다.
 > 원본: https://grafana.com/docs/mimir/latest/manage/tools/
 
 ---
@@ -11,10 +10,9 @@
 2. [mimirtool](#mimirtool)
 3. [Mimir Continuous Test](#mimir-continuous-test)
 4. [Query-tee](#query-tee)
-5. [mimir-query-tee](#mimir-query-tee)
-6. [trafficdump](#trafficdump)
-7. [bucket-tool](#bucket-tool)
-8. [grafana-mimir-architecture-diagrams](#grafana-mimir-architecture-diagrams)
+5. [trafficdump](#trafficdump)
+6. [bucket-tool](#bucket-tool)
+7. [grafana-mimir-architecture-diagrams](#grafana-mimir-architecture-diagrams)
 
 ---
 
@@ -22,17 +20,17 @@
 
 | 도구 | 용도 |
 |------|------|
-| `mimirtool` | 종합 CLI (룰, AM, 분석, 변환) |
-| `Mimir Continuous Test` | 운영 중 무결성 검증 |
-| `query-tee` | 두 백엔드 응답 비교 |
-| `trafficdump` | 트래픽 캡처/분석 |
-| `bucket-tool` | 오브젝트 스토리지 직접 조작 |
+| `mimirtool` | 종합 CLI (룰, Alertmanager, 분석, 변환) |
+| `Mimir Continuous Test` | 운영 중 데이터 무결성 지속 검증 |
+| `query-tee` | 두 백엔드에 동일 쿼리를 전송하여 응답 비교 |
+| `trafficdump` | 트래픽 캡처 및 분석 |
+| `bucket-tool` | 오브젝트 스토리지의 Mimir 데이터 직접 조작 |
 
 ---
 
 ## mimirtool
 
-종합 CLI 도구. Mimir 운영의 거의 모든 작업.
+Mimir 운영에 필요한 거의 모든 작업을 수행하는 종합 CLI 도구.
 
 ### 설치
 
@@ -71,7 +69,7 @@ export MIMIR_TENANT_ID=tenant-1
 mimirtool
 ├── rules           # Recording/Alerting Rules
 ├── alertmanager    # Alertmanager 설정
-├── analyse         # 사용 분석
+├── analyze         # 사용 분석
 ├── backfill        # 블록 백필
 ├── bucket-validation  # 버킷 검증
 ├── config          # 구성 변환
@@ -150,10 +148,13 @@ mimirtool rules delete-namespace \
 #### 룰 검증 (lint)
 
 ```bash
+# lint: YAML 및 PromQL 포맷 자동 수정 (in-place)
 mimirtool rules lint rules.yaml
 
-# 자동 수정 (rule order 등)
-mimirtool rules format rules.yaml
+# 드라이런 (수정 없이 확인만)
+mimirtool rules lint -n rules.yaml
+
+# 모범 사례 기준 검사
 mimirtool rules check rules.yaml
 ```
 
@@ -214,46 +215,46 @@ mimirtool alertmanager migrate-utf8 \
 
 ---
 
-### `mimirtool analyse`
+### `mimirtool analyze`
 
 #### Grafana 대시보드 분석
 
 ```bash
-mimirtool analyse grafana \
+mimirtool analyze grafana \
   --address=http://grafana:3000 \
   --key=$GRAFANA_API_KEY
 ```
 
-대시보드에서 사용된 메트릭 추출.
+대시보드에서 사용된 메트릭을 추출한다.
 
 #### Prometheus → Mimir 분석
 
 ```bash
-mimirtool analyse prometheus \
+mimirtool analyze prometheus \
   --address=http://prometheus:9090 \
   --grafana-metrics-file=metrics-in-grafana.json \
   --ruler-metrics-file=metrics-in-ruler.json
 ```
 
-실제로 사용되는 메트릭 vs 수집되는 메트릭 비교 → 사용 안 되는 메트릭 식별.
+실제로 사용되는 메트릭과 수집되는 메트릭을 비교하여 불필요한 메트릭을 식별한다.
 
-#### 룰 분석
+#### 룰 파일 분석
 
 ```bash
-mimirtool analyse rule-file rules.yaml
+mimirtool analyze rule-file rules.yaml
 ```
 
-#### 모든 메트릭 분석
+#### 대시보드 JSON 분석
 
 ```bash
-mimirtool analyse dashboard dashboard.json
+mimirtool analyze dashboard dashboard.json
 ```
 
 ---
 
 ### `mimirtool backfill`
 
-블록을 직접 Mimir에 업로드 (마이그레이션, 복원).
+TSDB 블록을 Mimir에 직접 업로드한다 (마이그레이션, 복원 등에 활용).
 
 ```bash
 mimirtool backfill \
@@ -271,7 +272,7 @@ mimirtool backfill \
 
 ### `mimirtool bucket-validation`
 
-오브젝트 스토리지 작동 검증.
+오브젝트 스토리지 동작을 검증한다.
 
 ```bash
 mimirtool bucket-validation \
@@ -294,7 +295,7 @@ mimirtool bucket-validation \
 
 ### `mimirtool config`
 
-구성 변환 (Cortex → Mimir, 구버전 → 신버전).
+설정 파일을 변환한다 (Cortex → Mimir, 구버전 → 신버전).
 
 ```bash
 # Cortex → Mimir
@@ -313,7 +314,7 @@ mimirtool config convert \
 
 ### `mimirtool remote-read`
 
-Remote Read 엔드포인트 직접 호출.
+Remote Read 엔드포인트를 직접 호출한다.
 
 ```bash
 mimirtool remote-read dump \
@@ -330,7 +331,7 @@ mimirtool remote-read dump \
 
 ### 개요
 
-Mimir 클러스터의 정상성을 지속적으로 검증.
+Mimir 클러스터의 정상성을 지속적으로 검증한다.
 
 ### 동작
 
@@ -390,7 +391,7 @@ mimir_continuous_test_query_result_checks_failed_total
 
 ### 개요
 
-두 Mimir/Cortex/Prometheus 백엔드에 동일 쿼리 전송 후 응답 비교.
+두 Mimir/Cortex/Prometheus 백엔드에 동일한 쿼리를 전송하고 응답을 비교한다.
 
 ### 활용
 
@@ -429,19 +430,9 @@ docker run -d \
 ### 메트릭
 
 ```
-cortex_querytee_request_duration_seconds
-cortex_querytee_responses_total{result="success|failed|matching"}
+cortex_querytee_backend_request_duration_seconds
+cortex_querytee_responses_total
 cortex_querytee_responses_compared_total
-cortex_querytee_responses_comparison_failures_total
-```
-
-### 활용 예
-
-```promql
-# Mimir 새 버전 응답이 기존과 다른 비율
-sum(rate(cortex_querytee_responses_comparison_failures_total[5m]))
-/
-sum(rate(cortex_querytee_responses_compared_total[5m]))
 ```
 
 ---
@@ -456,7 +447,7 @@ sum(rate(cortex_querytee_responses_compared_total[5m]))
 
 ### 개요
 
-Mimir 트래픽을 캡처하여 분석/리플레이.
+Mimir 트래픽을 캡처하여 분석하거나 리플레이할 수 있다.
 
 ### 캡처
 
@@ -497,7 +488,7 @@ trafficdump replay \
 
 ### 개요
 
-오브젝트 스토리지의 Mimir 데이터 직접 조작.
+오브젝트 스토리지의 Mimir 데이터를 직접 조작한다.
 
 ### 명령
 
@@ -545,7 +536,7 @@ bucket-tool blocks check \
 
 ### 개요
 
-현재 Mimir 클러스터 구성을 다이어그램으로 시각화.
+현재 Mimir 클러스터 구성을 다이어그램으로 시각화한다.
 
 ### 사용
 
@@ -611,17 +602,17 @@ mimirtool rules sync \
 
 ```bash
 # 1. Grafana 대시보드 분석
-mimirtool analyse grafana \
+mimirtool analyze grafana \
   --address=http://grafana:3000 \
   --key=$GRAFANA_API_KEY \
   --output=grafana-metrics.json
 
 # 2. Prometheus 분석
-mimirtool analyse prometheus \
+mimirtool analyze prometheus \
   --address=http://prometheus:9090 \
   --grafana-metrics-file=grafana-metrics.json \
   --ruler-metrics-file=ruler-metrics.json \
   --output=prometheus-metrics.json
 
-# 3. 결과 검토 → write_relabel_configs로 불필요 메트릭 드롭
+# 3. 결과 검토 후 write_relabel_configs로 불필요한 메트릭 드롭
 ```

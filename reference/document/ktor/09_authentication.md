@@ -1,13 +1,12 @@
 # 09. 인증 (Authentication)
 
 > 출처: https://ktor.io/docs/server-auth.html
-> 한국어 학습 노트입니다.
 
 ---
 
 ## 개념
 
-Ktor의 인증은 **`Authentication` 플러그인 + 명명된 프로바이더 + `authenticate("name") { }` 블록** 구조로 동작합니다. 인증에 성공하면 **Principal** 객체가 만들어져 `call.principal<T>()`로 꺼낼 수 있습니다.
+Ktor 인증은 **`Authentication` 플러그인 + 명명된 프로바이더 + `authenticate("name") { }` 블록** 구조로 동작합니다. 인증에 성공하면 **Principal** 객체가 생성되며 `call.principal<T>()`로 꺼낼 수 있습니다.
 
 핵심 용어:
 
@@ -60,7 +59,7 @@ routing {
 }
 ```
 
-여러 프로바이더를 동시에 허용하려면 이름을 여러 개 넘기면 됩니다.
+여러 프로바이더를 동시에 허용하려면 이름을 여러 개 전달하면 됩니다.
 
 ```kotlin
 authenticate("auth-basic", "auth-jwt") { ... }
@@ -163,12 +162,12 @@ install(Authentication) {
 
 ## challenge
 
-인증 실패 시 클라이언트에게 줄 응답을 정의합니다. 미정의 시 `401 Unauthorized`(basic은 `WWW-Authenticate` 헤더 포함)가 기본 동작입니다.
+인증 실패 시 클라이언트에 반환할 응답을 정의합니다. 미정의 시 `401 Unauthorized`(basic은 `WWW-Authenticate` 헤더 포함)가 기본 동작입니다.
 
 ---
 
 ## 자주 쓰는 패턴
 
-- **로그인** 라우트는 인증 블록 바깥에 두고, 검증 성공 시 토큰을 발급 또는 세션을 set.
+- **로그인** 라우트는 인증 블록 바깥에 두고, 검증 성공 시 토큰을 발급하거나 세션을 설정한다.
 - **재발급/로그아웃** 라우트는 `authenticate {}` 안에 둔다.
 - JWT 키/시크릿은 `application.conf`의 환경변수 보간으로 주입한다 (`${JWT_SECRET}`).

@@ -1,6 +1,5 @@
 # Alloy HTTP 엔드포인트
 
-> 이 문서는 Grafana Alloy 공식 문서의 HTTP Endpoints 섹션을 한국어로 정리한 것입니다.
 > 원본: https://grafana.com/docs/alloy/latest/reference/cli/run/
 
 ---
@@ -20,7 +19,7 @@
 
 ## 개요
 
-Alloy의 HTTP 서버는 기본 포트 **12345** 에서 실행됩니다.
+Alloy HTTP 서버는 기본 포트 **12345**에서 실행됩니다.
 
 ```bash
 alloy run --server.http.listen-addr=0.0.0.0:12345 config.alloy
@@ -28,7 +27,7 @@ alloy run --server.http.listen-addr=0.0.0.0:12345 config.alloy
 
 ### 인증
 
-기본적으로 인증 없음. 운영 환경에서는 리버스 프록시 권장.
+기본적으로 인증을 제공하지 않으며, 운영 환경에서는 리버스 프록시 사용을 권장합니다.
 
 ---
 
@@ -36,7 +35,7 @@ alloy run --server.http.listen-addr=0.0.0.0:12345 config.alloy
 
 ### `GET /-/healthy`
 
-기본 헬스체크. Alloy 프로세스가 살아있는지.
+기본 헬스체크. Alloy 프로세스가 실행 중인지 확인합니다.
 
 ```bash
 curl http://localhost:12345/-/healthy
@@ -49,7 +48,7 @@ curl http://localhost:12345/-/healthy
 
 ### `GET /-/ready`
 
-준비 상태. 모든 컴포넌트가 준비되었는지.
+준비 상태 확인. 모든 컴포넌트가 준비되었는지 반환합니다.
 
 ```bash
 curl http://localhost:12345/-/ready
@@ -70,7 +69,7 @@ curl http://localhost:12345/-/ready
 
 ### `POST /-/reload`
 
-구성 파일 리로드.
+구성 파일을 다시 로드합니다.
 
 ```bash
 curl -X POST http://localhost:12345/-/reload
@@ -88,7 +87,7 @@ curl -X POST http://localhost:12345/-/reload
 
 ### `GET /api/v0/web/config`
 
-현재 구성을 텍스트로 조회.
+현재 구성을 텍스트 형식으로 조회합니다.
 
 ```bash
 curl http://localhost:12345/api/v0/web/config
@@ -100,7 +99,7 @@ curl http://localhost:12345/api/v0/web/config
 
 ### `GET /api/v0/web/components`
 
-모든 컴포넌트 목록과 상태.
+모든 컴포넌트의 목록과 상태를 반환합니다.
 
 ```bash
 curl http://localhost:12345/api/v0/web/components
@@ -129,7 +128,7 @@ curl http://localhost:12345/api/v0/web/components
 
 ### `GET /api/v0/web/components/<id>`
 
-특정 컴포넌트 상세.
+특정 컴포넌트의 상세 정보를 반환합니다.
 
 ```bash
 curl http://localhost:12345/api/v0/web/components/prometheus.scrape.default
@@ -152,7 +151,7 @@ curl http://localhost:12345/api/v0/web/components/prometheus.scrape.default
 
 ### `GET /api/v0/web/peers`
 
-클러스터 피어 목록 (클러스터링 활성화 시).
+클러스터 피어 목록을 반환합니다 (클러스터링 활성화 시).
 
 ```bash
 curl http://localhost:12345/api/v0/web/peers
@@ -164,7 +163,7 @@ curl http://localhost:12345/api/v0/web/peers
 
 ### `GET /api/v1/cluster/peers`
 
-클러스터의 모든 피어.
+클러스터의 모든 피어 정보를 반환합니다.
 
 ```bash
 curl http://localhost:12345/api/v1/cluster/peers
@@ -192,7 +191,7 @@ curl http://localhost:12345/api/v1/cluster/peers
 
 ### `GET /api/v1/cluster/state`
 
-클러스터 상태.
+클러스터 상태를 반환합니다.
 
 상태 값:
 - `alive`: 정상
@@ -206,7 +205,7 @@ curl http://localhost:12345/api/v1/cluster/peers
 
 ### `GET /metrics`
 
-Prometheus 형식 자체 메트릭.
+Prometheus 형식으로 자체 메트릭을 노출합니다.
 
 ```bash
 curl http://localhost:12345/metrics
@@ -242,7 +241,7 @@ cluster_transport_stream_*
 
 #### Component-specific
 
-각 컴포넌트가 자체 메트릭 노출:
+각 컴포넌트가 자체 메트릭을 노출합니다:
 
 ```
 prometheus_remote_write_*
@@ -256,7 +255,7 @@ otelcol_*
 
 ### `GET /debug/pprof/*`
 
-Go pprof 프로파일.
+Go pprof 프로파일 엔드포인트입니다.
 
 ```bash
 # Heap
@@ -287,7 +286,7 @@ go tool pprof heap.pprof
 
 ### `GET /debug/fgprof`
 
-Off-CPU 프로파일링 (실험적).
+Off-CPU 프로파일링을 수행합니다 (실험적 기능).
 
 ```bash
 curl "http://localhost:12345/debug/fgprof?seconds=30" > fgprof.pprof
@@ -299,7 +298,7 @@ curl "http://localhost:12345/debug/fgprof?seconds=30" > fgprof.pprof
 
 ### Web UI
 
-기본 접속: `http://localhost:12345/`
+기본 주소: `http://localhost:12345/`
 
 ### 주요 페이지
 
@@ -323,19 +322,19 @@ curl "http://localhost:12345/debug/fgprof?seconds=30" > fgprof.pprof
 각 컴포넌트 페이지에서 확인 가능:
 
 #### Arguments
-컴포넌트에 전달된 인자.
+컴포넌트에 전달된 인자를 표시합니다.
 
 #### Exports
-다른 컴포넌트가 참조 가능한 출력.
+다른 컴포넌트가 참조할 수 있는 출력 값을 표시합니다.
 
 #### Health
-현재 상태와 마지막 업데이트.
+현재 상태와 마지막 업데이트 시각을 표시합니다.
 
 #### Debug Info
-컴포넌트별 실시간 디버그 정보 (예: `prometheus.scrape`의 마지막 스크래핑 시간/결과).
+컴포넌트별 실시간 디버그 정보를 표시합니다 (예: `prometheus.scrape`의 마지막 스크래핑 시간 및 결과).
 
 #### Live Debugging
-`livedebugging` 활성화 시 실시간 입출력 데이터 확인.
+`livedebugging` 활성화 시 실시간 입출력 데이터를 확인할 수 있습니다.
 
 ---
 

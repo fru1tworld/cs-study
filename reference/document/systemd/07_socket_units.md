@@ -1,6 +1,5 @@
 # Socket Unit과 소켓 활성화
 
-> 이 문서는 `man systemd.socket` 의 내용을 한국어로 정리한 것입니다.
 > 원본: https://www.freedesktop.org/software/systemd/man/systemd.socket.html
 
 ---
@@ -21,7 +20,7 @@
 
 ## 소켓 활성화란?
 
-전통적인 `inetd` 의 systemd 버전입니다. systemd가 대신 포트(또는 유닉스 소켓)를 열어 두고, 첫 연결이 들어오면 그제서야 서비스를 시작해 그 소켓을 넘겨줍니다.
+전통적인 `inetd`의 systemd 버전입니다. systemd가 포트(또는 유닉스 소켓)를 미리 열어 두고, 첫 연결이 들어오면 서비스를 시작해 해당 소켓을 넘겨줍니다.
 
 ```
 [부팅]
@@ -42,11 +41,11 @@
 
 ### 1. 부팅 가속
 
-서비스 자체를 시작하지 않고 소켓만 열어두면 되므로 부팅이 빠릅니다. systemd가 모든 서비스의 소켓을 동시에 열어두면, 의존성 있는 서비스들도 병렬로 부팅 가능합니다.
+서비스 자체를 시작하지 않고 소켓만 열어두면 되므로 부팅이 빠릅니다. systemd가 모든 서비스의 소켓을 동시에 열어두면, 의존 관계가 있는 서비스들도 병렬로 기동할 수 있습니다.
 
 ### 2. 의존성 단순화
 
-A 서비스가 B 서비스에 연결한다고 가정. 일반적으로는 A가 B 시작을 기다려야 합니다. 그러나 B의 **소켓** 만 열려 있으면 A는 즉시 연결을 시도할 수 있고, 커널 버퍼에 들어간 데이터는 B가 시작된 뒤 처리됩니다. 즉 **순서 의존성이 사라집니다**.
+A 서비스가 B 서비스에 연결한다고 가정합니다. 일반적으로는 A가 B의 시작을 기다려야 합니다. 그러나 B의 **소켓**만 열려 있으면 A는 즉시 연결을 시도할 수 있고, 커널 버퍼에 쌓인 데이터는 B가 시작된 뒤 처리됩니다. 즉 **순서 의존성이 사라집니다**.
 
 ### 3. 서비스 재시작에도 연결 유지
 
@@ -54,17 +53,17 @@ A 서비스가 B 서비스에 연결한다고 가정. 일반적으로는 A가 B 
 
 ### 4. 권한 분리
 
-소켓을 systemd가 열고 권한 있는 fd를 unprivileged 서비스에 넘겨주면, 서비스 자체는 root가 아니어도 됩니다. (1024 미만 포트도 OK)
+systemd가 소켓을 열고 권한 있는 fd를 비특권 서비스에 넘겨주면, 서비스 자체는 root 권한 없이도 동작합니다. (1024 미만 포트 포함)
 
 ### 5. 온디맨드 시작
 
-거의 사용되지 않는 서비스는 메모리를 차지하지 않다가 필요할 때만 시작.
+거의 사용되지 않는 서비스는 평소에 메모리를 점유하지 않다가, 필요할 때만 시작됩니다.
 
 ---
 
 ## 기본 구조
 
-소켓 unit과 서비스 unit은 같은 이름을 가져야 자동으로 짝지어집니다.
+소켓 유닛과 서비스 유닛은 같은 이름을 가져야 자동으로 연결됩니다.
 
 ```ini
 # /etc/systemd/system/echo.socket
@@ -147,11 +146,11 @@ USB Gadget 모드의 functionfs 인스턴스.
 
 ### Accept=no (기본, 권장)
 
-소켓 fd 자체를 서비스에 넘김. 서비스는 단일 인스턴스로 실행되며, 직접 `accept(2)` 를 호출해 연결을 처리. nginx, sshd처럼 자체 멀티플렉싱이 가능한 데몬에 적합.
+소켓 fd 자체를 서비스에 넘깁니다. 서비스는 단일 인스턴스로 실행되며, 직접 `accept(2)`를 호출해 연결을 처리합니다. nginx, sshd처럼 자체 멀티플렉싱이 가능한 데몬에 적합합니다.
 
 ### Accept=yes
 
-연결마다 서비스를 새 인스턴스로 fork. 서비스는 stdin/stdout이 클라이언트와 연결된 단순 프로그램이면 됨. 옛날 `inetd` 스타일. 단순한 echo 서버, ftp 같은 곳에 적합.
+연결마다 서비스를 새 인스턴스로 fork합니다. 서비스는 stdin/stdout이 클라이언트와 연결된 단순한 프로그램이면 됩니다. 옛 `inetd` 스타일로, 간단한 echo 서버나 ftp 같은 용도에 적합합니다.
 
 ```ini
 [Socket]
@@ -180,7 +179,7 @@ SocketGroup=nginx
 SocketMode=0660
 ```
 
-Unix 소켓의 소유자와 권한.
+Unix 소켓의 소유자 및 권한을 설정합니다.
 
 ### Backlog
 
@@ -188,7 +187,7 @@ Unix 소켓의 소유자와 권한.
 Backlog=128
 ```
 
-`listen(2)` backlog 큐 크기.
+`listen(2)` backlog 큐 크기를 설정합니다.
 
 ### KeepAlive
 
@@ -199,7 +198,7 @@ KeepAliveIntervalSec=75
 KeepAliveProbes=9
 ```
 
-TCP keepalive 설정.
+TCP keepalive를 설정합니다.
 
 ### NoDelay (TCP_NODELAY)
 
@@ -207,7 +206,7 @@ TCP keepalive 설정.
 NoDelay=yes
 ```
 
-Nagle 알고리즘 비활성화. 작은 패킷의 지연을 줄임.
+Nagle 알고리즘을 비활성화합니다. 작은 패킷의 전송 지연을 줄입니다.
 
 ### FreeBind
 
@@ -215,7 +214,7 @@ Nagle 알고리즘 비활성화. 작은 패킷의 지연을 줄임.
 FreeBind=yes
 ```
 
-존재하지 않는/구성되지 않은 IP 주소에도 바인딩 허용. floating IP 환경에서 유용.
+존재하지 않거나 아직 구성되지 않은 IP 주소에도 바인딩을 허용합니다. floating IP 환경에서 유용합니다.
 
 ### Transparent
 
@@ -223,7 +222,7 @@ FreeBind=yes
 Transparent=yes
 ```
 
-`IP_TRANSPARENT`. 투명 프록시 구현.
+`IP_TRANSPARENT`. 투명 프록시 구현에 사용합니다.
 
 ### ReusePort
 
@@ -231,7 +230,7 @@ Transparent=yes
 ReusePort=yes
 ```
 
-`SO_REUSEPORT`. 여러 프로세스가 같은 포트에 바인딩 가능 (커널 레벨 로드 밸런싱).
+`SO_REUSEPORT`. 여러 프로세스가 동일한 포트에 바인딩할 수 있습니다 (커널 수준 로드 밸런싱).
 
 ### MaxConnections
 
@@ -240,7 +239,7 @@ MaxConnections=100
 MaxConnectionsPerSource=10
 ```
 
-`Accept=yes` 모드에서 동시 연결 수 제한.
+`Accept=yes` 모드에서 동시 연결 수를 제한합니다.
 
 ### TriggerLimit
 
@@ -249,20 +248,20 @@ TriggerLimitIntervalSec=2s
 TriggerLimitBurst=200
 ```
 
-소켓 활성화 트리거 빈도 제한 (DoS 방지).
+소켓 활성화 트리거 빈도를 제한합니다 (DoS 방지).
 
 ---
 
 ## sd_listen_fds 프로토콜
 
-소켓 활성화를 지원하는 서비스는 fd를 어떻게 받을까요?
+소켓 활성화를 지원하는 서비스는 fd를 다음과 같이 전달받습니다.
 
-systemd는 다음 환경 변수를 설정한 채 서비스를 실행합니다:
+systemd는 다음 환경 변수를 설정한 뒤 서비스를 실행합니다:
 - `LISTEN_FDS=N`: 전달된 fd 개수
 - `LISTEN_PID=<pid>`: 현재 PID (다른 프로세스에서 받지 않도록 검증용)
 - `LISTEN_FDNAMES=name1:name2`: fd 이름 (선택적)
 
-fd는 `3` 부터 시작하는 정수로 전달됩니다 (3, 4, 5, ...).
+fd는 `3`부터 시작하는 정수로 전달됩니다 (3, 4, 5, ...).
 
 ### libsystemd C API
 
@@ -283,7 +282,7 @@ listeners, err := activation.Listeners()  // github.com/coreos/go-systemd/activa
 
 ### 셸/Python
 
-기본적으로는 직접 환경 변수를 읽고 fd 3부터 다루면 됩니다.
+환경 변수를 직접 읽고 fd 3부터 처리하면 됩니다.
 
 ### FileDescriptorName
 
@@ -295,7 +294,7 @@ FileDescriptorName=http
 FileDescriptorName=https
 ```
 
-여러 소켓을 이름으로 구분할 때 사용.
+여러 소켓을 이름으로 구분할 때 사용합니다.
 
 ---
 
@@ -320,7 +319,7 @@ WantedBy=sockets.target
 
 ### 2. nginx 권한 분리
 
-systemd가 80/443 소켓을 열고 nginx에 넘김 → nginx는 root 권한 없이 실행.
+systemd가 80/443 소켓을 열고 nginx에 넘기면, nginx는 root 권한 없이 실행됩니다.
 
 ```ini
 # nginx.socket

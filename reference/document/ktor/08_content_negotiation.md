@@ -1,7 +1,6 @@
 # 08. Content Negotiation 과 직렬화
 
 > 출처: https://ktor.io/docs/server-serialization.html
-> 한국어 학습 노트입니다.
 
 ---
 
@@ -42,7 +41,7 @@ install(ContentNegotiation) {
 }
 ```
 
-설정을 넘기는 경우:
+설정을 전달하는 경우:
 
 ```kotlin
 install(ContentNegotiation) {
@@ -99,12 +98,12 @@ post("/users") {
 
 ## 커스텀 컨버터
 
-`ContentConverter` 인터페이스를 직접 구현하면 임의의 미디어 타입을 다룰 수 있습니다.
+`ContentConverter` 인터페이스를 직접 구현해 임의의 미디어 타입을 처리할 수 있습니다.
 
 ```kotlin
 class CsvConverter : ContentConverter {
     override suspend fun serialize(
-        contentType: ContentType, charset: Charset, typeInfo: TypeInfo, value: Any?
+        contentType: ContentType, charset: Charset, typeInfo: TypeInfo, value: Any
     ): OutgoingContent? = TODO()
 
     override suspend fun deserialize(

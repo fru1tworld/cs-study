@@ -1,6 +1,5 @@
 # Tempo 애플리케이션 계측
 
-> 이 문서는 Grafana Tempo 공식 문서의 "Set up tracing" 섹션 중 계측 부분을 한국어로 정리한 것입니다.
 > 원본: https://grafana.com/docs/tempo/latest/setup/instrumentation/
 
 ---
@@ -20,7 +19,7 @@
 
 ## 개요
 
-애플리케이션이 Tempo로 트레이스를 보내려면 **계측(instrumentation)** 이 필요합니다.
+애플리케이션이 Tempo로 트레이스를 전송하려면 **계측(instrumentation)** 이 필요합니다.
 
 ### 권장 라이브러리
 
@@ -307,7 +306,7 @@ end
 
 ## 수동 계측 (Manual)
 
-자동 계측이 다루지 않는 비즈니스 로직을 직접 추적.
+자동 계측이 다루지 않는 비즈니스 로직을 직접 추적한다.
 
 ### 스팬 속성 추가
 
@@ -352,7 +351,7 @@ with tracer.start_as_current_span("riskOperation") as span:
 
 ## 자동 계측 (Auto)
 
-각 언어별 SDK는 인기 있는 라이브러리/프레임워크를 자동 계측합니다.
+각 언어별 SDK는 주요 라이브러리와 프레임워크를 자동으로 계측한다.
 
 ### 지원 라이브러리 예 (언어별)
 
@@ -380,7 +379,7 @@ tracestate: <vendor-specific>
 
 ### Baggage
 
-요청 전반에 걸쳐 키-값 메타데이터 전파:
+요청 전체에 걸쳐 키-값 메타데이터를 전파한다:
 
 ```python
 from opentelemetry import baggage
@@ -403,7 +402,7 @@ propagate.set_global_textmap(B3MultiFormat())
 
 ## 샘플링
 
-모든 트레이스를 보내면 비용/성능 부담. 샘플링으로 일부만 수집.
+모든 트레이스를 전송하면 비용과 성능에 부담이 생긴다. 샘플링으로 일부만 수집한다.
 
 ### Head-based Sampling (시작 시 결정)
 
@@ -418,7 +417,7 @@ provider = TracerProvider(
 
 ### ParentBased Sampling
 
-부모 결정 따름.
+부모 스팬의 샘플링 결정을 따른다.
 
 ```python
 from opentelemetry.sdk.trace.sampling import ParentBased, TraceIdRatioBased
@@ -430,7 +429,7 @@ provider = TracerProvider(
 
 ### Tail-based Sampling (Collector에서)
 
-OTel Collector나 Alloy에서 트레이스 종료 후 결정 (느린 트레이스, 에러 트레이스만 보존 등).
+OTel Collector나 Alloy에서 트레이스가 완전히 수집된 후 샘플링 여부를 결정한다 (느린 트레이스·에러 트레이스만 보존하는 방식 등).
 
 ```alloy
 otelcol.processor.tail_sampling "default" {

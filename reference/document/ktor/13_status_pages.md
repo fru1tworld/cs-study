@@ -1,7 +1,6 @@
 # 13. StatusPages — 예외와 상태 코드 처리
 
 > 출처: https://ktor.io/docs/server-status-pages.html
-> 한국어 학습 노트입니다.
 
 ---
 
@@ -91,6 +90,6 @@ install(StatusPages) {
 
 ## 주의할 점
 
-- `StatusPages`에서 응답을 보내고 나면 같은 호출에 또 응답을 보내려 하면 예외가 납니다.
-- `status()` 핸들러는 상태가 명시적으로 set된 경우에만 트리거됩니다 — 라우트 매칭이 아예 안 돼서 발생한 `404`도 잡으려면 `status(HttpStatusCode.NotFound)`를 등록해 두세요.
-- `CallLogging`을 같이 쓰면 예외가 잡혀도 로그가 유실되지 않게 `exception<Throwable>`에서 명시적으로 로그를 남기는 게 안전합니다.
+- `StatusPages`에서 응답을 보낸 후 같은 호출에 다시 응답을 시도하면 예외가 발생합니다.
+- `status()` 핸들러는 상태 코드가 명시적으로 설정된 경우에만 동작합니다 — 라우트 매칭이 실패해서 발생한 `404`도 처리하려면 `status(HttpStatusCode.NotFound)`를 등록해 두세요.
+- `CallLogging`을 함께 사용하는 경우, 예외가 잡혀도 로그가 유실되지 않도록 `exception<Throwable>`에서 명시적으로 로그를 남기는 것이 안전합니다.

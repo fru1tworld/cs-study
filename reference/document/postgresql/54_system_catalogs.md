@@ -22,7 +22,7 @@
 
 ### 핵심 특징
 
-PostgreSQL의 시스템 카탈로그는 일반 테이블 입니다. 기술적으로는 삭제, 재생성, 수정이 가능하지만, 정상적인 상황에서는 직접 수정하지 않는 것이 좋습니다.
+PostgreSQL의 시스템 카탈로그는 일반 테이블입니다. 기술적으로는 삭제, 재생성, 수정이 가능하지만, 정상적인 상황에서는 직접 수정하지 않는 것이 좋습니다.
 
 > 주의사항: 시스템 카탈로그에 컬럼을 추가하거나, 값을 직접 삽입/수정하면 시스템에 심각한 문제가 발생할 수 있습니다.
 
@@ -288,7 +288,7 @@ PostgreSQL은 50개 이상의 시스템 카탈로그를 제공합니다. 주요 
 | `prosupport` | `regproc` | 플래너 지원 함수 OID (없으면 0) |
 | `prokind` | `char` | 함수 유형: `f` (일반), `p` (프로시저), `a` (집계), `w` (윈도우) |
 | `prosecdef` | `bool` | 보안 정의자 함수 여부 (SECURITY DEFINER) |
-| `proleakproof` | `bool` | 부작용이 없는 함수 여부 |
+| `proleakproof` | `bool` | 인자 정보가 반환값 외의 경로로 노출되지 않는 함수 여부 (행 수준 보안과 함께 사용) |
 | `proisstrict` | `bool` | 인자가 NULL이면 NULL 반환 여부 |
 | `proretset` | `bool` | 함수가 집합(여러 값)을 반환하는지 여부 |
 | `provolatile` | `char` | 휘발성: `i` (immutable/불변), `s` (stable/안정), `v` (volatile/휘발) |
@@ -321,11 +321,11 @@ PostgreSQL은 50개 이상의 시스템 카탈로그를 제공합니다. 주요 
 
 ### pg_namespace
 
-`pg_namespace` 카탈로그는 네임스페이스(Namespaces) 를 저장합니다. 네임스페이스는 SQL 스키마의 기반이 되는 구조입니다.
+`pg_namespace` 카탈로그는 네임스페이스(Namespaces)를 저장합니다. 네임스페이스는 SQL 스키마의 기반이 되는 구조입니다.
 
 #### 핵심 개념
 
-각 네임스페이스는 이름 충돌 없이 릴레이션, 타입, 기타 객체의 별도 컬렉션을 가질 수 있습니다.
+각 네임스페이스는 이름 충돌 없이 릴레이션, 타입, 기타 객체를 별도 컬렉션으로 보유할 수 있습니다.
 
 #### 컬럼 정의
 
@@ -443,7 +443,7 @@ PostgreSQL은 50개 이상의 시스템 카탈로그를 제공합니다. 주요 
 
 ### pg_database
 
-`pg_database` 카탈로그는 PostgreSQL 클러스터에서 사용 가능한 데이터베이스에 대한 정보를 저장합니다. 이것은 공유 카탈로그(Shared Catalog) 입니다 - 데이터베이스마다 하나가 아니라 클러스터당 하나의 복사본만 존재합니다.
+`pg_database` 카탈로그는 PostgreSQL 클러스터에서 사용 가능한 데이터베이스에 대한 정보를 저장합니다. 이것은 공유 카탈로그(Shared Catalog)입니다 - 데이터베이스마다 하나씩 존재하는 것이 아니라 클러스터당 하나의 복사본만 존재합니다.
 
 #### 컬럼 정의
 
@@ -463,7 +463,7 @@ PostgreSQL은 50개 이상의 시스템 카탈로그를 제공합니다. 주요 
 | `dattablespace` | `oid` | 기본 테이블스페이스 (`pg_tablespace.oid` 참조) |
 | `datcollate` | `text` | LC_COLLATE 설정 |
 | `datctype` | `text` | LC_CTYPE 설정 |
-| `datlocale` | `text` | 콜레이션 제공자 로케일 이름 (libc의 경우 NULL) |
+| `datlocale` | `text` | 콜레이션 제공자 로케일 이름 (libc 제공자의 경우 NULL) |
 | `daticurules` | `text` | ICU 콜레이션 규칙 |
 | `datcollversion` | `text` | 제공자별 콜레이션 버전 |
 | `datacl` | `aclitem[]` | 접근 권한 |
@@ -678,7 +678,7 @@ ORDER BY pg_database_size(datname) DESC;
 
 2. 지연된 플래그 갱신: `relhasindex`, `relhasrules`, `relhastriggers`, `relhassubclass` 같은 불리언 플래그는 지연되어 갱신됩니다. 조건이 충족되면 true로 설정되지만, 조건이 해제되어도 즉시 false로 재설정되지 않을 수 있습니다.
 
-3. 추정값 이해: `relpages`, `reltuples`, `relallvisible`, `relallfrozen`은 VACUUM, ANALYZE, 특정 DDL 명령에 의해 갱신되는 추정값 입니다.
+3. 추정값 이해: `relpages`, `reltuples`, `relallvisible`, `relallfrozen`은 VACUUM, ANALYZE, 특정 DDL 명령에 의해 갱신되는 추정값입니다.
 
 4. 공유 카탈로그: `pg_database`, `pg_authid`, `pg_tablespace` 같은 일부 카탈로그는 클러스터 전체에서 공유됩니다.
 

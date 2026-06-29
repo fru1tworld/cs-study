@@ -1,6 +1,5 @@
 # grpcurl
 
-> 이 문서는 gRPC 서버와 명령줄에서 상호작용하는 도구 grpcurl(curl의 gRPC 버전)의 공식 문서를 한국어로 정리한 것입니다.
 > 원본: https://github.com/fullstorydev/grpcurl
 
 ---
@@ -89,7 +88,7 @@ grpcurl -version
 
 ## 서비스 디스커버리
 
-`grpcurl`이 RPC 스키마를 파악하는 방법은 세 가지이며, 우선순위가 있습니다.
+`grpcurl`이 RPC 스키마를 파악하는 방법은 세 가지입니다. 각 방법에는 우선순위가 있습니다.
 
 ### 1. 서버 리플렉션 (Server Reflection)
 
@@ -171,7 +170,7 @@ grpcurl -msg-template localhost:8787 describe .my.custom.server.MyRequest
 
 ## RPC 호출
 
-호출은 `grpcurl [flags] <서버주소> <서비스>/<메서드>` 형식입니다. 메서드 구분자는 `/` 또는 `.`을 사용할 수 있습니다.
+호출은 `grpcurl [flags] <서버주소> <서비스>/<메서드>` 형식입니다. 서비스와 메서드 사이 구분자는 `/` 또는 `.` 모두 사용할 수 있습니다.
 
 ### 빈 요청 호출
 
@@ -215,7 +214,7 @@ grpcurl -d @ grpc.server.com:443 my.custom.server.Service/Method < request.json
 
 `grpcurl`은 단항뿐 아니라 모든 스트리밍 메서드를 지원합니다.
 
-- **클라이언트/서버 스트리밍**: `-d`의 JSON에 여러 메시지를 연달아 넣으면 클라이언트 스트림의 여러 요청으로 전송됩니다.
+- **클라이언트/서버 스트리밍**: `-d`에 여러 JSON 메시지를 이어서 작성하면, 각 메시지가 클라이언트 스트림의 개별 요청으로 전송됩니다.
 
 ```bash
 grpcurl -d @ localhost:8080 my.custom.server.Service/ClientStream <<EOM
@@ -225,7 +224,7 @@ grpcurl -d @ localhost:8080 my.custom.server.Service/ClientStream <<EOM
 EOM
 ```
 
-- **양방향 스트리밍**: 대화형 터미널에서 `grpcurl`을 실행하고 stdin을 요청 본문으로 사용하면, 입력하는 메시지가 즉시 전송되어 인터랙티브하게 동작합니다.
+- **양방향 스트리밍**: 대화형 터미널에서 `grpcurl`을 실행하면 stdin이 요청 입력으로 연결되어, 타이핑하는 메시지가 즉시 전송됩니다.
 
 ---
 

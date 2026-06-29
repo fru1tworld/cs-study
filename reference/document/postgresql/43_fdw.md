@@ -180,7 +180,7 @@ void GetForeignRelSize(PlannerInfo *root,
                        Oid foreigntableid);
 ```
 
-목적: 쿼리 계획 시 외래 테이블의 크기 추정치를 얻습니다.
+목적: 쿼리 계획 단계에서 외래 테이블의 크기 추정치를 계산합니다.
 
 설명:
 - `baserel->rows`: 예상 행 수 (WHERE 절 적용 후)
@@ -311,7 +311,7 @@ void BeginForeignScan(ForeignScanState *node, int eflags);
 
 목적: 실행기 시작 시 스캔을 초기화합니다.
 
-주의: `(eflags & EXEC_FLAG_EXPLAIN_ONLY)`가 참이면 외부에서 볼 수 있는 동작을 수행하지 말아야 합니다 (EXPLAIN 전용).
+주의: `(eflags & EXEC_FLAG_EXPLAIN_ONLY)`가 참이면 외부에서 관찰 가능한 부작용을 일으키는 동작을 수행해서는 안 됩니다 (EXPLAIN 전용 실행).
 
 ```c
 static void
@@ -344,7 +344,7 @@ TupleTableSlot *IterateForeignScan(ForeignScanState *node);
 
 목적: 외래 소스에서 한 행을 가져옵니다.
 
-반환값: 행이 더 이상 없으면 NULL을 반환합니다.
+반환값: 더 이상 가져올 행이 없으면 빈 슬롯을 반환합니다.
 
 ```c
 static TupleTableSlot *
@@ -376,7 +376,7 @@ myIterateForeignScan(ForeignScanState *node)
 void ReScanForeignScan(ForeignScanState *node);
 ```
 
-목적: 스캔을 처음부터 다시 시작합니다. 매개변수 값이 변경되었을 수 있습니다.
+목적: 스캔을 처음부터 다시 시작합니다. 이 시점에 매개변수 값이 변경되어 있을 수 있습니다.
 
 ```c
 static void
@@ -691,21 +691,21 @@ myExecForeignInsert(EState *estate,
 #### ExecForeignBatchInsert
 
 ```c
-TupleTableSlot ExecForeignBatchInsert(EState *estate,
+TupleTableSlot **ExecForeignBatchInsert(EState *estate,
                                         ResultRelInfo *rinfo,
-                                        TupleTableSlot slots,
-                                        TupleTableSlot planSlots,
+                                        TupleTableSlot **slots,
+                                        TupleTableSlot **planSlots,
                                         int *numSlots);
 ```
 
 목적: 여러 튜플을 일괄 삽입합니다.
 
 ```c
-static TupleTableSlot 
+static TupleTableSlot **
 myExecForeignBatchInsert(EState *estate,
                          ResultRelInfo *rinfo,
-                         TupleTableSlot slots,
-                         TupleTableSlot planSlots,
+                         TupleTableSlot **slots,
+                         TupleTableSlot **planSlots,
                          int *numSlots)
 {
     MyFdwModifyState *fmstate = (MyFdwModifyState *) rinfo->ri_FdwState;
@@ -1073,7 +1073,7 @@ bool IsForeignScanParallelSafe(PlannerInfo *root,
                                RangeTblEntry *rte);
 ```
 
-목적: 스캔이 병렬 워커에서 수행될 수 있는지 테스트합니다.
+목적: 스캔을 병렬 워커에서 수행해도 안전한지 확인합니다.
 
 #### EstimateDSMForeignScan
 
@@ -1081,7 +1081,7 @@ bool IsForeignScanParallelSafe(PlannerInfo *root,
 Size EstimateDSMForeignScan(ForeignScanState *node, ParallelContext *pcxt);
 ```
 
-목적: 필요한 동적 공유 메모리 크기를 추정합니다 (바이트 단위).
+목적: 필요한 동적 공유 메모리 크기(바이트)를 추정합니다.
 
 #### InitializeDSMForeignScan
 
@@ -1091,7 +1091,7 @@ void InitializeDSMForeignScan(ForeignScanState *node,
                               void *coordinate);
 ```
 
-목적: 병렬 연산을 위한 공유 메모리를 초기화합니다.
+목적: 병렬 연산에 사용할 공유 메모리를 초기화합니다.
 
 #### InitializeWorkerForeignScan
 
@@ -1101,7 +1101,7 @@ void InitializeWorkerForeignScan(ForeignScanState *node,
                                  void *coordinate);
 ```
 
-목적: 리더의 공유 상태에서 병렬 워커의 로컬 상태를 초기화합니다.
+목적: 리더의 공유 상태를 기반으로 병렬 워커의 로컬 상태를 초기화합니다.
 
 #### ShutdownForeignScan
 
@@ -1109,7 +1109,7 @@ void InitializeWorkerForeignScan(ForeignScanState *node,
 void ShutdownForeignScan(ForeignScanState *node);
 ```
 
-목적: DSM 세그먼트 파괴 전에 리소스를 해제합니다.
+목적: DSM 세그먼트가 해제되기 전에 리소스를 정리합니다.
 
 ### 3.11 비동기 실행 콜백 (Asynchronous Execution Callbacks)
 
@@ -1119,7 +1119,7 @@ void ShutdownForeignScan(ForeignScanState *node);
 bool IsForeignPathAsyncCapable(ForeignPath *path);
 ```
 
-목적: 경로가 외래 릴레이션을 비동기적으로 스캔할 수 있는지 테스트합니다.
+목적: 해당 경로가 외래 릴레이션을 비동기적으로 스캔할 수 있는지 확인합니다.
 
 #### ForeignAsyncRequest
 
@@ -1143,13 +1143,13 @@ void ForeignAsyncConfigureWait(AsyncRequest *areq);
 void ForeignAsyncNotify(AsyncRequest *areq);
 ```
 
-목적: 관련 이벤트를 처리하고 비동기적으로 한 튜플을 생성합니다.
+목적: 관련 이벤트를 처리하고, 비동기적으로 튜플 하나를 생성합니다.
 
 ---
 
 ## 4. 헬퍼 함수
 
-PostgreSQL 코어 서버에서 FDW 개발을 위해 제공하는 유틸리티 함수들입니다.
+PostgreSQL 코어 서버가 FDW 개발을 위해 제공하는 유틸리티 함수들입니다.
 
 ### 4.1 ForeignDataWrapper 함수
 
@@ -1311,19 +1311,19 @@ qual 리스트에서 제거된 조건은 다음 중 하나여야 합니다:
 - `fdw_recheck_quals`에 추가되거나
 - `RecheckForeignScan`에서 재검사
 
-이는 `READ COMMITTED` 격리 수준에서 동시 업데이트 발생 시 올바른 동작을 보장합니다. 잠재적 NULL 필드가 있는 푸시다운된 외부 조인의 경우 `RecheckForeignScan` 구현이 필요할 수 있습니다.
+이는 `READ COMMITTED` 격리 수준에서 동시 업데이트가 발생했을 때 올바른 동작을 보장하기 위함입니다. NULL이 발생할 수 있는 필드를 포함한 외부 조인을 푸시다운하는 경우 `RecheckForeignScan` 구현이 필요할 수 있습니다.
 
 ### 5.5 ForeignScan 출력 설명
 
 `fdw_scan_tlist`: FDW가 반환하는 튜플을 설명합니다:
 
 - NIL: 반환된 튜플이 외래 테이블의 선언된 행 타입과 일치
-- Non-NIL: 반환된 컬럼을 나타내는 Var/표현식이 있는 TargetEntry 리스트
+- Non-NIL: 반환되는 컬럼을 나타내는 Var/표현식으로 구성된 TargetEntry 리스트
 
 사용 사례:
 - 쿼리에 필요 없는 생략된 컬럼 문서화
 - FDW가 로컬 실행보다 저렴하게 계산하는 표현식 포함
-- `GetForeignJoinPaths`에서 생성된 조인 계획에 필수
+- `GetForeignJoinPaths`로 생성된 조인 계획에서 필수
 
 ### 5.6 조인을 위한 매개변수화된 경로
 
@@ -1331,9 +1331,9 @@ FDW는 다음을 구성해야 합니다:
 
 1. 최소 하나의 경로: 테이블 제한 조건에만 의존
 2. 매개변수화된 경로: 조인용 (예: `foreign_variable = local_variable`)
-   - 릴레이션의 조인 리스트에서 조인 조건 검색 (`baserestrictinfo`에 없음)
-   - `get_baserel_parampathinfo`를 사용하여 `param_info` 설정
-   - `fdw_exprs`에 local_variable 부분 추가
+   - 릴레이션의 조인 리스트에서 조인 조건을 검색 (`baserestrictinfo`에는 없음)
+   - `get_baserel_parampathinfo`를 사용해 `param_info` 설정
+   - `fdw_exprs`에 local_variable 부분을 추가
 
 ### 5.7 원격 조인 지원
 
@@ -1359,7 +1359,7 @@ FDW는 다음을 구성해야 합니다:
 - 외래 테이블의 RelOptInfo 구조체
 - 스캔 계획 중 생성된 baserel->fdw_private 데이터
 
-반환된 `List`는 `copyObject`가 복사 방법을 아는 구조체만 포함해야 합니다.
+반환되는 `List`는 `copyObject`가 처리할 수 있는 구조체만 포함해야 합니다.
 
 ---
 
@@ -1367,7 +1367,7 @@ FDW는 다음을 구성해야 합니다:
 
 ### 6.1 개요
 
-외래 데이터 래퍼(FDW)는 행 수준 잠금을 구현하여 동시 업데이트를 방지하고, PostgreSQL의 표준 테이블 잠금 의미론을 근사할 수 있습니다.
+FDW는 행 수준 잠금을 구현해 동시 업데이트를 방지하고, PostgreSQL 표준 테이블 잠금의 의미론을 근사적으로 재현할 수 있습니다.
 
 ### 6.2 초기 잠금 vs 지연 잠금
 
@@ -1401,15 +1401,15 @@ myIterateForeignScan_EarlyLock(ForeignScanState *node)
 #### 지연 잠금 (Late Locking)
 
 - 필요할 때만 행을 잠금
-- 더 복잡함; 행을 고유하게 재식별하는 능력 필요
-- PostgreSQL TID와 같이 특정 행 버전을 식별하는 행 식별자 필요
-- 섹션 58.2.6의 API 함수가 지연 잠금 지원
+- 구현이 더 복잡하며, 행을 고유하게 재식별하는 기능이 필요
+- PostgreSQL TID처럼 특정 행 버전을 가리키는 행 식별자가 필요
+- 섹션 58.2.6의 API 함수가 지연 잠금을 지원
 
 ### 6.3 구현 접근법
 
 #### UPDATE/DELETE 연산용
 
-`ForeignScan` 연산은 타겟 테이블 행에 대해 초기 잠금 을 수행해야 합니다:
+`ForeignScan` 연산은 대상 테이블 행에 대해 초기 잠금을 수행해야 합니다:
 
 ```
 ForeignScan → SELECT FOR UPDATE (동등)
@@ -1463,10 +1463,10 @@ UPDATE/DELETE/SELECT FOR UPDATE/SHARE에서 잠금되지 않은 외래 테이블
 
 ### 6.5 READ COMMITTED 격리 고려사항
 
-`READ COMMITTED` 모드에서 PostgreSQL은 업데이트된 튜플에 대해 조건을 재검사해야 할 수 있습니다. FDW는 다음을 할 수 있습니다:
+`READ COMMITTED` 모드에서 PostgreSQL은 업데이트된 튜플에 대해 조건을 재검사해야 할 수 있습니다. FDW는 다음 방법 중 하나를 선택할 수 있습니다:
 
-1. 효율적인 재가져오기를 위해 프로젝션된 컬럼에 TID 포함 (저렴한 재가져오기 능력 필요)
-2. 컬럼 리스트에 전체 행 복사 (기본) - 특별한 요구 없지만 병합/해시 조인 성능 저하
+1. 효율적인 재가져오기를 위해 프로젝션된 컬럼에 TID를 포함 (저비용 재가져오기 기능 필요)
+2. 전체 행 복사를 기본으로 사용 — 특별한 요구사항은 없지만 병합/해시 조인 성능이 저하될 수 있음
 
 ```c
 /* RefetchForeignRow 구현 예제 */

@@ -1,6 +1,5 @@
 # Tempo 운영 관리
 
-> 이 문서는 Grafana Tempo 공식 문서의 "Manage Tempo" 섹션을 한국어로 정리한 것입니다.
 > 원본: https://grafana.com/docs/tempo/latest/operations/
 
 ---
@@ -27,7 +26,7 @@
 multitenancy_enabled: true
 ```
 
-활성화되면 모든 API 요청에 `X-Scope-OrgID` 헤더 필수.
+활성화하면 모든 API 요청에 `X-Scope-OrgID` 헤더가 필수다.
 
 ### 단일 테넌트 모드
 
@@ -35,7 +34,7 @@ multitenancy_enabled: true
 multitenancy_enabled: false
 ```
 
-모든 데이터는 `single-tenant` ID로 저장.
+모든 데이터는 `single-tenant` ID로 저장된다.
 
 ### 테넌트별 한도 (overrides.yaml)
 
@@ -144,7 +143,7 @@ storage:
 
 ### Bucket Index
 
-각 테넌트의 블록 목록을 캐싱하여 빠른 조회.
+각 테넌트의 블록 목록을 캐싱하여 빠르게 조회한다.
 
 ```yaml
 storage:
@@ -239,7 +238,7 @@ compactor:
     instance_id: ${POD_NAME}
 ```
 
-여러 Compactor 인스턴스가 테넌트별로 작업을 분산.
+여러 Compactor 인스턴스가 테넌트별로 작업을 분산 처리한다.
 
 ### 모니터링
 
@@ -414,13 +413,13 @@ storage:
 
 ```bash
 # 손상된 블록 식별
-tempo-cli list blocks --backend=s3 --bucket=my-tempo
+tempo-cli list blocks <tenant-id>
 
-# 특정 블록 검사
-tempo-cli view-block <block-id>
+# 특정 블록 스키마 검사
+tempo-cli view schema <tenant-id> <block-id>
 
-# 블록 삭제 (마지막 수단)
-tempo-cli delete-block <block-id>
+# 특정 트레이스 제거 (마지막 수단)
+tempo-cli rewrite-blocks drop-traces <tenant-id> <trace-ids>
 ```
 
 ### 백업 전략
@@ -430,4 +429,4 @@ tempo-cli delete-block <block-id>
 - GCS: Object Versioning, Multi-region buckets
 - Azure: Geo-Redundant Storage
 
-WAL 디스크는 일시적이므로 백업 불필요.
+WAL 디스크는 일시적 데이터이므로 별도 백업이 불필요하다.

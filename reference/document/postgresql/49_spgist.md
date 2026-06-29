@@ -25,7 +25,7 @@ SP-GiST는 Space-Partitioned GiST 의 약자로, 분할 검색 트리(partitione
 
 SP-GiST는 검색 공간을 동일하지 않은 크기의 파티션으로 반복적으로 분할 하는 구조를 지원합니다. 쿼리가 분할 규칙과 잘 일치하면 매우 빠른 검색이 가능합니다.
 
-전통적인 메모리 기반 검색 트리에서 발생하는 주요 문제는 노드를 디스크 페이지에 효율적으로 매핑하는 것입니다. SP-GiST는 이 문제를 해결하기 위해 설계되었습니다:
+전통적인 메모리 기반 검색 트리의 주요 과제는 노드를 디스크 페이지에 효율적으로 매핑하는 것입니다. SP-GiST는 이를 해결하기 위해 설계되었습니다:
 
 - 포인터 기반 구조 대신 디스크 페이지에 최적화된 구조 사용
 - 높은 팬아웃(fanout)으로 I/O 연산 최소화
@@ -264,11 +264,11 @@ SELECT name FROM products WHERE name LIKE 'App%';
 
 ## 69.3. 확장성 (Extensibility)
 
-SP-GiST는 다양한 유형의 비균형 디스크 기반 데이터 구조를 구현할 수 있는 확장 가능한 인터페이스를 제공합니다. SP-GiST는 분할 규칙과 동등성에 대한 높은 수준의 추상화를 제공합니다. 또한 데이터를 내부 튜플 간에 이동하거나 값 압축과 같은 일반적인 작업은 SP-GiST 코어에서 처리합니다.
+SP-GiST는 다양한 유형의 비균형 디스크 기반 데이터 구조를 구현할 수 있도록 확장 가능한 인터페이스를 제공합니다. 분할 규칙 및 동등성에 대한 높은 수준의 추상화를 제공하며, 데이터를 내부 튜플 간에 이동하거나 값을 압축하는 등의 일반적인 작업은 SP-GiST 코어에서 처리합니다.
 
 ### 필수 사용자 정의 메서드
 
-모든 SP-GiST 연산자 클래스는 5개의 필수 메서드와 1개의 선택적 메서드를 구현해야 합니다:
+모든 SP-GiST 연산자 클래스는 5개의 필수 메서드와 선택적 메서드를 구현해야 합니다:
 
 #### 1. config 메서드
 
@@ -395,8 +395,8 @@ typedef struct spgPickSplitOut
 ```
 
 중요 요구사항:
-- 여러 리프 튜플을 2개 이상의 노드로 분류 해야 함
-- 모든 튜플이 단일 노드에 할당되면 SP-GiST 코어가 결과를 무시함
+- 여러 리프 튜플을 2개 이상의 노드로 분류해야 함
+- 모든 튜플이 단일 노드에 할당되면 SP-GiST 코어가 해당 결과를 무시함
 
 #### 4. inner_consistent 메서드
 
@@ -432,8 +432,8 @@ typedef struct spgInnerConsistentOut
     int        *nodeNumbers;            /* 방문할 노드 인덱스 */
     int        *levelAdds;              /* 각 노드별 레벨 증가량 */
     Datum      *reconstructedValues;    /* 재구성된 값 (NULL 가능) */
-    void      traversalValues;        /* 연산자 클래스 전용 순회 값 */
-    double    distances;              /* k-NN 검색용 거리 (NULL 가능) */
+    void     **traversalValues;        /* 연산자 클래스 전용 순회 값 */
+    double   **distances;              /* k-NN 검색용 거리 (NULL 가능) */
 } spgInnerConsistentOut;
 ```
 
@@ -518,8 +518,6 @@ CREATE OPERATOR CLASS my_int_ops
 
 ## 69.4. 구현 (Implementation)
 
-이 섹션에서는 SP-GiST 인덱스의 구현 세부 사항을 설명합니다.
-
 ### SP-GiST 제한 사항
 
 #### 페이지 크기 제약
@@ -535,7 +533,7 @@ CREATE OPERATOR CLASS my_int_ops
 
 #### 무한 루프 방지
 
-SP-GiST는 리프 데이텀이 10회의 `choose` 호출 내에서 축소되지 않으면 오류를 발생시킵니다.
+SP-GiST는 리프 데이텀이 10회의 `choose` 호출 내에 축소되지 않으면 오류를 발생시킵니다.
 
 ### 노드 레이블 없는 SP-GiST
 
@@ -612,9 +610,9 @@ SELECT * FROM test_spgist WHERE location IS NULL;
 
 SP-GiST 지원 메서드는 단기 메모리 컨텍스트에서 호출됩니다:
 
-- `CurrentMemoryContext`는 각 튜플 후 재설정됨
-- 예외: `config` 메서드는 메모리 누수를 피해야 함
-- 출력 구조체는 메서드 호출 전 0으로 초기화됨
+- `CurrentMemoryContext`는 각 튜플 처리 후 재설정됨
+- `config` 메서드는 메모리 누수를 피해야 함
+- 출력 구조체는 메서드 호출 전에 0으로 초기화됨
 
 ```c
 /* config 메서드 예시 - 메모리 누수 주의 */

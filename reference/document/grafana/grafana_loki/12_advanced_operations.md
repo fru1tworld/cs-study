@@ -1,6 +1,5 @@
 # Loki 고급 운영
 
-> 이 문서는 Grafana Loki 공식 문서 Operations 섹션의 고급 주제들을 한국어로 정리한 것입니다.
 > 원본: https://grafana.com/docs/loki/latest/operations/
 
 ---
@@ -74,7 +73,7 @@ limits_config:
 
 ### 개념
 
-테넌트의 데이터/쿼리를 모든 인스턴스가 아니라 **일부 인스턴스에만** 분배. 한 테넌트의 영향이 다른 테넌트로 번지는 것을 막음.
+테넌트의 데이터/쿼리를 모든 인스턴스가 아닌 **일부 인스턴스에만** 분배한다. 한 테넌트의 영향이 다른 테넌트로 전파되는 것을 방지한다.
 
 ### 활성화
 
@@ -124,7 +123,7 @@ limits_config:
 
 ### 문제
 
-단일 스트림이 너무 많은 데이터를 받으면 한 Ingester에 부하 집중. Rate Limit 초과나 메모리 압박 발생.
+단일 스트림이 너무 많은 데이터를 수신하면 특정 Ingester에 부하가 집중된다. Rate Limit 초과나 메모리 압박으로 이어질 수 있다.
 
 ### 해결: 자동 샤딩
 
@@ -170,7 +169,7 @@ A{__stream_shard__="0"}, A{__stream_shard__="1"}, A{__stream_shard__="2"}, A{__s
 
 ### 문제
 
-Ingester는 stateful이고 Replication Factor 3으로 운영. 한 번에 너무 많이 재시작하면 데이터 손실 위험.
+Ingester는 stateful이며 Replication Factor 3으로 운영된다. 한 번에 너무 많이 재시작하면 데이터 손실 위험이 있다.
 
 ### 해결: Zone Awareness
 
@@ -225,7 +224,7 @@ zone-a 모두 업그레이드 → 안정화 대기 → zone-b → 안정화 → 
 
 ### KEDA 기반 자동 스케일링
 
-Querier는 stateless이므로 부하에 따라 자동 확장/축소 가능.
+Querier는 stateless이므로 부하에 따라 자동으로 확장/축소할 수 있다.
 
 ```yaml
 apiVersion: keda.sh/v1alpha1
@@ -248,7 +247,7 @@ spec:
         metricName: querier_inflight_queries
         threshold: "10"
         query: |
-          sum(querier_inflight_requests{job="loki-querier"})
+          sum(loki_query_scheduler_inflight_requests{job="loki-querier"})
     
     # 쿼리 큐 길이 기반
     - type: prometheus
@@ -273,7 +272,7 @@ querier:
 
 ### 권장 메트릭
 
-- `loki_querier_inflight_requests` (현재 처리 중)
+- `loki_query_scheduler_inflight_requests` (현재 처리 중)
 - `cortex_query_scheduler_queue_length` (큐 대기)
 - CPU/메모리 사용률
 
@@ -387,7 +386,7 @@ X-Scope-OrgID: tenant-a|tenant-b|tenant-c
 
 ### 기본: 인증 없음
 
-Loki는 자체 인증을 제공하지 않습니다. 운영 환경에서는 필수로 추가:
+Loki는 자체 인증을 제공하지 않으므로 운영 환경에서는 별도로 추가해야 한다.
 
 ### 옵션 1: 리버스 프록시
 

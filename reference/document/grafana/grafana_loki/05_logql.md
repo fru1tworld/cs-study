@@ -1,6 +1,5 @@
 # LogQL 쿼리 언어
 
-> 이 문서는 Grafana Loki 공식 문서의 LogQL 섹션을 한국어로 정리한 것입니다.
 > 원본: https://grafana.com/docs/loki/latest/query/
 
 ---
@@ -23,7 +22,7 @@
 
 ## LogQL 개요
 
-**LogQL**은 Grafana Loki의 쿼리 언어로, **PromQL에서 영감** 을 받았습니다. 라벨과 연산자를 사용하여 로그를 필터링하고 분석할 수 있습니다.
+**LogQL**은 Grafana Loki의 쿼리 언어로, **PromQL에서 영감**을 받았습니다. 라벨과 연산자를 사용하여 로그를 필터링하고 분석합니다.
 
 ### 두 가지 쿼리 유형
 
@@ -67,7 +66,7 @@
 
 ## Log Stream Selector
 
-라벨 키-값 쌍으로 처리할 데이터셋을 좁힙니다.
+라벨 키-값 쌍으로 처리할 로그 스트림 범위를 좁힙니다.
 
 ### 사용 가능한 연산자
 
@@ -160,7 +159,7 @@ level=error msg="timeout occurred" duration=5s
 {job="nginx"} | pattern `<ip> - - [<_>] "<method> <path> <_>" <status>`
 ```
 
-위치 기반 추출. `<_>`는 무시할 부분.
+위치 기반으로 필드를 추출하며, `<_>`는 무시할 부분을 나타냅니다.
 
 ### regexp 파서
 
@@ -168,7 +167,7 @@ level=error msg="timeout occurred" duration=5s
 {job="app"} | regexp `(?P<method>\w+) (?P<path>[^\s]+)`
 ```
 
-정규식 그룹으로 라벨 추출. 명명된 캡처 그룹(`?P<name>`) 사용.
+정규식의 명명된 캡처 그룹(`?P<name>`)으로 라벨을 추출합니다.
 
 ### unpack 파서
 
@@ -176,7 +175,7 @@ level=error msg="timeout occurred" duration=5s
 {job="app"} | unpack
 ```
 
-Promtail의 `pack` stage로 패킹된 로그를 풉니다.
+Promtail의 `pack` stage로 패킹된 로그를 언패킹합니다.
 
 ---
 
@@ -197,7 +196,7 @@ Promtail의 `pack` stage로 패킹된 로그를 풉니다.
 
 ### 데이터 타입
 
-라벨 필터는 다음 타입을 자동 감지합니다.
+라벨 필터는 다음 타입을 자동으로 감지합니다.
 
 - **String**: 따옴표 사용 `level="error"`
 - **Duration**: `1ms`, `1s`, `1m`, `1h`
@@ -216,7 +215,7 @@ Promtail의 `pack` stage로 패킹된 로그를 풉니다.
 
 ## 라인 필터
 
-원본 로그 라인 자체에 대한 텍스트 필터입니다.
+원본 로그 라인에 대한 텍스트 필터입니다.
 
 | 연산자 | 의미 |
 |--------|------|
@@ -250,7 +249,7 @@ Promtail의 `pack` stage로 패킹된 로그를 풉니다.
 
 ### `line_format`
 
-로그 라인 자체를 변환합니다.
+로그 라인의 출력 형식을 변환합니다.
 
 ```logql
 {job="api"} | json | line_format "{{.method}} {{.path}} took {{.duration}}"
@@ -270,7 +269,7 @@ Go 템플릿 문법을 사용합니다.
 
 ## Metric 쿼리
 
-로그를 메트릭으로 변환합니다. 두 가지 카테고리가 있습니다.
+로그를 메트릭으로 변환합니다. 두 가지 유형이 있습니다.
 
 ### Range 집계
 
@@ -285,7 +284,7 @@ bytes_over_time({app="api"}[5m])   # 5분간 총 바이트
 
 ### Unwrap 집계
 
-`unwrap`으로 추출한 숫자 값에 대한 집계입니다.
+`unwrap`으로 추출한 숫자 값을 집계합니다.
 
 ```logql
 sum_over_time({job="api"} | json | unwrap duration [5m])
@@ -300,7 +299,7 @@ stddev_over_time({job="api"} | json | unwrap duration [5m])
 
 ## 집계 함수
 
-벡터 집계로 시계열을 그룹화합니다.
+벡터 집계로 시계열을 그룹화하거나 축약합니다.
 
 | 함수 | 설명 |
 |------|------|

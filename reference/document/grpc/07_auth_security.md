@@ -1,6 +1,5 @@
 # gRPC 인증과 보안 (Go)
 
-> 이 문서는 gRPC 공식 문서의 "Authentication" 가이드를 Go 중심으로 정리한 것입니다.
 > 원본: https://grpc.io/docs/guides/auth/
 
 ---
@@ -58,7 +57,7 @@ conn, err := grpc.NewClient("localhost:50051",
 
 ### 클라이언트 (서버 인증서 검증)
 
-서버의 인증서를 검증할 루트 CA 인증서(`roots.pem`)로 클라이언트 자격증명을 만듭니다. 두 번째 인자는 서버 이름 오버라이드(server name override)이며 보통 빈 문자열입니다.
+서버 인증서 검증에 사용할 루트 CA 인증서(`roots.pem`)로 클라이언트 자격증명을 만듭니다. 두 번째 인자는 서버 이름 오버라이드(server name override)로, 보통 빈 문자열을 전달합니다.
 
 ```go
 import "google.golang.org/grpc/credentials"
@@ -93,7 +92,7 @@ mTLS(상호 TLS) 등 더 세밀한 설정이 필요하면 `credentials.NewTLS(*t
 
 ## Call Credentials와 토큰 인증
 
-토큰(OAuth2, JWT 등)은 항상 per-call(호출 단위) 자격증명입니다. Go에서는 `credentials.PerRPCCredentials` 인터페이스를 구현하거나 `oauth` 헬퍼를 사용해 매 호출에 자격증명을 붙입니다.
+토큰(OAuth2, JWT 등)은 항상 per-call(호출 단위) 자격증명으로 사용합니다. Go에서는 `credentials.PerRPCCredentials` 인터페이스를 직접 구현하거나 `oauth` 헬퍼를 사용해 매 호출에 자격증명을 첨부합니다.
 
 ```go
 import "google.golang.org/grpc/credentials/oauth"
@@ -109,7 +108,7 @@ conn, err := grpc.NewClient("myservice.example.com:443",
 )
 ```
 
-`grpc.WithPerRPCCredentials`로 채널 전체에 적용하거나, 개별 호출 시 `grpc.PerRPCCredentials(...)` 호출 옵션으로 지정할 수 있습니다. 이 자격증명은 매 RPC마다 `authorization` 메타데이터를 자동으로 채웁니다.
+`grpc.WithPerRPCCredentials`로 채널 전체에 적용하거나, 개별 호출 시 `grpc.PerRPCCredentials(...)` 호출 옵션으로 지정할 수 있습니다. 이 자격증명은 RPC마다 `authorization` 메타데이터를 자동으로 삽입합니다.
 
 > 참고: per-RPC credentials를 평문(insecure) 채널에서 전송하려면 별도 허용 설정이 필요합니다. 토큰 유출을 막기 위해 토큰 기반 인증은 TLS 채널과 함께 사용하는 것이 원칙입니다.
 
@@ -117,13 +116,13 @@ conn, err := grpc.NewClient("myservice.example.com:443",
 
 ## Channel과 Call Credentials 결합
 
-위 예시처럼 `grpc.WithTransportCredentials`(채널)와 `grpc.WithPerRPCCredentials`(호출)를 함께 지정하면, 채널 수준 암호화와 호출 수준 인증을 동시에 적용할 수 있습니다. 이는 "TLS로 보호된 연결 위에 매 요청 토큰을 붙이는" 가장 일반적인 패턴입니다.
+`grpc.WithTransportCredentials`(채널)와 `grpc.WithPerRPCCredentials`(호출)를 함께 지정하면 채널 수준 암호화와 호출 수준 인증을 동시에 적용할 수 있습니다. TLS로 보호된 연결 위에 매 요청마다 토큰을 첨부하는 이 패턴이 가장 일반적입니다.
 
 ---
 
 ## ALTS
 
-ALTS는 Google 인프라(GCE/GKE)에서 동작하는 상호 인증·암호화 프로토콜입니다. 같은 환경 내 서비스 간 통신에서 인증서 관리 없이 신원 기반 인증을 제공합니다.
+ALTS는 Google 인프라(GCE/GKE)에서 동작하는 상호 인증·암호화 프로토콜입니다. 동일 환경 내 서비스 간 통신에서 인증서 관리 없이 신원 기반 인증을 제공합니다.
 
 ```go
 import "google.golang.org/grpc/credentials/alts"

@@ -1,6 +1,5 @@
 # Akka 클러스터 핵심
 
-> 이 문서는 Akka 공식 문서의 "Cluster" 섹션을 한국어로 번역한 것입니다.
 > 원본: https://doc.akka.io/libraries/akka-core/current/typed/cluster.html
 
 ---
@@ -172,7 +171,7 @@ akka.cluster.configuration-compatibility-check.enforce-on-join = off
 
 Akka 클러스터는 "단일 장애 지점이 없는, 결함 허용 탈중앙 P2P 기반 클러스터 멤버십 서비스(fault-tolerant decentralized peer-to-peer based Cluster Membership Service with no single point of failure)"입니다. 가십 프로토콜(gossip protocol)과 자동 장애 감지(automatic failure detection)를 사용하여 여러 노드 및 여러 액터 시스템에 걸친 분산 애플리케이션을 가능하게 합니다.
 
-이 멤버십 시스템은 Amazon의 Dynamo와 Basho의 Riak에서 유래하였으며, 클러스터 상태 정보를 분산시키기 위해 가십 프로토콜을 사용합니다.
+이 멤버십 시스템은 Amazon의 Dynamo와 Basho의 Riak에서 유래했으며, 클러스터 상태 정보를 전파하는 데 가십 프로토콜을 사용합니다.
 
 ---
 
@@ -200,7 +199,7 @@ Akka 클러스터는 "단일 장애 지점이 없는, 결함 허용 탈중앙 P2
 
 #### 2.3.3 장애 감지 (Failure Detection)
 
-Phi Accrual 장애 감지기(Phi Accrual Failure Detector)가 노드의 도달 가능성(reachability)을 모니터링합니다. 각 노드는 해시된 링 순서(hashed ring ordering)를 통해 선택된 5개의 다른 노드를 모니터링하며, 이는 랙(rack)이나 데이터센터(datacenter)를 가로지르는 모니터링을 촉진합니다.
+Phi Accrual 장애 감지기(Phi Accrual Failure Detector)가 노드의 도달 가능성(reachability)을 모니터링합니다. 각 노드는 해시된 링 순서(hashed ring ordering)를 통해 선택된 5개의 다른 노드를 모니터링하며, 랙(rack)이나 데이터센터(datacenter)를 가로지르는 모니터링을 유도합니다.
 
 장애가 감지되면, "단 하나의 노드만 어떤 노드를 도달 불가능으로 표시(mark unreachable)해도, 가십 전파를 통해 나머지 클러스터 전체가 그 노드를 도달 불가능으로 표시"하게 됩니다.
 
@@ -284,7 +283,7 @@ Akka 클러스터의 핵심은 클러스터 멤버십(cluster membership)으로,
 
 이 기능이 활성화되면, "수렴이 아직 이루어지지 않은 상태에서도 합류 중인 노드가 WeaklyUp 상태로 승격(promoted)"될 수 있습니다.
 
-문서는 다음과 같이 주의를 줍니다. 이 상태의 노드는 오직 한쪽 파티션에만 존재합니다. 네트워크 분리(network split)의 반대편에 있는 멤버들은 이 노드의 존재를 전혀 알지 못하므로, 정족수 결정(quorum decision)에 사용하기에는 적합하지 않습니다.
+WeaklyUp 상태의 노드는 오직 한쪽 파티션에만 존재합니다. 네트워크 분리(network split)의 반대편에 있는 멤버들은 이 노드의 존재를 전혀 알지 못하므로, 정족수 결정(quorum decision)에 사용하기에는 적합하지 않습니다.
 
 ---
 
@@ -334,7 +333,7 @@ Phi Accrual 장애 감지기(Phi Accrual Failure Detector)는 Akka의 Remote Dea
 
 이 감지기는 단순한 "up" 또는 "down"의 이진(binary) 답변을 제공하는 대신, 노드가 장애를 일으켰을 통계적 가능성(statistical likelihood)을 나타내는 **phi 값(phi value)**을 반환합니다. 이는 모니터링(monitoring)과 해석(interpretation)을 분리(decouple)하여, 다양한 네트워크 조건에 적응할 수 있게 합니다.
 
-핵심 원칙은 다음과 같습니다. 감지기는 수신한 하트비트로부터 과거 통계(historical statistics)를 유지하고, 단순한 예/아니오(yes/no) 판단에 의존하는 대신 이러한 지표를 사용하여 노드 상태에 대한 근거 있는 평가(educated assessment)를 생성합니다.
+감지기는 수신한 하트비트로부터 과거 통계(historical statistics)를 유지하고, 단순한 예/아니오(yes/no) 판단에 의존하는 대신 이러한 지표를 사용하여 노드 상태를 통계적으로 평가합니다.
 
 ---
 
@@ -403,9 +402,9 @@ UNREACHABLE/REACHABLE 사이클이 빈번하게 반복된다면, `acceptable-hea
 
 ### 5.1 개요 (Overview)
 
-이 문서는 Akka 클러스터 채택과 관련된 아키텍처 결정을 다룹니다. 핵심 질문은 마이크로서비스(microservices)와 전통적 분산 애플리케이션(distributed application) 접근 방식 중 무엇을 선택할 것인가이며, 이 선택은 Akka 클러스터를 어떻게 구현해야 할지에 큰 영향을 줍니다.
+핵심 질문은 마이크로서비스(microservices)와 전통적 분산 애플리케이션(distributed application) 접근 방식 중 무엇을 선택할 것인가이며, 이 선택은 Akka 클러스터를 어떻게 구현할지에 큰 영향을 줍니다.
 
-기초 자료로 "Stateful or Stateless applications: to Akka Cluster or not" 영상은 아키텍처에서 Akka 클러스터를 사용하는 동기를 탐구합니다.
+"Stateful or Stateless applications: to Akka Cluster or not" 영상은 아키텍처에서 Akka 클러스터를 사용하는 동기를 탐구합니다.
 
 ---
 
@@ -415,7 +414,7 @@ UNREACHABLE/REACHABLE 사이클이 빈번하게 반복된다면, `acceptable-hea
 
 #### 5.2.1 서비스 간 통신 (Inter-Service Communication)
 
-문서는 명시적으로 다음과 같이 권고합니다. "서로 다른 서비스 사이에 Akka 클러스터와 액터 메시징(actor messaging)을 사용하는 것을 권장하지 않습니다." 이는 과도한 코드 결합(code coupling)을 초래하고 독립적 배포(independent deployment)를 복잡하게 만들어, 마이크로서비스의 핵심 이점을 훼손하기 때문입니다.
+공식 문서는 명시적으로 다음과 같이 권고합니다. "서로 다른 서비스 사이에 Akka 클러스터와 액터 메시징(actor messaging)을 사용하는 것을 권장하지 않습니다." 이는 과도한 코드 결합(code coupling)을 초래하고 독립적 배포(independent deployment)를 복잡하게 만들어, 마이크로서비스의 핵심 이점을 훼손하기 때문입니다.
 
 서비스 간 통신에는 다음을 사용하십시오.
 
@@ -468,7 +467,7 @@ UNREACHABLE/REACHABLE 사이클이 빈번하게 반복된다면, `acceptable-hea
 
 ### 5.5 상위 수준 클러스터 도구 (Higher-Level Cluster Tools)
 
-문서는 다음과 같은 여러 특화된 Akka 클러스터 패턴을 언급합니다.
+Akka 클러스터는 다음과 같은 특화 패턴을 지원합니다.
 
 - **클러스터 샤딩 (Cluster Sharding)**: 액터를 클러스터 노드들에 분산합니다.
 - **클러스터 싱글톤 (Cluster Singleton)**: 클러스터 전체에서 단일 인스턴스를 보장합니다.

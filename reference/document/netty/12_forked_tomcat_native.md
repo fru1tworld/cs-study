@@ -1,6 +1,5 @@
 # Forked Tomcat Native (netty-tcnative)
 
-> 이 문서는 Netty 공식 Wiki의 "Forked Tomcat Native" 페이지를 한국어로 번역한 것입니다.
 > 원본: https://netty.io/wiki/forked-tomcat-native.html
 
 ---
@@ -11,7 +10,7 @@
 * 프로젝트의 완전한 mavenize
 * OpenSSL 지원 개선
 
-유지보수 부담을 줄이기 위해 우리는 안정 upstream 릴리스마다 전용 브랜치를 만들고 그 위에 우리 변경사항을 올리며, 유지보수 중인 브랜치 수는 최소한으로 유지합니다.
+유지보수 부담을 줄이기 위해 안정 upstream 릴리스마다 전용 브랜치를 만들고 그 위에 변경사항을 올리며, 유지보수하는 브랜치 수는 최소한으로 유지합니다.
 
 ## 아티팩트
 
@@ -20,9 +19,9 @@
 | ArtifactId | 설명 | Maven Central 제공 |
 | --- | --- | --- |
 | netty-tcnative-{os_arch} | "기본" 아티팩트로, [libapr-1](https://apr.apache.org/)과 [OpenSSL](https://www.openssl.org/) 양쪽에 대해 동적 링크되어 있습니다. 이 아티팩트를 사용하려면 시스템에 libapr-1과 OpenSSL이 설치되고 설정되어 있어야 합니다. 사이트 관리자가 애플리케이션을 다시 빌드하지 않고도 OpenSSL을 자유롭게 업그레이드할 수 있는 운영 환경에서 유용합니다. 자체 APR/OpenSSL 빌드를 만들지 않는 한 Windows에서는 지원되지 않습니다. | yes |
-| netty-tcnative-boringssl-static-{os_arch} | Google의 [boringssl](https://boringssl.googlesource.com/)에 정적 링크된 아티팩트입니다. boringssl은 OpenSSL의 fork로, 코드 푸트프린트를 줄이고 작성 시점 기준으로 stable Linux 릴리스에는 아직 등장하지 않은 추가 기능(ALPN 등)을 갖고 있습니다. 정적 링크 덕분에 추가 설치 단계 걱정 없이 시스템에서 tcnative를 손쉽게 시작할 수 있습니다. APR을 요구하지 않습니다. | yes |
-| netty-tcnative-boringssl-static | 지원되는 모든 `netty-tcnative-boringssl-static-{os_arch}` 정적 링크 라이브러리를 담은 uber jar입니다. 꽤 큰 jar이지만, 애플리케이션이 플랫폼별로 올바른 jar을 챙길 필요가 없으니 시작 경험이 크게 단순해집니다. | yes |
-| netty-tcnative-openssl-static-{os_arch} | libapr-1과 OpenSSL 양쪽에 정적 링크된 아티팩트입니다. 추가 설치 단계 없이 tcnative를 시작하기 쉽습니다. | no |
+| netty-tcnative-boringssl-static-{os_arch} | Google의 [boringssl](https://boringssl.googlesource.com/)에 정적 링크된 아티팩트입니다. boringssl은 OpenSSL의 fork로, 코드 풋프린트를 줄이고 작성 시점 기준 안정 Linux 릴리스에는 아직 포함되지 않은 추가 기능(ALPN 등)을 제공합니다. 정적 링크 덕분에 추가 설치 단계 없이 시스템에서 tcnative를 바로 사용할 수 있습니다. APR이 필요하지 않습니다. | yes |
+| netty-tcnative-boringssl-static | 지원되는 모든 `netty-tcnative-boringssl-static-{os_arch}` 정적 링크 라이브러리를 담은 uber jar입니다. jar 크기가 다소 크지만, 애플리케이션이 플랫폼별로 올바른 jar를 직접 선택할 필요가 없어 설정이 크게 단순해집니다. | yes |
+| netty-tcnative-openssl-static-{os_arch} | libapr-1과 OpenSSL 양쪽에 정적 링크된 아티팩트입니다. 추가 설치 단계 없이 tcnative를 바로 사용할 수 있습니다. | no |
 | netty-tcnative-libressl-static-{os_arch} | 곧 출시 예정. | no |
 
 ## Gradle와 Bazel
@@ -85,7 +84,7 @@ Maven 패키징이 `2.0.49.Final` 버전에서 약간 달라졌습니다. Maven 
 </project>
 ```
 
-netty-tcnative는 [Maven Central](http://repo1.maven.org/maven2/io/netty/netty-tcnative/)에 배포할 때 classifier를 사용해 다음 플랫폼용 배포본을 제공합니다.
+netty-tcnative는 [Maven Central](http://repo1.maven.org/maven2/io/netty/netty-tcnative/)에 배포 시 classifier를 사용해 다음 플랫폼용 배포본을 제공합니다.
 
 | Classifier | 설명 |
 | --- | --- |
@@ -131,7 +130,7 @@ netty-tcnative는 [Maven Central](http://repo1.maven.org/maven2/io/netty/netty-t
 </project>
 ```
 
-netty-tcnative는 [Maven Central](http://repo1.maven.org/maven2/io/netty/netty-tcnative/)에 배포할 때 다양한 플랫폼용 배포본을 위해 classifier를 사용합니다. Linux에서 OpenSSL은 Fedora 파생 배포판과 다른 Linux 릴리스에서 서로 다른 soname을 사용한다는 점을 알아둘 필요가 있습니다. `1.1.33.Fork7` 버전부터는 Linux용으로 두 가지 별도 버전을 배포해 이 한계를 우회합니다(아래 표 참고).
+netty-tcnative는 [Maven Central](http://repo1.maven.org/maven2/io/netty/netty-tcnative/)에 배포 시 다양한 플랫폼용 배포본을 위해 classifier를 사용합니다. Linux에서 OpenSSL은 Fedora 파생 배포판과 그 외 Linux 릴리스에서 서로 다른 soname을 사용합니다. `1.1.33.Fork7` 버전부터는 이 한계를 우회하기 위해 Linux용으로 두 가지 별도 버전을 배포합니다(아래 표 참고).
 
 | Classifier | 설명 |
 | --- | --- |
@@ -140,7 +139,7 @@ netty-tcnative는 [Maven Central](http://repo1.maven.org/maven2/io/netty/netty-t
 | linux-x86_64 | Fedora 파생이 아닌 Linux용 |
 | linux-x86_64-fedora | Fedora 파생용 |
 
-`classifierWithLikes`를 사용하면 `os-maven-plugin`이 생성하는 `os.detected.classifier` 프로퍼티를 변경하도록 설정합니다. 빌드에서 `os.detected.classifier`에 의존하는 다른 의존성이 있다면, `antrun` 플러그인으로 netty-tcnative classifier를 직접 만들 수도 있습니다.
+`classifierWithLikes`를 사용하면 `os-maven-plugin`이 생성하는 `os.detected.classifier` 프로퍼티 값이 바뀝니다. 빌드에서 `os.detected.classifier`에 의존하는 다른 의존성이 있다면, `antrun` 플러그인으로 netty-tcnative classifier를 직접 구성할 수도 있습니다.
 
 ```xml
 <project>
@@ -225,11 +224,11 @@ public class MyChannelInitializer extends ChannelInitializer<SocketChannel> {
 }
 ```
 
-Netty는 netty-tcnative-XXX 아티팩트에 들어 있는 공유 라이브러리를 임시 디렉터리에 풀고 `java.lang.System.load(String)`로 로드합니다.
+Netty는 netty-tcnative-XXX 아티팩트에 포함된 공유 라이브러리를 임시 디렉터리에 압축 해제한 뒤 `java.lang.System.load(String)`로 로드합니다.
 
 ### 동적 링크된 `netty-tcnative`의 사전 요구사항
 
-`netty-tcnative` 아티팩트의 공유 라이브러리는 Apache Portable Runtime(APR)과 OpenSSL에 동적 링크되어 있다는 점에 유의하세요. 이 라이브러리들은 시스템 라이브러리 디렉터리, `$LD_LIBRARY_PATH`, `%PATH%` 등 라이브러리 로드 경로에 있어야 합니다.
+`netty-tcnative` 아티팩트의 공유 라이브러리는 Apache Portable Runtime(APR)과 OpenSSL에 동적 링크되어 있습니다. 이 라이브러리들은 시스템 라이브러리 디렉터리, `$LD_LIBRARY_PATH`, `%PATH%` 등 라이브러리 탐색 경로에 위치해야 합니다.
 
 * Linux를 사용 중이라면 시스템 패키지 매니저로 설치할 수 있으니 별다른 작업이 필요 없을 가능성이 큽니다.
 * Mac을 사용 중이라면 [Homebrew](http://brew.sh/)로 `openssl` 패키지를 설치해야 합니다.
@@ -238,25 +237,25 @@ Netty는 netty-tcnative-XXX 아티팩트에 들어 있는 공유 라이브러리
   * [Windows용 OpenSSL](http://slproweb.com/products/Win32OpenSSL.html)을 설치하고,
   * .DLL 파일이 들어 있는 디렉터리들을 `%PATH%`에 추가해야 합니다.
 
-**중요:** Linux에서 ALPN을 사용하려면(http2를 위해 필요) openssl 1.0.2 이상이 설치되어 있어야 합니다. 배포판 패키지 시스템이 이 버전을 제공하지 않는다면 직접 컴파일하고 [How to build](http://netty.io/wiki/forked-tomcat-native.html#wiki-h2-2)에서 설명하는 대로 LD_LIBRARY_PATH를 설정해야 합니다.
+**중요:** Linux에서 ALPN을 사용하려면(HTTP/2에 필요) openssl 1.0.2 이상이 설치되어 있어야 합니다. 배포판 패키지 시스템이 이 버전을 제공하지 않는다면 직접 컴파일하고 [How to build](http://netty.io/wiki/forked-tomcat-native.html#wiki-h2-2)에서 설명하는 대로 LD_LIBRARY_PATH를 설정해야 합니다.
 
 ### 정적 링크된 `netty-tcnative-*-static`의 사전 요구사항
 
 Fedora 30 이상을 사용 중이라면 `dnf -y install libxcrypt-compat`을 실행해 필요한 의존성을 설치하세요.
 
-설치하지 않으면 다음과 같은 오류를 보게 될 가능성이 높습니다.
+설치하지 않으면 다음과 같은 오류가 발생할 수 있습니다.
 
 > "libcrypt.so.1: cannot open shared object file: No such file or directory"
 
 ## 빌드 방법
 
-`Linux x86_64`, `Mac OS X x86_64`, `Windows x86_64`용 네이티브 라이브러리가 들어 있는 JAR를 공식적으로 배포하므로 보통 `netty-tcnative`를 직접 빌드할 필요는 없습니다. SNAPSHOT 빌드를 찾는다면 [Sonatype Snapshots](https://oss.sonatype.org/content/repositories/snapshots/io/netty/)을 확인하세요.
+`Linux x86_64`, `Mac OS X x86_64`, `Windows x86_64`용 네이티브 라이브러리 JAR를 공식적으로 배포하므로 보통 `netty-tcnative`를 직접 빌드할 필요는 없습니다. SNAPSHOT 빌드가 필요하다면 [Sonatype Snapshots](https://oss.sonatype.org/content/repositories/snapshots/io/netty/)을 확인하세요.
 
-Windows x86_32 같이 우리가 네이티브 라이브러리 JAR를 배포하지 않는 플랫폼에서는 이 절의 지침을 따르세요.
+Windows x86_32처럼 네이티브 라이브러리 JAR를 공식 배포하지 않는 플랫폼에서는 이 절의 지침을 따르세요.
 
 ### 의존성 업데이트와 검증
 
-직접 빌드할 때는 서드파티 의존성의 무결성을 검증하는 것이 중요합니다. 또한 빌드의 의존성 업데이트는 체크섬 실패를 일으키며, 패키지 메인테이너는 체크섬을 갱신하기 전에 패키지 무결성을 확인해야 합니다.
+직접 빌드할 때는 서드파티 의존성의 무결성을 검증하는 것이 중요합니다. 또한 의존성을 업데이트하면 체크섬 불일치가 발생할 수 있으므로, 패키지 메인테이너는 체크섬을 갱신하기 전에 패키지 무결성을 먼저 확인해야 합니다.
 
 ### autoconf
 - http://ftp.gnu.org/gnu/autoconf/autoconf-X.Y.Z.tar.gz 에서 tgz와 tgz.sig를 다운로드
@@ -282,7 +281,7 @@ Windows x86_32 같이 우리가 네이티브 라이브러리 JAR를 배포하지
 
 ### boringssl
 
-boringssl은 현재 tcnative 빌드용으로 hermetically 버전 관리되지 않습니다. 대신 빌드 시 [upstream google git repo](https://boringssl.googlesource.com/boringssl/)의 `chromium-stable` 브랜치에서 그대로 가져옵니다.
+boringssl은 현재 tcnative 빌드에서 hermetic하게 버전 관리되지 않습니다. 대신 빌드 시 [upstream Google git repo](https://boringssl.googlesource.com/boringssl/)의 `chromium-stable` 브랜치에서 직접 가져옵니다.
 
 ### Linux에서 빌드
 
@@ -315,7 +314,7 @@ IBM Z(s390x)에서 Linux용 `netty-tcnative` 라이브러리를 빌드하려면 
 
 ### Mac OS X에서 빌드
 
-먼저 [Xcode](https://itunes.apple.com/de/app/xcode/id497799835?mt=12)를 설치해야 합니다. 설치 후 명령줄 도구도 설치하세요.
+먼저 [Xcode](https://itunes.apple.com/de/app/xcode/id497799835?mt=12)를 설치한 뒤 명령줄 도구도 설치하세요.
 
 ```bash
 xcode-select --install
@@ -341,7 +340,7 @@ git checkout [branch]
 
 ### Windows에서 빌드
 
-이 절은 64비트 Windows에서의 빌드를 다룹니다. 32비트 시스템에서 빌드할 때는 일부 단계가 달라질 수 있습니다.
+이 절은 64비트 Windows에서의 빌드를 다룹니다. 32비트 시스템에서는 일부 단계가 달라질 수 있습니다.
 
 다음 패키지들을 설치하세요.
 
@@ -372,7 +371,7 @@ git checkout [branch]
     * `APR_INCLUDE_DIR=C:\Workspaces\apr-1.5.2-dist\include`
     * `APR_LIB_DIR=C:\Workspaces\apr-1.5.2-dist\lib`
 
-이제 명령 프롬프트(`cmd.exe`)를 시작하고 Visual C++에 필요한 환경 변수를 로드합니다.
+명령 프롬프트(`cmd.exe`)를 열고 Visual C++ 환경 변수를 로드합니다.
 
 ```bat
 "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" x86_amd64
@@ -392,11 +391,11 @@ mvnw clean install
 
 ## 새 fork 만들기
 
-`bootstrap` 브랜치를 체크아웃하고 upstream tcnative 버전을 인자로 `new-fork` 스크립트를 실행하면, upstream tcnative 버전과 동일한 이름을 가진 완전히 mavenize된 새 브랜치로 이동하게 됩니다. 예를 들어:
+`bootstrap` 브랜치를 체크아웃하고 upstream tcnative 버전을 인수로 `new-fork` 스크립트를 실행하면, upstream tcnative 버전과 동일한 이름의 완전히 mavenize된 새 브랜치로 이동합니다. 예를 들어:
 
 ```
 $ git checkout bootstrap
 $ ./new-fork 1.1.29 1
 ```
 
-는 `tcnative-1.1.29`의 mavenize된 fork를 담은 `1.1.29`라는 새 브랜치를 만듭니다. 이 fork는 `tcnative`의 메인 소스 코드를 변경하는 패치를 포함하지 않는다는 점에 유의하세요. 이미 패치된 다른 브랜치에서 일부 커밋을 cherry-pick하고 싶을 가능성이 큽니다.
+위 명령은 `tcnative-1.1.29`의 mavenize된 fork를 담은 `1.1.29` 브랜치를 새로 만듭니다. 이 fork에는 `tcnative` 메인 소스 코드를 수정하는 패치가 포함되어 있지 않으므로, 이미 패치된 다른 브랜치에서 일부 커밋을 cherry-pick해야 할 수 있습니다.

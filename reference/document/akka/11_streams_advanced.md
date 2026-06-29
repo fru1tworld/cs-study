@@ -1,6 +1,5 @@
 # Akka Streams 고급과 연동
 
-> 이 문서는 Akka 공식 문서의 "Streams" 고급/연동 섹션을 한국어로 번역한 것입니다.
 > 원본: https://doc.akka.io/libraries/akka-core/current/stream/index.html
 
 ---
@@ -21,11 +20,11 @@
 
 ## 1. 동적 스트림 처리(Dynamic Stream Handling)
 
-동적 스트림 처리(dynamic stream handling)는 그래프 연결을 사전에 정해 두지 않고도, 실행 시점(runtime)에 스트림의 완료(completion)와 라우팅(routing)을 제어할 수 있게 해 줍니다. 이 섹션은 스트림을 외부에서 종료시키는 킬 스위치(KillSwitch) 메커니즘과, 실행 중에 동적으로 팬-인(fan-in)/팬-아웃(fan-out)을 구성할 수 있는 허브(Hub) 구현을 다룹니다.
+동적 스트림 처리(dynamic stream handling)는 그래프 연결을 사전에 정해 두지 않고도, 실행 시점(runtime)에 스트림의 완료(completion)와 라우팅(routing)을 제어할 수 있게 해 줍니다. 이 섹션에서는 스트림을 외부에서 종료시키는 킬 스위치(KillSwitch) 메커니즘과, 실행 중에 동적으로 팬-인(fan-in)/팬-아웃(fan-out)을 구성할 수 있는 허브(Hub) 구현을 다룹니다.
 
 ### 1.1 KillSwitch: 스트림 완료 제어
 
-킬 스위치(KillSwitch)는 연산자(operator)의 완료를 **외부에서** 제어할 수 있게 해 주는 도구입니다. 공식 문서의 표현을 빌리면, KillSwitch는 "외부에서 `FlowShape` 연산자의 완료를 가능하게(allows the completion of operators of FlowShape from the outside)" 합니다. 이 인터페이스는 두 가지 주요 동작을 제공합니다.
+킬 스위치(KillSwitch)는 연산자(operator)의 완료를 **외부에서** 제어할 수 있게 해 주는 도구입니다. 공식 문서에 따르면 KillSwitch는 "외부에서 `FlowShape` 연산자의 완료를 가능하게(allows the completion of operators of FlowShape from the outside)" 합니다. 이 인터페이스는 두 가지 주요 동작을 제공합니다.
 
 - **`shutdown()`**: 스트림을 정상적으로 완료시킵니다. 업스트림(upstream)을 취소(cancel)하고 다운스트림(downstream)을 완료(complete)합니다.
 - **`abort(Throwable)`**: 스트림을 실패(fail)시킵니다. 업스트림을 취소하고 다운스트림을 지정된 예외로 실패시킵니다.
@@ -90,7 +89,7 @@
 
 분할 방식에는 두 가지가 있습니다.
 
-- **무상태(stateless) 분할**: 단순한 함수가 소비자 수(consumer count)와 요소(element)를 받아, 선택할 소비자의 인덱스를 반환합니다.
+- **무상태(stateless) 분할**: 소비자 수(consumer count)와 요소(element)를 받아 선택할 소비자의 인덱스를 반환하는 단순한 함수를 사용합니다.
 - **유상태(stateful) 분할**: 팩토리 함수(factory function)가 각 머티리얼라이제이션마다 상태 보관자(state holder)를 생성하여, 라운드 로빈(round-robin)이나 큐 크기를 고려한 라우팅(queue-size-aware routing)을 가능하게 합니다.
 
 > **고급 라우팅 예시**: `ConsumerInfo`의 `queueSize()` 접근자는 대략적인 버퍼 수준(approximate buffer level)을 알려 주어, 버퍼에 쌓인 요소가 더 적은(더 빠른) 소비자 쪽으로 라우팅할 수 있게 합니다.
@@ -287,7 +286,7 @@ val decider: Supervision.Decider = {
 }
 ```
 
-데사이더(decider) 함수는 예외를 검사하여 적절한 지시를 반환합니다.
+디사이더(decider) 함수는 예외를 검사하여 적절한 지시를 반환합니다.
 
 ### 3.6 mapAsync 에러 처리
 
@@ -316,7 +315,7 @@ val decider: Supervision.Decider = {
 
 ## 4. 스트리밍 IO 다루기(Working with Streaming IO)
 
-Akka Streams는 백프레셔(back-pressure)를 투명하게 관리하면서 파일 IO와 TCP 연결을 다루는 도구를 제공합니다. 수동으로 다루는 Akka IO 방식과 달리, Streams는 백프레셔를 자동으로 처리하여 네트워크와 파일 작업을 단순화합니다.
+Akka Streams는 백프레셔(back-pressure)를 투명하게 관리하면서 파일 IO와 TCP 연결을 다루는 도구를 제공합니다. 수동으로 다루는 Akka IO와 달리, Streams는 백프레셔를 자동으로 처리하여 네트워크와 파일 작업을 단순화합니다.
 
 > 이 기능을 사용하려면 `akka-stream` 모듈을 프로젝트에 추가해야 합니다.
 
@@ -368,9 +367,7 @@ Akka는 TLS 변형을 제공합니다. `outgoingConnectionWithTls`, `bindWithTls
 
 ## 5. 액터와의 연동(Integration with Actors)
 
-이 섹션은 스트림과 액터 기반 시스템을 결합하는 여러 접근법을 설명합니다. 이러한 기법들은 기존 API, 공유된 가변 상태(shared mutable state), 또는 스트림 실행 중 외부 영향을 받는 로직이 관여하는 시나리오를 다룹니다.
-
-> 이 기능을 사용하려면 `akka-stream` 아티팩트를 프로젝트에 추가해야 합니다.
+이 섹션에서는 스트림과 액터 기반 시스템을 결합하는 여러 접근법을 설명합니다. 이러한 기법들은 기존 API, 공유된 가변 상태(shared mutable state), 또는 스트림 실행 중 외부 영향을 받는 로직이 관여하는 시나리오를 다룹니다.
 
 ### 5.1 Ask 패턴(ask 연산자)
 

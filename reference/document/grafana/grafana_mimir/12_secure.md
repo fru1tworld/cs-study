@@ -1,6 +1,5 @@
 # Mimir 보안
 
-> 이 문서는 Grafana Mimir 공식 문서의 "Secure" 섹션을 한국어로 정리한 것입니다.
 > 원본: https://grafana.com/docs/mimir/latest/manage/secure/
 
 ---
@@ -22,7 +21,7 @@
 
 ## 보안 개요
 
-Mimir는 자체 인증을 제공하지 않으므로 외부 보안 계층 필수.
+Mimir는 자체 인증을 제공하지 않으므로 외부 보안 계층이 필요하다.
 
 ### 보안 계층
 
@@ -163,7 +162,7 @@ distributor:
 
 ## 인증 (Authentication)
 
-Mimir는 자체 인증 X. 옵션:
+Mimir는 자체 인증을 제공하지 않는다. 주요 옵션:
 
 ### 옵션 1: 리버스 프록시
 
@@ -257,7 +256,7 @@ spec:
 multitenancy_enabled: true
 ```
 
-활성화 시 모든 요청에 `X-Scope-OrgID` 필수.
+활성화하면 모든 요청에 `X-Scope-OrgID` 헤더가 필수다.
 
 ### 테넌트 격리
 
@@ -280,7 +279,7 @@ limits:
 
 ### 테넌트 간 페더레이션 (Cross-tenant)
 
-기본은 비활성. 명시적 활성화:
+기본적으로 비활성화되어 있으며 명시적으로 활성화해야 한다:
 
 ```yaml
 limits:
@@ -447,7 +446,7 @@ env:
 
 ### IAM Roles (AWS)
 
-가장 안전. 비밀 키 불필요.
+가장 안전한 방식으로, 별도의 비밀 키가 필요하지 않다.
 
 ```yaml
 serviceAccount:
@@ -607,7 +606,7 @@ common:
 
 #### GCS
 
-기본 암호화 (Google 관리). CMEK 옵션:
+기본적으로 Google이 암호화를 관리한다. CMEK 사용 시:
 
 ```yaml
 common:
@@ -619,7 +618,7 @@ common:
 
 #### Azure Blob
 
-기본 암호화. Customer-managed keys 가능 (스토리지 계정 설정).
+기본적으로 암호화된다. Customer-managed keys는 스토리지 계정 설정에서 구성할 수 있다.
 
 ### Disk 암호화
 

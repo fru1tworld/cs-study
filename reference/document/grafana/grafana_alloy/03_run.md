@@ -1,7 +1,6 @@
 # Alloy 실행
 
-> 이 문서는 Grafana Alloy 공식 문서의 "Run Alloy" 섹션을 한국어로 정리한 것입니다.
-> 원본: https://grafana.com/docs/alloy/latest/set-up/run/
+> 원본 참고: https://grafana.com/docs/alloy/latest/set-up/run/
 
 ---
 
@@ -47,7 +46,7 @@ alloy run \
 | `alloy validate` | 구성 파일 검증 |
 | `alloy fmt` | 구성 포맷 정리 |
 | `alloy convert` | 다른 포맷에서 변환 |
-| `alloy tools` | 보조 도구 (예: prometheus.relabel 평가) |
+| `alloy tools` | WAL 읽기 및 통계 분석 |
 | `alloy --version` | 버전 확인 |
 
 ### `alloy run` 주요 플래그
@@ -58,7 +57,7 @@ alloy run \
 | `--server.http.ui-path-prefix` | `/` | UI 경로 |
 | `--storage.path` | `data-alloy/` | WAL 등 저장 |
 | `--config.format` | `alloy` | 구성 형식 |
-| `--config.bypass-conversion-warnings` | false | 변환 경고 무시 |
+| `--config.bypass-conversion-errors` | false | 변환 오류 무시 |
 | `--cluster.enabled` | false | 클러스터링 활성화 |
 | `--cluster.join-addresses` | "" | 가입할 노드들 |
 | `--cluster.advertise-address` | "" | 광고 주소 |
@@ -133,7 +132,7 @@ Environment="CUSTOM_ARGS=--server.http.listen-addr=0.0.0.0:12345 --cluster.enabl
 
 ## 환경 변수
 
-Alloy 구성에서 `sys.env()`로 환경변수 참조 가능.
+Alloy 구성에서 `sys.env()`를 사용해 환경 변수를 참조할 수 있다.
 
 ### 구성에서 사용
 
@@ -203,7 +202,7 @@ curl -X POST http://localhost:12345/-/reload
 
 ### Kubernetes ConfigReloader
 
-`configReloader.enabled: true` 설정 시 ConfigMap 변경을 자동 감지.
+`configReloader.enabled: true`로 설정하면 ConfigMap 변경을 자동으로 감지한다.
 
 ```yaml
 configReloader:
@@ -306,7 +305,7 @@ loki.write "self" {
 
 ### 보안 (인증)
 
-Alloy 자체는 인증 미제공. 리버스 프록시 권장:
+Alloy 자체는 인증을 제공하지 않으므로 리버스 프록시 사용을 권장한다:
 
 ```nginx
 server {
@@ -325,7 +324,7 @@ server {
 
 ## 메트릭 노출
 
-`/metrics` 엔드포인트로 자체 메트릭 노출.
+`/metrics` 엔드포인트를 통해 자체 메트릭을 노출한다.
 
 ### Prometheus로 수집
 
@@ -373,7 +372,7 @@ logging {
 
 ### 컴포넌트별 디버그 정보
 
-UI 컴포넌트 상세 페이지의 **Debug Info** 섹션에서 실시간 정보 확인.
+UI 컴포넌트 상세 페이지의 **Debug Info** 섹션에서 실시간 정보를 확인할 수 있다.
 
 예: `prometheus.scrape`의 디버그 정보
 - 마지막 스크래핑 시간
@@ -425,7 +424,7 @@ alloy validate config.alloy
 config.alloy is valid
 ```
 
-실패 시 오류 위치와 원인 표시.
+실패 시 오류 위치와 원인을 출력한다.
 
 ### 포맷 정리
 

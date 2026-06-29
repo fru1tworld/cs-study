@@ -1,6 +1,5 @@
 # Alloy 컴포넌트 레퍼런스
 
-> 이 문서는 Grafana Alloy 공식 문서의 "Reference" 섹션 중 주요 컴포넌트를 한국어로 정리한 것입니다.
 > 원본: https://grafana.com/docs/alloy/latest/reference/components/
 
 ---
@@ -418,8 +417,8 @@ loki.write "default" {
     batch_size = "1MiB"
     batch_wait = "1s"
     
-    max_backoff_period = "5m"
-    max_retries        = 10
+    max_backoff_period   = "5m"
+    max_backoff_retries  = 10
   }
   
   external_labels = {
@@ -499,7 +498,7 @@ otelcol.processor.tail_sampling "default" {
 
 ### otelcol.connector.spanmetrics
 
-스팬에서 메트릭 자동 생성.
+스팬으로부터 메트릭을 자동으로 생성합니다.
 
 ```alloy
 otelcol.connector.spanmetrics "default" {
@@ -619,7 +618,7 @@ prometheus.remote_write "mimir" {
 
 ### local.file_match
 
-파일 글로브로 타겟 생성.
+파일 글로브 패턴으로 타겟을 생성합니다.
 
 ```alloy
 local.file_match "logs" {
@@ -740,7 +739,7 @@ beyla.ebpf "default" {
 
 ### mimir.rules.kubernetes
 
-Kubernetes CR(PrometheusRule)에서 룰을 자동으로 Mimir에 동기화.
+Kubernetes CR(PrometheusRule)에 정의된 룰을 Mimir에 자동으로 동기화합니다.
 
 ```alloy
 mimir.rules.kubernetes "default" {

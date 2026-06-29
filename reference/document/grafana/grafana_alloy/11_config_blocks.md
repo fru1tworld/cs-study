@@ -1,6 +1,5 @@
 # Alloy 구성 블록 레퍼런스
 
-> 이 문서는 Grafana Alloy 공식 문서의 Configuration Blocks 섹션을 한국어로 정리한 것입니다.
 > 원본: https://grafana.com/docs/alloy/latest/reference/config-blocks/
 
 ---
@@ -53,7 +52,7 @@
 
 ## `logging`
 
-Alloy 자체 로그 설정.
+Alloy 프로세스 자체의 로그를 설정합니다.
 
 ```alloy
 logging {
@@ -97,7 +96,7 @@ loki.write "default" {
 
 ## `tracing`
 
-Alloy 자체 트레이스 (분산 트레이싱 데이터).
+Alloy 프로세스 자체의 분산 트레이싱을 설정합니다.
 
 ```alloy
 tracing {
@@ -132,7 +131,7 @@ Alloy 내부 동작 디버그:
 
 ## `livedebugging`
 
-라이브 디버깅 활성화 (실험적).
+라이브 디버깅을 활성화합니다.
 
 ```alloy
 livedebugging {
@@ -140,7 +139,7 @@ livedebugging {
 }
 ```
 
-UI에서 실시간으로 컴포넌트 입출력 확인 가능.
+Alloy UI에서 컴포넌트의 입출력을 실시간으로 확인할 수 있습니다.
 
 ### 활용
 
@@ -152,7 +151,7 @@ UI에서 실시간으로 컴포넌트 입출력 확인 가능.
 
 ## `argument`
 
-모듈 입력 인자 정의.
+모듈의 입력 인자를 정의합니다.
 
 ```alloy
 argument "endpoint" {
@@ -198,7 +197,7 @@ loki.write "default" {
 
 ## `export`
 
-모듈 출력 정의.
+모듈의 출력 값을 정의합니다.
 
 ```alloy
 export "receiver" {
@@ -218,7 +217,7 @@ export "endpoint_url" {
 
 ### 사용
 
-다른 구성에서:
+다른 구성 파일에서 모듈 출력을 참조하는 예시:
 
 ```alloy
 import.file "log_module" {
@@ -240,7 +239,7 @@ loki.source.file "app" {
 
 ## `declare`
 
-인라인 모듈 선언 (별도 파일 없이).
+별도 파일 없이 인라인으로 모듈을 선언합니다.
 
 ```alloy
 declare "log_pipeline" {
@@ -282,7 +281,7 @@ loki.source.file "app" {
 
 ## `import.file`
 
-로컬 파일에서 모듈 임포트.
+로컬 파일에서 모듈을 가져옵니다.
 
 ```alloy
 import.file "modules" {
@@ -296,7 +295,7 @@ import.file "modules" {
 |------|--------|------|
 | `filename` | (필수) | 파일 경로 |
 
-### 디렉토리 임포트
+### 디렉토리 가져오기
 
 ```alloy
 import.file "all_modules" {
@@ -321,7 +320,7 @@ loki.pipeline "default" {
 
 ## `import.git`
 
-Git 저장소에서 모듈 임포트.
+Git 저장소에서 모듈을 가져옵니다.
 
 ```alloy
 import.git "modules" {
@@ -348,8 +347,8 @@ import.git "modules" {
 |------|--------|------|
 | `repository` | (필수) | Git URL |
 | `revision` | `HEAD` | branch/tag/commit |
-| `path` | `""` | 저장소 내 경로 |
-| `pull_frequency` | `0s` | 풀 주기 (0이면 시작 시만) |
+| `path` | (필수) | 저장소 내 경로 |
+| `pull_frequency` | `60s` | 저장소를 풀하는 주기 |
 
 ### 사용
 
@@ -369,7 +368,7 @@ modules.kubernetes.logs.pods "default" {
 
 ## `import.http`
 
-HTTP 엔드포인트에서 모듈 임포트.
+HTTP 엔드포인트에서 모듈을 가져옵니다.
 
 ```alloy
 import.http "module" {
@@ -408,7 +407,7 @@ import.http "module" {
 
 ## `import.string`
 
-인라인 문자열로 모듈 정의.
+인라인 문자열로 모듈을 정의합니다.
 
 ```alloy
 import.string "inline" {
@@ -437,7 +436,7 @@ inline "world" {
 
 ## `remotecfg`
 
-원격 구성 서버에서 Alloy 구성 가져오기.
+원격 구성 서버에서 Alloy 구성을 가져옵니다.
 
 ```alloy
 remotecfg {
@@ -480,7 +479,7 @@ remotecfg {
 
 ## `http`
 
-전역 HTTP 클라이언트 기본값.
+전역 HTTP 클라이언트 기본값을 설정합니다.
 
 ```alloy
 http {
@@ -500,7 +499,7 @@ http {
 }
 ```
 
-이 블록은 모든 HTTP 요청 컴포넌트의 기본값으로 적용. 컴포넌트별 오버라이드 가능.
+이 블록에서 설정한 값은 모든 HTTP 요청 컴포넌트의 기본값으로 적용되며, 각 컴포넌트에서 개별적으로 재정의할 수 있습니다.
 
 ---
 

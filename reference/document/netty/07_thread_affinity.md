@@ -1,6 +1,5 @@
 # Thread Affinity (스레드 친화도)
 
-> 이 문서는 Netty 공식 Wiki의 "Thread Affinity" 페이지를 한국어로 번역한 것입니다.
 > 원본: https://netty.io/wiki/thread-affinity.html
 
 ---
@@ -19,7 +18,7 @@ Netty로 저지연(low-latency) 네트워크 애플리케이션을 개발 중이
 </dependency>
 ```
 
-다음으로, 특정 전략을 가진 `AffinityThreadFactory`를 생성하고 이를 지연시간에 민감한 스레드를 포함하게 될 `EventLoopGroup`에 전달합니다. 예를 들어:
+다음으로, 원하는 전략으로 `AffinityThreadFactory`를 생성하고, 지연 시간에 민감한 스레드를 처리할 `EventLoopGroup`에 전달합니다. 예를 들어:
 
 ```java
 final int acceptorThreads = 1;

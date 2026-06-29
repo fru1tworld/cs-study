@@ -1,6 +1,5 @@
 # Loki 모범 사례 (Best Practices)
 
-> 이 문서는 Grafana Loki 공식 문서의 Best Practices 섹션을 한국어로 정리한 것입니다.
 > 원본: https://grafana.com/docs/loki/latest/get-started/labels/bp-labels/
 
 ---
@@ -75,7 +74,7 @@ loki.process "extract" {
 }
 ```
 
-동적 라벨은 카디널리티가 예측 가능한 경우만 사용.
+동적 라벨은 카디널리티가 예측 가능한 경우에만 사용.
 
 ---
 
@@ -90,13 +89,17 @@ loki.process "extract" {
 ### 분석 도구
 
 ```bash
-# logcli로 라벨 카디널리티 확인
+# logcli로 라벨 목록 조회
 logcli labels --addr=http://loki:3100 \
   --from="2024-01-01T00:00:00Z" \
   --to="2024-01-02T00:00:00Z"
 
 # 특정 라벨의 값 분포
 logcli labels level --addr=http://loki:3100
+
+# 라벨별 카디널리티 분석 (Loki 1.6.0+)
+logcli series --analyze-labels --addr=http://loki:3100 \
+  --match='{namespace="prod"}'
 ```
 
 ### Series API
@@ -139,7 +142,7 @@ loki.process "reduce_cardinality" {
 
 #### 서버 측 (구조화된 메타데이터로 이전)
 
-높은 카디널리티 정보는 라벨 대신 **structured metadata** 로:
+카디널리티가 높은 정보는 라벨 대신 **structured metadata**로 이전한다.
 
 ```alloy
 loki.process "metadata" {
@@ -152,7 +155,7 @@ loki.process "metadata" {
 }
 ```
 
-라벨 인덱스에는 영향 없으면서 쿼리에서 필터/추출 가능.
+라벨 인덱스에 영향을 주지 않으면서 쿼리에서 필터링·추출이 가능하다.
 
 ---
 
@@ -273,7 +276,7 @@ loki.write "default" {
 
 ### 압축
 
-기본적으로 활성화되어 있지만 확인:
+기본적으로 활성화되어 있으나 설정을 확인한다.
 
 ```alloy
 loki.write "default" {
@@ -286,11 +289,11 @@ loki.write "default" {
 
 ### 라벨 정렬
 
-라벨은 알파벳 순으로 정렬되어야 캐싱이 일관됨. 클라이언트가 자동 처리.
+라벨은 알파벳 순으로 정렬되어야 캐싱이 일관되게 동작한다. 클라이언트가 자동으로 처리한다.
 
 ### 시간 정렬
 
-같은 스트림의 로그는 시간 순서대로 보내야 함. Out-of-order는 거부됨 (또는 별도 설정 필요):
+같은 스트림의 로그는 시간 순서대로 전송해야 한다. 순서가 어긋난 로그는 거부되며, 허용하려면 별도 설정이 필요하다.
 
 ```yaml
 limits_config:
@@ -302,7 +305,7 @@ limits_config:
 
 ### Structured Metadata 활용
 
-라벨 카디널리티를 늘리지 않고 메타데이터 추가:
+라벨 카디널리티를 늘리지 않으면서 메타데이터를 추가할 수 있다.
 
 ```alloy
 stage.structured_metadata {
@@ -319,7 +322,7 @@ stage.structured_metadata {
 
 ### S3 Lifecycle 정책
 
-오래된 청크를 자동으로 저렴한 스토리지 클래스로 이전:
+오래된 청크를 자동으로 저렴한 스토리지 클래스로 전환한다.
 
 ```json
 {
@@ -347,7 +350,7 @@ stage.structured_metadata {
 
 ### 동일 리전 권장
 
-오브젝트 스토리지와 Loki는 같은 리전에 두어 네트워크 비용/지연 최소화.
+오브젝트 스토리지와 Loki는 같은 리전에 배치하여 네트워크 비용과 지연을 최소화한다.
 
 ### Versioning + Replication
 
@@ -396,7 +399,7 @@ overrides:
 
 ### 전체 한도 보호
 
-테넌트별 한도 외에도 전역 보호:
+테넌트별 한도 외에도 전역 수준의 보호를 설정한다.
 
 ```yaml
 ingester:
@@ -413,7 +416,7 @@ limits_config:
   ingestion_partitions_tenant_shard_size: 4
 ```
 
-큰 테넌트가 작은 테넌트에 영향 안 미치게.
+대형 테넌트가 소형 테넌트에 영향을 주지 않도록 격리한다.
 
 ---
 
@@ -435,11 +438,11 @@ limits_config:
 
 ### 카나리 배포
 
-먼저 1-2개 인스턴스만 업그레이드, 검증 후 나머지.
+먼저 1~2개 인스턴스만 업그레이드하고 검증한 뒤 나머지를 진행한다.
 
 ### 롤백 계획
 
-새 청크 형식이나 인덱스 형식이 변경되면 롤백 어려움. 신중히.
+청크 형식이나 인덱스 형식이 변경된 경우 롤백이 어렵다. 신중하게 진행할 것.
 
 ---
 
@@ -547,7 +550,7 @@ jb install github.com/grafana/loki/production/loki-mixin@main
 jsonnet -J vendor mixin.libsonnet > dashboards.json
 ```
 
-대시보드 + Recording Rules + Alerting Rules 일괄 제공.
+대시보드, Recording Rules, Alerting Rules를 일괄 제공한다.
 
 ### Loki Canary 배포
 

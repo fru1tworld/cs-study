@@ -1,17 +1,16 @@
 # 참조 카운트 객체 (Reference Counted Objects)
 
-> 이 문서는 Netty 공식 Wiki의 "Reference counted objects" 페이지를 한국어로 번역한 것입니다.
 > 원본: https://netty.io/wiki/reference-counted-objects.html
 
 ---
 
-Netty 4부터 일부 객체의 라이프사이클은 참조 카운트(reference count)에 의해 관리됩니다. 이 덕분에 Netty는 객체가 더 이상 사용되지 않는 즉시 그 객체(또는 객체가 가진 공유 자원)를 객체 풀(또는 객체 할당자)로 반환할 수 있습니다. 가비지 컬렉션과 reference queue는 도달 불가 시점에 대한 효율적인 실시간 보장을 제공하지 못하지만, 참조 카운트는 약간의 불편을 감수하는 대신 그 대안을 제공합니다.
+Netty 4부터 일부 객체의 라이프사이클은 참조 카운트(reference count)에 의해 관리됩니다. 덕분에 Netty는 객체가 더 이상 사용되지 않는 즉시 해당 객체(또는 객체가 보유한 공유 자원)를 객체 풀(또는 객체 할당자)로 반환할 수 있습니다. 가비지 컬렉션과 reference queue는 도달 불가 시점에 대한 효율적인 실시간 보장을 제공하지 못하는데, 참조 카운트는 약간의 불편을 감수하는 대신 이에 대한 대안을 제공합니다.
 
 [`ByteBuf`](http://netty.io/4.0/api/index.html?io/netty/buffer/ByteBuf.html)는 할당/해제 성능을 개선하기 위해 참조 카운트를 활용하는 가장 대표적인 타입입니다. 이 페이지에서는 `ByteBuf`를 예로 들어 Netty의 참조 카운트가 어떻게 동작하는지 설명합니다.
 
 ## 참조 카운트의 기초
 
-참조 카운트 객체의 초기 참조 카운트는 1입니다.
+새로 할당된 참조 카운트 객체의 초기 참조 카운트는 1입니다.
 
 ```java
 ByteBuf buf = ctx.alloc().directBuffer();
@@ -37,7 +36,7 @@ assert buf.refCnt() == 0;
 try {
   buf.writeLong(0xdeadbeef);
   throw new Error("should not reach here");
-} catch (IllegalReferenceCountExeception e) {
+} catch (IllegalReferenceCountException e) {
   // Expected
 }
 ```
@@ -62,8 +61,8 @@ assert buf.refCnt() == 1;
 
 일반적인 원칙은 **참조 카운트 객체를 마지막으로 접근한 쪽이 그 객체의 소멸도 책임진다**는 것입니다. 구체적으로:
 
-* [송신 측] 컴포넌트가 참조 카운트 객체를 다른 [수신 측] 컴포넌트에 전달해야 한다면, 송신 측은 보통 그것을 소멸시킬 필요가 없고, 그 결정을 수신 측에 위임합니다.
-* 어떤 컴포넌트가 참조 카운트 객체를 소비하고 그 이후로는 다른 누구도 그것에 접근하지 않을 것을 안다면(즉, 또 다른 컴포넌트로 참조를 넘기지 않는다면), 그 컴포넌트가 객체를 소멸시켜야 합니다.
+* [송신 측] 컴포넌트가 참조 카운트 객체를 [수신 측] 컴포넌트에 전달해야 한다면, 송신 측은 보통 직접 소멸시킬 필요가 없으며 그 결정을 수신 측에 위임합니다.
+* 어떤 컴포넌트가 참조 카운트 객체를 소비하고, 이후 다른 컴포넌트로 참조를 넘기지 않는다면, 해당 컴포넌트가 객체를 소멸시켜야 합니다.
 
 간단한 예:
 
@@ -169,7 +168,7 @@ public void channelRead(ChannelHandlerContext ctx, Object msg) {
 }
 ```
 
-이 문서의 '누가 객체를 소멸시키는가?' 섹션에서 설명한 것처럼, 핸들러가 버퍼(또는 어떤 참조 카운트 객체)를 다음 핸들러에게 넘기면 그것을 release할 필요가 없습니다.
+앞서 '누가 객체를 소멸시키는가?' 섹션에서 설명했듯이, 핸들러가 버퍼(또는 참조 카운트 객체)를 다음 핸들러에 넘길 때는 직접 release할 필요가 없습니다.
 
 ```java
 public void channelRead(ChannelHandlerContext ctx, Object msg) {
@@ -179,7 +178,7 @@ public void channelRead(ChannelHandlerContext ctx, Object msg) {
 }
 ```
 
-`ByteBuf`만 Netty의 참조 카운트 타입은 아니라는 점에 유의하세요. 디코더가 만들어낸 메시지를 다룬다면, 그 메시지도 참조 카운트 타입일 가능성이 매우 높습니다.
+Netty의 참조 카운트 타입은 `ByteBuf`만이 아닙니다. 디코더가 생성한 메시지를 다룬다면, 그 메시지도 참조 카운트 타입일 가능성이 높습니다.
 
 ```java
 // 핸들러가 `HttpRequestDecoder` 다음에 위치한다고 가정
@@ -247,7 +246,7 @@ public void write(ChannelHandlerContext ctx, Object message, ChannelPromise prom
 
 참조 카운트의 단점은 객체를 누수시키기 쉽다는 것입니다. JVM은 Netty의 참조 카운트를 인식하지 못하기 때문에, 참조 카운트가 0이 아니더라도 객체가 도달 불가능해지면 자동으로 가비지 컬렉트해버립니다. 한 번 가비지 컬렉트된 객체는 되살릴 수 없으므로 자신이 왔던 풀로도 반환되지 못하고, 그 결과 메모리 누수가 발생합니다.
 
-다행히 누수 추적이 어렵긴 해도, Netty는 기본적으로 약 1%의 버퍼 할당을 샘플링해 애플리케이션에 누수가 있는지 검사합니다. 누수가 있는 경우 다음과 같은 로그 메시지를 보게 됩니다.
+다행히, 누수 추적이 어렵긴 해도 Netty는 기본적으로 약 1%의 버퍼 할당을 샘플링해 애플리케이션의 누수 여부를 검사합니다. 누수가 있는 경우 다음과 같은 로그 메시지를 보게 됩니다.
 
 > `LEAK: ByteBuf.release() was not called before it's garbage-collected. Enable advanced leak reporting to find out where the leak occurred. To enable advanced leak reporting, specify the JVM option '-Dio.netty.leakDetectionLevel=advanced' or call ResourceLeakDetector.setLevel()`
 
@@ -346,7 +345,7 @@ java -Dio.netty.leakDetection.level=advanced ...
 
 ### 단위 테스트에서의 누수 수정
 
-단위 테스트에서 버퍼나 메시지를 release하는 것을 잊기는 매우 쉽습니다. 그러면 누수 경고가 발생하지만 그것이 곧 애플리케이션에 누수가 있다는 의미는 아닙니다. 단위 테스트를 `try-finally` 블록으로 감싸 모든 버퍼를 release하는 대신 `ReferenceCountUtil.releaseLater()` 유틸리티 메서드를 사용할 수 있습니다.
+단위 테스트에서는 버퍼나 메시지를 release하는 것을 빠뜨리기 쉽습니다. 누수 경고가 발생하더라도 이것이 곧 애플리케이션에 누수가 있다는 의미는 아닙니다. `try-finally` 블록으로 모든 버퍼를 직접 release하는 대신, `ReferenceCountUtil.releaseLater()` 유틸리티 메서드를 활용할 수 있습니다.
 
 ```java
 import static io.netty.util.ReferenceCountUtil.*;

@@ -1,10 +1,8 @@
 # PostgreSQL 18 오류 코드 (Error Codes)
 
-이 문서는 PostgreSQL 18.1 공식 문서의 "Appendix A. PostgreSQL Error Codes"를 한국어로 번역한 것입니다.
-
 ## 개요
 
-PostgreSQL 서버가 발생시키는 모든 메시지에는 5자리 오류 코드가 할당되며, 이는 SQL 표준의 "SQLSTATE" 코드 규약을 따릅니다. 특정 오류 조건을 인식해야 하는 애플리케이션은 일반적으로 텍스트 오류 메시지가 아닌 오류 코드를 테스트해야 합니다. 오류 코드는 PostgreSQL 릴리스 간에 변경될 가능성이 적고, 서버 오류 메시지의 지역화(localization)에 영향을 받지 않습니다.
+PostgreSQL 서버가 내보내는 모든 메시지에는 5자리 오류 코드가 부여되며, 이는 SQL 표준의 "SQLSTATE" 코드 규약을 따릅니다. 특정 오류 조건을 감지해야 하는 애플리케이션은 텍스트 오류 메시지 대신 오류 코드를 기준으로 판단해야 합니다. 오류 코드는 PostgreSQL 릴리스 간에 변경될 가능성이 낮고, 서버 오류 메시지의 지역화(localization)에 영향을 받지 않습니다.
 
 ---
 
@@ -247,7 +245,7 @@ $$;
 
 ### Class 22 - 데이터 예외 (Data Exception)
 
-데이터 처리 중 발생하는 다양한 오류를 포함합니다.
+데이터 처리 과정에서 발생하는 다양한 오류를 포함합니다.
 
 | SQLSTATE | 조건명 (Condition Name) | 설명 |
 |----------|------------------------|------|
@@ -356,7 +354,7 @@ $$;
 
 ### Class 23 - 무결성 제약 위반 (Integrity Constraint Violation)
 
-데이터 무결성과 관련된 중요한 오류 클래스입니다.
+데이터 무결성과 관련된 오류 클래스입니다.
 
 | SQLSTATE | 조건명 (Condition Name) | 설명 |
 |----------|------------------------|------|
@@ -638,7 +636,7 @@ $$ LANGUAGE plpgsql;
 
 ### Class 42 - 구문 오류 또는 접근 규칙 위반 (Syntax Error or Access Rule Violation)
 
-가장 흔하게 발생하는 오류 클래스 중 하나입니다.
+가장 자주 발생하는 오류 클래스 중 하나입니다.
 
 | SQLSTATE | 조건명 (Condition Name) | 설명 |
 |----------|------------------------|------|
@@ -958,7 +956,7 @@ $$ LANGUAGE plpgsql;
 
 ### 1. PL/pgSQL에서 예외 처리
 
-조건명을 사용하여 예외를 처리할 수 있습니다 (대소문자 구분 없음):
+조건명으로 예외를 처리할 수 있습니다(대소문자 구분 없음):
 
 ```sql
 CREATE OR REPLACE FUNCTION safe_divide(a NUMERIC, b NUMERIC)
@@ -976,7 +974,7 @@ $$ LANGUAGE plpgsql;
 
 ### 2. SQLSTATE 코드 직접 사용
 
-조건명 대신 SQLSTATE 코드를 직접 사용할 수도 있습니다:
+조건명 대신 SQLSTATE 코드를 직접 지정할 수도 있습니다:
 
 ```sql
 DO $$
@@ -993,7 +991,7 @@ $$;
 
 ### 3. 사용자 정의 SQLSTATE 코드
 
-사용자 정의 오류에 대해 자체 SQLSTATE 코드를 사용할 수 있습니다:
+사용자 정의 오류에 자체 SQLSTATE 코드를 부여할 수 있습니다:
 
 ```sql
 CREATE OR REPLACE FUNCTION custom_validation()
@@ -1008,7 +1006,7 @@ $$ LANGUAGE plpgsql;
 
 ### 4. 애플리케이션에서 오류 코드 처리
 
-애플리케이션은 오류 메시지 텍스트가 아닌 오류 코드를 테스트해야 합니다:
+애플리케이션은 오류 메시지 텍스트가 아닌 오류 코드를 기준으로 처리해야 합니다:
 
 ```python
 # Python (psycopg2) 예제
@@ -1050,7 +1048,7 @@ try {
 
 ### GET DIAGNOSTICS 사용
 
-PL/pgSQL에서 예외 발생 시 상세 정보를 조회할 수 있습니다:
+PL/pgSQL에서 예외가 발생했을 때 상세 정보를 조회할 수 있습니다:
 
 ```sql
 CREATE OR REPLACE FUNCTION detailed_error_handling()
@@ -1089,15 +1087,15 @@ $$ LANGUAGE plpgsql;
 
 ## 주요 참고사항
 
-1. 이식성: 오류 코드는 텍스트 오류 메시지보다 PostgreSQL 버전 간에 더 안정적입니다.
+1. 이식성: 오류 코드는 텍스트 오류 메시지보다 PostgreSQL 버전 간 안정성이 높습니다.
 
-2. 지역화 독립성: 오류 코드는 서버의 언어 설정에 관계없이 동일하게 유지됩니다.
+2. 지역화 독립성: 오류 코드는 서버의 언어 설정에 관계없이 동일한 값을 유지합니다.
 
 3. SQL 표준 준수: 많은 코드가 SQL 표준에 정의되어 있으며, 일부는 PostgreSQL 전용입니다.
 
 4. PostgreSQL 전용 코드: `P`가 포함된 코드(예: `23P01`, `08P01`)는 PostgreSQL 전용입니다.
 
-5. 오류 클래스 테스트: 특정 조건 대신 오류 클래스 전체를 테스트할 수 있습니다:
+5. 오류 클래스 단위 처리: 특정 조건 대신 오류 클래스 전체를 포괄적으로 처리할 수 있습니다:
    ```sql
    EXCEPTION
        WHEN integrity_constraint_violation THEN  -- Class 23 전체

@@ -1,6 +1,5 @@
 # CQL 데이터 조작 (DML)
 
-> 이 문서는 Apache Cassandra 공식 문서의 CQL "Data Manipulation" 및 "Operators" 섹션을 한국어로 번역한 것입니다.
 > 원본: https://cassandra.apache.org/doc/latest/cassandra/developing/cql/dml.html
 
 ---
@@ -139,8 +138,8 @@ SELECT COUNT (*) AS user_count FROM users;
 WRITETIME(column_name)
 MAXWRITETIME(column_name)
 TTL(column_name)
-WRITETTIME(phones[2..4])
-WRITETTIME(user.name)
+WRITETIME(phones[2..4])
+WRITETIME(user.name)
 ```
 
 - `WRITETIME(column_name)` — 해당 컬럼 값이 기록된 시점의 타임스탬프(timestamp, 마이크로초 단위)를 반환합니다.
@@ -198,7 +197,7 @@ WHERE event_type = 'myEvent'
 
 ### GROUP BY 절
 
-`GROUP BY` 절은 동일한 값을 가진 행들을 하나의 그룹으로 묶어(condense) 처리합니다. 그룹화는 파티션 키(partition key)와 클러스터링 컬럼(clustering column) 컬럼들로만 수행할 수 있습니다.
+`GROUP BY` 절은 동일한 값을 가진 행들을 하나의 그룹으로 묶어(condense) 처리합니다. 그룹화는 파티션 키(partition key)와 클러스터링 컬럼(clustering column)으로만 수행할 수 있습니다.
 
 ```
 group_by_clause::= column_name ( ',' column_name )*
@@ -524,7 +523,7 @@ CQL은 다음 연산자를 지원합니다.
 | **varint**   | varint  | varint   | varint | decimal | decimal | decimal | decimal | decimal | decimal |
 | **decimal**  | decimal | decimal  | decimal| decimal | decimal | decimal | decimal | decimal | decimal |
 
-예를 들어, `tinyint`와 `smallint`의 연산 결과는 `smallint`가 되며, `bigint`는 `float`/`double`을 제외한 어떤 숫자 타입과 연산해도 `bigint`를 결과로 냅니다.
+예를 들어, `tinyint`와 `smallint`의 연산 결과는 `smallint`가 되며, `bigint`와 `float` 또는 `double`을 연산하면 `double`이 반환됩니다.
 
 ### 연산자 우선순위(Precedence)
 

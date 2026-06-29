@@ -1,6 +1,5 @@
 # Pyroscope 설정 (Configuration)
 
-> 이 문서는 Pyroscope 서버의 설정 파일 구조와 주요 블록을 다룹니다.
 > 원본: https://grafana.com/docs/pyroscope/latest/configure-server/reference-configuration-parameters/
 
 ---
@@ -23,7 +22,7 @@
 
 ## 설정 파일 형식
 
-YAML 파일로 작성하며 CLI 플래그와 환경 변수로도 일부 오버라이드 가능합니다.
+YAML 파일로 작성하며, CLI 플래그와 환경 변수로 일부 값을 오버라이드할 수 있습니다.
 
 ```bash
 pyroscope -config.file=pyroscope.yaml -target=all
@@ -37,11 +36,11 @@ storage:
     access_key_id: ${AWS_ACCESS_KEY_ID}
 ```
 
-`-config.expand-env=true` 플래그로 활성화.
+`-config.expand-env=true` 플래그로 활성화합니다.
 
 ### 핫 리로드
 
-`SIGHUP` 으로 일부 항목(limits 등) 재로드 가능. 모든 항목이 핫 리로드 가능한 것은 아닙니다.
+`SIGHUP` 시그널로 일부 항목(limits 등)을 재로드할 수 있습니다. 단, 모든 항목이 핫 리로드를 지원하지는 않습니다.
 
 ---
 
@@ -73,7 +72,7 @@ tracing: { ... }
 
 ## server 블록
 
-HTTP/gRPC 리스너 설정.
+HTTP/gRPC 리스너 설정입니다.
 
 ```yaml
 server:
@@ -91,7 +90,7 @@ server:
 
 ## storage 블록
 
-오브젝트 스토리지(또는 로컬 파일시스템) 설정.
+오브젝트 스토리지 또는 로컬 파일시스템 설정입니다.
 
 ### S3 (또는 호환)
 
@@ -147,7 +146,7 @@ storage:
 
 ## memberlist / ring
 
-해시 링과 멤버십을 위한 gossip 설정.
+해시 링과 멤버십 관리를 위한 gossip 설정입니다.
 
 ```yaml
 memberlist:
@@ -175,7 +174,7 @@ distributor:
       store: memberlist
 ```
 
-대안: `consul`, `etcd`, `inmemory`.
+kvstore 대안으로 `consul`, `etcd`, `inmemory`를 사용할 수 있습니다.
 
 ---
 
@@ -194,7 +193,7 @@ ingester:
       heartbeat_period: 5s
       heartbeat_timeout: 1m
 
-phlaredb:
+pyroscopedb:
   data_path: /data/pyroscope
   max_block_duration: 1h
   row_group_target_size: 1342177280   # 1.25GiB
@@ -243,7 +242,7 @@ compactor:
 
 ## limits 블록
 
-테넌트별/글로벌 한도. (자세한 설명은 [07_manage.md](./07_manage.md))
+테넌트별 및 글로벌 한도 설정입니다. (자세한 설명은 [07_manage.md](./07_manage.md))
 
 ```yaml
 limits:
@@ -282,7 +281,7 @@ overrides:
 
 ### analytics
 
-Grafana Labs로 익명 사용 통계 전송. 비활성화 가능.
+Grafana Labs에 익명 사용 통계를 전송합니다. 비활성화할 수 있습니다.
 
 ```yaml
 analytics:
@@ -291,7 +290,7 @@ analytics:
 
 ### self_profiling
 
-자기 자신을 프로파일링.
+Pyroscope 자신을 프로파일링합니다.
 
 ```yaml
 self_profiling:
@@ -324,7 +323,7 @@ storage:
     access_key_id: ${AWS_ACCESS_KEY_ID}
     secret_access_key: ${AWS_SECRET_ACCESS_KEY}
 
-phlaredb:
+pyroscopedb:
   data_path: /data/pyroscope
 ```
 

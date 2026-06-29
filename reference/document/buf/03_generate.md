@@ -1,6 +1,5 @@
 # 코드 생성 (buf generate / buf.gen.yaml)
 
-> 이 문서는 buf의 코드 생성(buf.gen.yaml v2, 플러그인, managed mode, inputs)을 한국어로 정리한 것입니다.
 > 원본: https://buf.build/docs/configuration/v2/buf-gen-yaml/ , https://buf.build/docs/generate/tutorial/ , https://buf.build/docs/generate/managed-mode/
 
 ---
@@ -38,7 +37,7 @@ buf generate buf.build/acme/weather  # BSR 모듈을 입력으로
 | `plugins` | 필수 | 코드 생성기 목록 |
 | `managed` | 선택 | managed mode 설정(아래 5절) |
 | `inputs` | 선택 | 코드 생성 입력 소스 목록 |
-| `clean` | 선택 | `true`면 생성 전에 출력 디렉터리를 삭제 |
+| `clean` | 선택 | `true`면 생성 전에 `out`에 지정된 디렉터리·zip·jar 파일을 삭제 |
 
 ---
 
@@ -83,7 +82,7 @@ buf generate buf.build/acme/weather  # BSR 모듈을 입력으로
 
 ## 5. managed mode
 
-managed mode는 `go_package`, `java_package` 같은 언어별 파일 옵션을 `.proto`에 직접 넣지 않고 `buf.gen.yaml`에서 생성 시점에 적용하는 기능입니다. `.proto`를 언어 중립적으로 유지하고, 소비자마다 다른 네임스페이스로 코드를 생성할 수 있습니다.
+managed mode는 `go_package`, `java_package` 같은 언어별 파일 옵션을 `.proto`에 직접 작성하지 않고, `buf.gen.yaml`에서 생성 시점에 적용하는 기능입니다. `.proto`를 언어 중립적으로 유지하면서 소비자마다 다른 네임스페이스로 코드를 생성할 수 있습니다.
 
 ### 활성화
 
@@ -105,7 +104,7 @@ plugins:
 
 ### override / disable
 
-`override`는 특정 module/path/file/field에 대해 값을 덮어쓰며, **나중에 매칭된 규칙이 우선**합니다. `disable`은 managed mode 적용 자체를 막습니다(외부 의존성에 흔히 사용). 둘 다 매칭되면 `disable`이 우선합니다.
+`override`는 특정 module/path/file/field에 대해 값을 덮어씁니다. 규칙은 순서대로 평가되며 **나중에 매칭된 규칙이 우선**합니다. `disable`은 managed mode 적용 자체를 막으며, 외부 의존성에 주로 사용합니다. 같은 옵션에 둘 다 매칭되면 `disable`이 우선합니다.
 
 ```yaml
 managed:
@@ -128,7 +127,7 @@ managed:
 
 ## 6. 실전 예제
 
-원격 플러그인 + managed mode를 사용하는 현실적인 `buf.gen.yaml`입니다.
+원격 플러그인과 managed mode를 함께 사용하는 `buf.gen.yaml` 예제입니다.
 
 ```yaml
 version: v2
@@ -164,7 +163,7 @@ inputs:
 
 ## 7. 기본 워크플로
 
-공식 튜토리얼 기준의 전형적인 흐름입니다.
+공식 튜토리얼 기준의 전형적인 작업 흐름입니다.
 
 ```bash
 # 1) 프로젝트 초기화
@@ -182,7 +181,7 @@ buf config init   # buf.yaml 생성
 buf generate
 ```
 
-로컬 플러그인으로 시작했다가 원격 플러그인으로 바꾸려면 `local: protoc-gen-go`를 `remote: buf.build/protocolbuffers/go:v1.34.2`로 교체하면 됩니다. 로컬 플러그인을 쓸 경우 해당 바이너리를 미리 설치합니다.
+로컬 플러그인에서 원격 플러그인으로 전환하려면 `local: protoc-gen-go`를 `remote: buf.build/protocolbuffers/go:v1.34.2`로 교체하면 됩니다. 로컬 플러그인을 사용하는 경우에는 해당 바이너리를 미리 설치해야 합니다.
 
 ```bash
 go install google.golang.org/protobuf/cmd/protoc-gen-go@latest

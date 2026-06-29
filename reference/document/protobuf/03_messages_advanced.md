@@ -1,6 +1,5 @@
 # proto3 언어 가이드: 고급 메시지 구성
 
-> 이 문서는 Protocol Buffers 공식 문서의 "Language Guide (proto3)" 중 고급 기능을 한국어로 정리한 것입니다.
 > 원본: https://protobuf.dev/programming-guides/proto3/
 
 ---
@@ -102,7 +101,7 @@ message SampleMessage {
 - `map`이나 `repeated` 필드는 oneof에 넣을 수 없습니다.
 - 여러 값이 설정되면 마지막에 설정한 값이 이전 값을 덮어씁니다.
 - 어떤 필드가 설정됐는지는 (Go에서는) 타입 스위치로 확인합니다.
-- 와이어상에 oneof 멤버가 여러 개 나타나면, 파서는 다른 멤버가 설정돼 있으면 해제하고, 마지막 것을 적용합니다(원시 값은 덮어쓰고, 메시지는 병합).
+- 와이어에 oneof 멤버가 여러 개 나타나면 파서는 기존 멤버를 해제하고 마지막 값을 적용합니다(원시 값은 덮어쓰고, 메시지 필드는 병합).
 
 ---
 
@@ -151,7 +150,7 @@ message ErrorStatus {
 ```
 
 - 기본 타입 URL: `type.googleapis.com/패키지명.메시지명`
-- 사용할 때는 언어별 pack/unpack 메서드로 실제 메시지를 넣고 꺼냅니다. Go에서는 `anypb.New` / `(*anypb.Any).UnmarshalTo` 등을 사용합니다.
+- 사용 시 언어별 pack/unpack 메서드로 실제 메시지를 직렬화하거나 역직렬화합니다. Go에서는 `anypb.New` / `(*anypb.Any).UnmarshalTo` 등을 사용합니다.
 
 ---
 
@@ -211,7 +210,7 @@ service SearchService {
 ```
 
 - protobuf와 함께 권장되는 RPC 시스템은 **gRPC**입니다.
-- 서비스 코드는 컴파일러만으로는 생성되지 않으며, 별도의 코드 생성 플러그인(예: `protoc-gen-go-grpc`)이 필요합니다. 기본 `protoc-gen-go`는 서비스에 대한 출력을 만들지 않습니다.
+- 서비스 코드는 컴파일러만으로 생성되지 않으며, 별도의 코드 생성 플러그인(예: `protoc-gen-go-grpc`)이 필요합니다. 기본 `protoc-gen-go`는 서비스 코드를 생성하지 않습니다.
 
 스트리밍(streaming) RPC도 정의할 수 있습니다.
 

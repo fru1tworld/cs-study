@@ -1,6 +1,5 @@
 # Mimir 시작 가이드
 
-> 이 문서는 Grafana Mimir 공식 문서의 "Get started" 섹션을 한국어로 정리한 것입니다.
 > 원본: https://grafana.com/docs/mimir/latest/get-started/
 
 ---
@@ -21,7 +20,7 @@
 
 ## 개요
 
-이 가이드는 Mimir를 빠르게 시작하기 위한 단계를 다룹니다.
+Mimir를 빠르게 시작하는 두 가지 방법을 설명합니다.
 
 ### 두 가지 시작 방법
 
@@ -312,7 +311,7 @@ scrape_configs:
 remote_write:
   - url: http://mimir:9009/api/v1/push
     headers:
-      X-Scope-OrgID: demo  # multitenancy_enabled=true 시 필수
+      X-Scope-OrgID: demo  # multitenancy_enabled: true 일 때 필수
 ```
 
 ### Prometheus 실행
@@ -364,7 +363,7 @@ alloy run config.alloy
 4. 설정:
    - Name: `Mimir`
    - URL: `http://mimir:9009/prometheus`
-   - Custom HTTP Headers: `X-Scope-OrgID: demo` (멀티 테넌시 사용 시)
+   - Custom HTTP Headers: `X-Scope-OrgID: demo` (멀티 테넌시 사용 시에만)
 5. **Save & test**
 
 ### 프로비저닝 (자동 설정)

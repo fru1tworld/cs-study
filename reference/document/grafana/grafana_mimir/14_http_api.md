@@ -1,6 +1,5 @@
 # Mimir HTTP API 레퍼런스
 
-> 이 문서는 Grafana Mimir 공식 문서의 HTTP API 섹션을 한국어로 정리한 것입니다.
 > 원본: https://grafana.com/docs/mimir/latest/references/http-api/
 
 ---
@@ -107,7 +106,7 @@ curl -X POST \
 
 ### `POST /api/v1/push/influx/write`
 
-InfluxDB Line Protocol (활성화 시).
+InfluxDB Line Protocol (활성화된 경우).
 
 ```bash
 curl -X POST \
@@ -177,7 +176,7 @@ curl -G "http://mimir:9009/prometheus/api/v1/query_range" \
 
 ### `POST /prometheus/api/v1/read`
 
-Remote Read (긴 시간 범위에 권장).
+Remote Read (긴 시간 범위 조회 시 권장).
 
 ```bash
 curl -X POST \
@@ -485,7 +484,7 @@ curl http://mimir:9009/ready
 
 ### `GET /config`
 
-활성 구성 (마스킹된 형태).
+현재 활성 구성을 YAML 형식으로 반환 (민감 정보는 마스킹됨).
 
 ```bash
 curl http://mimir:9009/config
@@ -521,7 +520,7 @@ curl http://mimir:9009/distributor/ring
 curl http://mimir:9009/store-gateway/ring
 curl http://mimir:9009/compactor/ring
 curl http://mimir:9009/ruler/ring
-curl http://mimir:9009/alertmanager/ring
+curl http://mimir:9009/multitenant_alertmanager/ring
 ```
 
 ### Ring 조작
@@ -545,11 +544,11 @@ curl -X POST http://mimir:9009/ingester/flush
 
 ### `POST /ingester/prepare-shutdown`
 
-종료 준비 (블록 업로드 가속).
+종료 전 준비 단계로, 블록 업로드를 가속화한다.
 
 ### `GET /distributor/all_user_stats`
 
-테넌트별 통계 (HA Tracker, Rate 등).
+테넌트별 통계 (HA Tracker, 수집 속도 등).
 
 ### `GET /distributor/ha_tracker`
 

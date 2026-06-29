@@ -1,7 +1,5 @@
 # Vector 설치 가이드
 
-이 문서는 Vector 공식 문서의 설치(Installation) 섹션을 한국어로 번역한 것입니다.
-
 원본 문서: https://vector.dev/docs/setup/installation/
 
 ---
@@ -58,7 +56,7 @@ Vector는 관측성(observability) 파이프라인을 구축하기 위한 경량
 
 Vector는 단일 정적 바이너리로 컴파일되어 설치가 매우 간단합니다. *nix 시스템에서 Vector의 유일한 의존성은 libc이며, 이는 일반적으로 운영체제에서 제공됩니다.
 
-Vector는 또한 musl을 사용하여 libc 구현을 정적으로 링크한 아티팩트를 릴리스합니다. 이로 인해 의존성이 없는 정적 바이너리가 생성됩니다. 이러한 의존성 없는 아티팩트는 내장 libc 구현을 제공하지 않는 최소화된 환경에서 유용할 수 있습니다.
+Vector는 musl을 사용해 libc 구현을 정적으로 링크한 아티팩트도 릴리스합니다. 이를 통해 의존성이 없는 정적 바이너리를 생성할 수 있으며, 내장 libc 구현을 제공하지 않는 최소화된 환경에서 유용합니다.
 
 > 참고: musl은 Vector가 여러 스레드에서 실행될 때 glibc보다 성능이 상당히 떨어집니다. 단일 CPU에서 Vector를 실행하지 않는 한, 가능하면 glibc를 사용하는 것이 좋습니다.
 
@@ -233,7 +231,7 @@ helm upgrade -f values.yaml <RELEASE_NAME> vector/vector
 #### 제거
 
 ```bash
-helm delete <RELEASE_NAME>
+helm uninstall <RELEASE_NAME>
 ```
 
 이 명령은 차트와 연결된 모든 Kubernetes 구성 요소를 제거하고 릴리스를 삭제합니다.
@@ -289,7 +287,7 @@ msiexec /i vector-0.52.0-x64.msi
 
 #### 주요 이점
 
-Rust의 Windows에 대한 tier 1 지원 외에도, Vector는 어떤 의존성 설치도 필요하지 않습니다. 이로 인해 설치가 Vector 바이너리를 머신에 복사하는 것만큼 간단합니다. 추가 DLL 파일을 설치하거나 환경 변경이 필요하지 않습니다.
+Rust의 Windows tier 1 지원 덕분에 Vector는 별도의 의존성 설치가 필요 없습니다. Vector 바이너리를 머신에 복사하는 것만으로 설치가 완료되며, 추가 DLL 파일 설치나 환경 변경도 필요하지 않습니다.
 
 ---
 
@@ -437,7 +435,7 @@ Kubernetes에서 Vector를 Helm, kubectl 또는 Vector Operator를 사용하여 
 
 #### kubectl을 사용한 설치
 
-Vector Agent와 Aggregator 역할로 설치하는 방법입니다. Vector를 자체 Kubernetes 네임스페이스에서 실행하는 것이 좋으며, 일반적으로 'vector'를 네임스페이스로 사용합니다.
+Vector를 Agent 또는 Aggregator 역할로 설치하는 방법입니다. Vector는 전용 Kubernetes 네임스페이스에서 실행하는 것을 권장하며, 일반적으로 `vector`를 네임스페이스로 사용합니다.
 
 Agent로 설치:
 
@@ -580,7 +578,7 @@ Vector 시작:
 
 ### Vector 설치 스크립트
 
-Vector 설치 스크립트를 사용하면 플랫폼에 구애받지 않는 설치 스크립트로 Vector를 설치할 수 있습니다.
+Vector 설치 스크립트를 사용하면 플랫폼에 관계없이 Vector를 설치할 수 있습니다.
 
 #### 기본 설치
 
@@ -598,7 +596,7 @@ curl --proto '=https' --tlsv1.2 -sSfL https://sh.vector.dev | VECTOR_VERSION=0.5
 
 ### 아카이브에서 설치
 
-이 설치 방법은 사전 빌드된 아카이브에서 Vector를 설치하는 방법을 다룹니다. 이러한 아카이브에는 vector 바이너리와 지원 구성 파일이 포함되어 있습니다.
+이 방법은 사전 빌드된 아카이브에서 Vector를 설치합니다. 아카이브에는 vector 바이너리와 지원 구성 파일이 포함되어 있습니다.
 
 > 권장사항: 가능하면 지원되는 플랫폼 또는 패키지 관리자를 통해 설치하는 것이 좋습니다. 이들은 권한, 디렉토리 생성 및 기타 복잡한 사항을 처리합니다.
 

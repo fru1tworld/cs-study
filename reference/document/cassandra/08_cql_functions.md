@@ -1,6 +1,5 @@
 # CQL 함수와 집계
 
-> 이 문서는 Apache Cassandra 공식 문서의 CQL "Functions" 섹션을 한국어로 번역한 것입니다.
 > 원본: https://cassandra.apache.org/doc/latest/cassandra/cql/functions.html
 
 ---
@@ -36,7 +35,7 @@ CQL은 데이터를 변환하는 데 사용할 수 있는 여러 종류의 **함
 
 각 분류에는 Cassandra가 기본으로 제공하는 **내장 함수(native function)**와, 사용자가 직접 코드를 작성하여 정의하는 **사용자 정의 함수(user-defined function, UDF)** 및 **사용자 정의 집계(user-defined aggregate, UDA)**가 존재합니다.
 
-> 참고: 스칼라 함수와 집계 함수는 조정자(coordinator) 노드에서 평가됩니다. 이로 인해 결과 집합이 커질 경우 클라이언트로 데이터를 모두 반환하기 전에 조정자에서 계산이 수행될 수 있다는 점을 유의해야 합니다.
+> 참고: 스칼라 함수와 집계 함수는 조정자(coordinator) 노드에서 평가됩니다. 결과 집합이 클 경우, 클라이언트에 데이터를 반환하기 전에 조정자에서 계산이 수행된다는 점에 유의해야 합니다.
 
 ---
 
@@ -136,7 +135,7 @@ INSERT INTO users (id, name) VALUES (uuid(), 'Alice');
 
 `now` 함수는 인자를 받지 않으며, 호출 시점의 노드 시간을 기반으로 한 **새로운 타입 1(version 1) timeuuid**를 생성합니다. 단, 단일 구문(statement) 내의 모든 호출은 동일한 값을 생성한다는 점에 유의해야 합니다.
 
-이 메서드는 timeuuid 값을 기준으로 데이터를 삽입하는 경우에 매우 유용합니다.
+이 함수는 timeuuid 값을 기준으로 데이터를 삽입할 때 유용합니다.
 
 ```cql
 INSERT INTO myTable (t) VALUES (now());
@@ -244,7 +243,6 @@ CQL은 다음과 같은 수학 함수를 제공합니다.
 | `round` | 입력값을 가장 가까운 정수로 반올림합니다. 반올림 모드는 `HALF_UP`(반올림)을 사용합니다. |
 
 > 이 함수들의 반환 타입은 항상 입력 타입과 동일합니다.
-> (The return type for these functions is always the same as the input type.)
 
 예시:
 
@@ -263,8 +261,8 @@ SELECT abs(temperature), round(score) FROM measurements;
 | `map_keys(map)` | 맵의 키(key)들로 이루어진 `set`을 반환합니다. |
 | `map_values(map)` | 맵의 값(value)들로 이루어진 `list`를 반환합니다. |
 | `collection_count(collection)` | 컬렉션에 포함된 원소의 개수를 반환합니다. |
-| `collection_min(collection)` | 컬렉션에서 가장 작은 원소를 반환합니다. |
-| `collection_max(collection)` | 컬렉션에서 가장 큰 원소를 반환합니다. |
+| `collection_min(collection)` | `set` 또는 `list`에서 가장 작은 원소를 반환합니다. |
+| `collection_max(collection)` | `set` 또는 `list`에서 가장 큰 원소를 반환합니다. |
 | `collection_sum(collection)` | 숫자 컬렉션의 원소 합을 반환합니다. |
 | `collection_avg(collection)` | 숫자 컬렉션의 원소 평균을 반환합니다. |
 

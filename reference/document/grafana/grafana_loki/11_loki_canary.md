@@ -1,6 +1,5 @@
 # Loki Canary
 
-> 이 문서는 Grafana Loki 공식 문서의 Loki Canary 섹션을 한국어로 정리한 것입니다.
 > 원본: https://grafana.com/docs/loki/latest/operations/loki-canary/
 
 ---
@@ -19,7 +18,7 @@
 
 ## 개요
 
-**Loki Canary** 는 Loki 클러스터의 가용성과 데이터 무결성을 지속적으로 검증하는 도구입니다.
+**Loki Canary**는 Loki 클러스터의 가용성과 데이터 무결성을 지속적으로 검증하는 도구입니다.
 
 ### 목적
 
@@ -30,7 +29,7 @@
 
 ### 위치
 
-Loki 저장소의 [`cmd/loki-canary`](https://github.com/grafana/loki/tree/main/cmd/loki-canary) 에 포함되어 있으며, 단독 바이너리/컨테이너로 배포됩니다.
+Loki 저장소의 [`cmd/loki-canary`](https://github.com/grafana/loki/tree/main/cmd/loki-canary)에 포함되어 있으며, 단독 바이너리 또는 컨테이너로 배포됩니다.
 
 ---
 
@@ -164,7 +163,7 @@ lokiCanary:
 |--------|--------|------|
 | `-wait` | `60s` | 라인 생성 후 쿼리 대기 시간 |
 | `-max-wait` | `5m` | 최대 대기 시간 |
-| `-pruning-interval` | `60s` | 메모리 정리 주기 |
+| `-pruneinterval` | `1m` | 메모리 정리 주기 |
 | `-buckets` | `10` | 히스토그램 버킷 수 |
 | `-spot-check-interval` | `15m` | 스팟 체크 간격 |
 | `-spot-check-max` | `4h` | 스팟 체크 최대 범위 |
@@ -179,8 +178,8 @@ lokiCanary:
 | 플래그 | 기본값 | 설명 |
 |--------|--------|------|
 | `-port` | `3500` | 메트릭 포트 |
-| `-out-of-order-min` | `10` | 순서 어긋남 최소 |
-| `-out-of-order-max` | `60` | 순서 어긋남 최대 |
+| `-out-of-order-min` | `30s` | 순서 어긋남 최소 되감기 시간 |
+| `-out-of-order-max` | `1m` | 순서 어긋남 최대 되감기 시간 |
 | `-out-of-order-percentage` | `10` | 순서 어긋남 비율 |
 
 ---
@@ -210,8 +209,7 @@ loki_canary_spot_check_request_total
 loki_canary_spot_check_error_total
 
 # 메트릭 테스트
-loki_canary_metric_test_expected
-loki_canary_metric_test_actual
+loki_canary_metric_test_deviation
 loki_canary_metric_test_request_total
 loki_canary_metric_test_error_total
 ```
@@ -308,8 +306,8 @@ histogram_quantile(0.99,
 
 ### Spot Check (장기 데이터 검증)
 
-`-spot-check-*` 옵션으로 과거 데이터에 대한 주기적 검증. 보존 정책이나 Compactor 문제로 인한 손실 감지.
+`-spot-check-*` 옵션으로 과거 데이터를 주기적으로 검증합니다. 보존 정책이나 Compactor 문제로 인한 손실을 감지할 수 있습니다.
 
 ### Metric Test (메트릭 쿼리 검증)
 
-`-metric-test-*` 옵션으로 LogQL 메트릭 쿼리(`count_over_time` 등)가 정상 동작하는지 검증.
+`-metric-test-*` 옵션으로 LogQL 메트릭 쿼리(`count_over_time` 등)가 정상 동작하는지 검증합니다.

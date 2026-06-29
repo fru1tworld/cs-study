@@ -4,13 +4,11 @@
 > - https://ktor.io/docs/server-configuration-file.html
 > - https://ktor.io/docs/server-modules.html
 >
-> 한국어 학습 노트입니다.
-
 ---
 
 ## 설정 포맷 — HOCON vs YAML
 
-Ktor는 두 가지 설정 포맷을 지원합니다. 둘 다 `src/main/resources/` 아래에 위치합니다.
+Ktor는 두 가지 설정 포맷을 지원합니다. 둘 다 `src/main/resources/` 디렉터리에 위치합니다.
 
 | 항목 | `application.conf` (HOCON) | `application.yaml` (YAML) |
 | --- | --- | --- |
@@ -97,7 +95,7 @@ port: ${PORT:8080}  # 콜론 뒤가 기본값
 
 ## 커맨드라인 오버라이드
 
-`EngineMain` 사용 시 빌드 jar에 인자를 넘기면 설정값을 덮어쓸 수 있습니다.
+`EngineMain` 사용 시 빌드된 jar에 인자를 전달하면 설정값을 덮어쓸 수 있습니다.
 
 ```bash
 java -jar app.jar -port=9090
@@ -189,4 +187,4 @@ ktor:
       - com.example.AdminKt.adminModule
 ```
 
-> 설정 파일에서 등록할 때는 모듈 함수가 **확장 함수 이름** (`com.example.ApplicationKt.module`)으로 정확히 명시되어야 합니다.
+> 설정 파일에서 등록할 때는 모듈 함수의 **완전한 정규화 이름**(예: `com.example.ApplicationKt.module`)을 정확히 명시해야 합니다.

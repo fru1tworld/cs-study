@@ -1,12 +1,9 @@
 # Netty 소개
 
-> 이 문서는 Netty 공식 Wiki의 Home 페이지를 한국어로 번역한 것입니다.
 > 원본: https://netty.io/wiki/index.html
 > 원본 소스: https://github.com/netty/netty/wiki/Home
 
 ---
-
-*이 저장소의 모든 Wiki 페이지는 [Netty 공식 문서 사이트](https://netty.io/wiki/index.html)로 자동 export됩니다. 이 페이지를 편집하려는 목적이 아니라면, 더 나은 읽기 환경을 위해 공식 사이트를 이용하시는 것을 권장합니다.*
 
 ## 그 외 자료
 
@@ -20,9 +17,7 @@
 
 ---
 
-## 이 한국어 번역 문서의 구성
-
-이 디렉터리에는 Netty 공식 Wiki의 핵심 기술 문서를 번역한 자료가 모여 있습니다.
+## 문서 구성
 
 | 번호 | 파일 | 원문 |
 | --- | --- | --- |

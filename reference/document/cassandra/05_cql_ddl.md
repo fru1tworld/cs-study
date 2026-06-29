@@ -1,6 +1,5 @@
 # CQL 데이터 정의 (DDL)
 
-> 이 문서는 Apache Cassandra 공식 문서의 CQL "Data Definition" 섹션을 한국어로 번역한 것입니다.
 > 원본: https://cassandra.apache.org/doc/latest/cassandra/cql/ddl.html
 
 ---
@@ -44,7 +43,7 @@
 - **키스페이스(keyspace)**: 테이블의 묶음을 위한 네임스페이스(namespace)로, 복제 전략(replication strategy)과 몇 가지 옵션을 정의합니다.
 - **테이블(table)**: 행(row)들의 집합이며, 각 행은 미리 정의된 컬럼(column)들로 구성됩니다.
 
-권장되는 모범 사례(best practice)는 "애플리케이션당 하나의 키스페이스(one keyspace per application)"를 유지하는 것입니다.
+권장되는 모범 사례(best practice)는 "애플리케이션당 하나의 키스페이스(one keyspace per application)"를 두는 것입니다.
 
 ### 명명 규칙(Naming Rules)
 
@@ -115,7 +114,7 @@ CREATE KEYSPACE excalibur
 
 위 예제는 `DC1` 데이터센터에 1개의 복제본을, `DC2` 데이터센터에 3개의 복제본을 둡니다.
 
-`NetworkTopologyStrategy`는 새로운 데이터센터가 추가될 때 복제 계수를 자동으로 확장(auto-expansion)하는 기능을 제공합니다. 또한 **일시적 복제(transient replication)**를 지원하여 `'DC1': '3/1'`과 같은 형식으로 지정할 수 있습니다(전체 3개의 복제본 중 1개가 일시적 복제본을 의미).
+`NetworkTopologyStrategy`는 새로운 데이터센터가 추가될 때 복제 계수를 자동으로 확장(auto-expansion)하는 기능을 제공합니다. 또한 **일시적 복제(transient replication)**를 지원하여 `'DC1': '3/1'`과 같은 형식으로 지정할 수 있습니다. 여기서 `3`은 전체 복제본 수이고, `1`은 그 중 일시적 복제본(transient replica) 수를 의미합니다.
 
 ### durable_writes
 

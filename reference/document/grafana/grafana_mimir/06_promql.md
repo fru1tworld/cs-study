@@ -1,6 +1,5 @@
 # Mimir PromQL 쿼리
 
-> 이 문서는 Grafana Mimir 공식 문서의 "Query metric data" 섹션을 한국어로 정리한 것입니다.
 > 원본: https://grafana.com/docs/mimir/latest/references/http-api/
 
 ---
@@ -135,13 +134,13 @@ node_memory_MemFree_bytes / node_memory_MemTotal_bytes
 ==, !=, >, <, >=, <=
 ```
 
-기본은 필터링 (조건 만족하는 시계열만 반환):
+기본 동작은 필터링으로, 조건을 만족하는 시계열만 반환합니다.
 
 ```promql
 node_memory_MemFree_bytes < 1000000000
 ```
 
-`bool` 모디파이어로 0/1 반환:
+`bool` 수식어를 사용하면 0/1 값을 반환합니다.
 
 ```promql
 node_memory_MemFree_bytes < bool 1000000000
@@ -311,7 +310,7 @@ clamp_max(v, max)
 
 ## Recording Rules
 
-자주 쓰는 쿼리를 미리 계산하여 새 메트릭으로 저장.
+자주 사용하는 쿼리를 미리 계산해 새 메트릭으로 저장합니다.
 
 ### 룰 파일
 
@@ -342,7 +341,7 @@ mimirtool rules load --address=http://mimir:9009 \
 
 ## Mimir HTTP API
 
-Prometheus HTTP API와 호환.
+Prometheus HTTP API와 호환됩니다.
 
 ### Instant Query
 
@@ -410,7 +409,7 @@ curl -G "http://mimir:9009/prometheus/api/v1/cardinality/active_series" \
 
 ## Native Histograms
 
-Prometheus 2.40+ 에서 도입. Mimir 완전 지원.
+Prometheus 2.40+에서 도입되었으며 Mimir에서 완전히 지원합니다.
 
 ### 장점
 
@@ -442,7 +441,7 @@ histogram_fraction(0, 100, rate(my_metric[5m]))
 
 ## Exemplars
 
-메트릭 데이터 포인트와 트레이스를 연결.
+메트릭 데이터 포인트와 트레이스를 연결합니다.
 
 ### 활성화
 
@@ -456,20 +455,20 @@ ingester:
 
 ### Prometheus에서 생성
 
-OpenMetrics 형식 메트릭에 `# {trace_id="abc"} value` 추가.
+OpenMetrics 형식 메트릭에 `# {trace_id="abc"} value`를 추가합니다.
 
-### 쿼리 (Range Query에 추가)
+### 쿼리
 
 ```bash
-curl -G "http://mimir:9009/prometheus/api/v1/query_range" \
-  --data-urlencode 'query=histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m]))' \
+curl -G "http://mimir:9009/prometheus/api/v1/query_exemplars" \
+  -H "X-Scope-OrgID: tenant-1" \
+  --data-urlencode 'query=http_request_duration_seconds_bucket' \
   --data-urlencode 'start=1700000000' \
-  --data-urlencode 'end=1700003600' \
-  --data-urlencode 'step=15s'
+  --data-urlencode 'end=1700003600'
 ```
 
 응답에 `exemplars` 필드 포함.
 
 ### Grafana 통합
 
-Prometheus/Mimir 데이터 소스에서 **Exemplars** 활성화 + Tempo 데이터 소스 연결로 클릭 시 트레이스 이동.
+Prometheus/Mimir 데이터 소스에서 **Exemplars**를 활성화하고 Tempo 데이터 소스를 연결하면, 클릭 시 해당 트레이스로 이동할 수 있습니다.

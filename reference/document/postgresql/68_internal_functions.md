@@ -1,7 +1,5 @@
 # PostgreSQL 내부 함수와 시스템 관리 함수 (Internal Functions and System Administration Functions)
 
-이 문서는 PostgreSQL 공식 문서의 시스템 관리 함수(System Administration Functions)와 시스템 정보 함수(System Information Functions)를 한국어로 번역한 것입니다.
-
 ## 개요
 
 PostgreSQL은 데이터베이스 서버의 관리, 모니터링, 백업, 복제 등을 위한 다양한 시스템 함수를 제공합니다. 이러한 함수들은 DBA(Database Administrator)와 시스템 운영자가 PostgreSQL 클러스터를 효과적으로 관리하는 데 필수적입니다.
@@ -20,7 +18,7 @@ pg_cancel_backend(pid integer) → boolean
 
 설명: 지정된 백엔드 프로세스의 현재 쿼리를 취소합니다.
 
-권한: 해당 역할의 멤버이거나 `pg_signal_backend` 권한을 가진 사용자만 사용 가능. 슈퍼유저 백엔드는 슈퍼유저만 취소 가능.
+권한: 해당 역할의 멤버이거나 `pg_signal_backend` 권한이 있어야 합니다. 슈퍼유저 백엔드는 슈퍼유저만 취소할 수 있습니다.
 
 예제:
 ```sql
@@ -70,7 +68,7 @@ pg_log_backend_memory_contexts(pid integer) → boolean
 
 설명: 지정된 백엔드의 메모리 컨텍스트 정보를 서버 로그에 기록하도록 요청합니다.
 
-권한: 슈퍼유저만 사용 가능
+권한: 슈퍼유저 전용
 
 예제:
 ```sql
@@ -84,7 +82,7 @@ SELECT pg_log_backend_memory_contexts(pg_backend_pid());
 pg_reload_conf() → boolean
 ```
 
-설명: 모든 PostgreSQL 프로세스가 설정 파일을 다시 로드하도록 합니다. postmaster에 SIGHUP 신호를 보내고, postmaster는 자식 프로세스들에게 전달합니다.
+설명: 모든 PostgreSQL 프로세스가 설정 파일을 다시 로드하도록 신호를 보냅니다. postmaster에 SIGHUP을 전달하면 postmaster가 자식 프로세스에 다시 전파합니다.
 
 참고: 리로드 전에 `pg_file_settings`, `pg_hba_file_rules`, `pg_ident_file_mappings` 뷰로 설정 파일을 확인하는 것이 좋습니다.
 
@@ -103,7 +101,7 @@ SELECT * FROM pg_file_settings WHERE error IS NOT NULL;
 pg_rotate_logfile() → boolean
 ```
 
-설명: 로그 파일 관리자에게 새 출력 파일로 전환하도록 신호를 보냅니다.
+설명: 로그 파일 관리자에게 새 출력 파일로 즉시 전환하도록 신호를 보냅니다.
 
 참고: 내장 로그 수집기(built-in log collector)가 실행 중일 때만 작동합니다.
 
@@ -161,7 +159,7 @@ pg_backup_stop([wait_for_archive boolean]) → record
 - `labelfile`: 백업 레이블 파일 내용
 - `spcmapfile`: 테이블스페이스 맵 파일 내용
 
-중요: 반환된 파일 내용은 반드시 백업 영역에 기록해야 합니다. 라이브 데이터 디렉터리에 기록하면 안 됩니다.
+중요: 반환된 파일 내용은 반드시 백업 영역에 기록해야 합니다. 라이브 데이터 디렉터리에는 기록하지 마십시오.
 
 권한: 슈퍼유저 (권한 부여 가능)
 
@@ -185,7 +183,7 @@ pg_create_restore_point(name text) → pg_lsn
 매개변수:
 - `name`: 복구 지점 이름 (`recovery_target_name` 매개변수와 함께 사용)
 
-주의: 중복 이름 사용을 피하세요. 복구는 첫 번째 일치 지점에서 중단됩니다.
+주의: 중복 이름 사용은 피하는 것이 좋습니다. 복구는 이름이 일치하는 첫 번째 지점에서 중단됩니다.
 
 권한: 슈퍼유저 (권한 부여 가능)
 
@@ -236,7 +234,7 @@ pg_switch_wal() → pg_lsn
 
 설명: 아카이빙을 위해 새 WAL 파일로 강제 전환합니다.
 
-반환값: 완료된 파일의 끝 위치 + 1. 마지막 전환 이후 WAL 활동이 없으면 아무것도 반환하지 않습니다.
+반환값: 완료된 파일의 끝 위치 + 1. 마지막 전환 이후 WAL 활동이 없으면 현재 WAL 위치의 시작 부분을 반환합니다.
 
 권한: 슈퍼유저 (권한 부여 가능)
 
@@ -322,7 +320,7 @@ FROM pg_stat_replication;
 pg_is_in_recovery() → boolean
 ```
 
-설명: 복구가 아직 진행 중인지 여부를 반환합니다.
+설명: 복구가 진행 중인지 여부를 반환합니다.
 
 예제:
 ```sql
@@ -391,7 +389,7 @@ pg_get_wal_resource_managers() → setof record
 pg_is_wal_replay_paused() → boolean
 ```
 
-설명: 복구 일시정지가 요청되었는지 여부를 반환합니다.
+설명: 복구 일시정지가 요청된 상태인지 여부를 반환합니다.
 
 ### pg_get_wal_replay_pause_state()
 
@@ -414,7 +412,7 @@ pg_wal_replay_pause() → void
 
 설명: 복구 일시정지를 요청합니다.
 
-참고: 일시정지 중에는 데이터베이스 변경이 적용되지 않으며, 쿼리는 일관된 스냅샷을 봅니다.
+참고: 일시정지 중에는 데이터베이스 변경이 적용되지 않으며, 쿼리는 일관된 스냅샷을 기준으로 실행됩니다.
 
 권한: 슈퍼유저 (권한 부여 가능)
 
@@ -466,9 +464,9 @@ SELECT pg_promote(true, 120);
 ```
 
 주의사항:
-- 승격 중에는 `pg_wal_replay_pause()` 또는 `pg_wal_replay_resume()` 실행 불가
-- 일시정지 중 승격이 트리거되면 일시정지 상태 종료
-- 스트리밍이 활성화된 상태에서 무기한 일시정지하면 디스크 공간이 가득 찰 수 있음
+- 승격 진행 중에는 `pg_wal_replay_pause()` 또는 `pg_wal_replay_resume()` 실행 불가
+- 일시정지 상태에서 승격이 트리거되면 일시정지 상태가 해제됨
+- 스트리밍이 활성화된 상태에서 무기한 일시정지하면 디스크 공간이 부족해질 수 있음
 
 ---
 
@@ -484,11 +482,11 @@ pg_export_snapshot() → text
 
 설명: 트랜잭션의 현재 스냅샷을 저장하고 식별 문자열을 반환합니다.
 
-용도: 반환된 문자열을 다른 클라이언트에 전달하여 동일한 스냅샷을 가져올 수 있습니다.
+용도: 반환된 문자열을 다른 클라이언트에 전달하면 해당 클라이언트도 동일한 스냅샷을 사용할 수 있습니다.
 
 주의사항:
-- 내보내는 트랜잭션이 종료될 때까지만 유효
-- 트랜잭션당 여러 번 내보내기 가능 (`READ COMMITTED`에서만 유용)
+- 내보낸 트랜잭션이 종료될 때까지만 유효
+- 트랜잭션당 여러 번 내보내기 가능 (`READ COMMITTED`에서만 의미 있음)
 - 스냅샷 내보내기 후 `PREPARE TRANSACTION` 사용 불가
 - 동기화된 트랜잭션은 기존 데이터에 대해 동일한 뷰를 가지지만, 서로의 미커밋 변경 사항은 볼 수 없음
 
@@ -513,7 +511,7 @@ pg_log_standby_snapshot() → pg_lsn
 
 설명: 실행 중인 트랜잭션의 스냅샷을 WAL에 기록합니다.
 
-용도: 스탠바이에서의 논리적 디코딩(logical decoding)에 유용합니다. bgwriter나 checkpointer를 기다리지 않아도 됩니다.
+용도: 스탠바이에서의 논리적 디코딩(logical decoding)에 유용합니다. bgwriter나 checkpointer가 스냅샷을 기록할 때까지 기다릴 필요가 없습니다.
 
 ---
 
@@ -714,7 +712,7 @@ pg_replication_slot_advance(
 
 설명: 복제 슬롯의 확인된 위치를 앞으로 이동합니다.
 
-주의: 슬롯은 뒤로 이동하거나 삽입 위치를 초과하여 이동하지 않습니다. 위치는 다음 체크포인트에서 기록됩니다.
+주의: 슬롯 위치를 뒤로 이동하거나 삽입 위치를 초과하여 이동할 수 없습니다. 변경된 위치는 다음 체크포인트에서 기록됩니다.
 
 예제:
 ```sql
@@ -768,7 +766,7 @@ pg_replication_origin_session_setup(node_name text) → void
 
 설명: 현재 세션을 지정된 원점에서 재생하는 것으로 표시합니다.
 
-주의: 이미 선택된 원점이 없을 때만 호출 가능. `pg_replication_origin_session_reset()`으로 취소.
+주의: 이미 선택된 원점이 없는 경우에만 호출 가능합니다. `pg_replication_origin_session_reset()`으로 해제할 수 있습니다.
 
 ### pg_replication_origin_session_reset()
 
@@ -808,7 +806,7 @@ pg_replication_origin_xact_setup(
 
 설명: 현재 트랜잭션을 원점에서 재생하는 트랜잭션으로 표시합니다.
 
-주의: `pg_replication_origin_session_setup()`으로 원점이 선택된 경우에만 호출 가능.
+주의: `pg_replication_origin_session_setup()`으로 원점이 선택된 경우에만 호출 가능합니다.
 
 ### pg_replication_origin_xact_reset()
 
@@ -826,9 +824,9 @@ pg_replication_origin_advance(node_name text, lsn pg_lsn) → void
 
 설명: 원점 노드의 복제 진행 상황을 설정합니다.
 
-용도: 초기 설정 또는 구성 변경 후 유용합니다.
+용도: 초기 설정이나 구성 변경 후에 사용합니다.
 
-경고: 부주의하게 사용하면 일관성 없는 복제로 이어질 수 있습니다.
+경고: 부주의하게 사용하면 복제 일관성이 깨질 수 있습니다.
 
 ### pg_replication_origin_progress()
 
@@ -948,7 +946,7 @@ ORDER BY pg_database_size(datname) DESC;
 pg_table_size(regclass) → bigint
 ```
 
-설명: 테이블이 사용하는 디스크 공간을 반환합니다 (인덱스 제외). TOAST 테이블, 자유 공간 맵(FSM), 가시성 맵(VM)을 포함합니다.
+설명: 테이블이 사용하는 디스크 공간을 반환합니다(인덱스 제외). TOAST 테이블, 자유 공간 맵(FSM), 가시성 맵(VM)을 포함합니다.
 
 ### pg_indexes_size()
 
@@ -1083,7 +1081,7 @@ pg_filenode_relation(tablespace oid, filenode oid) → regclass
 
 ## 6.3 통계 조작 함수 (Statistics Manipulation Functions)
 
-경고: 변경 사항은 autovacuum이나 VACUUM/ANALYZE에 의해 덮어씌워질 가능성이 높습니다. 임시 용도로만 사용하세요.
+경고: 변경 사항은 autovacuum 또는 VACUUM/ANALYZE에 의해 덮어씌워질 수 있습니다. 임시 목적으로만 사용하십시오.
 
 복구 중에는 실행할 수 없습니다.
 
@@ -1285,7 +1283,7 @@ SELECT gin_clean_pending_list('mytable_gin_idx');
 
 클러스터 디렉터리와 `log_directory`로 접근이 제한됩니다. 슈퍼유저 또는 `pg_read_server_files` 역할을 가진 사용자만 사용 가능합니다.
 
-중요: 이러한 함수는 데이터베이스 내 권한 검사를 우회합니다. 권한 부여에 주의하세요.
+중요: 이러한 함수는 데이터베이스 내부 권한 검사를 우회합니다. 권한 부여 시 주의하십시오.
 
 ## 디렉터리 목록 함수
 
@@ -1402,7 +1400,7 @@ pg_read_file(
 - `offset`: 음수이면 파일 끝에서부터의 상대 위치
 - `missing_ok`: `true`이면 없을 때 `NULL` 반환
 
-참고: 데이터베이스 인코딩 문자열로 해석합니다. 유효하지 않은 인코딩이면 에러 발생.
+참고: 파일 내용을 데이터베이스 인코딩 문자열로 해석합니다. 유효하지 않은 인코딩이면 오류가 발생합니다.
 
 권한: 슈퍼유저 (권한 부여 가능)
 
@@ -1651,7 +1649,7 @@ COMMIT; -- 잠금 자동 해제
 
 # 10. 세션 정보 함수 (Session Information Functions)
 
-세션 및 시스템 정보를 추출하는 함수들입니다.
+세션 및 시스템 정보를 조회하는 함수들입니다.
 
 ## 기본 세션 정보
 
@@ -1676,7 +1674,7 @@ user → name
 - `current_user` / `user`: 현재 실행 컨텍스트의 사용자 이름
 - `session_user`: 세션 사용자 이름
 
-참고: `current_role`은 `current_user`와 동일합니다.
+참고: `current_role`은 `current_user`의 동의어입니다.
 
 ### current_schema / current_schemas()
 
@@ -1821,7 +1819,7 @@ pg_current_xact_id() → xid8
 pg_current_xact_id_if_assigned() → xid8
 ```
 
-설명: 할당된 경우 트랜잭션 ID를 반환하고, 없으면 `NULL`을 반환합니다.
+설명: 트랜잭션 ID가 할당된 경우 해당 ID를 반환하고, 없으면 `NULL`을 반환합니다.
 
 ### pg_xact_status()
 
@@ -1908,7 +1906,7 @@ pg_visible_in_snapshot(xid8, pg_snapshot) → boolean
 
 # 12. 제어 데이터 함수 (Control Data Functions)
 
-클러스터 전체 정보를 반환합니다 (`pg_controldata` 애플리케이션과 유사).
+클러스터 전체 정보를 반환합니다(`pg_controldata` 유틸리티와 유사한 정보).
 
 ## pg_control_checkpoint()
 

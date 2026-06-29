@@ -1,6 +1,5 @@
 # Alloy 설치
 
-> 이 문서는 Grafana Alloy 공식 문서의 "Install Alloy" 섹션을 한국어로 정리한 것입니다.
 > 원본: https://grafana.com/docs/alloy/latest/set-up/install/
 
 ---
@@ -38,7 +37,7 @@
 ```bash
 # Grafana 저장소 추가
 sudo mkdir -p /etc/apt/keyrings/
-wget -q -O - https://apt.grafana.com/gpg.key | gpg --dearmor | sudo tee /etc/apt/keyrings/grafana.gpg > /dev/null
+wget -q -O - https://apt.grafana.com/gpg-full.key | gpg --dearmor | sudo tee /etc/apt/keyrings/grafana.gpg > /dev/null
 echo "deb [signed-by=/etc/apt/keyrings/grafana.gpg] https://apt.grafana.com stable main" | sudo tee /etc/apt/sources.list.d/grafana.list
 
 # 설치
@@ -75,7 +74,6 @@ sudo systemctl enable --now alloy
 
 ### 설정 파일 위치
 
-기본:
 - 구성: `/etc/alloy/config.alloy`
 - 데이터: `/var/lib/alloy/data`
 - 로그: `journalctl -u alloy`
@@ -106,7 +104,7 @@ sudo systemctl restart alloy
 brew install grafana/grafana/alloy
 
 # 시작
-brew services start alloy
+brew services restart grafana/grafana/alloy
 ```
 
 ### 수동 다운로드
@@ -292,7 +290,7 @@ helm install alloy-operator grafana/alloy-operator \
   --create-namespace
 ```
 
-CR 생성:
+CR 예시:
 
 ```yaml
 apiVersion: collector.grafana.com/v1alpha1
@@ -411,8 +409,8 @@ sudo rm -rf /var/lib/alloy /etc/alloy
 ### macOS (Homebrew)
 
 ```bash
-brew services stop alloy
-brew uninstall alloy
+brew services stop grafana/grafana/alloy
+brew uninstall grafana/grafana/alloy
 ```
 
 ### Windows

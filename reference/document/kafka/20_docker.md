@@ -1,17 +1,16 @@
 # Kafka Docker
 
-> 이 문서는 Apache Kafka 공식 문서의 "Docker" 섹션을 한국어로 번역한 것입니다.
 > 원본: https://kafka.apache.org/documentation/#docker
 
 ## 개요
 
-Apache Kafka는 공식 Docker 이미지를 제공하여 컨테이너 환경에서 쉽게 Kafka를 배포하고 실행할 수 있습니다. 이 문서에서는 Docker를 사용하여 Kafka를 설정하고 구성하는 방법을 설명합니다.
+Apache Kafka는 공식 Docker 이미지를 제공하여 컨테이너 환경에서 Kafka를 배포하고 실행할 수 있습니다.
 
 ---
 
 ## 시스템 요구사항
 
-Docker 버전 20.10.4 이상 이 필요합니다. 이전 버전의 Docker는 `/opt/kafka/config`와 같은 컨테이너 경로를 생성할 때 디렉토리 권한을 올바르게 설정하지 않아 권한 오류가 발생할 수 있습니다.
+Docker 버전 20.10.4 이상이 필요합니다. 이전 버전에서는 `/opt/kafka/config`와 같은 컨테이너 경로를 생성할 때 디렉토리 권한이 올바르게 설정되지 않아 권한 오류가 발생할 수 있습니다.
 
 ---
 
@@ -79,7 +78,7 @@ docker run --volume /path/to/property/folder:/mnt/shared/config -p 9092:9092 apa
 | `abc-def` | `KAFKA_ABC___DEF` |
 | `num.partitions` | `KAFKA_NUM_PARTITIONS` |
 
-참고: 환경 변수를 통해 정의된 Kafka 속성은 사용자가 제공한 속성 파일에 정의된 해당 속성의 값을 재정의합니다. 공통 구성 세트는 입력 파일을 사용하고, 특정 노드 속성은 환경 변수를 사용하여 재정의하는 것도 가능합니다.
+참고: 환경 변수로 정의한 Kafka 속성은 속성 파일에 정의된 동일 속성 값을 덮어씁니다. 공통 구성은 파일로, 노드별 속성은 환경 변수로 재정의하는 방식도 가능합니다.
 
 ---
 
@@ -231,7 +230,7 @@ docker run -p 9092:9092 \
 
 ### KRaft 모드 (권장)
 
-최신 Kafka 버전은 ZooKeeper 없이 클러스터 조정을 내부화하는 KRaft 모드를 지원합니다. KRaft 모드는 다음과 같은 장점을 제공합니다:
+최신 Kafka 버전은 ZooKeeper 없이 클러스터 조율을 내장 처리하는 KRaft 모드를 지원합니다. KRaft 모드는 다음과 같은 장점을 제공합니다:
 
 - 외부 ZooKeeper 의존성 제거
 - 더 간단한 배포 및 운영
@@ -240,7 +239,7 @@ docker run -p 9092:9092 \
 ### ZooKeeper 지원 종료
 
 - ZooKeeper는 Kafka 버전 3.5에서 더 이상 사용되지 않음(deprecated)으로 표시되었습니다
-- Kafka 버전 4.0에서 ZooKeeper 지원이 제거될 예정입니다
+- Kafka 버전 4.0에서 ZooKeeper 지원이 제거되었습니다
 
 ---
 

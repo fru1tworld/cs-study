@@ -1,6 +1,5 @@
 # Mimir 시각화 (Grafana 통합)
 
-> 이 문서는 Grafana Mimir 공식 문서의 "Visualize data" 섹션을 한국어로 정리한 것입니다.
 > 원본: https://grafana.com/docs/mimir/latest/visualize/
 
 ---
@@ -112,7 +111,7 @@ rate(http_requests_total[5m])
 
 ### Builder 모드
 
-UI로 메트릭/라벨/연산 클릭하여 작성. PromQL 모르는 사용자도 사용.
+메트릭/라벨/연산을 클릭해 쿼리를 작성하는 UI 모드. PromQL을 모르는 사용자도 사용할 수 있다.
 
 ### Code 모드
 
@@ -152,7 +151,7 @@ sum by (le) (
 
 ### Native Histogram 자동 감지
 
-Native Histogram이면 Grafana가 자동으로 적절한 시각화 제공.
+Native Histogram인 경우 Grafana가 자동으로 적절한 시각화를 제공한다.
 
 ```promql
 # Native Histogram
@@ -209,7 +208,7 @@ exemplarTraceIdDestinations:
 
 ### 시각화
 
-차트의 점이 Exemplar 표시:
+차트에서 점으로 Exemplar가 표시된다:
 
 ```
 시계열 그래프
@@ -219,7 +218,7 @@ exemplarTraceIdDestinations:
    │ ╱╲ │
 ```
 
-점을 클릭하면 → Tempo에서 트레이스 조회.
+점을 클릭하면 Tempo에서 해당 트레이스를 조회할 수 있다.
 
 ### PromQL Range Query
 
@@ -355,7 +354,7 @@ thresholds:
 
 #### Exemplar 활용
 
-차트 점 클릭 → Tempo에서 trace_id 조회 → Loki에서 같은 trace_id 로그.
+차트의 점을 클릭하면 Tempo에서 trace_id를 조회하고, 같은 trace_id로 Loki에서 로그를 확인할 수 있다.
 
 #### 데이터 링크 (Data Links)
 
@@ -415,7 +414,7 @@ jsonnet -J vendor mixin.libsonnet > dashboards.json
 
 ### Grafana Cloud
 
-Grafana Cloud Mimir는 자동으로 모든 Mixin 대시보드를 사전 설치.
+Grafana Cloud Mimir는 모든 Mixin 대시보드를 자동으로 사전 설치한다.
 
 ### Import
 
@@ -434,7 +433,7 @@ Dashboards → Import → grafana.com → ID 입력
 
 ### 미리 계산된 메트릭
 
-대시보드에서 자주 쓰는 무거운 쿼리는 Recording Rules로:
+대시보드에서 자주 사용하는 무거운 쿼리는 Recording Rules로 미리 계산해 둔다:
 
 ```yaml
 groups:
@@ -473,7 +472,7 @@ groups:
 cluster:api_latency:p95:5m{cluster="$cluster"}
 ```
 
-빠른 대시보드 로딩.
+이를 통해 대시보드 로딩 속도를 높일 수 있다.
 
 ### 명명 규칙
 

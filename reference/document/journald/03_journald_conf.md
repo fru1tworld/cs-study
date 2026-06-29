@@ -1,6 +1,5 @@
 # journald.conf 설정
 
-> 이 문서는 `man journald.conf` 의 내용을 한국어로 정리한 것입니다.
 > 원본: https://www.freedesktop.org/software/systemd/man/journald.conf.html
 
 ---
@@ -30,7 +29,7 @@ journald 설정은 다음 우선순위로 적용됩니다:
 /usr/lib/systemd/journald.conf.d/*.conf
 ```
 
-`drop-in` 디렉터리(`journald.conf.d/`)에 별도 파일을 두는 것이 패키지 충돌 방지에 좋습니다.
+패키지 충돌을 방지하려면 `drop-in` 디렉터리(`journald.conf.d/`)에 별도 파일을 두는 것이 좋습니다.
 
 설정 변경 후:
 
@@ -78,7 +77,7 @@ sudo systemctl restart systemd-journald
 Compress=yes
 ```
 
-64비트 항목은 자동 LZ4 압축. 텍스트 로그는 일반적으로 70% 이상 압축률.
+기본적으로 512바이트 이상의 데이터 객체는 자동으로 압축됩니다. 텍스트 로그는 일반적으로 70% 이상 압축률.
 
 크기 임계값 지정:
 ```ini
@@ -153,7 +152,7 @@ RuntimeMaxFileSize=64M
 RuntimeMaxFiles=20
 ```
 
-기본값은 더 작게 — RAM이므로.
+RAM을 사용하므로 기본값이 더 작습니다.
 
 ### 시간 기반 보존
 
@@ -178,7 +177,7 @@ sudo journalctl --vacuum-time=1month
 
 ## Rate Limit
 
-폭주 로그가 디스크와 CPU를 점유하는 것을 막는 기능.
+로그 폭주로 디스크와 CPU가 점유되는 것을 방지하는 기능.
 
 ```ini
 RateLimitIntervalSec=30s
@@ -208,7 +207,7 @@ RateLimitBurst=0
 
 ## Forward 옵션
 
-journald가 받은 로그를 다른 채널로도 전달할지 제어.
+journald가 수신한 로그를 다른 채널로 전달할지 제어.
 
 ```ini
 ForwardToSyslog=yes
@@ -255,7 +254,7 @@ TTYPath=/dev/console
 LineMax=48K
 ```
 
-stdout/stderr를 받을 때 줄 길이 한도. 이 길이를 넘으면 분할.
+스트림 로그를 레코드 로그로 변환할 때 허용하는 최대 줄 길이. 이 길이를 초과하면 분할됩니다.
 
 ### ReadKMsg
 

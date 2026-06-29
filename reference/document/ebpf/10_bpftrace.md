@@ -1,6 +1,5 @@
 # bpftrace
 
-> 이 문서는 bpftrace의 문법과 사용법을 정리한 것입니다.
 > 원본: https://github.com/bpftrace/bpftrace , https://bpftrace.org/
 
 ---
@@ -22,14 +21,14 @@
 
 ## bpftrace란?
 
-DTrace에서 영감을 받은 **고수준 트레이싱 언어**. BPF 위에서 동작하지만 사용자는 짧은 스크립트로 복잡한 관측을 표현할 수 있습니다.
+DTrace에서 영감을 받은 **고수준 트레이싱 언어**로, BPF 위에서 동작하며 짧은 스크립트로 복잡한 관측을 표현할 수 있습니다.
 
 특징:
 - 원라이너 친화 (CLI에서 즉석 트레이싱)
 - AWK 스타일 문법 (probe / filter / action)
 - 자동 메모리 관리
 - 풍부한 내장 변수와 helper
-- 100+ 라이브러리 예제
+- 100개 이상의 라이브러리 예제
 
 ---
 
@@ -96,7 +95,7 @@ tracepoint:syscalls:sys_enter_openat
 tracepoint:sched:sched_switch
 ```
 
-`args->필드` 로 인자 접근.
+`args->필드` 형식으로 인자에 접근합니다.
 
 ### usdt
 
@@ -125,10 +124,10 @@ BEGIN  { printf("starting\n"); }
 END    { printf("done\n"); }
 ```
 
-### kfunc / kretfunc (BTF 기반, 5.5+)
+### kfunc / kretfunc (BTF 기반, Linux 5.5+)
 
 ```
-kfunc:vfs_read       # kprobe보다 빠르고 인자 직접 접근
+kfunc:vfs_read       # kprobe보다 빠르며 인자에 직접 접근 가능
 ```
 
 ```
@@ -170,7 +169,7 @@ tracepoint:syscalls:sys_enter_openat {
 }
 ```
 
-(필드 자동완성은 `bpftrace -lv` 로 확인.)
+(필드 목록은 `bpftrace -lv` 로 확인.)
 
 #### kprobe
 
@@ -200,7 +199,7 @@ kfunc:vfs_read {
 | `print(@map)` | map 출력 |
 | `time("...")` / `strftime("...", nsec)` | 시간 포맷 |
 | `cat("/path")` | 파일 내용 출력 |
-| `system("cmd")` | 외부 명령 실행 (느림 — 디버깅 외 비추) |
+| `system("cmd")` | 외부 명령 실행 (느림 — 디버깅 용도 외에는 사용 비권장) |
 
 ### 메모리 접근
 
@@ -246,7 +245,7 @@ kfunc:vfs_read {
 
 ## 맵과 집계
 
-map은 `@` 으로 시작:
+맵은 `@` 으로 시작합니다:
 
 ### 단순 카운터
 
@@ -256,7 +255,7 @@ tracepoint:syscalls:sys_enter_openat {
 }
 ```
 
-종료 시 자동 출력. 또는:
+프로그램 종료 시 자동으로 출력됩니다. 수동으로 제어하려면:
 
 ```
 END {
@@ -332,7 +331,7 @@ kprobe:vfs_read {
 
 ### 변수
 
-스칼라 변수는 `$` 접두사:
+스칼라 변수는 `$` 접두사를 사용합니다:
 
 ```
 {
@@ -341,7 +340,7 @@ kprobe:vfs_read {
 }
 ```
 
-전역 map은 `@`.
+전역 맵은 `@`을 사용합니다.
 
 ### exit
 
@@ -438,7 +437,7 @@ sudo bpftrace -e 'uprobe:/usr/lib/libc.so.6:malloc /arg0 > 1048576/ { printf("%s
 
 ## 스크립트 파일
 
-긴 트레이싱은 `.bt` 파일로:
+긴 트레이싱 스크립트는 `.bt` 파일로 작성합니다:
 
 ```bpftrace
 #!/usr/bin/env bpftrace
@@ -479,7 +478,7 @@ sudo ./tcpconn.bt
 
 ### 라이브러리
 
-`/usr/share/bpftrace/tools/` 에 100+개 예제 스크립트가 있습니다.
+`/usr/share/bpftrace/tools/` 에 100개 이상의 예제 스크립트가 있습니다.
 
 ```bash
 ls /usr/share/bpftrace/tools/

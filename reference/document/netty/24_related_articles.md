@@ -1,6 +1,5 @@
 # Netty 관련 글 (Related Articles)
 
-> 이 문서는 Netty 공식 Wiki의 "Related articles" 페이지를 한국어로 번역한 것입니다.
 > 원본: https://netty.io/wiki/related-articles.html
 
 ---

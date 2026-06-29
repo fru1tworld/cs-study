@@ -1,6 +1,5 @@
 # Path Unit
 
-> 이 문서는 `man systemd.path` 의 내용을 한국어로 정리한 것입니다.
 > 원본: https://www.freedesktop.org/software/systemd/man/systemd.path.html
 
 ---
@@ -49,7 +48,7 @@ WantedBy=multi-user.target
 PathExists=/var/lib/myapp/trigger
 ```
 
-**경로가 존재하는 동안** 연관 unit을 활성 상태로 유지. 파일이 사라지면 unit도 비활성화.
+경로가 존재하면 연관 unit을 활성화. 파일이 사라지면 unit도 비활성화.
 
 ### PathExistsGlob
 
@@ -57,7 +56,7 @@ PathExists=/var/lib/myapp/trigger
 PathExistsGlob=/var/spool/jobs/*.job
 ```
 
-glob 패턴 매칭. 매칭하는 파일이 하나라도 있으면 활성화.
+glob 패턴을 사용합니다. 패턴에 매칭하는 파일이 하나라도 있으면 활성화됩니다.
 
 ### PathChanged
 
@@ -65,7 +64,7 @@ glob 패턴 매칭. 매칭하는 파일이 하나라도 있으면 활성화.
 PathChanged=/etc/myapp.conf
 ```
 
-파일이 **닫힐 때(write 후 close)** 트리거. 가장 자주 쓰는 옵션. 디렉터리를 지정하면 그 안의 파일 변경을 감지.
+파일이 **닫힐 때(write 후 close)** 트리거됩니다. 가장 자주 사용하는 옵션이며, 디렉터리를 지정하면 그 안의 파일 변경을 감지합니다.
 
 ### PathModified
 
@@ -73,7 +72,7 @@ PathChanged=/etc/myapp.conf
 PathModified=/var/log/access.log
 ```
 
-`PathChanged` 와 비슷하지만 close 없이 **write 시점에도** 트리거. 더 빠르지만 같은 변경에 여러 번 발화할 수 있음.
+`PathChanged`와 비슷하지만 close 없이 **write 시점에도** 트리거됩니다. 더 민감하지만 같은 변경에 여러 번 발화할 수 있습니다.
 
 ### DirectoryNotEmpty
 
@@ -81,7 +80,7 @@ PathModified=/var/log/access.log
 DirectoryNotEmpty=/var/incoming
 ```
 
-디렉터리에 무언가가 있으면 트리거. 처리 큐 패턴에 적합.
+디렉터리에 파일이 하나라도 있으면 트리거됩니다. 처리 큐 패턴에 적합합니다.
 
 > 모든 옵션은 절대 경로여야 하며, 여러 번 지정해 여러 경로를 감시할 수 있습니다.
 
@@ -118,7 +117,7 @@ MakeDirectory=yes
 DirectoryMode=0755
 ```
 
-감시 대상 디렉터리가 없으면 자동 생성.
+감시 대상 디렉터리가 없으면 자동으로 생성합니다.
 
 ---
 
@@ -207,7 +206,7 @@ ExecStart=/usr/local/bin/process %i
 
 ### inotify 큐 한도
 
-너무 많은 파일이 빠르게 변경되면 inotify 이벤트가 누락될 수 있습니다.
+파일 변경이 빠르게 대량으로 발생하면 inotify 이벤트가 누락될 수 있습니다.
 
 ```bash
 sysctl fs.inotify.max_user_watches
@@ -216,15 +215,15 @@ sysctl fs.inotify.max_queued_events
 
 ### 단발성 이벤트
 
-`PathChanged` 는 하나의 close 이벤트마다 한 번씩 unit을 트리거합니다. 짧은 시간에 여러 변경이 있으면 service가 여러 번 호출될 수 있으므로 service 자체는 idempotent해야 합니다.
+`PathChanged`는 close 이벤트마다 unit을 한 번씩 트리거합니다. 짧은 시간에 변경이 여러 번 발생하면 service가 여러 번 호출될 수 있으므로, service 자체는 idempotent하게 작성해야 합니다.
 
 ### 디렉터리 vs 파일
 
-디렉터리를 `PathChanged` 로 감시하면 그 안의 파일 close가 트리거합니다. 그러나 **하위 디렉터리는 재귀적으로 감시되지 않습니다**. 깊은 트리를 감시하려면 별도의 inotify 도구가 필요합니다.
+디렉터리를 `PathChanged`로 감시하면 그 안의 파일 close 이벤트가 트리거됩니다. 단, **하위 디렉터리는 재귀적으로 감시되지 않습니다**. 깊은 디렉터리 트리를 감시하려면 별도의 inotify 도구가 필요합니다.
 
 ### NFS와 가상 파일시스템
 
-inotify는 로컬 파일시스템 변경만 감지합니다. NFS 클라이언트에서 다른 클라이언트의 변경은 감지되지 않습니다.
+inotify는 로컬 파일시스템의 변경만 감지합니다. NFS를 사용하는 경우 다른 클라이언트의 변경은 감지되지 않습니다.
 
 ---
 

@@ -1,6 +1,6 @@
 # OTLP — OpenTelemetry Protocol
 
-> SDK ↔ Collector ↔ 백엔드 사이의 표준 와이어 프로토콜을 정리합니다.
+> SDK ↔ Collector ↔ 백엔드 사이의 표준 와이어 프로토콜
 
 ---
 
@@ -214,7 +214,7 @@ SDK              Collector
   │                  │
 ```
 
-응답은 보통 **거의 즉시** 옵니다. Collector가 데이터를 큐에 넣고 ack하기 때문 → "response = 백엔드 도달"이 아니라 "response = 수신자가 받음"입니다.
+응답은 보통 **거의 즉시** 반환됩니다. Collector가 데이터를 큐에 넣은 뒤 ack하기 때문입니다 → "response = 백엔드 도달"이 아니라 "response = 수신자가 받음"입니다.
 
 ### 응답 객체
 
@@ -262,15 +262,15 @@ ExportResponse {
 ### 재시도 가능한 실패
 
 다음 응답은 **재시도 권장**:
-- gRPC: `UNAVAILABLE`, `CANCELLED`, `DEADLINE_EXCEEDED`, `RESOURCE_EXHAUSTED`, `OUT_OF_RANGE`, `UNAUTHENTICATED`, `ABORTED`, `DATA_LOSS`
+- gRPC: `UNAVAILABLE`, `CANCELLED`, `DEADLINE_EXCEEDED`, `RESOURCE_EXHAUSTED`(서버가 RetryInfo로 회복을 알린 경우), `OUT_OF_RANGE`, `ABORTED`, `DATA_LOSS`
 - HTTP: `408`, `429`, `502`, `503`, `504`
 
 ### 재시도하지 말아야 하는 실패
 
-- gRPC: `INVALID_ARGUMENT`, `NOT_FOUND`, `ALREADY_EXISTS`, `FAILED_PRECONDITION`
+- gRPC: `INVALID_ARGUMENT`, `NOT_FOUND`, `ALREADY_EXISTS`, `FAILED_PRECONDITION`, `UNAUTHENTICATED`
 - HTTP: 4xx (429 제외)
 
-→ 데이터가 잘못된 경우. 재시도해도 실패함.
+→ 데이터 자체가 잘못된 경우로, 재시도해도 동일하게 실패함.
 
 ### 재시도 전략
 
@@ -294,7 +294,7 @@ Retry-After: 30
 
 ### 배압 (Backpressure)
 
-큐가 가득 차면 SDK/Collector는 **새 데이터를 drop** 하거나 **계측 코드를 차단** 할 수 있음.
+큐가 가득 차면 SDK/Collector는 **새 데이터를 drop** 하거나 **계측 코드를 블로킹** 할 수 있음.
 
 - SDK 기본: 큐 가득 차면 drop, 메트릭으로 카운트
 - Collector `memory_limiter` processor: 메모리 임계 초과 시 receiver가 거부 → upstream에 압력 전달
@@ -351,7 +351,7 @@ OTEL_EXPORTER_OTLP_ENDPOINT       # 기본 엔드포인트 (모든 시그널 공
 OTEL_EXPORTER_OTLP_TRACES_ENDPOINT # trace만 다른 엔드포인트
 OTEL_EXPORTER_OTLP_PROTOCOL       # grpc | http/protobuf | http/json
 OTEL_EXPORTER_OTLP_HEADERS        # "k1=v1,k2=v2"
-OTEL_EXPORTER_OTLP_TIMEOUT        # ms
+OTEL_EXPORTER_OTLP_TIMEOUT        # 초(seconds), 기본값 10s
 OTEL_EXPORTER_OTLP_COMPRESSION    # gzip | none
 OTEL_EXPORTER_OTLP_CERTIFICATE    # CA cert 경로
 ```
@@ -372,7 +372,7 @@ OTEL_EXPORTER_OTLP_COMPRESSION=gzip
 
 ### Batching
 
-SDK·Collector 모두 batch processor/processor가 핵심:
+SDK·Collector 모두 batch processor 설정이 핵심:
 - Batch size: 보통 512~2048 record
 - Timeout: 1~5초
 

@@ -1,6 +1,5 @@
 # systemctl 사용법
 
-> 이 문서는 `man systemctl` 의 내용을 한국어로 정리한 것입니다.
 > 원본: https://www.freedesktop.org/software/systemd/man/systemctl.html
 
 ---
@@ -207,7 +206,7 @@ sudo systemctl mask cups.service       # /etc/systemd/system/cups.service → /d
 sudo systemctl unmask cups.service
 ```
 
-내부적으로 `/etc/systemd/system/cups.service` 를 `/dev/null` 로 향하는 심볼릭 링크로 만듭니다. 따라서 그 어떤 ExecStart도 실행되지 않습니다.
+내부적으로 `/etc/systemd/system/cups.service` 를 `/dev/null` 로 향하는 심볼릭 링크로 만들어, 어떤 수단으로도 해당 unit을 시작할 수 없게 합니다.
 
 언제 쓰나:
 - 절대 시작되면 안 되는 서비스
@@ -258,7 +257,7 @@ sudo systemctl isolate emergency.target
 systemctl --host=user@server status nginx
 ```
 
-내부적으로 SSH 사용. systemctl 자체에 SSH 클라이언트 기능 내장.
+내부적으로 SSH를 사용하며, systemctl에 SSH 클라이언트 기능이 내장되어 있습니다.
 
 ```bash
 systemctl --machine=container-name status nginx    # 컨테이너 안의 systemd
@@ -299,7 +298,7 @@ sudo systemd-run --unit=oneshot-task --scope --slice=batch.slice \
   /usr/local/bin/heavy-task.sh
 ```
 
-서비스 파일 없이 즉석에서 cgroup·격리를 적용해 명령어 실행. 백그라운드 작업 처리에 유용.
+서비스 파일 없이 즉석에서 cgroup·격리를 적용하여 명령어를 실행합니다. 백그라운드 작업 처리에 유용합니다.
 
 ### 부팅 분석
 
@@ -330,7 +329,7 @@ $ systemctl cat nginx.service
 Restart=always
 ```
 
-원본 unit과 모든 drop-in을 합쳐서 보여줌.
+원본 unit과 모든 drop-in을 합쳐서 보여줍니다.
 
 ---
 

@@ -34,7 +34,7 @@ Vector는 다양한 싱크를 지원합니다:
 
 ### 1. Acknowledgements (승인)
 
-승인 기능은 end-to-end 데이터 전송 보장을 위해 사용됩니다.
+승인 기능은 end-to-end 데이터 전송을 보장하기 위해 사용됩니다.
 
 ```toml
 [sinks.my_sink]
@@ -46,8 +46,8 @@ enabled = true
 ```
 
 설명:
-- 싱크에서 승인이 활성화되면, end-to-end 승인을 지원하는 모든 연결된 소스는 해당 싱크가 이벤트를 승인할 때까지 기다립니다
-- 싱크 레벨의 승인 설정은 전역 승인 설정보다 우선합니다
+- 싱크에서 승인이 활성화되면, end-to-end 승인을 지원하는 연결된 소스는 해당 싱크가 이벤트를 승인할 때까지 대기합니다
+- 싱크 레벨의 승인 설정은 전역 승인 설정보다 우선적으로 적용됩니다
 
 ### 2. Batching (배칭)
 
@@ -501,11 +501,11 @@ job = "vector"
 
 주요 옵션:
 - `endpoint`: Loki 서버 엔드포인트
-- `labels`: 각 이벤트 배치에 첨부될 레이블 (키-값 쌍)
-- `out_of_order_action`: 순서 이탈 로그 처리 방법 (accept, drop, rewrite_timestamp)
+- `labels`: 각 이벤트 배치에 첨부할 레이블 (키-값 쌍)
+- `out_of_order_action`: 순서가 어긋난 로그 처리 방식 (accept, drop, rewrite_timestamp)
 - `tenant_id`: 멀티 테넌시 환경에서의 테넌트 ID
 
-주의: 레이블의 카디널리티가 높으면 Loki에 심각한 성능 문제가 발생할 수 있습니다. 고유 레이블 키와 값의 수를 줄이는 것이 좋습니다.
+주의: 레이블 카디널리티가 높으면 Loki에 심각한 성능 문제가 발생할 수 있습니다. 고유 레이블 키와 값의 수는 최소화하는 것이 좋습니다.
 
 ---
 
@@ -559,7 +559,7 @@ site = "datadoghq.com"
 공통 옵션:
 - `default_api_key`: Datadog API 키 (환경 변수 `DD_API_KEY`로도 설정 가능)
 - `site`: Datadog 사이트 (datadoghq.com, datadoghq.eu 등)
-- 특수 필드: `ddsource`, `ddtags`, `hostname`, `message`, `service`가 이벤트에 있으면 API 참조에 따라 처리됩니다.
+- 특수 필드: 이벤트에 `ddsource`, `ddtags`, `hostname`, `message`, `service`가 있으면 API 규격에 따라 처리됩니다.
 
 ---
 
@@ -623,9 +623,9 @@ assume_role = "arn:aws:iam::123456789012:role/VectorS3Role"
 ```
 
 주요 옵션:
-- `bucket`: S3 버킷 이름 (앞에 `s3://` 또는 뒤에 `/` 제외)
+- `bucket`: S3 버킷 이름 (`s3://` 접두사나 끝의 `/`는 포함하지 않음)
 - `key_prefix`: 객체 키 접두사 (디렉토리 구조로 사용 시 `/`로 끝나야 함)
-- `grant_full_control`: 교차 계정 액세스 시 버킷 소유자의 정식 사용자 ID
+- `grant_full_control`: 교차 계정 액세스 시 버킷 소유자의 정규 사용자 ID
 
 ---
 
@@ -726,9 +726,9 @@ user = "your-user-id"
 password = "${GRAFANA_API_KEY}"
 ```
 
-압축 옵션: 공식적으로 Snappy만 지원되지만, Vector는 Gzip과 Zstd도 지원합니다.
+압축 옵션: Prometheus Remote Write 프로토콜은 공식적으로 Snappy만 지원하지만, Vector는 Gzip과 Zstd도 지원합니다.
 
-주의: 높은 카디널리티의 메트릭 이름과 레이블은 Prometheus에서 성능 문제를 일으킬 수 있습니다. `tag_cardinality_limit` 트랜스폼 사용을 고려하세요.
+주의: 카디널리티가 높은 메트릭 이름과 레이블은 Prometheus 성능에 문제를 일으킬 수 있습니다. `tag_cardinality_limit` 트랜스폼 사용을 고려하세요.
 
 ---
 
@@ -846,7 +846,7 @@ index = "metrics"
 ```
 
 인덱서 승인:
-Splunk HEC 토큰에 인덱서 승인 기능이 활성화되어 있으면, 싱크는 자동으로 통합되어 데이터 전송 성공을 확인합니다.
+Splunk HEC 토큰에 인덱서 승인 기능이 활성화되어 있으면, 싱크가 자동으로 연동되어 데이터 전송 성공 여부를 확인합니다.
 
 ---
 
@@ -1077,7 +1077,7 @@ filename_time_format = "%s"
 codec = "json"
 ```
 
-인증: API 키 또는 서비스 계정 JSON 파일 경로를 지정하거나, `GOOGLE_APPLICATION_CREDENTIALS` 환경 변수를 사용합니다.
+인증: API 키나 서비스 계정 JSON 파일 경로를 지정하거나, `GOOGLE_APPLICATION_CREDENTIALS` 환경 변수를 사용합니다.
 
 ---
 
@@ -1229,22 +1229,7 @@ inputs = ["my_source"]
 type = "http"
 uri = "http://localhost:4318/v1/logs"
 
-[sinks.otel.encoding]
-codec = "otlp"
-```
-
-#### gRPC 프로토콜
-
-```toml
-[sinks.otel]
-type = "opentelemetry"
-inputs = ["my_source"]
-
-[sinks.otel.protocol]
-type = "grpc"
-uri = "http://localhost:4317"
-
-[sinks.otel.encoding]
+[sinks.otel.protocol.encoding]
 codec = "otlp"
 ```
 
@@ -1451,7 +1436,7 @@ endpoint = "logs.papertrailapp.com:12345"
 process = "{{ application }}"
 ```
 
-설정: Papertrail에서 Log Destination을 생성하고 TCP를 활성화한 후 엔드포인트를 설정합니다.
+설정: Papertrail에서 Log Destination을 생성하고 TCP를 활성화한 뒤 엔드포인트를 지정합니다.
 
 ---
 
@@ -1480,7 +1465,7 @@ region = "us"
 default_namespace = "vector"
 ```
 
-참고: Sematext 모니터링은 단일 값을 포함하는 메트릭만 허용하므로, counter와 gauge 메트릭만 지원됩니다.
+참고: Sematext 모니터링은 단일 값을 가진 메트릭만 허용하므로 counter와 gauge 메트릭만 지원됩니다.
 
 ---
 

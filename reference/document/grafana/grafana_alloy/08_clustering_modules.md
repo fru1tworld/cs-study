@@ -1,6 +1,5 @@
 # Alloy 클러스터링과 모듈
 
-> 이 문서는 Grafana Alloy 공식 문서의 "Clustering" 및 "Modules" 섹션을 한국어로 정리한 것입니다.
 > 원본: https://grafana.com/docs/alloy/latest/concepts/clustering/
 
 ---
@@ -111,7 +110,7 @@ controller:
   replicas: 3
 ```
 
-Helm 차트가 자동으로 Headless Service와 발견 설정 처리.
+Helm 차트가 Headless Service 생성과 피어 발견 설정을 자동으로 처리한다.
 
 ### DNS
 
@@ -119,7 +118,7 @@ Helm 차트가 자동으로 Headless Service와 발견 설정 처리.
 --cluster.discover-peers="provider=dns,name=alloy.example.com,port=12345"
 ```
 
-DNS A 레코드의 모든 IP를 피어로 등록.
+DNS A 레코드의 모든 IP를 피어로 등록한다.
 
 ### 다중 디스커버리
 
@@ -144,7 +143,7 @@ prometheus.scrape "kubernetes" {
 }
 ```
 
-각 타겟이 일관된 해싱으로 한 노드에만 할당. N개 노드면 각 노드가 ~1/N의 타겟 처리.
+각 타겟이 일관된 해싱으로 단일 노드에만 할당된다. N개 노드 기준으로 각 노드가 전체 타겟의 ~1/N을 처리한다.
 
 ### pyroscope.scrape
 
@@ -261,11 +260,11 @@ serviceAccount:
 
 ### 동작
 
-- 3개 Deployment Pod
-- Headless Service로 서로 발견
-- Kubernetes API에서 모든 Pod 목록 받음
-- 각 Pod 타겟이 일관된 해싱으로 3개 Alloy에 분배
-- 각 Alloy는 ~1/3의 Pod만 스크래핑
+- 3개의 Deployment Pod 실행
+- Headless Service를 통해 상호 피어 발견
+- Kubernetes API에서 전체 Pod 목록 수신
+- 각 Pod 타겟이 일관된 해싱으로 3개 Alloy 인스턴스에 분배
+- 각 Alloy 인스턴스는 전체 Pod의 ~1/3만 스크래핑
 
 ### 모니터링
 
@@ -283,7 +282,7 @@ sum by (instance) (prometheus_sd_discovered_targets)
 
 ### 모듈이란?
 
-재사용 가능한 Alloy 구성 단위. 매개변수와 출력을 정의하여 라이브러리로 사용.
+재사용 가능한 Alloy 구성 단위로, 매개변수와 출력을 정의해 라이브러리처럼 활용한다.
 
 ### 모듈 구조
 
@@ -393,7 +392,7 @@ loki.source.file "app" {
 
 ### `declare` 블록 사용
 
-같은 파일 내에서 모듈 정의:
+같은 파일 안에서 모듈을 정의할 수 있다:
 
 ```alloy
 declare "log_to_loki" {
@@ -454,7 +453,7 @@ modules.kubernetes.logs.pods "default" {
 
 ### 디렉토리 임포트
 
-여러 모듈을 한 번에 임포트:
+여러 모듈을 한 번에 임포트한다:
 
 ```alloy
 import.git "k8s_modules" {

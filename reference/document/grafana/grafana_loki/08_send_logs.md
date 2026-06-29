@@ -1,6 +1,5 @@
 # Loki로 로그 전송
 
-> 이 문서는 Grafana Loki 공식 문서의 "Send logs to Loki" 섹션을 한국어로 정리한 것입니다.
 > 원본: https://grafana.com/docs/loki/latest/send-data/
 
 ---
@@ -23,7 +22,7 @@
 
 ## 개요
 
-Loki는 다양한 클라이언트로부터 로그를 받을 수 있습니다. 모두 **HTTP 기반 Push 방식** 으로 데이터를 전송합니다.
+Loki는 다양한 클라이언트로부터 로그를 수신할 수 있습니다. 모두 **HTTP 기반 Push 방식**으로 데이터를 전송합니다.
 
 ### 주요 클라이언트 비교
 
@@ -434,9 +433,9 @@ encoding.codec = "json"
 
 ## 언어/프레임워크 클라이언트
 
-직접 Loki Push API로 전송하는 라이브러리들.
+Loki Push API로 직접 로그를 전송하는 라이브러리들입니다.
 
-### Java (Log4j2)
+### Java (Logback)
 
 `com.github.loki4j:loki-logback-appender`
 
@@ -513,7 +512,7 @@ logger.info("hello");
 
 ## Loki HTTP Push API
 
-직접 API 호출도 가능합니다.
+직접 API를 호출할 수도 있습니다.
 
 ### 엔드포인트
 
@@ -542,17 +541,16 @@ curl -H "Content-Type: application/json" \
 
 ### 요청 형식 (Protobuf, Snappy 압축)
 
-대용량 환경에서는 Protobuf + Snappy 권장.
+기본(default) 형식은 Protobuf + Snappy입니다.
 
 - `Content-Type: application/x-protobuf`
-- `Content-Encoding: snappy`
-- 페이로드: snappy 압축된 protobuf
+- 페이로드: Snappy 압축된 Protobuf
 
 ### 응답
 
 | 상태 코드 | 의미 |
 |---------|------|
-| 204 | 성공 |
+| 200 | 성공 |
 | 400 | 잘못된 요청 |
 | 401 | 인증 실패 |
 | 429 | Rate Limit 초과 |

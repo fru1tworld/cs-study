@@ -1,7 +1,5 @@
 # PostgreSQL SQL 명령어 참조 (SQL Commands Reference)
 
-이 문서는 PostgreSQL 공식 문서를 기반으로 주요 SQL 명령어를 한국어로 설명합니다.
-
 ## 목차
 
 1. [데이터 조작 명령어 (DML)](#1-데이터-조작-명령어-dml)
@@ -306,8 +304,8 @@ DELETE FROM [ ONLY ] table_name [ * ] [ [ AS ] alias ]
 #### 주요 특징
 
 - WHERE 절이 없으면 테이블의 모든 행이 삭제됨
-- 대상 테이블에 DELETE 권한 필요
-- USING 절의 테이블에는 SELECT 권한 필요
+- 대상 테이블에 대한 DELETE 권한 필요
+- USING 절의 테이블에는 SELECT 권한이 필요
 - 모든 행을 빠르게 삭제하려면 `TRUNCATE` 사용 권장
 
 #### 예제
@@ -811,7 +809,7 @@ CREATE INDEX code_idx ON films (code) TABLESPACE indexspace;
 
 ### 2.5 CREATE VIEW - 뷰 생성
 
-`CREATE VIEW`는 쿼리의 뷰를 정의합니다. 뷰는 물리적으로 구체화되지 않으며, 뷰가 참조될 때마다 쿼리가 실행됩니다.
+`CREATE VIEW`는 쿼리에 대한 뷰를 정의합니다. 뷰는 물리적으로 구체화되지 않으며, 뷰가 참조될 때마다 쿼리가 실행됩니다.
 
 #### 기본 구문
 

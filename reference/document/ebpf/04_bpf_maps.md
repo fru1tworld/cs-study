@@ -1,6 +1,5 @@
 # BPF Maps
 
-> 이 문서는 BPF map 종류와 사용법을 정리한 것입니다.
 > 원본: https://docs.kernel.org/bpf/maps.html
 
 ---
@@ -21,14 +20,14 @@
 
 ## BPF Map이란?
 
-BPF 프로그램과 사용자 공간이 데이터를 교환하는 **공유 자료구조**. 직접 메모리 공유가 안 되는 BPF 환경에서 유일한 통신 채널.
+BPF 프로그램과 사용자 공간이 데이터를 교환하는 **공유 자료구조**. 직접 메모리 공유가 불가능한 BPF 환경에서 핵심 통신 채널 역할을 한다.
 
 특징:
-- 커널 안에 존재
-- BPF 프로그램과 사용자 공간(`bpf()` syscall) 양쪽에서 read/write
-- 여러 BPF 프로그램 간에도 공유 가능
+- 커널 내부에 존재
+- BPF 프로그램과 사용자 공간(`bpf()` 시스템 콜) 양쪽에서 읽기/쓰기 가능
+- 여러 BPF 프로그램 간에 공유 가능
 - key-value 또는 큐 형태
-- 커널이 동시성(락) 처리 (대부분의 map 타입)
+- 대부분의 맵 타입에서 커널이 동시성(락) 처리
 
 ---
 
@@ -64,13 +63,16 @@ int count_opens(struct pt_regs *ctx) {
 struct my_skel *skel = my_skel__open_and_load();
 my_skel__attach(skel);
 
-u32 key = 0;
+u32 cur_key, next_key;
 u64 value;
 
 while (true) {
-    while (bpf_map__get_next_key(skel->maps.my_map, &key, &key, sizeof(key)) == 0) {
-        bpf_map__lookup_elem(skel->maps.my_map, &key, sizeof(key), &value, sizeof(value), 0);
-        printf("pid %u: %llu opens\n", key, value);
+    void *start = NULL;
+    while (bpf_map__get_next_key(skel->maps.my_map, start, &next_key, sizeof(next_key)) == 0) {
+        bpf_map__lookup_elem(skel->maps.my_map, &next_key, sizeof(next_key), &value, sizeof(value), 0);
+        printf("pid %u: %llu opens\n", next_key, value);
+        start = &next_key;
+        cur_key = next_key;
     }
     sleep(1);
 }
@@ -86,10 +88,10 @@ while (true) {
 범용 해시 테이블. key는 임의 크기, value도 임의 크기.
 
 #### `BPF_MAP_TYPE_LRU_HASH`
-LRU eviction. 가득 차면 가장 적게 사용된 엔트리 자동 제거. 캐시 워크로드에 적합.
+LRU eviction. 맵이 가득 차면 가장 오래 사용되지 않은 엔트리를 자동 제거. 캐시 워크로드에 적합.
 
 #### `BPF_MAP_TYPE_HASH_OF_MAPS`
-map of maps — 값이 다른 map의 fd. 동적 맵 디스패치.
+map-in-map — 값으로 다른 맵의 fd를 저장. 동적 맵 디스패치에 활용.
 
 ### Array 계열
 
@@ -100,7 +102,7 @@ map of maps — 값이 다른 map의 fd. 동적 맵 디스패치.
 CPU별 별도 인스턴스. 동기화 비용 없음. (아래 PERCPU 절 참조)
 
 #### `BPF_MAP_TYPE_PROG_ARRAY`
-값이 BPF 프로그램 fd. tail call에 사용.
+값으로 BPF 프로그램 fd를 저장. tail call에 사용.
 
 ### 큐 계열
 
@@ -120,7 +122,7 @@ bpf_map_push_elem(&events, &event, BPF_EXIST);
 ### Ring Buffer / Perf Event
 
 #### `BPF_MAP_TYPE_RINGBUF`
-**5.8+ 권장**. mp/sc ring buffer. 사용자 공간이 polling. perf_event_array보다 효율적.
+**5.8+ 권장**. multi-producer/single-consumer ring buffer. 사용자 공간이 폴링. perf_event_array보다 효율적.
 
 #### `BPF_MAP_TYPE_PERF_EVENT_ARRAY`
 이전 표준. CPU별 perf ring buffer. 더 복잡하지만 호환성 좋음.
@@ -130,16 +132,16 @@ bpf_map_push_elem(&events, &event, BPF_EXIST);
 ### Socket/Networking
 
 #### `BPF_MAP_TYPE_SOCKHASH` / `BPF_MAP_TYPE_SOCKMAP`
-소켓 fd를 저장. socket redirect에 사용.
+소켓 fd를 저장. 소켓 리다이렉트에 사용.
 
 #### `BPF_MAP_TYPE_DEVMAP` / `BPF_MAP_TYPE_DEVMAP_HASH`
 네트워크 디바이스 인덱스. XDP_REDIRECT의 대상.
 
 #### `BPF_MAP_TYPE_CPUMAP`
-CPU에 RPS 비슷하게 패킷 dispatch.
+RPS와 유사하게 CPU별로 패킷을 분배.
 
 #### `BPF_MAP_TYPE_XSKMAP`
-AF_XDP 소켓.
+AF_XDP 소켓 맵.
 
 ### LPM (Longest Prefix Match)
 
@@ -159,7 +161,7 @@ struct {
 ### 기타
 
 #### `BPF_MAP_TYPE_TASK_STORAGE` / `INODE_STORAGE` / `SK_STORAGE` / `CGROUP_STORAGE`
-task/inode/socket/cgroup 객체에 직접 매달린 storage. 자동 라이프사이클.
+task/inode/socket/cgroup 객체에 직접 연결된 storage. 객체 수명에 따라 자동으로 관리.
 
 #### `BPF_MAP_TYPE_BLOOM_FILTER` (5.16+)
 블룸 필터 — 빠른 멤버십 검사.
@@ -168,7 +170,7 @@ task/inode/socket/cgroup 객체에 직접 매달린 storage. 자동 라이프사
 
 ## PERCPU 맵
 
-`HASH`, `ARRAY` 등에 PERCPU 변형이 있음. CPU 코어마다 별도 인스턴스를 가져 동기화 없이 빠르게 접근 가능.
+`HASH`, `ARRAY` 등에 PERCPU 변형이 있다. CPU 코어마다 별도 인스턴스를 유지하므로 동기화 없이 빠르게 접근할 수 있다.
 
 ```c
 struct {
@@ -202,7 +204,7 @@ PERCPU 맵은 카운터, 히스토그램에 거의 항상 권장.
 
 ## Ring Buffer와 Perf Event Array
 
-BPF가 사용자 공간으로 **이벤트 스트림** 을 보낼 때 사용.
+BPF 프로그램이 사용자 공간으로 **이벤트 스트림**을 전달할 때 사용.
 
 ### Perf Event Array
 
@@ -219,9 +221,9 @@ bpf_perf_event_output(ctx, &events, BPF_F_CURRENT_CPU, &event, sizeof(event));
 ```
 
 특징:
-- CPU당 별도 ring
+- CPU당 별도 링
 - 호환성 좋음 (4.x부터)
-- 사용자 공간이 CPU마다 separate poll
+- 사용자 공간이 CPU마다 개별 폴링
 
 ### Ring Buffer (5.8+, 권장)
 
@@ -241,10 +243,10 @@ bpf_ringbuf_submit(e, 0);
 
 특징:
 - multi-producer / single-consumer
-- CPU 통합 ring (단일 ring으로 모든 CPU의 이벤트)
-- 더 효율적
-- BPF 측 API가 깔끔 (reserve/submit)
-- 5.8+ 만 지원
+- CPU 공유 링 (단일 링으로 모든 CPU의 이벤트 수신)
+- perf_event_array보다 메모리 효율적
+- BPF API가 간결 (reserve/submit)
+- 커널 5.8 이상에서만 지원
 
 ```c
 // 사용자 공간 (libbpf)
@@ -259,10 +261,10 @@ while (1) {
 
 ## BPF 객체 핀닝
 
-map과 프로그램은 사용자 프로세스가 죽으면 사라집니다. 영구화하려면 BPF FS에 핀.
+맵과 프로그램은 참조하는 사용자 프로세스가 종료되면 사라진다. 영구 보존이 필요하면 BPF FS에 핀한다.
 
 ```bash
-sudo mount -t bpf bpf /sys/fs/bpf      # 보통 자동
+sudo mount -t bpf bpf /sys/fs/bpf      # 보통 자동 마운트됨
 sudo bpftool map pin id <map-id> /sys/fs/bpf/my_map
 sudo bpftool prog pin id <prog-id> /sys/fs/bpf/my_prog
 ```
@@ -272,13 +274,13 @@ sudo bpftool prog pin id <prog-id> /sys/fs/bpf/my_prog
 int fd = bpf_obj_get("/sys/fs/bpf/my_map");
 ```
 
-핀된 객체는 마지막 참조가 사라질 때까지 유지. `rm /sys/fs/bpf/my_map` 으로 unpin.
+핀된 객체는 마지막 참조가 사라질 때까지 유지된다. `rm /sys/fs/bpf/my_map`으로 unpin할 수 있다.
 
 ---
 
 ## Map-in-Map
 
-값이 다른 map인 map. 동적 디스패치.
+값으로 다른 맵을 저장하는 맵. 동적 디스패치에 활용.
 
 ```c
 struct inner_map {
@@ -296,7 +298,7 @@ struct {
 } outer SEC(".maps");
 ```
 
-`PROG_ARRAY` 와 함께 동적 BPF 라우팅을 구현하는 데 자주 쓰임.
+`PROG_ARRAY`와 함께 동적 BPF 라우팅 구현에 자주 쓰인다.
 
 ---
 
@@ -311,9 +313,9 @@ struct {
 
 ### Prealloc vs No-Prealloc
 
-기본은 prealloc — 모든 max_entries만큼 미리 할당. 빠르지만 메모리 사용 큼.
+기본값은 prealloc — max_entries 수만큼 미리 할당. 빠르지만 메모리를 많이 사용.
 
-`BPF_F_NO_PREALLOC`: 동적 할당. 메모리 절약, 약간 느림. LPM_TRIE는 이게 강제.
+`BPF_F_NO_PREALLOC`: 동적 할당. 메모리를 절약하지만 약간 느림. LPM_TRIE는 이 플래그가 필수.
 
 ### Update Flag
 
@@ -325,7 +327,7 @@ bpf_map_update_elem(&map, &key, &val, BPF_EXIST);  // 있을 때만
 
 ### Atomic 연산
 
-PERCPU가 아닌 곳에서 카운터 증가:
+PERCPU 맵이 아닌 환경에서 카운터 증가:
 ```c
 __sync_fetch_and_add(val_ptr, 1);
 ```
@@ -338,7 +340,7 @@ __atomic_fetch_add(val_ptr, 1, __ATOMIC_RELAXED);
 
 ### bpf_map_lookup_and_delete
 
-5.14+. 조회+삭제를 하나로. 큐 패턴에서 race 방지.
+5.14+. 조회와 삭제를 원자적으로 수행. 큐 패턴에서 race condition 방지.
 
 ---
 

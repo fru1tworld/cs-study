@@ -1,6 +1,5 @@
 # Mimir 운영 관리
 
-> 이 문서는 Grafana Mimir 공식 문서의 "Manage" 섹션을 한국어로 정리한 것입니다.
 > 원본: https://grafana.com/docs/mimir/latest/manage/
 
 ---
@@ -60,7 +59,7 @@ overrides:
 
 ### Shuffle Sharding
 
-테넌트별로 일부 인스턴스만 사용해 격리.
+테넌트별로 일부 인스턴스만 사용하여 격리한다.
 
 ```yaml
 limits:
@@ -71,8 +70,8 @@ limits:
 ```
 
 장점:
-- 한 테넌트의 무거운 워크로드가 다른 테넌트에 영향 최소화
-- 모든 인스턴스를 사용하지 않으므로 메모리 효율
+- 한 테넌트의 무거운 워크로드가 다른 테넌트에 미치는 영향을 최소화
+- 전체 인스턴스를 사용하지 않으므로 메모리 효율적
 
 ---
 
@@ -89,7 +88,7 @@ limits:
 
 ### Ingester 시계열 추정
 
-각 활성 시계열은 약 **8KB 메모리** 사용 (압축 후).
+활성 시계열 하나당 약 **8KB 메모리**를 사용한다 (압축 후).
 
 ```
 Ingester RAM ≈ (시계열 수 × 8KB) × 1.5 (오버헤드)
@@ -97,7 +96,7 @@ Ingester RAM ≈ (시계열 수 × 8KB) × 1.5 (오버헤드)
 
 ### 오브젝트 스토리지
 
-압축률은 일반적으로 **10:1 ~ 30:1** (메모리 대비).
+압축률은 일반적으로 메모리 대비 **10:1 ~ 30:1** 수준이다.
 
 ```
 일일 데이터 ≈ 활성 시계열 × 샘플/일 × 2 bytes (압축 후)
@@ -127,7 +126,7 @@ query_frontend:
   query_sharding_max_regexp_size_bytes: 4096
 ```
 
-병렬 처리로 큰 쿼리 가속.
+병렬 처리로 대형 쿼리를 가속한다.
 
 #### Query Splitting
 
@@ -239,7 +238,7 @@ query_frontend:
 
 ### Ingester Sharding
 
-`shuffle-sharding` 권장:
+`shuffle-sharding` 사용을 권장한다:
 
 ```yaml
 limits:
@@ -269,7 +268,7 @@ compactor:
     shard_per_tenant: true
 ```
 
-각 테넌트의 압축을 한 compactor가 담당.
+각 테넌트의 압축은 하나의 compactor가 전담한다.
 
 ---
 
@@ -378,7 +377,7 @@ prometheus.relabel "drop_high_cardinality" {
 
 ### 자체 메트릭
 
-`/metrics` 엔드포인트 (각 컴포넌트).
+각 컴포넌트의 `/metrics` 엔드포인트를 통해 자체 메트릭을 수집한다.
 
 ### Mimir Mixin
 
@@ -389,7 +388,7 @@ jb install github.com/grafana/mimir/operations/mimir-mixin@main
 jsonnet -J vendor mixin.libsonnet > dashboards.json
 ```
 
-대시보드 + Recording Rules + Alerting Rules 일괄 제공.
+대시보드, Recording Rules, Alerting Rules를 일괄 제공한다.
 
 ### 권장 SLO
 
@@ -419,12 +418,12 @@ jsonnet -J vendor mixin.libsonnet > dashboards.json
 
 #### 단일 인스턴스 다운
 
-- WAL이 활성화되어 있으면 데이터 손실 없이 재시작
-- Replication factor 3이면 다른 ingester가 처리
+- WAL이 활성화되어 있으면 데이터 손실 없이 재시작 가능
+- Replication factor가 3이면 다른 ingester가 요청을 처리
 
 #### 다수 다운
 
-- Read 영향: 최근 데이터 일부 누락 (스토리지에 플러시 안 됨)
+- Read 영향: 스토리지에 플러시되지 않은 최근 데이터 일부 누락
 - Write 영향: Quorum 부족 시 쓰기 실패
 
 복구:
@@ -435,13 +434,13 @@ jsonnet -J vendor mixin.libsonnet > dashboards.json
 
 ### 오브젝트 스토리지 장애
 
-- Ingester는 메모리 + WAL에 데이터 보관 (재시도)
-- Querier는 캐시된 데이터로 일부 응답
-- 복구 후 Ingester가 자동 업로드 재시도
+- Ingester는 메모리와 WAL에 데이터를 보관하며 업로드를 재시도
+- Querier는 캐시된 데이터로 일부 응답 가능
+- 복구 후 Ingester가 자동으로 업로드를 재시도
 
 ### Hash Ring 분할 (Split Brain)
 
-Memberlist gossip 사용 시 자가 치유. 일시적 분할은 자동 해결.
+Memberlist gossip을 사용하면 자가 치유되며, 일시적 분할은 자동으로 해결된다.
 
 영구 분할 시:
 1. 한쪽 클러스터 종료
@@ -499,7 +498,7 @@ Mimir Mixin이 제공하는 [공식 Runbook](https://github.com/grafana/mimir/bl
 
 ### 오브젝트 스토리지 백업
 
-가장 중요. 다음 방법 권장:
+가장 중요한 백업 대상이다. 다음 방법을 권장한다:
 
 - **S3**: Cross-Region Replication, Versioning
 - **GCS**: Object Versioning, Multi-region buckets
@@ -516,5 +515,5 @@ Mimir Mixin이 제공하는 [공식 Runbook](https://github.com/grafana/mimir/bl
 
 1. 새 클러스터 배포 (동일 구성)
 2. 기존 오브젝트 스토리지 마운트 (또는 복제 버킷 사용)
-3. WAL 데이터는 손실되나 그 외 복원 가능
-4. Prometheus의 로컬 데이터로 갭 복구
+3. WAL 데이터는 손실될 수 있으나 그 외 데이터는 복원 가능
+4. Prometheus 로컬 데이터로 갭 복구

@@ -1,6 +1,5 @@
 # CLI 레퍼런스
 
-> 이 문서는 buf CLI의 주요 서브커맨드를 요약 정리한 것입니다.
 > 원본: https://buf.build/docs/cli/ , https://buf.build/docs/reference/cli/buf/
 
 ---
@@ -67,7 +66,7 @@ buf lint --error-format=json
 
 ## 5. breaking
 
-스키마를 비교 대상과 견주어 호환성 깨짐을 검출합니다(상세는 `05_breaking.md`).
+스키마를 비교 대상과 비교하여 호환성 깨짐을 검출합니다(상세는 `05_breaking.md`).
 
 ```bash
 buf breaking --against '.git#branch=main'
@@ -83,7 +82,7 @@ buf breaking --against 'buf.build/acme/weather'
 ```bash
 buf format -w                # 파일을 제자리에서 수정
 buf format -d                # diff만 출력
-buf format --exit-code       # 변경이 필요하면 0이 아닌 종료(CI 검사용)
+buf format --exit-code       # 포매팅 변경이 필요한 파일이 있으면 0이 아닌 종료(CI 검사용)
 ```
 
 ---

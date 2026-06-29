@@ -1,6 +1,5 @@
 # Loki 알림 (Ruler)
 
-> 이 문서는 Grafana Loki 공식 문서의 알림(Ruler) 섹션을 한국어로 정리한 것입니다.
 > 원본: https://grafana.com/docs/loki/latest/alert/
 
 ---
@@ -20,7 +19,7 @@
 
 ## 개요
 
-Loki는 **Ruler** 라는 컴포넌트를 통해 **로그 기반 알림** 을 제공합니다. Ruler는 다음 작업을 수행합니다.
+Loki는 **Ruler** 컴포넌트를 통해 **로그 기반 알림**을 제공합니다. Ruler는 다음 작업을 수행합니다.
 
 - LogQL 쿼리를 주기적으로 평가
 - 조건 충족 시 Alertmanager로 알림 전송 (Alerting Rules)
@@ -28,7 +27,7 @@ Loki는 **Ruler** 라는 컴포넌트를 통해 **로그 기반 알림** 을 제
 
 ### Prometheus와의 호환성
 
-Loki Ruler는 Prometheus의 룰 파일 포맷과 동일한 구조를 사용하므로, 기존 Prometheus 알림 운영자에게 친숙합니다.
+Loki Ruler는 Prometheus의 룰 파일 포맷과 동일한 구조를 사용하므로, Prometheus 알림에 익숙한 운영자라면 쉽게 적용할 수 있습니다.
 
 ---
 
@@ -164,7 +163,7 @@ groups:
 
 ### 라벨/주석 템플릿
 
-Go 템플릿 문법 사용 가능.
+Go 템플릿 문법을 사용할 수 있습니다.
 
 ```yaml
 annotations:
@@ -181,7 +180,7 @@ annotations:
 
 ## Recording 룰
 
-LogQL 쿼리 결과를 메트릭으로 저장합니다. Loki는 직접 저장하지 않고 **Remote Write** 로 Prometheus나 Mimir로 전송합니다.
+LogQL 쿼리 결과를 메트릭으로 저장합니다. Loki는 직접 저장하지 않고 **Remote Write**로 Prometheus나 Mimir에 전송합니다.
 
 ### Remote Write 설정
 
@@ -219,7 +218,7 @@ groups:
           sum by (service) (rate({namespace="prod"} [5m]))
 ```
 
-이렇게 저장된 메트릭은 Mimir/Prometheus에서 일반 메트릭처럼 PromQL로 조회 가능.
+이렇게 저장된 메트릭은 Mimir/Prometheus에서 일반 메트릭처럼 PromQL로 조회할 수 있습니다.
 
 ---
 
@@ -320,7 +319,7 @@ ruler:
 
 ## Ruler 분산 모드
 
-대규모 환경에서 룰을 여러 Ruler 인스턴스에 분산.
+대규모 환경에서 룰 평가를 여러 Ruler 인스턴스에 분산합니다.
 
 ### 활성화
 
@@ -339,7 +338,7 @@ ruler:
 
 ### Shuffle Sharding
 
-테넌트별로 일부 Ruler만 사용하도록 격리. 한 테넌트의 무거운 룰이 다른 테넌트에 영향 안 미침.
+테넌트별로 일부 Ruler만 사용하도록 격리합니다. 한 테넌트의 무거운 룰이 다른 테넌트에 영향을 주지 않습니다.
 
 ```yaml
 limits_config:

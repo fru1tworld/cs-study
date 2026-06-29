@@ -1,6 +1,5 @@
 # buf 개요와 설치
 
-> 이 문서는 buf CLI의 개요(무엇인가/왜 쓰는가)와 설치 방법을 한국어로 정리한 것입니다.
 > 원본: https://buf.build/docs/cli/ , https://buf.build/docs/cli/installation/
 
 ---
@@ -34,14 +33,14 @@ buf는 Protocol Buffers(protobuf)를 위한 현대적인 툴체인(toolchain)으
 
 ## 2. 왜 buf를 쓰는가
 
-`protoc`는 대규모 프로젝트에서 다음과 같은 어려움이 있습니다. buf는 이를 해결합니다.
+`protoc`는 대규모 프로젝트에서 다음과 같은 어려움이 있으며, buf는 이를 해결합니다.
 
-- **자동 파일 탐색**: include path를 수동으로 구성할 필요 없이 `.proto` 파일을 자동 발견합니다.
+- **자동 파일 탐색**: include path를 수동으로 지정하지 않아도 `.proto` 파일을 자동으로 탐색합니다.
 - **내장 품질 검사**: 40개 이상의 린트 규칙, 50개 이상의 호환성 깨짐 규칙을 기본 제공합니다.
-- **병렬 컴파일**: `protoc` 대비 약 2배의 처리량을 제공합니다.
-- **범용 입력 처리**: 디렉터리, Git 저장소, tarball, 사전 빌드된 이미지(image)를 입력으로 받습니다.
+- **병렬 컴파일**: `protoc` 대비 약 2배의 처리량을 냅니다.
+- **범용 입력 처리**: 디렉터리, Git 저장소, tarball, 사전 빌드된 이미지(image) 등을 입력으로 받습니다.
 - **네이티브 의존성 관리**: Go modules나 npm 패키지처럼 의존성을 다룹니다.
-- **퍼블리싱 워크플로**: 로컬 스키마를 BSR에 게시해 소비자(consumer)에게 배포합니다.
+- **퍼블리싱 워크플로**: 로컬 스키마를 BSR에 게시하여 소비자(consumer)에게 배포합니다.
 - **에디터 연동**: LSP(Language Server Protocol)로 VS Code, JetBrains, Vim 등에서 동작합니다.
 
 ---
@@ -75,7 +74,7 @@ buf는 Protocol Buffers(protobuf)를 위한 현대적인 툴체인(toolchain)으
 | `buf.lock` | 의존성을 특정 커밋(commit)으로 고정(pin)하는 잠금 파일 |
 | `buf.work.yaml` | (v1 전용) 멀티 모듈 워크스페이스 정의. v2에서는 `buf.yaml`의 `modules`로 통합됨 |
 
-설정 파일은 `buf config init` 명령으로 생성할 수 있습니다.
+`buf config init` 명령으로 설정 파일을 생성할 수 있습니다.
 
 ---
 
@@ -98,7 +97,7 @@ npx buf --version
 
 ### Go (소스에서 설치)
 
-버전을 명시적으로 고정하는 것을 권장합니다.
+버전을 명시적으로 고정하여 설치하는 것을 권장합니다.
 
 ```bash
 GOBIN=/usr/local/bin go install github.com/bufbuild/buf/cmd/buf@v1.71.0
@@ -106,7 +105,7 @@ GOBIN=/usr/local/bin go install github.com/bufbuild/buf/cmd/buf@v1.71.0
 
 ### 바이너리 / tarball 다운로드
 
-GitHub Releases에서 OS/아키텍처에 맞는 바이너리를 받거나, tarball로 설치합니다(자동완성 포함).
+GitHub Releases에서 OS/아키텍처에 맞는 바이너리를 내려받거나, 자동완성 파일이 포함된 tarball로 설치합니다.
 
 ```bash
 PREFIX="/usr/local" && VERSION="1.71.0" && \
@@ -138,10 +137,10 @@ buf --version
 # 예: 1.71.0
 ```
 
-자동완성(예: zsh)을 수동으로 설정하려면 다음과 같이 합니다.
+zsh 자동완성을 수동으로 설정하려면 다음과 같이 입력합니다.
 
 ```bash
 buf completion zsh > "${fpath[1]}/_buf"
 ```
 
-tarball 설치는 자동완성 파일을 `${PREFIX}/share/{fish,zsh}/...` 경로에 배치합니다. CI 등 재현성이 중요한 환경에서는 설치 버전을 명시적으로 고정(예: `@v1.71.0`)하는 것을 권장합니다.
+tarball 설치 시 자동완성 파일은 `${PREFIX}/share/{fish,zsh}/...` 경로에 배치됩니다. CI 등 재현성이 중요한 환경에서는 버전을 명시적으로 고정(예: `@v1.71.0`)하여 설치하는 것을 권장합니다.

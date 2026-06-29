@@ -53,14 +53,14 @@ ECPG 프로그램은 다음 단계를 거쳐 처리됩니다:
 EXEC SQL ...;
 ```
 
-이 문장들은 구문적으로 일반 C 문장을 대체하며, 전역 수준과 함수 내부 모두에서 사용할 수 있습니다.
+이 구문들은 일반 C 문장과 동일한 위치에 쓸 수 있으며, 전역 수준과 함수 내부 모두에서 사용 가능합니다.
 
 ### 2.3 ECPG의 장점
 
-1. 단순화된 데이터 처리: C 변수와의 데이터 전달을 자동으로 관리
-2. 빌드 타임 검증: SQL 코드가 컴파일 시점에 구문 검사됨
-3. 표준 준수: SQL 표준에 명시되어 많은 데이터베이스 시스템에서 지원
-4. 이식성: 다른 SQL 데이터베이스용 프로그램을 PostgreSQL로 쉽게 포팅 가능
+1. 단순화된 데이터 처리: C 변수와의 데이터 교환을 자동으로 관리
+2. 빌드 타임 검증: SQL 코드의 구문을 컴파일 시점에 검사
+3. 표준 준수: SQL 표준에 명시되어 다양한 데이터베이스 시스템에서 지원
+4. 이식성: 다른 SQL 데이터베이스용 프로그램을 PostgreSQL로 쉽게 이식 가능
 
 ### 2.4 중요한 구문 규칙
 
@@ -118,7 +118,7 @@ EXEC SQL CONNECT TO :target USER :user USING :passwd;
 
 #### 보안 참고사항
 
-신뢰할 수 없는 사용자 접근의 경우, `search_path`에서 공개적으로 쓰기 가능한 스키마를 제거하세요:
+신뢰할 수 없는 사용자가 접근할 수 있는 환경에서는 `search_path`에서 공개 쓰기 가능 스키마를 제거하세요:
 
 ```c
 EXEC SQL SELECT pg_catalog.set_config('search_path', '', false);
@@ -126,7 +126,7 @@ EXEC SQL SELECT pg_catalog.set_config('search_path', '', false);
 
 ### 3.2 연결 선택
 
-여러 연결을 관리할 때 세 가지 방법이 있습니다:
+여러 연결을 관리하는 방법은 세 가지입니다:
 
 #### 방법 1: 명시적 AT 절
 
@@ -134,7 +134,7 @@ EXEC SQL SELECT pg_catalog.set_config('search_path', '', false);
 EXEC SQL AT connection-name SELECT ...;
 ```
 
-여러 연결을 혼합하여 사용해야 할 때 가장 적합합니다.
+여러 연결을 혼용해야 할 때 적합합니다.
 
 #### 방법 2: SET CONNECTION 문
 
@@ -142,7 +142,7 @@ EXEC SQL AT connection-name SELECT ...;
 EXEC SQL SET CONNECTION connection-name;
 ```
 
-같은 연결에서 많은 문장을 실행할 때 가장 적합합니다.
+동일 연결에서 많은 문장을 실행할 때 적합합니다.
 
 #### 완전한 예제 프로그램
 
@@ -228,7 +228,7 @@ int main(){
 
 #### 스레딩 참고사항
 
-여러 스레드가 동시에 연결을 공유할 수 없습니다. 접근 제어를 위한 뮤텍스를 사용하거나 스레드당 별도의 연결을 사용하세요.
+여러 스레드가 동시에 연결을 공유할 수 없습니다. 뮤텍스로 접근을 제어하거나 스레드별로 별도의 연결을 사용하세요.
 
 ### 3.3 연결 닫기
 
@@ -247,7 +247,7 @@ EXEC SQL DISCONNECT [connection];
 
 #### 모범 사례
 
-적절한 리소스 관리를 위해 항상 열린 모든 연결에서 명시적으로 연결을 해제하세요.
+리소스 관리를 위해 열린 모든 연결을 명시적으로 해제하세요.
 
 ```c
 EXEC SQL DISCONNECT ALL;
@@ -304,7 +304,7 @@ EXEC SQL SELECT foo INTO :FooBar FROM table1 WHERE ascii = 'doodad';
 EXEC SQL SHOW search_path INTO :var;
 ```
 
-> 참고: `:something`과 같은 토큰은 C 프로그램 변수를 참조하는 호스트 변수 입니다.
+> 참고: `:something` 형태의 토큰은 C 프로그램 변수를 참조하는 호스트 변수입니다.
 
 ### 4.2 커서 사용
 
@@ -328,7 +328,7 @@ EXEC SQL CLOSE foo_bar;
 EXEC SQL COMMIT;
 ```
 
-> 중요: `ECPG DECLARE` 명령은 PostgreSQL에 문장을 보내지 않습니다. 커서는 실제로 `OPEN`이 실행될 때 백엔드에서 열립니다.
+> 중요: `ECPG DECLARE` 명령은 PostgreSQL 서버에 아무것도 전송하지 않습니다. 커서는 `OPEN`이 실행될 때 백엔드에서 실제로 열립니다.
 
 ### 4.3 트랜잭션 관리
 
@@ -348,7 +348,7 @@ EXEC SQL COMMIT;
 
 ### 4.4 준비된 문장 (Prepared Statements)
 
-알 수 없는 값이나 재사용 가능한 문장의 경우 준비된 문장을 사용합니다:
+값을 미리 알 수 없거나 문장을 재사용해야 할 경우 준비된 문장을 사용합니다:
 
 #### 문장 준비
 
@@ -385,7 +385,7 @@ EXEC SQL CLOSE foo_bar;
 EXEC SQL DEALLOCATE PREPARE name;
 ```
 
-알 수 없는 값에 대해 `?`를 플레이스홀더로 사용하고 `USING` 절을 통해 실제 값을 제공합니다.
+미지의 값에는 `?`를 플레이스홀더로 사용하고, `USING` 절로 실제 값을 전달합니다.
 
 ---
 
@@ -393,7 +393,7 @@ EXEC SQL DEALLOCATE PREPARE name;
 
 ### 5.1 개요
 
-호스트 변수(Host Variables)는 C 프로그램과 PostgreSQL 간에 데이터를 교환하기 위해 내장 SQL 문에서 사용되는 C 프로그램 변수입니다. SQL 문은 C 프로그램 코드("호스트 언어") 내의 "손님"으로 간주되므로 C 변수를 호스트 변수 라고 합니다.
+호스트 변수(Host Variables)는 내장 SQL 문에서 C 프로그램과 PostgreSQL 사이의 데이터 교환에 사용되는 C 변수입니다. SQL 문은 C 프로그램 코드("호스트 언어") 안에 삽입된 손님으로 취급되므로, C 변수를 호스트 변수라고 부릅니다.
 
 #### 기본 구문
 
@@ -405,7 +405,7 @@ SQL 문에서 사용될 때 변수 앞에 콜론(`:`)을 붙입니다.
 
 ### 5.2 선언 섹션 (Declare Sections)
 
-전처리기가 호스트 변수를 인식할 수 있도록 특별히 표시된 섹션에서 선언해야 합니다.
+전처리기가 호스트 변수를 인식할 수 있도록, 특별히 표시된 섹션 안에서 선언해야 합니다.
 
 #### 구문
 
@@ -464,7 +464,7 @@ do {
 
 ### 5.4 타입 매핑
 
-PostgreSQL 데이터 타입은 해당하는 C 변수 타입에 매핑되어야 합니다:
+PostgreSQL 데이터 타입은 대응하는 C 변수 타입에 매핑되어야 합니다:
 
 | PostgreSQL 타입 | C 변수 타입 |
 |----------------|-------------|
@@ -493,7 +493,7 @@ EXEC SQL BEGIN DECLARE SECTION;
 EXEC SQL END DECLARE SECTION;
 ```
 
-주의: 버퍼 오버플로우를 피하기 위해 길이를 수동으로 관리해야 합니다.
+주의: 버퍼 오버플로우를 방지하려면 길이를 직접 관리해야 합니다.
 
 #### VARCHAR 사용
 
@@ -510,7 +510,7 @@ struct varchar_var {
 } var;
 ```
 
-입력으로 사용될 때 `strlen(arr)`과 `len` 중 더 짧은 것이 사용됩니다.
+입력값으로 사용할 때는 `strlen(arr)`과 `len` 중 더 짧은 값이 사용됩니다.
 
 ### 5.6 특수 데이터 타입
 
@@ -593,7 +593,7 @@ EXEC SQL END DECLARE SECTION;
 
 ### 5.8 호스트 변수로서의 구조체
 
-일치하는 구조체 멤버로 여러 열 가져오기:
+구조체 멤버에 여러 열을 한 번에 가져오기:
 
 ```c
 EXEC SQL BEGIN DECLARE SECTION;
@@ -623,7 +623,7 @@ EXEC SQL CLOSE cur1;
 
 ### 5.9 NULL 처리를 위한 인디케이터
 
-인디케이터는 null 값과 잘림을 추적합니다:
+인디케이터는 null 값과 잘림 여부를 추적합니다:
 
 ```c
 EXEC SQL BEGIN DECLARE SECTION;
@@ -644,7 +644,7 @@ EXEC SQL SELECT b INTO :val :val_ind FROM test1;
 
 #### no-indicator 모드
 
-전처리기에 `-r no_indicator`를 전달합니다. null 값은 다음과 같이 신호됩니다:
+전처리기에 `-r no_indicator`를 전달합니다. null 값은 다음과 같이 표현됩니다:
 - 문자 타입의 경우 빈 문자열
 - 정수 타입의 경우 가능한 가장 낮은 값 (예: `INT_MIN`)
 
@@ -677,13 +677,13 @@ while (1) {
 
 ## 6. 동적 SQL
 
-동적 SQL을 사용하면 애플리케이션이 런타임에 구성되거나 외부 소스에서 제공된 SQL 문을 실행할 수 있습니다. ECPG는 동적 SQL 문을 실행하기 위한 세 가지 주요 접근 방식을 제공합니다.
+동적 SQL을 사용하면 런타임에 구성되거나 외부에서 제공된 SQL 문을 실행할 수 있습니다. ECPG는 동적 SQL 실행을 위해 세 가지 주요 방식을 제공합니다.
 
 ### 6.1 결과 집합 없이 문장 실행
 
 명령: `EXECUTE IMMEDIATE`
 
-결과를 반환하지 않는 SQL 문(DDL, INSERT, UPDATE, DELETE)에 사용합니다.
+행을 반환하지 않는 SQL 문(DDL, INSERT, UPDATE, DELETE)에 사용합니다.
 
 ```c
 EXEC SQL BEGIN DECLARE SECTION;
@@ -693,11 +693,11 @@ EXEC SQL END DECLARE SECTION;
 EXEC SQL EXECUTE IMMEDIATE :stmt;
 ```
 
-제한사항: SELECT나 데이터를 검색하는 다른 문장은 실행할 수 없습니다.
+제한사항: SELECT나 데이터를 조회하는 문장은 실행할 수 없습니다.
 
 ### 6.2 입력 매개변수가 있는 문장 실행
 
-접근 방식: 문장을 한 번 준비하고 다른 매개변수로 여러 번 실행합니다.
+문장을 한 번 준비한 뒤, 다른 매개변수로 여러 번 실행하는 방식입니다.
 
 매개변수에 대한 플레이스홀더로 물음표(`?`)를 사용합니다:
 
@@ -711,7 +711,7 @@ EXEC SQL PREPARE mystmt FROM :stmt;
 EXEC SQL EXECUTE mystmt USING 42, 'foobar';
 ```
 
-정리: 더 이상 필요하지 않은 준비된 문장은 해제합니다:
+더 이상 필요하지 않은 준비된 문장은 해제합니다:
 
 ```c
 EXEC SQL DEALLOCATE PREPARE name;
@@ -737,7 +737,7 @@ EXEC SQL EXECUTE mystmt INTO :v1, :v2, :v3 USING 37;
 
 #### 여러 결과 행
 
-여러 행을 반환하는 쿼리에는 커서 를 사용합니다:
+여러 행을 반환하는 쿼리에는 커서를 사용합니다:
 
 ```c
 EXEC SQL BEGIN DECLARE SECTION;
@@ -781,7 +781,7 @@ EXEC SQL DISCONNECT ALL;
 
 ## 7. 오류 처리
 
-ECPG는 예외와 경고를 처리하기 위한 두 가지 비배타적 기능을 제공합니다:
+ECPG는 예외와 경고 처리를 위해 서로 독립적으로 사용할 수 있는 두 가지 기능을 제공합니다:
 1. 콜백 - `WHENEVER` 명령 사용
 2. 상세 정보 - `sqlca` 변수 접근
 
@@ -822,7 +822,7 @@ EXEC SQL WHENEVER SQLERROR STOP;
 
 #### 중요 참고사항
 
-`EXEC SQL WHENEVER`는 C 문이 아닌 전처리기 지시문 입니다. 오류 핸들러는 C 제어 흐름에 관계없이 설정된 위치 아래 의 모든 내장 SQL 문에 적용됩니다. 다음 패턴은 작동하지 않습니다:
+`EXEC SQL WHENEVER`는 C 문이 아니라 전처리기 지시문입니다. 오류 핸들러는 C 제어 흐름과 무관하게 지시문이 위치한 곳 이후의 모든 내장 SQL 문에 적용됩니다. 다음 패턴은 동작하지 않습니다:
 
 ```c
 /* 잘못됨 - if 블록 내부의 핸들러 */
@@ -885,7 +885,7 @@ struct
 
 #### 멀티스레딩
 
-멀티스레드 프로그램에서 각 스레드는 자동으로 `sqlca`의 자체 복사본을 갖습니다 (`errno`와 유사).
+멀티스레드 프로그램에서 각 스레드는 자동으로 `sqlca`의 독립적인 복사본을 갖습니다 (`errno`와 유사).
 
 #### 예제: sqlca 내용 출력
 
@@ -943,7 +943,7 @@ sqlstate: 42P01
 
 #### 권장사항
 
-새 애플리케이션에는 SQLSTATE 사용 - 더 나은 이식성과 일관성을 제공합니다.
+새 애플리케이션에는 SQLSTATE를 사용하세요. 이식성과 일관성이 더 뛰어납니다.
 
 ### 7.4 SQLCODE 오류 코드 참조
 
@@ -1071,15 +1071,15 @@ EXEC SQL INCLUDE "filename";
 
 #### 주요 동작
 
-- 전처리기는 `.h`가 이미 없으면 파일 이름에 추가합니다
+- 파일 이름에 `.h`가 없으면 전처리기가 자동으로 추가합니다
 - 검색 순서:
   1. 현재 디렉토리
   2. `/usr/local/include`
   3. PostgreSQL 포함 디렉토리 (예: `/usr/local/pgsql/include`)
   4. `/usr/include`
 - `EXEC SQL INCLUDE "filename"` 사용 시 현재 디렉토리만 검색됩니다
-- 포함된 파일이 전처리되므로 내장 SQL 문이 올바르게 처리됩니다
-- C의 `#include`와 동일하지 않음 - C의 #include는 SQL 명령을 전처리하지 않음
+- 포함된 파일도 전처리되므로 내장 SQL 문이 올바르게 처리됩니다
+- C의 `#include`와 동일하지 않습니다 — C의 `#include`는 SQL 명령을 전처리하지 않습니다
 
 참고: 포함 파일 이름은 대소문자를 구분합니다.
 
@@ -1103,9 +1103,9 @@ EXEC SQL UNDEF MYNUMBER;
 
 #### C `#define`과의 주요 차이점
 
-- `EXEC SQL DEFINE` 값은 ecpg 전처리기에 의해 평가되고 컴파일 전에 대체됩니다
-- 내장 SQL 쿼리에서 사용되는 상수에 C의 `#define`을 사용할 수 없습니다
-- `EXEC SQL DEFINE`/`UNDEF`의 효과는 여러 입력 파일에 걸쳐 전달되지 않습니다; 각 파일은 `-D` 명령줄 심볼만으로 새로 시작합니다
+- `EXEC SQL DEFINE` 값은 ecpg 전처리기가 평가하고 컴파일 전에 대체합니다
+- 내장 SQL 쿼리에서 사용하는 상수에는 C의 `#define`을 사용할 수 없습니다
+- `EXEC SQL DEFINE`/`UNDEF`의 효과는 여러 입력 파일에 걸쳐 전파되지 않습니다; 각 파일은 `-D` 명령줄 심볼만으로 새로 시작합니다
 
 ### 8.3 조건부 컴파일 지시문
 
@@ -1122,7 +1122,7 @@ EXEC SQL endif;           /* 조건부 블록 종료 */
 #### 특징
 
 - 구조는 최대 127 레벨까지 중첩 가능
-- `elif` 섹션은 name이 정의되어 있고 이전 섹션이 처리되지 않은 경우에만 처리됨
+- `elif` 섹션은 name이 정의되어 있고 이전 섹션이 처리되지 않은 경우에만 처리됩니다
 
 #### 예제
 
@@ -1168,13 +1168,13 @@ ecpg -o output.c input.pgc
 
 #### 2. 컴파일
 
-전처리된 C 파일을 정상적으로 컴파일합니다:
+전처리된 C 파일을 일반적인 방법으로 컴파일합니다:
 
 ```bash
 cc -c prog1.c
 ```
 
-중요: 기본 검색 위치에 없는 경우 PostgreSQL 헤더 경로를 포함합니다:
+중요: PostgreSQL 헤더가 기본 검색 경로에 없는 경우 경로를 명시합니다:
 ```bash
 cc -c prog1.c -I/usr/local/pgsql/include
 ```
@@ -1187,14 +1187,14 @@ cc -c prog1.c -I/usr/local/pgsql/include
 cc -o myprog prog1.o prog2.o ... -lecpg
 ```
 
-필요한 경우 라이브러리 경로를 추가합니다:
+라이브러리가 기본 경로에 없는 경우 경로를 추가합니다:
 ```bash
 cc -o myprog prog1.o prog2.o ... -lecpg -L/usr/local/pgsql/lib
 ```
 
 ### 9.3 설치 경로 찾기
 
-PostgreSQL 설치를 찾으려면 `pg_config` 또는 `pkg-config`를 사용합니다:
+PostgreSQL 설치 경로를 확인하려면 `pg_config` 또는 `pkg-config`를 사용합니다:
 
 ```bash
 pg_config --includedir
@@ -1205,7 +1205,7 @@ pkg-config --cflags --libs libecpg
 
 ### 9.4 Make 통합
 
-대규모 프로젝트의 경우 Makefile에 이 암시적 규칙을 추가합니다:
+대규모 프로젝트에서는 Makefile에 다음 암시적 규칙을 추가합니다:
 
 ```makefile
 ECPG = ecpg
@@ -1216,7 +1216,7 @@ ECPG = ecpg
 
 ### 9.5 스레딩 지원
 
-`libecpg` 라이브러리는 기본적으로 스레드 안전 하지만, 클라이언트 코드를 컴파일할 때 스레딩 컴파일러 플래그를 추가해야 할 수 있습니다.
+`libecpg` 라이브러리는 기본적으로 스레드 안전하지만, 클라이언트 코드 컴파일 시 스레딩 컴파일러 플래그를 추가해야 할 수 있습니다.
 
 ---
 

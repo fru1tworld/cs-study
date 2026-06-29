@@ -1,6 +1,5 @@
 # 모듈과 워크스페이스 (buf.yaml)
 
-> 이 문서는 buf의 모듈/워크스페이스 개념과 buf.yaml(v1·v2) 설정, 의존성·buf.lock을 한국어로 정리한 것입니다.
 > 원본: https://buf.build/docs/cli/modules-workspaces/ , https://buf.build/docs/configuration/v2/buf-yaml/ , https://buf.build/docs/configuration/v1/buf-yaml/
 
 ---
@@ -19,15 +18,15 @@
 
 ## 1. 모듈(Module)이란
 
-모듈은 buf가 하나의 단위로 다루는 `.proto` 파일들의 디렉터리 트리입니다. 빌드/버전/게시/의존의 대상이 되는 기본 단위이며, BSR의 한 저장소(repository)에 대응합니다.
+모듈은 buf가 하나의 단위로 다루는 `.proto` 파일들의 디렉터리 트리입니다. 빌드·버전·게시·의존의 기본 단위이며, BSR의 저장소(repository) 하나에 대응합니다.
 
-모듈 내부에서 import는 항상 **모듈 루트(root) 기준**으로 해석됩니다. 즉 `proto/acme/weather/v1/api.proto` 파일은 import 시 `acme/weather/v1/api.proto`로 참조됩니다(파일 위치 기준이 아님).
+모듈 내부에서 import는 항상 **모듈 루트(root) 기준**으로 해석됩니다. 즉 `proto/acme/weather/v1/api.proto` 파일은 import 시 `acme/weather/v1/api.proto`로 참조됩니다(파일의 실제 위치 기준이 아님).
 
 ---
 
 ## 2. 워크스페이스(Workspace)란
 
-워크스페이스는 하나 이상의 모듈을 함께 설정하는 단위입니다. 워크스페이스 수준에서 다음을 공유합니다.
+워크스페이스는 하나 이상의 모듈을 묶어 공통으로 설정하는 단위입니다. 워크스페이스 수준에서 다음을 공유합니다.
 
 - 공통 lint / breaking 기본 규칙
 - 외부 BSR 의존성(deps)
@@ -177,8 +176,8 @@ directories:
 
 buf는 import를 두 단계로 해석합니다.
 
-1. **로컬 해석**: 현재 워크스페이스의 모든 모듈에서 먼저 찾습니다. 같은 워크스페이스의 모듈은 별도 의존성 선언 없이 서로 import할 수 있습니다.
-2. **외부 해석**: 로컬에서 못 찾으면 `deps`에 선언된 BSR 모듈을 다운로드합니다.
+1. **로컬 해석**: 현재 워크스페이스의 모든 모듈에서 먼저 탐색합니다. 같은 워크스페이스 내 모듈은 별도 의존성 선언 없이 서로 import할 수 있습니다.
+2. **외부 해석**: 로컬에서 찾지 못하면 `deps`에 선언된 BSR 모듈을 다운로드합니다.
 
 `deps` 항목은 커밋/라벨을 함께 지정할 수 있습니다.
 
@@ -195,7 +194,7 @@ deps:
 
 ## 7. buf.lock 파일
 
-`buf.lock`은 외부 BSR 의존성을 특정 커밋으로 고정하여 재현 가능한 빌드를 보장하는 잠금 파일입니다. `buf dep update`가 자동 생성/갱신하며 직접 편집하지 않습니다.
+`buf.lock`은 외부 BSR 의존성을 특정 커밋으로 고정해 재현 가능한 빌드를 보장하는 잠금 파일입니다. `buf dep update`가 자동으로 생성·갱신하며, 직접 편집하지 않습니다.
 
 ```bash
 buf dep update   # deps를 해석해 buf.lock 갱신

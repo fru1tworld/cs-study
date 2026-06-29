@@ -1,7 +1,5 @@
 # Metrics
 
-> Instrument 종류, 집계 방식, Views, Exemplars를 정리합니다.
-
 ---
 
 ## 목차
@@ -34,7 +32,7 @@ http_requests_total
 └── {method=POST, status=200, route=/api/users}  → [(t1,  20), (t2,  21), ...]
 ```
 
-각 라벨 조합마다 별도 시계열이 생기므로 **카디널리티 폭발** 이 메트릭의 가장 큰 적입니다.
+라벨 조합마다 별도의 시계열이 생성되므로 **카디널리티 폭발** 이 메트릭의 가장 큰 적입니다.
 
 ---
 
@@ -106,10 +104,15 @@ duration = meter.create_histogram(
 duration.record(0.123, {"route": "/api/users", "status": 200})
 ```
 
-내부적으로 explicit bucket histogram을 사용:
+내부적으로 explicit bucket histogram을 사용하며, OTel SDK의 기본 bucket 경계는 다음과 같습니다:
 
 ```
-buckets: [0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1, 2.5, 5, 10]
+buckets: [0, 5, 10, 25, 50, 75, 100, 250, 500, 750, 1000, 2500, 5000, 7500, 10000]
+```
+
+예시 (단위 `s` 로 기록하면 대부분의 HTTP 요청은 낮은 bucket에 집중):
+
+```
 le=0.005:    10
 le=0.01:     50
 le=0.025:   200
@@ -146,7 +149,7 @@ meter.create_observable_counter("runtime.gc.count", callbacks=[gc_count_callback
 | UpDownCounter | `UpDownCounter` (delta) | `ObservableUpDownCounter` (절대값) |
 | Gauge | `Gauge` (값 직접 기록) | `ObservableGauge` (콜백으로 현재 상태) |
 
-핵심 차이: 동기는 **델타** 를 SDK에 더하고, 비동기는 콜백이 **현재 절대값** 을 보고합니다 (Counter는 누적값).
+핵심 차이: 동기 instrument는 **델타** 를 SDK에 누적하고, 비동기 instrument는 콜백이 **현재 절대값** 을 보고합니다 (ObservableCounter는 누적값).
 
 ---
 
@@ -328,7 +331,7 @@ http.server.duration (unit=s) → http_server_duration_seconds
 - **E**rrors — 에러율 (Counter, status 라벨)
 - **D**uration — 지연 분포 (Histogram)
 
-자동 계측이 보통 다음 이름으로 만들어줌 (Semantic Conv):
+자동 계측 라이브러리는 보통 아래 이름으로 생성합니다 (Semantic Conventions):
 ```
 http.server.request.duration       (Histogram, unit=s)
 http.server.active_requests        (UpDownCounter)

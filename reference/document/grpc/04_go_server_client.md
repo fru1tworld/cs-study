@@ -1,6 +1,5 @@
 # gRPC Go 서버와 클라이언트 구현
 
-> 이 문서는 gRPC 공식 문서의 "Go Basics tutorial" 중 서비스 정의, 서버/클라이언트 구현을 한국어로 정리한 것입니다.
 > 원본: https://grpc.io/docs/languages/go/basics/
 
 ---
@@ -18,7 +17,7 @@
 
 ## 서비스 정의
 
-`.proto` 파일에서 서비스와 메시지를 정의합니다. 아래는 공식 튜토리얼의 `RouteGuide` 서비스로, 4가지 RPC 타입을 모두 보여줍니다.
+`.proto` 파일에서 서비스와 메시지를 정의합니다. 아래는 공식 튜토리얼의 `RouteGuide` 서비스로, 네 가지 RPC 타입을 모두 포함합니다.
 
 ```proto
 syntax = "proto3";
@@ -66,7 +65,7 @@ protoc --go_out=. --go_opt=paths=source_relative \
 
 ## 서버 구현
 
-생성된 서버 인터페이스를 구현하는 구조체를 만듭니다. `pb.UnimplementedRouteGuideServer`를 임베드하면 향후 추가된 메서드에 대한 전방 호환성(forward compatibility)을 확보할 수 있습니다.
+생성된 서버 인터페이스를 구현하는 구조체를 만듭니다. `pb.UnimplementedRouteGuideServer`를 임베드하면 향후 메서드가 추가되더라도 전방 호환성(forward compatibility)을 유지할 수 있습니다.
 
 ```go
 type routeGuideServer struct {
@@ -78,7 +77,7 @@ type routeGuideServer struct {
 
 ### 단방향 RPC
 
-요청을 받아 응답을 반환합니다. 컨텍스트와 요청 메시지를 받고, 응답 메시지와 에러를 반환합니다.
+컨텍스트와 요청 메시지를 받아 응답 메시지와 에러를 반환합니다.
 
 ```go
 func (s *routeGuideServer) GetFeature(ctx context.Context, point *pb.Point) (*pb.Feature, error) {
@@ -94,7 +93,7 @@ func (s *routeGuideServer) GetFeature(ctx context.Context, point *pb.Point) (*pb
 
 ### 서버 스트리밍 RPC
 
-요청과 함께 전용 스트림 객체를 받습니다. `stream.Send`로 여러 응답을 보낸 뒤 `nil`을 반환하면 스트림이 종료됩니다.
+요청과 함께 전용 스트림 객체를 받습니다. `stream.Send`로 여러 응답을 전송한 뒤 `nil`을 반환하면 스트림이 종료됩니다.
 
 ```go
 func (s *routeGuideServer) ListFeatures(rect *pb.Rectangle, stream pb.RouteGuide_ListFeaturesServer) error {
@@ -170,7 +169,7 @@ func (s *routeGuideServer) RouteChat(stream pb.RouteGuide_RouteChatServer) error
 
 ## 서버 시작
 
-리스너(listener)를 열고, `grpc.NewServer`로 서버를 만든 뒤, 생성된 `RegisterXxxServer`로 구현을 등록하고 `Serve`로 요청을 처리합니다.
+리스너를 열고, `grpc.NewServer`로 서버를 생성한 뒤 `RegisterXxxServer`로 구현체를 등록하고, `Serve`를 호출해 요청을 처리합니다.
 
 ```go
 lis, err := net.Listen("tcp", fmt.Sprintf("localhost:%d", port))
@@ -188,9 +187,9 @@ grpcServer.Serve(lis)   // 블로킹: 종료될 때까지 요청을 처리
 
 ## 클라이언트 구현
 
-`grpc.NewClient`로 채널을 만들고, 생성된 `NewXxxClient`로 스텁을 만든 뒤 메서드를 호출합니다.
+`grpc.NewClient`로 채널을 생성하고, 생성된 `NewXxxClient`로 스텁을 만든 뒤 메서드를 호출합니다.
 
-> 참고: 최신 gRPC-Go에서는 `grpc.Dial` 대신 `grpc.NewClient`가 권장됩니다. `NewClient`는 즉시 연결하지 않고 지연 연결(lazy)하므로 별도의 블로킹 다이얼이 필요 없습니다. 암호화가 없는 연결에는 반드시 트랜스포트 자격증명을 명시해야 합니다.
+> 참고: 최신 gRPC-Go에서는 `grpc.Dial` 대신 `grpc.NewClient`를 권장합니다. `NewClient`는 즉시 연결하지 않고 지연 연결(lazy)하므로 별도의 블로킹 다이얼이 필요 없습니다. 암호화 없이 연결할 때는 트랜스포트 자격증명을 반드시 명시해야 합니다.
 
 ```go
 conn, err := grpc.NewClient(*serverAddr,
@@ -292,8 +291,8 @@ stream.CloseSend()
 
 ## 채널과 연결 주의사항
 
-- 채널 생성은 비용이 있으므로, 가능하면 채널과 스텁을 재사용하고 RPC마다 새로 만들지 않습니다.
-- `grpc.NewClient`는 연결을 지연시키며, 첫 RPC 시점에 연결을 맺습니다.
+- 채널 생성에는 비용이 따르므로, 가능하면 채널과 스텁을 재사용하고 RPC마다 새로 만들지 않습니다.
+- `grpc.NewClient`는 연결을 지연하며, 첫 RPC 시점에 실제 연결을 맺습니다.
 - 암호화 없이 연결할 때는 `grpc.WithTransportCredentials(insecure.NewCredentials())`를 명시해야 합니다(프로덕션에서는 TLS 사용 권장, `07_auth_security.md` 참조).
 
 ---

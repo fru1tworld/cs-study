@@ -1,13 +1,12 @@
 # Kafka 브로커 설정
 
-> 이 문서는 Apache Kafka 공식 문서의 "Broker Configs" 섹션을 한국어로 번역한 것입니다.
-> 원본: https://kafka.apache.org/documentation/#brokerconfigs
+> 원본 참고: https://kafka.apache.org/documentation/#brokerconfigs
 
 ---
 
 ## 개요
 
-Kafka 브로커는 수백 개 이상의 설정 옵션을 제공합니다. 이 문서에서는 가장 중요하고 자주 사용되는 브로커 설정들을 카테고리별로 설명합니다. 각 설정은 타입, 기본값, 유효값, 중요도, 업데이트 모드 정보를 포함합니다.
+Kafka 브로커는 수백 개 이상의 설정 옵션을 제공합니다. 여기서는 가장 중요하고 자주 사용되는 브로커 설정을 카테고리별로 설명합니다. 각 설정은 타입, 기본값, 유효값, 중요도, 업데이트 모드 정보를 포함합니다.
 
 ### 업데이트 모드 (Update Mode)
 
@@ -84,7 +83,7 @@ process.roles=broker,controller
 | 중요도 | High |
 | 업데이트 모드 | read-only |
 
-Kafka는 파티션을 이 디렉토리들에 분산하여 저장합니다. 전용 디스크 또는 SSD를 사용하는 것이 권장됩니다.
+Kafka는 파티션을 이 디렉토리들에 분산하여 저장합니다. 전용 디스크 또는 SSD 사용을 권장합니다.
 
 ```properties
 log.dirs=/var/kafka-logs/disk1,/var/kafka-logs/disk2,/var/kafka-logs/disk3
@@ -152,7 +151,7 @@ listeners=SASL_SSL://0.0.0.0:9094
 | 중요도 | High |
 | 업데이트 모드 | per-broker |
 
-클라우드 환경이나 NAT 뒤에서 실행할 때 실제 리스너와 다른 주소를 광고해야 할 경우 유용합니다.
+클라우드 환경이나 NAT 뒤에서 실행할 때 실제 리스너와 다른 주소를 외부에 알려야 하는 경우 사용합니다.
 
 ```properties
 # AWS에서 퍼블릭 IP 광고
@@ -228,7 +227,7 @@ controller.quorum.bootstrap.servers=controller1:9093,controller2:9093,controller
 
 ## ZooKeeper 설정 (ZooKeeper Configurations)
 
-> 참고: Kafka 4.0부터 ZooKeeper 모드는 더 이상 권장되지 않습니다. KRaft 모드 사용을 권장합니다.
+> 참고: Kafka 4.0에서 ZooKeeper 모드가 제거되었습니다. KRaft 모드를 사용하십시오.
 
 ### zookeeper.connect
 
@@ -410,7 +409,7 @@ log.segment.bytes=1073741824
 
 ### log.cleaner.dedupe.buffer.size
 
-모든 클리너 스레드에서 로그 중복 제거에 사용할 총 메모리 크기입니다.
+전체 클리너 스레드에서 로그 중복 제거에 사용하는 총 메모리 크기입니다.
 
 | 속성 | 값 |
 |------|-----|
@@ -443,7 +442,7 @@ log.segment.bytes=1073741824
 
 ### log.cleanup.policy
 
-보관 기간이 지난 로그 세그먼트의 정리 정책입니다.
+보관 기간이 지난 로그 세그먼트에 적용할 정리 정책입니다.
 
 | 속성 | 값 |
 |------|-----|
@@ -480,7 +479,7 @@ log.cleanup.policy=delete,compact
 | 중요도 | High |
 | 업데이트 모드 | cluster-wide |
 
-네트워크에서 요청을 수신하고 응답을 전송합니다. 실제 요청 처리는 I/O 스레드에서 수행됩니다.
+네트워크에서 요청을 수신하고 응답을 전송하는 역할을 합니다. 실제 요청 처리는 I/O 스레드에서 수행됩니다.
 
 ### num.io.threads
 
@@ -494,7 +493,7 @@ log.cleanup.policy=delete,compact
 | 중요도 | High |
 | 업데이트 모드 | cluster-wide |
 
-디스크 I/O를 포함한 요청 처리를 담당합니다. 최소한 디스크 수만큼 설정하는 것이 좋습니다.
+디스크 I/O를 포함한 요청 처리를 담당합니다. 최소한 디스크 수만큼은 설정하는 것이 좋습니다.
 
 ### num.replica.fetchers
 
@@ -507,11 +506,11 @@ log.cleanup.policy=delete,compact
 | 중요도 | High |
 | 업데이트 모드 | cluster-wide |
 
-이 값을 늘리면 팔로워 브로커의 I/O 병렬화 수준이 높아질 수 있습니다.
+이 값을 늘리면 팔로워 브로커의 I/O 병렬 처리 수준을 높일 수 있습니다.
 
 ### num.recovery.threads.per.data.dir
 
-시작 시 로그 복구 및 종료 시 플러시에 사용되는 데이터 디렉토리별 스레드 수입니다.
+브로커 시작 시 로그 복구와 종료 시 플러시에 사용되는 데이터 디렉토리당 스레드 수입니다.
 
 | 속성 | 값 |
 |------|-----|
@@ -534,7 +533,7 @@ log.cleanup.policy=delete,compact
 
 ### queued.max.requests
 
-네트워크 스레드를 차단하기 전 데이터 플레인에서 허용되는 대기 중인 요청 수입니다.
+네트워크 스레드를 블로킹하기 전, 데이터 플레인에서 허용하는 최대 대기 요청 수입니다.
 
 | 속성 | 값 |
 |------|-----|
@@ -584,7 +583,7 @@ min.insync.replicas=2
 
 ### replica.lag.time.max.ms
 
-팔로워가 리더와 동기화되지 않은 상태로 유지될 수 있는 최대 시간입니다. 이 시간을 초과하면 ISR(In-Sync Replicas)에서 제거됩니다.
+팔로워가 리더와 동기화되지 않은 상태를 허용하는 최대 시간입니다. 이 시간을 초과하면 해당 팔로워는 ISR(In-Sync Replicas)에서 제거됩니다.
 
 | 속성 | 값 |
 |------|-----|
@@ -595,7 +594,7 @@ min.insync.replicas=2
 
 ### replica.fetch.wait.max.ms
 
-팔로워 레플리카가 페치 요청에서 대기하는 최대 시간입니다.
+팔로워 레플리카의 페치 요청 최대 대기 시간입니다.
 
 | 속성 | 값 |
 |------|-----|
@@ -606,7 +605,7 @@ min.insync.replicas=2
 
 ### replica.fetch.min.bytes
 
-각 페치 응답에 예상되는 최소 바이트 수입니다.
+각 페치 응답에 기대하는 최소 바이트 수입니다.
 
 | 속성 | 값 |
 |------|-----|
@@ -617,7 +616,7 @@ min.insync.replicas=2
 
 ### replica.fetch.max.bytes
 
-각 파티션에서 페치를 시도할 최대 바이트 수입니다.
+파티션당 페치할 최대 바이트 수입니다.
 
 | 속성 | 값 |
 |------|-----|
@@ -652,7 +651,7 @@ Kafka에서 허용하는 레코드 배치의 최대 크기입니다.
 | 중요도 | High |
 | 업데이트 모드 | cluster-wide |
 
-컨슈머의 `fetch.message.max.bytes`보다 크거나 같아야 합니다.
+컨슈머의 `fetch.message.max.bytes` 이상으로 설정해야 합니다.
 
 ```properties
 # 10MB로 증가
@@ -661,7 +660,7 @@ message.max.bytes=10485760
 
 ### replica.fetch.response.max.bytes
 
-전체 페치 응답에 예상되는 최대 바이트 수입니다.
+전체 페치 응답의 최대 바이트 수입니다.
 
 | 속성 | 값 |
 |------|-----|
@@ -685,7 +684,7 @@ message.max.bytes=10485760
 | 중요도 | High |
 | 업데이트 모드 | read-only |
 
-프로덕션에서는 `false`로 설정하고 명시적으로 토픽을 생성하는 것을 권장합니다.
+프로덕션에서는 `false`로 설정하고 토픽을 명시적으로 생성하는 방식을 권장합니다.
 
 ```properties
 auto.create.topics.enable=false
@@ -831,7 +830,7 @@ compression.type=zstd
 | 중요도 | High |
 | 업데이트 모드 | read-only |
 
-가용성을 보장하기 위해 클러스터 크기보다 작거나 같아야 합니다.
+가용성 보장을 위해 클러스터 브로커 수 이하로 설정해야 합니다.
 
 ### offsets.topic.num.partitions
 
@@ -846,7 +845,7 @@ compression.type=zstd
 
 ### offsets.retention.minutes
 
-컨슈머 그룹이 모든 컨슈머를 잃은 후 오프셋을 유지하는 시간입니다.
+컨슈머 그룹의 모든 컨슈머가 사라진 이후 오프셋을 보존하는 시간입니다.
 
 | 속성 | 값 |
 |------|-----|
@@ -894,7 +893,7 @@ compression.type=zstd
 
 ### transactional.id.expiration.ms
 
-트랜잭션 ID가 만료되기 전 트랜잭션 코디네이터가 대기하는 시간입니다.
+트랜잭션 코디네이터가 트랜잭션 ID를 만료시키기 전까지 대기하는 시간입니다.
 
 | 속성 | 값 |
 |------|-----|
@@ -920,7 +919,7 @@ compression.type=zstd
 
 ### group.initial.rebalance.delay.ms
 
-그룹 코디네이터가 첫 번째 리밸런스를 시작하기 전 대기하는 시간입니다.
+그룹 코디네이터가 첫 번째 리밸런스를 시작하기 전에 대기하는 시간입니다.
 
 | 속성 | 값 |
 |------|-----|
@@ -1248,7 +1247,7 @@ sasl.enabled.mechanisms=PLAIN,SCRAM-SHA-256,SCRAM-SHA-512
 
 ## 브로커 설정 동적 업데이트
 
-Kafka는 브로커 재시작 없이 일부 설정을 동적으로 업데이트할 수 있습니다.
+Kafka는 브로커를 재시작하지 않고도 일부 설정을 동적으로 변경할 수 있습니다.
 
 ### 클러스터 전체 업데이트 (cluster-wide)
 

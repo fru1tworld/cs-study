@@ -1,6 +1,5 @@
 # Tempo 시각화 (Grafana 통합)
 
-> 이 문서는 Grafana Tempo 공식 문서의 Visualization 섹션을 한국어로 정리한 것입니다.
 > 원본: https://grafana.com/docs/tempo/latest/getting-started/tempo-in-grafana/
 
 ---
@@ -119,7 +118,7 @@ datasources:
 
 ### Query Type
 
-Tempo Explore는 4가지 쿼리 타입 제공:
+Tempo Explore는 4가지 쿼리 타입을 제공한다:
 
 | 타입 | 용도 |
 |------|------|
@@ -258,7 +257,7 @@ spanBar:
 
 #### Tempo → Loki (Trace to Logs)
 
-트레이스 보다가 관련 로그로 이동:
+트레이스를 보다가 관련 로그로 이동:
 
 ```yaml
 tracesToLogsV2:
@@ -308,7 +307,7 @@ tracesToMetrics:
 
 #### Mimir → Tempo (Exemplars)
 
-메트릭 차트의 점에 trace ID 포함:
+메트릭 차트의 점에 trace ID가 포함된다:
 
 ```yaml
 # Mimir 데이터소스
@@ -325,7 +324,7 @@ exemplarTraceIdDestinations:
 
 ### 개요
 
-쿼리 작성 없이 클릭으로 트레이스 탐색하는 Grafana 플러그인.
+쿼리 없이 클릭만으로 트레이스를 탐색하는 Grafana 플러그인.
 
 ### 설치
 
@@ -347,7 +346,7 @@ grafana-cli plugins install grafana-exploretraces-app
 
 ### 활용
 
-- 사전 지식 없이 시스템 파악
+- 사전 지식 없이도 시스템 파악 가능
 - 이상 자동 강조
 - 문제 디버깅 시작점
 

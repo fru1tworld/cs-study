@@ -1,6 +1,5 @@
 # 시각화 및 Grafana 통합
 
-> 이 문서는 Pyroscope 데이터를 Grafana 에서 시각화하는 방법을 다룹니다: 데이터 소스, Explore Profiles 앱, 트레이스/로그/메트릭과의 상관관계.
 > 원본: https://grafana.com/docs/grafana/latest/datasources/grafana-pyroscope/
 
 ---
@@ -99,7 +98,7 @@ grafana-cli plugins install grafana-pyroscope-app
 
 ### 데이터 소스 선택
 
-Explore Profiles는 등록된 Pyroscope 데이터 소스 중 하나를 사용. 멀티 테넌트라면 상단에서 데이터 소스 변경.
+Explore Profiles는 등록된 Pyroscope 데이터 소스 중 하나를 사용합니다. 멀티 테넌트 환경이라면 상단에서 데이터 소스를 변경합니다.
 
 ---
 
@@ -136,7 +135,7 @@ env          = label_values(env)
 
 ## Trace ↔ Profile 연동 (Span Profiles)
 
-트레이스의 특정 스팬에서 그 시간/인스턴스의 프로파일로 점프하는 기능. **Span Profiles** 라고 부릅니다.
+트레이스의 특정 스팬에서 해당 시간/인스턴스의 프로파일로 이동하는 기능으로, **Span Profiles**라고 합니다.
 
 ### 동작 원리
 
@@ -163,7 +162,7 @@ profiler, _ := pyroscope.Start(pyroscope.Config{
 
 ### Tempo 데이터 소스 설정
 
-Tempo 데이터 소스에서 Pyroscope를 "Profiles" 탭의 연결 대상으로 추가하면, 스팬 디테일에서 자동으로 link 노출.
+Tempo 데이터 소스의 "Profiles" 탭에서 Pyroscope를 연결 대상으로 추가하면 스팬 상세 화면에서 자동으로 링크가 표시됩니다.
 
 ---
 
@@ -182,11 +181,11 @@ URL: <Pyroscope explore URL>
 Datasource: Pyroscope
 ```
 
-또는 단순히 `service_name` 라벨을 share 하여 Pyroscope에 자동 매칭.
+또는 `service_name` 라벨을 공유하여 Pyroscope에 자동으로 매칭할 수도 있습니다.
 
 ### 단순 통합
 
-Loki에서 로그 라벨 `service_name`, `env`, `cluster` 가 Pyroscope와 동일하다면 Explore에서 "Open in Pyroscope" 같은 버튼이 자동 활성화됩니다.
+Loki의 로그 라벨 `service_name`, `env`, `cluster`가 Pyroscope와 동일하다면 Explore에서 "Open in Pyroscope" 버튼이 자동으로 활성화됩니다.
 
 ---
 
@@ -240,7 +239,7 @@ URL: /a/grafana-pyroscope-app/.../service/${__field.labels.service_name}?from=${
 | `version` | `v1.2.3` | 배포 버전 (Diff에 핵심) |
 | `instance` | `host123` | 인스턴스 (고카디널리티 주의) |
 
-OTel Resource Attribute 표준에 맞추는 것이 권장됩니다 (`service.name` 등 → 라벨 변환 시 `_` 사용).
+OTel Resource Attribute 표준(`service.name` 등)에 맞추는 것을 권장합니다. 라벨 변환 시 `.`은 `_`으로 사용합니다.
 
 ---
 

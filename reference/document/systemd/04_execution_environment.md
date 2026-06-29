@@ -1,6 +1,5 @@
 # 실행 환경과 샌드박스
 
-> 이 문서는 `man systemd.exec` 의 내용을 한국어로 정리한 것입니다.
 > 원본: https://www.freedesktop.org/software/systemd/man/systemd.exec.html
 
 ---
@@ -44,10 +43,12 @@ DynamicUser=yes
 - `DynamicUser=yes`: **동적 사용자**. 서비스 실행 시 임시 UID 할당, 종료 시 회수. `/etc/passwd` 를 더럽히지 않음. 강력 권장.
 - `UMask=0077`: 파일 생성 마스크
 
-`DynamicUser=yes` 는 다음과 자동으로 함께 적용됩니다:
-- `PrivateTmp=yes`
+`DynamicUser=yes` 는 다음 설정을 자동으로 적용합니다:
 - `RemoveIPC=yes`
 - `ProtectSystem=strict`
+- `ProtectHome=read-only`
+- `NoNewPrivileges=yes`
+- `RestrictSUIDSGID=yes`
 
 ---
 
@@ -93,8 +94,8 @@ AmbientCapabilities=CAP_NET_BIND_SERVICE
 NoNewPrivileges=yes
 ```
 
-- `CapabilityBoundingSet=`: 이 capability **이외에는 절대 가질 수 없음**. 빈 값(`~`)으로 모두 제거 가능
-- `AmbientCapabilities=`: 비-root 프로세스에게 부여할 capability
+- `CapabilityBoundingSet=`: 이 capability **이외에는 절대 가질 수 없음**. 빈 문자열을 할당하면 bounding set을 완전히 비울 수 있음
+- `AmbientCapabilities=`: 비-root 프로세스에 부여할 capability
 - `NoNewPrivileges=yes`: setuid 바이너리·파일 capability·SELinux transition으로도 권한 상승 불가. **거의 모든 서비스에 권장**
 
 ### 자주 쓰는 capability
@@ -153,7 +154,7 @@ PrivateNetwork=yes
 PrivateUsers=yes
 ```
 
-서비스가 자체 user namespace를 가짐. UID/GID 매핑이 격리.
+서비스가 자체 user namespace를 가지며 UID/GID 매핑이 격리됩니다.
 
 ### IPC namespace
 
@@ -185,7 +186,7 @@ ReadOnlyPaths=/etc/myapp
 InaccessiblePaths=/srv
 ```
 
-`ProtectSystem=strict` 으로 거의 모든 곳을 읽기 전용으로 만든 뒤 `ReadWritePaths=` 로 필요한 곳만 열어주는 패턴이 안전합니다.
+`ProtectSystem=strict`으로 거의 모든 경로를 읽기 전용으로 잠근 뒤, `ReadWritePaths=`로 필요한 경로만 열어주는 패턴이 안전합니다.
 
 ### 커널 보호
 
@@ -211,7 +212,7 @@ ProcSubset=pid
 
 ## 시스템 콜 필터링
 
-seccomp 기반 syscall 화이트리스트/블랙리스트.
+seccomp 기반 syscall 허용 목록/차단 목록입니다.
 
 ```ini
 SystemCallFilter=@system-service
@@ -251,7 +252,7 @@ RestrictRealtime=yes
 RestrictSUIDSGID=yes
 ```
 
-- `MemoryDenyWriteExecute=yes`: W^X 강제. JIT 컴파일러가 있는 언어(Java, Node.js 등)는 비활성화 필요
+- `MemoryDenyWriteExecute=yes`: W^X를 강제합니다. JIT 컴파일러를 사용하는 언어(Java, Node.js 등)에서는 비활성화가 필요합니다
 - `LockPersonality=yes`: `personality()` syscall 차단 (32/64비트 전환 등)
 - `RestrictRealtime=yes`: 실시간 스케줄링 차단
 - `RestrictSUIDSGID=yes`: setuid/setgid 비트 설정 차단
@@ -262,7 +263,7 @@ RestrictSUIDSGID=yes
 RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
 ```
 
-서비스가 사용할 수 있는 소켓 패밀리를 제한. AF_NETLINK 등을 차단해 공격 표면 축소.
+서비스가 사용할 수 있는 소켓 패밀리를 제한합니다. AF_NETLINK 등을 차단해 공격 표면을 줄일 수 있습니다.
 
 ### Namespace 제한
 
@@ -270,7 +271,7 @@ RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
 RestrictNamespaces=yes
 ```
 
-서비스가 새 namespace를 만드는 것을 차단. 컨테이너 런타임이 아닌 한 거의 항상 켜야 함.
+서비스가 새 namespace를 생성하는 것을 차단합니다. 컨테이너 런타임이 아닌 서비스에는 거의 항상 활성화하는 것이 좋습니다.
 
 ### KeyringMode
 

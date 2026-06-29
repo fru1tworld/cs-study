@@ -1,7 +1,6 @@
 # 02. 새 Ktor 프로젝트 만들기
 
 > 출처: https://ktor.io/docs/server-create-a-new-project.html
-> 내용을 정리·요약한 한국어 학습 노트입니다.
 
 ---
 
@@ -15,13 +14,13 @@ Ktor 프로젝트는 다음 세 가지 방법 중 하나로 시작할 수 있습
 
 1. https://start.ktor.io/ 접속
 2. `Project artifact` (예: `com.example.ktor-sample`) 입력
-3. `Configure`로 Build System (Gradle Kotlin DSL / Groovy / Maven), Engine (Netty / Jetty / CIO / Tomcat), 설정 포맷 (HOCON / YAML) 선택
+3. `Configure` 단계에서 Build System (Gradle Kotlin DSL / Groovy / Maven), Engine (Netty / Jetty / CIO / Tomcat), 설정 포맷 (HOCON / YAML) 선택
 4. 필요한 플러그인을 검색·추가 (Routing / Content Negotiation / Authentication 등)
 5. `Download`로 zip을 받음
 
 ### 2) IntelliJ IDEA Ultimate 플러그인
 
-Ultimate 한정. `New Project → Ktor`에서 프로젝트 이름, 웹사이트, 엔진, Advanced Settings(빌드 시스템, Ktor 버전)을 설정 후 플러그인을 골라 `Create`.
+Ultimate 전용. `New Project → Ktor`에서 프로젝트 이름, 웹사이트, 엔진, Advanced Settings(빌드 시스템, Ktor 버전)을 설정한 뒤 플러그인을 선택하고 `Create`.
 
 ### 3) Ktor CLI
 
@@ -34,7 +33,7 @@ winget install JetBrains.KtorCLI   # Windows
 ktor new
 ```
 
-대화형으로 프로젝트 이름·플러그인을 입력하고 `Ctrl+G`로 생성.
+대화형으로 프로젝트 이름과 플러그인을 입력한 뒤 `Ctrl+G`로 생성.
 
 ---
 
@@ -125,7 +124,7 @@ fun Application.configureRouting() {
 }
 ```
 
-`src/main/resources/mycontent/sample.html`에 파일을 두면 http://0.0.0.0:9292/content/sample.html 로 접근됩니다.
+`src/main/resources/mycontent/sample.html`에 파일을 두면 http://0.0.0.0:9292/content/sample.html 로 접근할 수 있습니다.
 
 ---
 
@@ -142,7 +141,7 @@ class ServerTest {
 }
 ```
 
-`testApplication`은 Ktor가 제공하는 in-memory 테스트 하네스로, 실제 소켓을 띄우지 않고 핸들러를 호출합니다. 자세한 내용은 [14_testing.md](14_testing.md).
+`testApplication`은 Ktor가 제공하는 in-memory 테스트 하네스로, 실제 소켓 없이 핸들러를 직접 호출합니다. 자세한 내용은 [14_testing.md](14_testing.md).
 
 ---
 

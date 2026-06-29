@@ -1,6 +1,5 @@
 # Microbenchmarks
 
-> 이 문서는 Netty 공식 Wiki의 "Microbenchmarks" 페이지를 한국어로 번역한 것입니다.
 > 원본: https://netty.io/wiki/microbenchmarks.html
 
 ---
@@ -11,7 +10,7 @@ Netty에는 일련의 마이크로벤치마크 테스트를 수행하는 'netty-
 
 명령줄에서 maven으로 실행하거나 IDE에서 직접 실행할 수 있습니다. 모든 테스트를 기본 설정으로 실행하려면 `mvn -DskipTests=false test`를 사용합니다. `skipTests=false`를 명시적으로 설정해야 하는 이유는, 일반 테스트 실행에서 (시간이 꽤 걸릴 수 있는) 마이크로벤치마크가 단위 테스트처럼 실행되는 것을 원치 않기 때문입니다.
 
-순조롭게 진행되면 JMH가 지정된 fork 수만큼 워밍업과 측정 반복을 수행하면서 깔끔한 요약을 보여줍니다. 일반적인 벤치마크 실행은 다음과 같이 보입니다(출력에서 이런 결과를 여러 번 보게 됩니다).
+실행이 정상적으로 진행되면 JMH가 지정된 fork 수만큼 워밍업과 측정 반복을 수행하며 요약을 출력합니다. 일반적인 벤치마크 실행 결과는 다음과 같습니다(출력에서 이런 결과를 여러 번 확인할 수 있습니다).
 
 ```
 # Fork: 2 of 2
@@ -77,11 +76,11 @@ i.n.m.b.ByteBufAllocatorBenchmark.unpooledHeapAllocAndFree_6_65536      thrpt   
 Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 993.382 sec - in io.netty.microbench.buffer.ByteBufAllocatorBenchmark
 ```
 
-벤치마크는 IDE에서 직접 실행할 수도 있습니다. netty 부모 프로젝트를 임포트했다면 `microbench` 서브프로젝트를 열고 `src/main/java/io/netty/microbench` 네임스페이스로 이동합니다. `buffer` 네임스페이스에서 `ByteBufAllocatorBenchmark`를 다른 JUnit 기반 테스트처럼 실행할 수 있습니다. 차이점은 (현재로서는) 전체 벤치마크를 한꺼번에만 실행할 수 있고 개별 서브 벤치마크를 따로 실행할 수는 없다는 점입니다. 콘솔에서 `mvn`으로 직접 실행했을 때와 같은 출력을 보게 됩니다.
+벤치마크는 IDE에서 직접 실행할 수도 있습니다. netty 부모 프로젝트를 임포트한 경우 `microbench` 서브프로젝트를 열고 `src/main/java/io/netty/microbench` 네임스페이스로 이동합니다. `buffer` 네임스페이스의 `ByteBufAllocatorBenchmark`는 다른 JUnit 기반 테스트와 동일한 방식으로 실행할 수 있습니다. 단, 현재는 전체 벤치마크를 한꺼번에만 실행할 수 있으며 개별 서브 벤치마크를 따로 실행할 수는 없습니다. 출력 결과는 `mvn`으로 직접 실행했을 때와 동일합니다.
 
 ## 벤치마크 작성하기
 
-벤치마크 자체를 작성하는 일은 어렵지 않지만, 제대로 작성하기는 까다롭습니다. microbench 프로젝트가 사용하기 어려워서가 아니라, 벤치마크를 작성할 때 흔히 빠지는 함정을 피해야 하기 때문입니다. 다행히 JMH 스위트는 그런 함정 대부분을 완화해주는 유용한 애너테이션과 기능을 제공합니다. 시작하려면 벤치마크가 `AbstractMicrobenchmark`를 상속하도록 만들면 됩니다. 이는 JUnit으로 테스트가 실행되도록 보장하고 일부 기본값을 설정해줍니다.
+벤치마크 자체를 작성하는 일은 어렵지 않지만 올바르게 작성하기는 까다롭습니다. microbench 프로젝트가 복잡해서가 아니라, 벤치마크 작성 시 흔히 빠지는 함정을 피해야 하기 때문입니다. 다행히 JMH는 그런 함정 대부분을 방지할 수 있는 유용한 애너테이션과 기능을 제공합니다. 시작점으로, 벤치마크 클래스가 `AbstractMicrobenchmark`를 상속하도록 합니다. 이를 통해 JUnit으로 테스트가 실행되고 기본값이 설정됩니다.
 
 ```java
 public class MyBenchmark extends AbstractMicrobenchmark {
@@ -89,7 +88,7 @@ public class MyBenchmark extends AbstractMicrobenchmark {
 }
 ```
 
-다음 단계는 `@GenerateMicroBenchmark`로 애노테이션된(그리고 설명적인 이름을 가진) 메서드를 만드는 것입니다.
+다음으로, `@GenerateMicroBenchmark` 애너테이션을 붙인 메서드를 알아보기 쉬운 이름으로 정의합니다.
 
 ```java
 @GenerateMicroBenchmark
@@ -98,7 +97,7 @@ public void measureSomethingHere() {
 }
 ```
 
-지금부터 가장 좋은 방법은 [여기](http://hg.openjdk.java.net/code-tools/jmh/file/tip/jmh-samples/src/main/java/org/openjdk/jmh/samples/)에서 적절한 JMH 테스트 작성법에 대한 샘플과 영감을 얻는 것입니다. 또한 JMH 주요 작성자 중 한 명의 [발표 자료](http://shipilev.net/#benchmarking)도 확인해보세요.
+이후에는 [JMH 샘플 코드](http://hg.openjdk.java.net/code-tools/jmh/file/tip/jmh-samples/src/main/java/org/openjdk/jmh/samples/)를 참고해 올바른 벤치마크 작성법을 익히는 것이 좋습니다. JMH 주요 작성자 중 한 명의 [발표 자료](http://shipilev.net/#benchmarking)도 함께 살펴보세요.
 
 ## 런타임 조건 커스터마이징
 
@@ -114,7 +113,7 @@ public void measureSomethingHere() {
 mvn -DskipTests=false -DwarmupIterations=2 -DmeasureIterations=3 -Dforks=1 test
 ```
 
-일반적으로 이렇게 적은 반복 횟수를 사용하는 것은 권장되지 않지만, 벤치마크가 잘 동작하는지만 확인하고 나중에 본격적인 벤치마크를 돌릴 때 유용할 수 있습니다.
+일반적으로 이처럼 적은 반복 횟수는 권장되지 않지만, 벤치마크가 정상적으로 동작하는지 빠르게 확인할 때는 유용합니다.
 
 애노테이션을 통해 테스트 단위로 기본 설정을 커스터마이징할 수도 있습니다.
 
@@ -126,4 +125,4 @@ public class MyBenchmark extends AbstractMicrobenchmark {
 }
 ```
 
-이는 클래스 단위와 메서드(벤치마크) 단위로 적용할 수 있습니다. 명령줄 인자는 항상 애노테이션 기본값보다 우선합니다.
+이 설정은 클래스 단위와 메서드(벤치마크) 단위 모두에 적용할 수 있습니다. 명령줄 인자는 항상 애너테이션 기본값보다 우선합니다.

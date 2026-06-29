@@ -2,7 +2,7 @@
 
 ## 개요
 
-PostgreSQL은 오픈 소스 관계형 데이터베이스 관리 시스템으로, 잘 구조화된 소스 코드 기반을 가지고 있습니다. 이 문서는 PostgreSQL 소스 코드의 구조, 주요 디렉토리, 빌드 시스템, 그리고 코딩 규칙에 대해 설명합니다.
+PostgreSQL은 오픈 소스 관계형 데이터베이스 관리 시스템으로, 잘 구조화된 소스 코드 기반을 가지고 있습니다.
 
 ---
 
@@ -65,7 +65,7 @@ PostgreSQL 소스 코드의 핵심은 `src` 디렉토리에 있으며, 다음과
 
 PostgreSQL에서 프론트엔드와 백엔드 코드는 명확히 분리됩니다. 프론트엔드 변경사항은 주로 `src/bin` 또는 `src/fe_utils` 디렉토리에 위치합니다.
 
-공유 코드의 경우, `#ifdef FRONTEND` 전처리기 지시문을 사용하여 프론트엔드와 백엔드 로직을 분리합니다:
+공유 코드의 경우 `#ifdef FRONTEND` 전처리기 지시문으로 프론트엔드와 백엔드 로직을 분리합니다:
 
 ```c
 #ifndef FRONTEND
@@ -88,9 +88,9 @@ MemoryContextSwitchTo(MemoryContext context)
 PostgreSQL은 BSD 스타일의 코드 포맷팅을 따릅니다:
 
 - 탭 간격: 4열 탭 간격 사용 (탭을 공백으로 확장하지 않음)
-- 들여쓰기: 각 논리적 들여쓰기 레벨마다 하나의 탭 스탑 추가
-- 중괄호: 제어 블록(`if`, `while`, `switch` 등)의 중괄호는 별도의 줄에 배치
-- 줄 길이: 80열 창에서의 가독성을 위해 줄 길이 제한
+- 들여쓰기: 논리적 들여쓰기 수준마다 탭 스탑 하나씩 추가
+- 중괄호: 제어 블록(`if`, `while`, `switch` 등)의 중괄호는 별도 줄에 배치
+- 줄 길이: 80열 너비 기준 가독성을 위해 줄 길이 제한
 
 ```c
 /* 올바른 포맷팅 예시 */
@@ -108,7 +108,7 @@ else
 
 ### 2.2 주석 스타일 (Comment Style)
 
-C++ 스타일 주석(`//`)은 사용하지 않습니다. `pgindent`가 이를 `/* ... */` 형태로 대체합니다.
+C++ 스타일 주석(`//`)은 사용하지 않으며, `pgindent`가 이를 `/* ... */` 형태로 변환합니다.
 
 단일 줄 주석:
 ```c
@@ -143,14 +143,14 @@ PostgreSQL 코드는 C99 표준 기능만을 사용해야 합니다.
 - 유니버설 문자 이름
 
 폴백(fallback)과 함께 허용되는 비-C99 기능:
-- `_Static_assert()` - C99 호환 대체로 폴백
-- `__builtin_constant_p` - GCC 확장으로 폴백 있음
+- `_Static_assert()` - C11 기능; C99 호환 대체로 폴백
+- `__builtin_constant_p` - GCC 확장; 사용 가능 여부 확인 후 폴백
 
 ### 2.4 함수형 매크로와 인라인 함수
 
-`static inline` 함수가 선호되는 경우:
-- 매크로 형태에서 다중 평가 위험이 있을 때
-- 매크로가 매우 길 때
+`static inline` 함수를 선호하는 경우:
+- 매크로 형태로 작성하면 다중 평가 위험이 있을 때
+- 매크로가 매우 길어질 때
 
 ```c
 /* 인라인 함수 예시 */
@@ -161,19 +161,19 @@ Max(int a, int b)
 }
 ```
 
-매크로가 필요하거나 더 쉬운 경우:
-- 다양한 타입을 매크로에 전달해야 할 때
+매크로가 필요하거나 더 적합한 경우:
+- 다양한 타입의 표현식을 전달해야 할 때
 - 표현식 다형성이 필요할 때
 
 ### 2.5 시그널 핸들러 (Signal Handlers)
 
-시그널 핸들러는 인터럽트 위험 때문에 매우 조심스럽게 작성되어야 합니다:
+시그널 핸들러는 인터럽트 위험이 있으므로 매우 신중하게 작성해야 합니다:
 
 - async-signal-safe 함수만 호출 가능 (POSIX 정의)
 - `volatile sig_atomic_t` 변수에만 접근 가능
 - `SetLatch()`는 PostgreSQL에서 signal-safe로 간주됨
 
-최선의 관행: 최소한의 작업만 수행 - 시그널 도착만 기록하고 외부 코드를 깨움:
+권장 방식: 최소한의 작업만 수행 — 시그널 수신을 기록하고 래치로 외부 코드를 깨움:
 
 ```c
 static void
@@ -191,7 +191,7 @@ handle_sighup(SIGNAL_ARGS)
 (*emit_log_hook)(edata);
 ```
 
-구조체 멤버의 경우: 추가 구두점 생략:
+구조체 멤버의 경우: 추가 구두점 없이 직접 호출:
 ```c
 paramInfo->paramFetch(paramInfo, paramId);
 ```
@@ -202,7 +202,7 @@ paramInfo->paramFetch(paramInfo, paramId);
 
 ### 3.1 ereport 함수
 
-서버 코드 내에서 생성되는 오류, 경고, 로그 메시지는 `ereport` 또는 이전 버전인 `elog`를 사용하여 생성해야 합니다.
+서버 코드 내 오류, 경고, 로그 메시지는 `ereport` 또는 레거시 함수인 `elog`를 사용해 생성합니다.
 
 필수 요소:
 1. 심각도 레벨 (Severity Level): `DEBUG`부터 `PANIC`까지 (`src/include/utils/elog.h`에 정의)
@@ -231,7 +231,7 @@ ereport(ERROR,
 
 ### 3.3 심각도에 따른 동작
 
-- ERROR 이상의 심각도: 현재 쿼리 실행을 중단하고 반환하지 않음
+- ERROR 이상의 심각도: 현재 쿼리 실행을 중단하며 반환하지 않음
 - ERROR 미만: 정상적으로 반환
 
 ### 3.4 보조 함수 (Auxiliary Functions)
@@ -277,10 +277,10 @@ ereport(level, errmsg_internal("format string", ...));
 ```
 
 특성:
-- SQLSTATE 코드가 항상 기본값
-- 메시지가 번역 대상이 아님
+- SQLSTATE 코드는 항상 기본값 사용
+- 메시지를 번역하지 않음
 - 내부 오류 및 저수준 디버그 로깅에만 사용
-- 표기법의 단순함으로 인해 "발생할 수 없는" 오류 체크에 선호됨
+- 표기가 간결하여 "발생할 수 없는" 오류 체크에 주로 사용됨
 
 ---
 
@@ -317,7 +317,7 @@ Hint:       부록을 완전한 문장으로 작성.
 ### 4.3 시제 사용
 
 - 과거 시제 ("could not"): 나중에 성공할 수 있는 일시적 실패
-- 현재 시제 ("cannot"): 영구적, 지속적인 조건
+- 현재 시제 ("cannot"): 영구적이거나 지속적인 조건
 
 ```c
 could not open file "%s": %m     /* 다음에는 작동할 수 있음 */
@@ -341,7 +341,7 @@ cannot open file "%s"            /* 불가능한 작업 */
 
 ### 5.1 Meson 빌드 시스템
 
-PostgreSQL 16 이상에서는 Meson 빌드 시스템을 지원합니다. Meson은 Ninja를 기본 백엔드로 사용하는 현대적인 빌드 시스템입니다.
+PostgreSQL 16 이상에서 Meson 빌드 시스템을 지원합니다. Meson은 Ninja를 기본 백엔드로 사용하는 현대적인 빌드 시스템입니다.
 
 빠른 시작:
 ```bash
@@ -518,10 +518,10 @@ make install
 ```
 
 주요 사항:
-- `configure.in`을 편집 (생성된 `configure`가 아님)
+- 생성된 `configure` 대신 `configure.in`을 직접 편집
 - 변경 후 `autoconf` 실행
 - `make distclean`으로 모든 파생 파일 제거
-- 자동 헤더 의존성 추적을 위해 `--enable-depend` 플래그 사용
+- 헤더 의존성 자동 추적을 위해 `--enable-depend` 플래그 사용
 
 ---
 
@@ -529,7 +529,7 @@ make install
 
 ### 6.1 pgindent
 
-`pgindent`는 PostgreSQL 코딩 표준에 맞게 코드를 자동으로 재포맷하는 도구입니다.
+`pgindent`는 PostgreSQL 코딩 표준에 맞게 코드를 자동으로 재포맷팅하는 도구입니다.
 
 위치: `src/tools/pgindent`
 
@@ -578,7 +578,7 @@ PostgreSQL 파서는 `src/backend/parser` 디렉토리에 위치합니다:
 
 ## 8. 회귀 테스트 (Regression Testing)
 
-PostgreSQL은 SQL 구현을 검증하고 시스템 발전에 따른 호환성을 보장하기 위해 설계된 내장 회귀 테스트 프레임워크를 가지고 있습니다.
+PostgreSQL은 SQL 구현을 검증하고 시스템 발전에 따른 호환성을 보장하는 내장 회귀 테스트 프레임워크를 제공합니다.
 
 ```bash
 # Meson으로 테스트 실행
@@ -748,4 +748,3 @@ PostgreSQL 소스 코드는 체계적으로 구성된 디렉토리 구조를 가
 4. 빌드 시스템: Meson (현대적) 및 Autoconf (레거시) 지원
 5. 개발 도구: pgindent, 에디터 설정, 다양한 분석 도구 제공
 
-이러한 구조와 규칙을 이해하면 PostgreSQL 소스 코드를 효과적으로 탐색하고 기여할 수 있습니다.

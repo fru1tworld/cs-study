@@ -1,7 +1,5 @@
 # 영구 저장과 로테이션
 
-> 이 문서는 journald의 디스크 저장 동작과 로테이션 정책을 정리한 것입니다.
-
 ---
 
 ## 목차
@@ -43,7 +41,7 @@ sudo systemd-tmpfiles --create --prefix /var/log/journal
 sudo systemctl restart systemd-journald
 ```
 
-`systemd-tmpfiles` 가 적절한 권한(`2755`, `root:systemd-journal`)을 적용해줍니다.
+`systemd-tmpfiles` 가 적절한 권한(`2755`, `root:systemd-journal`)을 자동으로 설정합니다.
 
 ### 방법 2: 명시적 설정
 
@@ -93,7 +91,7 @@ other::r-x
 
 ### machine-id
 
-`/etc/machine-id` 에 저장된 32자리 hex. systemd가 처음 부팅될 때 생성. 같은 머신의 모든 journal은 이 ID로 묶입니다.
+`/etc/machine-id` 에 저장된 32자리 hex 값으로, systemd 최초 부팅 시 생성됩니다. 같은 머신의 모든 journal은 이 ID로 묶입니다.
 
 ```bash
 cat /etc/machine-id
@@ -113,7 +111,7 @@ hostnamectl status
 
 ## 로테이션이 일어나는 조건
 
-다음 중 하나라도 만족하면 활성 파일이 archived로 전환되고 새 활성 파일이 만들어집니다:
+다음 중 하나라도 해당되면 활성 파일이 archived로 전환되고 새 활성 파일이 생성됩니다:
 
 ### 1. 파일 크기
 
@@ -153,7 +151,7 @@ journald가 손상을 감지하면 즉시 회전.
 
 ### 자동 vacuum
 
-journald가 한도를 초과하면 자동으로 가장 오래된 archived 파일부터 삭제합니다. 활성 파일은 절대 삭제되지 않습니다.
+한도를 초과하면 journald가 자동으로 가장 오래된 archived 파일부터 삭제합니다. 활성 파일은 삭제되지 않습니다.
 
 한도:
 - `SystemMaxUse=`: 총 사용량
@@ -169,7 +167,7 @@ sudo journalctl --vacuum-time=2weeks   # 2주 넘은 것 삭제
 sudo journalctl --vacuum-files=10      # 최신 10개 파일만
 ```
 
-수동 vacuum은 활성 파일을 건드리지 않습니다. 즉시 효과를 보려면 회전 먼저:
+수동 vacuum은 활성 파일에 영향을 주지 않습니다. 즉시 효과를 보려면 먼저 회전을 수행합니다:
 
 ```bash
 sudo journalctl --rotate
@@ -182,10 +180,10 @@ sudo journalctl --vacuum-size=500M
 
 ### 기본값
 
-설정을 명시하지 않으면 systemd가 자동으로 결정:
+설정을 명시하지 않으면 systemd가 다음과 같이 자동으로 결정합니다:
 
 - `SystemMaxUse=` = `min(디스크 용량의 10%, 4G)`
-- `SystemKeepFree=` = `max(디스크 용량의 15%, 4G)`
+- `SystemKeepFree=` = `min(디스크 용량의 15%, 4G)`
 - `SystemMaxFileSize=` = `SystemMaxUse / 8`
 
 ### 실제 사용량 확인
@@ -204,7 +202,7 @@ du -sh /run/log/journal/
 
 ### 압축률 보기
 
-journal은 LZ4 압축. 일반적으로 텍스트의 1/3~1/5로 줄어듭니다. 매우 반복적인 syslog는 더 좋은 압축률.
+journal은 LZ4로 압축되며, 일반적으로 텍스트 크기의 1/3~1/5로 줄어듭니다. 반복성이 높은 syslog는 압축률이 더 좋습니다.
 
 ### 권장 설정
 
@@ -302,18 +300,18 @@ sudo mv /var/log/journal/<machine-id>/system.journal /tmp/corrupt.journal
 sudo systemctl start systemd-journald
 ```
 
-손상된 파일은 백업해두고 새 파일로 시작.
+손상된 파일은 백업해 두고 새 파일로 시작합니다.
 
 ### 디스크 풀
 
-journald는 `SystemKeepFree=` 만큼 항상 비워두려 하지만, 다른 프로세스가 디스크를 채우면 한계가 있습니다.
+journald는 `SystemKeepFree=` 에 지정된 공간을 항상 확보하려 하지만, 다른 프로세스가 디스크를 채우면 한계가 있습니다.
 
 ```bash
 sudo journalctl --vacuum-size=100M
 df -h /var/log
 ```
 
-영구적으로는 `SystemMaxUse=` 를 작게 잡고 forward를 사용.
+근본적인 해결은 `SystemMaxUse=` 를 작게 설정하고 외부 수집기로 forward하는 방식을 사용합니다.
 
 ### 권한 거부
 
@@ -331,7 +329,7 @@ sudo usermod -aG systemd-journal $USER
 
 ### 너무 빨리 회전
 
-`SystemMaxFileSize` 가 너무 작아서 매분 회전한다면 늘려줍니다:
+`SystemMaxFileSize` 가 너무 작아 매분 회전이 발생한다면 값을 늘립니다:
 
 ```ini
 [Journal]
@@ -340,7 +338,7 @@ SystemMaxFileSize=256M
 
 ### archived 파일이 안 지워짐
 
-`SystemMaxUse=` 가 비어있고 `SystemKeepFree=` 만 보고 있다면 디스크가 충분할 때 vacuum이 발생하지 않습니다. 명시적 한도를 설정하세요.
+`SystemMaxUse=` 를 설정하지 않고 `SystemKeepFree=` 만 설정한 경우, 디스크 여유 공간이 충분하면 vacuum이 발생하지 않습니다. 명시적인 상한을 설정하세요.
 
 ---
 

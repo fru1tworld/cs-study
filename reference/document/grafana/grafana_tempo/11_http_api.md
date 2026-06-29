@@ -1,6 +1,5 @@
 # Tempo HTTP API 레퍼런스
 
-> 이 문서는 Grafana Tempo 공식 문서의 HTTP API 섹션을 한국어로 정리한 것입니다.
 > 원본: https://grafana.com/docs/tempo/latest/api_docs/
 
 ---
@@ -36,7 +35,7 @@ Tempo의 주요 HTTP API:
 
 ### 인증 헤더
 
-멀티 테넌시 활성화 시:
+멀티 테넌시를 활성화한 경우:
 ```
 X-Scope-OrgID: <tenant-id>
 ```
@@ -115,7 +114,7 @@ OTLP/JSON 형식:
 
 ### Trace 청크 응답
 
-큰 트레이스는 여러 청크로 나뉘어 응답:
+트레이스가 크면 여러 청크로 나뉘어 응답됩니다:
 
 ```json
 {
@@ -164,17 +163,19 @@ curl -G "http://tempo:3200/api/search" \
       "rootTraceName": "HTTP GET /api/users",
       "startTimeUnixNano": "1700000000000000000",
       "durationMs": 150,
-      "spanSet": {
-        "spans": [
-          {
-            "spanID": "...",
-            "startTimeUnixNano": "...",
-            "durationNanos": "1000000",
-            "attributes": [...]
-          }
-        ],
-        "matched": 1
-      }
+      "spanSets": [
+        {
+          "spans": [
+            {
+              "spanID": "...",
+              "startTimeUnixNano": "...",
+              "durationNanos": "1000000",
+              "attributes": [...]
+            }
+          ],
+          "matched": 1
+        }
+      ]
     }
   ],
   "metrics": {
@@ -188,7 +189,7 @@ curl -G "http://tempo:3200/api/search" \
 
 ### 레거시: `GET /api/search` (key=value)
 
-오래된 형식, TraceQL 권장:
+기존 key=value 방식으로, 현재는 TraceQL 사용을 권장합니다:
 
 ```bash
 curl -G "http://tempo:3200/api/search" \
@@ -266,7 +267,7 @@ curl -G "http://tempo:3200/api/search/tag/service.name/values" \
 
 ### `GET /api/v2/search/tag/<tag>/values`
 
-타입 정보 포함:
+타입 정보가 포함됩니다:
 
 ```json
 {
@@ -355,7 +356,7 @@ curl -G "http://tempo:3200/api/metrics/query_range" \
 
 #### gRPC: `4317`
 
-OpenTelemetry SDK가 gRPC로 직접 전송.
+OpenTelemetry SDK에서 gRPC로 직접 전송합니다.
 
 #### HTTP: `4318`
 
@@ -412,7 +413,7 @@ Prometheus 형식 자체 메트릭.
 
 ### `GET /config`
 
-현재 활성 구성. 일부 필드는 마스킹.
+현재 활성 구성을 반환합니다. 일부 필드는 마스킹됩니다.
 
 ```bash
 curl http://tempo:3200/config
@@ -473,7 +474,7 @@ curl -X POST http://tempo:3200/shutdown
 
 ### `GET /flush`
 
-Ingester 메모리 트레이스를 즉시 플러시.
+Ingester의 메모리 트레이스를 즉시 플러시합니다.
 
 ```bash
 curl http://tempo:3200/flush
@@ -496,7 +497,7 @@ go tool pprof heap.pprof
 
 ### `GET /api/echo`
 
-수신 헤더와 본문을 그대로 응답 (디버깅용).
+수신한 헤더와 본문을 그대로 응답합니다 (디버깅용).
 
 ```bash
 curl -H "X-Scope-OrgID: tenant-1" \
@@ -525,7 +526,7 @@ curl http://tempo:3200/api/status/buildinfo
 
 ### `GET /api/overrides`
 
-현재 적용된 테넌트별 overrides 조회 (관리자).
+현재 적용 중인 테넌트별 overrides를 조회합니다 (관리자용).
 
 ---
 

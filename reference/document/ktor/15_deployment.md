@@ -3,8 +3,6 @@
 > 출처:
 > - https://ktor.io/docs/server-fatjar.html
 > - 일반적인 컨테이너/네이티브 배포 패턴
->
-> 한국어 학습 노트입니다.
 
 ---
 
@@ -52,7 +50,7 @@ java -jar build/libs/app.jar
 
 `runFatJar` 태스크는 빌드 직후 바로 실행해 줍니다.
 
-> Kotlin Multiplatform 플러그인과 같이 쓰면 fatJar가 비활성화됩니다. JVM 전용 모듈을 따로 두고 MPP 모듈을 의존성으로 끼우는 게 정석.
+> Kotlin Multiplatform 플러그인과 함께 사용하면 fatJar가 비활성화됩니다. JVM 전용 모듈을 별도로 두고 MPP 모듈을 의존성으로 추가하는 것이 정석입니다.
 
 ---
 
@@ -102,7 +100,7 @@ EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]
 ```
 
-- 환경변수로 설정을 주입할 거라면 `application.conf`에 `${?PORT}`처럼 선택적 보간 키를 미리 박아두는 게 깔끔합니다 (`-Dconfig.override.X` 또는 `-P:ktor.deployment.X=...`도 가능).
+- 환경변수로 설정을 주입하려면 `application.conf`에 `${?PORT}`처럼 선택적 보간 키를 미리 선언해두는 것이 깔끔합니다 (`-Dconfig.override.X` 또는 `-P:ktor.deployment.X=...`도 가능).
 - 헬스체크 엔드포인트(`get("/healthz") { call.respond(HttpStatusCode.OK) }`)는 거의 항상 둡니다.
 
 ---
@@ -120,7 +118,7 @@ Gradle 표준 `application` 플러그인이 만드는 `distZip` / `distTar`는 s
 
 ## 서블릿 컨테이너 (WAR)
 
-`ServletApplicationEngine`을 사용하고 `war` 플러그인을 적용하면 Tomcat/Jetty 같은 외부 컨테이너에 올릴 수 있는 WAR가 만들어집니다. 사내 표준이 서블릿 컨테이너라면 이 경로를 사용.
+`ServletApplicationEngine`을 사용하고 `war` 플러그인을 적용하면 Tomcat/Jetty 같은 외부 컨테이너에 배포할 수 있는 WAR가 생성됩니다. 사내 표준이 서블릿 컨테이너라면 이 방법을 사용합니다.
 
 ---
 

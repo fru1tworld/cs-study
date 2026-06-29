@@ -1,6 +1,5 @@
 # Prometheus / Loki / Pyroscope 데이터 수집
 
-> 이 문서는 Grafana Alloy 공식 문서의 Collect 섹션 (OTel 외 신호) 을 한국어로 정리한 것입니다.
 > 원본: https://grafana.com/docs/alloy/latest/collect/
 
 ---

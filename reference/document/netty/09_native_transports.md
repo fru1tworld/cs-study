@@ -1,6 +1,5 @@
 # Native Transports (네이티브 전송)
 
-> 이 문서는 Netty 공식 Wiki의 "Native transports" 페이지를 한국어로 번역한 것입니다.
 > 원본: https://netty.io/wiki/native-transports.html
 
 ---
@@ -10,7 +9,7 @@ Netty는 다음과 같은 플랫폼별 JNI 전송을 제공합니다.
 - Linux (4.0.16부터)
 - MacOS/BSD (4.1.11부터)
 
-이 JNI 전송들은 특정 플랫폼에 특화된 기능을 추가하고, 가비지를 더 적게 만들며, NIO 기반 전송에 비해 일반적으로 더 좋은 성능을 보여줍니다.
+이 JNI 전송들은 특정 플랫폼에 특화된 기능을 제공하고, 가비지를 더 적게 생성하며, NIO 기반 전송에 비해 일반적으로 더 나은 성능을 발휘합니다.
 
 ## 네이티브 전송 사용하기
 
@@ -18,7 +17,7 @@ Netty는 다음과 같은 플랫폼별 JNI 전송을 제공합니다.
 
 ### Linux 네이티브 전송 사용하기
 
-네이티브 전송은 NIO 전송과 호환되므로 다음과 같이 단순한 search-and-replace만 하면 됩니다.
+네이티브 전송은 NIO 전송과 호환되므로 다음 search-and-replace만 하면 됩니다.
 
 * `NioEventLoopGroup` → `EpollEventLoopGroup`
 * `NioEventLoop` → `EpollEventLoop`
@@ -80,7 +79,7 @@ Netty는 다음과 같은 플랫폼별 JNI 전송을 제공합니다.
 
 ## 네이티브 전송 빌드하기
 
-이미 네이티브 전송 JAR이 있다면, JAR 안에 필요한 공유 라이브러리 파일(`.so`, `.dll`, `.dynlib` 등)이 포함되어 있고 자동으로 로드되므로 직접 빌드할 필요는 없습니다.
+이미 네이티브 전송 JAR이 있다면, JAR 안에 필요한 공유 라이브러리 파일(`.so`, `.dll`, `.dylib` 등)이 포함되어 있고 자동으로 로드되므로 직접 빌드할 필요는 없습니다.
 
 ### Linux 네이티브 전송 빌드
 

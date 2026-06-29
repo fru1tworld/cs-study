@@ -1,6 +1,5 @@
 # Loki 스토리지 마이그레이션
 
-> 이 문서는 Grafana Loki 공식 문서의 Storage 및 Migration 섹션을 한국어로 정리한 것입니다.
 > 원본: https://grafana.com/docs/loki/latest/operations/storage/
 
 ---
@@ -51,14 +50,14 @@
 
 ### 왜 TSDB인가?
 
-- **압축률 향상**: 일반적으로 20-30% 작은 인덱스
-- **쿼리 성능**: 라벨 매칭 빠름
-- **샤딩 지원**: TSDB는 쿼리 샤딩 자동 지원
-- **Bloom 필터 지원**: 새 기능 활용 가능
+- **압축률 향상**: 일반적으로 20~30% 작은 인덱스
+- **쿼리 성능**: 라벨 매칭이 빠름
+- **샤딩 지원**: 쿼리 샤딩 자동 지원
+- **Bloom 필터 지원**: 신규 기능 활용 가능
 
 ### 마이그레이션 전략: 점진적 (Cutover Date)
 
-기존 데이터는 그대로 두고, **특정 날짜부터 새 스키마 적용**:
+기존 데이터는 그대로 유지하고, **특정 날짜부터 새 스키마를 적용**합니다.
 
 ```yaml
 schema_config:
@@ -84,9 +83,9 @@ schema_config:
 
 ### 주의사항
 
-1. **`from` 날짜는 반드시 미래** — 과거 날짜를 쓰면 데이터 손실
-2. **여유 시간 두기** — 최소 24시간 후 날짜 권장 (모든 인스턴스가 새 설정 받을 시간)
-3. **모든 컴포넌트 동시 업데이트** — Ingester, Querier, Compactor 모두
+1. **`from` 날짜는 반드시 미래** — 과거 날짜를 사용하면 데이터 손실 위험
+2. **여유 시간 확보** — 최소 24시간 이후 날짜 권장 (모든 인스턴스가 새 설정을 수신할 시간 확보)
+3. **모든 컴포넌트 동시 업데이트** — Ingester, Querier, Compactor 전체 적용
 
 ### TSDB Shipper 구성
 
@@ -122,7 +121,7 @@ sum(rate(loki_index_request_duration_seconds_count[5m]))
 
 ### BoltDB 데이터 정리
 
-보존 기간이 지나면 자동으로 BoltDB 데이터 만료. 모든 BoltDB 데이터가 만료되면 schema_config에서 해당 항목 제거 가능.
+보존 기간이 지나면 BoltDB 데이터가 자동으로 만료됩니다. 모든 BoltDB 데이터가 만료된 후 schema_config에서 해당 항목을 제거할 수 있습니다.
 
 ---
 
@@ -182,9 +181,9 @@ storage_config:
     bucket_name: new-loki-bucket               # 새 (쓰기/읽기)
 ```
 
-### 데이터 복사 (선택적)
+### 데이터 복사 (선택)
 
-기존 데이터를 새 백엔드로 복사하려면:
+기존 데이터를 새 백엔드로 복사하는 방법:
 
 ```bash
 # rclone 사용 예시
@@ -193,7 +192,7 @@ rclone sync s3:old-bucket gcs:new-bucket \
   --checkers 32
 ```
 
-복사 후 schema_config의 `from` 날짜를 과거로 변경 가능 (단, 기존 prefix와 충돌 없게).
+복사 후 schema_config의 `from` 날짜를 과거로 변경할 수 있습니다. 단, 기존 prefix와 충돌하지 않도록 주의하세요.
 
 ---
 
@@ -211,7 +210,7 @@ rclone sync s3:old-bucket gcs:new-bucket \
 
 ### 적용 방법
 
-같은 store 내 버전 변경도 새 항목으로 추가:
+동일한 store 내에서 버전을 변경할 때도 새 항목으로 추가합니다.
 
 ```yaml
 schema_config:
@@ -237,7 +236,7 @@ schema_config:
 
 ## Single Store에서 분리 모드로
 
-Loki 2.0 이전에는 인덱스와 청크를 분리된 스토어에 저장했습니다. 현재는 **Single Store** 가 표준 (인덱스+청크 모두 오브젝트 스토리지).
+Loki 2.0 이전에는 인덱스와 청크를 별도의 스토어에 분리하여 저장했습니다. 현재는 인덱스와 청크 모두 오브젝트 스토리지를 사용하는 **Single Store** 방식이 표준입니다.
 
 ### 마이그레이션 (드물게 필요)
 
@@ -271,7 +270,7 @@ storage_config:
     s3: s3://...
 ```
 
-기존 Cassandra 데이터는 보존 기간 만료까지 읽기 전용 유지.
+기존 Cassandra 데이터는 보존 기간이 만료될 때까지 읽기 전용으로 유지됩니다.
 
 ---
 
@@ -332,7 +331,7 @@ storage_config:
 - 일부 구성 옵션 제거
 - ingester WAL 형식 호환성 (재시작 시 비워질 수 있음)
 
-각 버전 [업그레이드 가이드](https://grafana.com/docs/loki/latest/setup/upgrade/) 필독.
+각 버전별 [업그레이드 가이드](https://grafana.com/docs/loki/latest/setup/upgrade/)를 반드시 참고하세요.
 
 ---
 
@@ -340,14 +339,14 @@ storage_config:
 
 ### 시나리오 1: 클러스터 분할
 
-큰 클러스터를 두 클러스터로 분할 (예: 테넌트별).
+하나의 클러스터를 두 클러스터로 분할합니다 (예: 테넌트별 분리).
 
 #### 단계
 
-1. 새 클러스터에 일부 테넌트 새로 시작 (실시간만)
-2. 과거 데이터는 기존 클러스터에서 계속 쿼리
-3. 특정 시점 후의 데이터만 새 클러스터에서 조회
-4. 보존 기간 후 기존 클러스터에서 정리
+1. 새 클러스터에서 일부 테넌트를 신규 시작 (실시간 데이터만)
+2. 과거 데이터는 기존 클러스터에서 계속 조회
+3. 특정 시점 이후 데이터는 새 클러스터에서 조회
+4. 보존 기간 경과 후 기존 클러스터 정리
 
 ### 시나리오 2: 데이터 이전
 
@@ -387,7 +386,7 @@ for stream in data["data"]["result"]:
     )
 ```
 
-> 주의: 시간 한도(`reject_old_samples_max_age`)를 임시로 늘려야 함:
+> 주의: 오래된 샘플 거부 제한(`reject_old_samples_max_age`)을 임시로 늘려야 합니다.
 > ```yaml
 > limits_config:
 >   reject_old_samples: false
@@ -395,7 +394,7 @@ for stream in data["data"]["result"]:
 
 #### Object Storage 직접 복사
 
-같은 스키마 사용 시 가장 빠름.
+동일한 스키마를 사용하는 경우 가장 빠른 방법입니다.
 
 ```bash
 # AWS CLI
@@ -408,7 +407,7 @@ rclone sync old:loki-bucket new:loki-bucket \
   --checkers 64
 ```
 
-복사 후 새 클러스터의 `storage_config`를 새 버킷으로 설정.
+복사 후 새 클러스터의 `storage_config`에서 새 버킷을 지정합니다.
 
 ---
 
@@ -418,7 +417,7 @@ rclone sync old:loki-bucket new:loki-bucket \
 
 #### 오브젝트 스토리지 백업
 
-가장 중요. 다음 옵션:
+가장 중요한 부분으로, 다음 옵션을 활용할 수 있습니다.
 
 **S3 Versioning + Cross-Region Replication**
 
@@ -443,7 +442,7 @@ rclone sync old:loki-bucket new:loki-bucket \
 
 **GCS Multi-Regional Buckets**
 
-기본적으로 여러 리전에 복제.
+기본적으로 여러 리전에 자동 복제됩니다.
 
 **Azure GRS**
 
@@ -456,15 +455,15 @@ Geo-Redundant Storage로 자동 복제.
 - 룰 파일들
 - Helm values
 
-GitOps 권장 (모든 구성을 Git으로 관리).
+모든 구성을 Git으로 관리하는 GitOps 방식을 권장합니다.
 
 ### 복구 절차
 
 #### 부분 복구
 
-특정 청크 손상 시:
+특정 청크가 손상된 경우:
 1. S3 Versioning에서 이전 버전 복구
-2. 영향 받은 시간대만 영향
+2. 손상된 시간대의 데이터만 영향받음
 
 #### 전체 복구
 
@@ -482,8 +481,8 @@ DR 사이트 운영:
 
 ### WAL 데이터
 
-WAL은 일시적이므로 백업 불필요. Ingester 재시작 시 메모리 복구용.
+WAL은 임시 데이터이므로 별도 백업이 필요하지 않습니다. Ingester 재시작 시 메모리 데이터 복구 용도로 사용됩니다.
 
 WAL 디스크 손상 시:
-- 최근 1-2시간 데이터 손실 가능
-- 복제 계수 3이면 다른 Ingester에서 복구 가능
+- 최근 1~2시간 데이터 손실 가능
+- 복제 계수가 3 이상이면 다른 Ingester에서 복구 가능

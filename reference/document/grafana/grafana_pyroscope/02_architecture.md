@@ -1,6 +1,5 @@
 # Pyroscope 아키텍처
 
-> 이 문서는 Grafana Pyroscope의 내부 아키텍처와 컴포넌트, 데이터 흐름, 스토리지 구조를 설명합니다.
 > 원본: https://grafana.com/docs/pyroscope/latest/reference-pyroscope-architecture/
 
 ---
@@ -79,8 +78,8 @@ Pyroscope는 **마이크로서비스 기반 수평 확장 아키텍처** 를 따
 
 **역할**: 쿼리 시 Ingester(최근)와 Store-Gateway(장기)의 데이터를 합쳐 반환합니다.
 
-- 라벨 셀렉터에 매칭되는 시리즈를 찾고
-- 시간 범위에 해당하는 블록을 식별하여 다운로드/스트리밍
+- 라벨 셀렉터에 매칭되는 시리즈를 탐색하고
+- 시간 범위에 해당하는 블록을 식별해 다운로드/스트리밍
 - pprof 형식으로 머지(merge)하거나 flame graph 데이터로 변환
 - 상태 비저장 → 수평 확장 가능
 
@@ -135,7 +134,7 @@ Pyroscope는 **마이크로서비스 기반 수평 확장 아키텍처** 를 따
    - 메모리의 헤드 블록(head block)에 추가
    - WAL에 기록
 4. **블록 빌드 & flush**
-   - 헤드 블록이 일정 크기/시간에 도달하면 closed
+   - 헤드 블록이 일정 크기/시간에 도달하면 닫힘(closed)
    - 컬럼형 포맷으로 직렬화하여 오브젝트 스토리지에 업로드
 5. **Compactor 병합**
    - 일정 주기마다 작은 블록을 큰 블록으로 병합
@@ -190,7 +189,7 @@ Pyroscope는 분산 컴포넌트 간 멤버십과 샤딩을 위해 **해시 링(
 
 ### 블록 (Block)
 
-- TSDB 영감을 받은 디자인
+- TSDB에서 영감을 받은 설계
 - 시간 범위(예: 2시간)와 테넌트 단위로 묶인 단위
 - ULID 기반 식별자
 
@@ -209,7 +208,7 @@ Pyroscope는 분산 컴포넌트 간 멤버십과 샤딩을 위해 **해시 링(
 ```
 
 - **profiles.parquet**: 프로파일 본체. Apache Parquet으로 저장되어 컬럼별 압축·필터링이 가능
-- **symbols/**: 스택 트레이스의 함수 이름, 파일, 라인을 dedup하여 저장 → 압축률 ↑
+- **symbols/**: 스택 트레이스의 함수 이름, 파일, 라인을 중복 제거(dedup)하여 저장 → 압축률 ↑
 - **index.tsdb**: 라벨 → 시리즈 매핑
 
 ### 보존 (Retention)
@@ -236,7 +235,7 @@ Pyroscope는 분산 컴포넌트 간 멤버십과 샤딩을 위해 **해시 링(
 
 ### 단일 테넌트 운영
 
-소규모 환경이라면 `auth_enabled: false` 로 두고 모든 데이터를 `anonymous` 테넌트에 저장할 수 있습니다.
+소규모 환경이라면 `multitenancy_enabled: false` (기본값)로 두고 모든 데이터를 `anonymous` 테넌트에 저장할 수 있습니다.
 
 ---
 

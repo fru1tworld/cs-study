@@ -1,13 +1,12 @@
 # 03. 엔진 (Engines)
 
 > 출처: https://ktor.io/docs/server-engines.html
-> 내용을 정리한 한국어 학습 노트입니다.
 
 ---
 
 ## 엔진이란
 
-Ktor의 **엔진(Engine)** 은 실제로 TCP 소켓을 열고 HTTP 요청을 받아 Ktor 파이프라인에 넘기는 컴포넌트입니다. Ktor는 엔진을 추상화해 두었기 때문에, 같은 애플리케이션 코드를 Netty 위에서도 Jetty 위에서도 돌릴 수 있습니다.
+Ktor의 **엔진(Engine)** 은 실제로 TCP 소켓을 열고 HTTP 요청을 받아 Ktor 파이프라인에 전달하는 컴포넌트입니다. Ktor는 엔진을 추상화하기 때문에 같은 애플리케이션 코드를 Netty에서도 Jetty에서도 실행할 수 있습니다.
 
 ---
 
@@ -29,7 +28,7 @@ Ktor의 **엔진(Engine)** 은 실제로 TCP 소켓을 열고 HTTP 요청을 받
 
 ### embeddedServer (코드 중심)
 
-엔진과 포트, 모듈을 코드 인자로 직접 지정합니다. 빠른 프로토타이핑·테스트에 좋습니다.
+엔진, 포트, 모듈을 코드 인자로 직접 지정합니다. 빠른 프로토타이핑·테스트에 적합합니다.
 
 ```kotlin
 fun main() {
@@ -41,7 +40,7 @@ fun main() {
 
 ### EngineMain (설정 파일 중심)
 
-엔진 모듈이 제공하는 `EngineMain.main(args)`를 사용. 포트·모듈은 `application.conf` / `application.yaml`에서 읽습니다. 운영 배포에 적합.
+엔진 모듈이 제공하는 `EngineMain.main(args)`를 사용합니다. 포트·모듈은 `application.conf` / `application.yaml`에서 읽습니다. 운영 배포에 적합합니다.
 
 ```kotlin
 fun main(args: Array<String>) =
@@ -61,13 +60,13 @@ ktor:
       - com.example.ApplicationKt.module
 ```
 
-`EngineMain.createServer(args)`를 쓰면 서버 인스턴스만 만들고 `start()` 시점을 직접 제어할 수도 있습니다.
+`EngineMain.createServer(args)`를 사용하면 서버 인스턴스만 생성하고 `start()` 호출 시점을 직접 제어할 수 있습니다.
 
 ---
 
 ## 공통 엔진 설정 옵션
 
-`embeddedServer(... , configure = { ... })` 블록에서 또는 설정 파일 `ktor.deployment.*` 키로 지정합니다.
+`embeddedServer(... , configure = { ... })` 블록이나 설정 파일의 `ktor.deployment.*` 키로 지정합니다.
 
 | 옵션 | 의미 |
 | --- | --- |

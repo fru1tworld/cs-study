@@ -1,7 +1,6 @@
 # 10. 세션 (Sessions)
 
 > 출처: https://ktor.io/docs/server-sessions.html
-> 한국어 학습 노트입니다.
 
 ---
 
@@ -53,7 +52,7 @@ install(Sessions) {
 
 ### 클라이언트 측 (기본)
 
-쿠키/헤더 값에 페이로드를 직접 인코딩해서 클라이언트가 들고 다닙니다. 서버는 stateless.
+쿠키/헤더 값에 페이로드를 직접 인코딩하여 클라이언트가 보관합니다. 서버는 stateless.
 
 ### 서버 측
 
@@ -151,4 +150,4 @@ routing {
 
 - 쿠키에는 항상 `httpOnly = true`, 가능하면 `secure = true`, `SameSite=Lax` 이상.
 - 서명/암호화 키는 환경변수 또는 시크릿 매니저로 주입.
-- 페이로드를 크게 들고 다니면 모든 요청에 cost가 붙음 → 길어지면 server-side 저장으로 전환.
+- 페이로드가 커지면 모든 요청에 비용이 발생하므로 → server-side 저장으로 전환.

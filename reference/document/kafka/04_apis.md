@@ -1,6 +1,5 @@
 # Kafka APIs
 
-> 이 문서는 Apache Kafka 공식 문서의 APIs 섹션을 한국어로 번역한 것입니다.
 > 원본: https://kafka.apache.org/documentation/#api
 
 ---
@@ -79,7 +78,7 @@ public class SimpleProducer {
 | 설정 | 설명 | 기본값 |
 |------|------|--------|
 | `bootstrap.servers` | Kafka 브로커 주소 목록 | - |
-| `acks` | 메시지 확인 수준 (0, 1, all) | 1 |
+| `acks` | 메시지 확인 수준 (0, 1, all) | all |
 | `retries` | 전송 실패 시 재시도 횟수 | 2147483647 |
 | `batch.size` | 배치 크기 (바이트) | 16384 |
 | `linger.ms` | 배치 전송 대기 시간 | 0 |
@@ -329,7 +328,7 @@ Kafka에서 외부 시스템으로 데이터를 내보냅니다:
 | FileStream | Source/Sink | 파일 시스템 연동 |
 | Debezium | Source | CDC(Change Data Capture) |
 
-많은 사용자가 사용자 정의 커넥터 코드를 작성할 필요 없이 기존의 사전 구축된 커넥터를 사용합니다.
+대부분의 경우 커스텀 커넥터를 직접 구현하지 않고 기존에 공개된 커넥터를 그대로 활용할 수 있습니다.
 
 자세한 내용은 [Kafka Connect 문서](https://kafka.apache.org/documentation/#connect)를 참조하세요.
 

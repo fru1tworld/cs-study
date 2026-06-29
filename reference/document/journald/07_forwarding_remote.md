@@ -1,6 +1,5 @@
 # Forwarding과 Remote 전송
 
-> 이 문서는 journald의 forwarding 옵션과 systemd-journal-remote/upload/gatewayd 도구를 정리한 것입니다.
 > 원본: https://www.freedesktop.org/software/systemd/man/systemd-journal-remote.service.html , https://www.freedesktop.org/software/systemd/man/systemd-journal-upload.service.html
 
 ---
@@ -91,7 +90,7 @@ $ModLoad imuxsock                # 시스템 로그 소켓
 
 ## systemd-journal-remote
 
-journal 형식 그대로 다른 머신에 전송하는 systemd 자체 도구. journal 바이너리 인덱스가 그대로 보존되어 검색 성능이 좋습니다.
+journal 형식을 그대로 다른 머신에 전송하는 systemd 자체 도구. journal 바이너리 인덱스가 보존되므로 검색 성능이 좋습니다.
 
 ### 수신 측 (서버)
 
@@ -138,7 +137,7 @@ journalctl -o export | curl -k --data-binary @- https://server:19532/upload
 
 ## systemd-journal-upload
 
-송신 전용 데몬. 로컬 journal을 읽어 원격 `journal-remote` 에 PUT.
+송신 전용 데몬. 로컬 journal을 읽어 원격 `journal-remote` 로 전송합니다.
 
 ### 설정
 
@@ -172,7 +171,7 @@ systemctl status systemd-journal-upload
 
 ## systemd-journal-gatewayd
 
-journal을 HTTP API로 노출하는 게이트웨이. 웹 UI나 다른 도구가 query할 수 있게 함.
+journal을 HTTP API로 노출하는 게이트웨이. 웹 UI나 다른 도구에서 조회할 수 있도록 합니다.
 
 ### 시작
 
@@ -314,7 +313,7 @@ encoding.codec = "json"
     Port  24224
 ```
 
-각 도구는 cursor 또는 마지막 처리 시각을 저장해 재시작 후 누락 없이 이어서 처리합니다.
+각 도구는 cursor 또는 마지막 처리 시각을 저장하므로, 재시작 후에도 누락 없이 이어서 처리합니다.
 
 ---
 

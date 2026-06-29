@@ -1,6 +1,5 @@
 # Netty 4.x 요구사항
 
-> 이 문서는 Netty 공식 Wiki의 "Requirements for 4.x" 페이지를 한국어로 번역한 것입니다.
 > 원본: https://netty.io/wiki/requirements-for-4.x.html
 
 ---
@@ -19,7 +18,7 @@ Netty 프로젝트는 다양한 서브 모듈로 구성되어 있습니다. 각 
 
 [HTTP/2 RFC](https://tools.ietf.org/html/rfc7540#section-3.3)는 TLS 사용을 강제하지는 않지만, TLS를 사용하는 경우에는 RFC가 요구하는 조건을 따라야 합니다 [[1](https://tools.ietf.org/html/rfc7540#section-9.2)][[2](https://tools.ietf.org/html/rfc7540#section-3.3)][[3](https://tools.ietf.org/html/rfc7540#section-3.4)].
 
-TLS 위에서 동작하는 HTTP/2는 `h2` 프로토콜을 협상하기 위해 [ALPN](https://tools.ietf.org/html/rfc7301) 사용을 의무화합니다. ALPN은 비교적 최신 표준이기 때문에, 아직 ALPN을 지원하지 않는 시스템을 위해 Netty는 가능한 경우 [NPN](https://tools.ietf.org/html/draft-agl-tls-nextprotoneg-04)을 통한 프로토콜 협상도 지원합니다.
+TLS 위에서 동작하는 HTTP/2는 `h2` 프로토콜 협상을 위해 [ALPN](https://tools.ietf.org/html/rfc7301) 사용을 의무화합니다. ALPN은 비교적 최신 표준이므로, ALPN을 지원하지 않는 시스템을 위해 Netty는 가능한 경우 [NPN](https://tools.ietf.org/html/draft-agl-tls-nextprotoneg-04)을 통한 프로토콜 협상도 지원합니다.
 
 ### OpenSSL을 사용한 TLS
 
@@ -48,7 +47,7 @@ TLS 위에서 동작하는 HTTP/2는 `h2` 프로토콜을 협상하기 위해 [A
 
 OpenSSL을 사용할 수 없다면 JDK를 사용한 TLS가 대안이 됩니다.
 
-Java는 8u251부터, 그리고 9 버전부터 ALPN/NPN을 지원합니다. 이전 JDK에서 지원이 없는 점을 보완하기 위해 OpenJDK용 [Jetty-ALPN](https://github.com/jetty-project/jetty-alpn) (Java 8 미만이면 [Jetty-NPN](https://github.com/jetty-project/jetty-npn)) bootclasspath 확장을 사용해야 합니다. 이를 위해서는 Jetty `alpn-boot` jar 경로를 가리키는 `Xbootclasspath` JVM 옵션을 추가합니다.
+Java 8u251 및 Java 9부터 ALPN/NPN을 기본 지원합니다. 그 이전 JDK에서는 OpenJDK용 [Jetty-ALPN](https://github.com/jetty-project/jetty-alpn) (Java 8 미만은 [Jetty-NPN](https://github.com/jetty-project/jetty-npn)) bootclasspath 확장을 사용해야 합니다. Jetty `alpn-boot` jar 경로를 `Xbootclasspath` JVM 옵션으로 지정합니다.
 
 ```sh
 java -Xbootclasspath/p:/path/to/jetty/alpn/extension.jar ...
@@ -58,7 +57,7 @@ java -Xbootclasspath/p:/path/to/jetty/alpn/extension.jar ...
 
 #### JDK Cipher
 
-Java 7은 HTTP/2 RFC가 [권장하는 cipher suite](https://tools.ietf.org/html/rfc7540#section-9.2.2)를 지원하지 **않습니다**. 이 문제를 해결하려면 가능한 경우 Java 8 사용을 권장하며, 또는 [Bouncy Castle](https://www.bouncycastle.org/java.html) 같은 대체 JCE 구현을 사용할 수도 있습니다. 이마저 어렵다면 다른 cipher를 사용할 수도 있지만, 호출 대상 서비스가 HTTP/2 RFC가 금지하는 해당 cipher를 지원하는지, 그리고 그로 인한 보안 위험을 평가했는지 반드시 확인해야 합니다.
+Java 7은 HTTP/2 RFC가 [권장하는 cipher suite](https://tools.ietf.org/html/rfc7540#section-9.2.2)를 지원하지 **않습니다**. 가능하면 Java 8 사용을 권장하며, [Bouncy Castle](https://www.bouncycastle.org/java.html) 같은 대체 JCE 구현을 쓰는 방법도 있습니다. 이마저 어렵다면 다른 cipher를 사용할 수도 있지만, 대상 서비스가 HTTP/2 RFC가 금지하는 해당 cipher를 지원하는지, 그로 인한 보안 위험은 없는지 반드시 확인해야 합니다.
 
 또한 Java 8u60 이전에는 GCM이 [매우 느리다(1 MB/s)](https://bugzilla.redhat.com/show_bug.cgi?id=1135504)는 점에 유의하세요. Java 8u60에서 GCM은 10배 빨라졌지만(10~20 MB/s), 그래도 OpenSSL(약 200 MB/s, AES-NI 지원 시 약 1 GB/s)에 비하면 여전히 느립니다. GCM cipher suite는 HTTP/2의 cipher 요구사항을 충족하는 유일한 suite입니다.
 

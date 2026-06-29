@@ -1,10 +1,8 @@
 # PostgreSQL 서버 설정 (Server Configuration)
 
-이 문서는 PostgreSQL 18 공식 문서의 "Chapter 19. Server Configuration"을 한국어로 번역한 것입니다.
-
 ## 개요
 
-PostgreSQL 서버의 동작을 제어하는 다양한 설정 파라미터가 있습니다. 이 장에서는 이러한 파라미터를 설정하는 방법과 각 파라미터의 의미를 설명합니다.
+PostgreSQL 서버의 동작을 제어하는 다양한 설정 파라미터가 있습니다. 파라미터를 설정하는 방법과 각 파라미터의 의미를 설명합니다.
 
 ---
 
@@ -170,7 +168,7 @@ env PGOPTIONS="-c geqo=off --statement-timeout=5min" psql
 
 ## 1.5 파라미터 컨텍스트
 
-파라미터는 설정할 수 있는 시점에 따라 분류됩니다:
+파라미터는 설정 가능한 시점에 따라 분류됩니다:
 
 | 컨텍스트 | 설명 |
 |----------|------|
@@ -180,14 +178,14 @@ env PGOPTIONS="-c geqo=off --statement-timeout=5min" psql
 | `superuser` | 슈퍼유저가 세션 수준에서 설정 가능 |
 | `user` | 모든 사용자가 세션 수준에서 설정 가능 |
 
-## 1.6 설정 우선순위 (높은 순서에서 낮은 순서)
+## 1.6 설정 우선순위 (높은 것에서 낮은 것 순)
 
 1. 서버 명령줄 (`-c`, `--name=value`)
 2. `PGOPTIONS` 환경 변수
 3. `ALTER DATABASE` / `ALTER ROLE` 설정
 4. `ALTER SYSTEM` / `postgresql.auto.conf`
 5. `postgresql.conf`
-6. 빌트인 기본값
+6. 내장 기본값
 
 ---
 
@@ -205,7 +203,7 @@ env PGOPTIONS="-c geqo=off --statement-timeout=5min" psql
 
 ## 기본 동작
 
-기본적으로 이러한 파라미터는 명시적으로 설정되지 않습니다. 대신:
+기본적으로 이 파라미터들은 명시적으로 설정되지 않습니다. 대신:
 - 데이터 디렉터리는 `-D` 명령줄 옵션 또는 `PGDATA` 환경 변수로 지정
 - 모든 설정 파일은 데이터 디렉터리 내에 위치
 
@@ -355,17 +353,17 @@ openssl dhparam -out dhparams.pem 2048
 
 | 파라미터 | 타입 | 기본값 | 설명 |
 |----------|------|--------|------|
-| `shared_buffers` | integer | `128MB` | 공유 메모리 버퍼용 메모리 양. RAM이 1GB 이상인 시스템에서는 RAM의 25% 권장, 최대 40% |
+| `shared_buffers` | integer | `128MB` | 공유 메모리 버퍼에 할당할 메모리 양. RAM이 1GB 이상인 시스템에서는 RAM의 25% 권장, 최대 40% |
 | `huge_pages` | enum | `try` | 주 공유 메모리용 huge pages 제어 (`try`, `on`, `off`) |
 | `huge_page_size` | integer | `0` | 활성화 시 huge page 크기 |
 | `temp_buffers` | integer | `8MB` | 임시 테이블용 세션당 최대 메모리 |
 | `max_prepared_transactions` | integer | `0` | 최대 동시 준비된 트랜잭션 수 |
-| `work_mem` | integer | `4MB` | 쿼리 작업(정렬, 해시 테이블)용 기본 메모리. 디스크에 쓰기 전 사용 |
+| `work_mem` | integer | `4MB` | 쿼리 작업(정렬, 해시 테이블)에 사용하는 기본 메모리. 초과 시 디스크에 씀 |
 | `hash_mem_multiplier` | float | `2.0` | 해시 작업 메모리 제한 승수: `work_mem * hash_mem_multiplier` |
 | `maintenance_work_mem` | integer | `64MB` | 유지보수 작업(VACUUM, CREATE INDEX, ALTER TABLE)용 메모리 |
 | `autovacuum_work_mem` | integer | `-1` | autovacuum 워커당 메모리. 기본값은 `maintenance_work_mem` 사용 |
 | `vacuum_buffer_usage_limit` | integer | `2MB` | VACUUM/ANALYZE용 버퍼 접근 전략 크기. 범위: 128KB-16GB |
-| `logical_decoding_work_mem` | integer | `64MB` | 디스크에 쓰기 전 논리적 디코딩용 메모리 |
+| `logical_decoding_work_mem` | integer | `64MB` | 논리적 디코딩에 사용하는 메모리. 초과 시 디스크에 씀 |
 | `max_stack_depth` | integer | `2MB` | 최대 안전 실행 스택 깊이 |
 | `shared_memory_type` | enum | `mmap` | 공유 메모리 구현 방식 (`mmap`, `sysv`, `windows`) |
 | `dynamic_shared_memory_type` | enum | `posix` | 동적 공유 메모리 구현 방식 |
@@ -589,7 +587,7 @@ archive_cleanup_command = 'pg_archivecleanup /mnt/server/archivedir %r'
 | `wal_keep_size` | integer | `0` | 대기 스트리밍 복제용으로 `pg_wal` 디렉터리에 유지되는 과거 WAL 파일의 최소 크기(MB) |
 | `max_slot_wal_keep_size` | integer | `-1` (무제한) | 복제 슬롯이 `pg_wal` 디렉터리에 유지할 수 있는 WAL 파일의 최대 크기(MB) |
 | `idle_replication_slot_timeout` | integer | `0` (비활성화) | 이 기간보다 오래 비활성인 복제 슬롯 무효화 |
-| `wal_sender_timeout` | integer | `60s` | 비활성 복제 연결 종료 |
+| `wal_sender_timeout` | integer | `60s` | 비활성 복제 연결을 이 시간 후 종료 |
 | `track_commit_timestamp` | boolean | `off` | 트랜잭션의 커밋 시간 기록 |
 | `synchronized_standby_slots` | string | (빈 문자열) | 논리적 WAL 송신기 프로세스가 대기할 스트리밍 복제 대기 슬롯 이름 목록 |
 
@@ -624,7 +622,7 @@ synchronous_standby_names = 's1, s2, s3'
 | `wal_receiver_create_temp_slot` | boolean | `off` | 영구 슬롯이 설정되지 않은 경우 원격 인스턴스에 임시 복제 슬롯 생성 |
 | `wal_receiver_status_interval` | integer | `10s` | WAL 수신기가 기본 서버에 복제 진행 상황을 전송하는 최소 빈도 |
 | `hot_standby_feedback` | boolean | `off` | 대기 서버에서 실행 중인 쿼리에 대한 피드백을 기본 서버로 전송 |
-| `wal_receiver_timeout` | integer | `60s` | 비활성 복제 연결 종료 |
+| `wal_receiver_timeout` | integer | `60s` | 비활성 복제 연결을 이 시간 후 종료 |
 | `wal_retrieve_retry_interval` | integer | `5s` | WAL 데이터를 사용할 수 없을 때 검색 재시도 전 대기 시간 |
 | `recovery_min_apply_delay` | integer | `0` (지연 없음) | 특정 시점 복구를 위해 복구를 지연 |
 | `sync_replication_slots` | boolean | `off` | 기본 서버에서 대기 서버로 논리적 장애 조치 슬롯 동기화 |
@@ -656,7 +654,7 @@ recovery_min_apply_delay = '5min'
 
 ## 7.1 플래너 메서드 설정
 
-이러한 파라미터는 쿼리 옵티마이저가 사용할 수 있는 쿼리 계획 유형을 제어합니다. 달리 명시되지 않는 한 모두 기본값 `on`입니다.
+이 파라미터들은 쿼리 옵티마이저가 사용할 수 있는 쿼리 계획 유형을 제어합니다. 달리 명시되지 않는 한 모두 기본값 `on`입니다.
 
 | 파라미터 | 타입 | 기본값 | 설명 |
 |----------|------|--------|------|
@@ -693,7 +691,7 @@ SET enable_seqscan = off;
 
 ## 7.2 플래너 비용 상수
 
-비용 변수는 상대적 값만 중요한 임의의 척도를 사용합니다. 기본 척도: `seq_page_cost = 1.0`
+비용 변수는 절대값이 아닌 상대적 비율만 의미를 가지는 임의의 척도를 사용합니다. 기준: `seq_page_cost = 1.0`
 
 | 파라미터 | 타입 | 기본값 | 설명 |
 |----------|------|--------|------|
@@ -724,7 +722,7 @@ effective_cache_size = 12GB
 
 ## 7.3 유전 쿼리 옵티마이저 (GEQO)
 
-많은 조인이 있는 복잡한 쿼리에 사용되어 최적이 아닌 계획의 잠재적 비용으로 계획 시간을 줄입니다.
+조인이 많은 복잡한 쿼리에 적용되며, 최적이 아닌 계획이 나올 수 있는 대신 계획 시간을 줄입니다.
 
 | 파라미터 | 타입 | 기본값 | 설명 |
 |----------|------|--------|------|
@@ -769,7 +767,7 @@ ANALYZE my_table;
 | 파라미터 | 타입 | 기본값 | 설명 |
 |----------|------|--------|------|
 | `log_destination` | string | `stderr` | 로그 대상의 쉼표로 구분된 목록: `stderr`, `csvlog`, `jsonlog`, `syslog`, `eventlog` (Windows만) |
-| `logging_collector` | boolean | `off` | stderr를 캡처하고 로그 파일로 리디렉션하는 백그라운드 로깅 수집기 프로세스 활성화 |
+| `logging_collector` | boolean | `off` | stderr를 캡처해 로그 파일로 리디렉션하는 백그라운드 로깅 수집기 프로세스 활성화 |
 | `log_directory` | string | `log` | 로그 파일 디렉터리 (절대 또는 클러스터 데이터 디렉터리 기준 상대) |
 | `log_filename` | string | `postgresql-%Y-%m-%d_%H%M%S.log` | `strftime` 형식 코드를 사용한 로그 파일 명명 패턴 |
 | `log_file_mode` | integer | `0600` | 로그 파일의 Unix 파일 권한 (8진수 형식) |
@@ -835,7 +833,7 @@ log_rotation_size = 100MB
 | `debug_print_rewritten` | boolean | `off` | 쿼리 재작성기 출력을 `LOG` 수준으로 출력 |
 | `debug_print_plan` | boolean | `off` | 실행 계획을 `LOG` 수준으로 출력 |
 | `debug_pretty_print` | boolean | `on` | 가독성을 위해 디버그 출력 들여쓰기 |
-| `log_autovacuum_min_duration` | integer | `10min` | 이 기간을 초과하는 autovacuum 작업 로깅. `-1`은 비활성화 |
+| `log_autovacuum_min_duration` | integer | `10min` | 이 시간을 초과하는 autovacuum 작업을 로깅. `-1`은 비활성화 |
 | `log_checkpoints` | boolean | `on` | 통계와 함께 체크포인트 및 restartpoint 작업 로깅 |
 | `log_connections` | string | `''` | 연결 측면 로깅: `receipt`, `authentication`, `authorization`, `setup_durations`, `all` |
 | `log_disconnections` | boolean | `off` | 기간과 함께 세션 종료 로깅 |
@@ -1070,7 +1068,7 @@ autovacuum_analyze_scale_factor = 0.05
 | `vacuum_multixact_failsafe_age` | integer | `1600000000` | 페일세이프가 트리거되는 최대 multixact 나이 |
 | `vacuum_max_eager_freeze_failure_rate` | float | `0.03` | eager 스캔 비활성화 전 VACUUM이 동결에 실패할 수 있는 페이지의 최대 비율 |
 
-동결의 목적: 충분히 오래된 행을 동결로 표시하여 XID 검사 없이 모든 사람에게 보이도록 하여 트랜잭션 ID 래핑 실패를 방지합니다.
+동결의 목적: 충분히 오래된 행을 동결 상태로 표시해 XID 검사 없이 모든 트랜잭션에서 보이도록 하고, 트랜잭션 ID 래핑(wraparound) 장애를 방지합니다.
 
 ---
 
@@ -1087,7 +1085,7 @@ autovacuum_analyze_scale_factor = 0.05
 | `default_tablespace` | string | (빈 문자열) | 명시적으로 지정되지 않은 경우 객체 생성을 위한 기본 테이블스페이스 |
 | `default_toast_compression` | enum | `pglz` | 기본 TOAST 압축 방법. 지원: `pglz`, `lz4` |
 | `temp_tablespaces` | string | (빈 문자열) | 임시 객체용 테이블스페이스 |
-| `check_function_bodies` | boolean | `on` | `off`일 때 `CREATE FUNCTION/PROCEDURE` 중 루틴 본문 문자열 유효성 검사 비활성화 |
+| `check_function_bodies` | boolean | `on` | `off`로 설정하면 `CREATE FUNCTION/PROCEDURE` 실행 중 루틴 본문 문자열 유효성 검사를 비활성화 |
 | `default_transaction_isolation` | enum | `read committed` | 기본 격리 수준. 값: `read uncommitted`, `read committed`, `repeatable read`, `serializable` |
 | `default_transaction_read_only` | boolean | `off` | 새 트랜잭션의 기본 읽기 전용 상태 |
 | `default_transaction_deferrable` | boolean | `off` | 기본 지연 가능 상태. `serializable` 읽기 전용 트랜잭션에만 영향 |
@@ -1196,7 +1194,7 @@ shared_preload_libraries = 'pg_stat_statements, auto_explain'
 - 기본값: `1s` (1초)
 - 단위: 밀리초 (단위 미지정 시)
 
-교착 상태 확인은 비용이 많이 들기 때문에 지속적으로 수행되지 않습니다. 이 값을 늘리면 불필요한 교착 상태 확인이 줄어들지만 교착 상태 오류 보고가 지연됩니다. 이상적으로는 일반적인 트랜잭션 시간을 초과하여 교착 상태 확인 전에 잠금이 해제되도록 해야 합니다.
+교착 상태 확인은 비용이 크기 때문에 항상 수행하지 않습니다. 이 값을 늘리면 불필요한 교착 상태 확인은 줄어들지만 교착 상태 오류 보고가 지연됩니다. 일반적인 트랜잭션 시간보다 크게 설정하면 교착 상태 확인 전에 잠금이 해제될 가능성이 높아집니다.
 
 참고: `log_lock_waits`가 활성화된 경우 이 파라미터는 잠금 대기 메시지 로깅 전 시간도 제어합니다.
 
@@ -1206,9 +1204,9 @@ shared_preload_libraries = 'pg_stat_statements, auto_explain'
 - 기본값: `64`
 - 설정 가능: 서버 시작 시에만
 
-행 잠금 제한이 아닙니다 (행 잠금은 무제한). 단일 트랜잭션에서 많은 다른 테이블을 건드리는 쿼리가 있으면 증가시킵니다.
+행 잠금에 대한 제한이 아닙니다(행 잠금은 무제한). 단일 트랜잭션에서 많은 테이블에 접근하는 쿼리가 있다면 이 값을 늘려야 합니다.
 
-중요: 대기 서버에서는 기본 서버와 같거나 높은 값으로 설정해야 합니다.
+중요: 대기 서버에서는 기본 서버와 같거나 더 높은 값으로 설정해야 합니다.
 
 ### 예시: 잠금 설정
 

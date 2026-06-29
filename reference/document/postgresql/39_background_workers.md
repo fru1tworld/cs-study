@@ -20,7 +20,7 @@
 
 ## 개요
 
-PostgreSQL은 사용자가 제공한 코드를 별도의 프로세스에서 실행할 수 있도록 확장할 수 있습니다. 이러한 프로세스를 백그라운드 워커(Background Worker) 라고 합니다.
+PostgreSQL은 사용자가 제공한 코드를 별도의 프로세스에서 실행하는 방식으로 확장할 수 있습니다. 이러한 프로세스를 백그라운드 워커(Background Worker)라고 합니다.
 
 백그라운드 워커의 특징:
 
@@ -88,10 +88,10 @@ void _PG_init(void)
 
 ```c
 bool RegisterDynamicBackgroundWorker(BackgroundWorker *worker,
-                                     BackgroundWorkerHandle handle)
+                                     BackgroundWorkerHandle **handle)
 ```
 
-동적 등록은 일반 백엔드(regular backend) 또는 다른 백그라운드 워커에서 호출해야 합니다. postmaster에서 직접 호출할 수 없습니다.
+동적 등록은 일반 백엔드(regular backend) 또는 다른 백그라운드 워커에서 호출해야 합니다. postmaster에서 직접 호출하는 것은 불가능합니다.
 
 ```c
 BackgroundWorker worker;
@@ -393,8 +393,8 @@ BgwHandleStatus GetBackgroundWorkerPid(BackgroundWorkerHandle *handle,
 void TerminateBackgroundWorker(BackgroundWorkerHandle *handle)
 ```
 
-- 워커가 실행 중이면 `SIGTERM`을 전송합니다
-- 실행 중이지 않으면 등록을 해제합니다
+- 워커가 실행 중이면 `SIGTERM`을 전송합니다.
+- 실행 중이지 않으면 등록을 해제합니다.
 
 ### 시작 대기
 
@@ -403,7 +403,7 @@ BgwHandleStatus WaitForBackgroundWorkerStartup(BackgroundWorkerHandle *handle,
                                                pid_t *pidp)
 ```
 
-postmaster가 워커를 시작하려고 시도하거나 postmaster가 종료될 때까지 차단됩니다.
+postmaster가 워커를 시작하거나 postmaster가 종료될 때까지 호출을 차단합니다.
 
 반환 값:
 
@@ -419,7 +419,7 @@ postmaster가 워커를 시작하려고 시도하거나 postmaster가 종료될 
 BgwHandleStatus WaitForBackgroundWorkerShutdown(BackgroundWorkerHandle *handle)
 ```
 
-백그라운드 워커가 종료되거나 postmaster가 종료될 때까지 차단됩니다.
+백그라운드 워커가 종료되거나 postmaster가 종료될 때까지 호출을 차단합니다.
 
 반환 값:
 
@@ -471,7 +471,7 @@ else if (status == BGWH_POSTMASTER_DIED)
 
 ## 비동기 알림 (Asynchronous Notifications)
 
-백그라운드 워커는 다음 방법으로 알림을 전송할 수 있습니다:
+백그라운드 워커에서 알림을 전송하는 방법은 다음과 같습니다:
 
 ### SPI를 통한 NOTIFY
 
@@ -618,7 +618,7 @@ void my_worker_main(Datum main_arg)
 
 ### 완전한 백그라운드 워커 예제
 
-다음은 주기적으로 테이블의 레코드 수를 로그에 기록하는 완전한 백그라운드 워커 예제입니다.
+주기적으로 테이블의 레코드 수를 로그에 기록하는 백그라운드 워커 예제입니다.
 
 ```c
 /* my_worker.c */

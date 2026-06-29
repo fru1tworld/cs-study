@@ -1,6 +1,5 @@
 # bpftool
 
-> 이 문서는 BPF 객체를 다루는 CLI 도구 bpftool의 사용법을 정리한 것입니다.
 > 원본: https://docs.kernel.org/bpf/bpftool.html
 
 ---
@@ -22,7 +21,7 @@
 
 ## bpftool이란?
 
-커널 BPF 객체(프로그램, 맵, 링크)를 검사하고 관리하는 표준 CLI. 커널 트리(`tools/bpf/bpftool/`)에 포함되어 있어 항상 커널 버전과 일치.
+커널 BPF 객체(프로그램, 맵, 링크)를 검사하고 관리하는 표준 CLI. 커널 트리(`tools/bpf/bpftool/`)에 포함되어 커널 버전과 항상 일치한다.
 
 용도:
 - 현재 로드된 BPF 프로그램 조회
@@ -93,7 +92,7 @@ eBPF helpers supported for program type kprobe:
         - ...
 ```
 
-배포 환경에서 자기 BPF가 동작할지 확인하는 데 필수.
+배포 환경에서 BPF 기능 동작 여부를 사전에 확인할 때 유용하다.
 
 ```bash
 # JSON 출력
@@ -134,7 +133,7 @@ sudo bpftool prog dump xlated id 123
 # JIT된 native asm
 sudo bpftool prog dump jited id 123
 
-# C 소스 매핑까지 (CONFIG_BPF_JIT_ALWAYS_ON 등 조건)
+# 소스 파일명·라인 번호·컬럼 정보 함께 표시
 sudo bpftool prog dump xlated id 123 linum
 sudo bpftool prog dump jited id 123 linum
 ```
@@ -156,7 +155,7 @@ sudo bpftool prog attach pinned /sys/fs/bpf/myprog \
 sudo bpftool prog profile id 123 duration 5 cycles instructions
 ```
 
-5초 동안 cycles와 instructions 카운터 측정.
+5초 동안 cycles와 instructions 카운터를 측정한다.
 
 ### 트레이싱 출력
 
@@ -164,7 +163,7 @@ sudo bpftool prog profile id 123 duration 5 cycles instructions
 sudo bpftool prog tracelog
 ```
 
-`/sys/kernel/debug/tracing/trace_pipe` 와 동일.
+`/sys/kernel/debug/tracing/trace_pipe`를 읽는 것과 동일하다.
 
 ---
 
@@ -224,7 +223,7 @@ sudo bpftool map create /sys/fs/bpf/manual_map \
 sudo bpftool map dump id 5 --pretty
 ```
 
-PERCPU 맵은 자동으로 모든 CPU 값을 보여줌.
+PERCPU 맵은 모든 CPU의 값을 자동으로 표시한다.
 
 ### Watch (실시간)
 
@@ -237,7 +236,7 @@ watch -n 1 'bpftool map dump id 5 -p'
 
 ## link와 attach 관리
 
-`link` 는 BPF 프로그램의 attachment를 추상화한 객체. 5.7+.
+`link`는 BPF 프로그램의 attachment를 추상화한 객체다. 커널 5.7+에서 지원.
 
 ```bash
 $ sudo bpftool link list
@@ -258,7 +257,7 @@ sudo bpftool link detach id 1
 sudo bpftool link pin id 1 /sys/fs/bpf/my_link
 ```
 
-핀하면 호출자가 종료해도 attach 유지.
+핀하면 호출자 프로세스가 종료돼도 attach가 유지된다.
 
 ---
 
@@ -290,7 +289,7 @@ sudo bpftool btf dump id <btf-id>
 
 ## Skeleton 생성
 
-CO-RE BPF 사용자 공간 코드의 자동 생성 인터페이스.
+CO-RE 기반 BPF 사용자 공간 코드를 자동으로 생성하는 인터페이스.
 
 ```bash
 bpftool gen skeleton my.bpf.o > my.skel.h
@@ -312,7 +311,7 @@ bpftool gen object my-merged.bpf.o my.bpf.o other.bpf.o   # 여러 ELF 머지
 
 ## Pin 관리
 
-BPF 객체를 영구화. `/sys/fs/bpf/` 가 BPF FS.
+BPF 객체를 영구화한다. `/sys/fs/bpf/`가 BPF FS 마운트 경로다.
 
 ### 마운트 확인
 
@@ -335,7 +334,7 @@ sudo bpftool link pin id 1 /sys/fs/bpf/my_link
 sudo rm /sys/fs/bpf/myprog
 ```
 
-객체에 대한 마지막 fd 참조가 사라지면 자동 해제.
+객체에 대한 마지막 fd 참조가 사라지면 자동으로 해제된다.
 
 ### 여러 객체 한 번에
 

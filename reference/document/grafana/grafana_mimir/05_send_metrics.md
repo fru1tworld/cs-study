@@ -1,6 +1,5 @@
 # Mimir로 메트릭 전송
 
-> 이 문서는 Grafana Mimir 공식 문서의 "Send metric data" 섹션을 한국어로 정리한 것입니다.
 > 원본: https://grafana.com/docs/mimir/latest/configure/configure-the-write-path/
 
 ---
@@ -27,7 +26,7 @@ Mimir는 다양한 프로토콜로 메트릭을 받습니다.
 |---------|----------|----------|
 | Prometheus Remote Write | `/api/v1/push` | `X-Scope-OrgID` |
 | OpenTelemetry OTLP/HTTP | `/otlp/v1/metrics` | `X-Scope-OrgID` |
-| Influx Line Protocol | `/api/v1/push/influx` | `X-Scope-OrgID` |
+| Influx Line Protocol | `/api/v1/push/influx/write` | `X-Scope-OrgID` |
 | Datadog Agent | `/api/v1/push/datadog` | `X-Scope-OrgID` |
 | Graphite | `/api/v1/push/graphite` | `X-Scope-OrgID` |
 
@@ -252,7 +251,7 @@ service:
 
 ### OTel 메트릭 → Prometheus 변환
 
-OTel은 Mimir에 들어오면서 자동으로 Prometheus 형식으로 변환됩니다.
+Mimir는 OTel 메트릭을 수신 시 자동으로 Prometheus 형식으로 변환합니다.
 
 - 점(`.`)은 언더스코어(`_`)로 변환
 - 단위 접미사 자동 추가 (선택적)
@@ -414,7 +413,7 @@ Mimir의 HA Tracker가 한 시점에 한 페어만 활성으로 인식.
 
 ### Prometheus 설정
 
-각 페어는 동일 `cluster` 라벨을 가지지만 다른 `__replica__` 라벨을 가집니다.
+각 페어는 동일한 `cluster` 라벨을 공유하되, `__replica__` 라벨은 서로 다르게 설정합니다.
 
 ```yaml
 # prometheus-1.yml

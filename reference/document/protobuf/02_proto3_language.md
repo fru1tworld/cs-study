@@ -1,6 +1,5 @@
 # proto3 언어 가이드: 기본 문법
 
-> 이 문서는 Protocol Buffers 공식 문서의 "Language Guide (proto3)" 중 기본 문법을 한국어로 정리한 것입니다.
 > 원본: https://protobuf.dev/programming-guides/proto3/
 
 ---
@@ -45,9 +44,9 @@ message SearchRequest {
 - **유효 범위**: 1 ~ 536,870,911
 - **예약 범위**: 19,000 ~ 19,999는 Protocol Buffers 내부용으로 예약되어 사용할 수 없습니다.
 - **최적화**: 자주 설정되는 필드에는 1~15를 사용하세요. 1~15는 1바이트로 인코딩됩니다(태그 + 와이어 타입). 16~2047은 2바이트입니다.
-- **재사용 금지**: 필드 번호는 절대 재사용하면 안 됩니다. 재사용하면 와이어 포맷 디코딩이 모호해집니다.
+- **재사용 금지**: 필드 번호는 절대 재사용해서는 안 됩니다. 재사용하면 와이어 포맷 디코딩이 모호해집니다.
 
-삭제한 필드 번호는 `reserved`로 예약하여 실수로 재사용되는 것을 막습니다.
+삭제한 필드 번호는 `reserved`로 예약해 실수로 재사용되는 것을 방지합니다.
 
 ```proto
 message Foo {
@@ -65,7 +64,7 @@ message Foo {
 **Singular(단일)** — 0개 또는 1개의 값을 가집니다.
 
 - 암시적(implicit) presence: proto3 기본 동작. 필드를 설정했는지 여부를 추적하지 않으며, 미설정 시 기본값을 반환합니다.
-- `optional`: 명시적(explicit) presence. 필드가 설정되었는지 여부를 추적할 수 있으며, 설정된 경우에만 직렬화됩니다.
+- `optional`: 명시적(explicit) presence. 필드 설정 여부를 추적할 수 있으며, 설정된 경우에만 직렬화됩니다.
 
 ```proto
 message Example {
@@ -124,7 +123,7 @@ message SearchResponse {
 - **message**: 미설정 상태(언어에 따라 다름. Go에서는 `nil`)
 - **repeated / map**: 빈 컬렉션
 
-암시적 presence에서는 기본값과 "미설정"을 구분할 수 없습니다. 구분이 필요하면 `optional`을 사용하세요.
+암시적 presence에서는 기본값과 "미설정"을 구분할 수 없으므로, 구분이 필요하면 `optional`을 사용하세요.
 
 ---
 
@@ -161,7 +160,7 @@ import "myproject/other_protos.proto";
 import public "new.proto";
 ```
 
-`import public`을 쓰면, 이 파일을 import한 쪽에서도 `new.proto`의 정의를 사용할 수 있습니다.
+`import public`을 사용하면, 이 파일을 import하는 쪽에서도 `new.proto`의 정의를 사용할 수 있습니다.
 
 ---
 
@@ -183,7 +182,7 @@ message SearchRequest {
 
 ## 메시지 타입 갱신과 호환성
 
-기존 메시지를 안전하게 진화(evolve)시키기 위한 규칙입니다.
+기존 메시지를 안전하게 발전(evolve)시키기 위한 규칙입니다.
 
 **안전한 변경(와이어 호환)**
 
@@ -195,7 +194,7 @@ message SearchRequest {
 **위험한 변경(호환 깨짐)**
 
 - 기존 필드의 번호 변경
-- 기존 oneof에 필드를 추가/이동
+- 기존 oneof로 필드를 이동
 
 **조건부 호환(타입 변경, 데이터 손실 가능)**
 
@@ -205,4 +204,4 @@ message SearchRequest {
 - string/bytes/message의 `singular ↔ repeated`
 - `enum ↔ int32/uint32/int64/uint64`
 
-> 알 수 없는 필드(unknown fields)는 파싱 시 보존되었다가 재직렬화 시 그대로 유지됩니다. 데이터 교환에는 텍스트 형식이 아닌 바이너리 형식을 사용하세요.
+> 알 수 없는 필드(unknown fields)는 파싱 시 보존되어 재직렬화할 때도 그대로 유지됩니다. 데이터 교환에는 텍스트 형식이 아닌 바이너리 형식을 사용하세요.

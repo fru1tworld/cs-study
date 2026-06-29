@@ -1,6 +1,5 @@
 # BPF Program Types
 
-> 이 문서는 Linux 커널 BPF 프로그램 타입을 정리한 것입니다.
 > 원본: https://docs.kernel.org/bpf/libbpf/program_types.html
 
 ---
@@ -99,7 +98,7 @@ int BPF_PROG(read_exit, struct file *file, char *buf, size_t count, ssize_t ret)
 
 ### UPROBE (`BPF_PROG_TYPE_KPROBE` 의 사용자 공간 변형)
 
-**사용자 공간 함수** 에 부착. 자기 애플리케이션이나 라이브러리(libc 등) 트레이싱.
+**사용자 공간 함수** 에 부착. 자신의 애플리케이션이나 라이브러리(libc 등) 트레이싱.
 
 ```c
 SEC("uprobe//usr/lib/libc.so.6:malloc")
@@ -179,7 +178,7 @@ int tc_filter(struct __sk_buff *skb) {
 
 ### Socket Filter (`BPF_PROG_TYPE_SOCKET_FILTER`)
 
-원조 BPF — 소켓 단위 패킷 필터. tcpdump/Wireshark가 사용.
+cBPF(classic BPF)에서 이어진 원형 소켓 패킷 필터. tcpdump/Wireshark가 사용.
 
 ### Sock Ops (`BPF_PROG_TYPE_SOCK_OPS`)
 
@@ -187,7 +186,7 @@ int tc_filter(struct __sk_buff *skb) {
 
 ### Socket Map / Sockmap (`BPF_PROG_TYPE_SK_MSG`, `SK_SKB`)
 
-소켓 redirect. msg/skb를 다른 소켓으로 점프. 사이드카 프록시 우회 패턴.
+소켓 redirect. msg/skb를 다른 소켓으로 전달. 사이드카 프록시 우회 패턴.
 
 ### LWT (Lightweight Tunnel)
 
@@ -247,7 +246,7 @@ systemd의 `SystemCallFilter=` 가 내부적으로 이를 사용합니다.
 | `CGROUP_SOCKOPT` | setsockopt/getsockopt |
 | `CGROUP_SYSCTL` | sysctl 접근 정책 |
 
-cgroup에 attach하면 그 cgroup 안의 모든 프로세스에 정책 적용. Kubernetes pod 단위 정책 등에 활용.
+cgroup에 attach하면 해당 cgroup 내 모든 프로세스에 정책이 적용됩니다. Kubernetes pod 단위 정책 등에 활용.
 
 ---
 
@@ -255,7 +254,7 @@ cgroup에 attach하면 그 cgroup 안의 모든 프로세스에 정책 적용. K
 
 ### KSYSCALL (`BPF_PROG_TYPE_KPROBE` 변형)
 
-5.16+. syscall에 더 깔끔하게 hook. 자동으로 ABI 차이 처리.
+5.16+. syscall에 보다 깔끔하게 hook. ABI 차이를 자동으로 처리.
 
 ```c
 SEC("ksyscall/openat")
@@ -266,7 +265,7 @@ int trace_openat(struct pt_regs *ctx, int dirfd, const char *pathname) {
 
 ### Sched (Scheduler)
 
-스케줄러 결정에 hook. 5.x 후반에 실험적.
+스케줄러 결정에 hook. 5.x 후반 기준 실험적 기능.
 
 ### NETFILTER
 
@@ -274,7 +273,7 @@ netfilter hook (5.13+). iptables의 BPF 대안.
 
 ### Iter (Map Iterator)
 
-map의 모든 엔트리를 순회하면서 BPF 프로그램으로 가공. 효율적인 통계 추출.
+map의 모든 엔트리를 순회하며 BPF 프로그램으로 처리. 효율적인 통계 추출에 활용.
 
 ---
 

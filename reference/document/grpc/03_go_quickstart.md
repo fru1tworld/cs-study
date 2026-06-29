@@ -1,6 +1,5 @@
 # gRPC Go 빠른 시작
 
-> 이 문서는 gRPC 공식 문서의 "Go Quick start" 섹션을 한국어로 정리한 것입니다.
 > 원본: https://grpc.io/docs/languages/go/quickstart/
 
 ---
@@ -20,7 +19,7 @@
 
 ### Go
 
-최근 두 개의 메이저 릴리스 중 하나를 사용합니다. 설치는 Go 공식 문서를 참고합니다.
+최근 두 메이저 릴리스 중 하나를 사용합니다. 설치는 Go 공식 문서를 참고합니다.
 
 ### Protocol Buffer 컴파일러(protoc)
 
@@ -50,7 +49,7 @@ export PATH="$PATH:$(go env GOPATH)/bin"
 
 ## 예제 코드 받기
 
-실제 사용 버전(v1.81.x)에 맞춰 태그를 지정해 grpc-go 저장소의 helloworld 예제를 받습니다.
+grpc-go 저장소에서 helloworld 예제를 특정 태그(v1.81.1)로 받습니다.
 
 ```bash
 git clone -b v1.81.1 --depth 1 https://github.com/grpc/grpc-go
@@ -109,7 +108,7 @@ message HelloReply {
 
 ## 코드 재생성
 
-`.proto`를 수정했으니 `protoc`로 Go 코드를 다시 생성합니다. `helloworld` 예제 디렉터리에서 실행합니다.
+`.proto`를 수정했으면 `protoc`로 Go 코드를 다시 생성합니다. `helloworld` 예제 디렉터리에서 실행합니다.
 
 ```bash
 protoc --go_out=. --go_opt=paths=source_relative \

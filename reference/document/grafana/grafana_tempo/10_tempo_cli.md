@@ -1,6 +1,5 @@
 # Tempo CLI
 
-> 이 문서는 Grafana Tempo 공식 문서의 "Tempo CLI" 섹션을 한국어로 정리한 것입니다.
 > 원본: https://grafana.com/docs/tempo/latest/operations/tempo_cli/
 
 ---
@@ -85,8 +84,8 @@ tempo-cli [global flags] <command> [command flags]
 ```bash
 --s3-endpoint=s3.amazonaws.com
 --s3-region=us-east-1
---s3-access-key=$AWS_ACCESS_KEY_ID
---s3-secret-key=$AWS_SECRET_ACCESS_KEY
+--s3-user=$AWS_ACCESS_KEY_ID
+--s3-pass=$AWS_SECRET_ACCESS_KEY
 ```
 
 #### GCS
@@ -225,7 +224,7 @@ tempo-cli search blocks \
 ### 트레이스 ID로 직접 조회
 
 ```bash
-tempo-cli query trace <tenant-id> <trace-id>
+tempo-cli query trace-id <trace-id> <tenant-id>
 ```
 
 ---
@@ -281,23 +280,21 @@ tempo-cli analyse block <tenant-id> <block-id> | head -20
 테넌트 ID 변경 또는 데이터 이동.
 
 ```bash
-tempo-cli migrate tenant \
-  --source-tenant=old-tenant \
-  --dest-tenant=new-tenant \
-  --source-backend=s3 \
-  --source-bucket=old-bucket \
-  --dest-backend=s3 \
-  --dest-bucket=new-bucket
+tempo-cli migrate tenant <source-tenant> <dest-tenant> \
+  --source-config-file=source-tempo.yaml \
+  --config-file=dest-tempo.yaml
 ```
 
-### `migrate parquet`
+### Parquet 버전 변환
 
-Parquet 버전 마이그레이션 (예: vParquet3 → vParquet4).
+Parquet 버전 변환 (예: vParquet3 → vParquet4, vParquet4 → vParquet5).
 
 ```bash
-tempo-cli migrate parquet \
-  --target-version=vParquet4 \
-  <tenant-id>
+# vParquet3 → vParquet4
+tempo-cli parquet convert-3to4 <in-file> [<out-path>]
+
+# vParquet4 → vParquet5
+tempo-cli parquet convert-4to5 <in-file> [<out-path>]
 ```
 
 > 주의: Compactor가 자동으로 새 버전으로 변환하지만, 빠르게 변환하려면 이 명령 사용.
@@ -314,7 +311,7 @@ tempo-cli migrate parquet \
 tempo-cli generate bloom <tenant-id> <block-id>
 ```
 
-손상된 Bloom 복구 시.
+Bloom 필터가 손상되었을 때 복구에 사용.
 
 ### `generate index`
 
@@ -363,7 +360,7 @@ tempo-cli clear --backend=s3 --bucket=my-tempo <tenant-id>
 tempo-cli delete-block <tenant-id> <block-id>
 ```
 
-손상된 블록 복구 불가능 시 사용.
+블록이 손상되어 복구할 수 없을 때 사용.
 
 ### `verify`
 
@@ -418,13 +415,9 @@ done
 aws s3 sync s3://old-tempo-bucket s3://new-tempo-bucket
 
 # 2. 또는 tempo-cli로
-tempo-cli migrate tenant \
-  --source-tenant=tenant-1 \
-  --dest-tenant=tenant-1 \
-  --source-backend=s3 \
-  --source-bucket=old-tempo-bucket \
-  --dest-backend=gcs \
-  --dest-bucket=new-tempo-bucket
+tempo-cli migrate tenant tenant-1 tenant-1 \
+  --source-config-file=old-tempo.yaml \
+  --config-file=new-tempo.yaml
 
 # 3. Tempo 구성 변경
 # storage.trace.backend: gcs
@@ -454,6 +447,6 @@ TRACE_IDS=("abc123" "def456" "ghi789")
 # 2. 각각 조회
 for tid in "${TRACE_IDS[@]}"; do
   echo "=== Trace: $tid ==="
-  tempo-cli query trace tenant-1 $tid
+  tempo-cli query trace-id $tid tenant-1
 done
 ```

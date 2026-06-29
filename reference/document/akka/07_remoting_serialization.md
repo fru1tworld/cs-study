@@ -1,6 +1,5 @@
 # Akka 원격 통신과 직렬화
 
-> 이 문서는 Akka 공식 문서의 "Remoting (Artery)", "Remote Security", "Serialization", "Serialization with Jackson", "Multi Node Testing" 섹션을 한국어로 번역한 것입니다.
 > 원본: https://doc.akka.io/libraries/akka-core/current/
 
 ---
@@ -42,7 +41,7 @@
 
 원격 통신(remoting)은 서로 다른 노드(node) 위에 있는 액터 시스템(Actor System)들이 통신할 수 있게 해 주는 내부 메커니즘입니다.
 
-공식 문서는 중요한 권장사항을 강조합니다: 애플리케이션은 일반적으로 원격 통신을 직접 사용하기보다는, Akka Cluster나 기술 중립적인 프로토콜(HTTP, gRPC 등)과 같은 더 높은 수준의 추상화(higher-level abstractions)를 활용해야 합니다. 원격 통신은 이러한 상위 계층 도구들이 그 위에 구축되는 기반 계층입니다.
+공식 문서는 중요한 권장사항을 강조합니다: 애플리케이션은 일반적으로 원격 통신을 직접 사용하기보다 Akka Cluster나 기술 중립적인 프로토콜(HTTP, gRPC 등)과 같은 상위 수준의 추상화(higher-level abstractions)를 활용해야 합니다. 원격 통신은 이러한 상위 계층 도구들의 기반이 되는 계층입니다.
 
 ### 의존성(Dependency)
 
@@ -69,7 +68,7 @@ Artery는 Akka 원격 통신 계층(remoting layer)의 현대적인 재구현(re
 - 성능 향상을 위한 ByteBuffer 기반 직렬화(serialization)
 - Akka 메이저(major) 버전 간 프로토콜 안정성(protocol stability)
 
-이러한 설계 목표 덕분에 Artery는 대용량 메시지 트래픽과 지연에 민감한 워크로드 모두에서 우수한 성능을 제공합니다.
+이러한 설계 목표 덕분에 Artery는 대용량 메시지 트래픽과 지연 민감 워크로드 모두에서 우수한 성능을 발휘합니다.
 
 ---
 
@@ -129,8 +128,8 @@ akka {
 
 1. 액터 프로바이더(actor provider)를 로컬(local)에서 변경합니다.
 2. Artery를 원격 통신 구현체(remoting implementation)로 활성화합니다.
-3. 호스트명(hostname)을 설정합니다. 프로덕션 환경에서는 localhost가 아니라 전역적으로 도달 가능한(globally reachable) 주소여야 합니다.
-4. 포트(port)를 설정합니다. 같은 머신에서 여러 액터 시스템을 운영할 경우 각각 고유한 포트를 가져야 합니다.
+3. 호스트명(hostname)을 설정합니다. 프로덕션 환경에서는 localhost가 아닌 전역적으로 도달 가능한(globally reachable) 주소를 사용해야 합니다.
+4. 포트(port)를 설정합니다. 같은 머신에서 여러 액터 시스템을 운영하는 경우 각각 고유한 포트를 지정해야 합니다.
 
 ---
 
@@ -193,22 +192,22 @@ selection.tell("Pretty awesome feature", getSelf());
 
 ### ActorSelection을 ActorRef로 변환
 
-`ActorSelection`을 `ActorRef`로 변환하려면, 내장된 `Identify` 메시지를 사용하거나 `resolveOne()` 메서드를 사용합니다. `resolveOne()`은 "일치하는 `ActorRef`를 담은 [`Future`/`CompletionStage`]를 반환(returns a [`Future`/`CompletionStage`] of the matching `ActorRef`)"합니다.
+`ActorSelection`을 `ActorRef`로 변환하려면 내장된 `Identify` 메시지를 사용하거나 `resolveOne()` 메서드를 사용합니다. `resolveOne()`은 일치하는 `ActorRef`를 담은 `Future`/`CompletionStage`를 반환합니다.
 
 ---
 
 ## 7. 메시지 전달 보장(Delivery Guarantees)
 
-문서는 액터 메시지 전달의 보장 수준을 명시합니다.
+문서는 액터 메시지 전달의 보장 수준을 다음과 같이 명시합니다.
 
-- 일반 메시지(regular messages)는 **최대 한 번(at-most-once)** 전달 기준으로 동작합니다. 즉, 메시지는 한 번 전달되거나 전혀 전달되지 않으며, 중복 전달은 없습니다.
+- 일반 메시지(regular messages)는 **최대 한 번(at-most-once)** 전달을 보장합니다. 메시지는 한 번 전달되거나 전혀 전달되지 않으며, 중복 전달은 없습니다.
 - 시스템 메시지(system messages, 예: 데스 워치(death watch)와 배포(deployment))는 확인(confirmation)과 재전송(resending) 메커니즘을 통해 **정확히 한 번(exactly-once)** 전달이 보장됩니다.
 
 ---
 
 ## 8. 직렬화 요구사항과 ByteBuffer 기반 직렬화
 
-문서는 명시합니다: "액터 메시지에 대해 [직렬화]를 활성화해야 한다(You need to enable [serialization] for your actor messages)." 기본 선택지로는 Jackson 기반 직렬화가 권장됩니다.
+문서는 "액터 메시지에 직렬화를 활성화해야 한다"고 명시합니다. 기본 선택지로는 Jackson 기반 직렬화가 권장됩니다.
 
 ### ByteBuffer 기반 직렬화
 
@@ -230,7 +229,7 @@ interface ByteBufferSerializer {
 }
 ```
 
-구현체는 일반적으로 `SerializerWithStringManifest`를 확장하고, 배열(array) 기반 메서드를 ByteBuffer 기반 메서드로 위임(delegate)해야 합니다.
+구현체는 일반적으로 `SerializerWithStringManifest`를 확장하며, 배열(array) 기반 메서드를 ByteBuffer 기반 메서드에 위임(delegate)해야 합니다.
 
 ---
 
@@ -260,7 +259,7 @@ phi = -log10(1 - F(timeSinceLastHeartbeat))
 
 각 ActorSystem은 인카네이션(incarnation, 같은 주소로 재시작된 새로운 인스턴스)을 구별하기 위한 고유 식별자(UID, unique identifier)를 가집니다.
 
-문서에 따르면: "이 상태에서 복구하는 유일한 방법은 액터 시스템 중 하나를 재시작하는 것입니다(The only way to recover from this state is to restart one of the actor systems)." 격리된 시스템으로 보내진 메시지는 폐기(drop)되지만, `actorSelection` 메시지는 시스템 재시작 여부를 탐지(probe)하기 위해 여전히 전달될 수 있습니다.
+문서에 따르면 "이 상태에서 복구하는 유일한 방법은 액터 시스템 중 하나를 재시작하는 것입니다." 격리된 시스템으로 전송된 메시지는 폐기(drop)되지만, `actorSelection` 메시지는 시스템 재시작 여부를 탐지(probe)하기 위해 여전히 전달될 수 있습니다.
 
 ---
 
@@ -268,7 +267,7 @@ phi = -log10(1 - F(timeSinceLastHeartbeat))
 
 원격 데스 워치(remote death watching)는 하트비트(heartbeat) 메시지와 장애 감지기를 활용하여 `Terminated` 메시지를 생성합니다.
 
-이 접근 방식은 "API 측면에서 로컬 액터를 감시하는 것과 다르지 않습니다(API wise not different than watching a local actor)." 다만 장애 감지기는 원격 시스템이 정상적으로 종료(graceful shutdown)되지 않고 충돌(crash)하는 시나리오를 처리합니다. 즉, 원격 노드가 갑자기 사라지더라도 감시하는 액터는 `Terminated` 알림을 받을 수 있습니다.
+API 사용 방식은 로컬 액터를 감시하는 것과 동일합니다. 다만 장애 감지기는 원격 시스템이 정상적으로 종료(graceful shutdown)되지 않고 충돌(crash)하는 시나리오를 처리합니다. 즉, 원격 노드가 갑자기 사라지더라도 감시하는 액터는 `Terminated` 알림을 받을 수 있습니다.
 
 ---
 
@@ -334,7 +333,7 @@ akka.remote.artery.advanced.aeron {
 akka.remote.artery.advanced.aeron.idle-cpu-level = 5
 ```
 
-값이 낮을수록 "수면(sleeping)" 기간이 늘어나, 유휴 상태의 CPU 사용량을 줄이는 대신 반응 시간(reaction time)이 길어집니다.
+값이 낮을수록 유휴 시 대기(sleeping) 시간이 길어져 CPU 사용량은 줄어들지만 응답 시간(reaction time)이 늘어납니다.
 
 ---
 
@@ -350,7 +349,7 @@ akka.actor.deployment {
     router = round-robin-pool
     nr-of-instances = 10
     target.nodes = [
-      "tcp://[email protected]:2552",
+      "akka://[email protected]:2552",
       "akka://[email protected]:2552"
     ]
   }
@@ -385,7 +384,7 @@ akka {
   actor {
     deployment {
       /sampleActor {
-        remote = "akka.tcp://[email protected]:2553"
+        remote = "akka://[email protected]:2553"
       }
     }
   }
@@ -447,7 +446,7 @@ akka.java-flight-recorder.enabled = false
 
 ### 핵심 보안 원칙
 
-문서에 따르면, `ActorSystem`은 신뢰할 수 없는 네트워크(untrusted network, 예: 인터넷)에 평문 Aeron/UDP 또는 TCP를 통해 노출되어서는 안 됩니다(An `ActorSystem` should not be exposed via Akka Remote (Artery) over plain Aeron/UDP or TCP to an untrusted network). 권장사항은 네트워크 보안(firewalls)으로 시스템을 보호하거나, "상호 인증을 동반한 TLS(TLS with mutual authentication)"를 활성화하는 것입니다.
+문서에 따르면, `ActorSystem`은 신뢰할 수 없는 네트워크(예: 인터넷)에 평문 Aeron/UDP 또는 TCP로 노출되어서는 안 됩니다. 권장 대응책은 방화벽(firewall)으로 시스템을 보호하거나 상호 인증 TLS(TLS with mutual authentication)를 활성화하는 것입니다.
 
 ### SSL/TLS 설정
 
@@ -499,7 +498,7 @@ TLS 1.2에 대한 RFC 7525 권고에 따른 암호화 방식:
 
 ### 상호 인증(Mutual Authentication)
 
-상호 인증(mutual authentication)은 기본적으로 활성화되어 있습니다. 이는 "연결의 수동 측(passive side, 즉 TLS 서버 측)이 연결하는 피어(peer)로부터도 인증서를 요청하고 검증한다(the passive side (the TLS server side) of a connection will also request and verify a certificate from the connecting peer)"는 것을 의미합니다. Akka는 피어 투 피어(peer-to-peer) 통신을 사용하므로, 두 노드 모두 키스토어(keystore)와 트러스트스토어(truststore)를 설정해야 합니다.
+상호 인증(mutual authentication)은 기본적으로 활성화되어 있습니다. 즉, 연결의 수동 측(TLS 서버 측)도 상대 피어(peer)에게 인증서를 요청하고 검증합니다. Akka는 피어 투 피어(peer-to-peer) 통신을 사용하므로 두 노드 모두 키스토어(keystore)와 트러스트스토어(truststore)를 설정해야 합니다.
 
 #### 호스트명 검증(Hostname Verification)
 
@@ -509,7 +508,7 @@ TLS 1.2에 대한 RFC 7525 권고에 따른 암호화 방식:
 akka.remote.artery.ssl.config-ssl-engine.hostname-verification=on
 ```
 
-이는 목적지 호스트명(destination hostname)이 피어 인증서(peer certificate)의 호스트명과 일치하는지 검증합니다. 동적 호스트명(dynamic hostname)을 사용하는 배포 환경에서는 검증을 비활성화할 수 있습니다.
+이 설정은 목적지 호스트명이 피어 인증서의 호스트명과 일치하는지 검증합니다. 동적 호스트명을 사용하는 배포 환경에서는 검증을 비활성화할 수 있습니다.
 
 ### 인증서 전략 옵션(Certificate Strategy Options)
 
@@ -660,9 +659,9 @@ akka.remote.artery.trusted-selection-paths = ["/user/receptionist", "/user/namin
 
 #### 한계(Limitations)
 
-신뢰할 수 없는 모드만으로는 완전한 보호를 제공하지 못합니다. 문서는 "Java 직렬화는 여전히 활성화해서는 안 된다(Java serialization should still not be enabled)"는 점을 강조하며, 신뢰할 수 없는 모드를 네트워크 보안 및/또는 상호 인증 TLS와 결합할 것을 권장합니다.
+신뢰할 수 없는 모드만으로는 완전한 보호를 제공하지 못합니다. 문서는 Java 직렬화는 여전히 활성화해서는 안 된다고 강조하며, 신뢰할 수 없는 모드를 네트워크 보안 및/또는 상호 인증 TLS와 함께 사용할 것을 권장합니다.
 
-모범 사례는 "잘 정의된 진입점 액터 집합(a well-defined set of entry point actors)"으로 시스템을 설계하고, 이 진입점 액터들이 요청을 검증한 뒤 로컬 참조(local references)를 사용하여 워커 시스템(worker systems)으로 전달하도록 하는 것입니다.
+모범 사례는 잘 정의된 진입점 액터 집합으로 시스템을 설계하고, 해당 진입점 액터들이 요청을 검증한 뒤 로컬 참조를 사용해 워커 시스템으로 전달하도록 구성하는 것입니다.
 
 ### 추가 보안 권장사항
 
@@ -675,7 +674,7 @@ akka.remote.artery.trusted-selection-paths = ["/user/receptionist", "/user/namin
 
 ## 17. 직렬화(Serialization) 개요
 
-Akka의 직렬화(serialization) 메커니즘은 JVM 객체를 바이트 배열(byte array)로 변환하여 JVM 간 통신을 가능하게 합니다. 로컬(local) 액터 메시지는 참조 전달(reference passing)을 사용하지만, 원격(remote) 메시지는 직렬화가 필요합니다. 프레임워크는 커스텀 직렬화기(custom serializer)와 자동 바인딩(binding) 설정을 지원합니다.
+Akka의 직렬화(serialization) 메커니즘은 JVM 객체를 바이트 배열(byte array)로 변환하여 JVM 간 통신을 가능하게 합니다. 로컬 액터 메시지는 참조 전달(reference passing)을 사용하지만, 원격 메시지는 직렬화가 필요합니다. 프레임워크는 커스텀 직렬화기(custom serializer)와 바인딩(binding) 설정을 지원합니다.
 
 ### 의존성 설정
 
@@ -738,8 +737,8 @@ akka {
 
 **핵심 사항:**
 - 트레이트(trait)/인터페이스(interface) 이름이나 추상 기반 클래스(abstract base class)를 지정합니다.
-- 모호한(ambiguous) 설정의 경우, 가장 구체적인(most specific) 클래스가 선택됩니다.
-- 메시지를 담고 있는 Scala 객체(object)는 완전한 정규화 이름(fully qualified name)을 요구합니다. 예: `Wrapper.Message` 대신 `Wrapper$Message`.
+- 바인딩이 모호한 경우 가장 구체적인(most specific) 클래스가 선택됩니다.
+- Scala 객체(object) 안에 정의된 메시지 클래스는 완전한 정규화 이름(fully qualified name)에서 `Wrapper.Message` 대신 `Wrapper$Message` 형식을 사용해야 합니다.
 
 ### 식별자 설정(Identifier Configuration)
 
@@ -804,7 +803,7 @@ val system = ActorSystem(Behaviors.empty, "example")
 val serialization = SerializationExtension(system)
 ```
 
-**중요:** 역직렬화(deserialization)를 위해서는 매니페스트(manifest)와 직렬화기 ID(serializer ID)가 바이트와 함께 동반되어야 합니다. 직렬화 바인딩이 변경되는 롤링 업데이트(rolling update)를 지원하려면 이 세 가지 구성 요소(바이트, 직렬화기 ID, 매니페스트)를 함께 저장하십시오.
+**중요:** 역직렬화 시에는 매니페스트(manifest)와 직렬화기 ID(serializer ID)가 바이트와 함께 있어야 합니다. 직렬화 바인딩이 변경되는 롤링 업데이트(rolling update)를 지원하려면 이 세 가지(바이트, 직렬화기 ID, 매니페스트)를 함께 저장하십시오.
 
 ---
 
@@ -864,7 +863,7 @@ static class MyOwnSerializer extends JSerializer {
 
 ### SerializerWithStringManifest (권장)
 
-문자열 기반 매니페스트(string-based manifest)는 더 나은 스키마 진화(schema evolution)와 영속성(persistence) 지원을 가능하게 합니다.
+문자열 기반 매니페스트(string-based manifest)를 사용하면 스키마 진화(schema evolution)와 영속성(persistence) 대응이 더 수월해집니다.
 
 **Scala:**
 ```scala
@@ -893,7 +892,7 @@ class MyOwnSerializer2 extends SerializerWithStringManifest {
 }
 ```
 
-**모범 사례:** 알 수 없는 매니페스트(unknown manifest)에 대해서는 `IllegalArgumentException`이나 `NotSerializableException`을 던져, 혼합 버전(mixed versions)이 공존하는 롤링 업데이트를 가능하게 하십시오.
+**모범 사례:** 알 수 없는 매니페스트에 대해 `IllegalArgumentException`이나 `NotSerializableException`을 던지도록 구현하면, 혼합 버전이 공존하는 롤링 업데이트 상황에서도 안전하게 동작합니다.
 
 ---
 
@@ -923,7 +922,7 @@ class PingSerializer(system: ExtendedActorSystem)
 }
 ```
 
-`ActorRefResolver`는 액터 참조를 직렬화 형식(serialization format)의 문자열로 변환(`toSerializationFormat`)하고, 역으로 문자열로부터 액터 참조를 복원(`resolveActorRef`)합니다.
+`ActorRefResolver`는 액터 참조를 직렬화 형식의 문자열로 변환(`toSerializationFormat`)하거나, 문자열로부터 액터 참조를 복원(`resolveActorRef`)하는 데 사용합니다.
 
 ---
 
@@ -953,7 +952,7 @@ akka {
 }
 ```
 
-특정 메시지를 검증에서 제외하려면 `NoSerializationVerificationNeeded` 마커 트레이트(marker trait)를 구현하거나, 클래스 접두사(class prefix)를 설정하십시오.
+특정 메시지를 검증에서 제외하려면 `NoSerializationVerificationNeeded` 마커 트레이트(marker trait)를 구현하거나 클래스 접두사(class prefix)를 설정하십시오.
 
 **참고:** 이 설정은 테스트(testing) 중에만 사용하십시오. 로컬 메시지 전달 최적화(local message passing optimization)를 비활성화합니다.
 
@@ -1027,7 +1026,7 @@ class MyMessage implements JsonSerializable {
 
 ### 다형적 타입 처리(Polymorphic Type Handling)
 
-중첩된 필드(nested field)가 추상 기반 타입(abstract base type)을 사용하는 경우, Jackson 애노테이션(annotation)을 사용하여 모든 구현체를 선언해야 합니다.
+중첩 필드가 추상 기반 타입(abstract base type)을 사용하는 경우, Jackson 애노테이션을 사용해 모든 구현체를 선언해야 합니다.
 
 **Scala:**
 ```scala
@@ -1246,13 +1245,13 @@ akka.serialization.jackson {
 
 직렬화기는 다음과 같은 여러 안전장치(safeguards)를 구현합니다.
 
-- "`java.lang.Object`, `java.io.Serializable`, `java.lang.Comparable`과 같은 개방형 타입(open-ended types)에 Jackson 직렬화기를 바인딩하는 것은 허용되지 않습니다(Disallowed to bind Jackson serializers to open-ended types ...)."
+- `java.lang.Object`, `java.io.Serializable`, `java.lang.Comparable` 같은 개방형 타입(open-ended types)에 Jackson 직렬화기를 바인딩하는 것은 허용되지 않습니다.
 - 알려진 직렬화 가젯 클래스(serialization gadget classes)에 대한 Jackson의 거부 목록(deny list)이 적용됩니다.
 - 명시적인 `@JsonSubTypes` 선언이 임의 클래스(arbitrary classes)의 로딩을 방지합니다.
 
 ### 임베디드 Akka 직렬화(Embedded Akka Serialization)
 
-이미 Akka 직렬화기를 가진 타입의 경우, `AkkaSerializationSerializer`와 `AkkaSerializationDeserializer`를 사용합니다.
+이미 Akka 직렬화기가 등록된 타입의 경우 `AkkaSerializationSerializer`와 `AkkaSerializationDeserializer`를 사용합니다.
 
 ```scala
 final case class MyMessage(
@@ -1291,7 +1290,7 @@ akka.serialization.jackson.allowed-class-prefix = [
 ]
 ```
 
-직렬화기 전환(serializer transition) 중이거나 레거시 저장 데이터(legacy stored data)를 읽을 때 유용합니다.
+직렬화기 전환(serializer transition) 중이거나 레거시 저장 데이터를 읽을 때 유용합니다.
 
 ---
 
@@ -1415,7 +1414,7 @@ akka.serialization.jackson.migrations {
 
 ### Jackson 순방향 호환성을 통한 롤링 업데이트(Forward Compatibility)
 
-무중단(zero-downtime) 배포를 위해, `supportedForwardVersion`을 사용하여 (현재는 기존 형식을 생성하면서도) 더 새로운 스키마(newer schemas)를 읽을 수 있습니다.
+무중단(zero-downtime) 배포를 위해 `supportedForwardVersion`을 사용하면, 현재 형식으로 쓰면서도 더 새로운 스키마를 읽을 수 있습니다.
 
 ```scala
 class ItemAddedMigration extends JacksonMigration {
@@ -1442,7 +1441,7 @@ class ItemAddedMigration extends JacksonMigration {
 
 ### 모듈 정보
 
-멀티노드 테스트 툴킷(Multi Node Testing toolkit)은 Akka 버전 2.10.19에 대해 `akka-multi-node-testkit`으로 제공됩니다. Akka의 보안 라이브러리(secure library)에 접근하려면 https://account.akka.io/token 에서 토큰화된 URL(tokenized URL)이 필요합니다.
+멀티노드 테스트 툴킷(Multi Node Testing toolkit)은 Akka 버전 2.10.19에서 `akka-multi-node-testkit` 아티팩트로 제공됩니다. Lightbend의 보안 라이브러리에 접근하려면 https://account.akka.io/token 에서 토큰화된 URL이 필요합니다.
 
 #### 의존성 설정
 
@@ -1507,13 +1506,13 @@ dependencies {
 
 ### 테스트 컨덕터(The Test Conductor)
 
-테스트 컨덕터(TestConductor)는 "네트워크 스택에 끼워 넣어지는(plugs in to the network stack) Akka 확장(Akka Extension)"으로, 테스트 실행을 동기화합니다. 주요 기능은 다음과 같습니다.
+테스트 컨덕터(TestConductor)는 네트워크 스택에 연결되는 Akka 확장(Akka Extension)으로, 테스트 실행을 동기화합니다. 주요 기능은 다음과 같습니다.
 
 - **노드 주소 조회(Node Address Lookup):** 공유 설정 없이 원격 테스트 노드까지의 전체 경로(full path)를 해석
 - **배리어 조율(Barrier Coordination):** 노드들이 동료(peer)를 기다리는 동기화 지점(synchronization point)
 - **네트워크 장애 주입(Network Failure Injection):** 패킷 손실(packet loss), 스로틀링(throttling), 노드 단절(disconnection)을 시뮬레이션
 
-컨덕터 아키텍처는 배리어(barrier)와 클라이언트 연결을 관리하는 서버(server)를 사용하며, 클라이언트들은 장애 시나리오를 실행합니다. 서버는 배리어를 조율하고 트래픽 조작(traffic manipulation)을 위한 명령을 클라이언트에게 디스패치(dispatch)합니다.
+컨덕터 아키텍처는 배리어(barrier)와 클라이언트 연결을 관리하는 서버를 사용하며, 클라이언트들이 장애 시나리오를 실행합니다. 서버는 배리어를 조율하고 트래픽 조작 명령을 클라이언트에 디스패치(dispatch)합니다.
 
 ### MultiNodeSpec
 

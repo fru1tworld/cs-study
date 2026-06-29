@@ -2,7 +2,7 @@
 
 ## 개요
 
-이 문서는 PostgreSQL의 Write-Ahead Logging(WAL) 시스템의 내부 구현에 대해 다룬다. WAL은 PostgreSQL의 데이터 무결성과 복구 메커니즘의 핵심이다.
+WAL은 PostgreSQL의 데이터 무결성과 복구 메커니즘의 핵심이다.
 
 ---
 
@@ -16,8 +16,8 @@ WAL의 핵심 원칙은 다음과 같다:
 
 이 원칙을 통해 다음과 같은 이점을 얻는다:
 
-- 트랜잭션 커밋 시 데이터 페이지를 플러시할 필요가 없음: WAL 레코드가 먼저 기록되므로 데이터 페이지의 즉각적인 플러시가 불필요
-- 충돌 복구(Crash Recovery): 충돌 시 WAL 레코드를 재생하여 적용되지 않은 변경사항을 복구 (roll-forward recovery 또는 REDO)
+- 트랜잭션 커밋 시 데이터 페이지를 플러시할 필요가 없음: WAL 레코드가 먼저 기록되므로 데이터 페이지를 즉시 플러시하지 않아도 됨
+- 충돌 복구(Crash Recovery): 충돌 시 WAL 레코드를 재생하여 미적용 변경사항을 복구 (roll-forward recovery 또는 REDO)
 
 ### 1.2 성능상의 이점
 
@@ -54,7 +54,7 @@ $PGDATA/pg_wal/
 세그먼트 파일 특성:
 - 기본 크기: 16MB (initdb의 `--wal-segsize` 옵션으로 구성 가능)
 - 순차적으로 번호가 매겨짐
-- 번호는 절대 순환하지 않음 (고갈되는 데 매우 오랜 시간이 걸림)
+- 번호는 순환하지 않음 (고갈되기까지 매우 오랜 시간이 걸림)
 
 ### 2.2 WAL 페이지 구조
 
@@ -274,7 +274,7 @@ typedef struct XLogRecordDataHeaderLong
 
 ### 5.1 리소스 관리자 개념
 
-리소스 관리자(Resource Manager, rmgr)는 WAL 기능과 관련된 작업 집합이다. 각 리소스 관리자는 특정 유형의 WAL 레코드 쓰기와 재생을 담당한다.
+리소스 관리자(Resource Manager, rmgr)는 WAL 기능과 관련된 작업 집합이다. 각 리소스 관리자는 특정 유형의 WAL 레코드 작성과 재생을 담당한다.
 
 ### 5.2 내장 리소스 관리자
 
@@ -345,9 +345,9 @@ extern void RegisterCustomRmgr(RmgrId rmid, const RmgrData *rmgr);
 
 등록 요구사항:
 
-1. 확장의 `_PG_init()` 함수에서 호출
+1. 확장의 `_PG_init()` 함수에서 호출해야 함
 2. 고유한 리소스 관리자 ID 사용 (개발 시 `RM_EXPERIMENTAL_ID` 사용)
-3. `shared_preload_libraries`에 추가하여 조기 로딩
+3. `shared_preload_libraries`에 추가하여 서버 시작 시 조기 로딩
 
 예제 코드:
 
@@ -421,7 +421,7 @@ WAL 레코드 작성 과정:
 
 ### 6.2 WAL 버퍼
 
-WAL 레코드는 먼저 WAL 버퍼(공유 메모리)에 기록된다:
+WAL 레코드는 먼저 공유 메모리의 WAL 버퍼에 기록된다:
 
 ```c
 /* WAL 버퍼 크기 설정 */
@@ -482,7 +482,7 @@ wal_sync_method = fdatasync  /* 기본값 */
 
 ### 7.1 개념
 
-전체 페이지 쓰기(Full Page Writes, FPW)는 각 체크포인트 후 페이지의 첫 번째 변경 시 전체 페이지 이미지를 WAL에 기록하는 것이다.
+전체 페이지 쓰기(Full Page Writes, FPW)는 체크포인트 이후 페이지가 처음 변경될 때 전체 페이지 이미지를 WAL에 기록하는 기능이다.
 
 ```c
 /* 전체 페이지 쓰기 활성화 (기본값: on) */
@@ -505,7 +505,7 @@ PostgreSQL은 일반적으로 8KB(16개의 512바이트 섹터) 페이지를 한
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-해결책: 전체 페이지 이미지를 WAL에 저장하여 부분적으로 기록된 페이지를 복구 시 복원
+해결책: WAL에 전체 페이지 이미지를 저장하여 복구 시 부분적으로 기록된 페이지를 복원
 
 ### 7.3 백업 블록 (Backup Block)
 
@@ -583,7 +583,7 @@ typedef struct CheckPoint
 
 ### 8.4 pg_control 파일
 
-`pg_control` 파일은 데이터베이스 복구에 필수적인 정보를 저장:
+`pg_control` 파일은 데이터베이스 복구에 필수적인 정보를 담고 있다:
 
 ```bash
 # pg_controldata로 확인
@@ -605,7 +605,7 @@ Latest checkpoint's TimeLineID:       1
 
 ### 9.1 복구 프로세스 개요
 
-PostgreSQL은 REDO 로그 기반 복구를 구현한다:
+PostgreSQL은 REDO 로그 기반 복구를 사용한다:
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -680,7 +680,7 @@ WAL 레코드들:
 
 ### 10.1 개념
 
-Generic WAL은 확장이 페이지 변경을 WAL에 기록할 수 있는 내장 메커니즘이다. `access/generic_xlog.h`에 정의되어 있다.
+Generic WAL은 확장이 페이지 변경을 WAL에 기록할 수 있도록 PostgreSQL이 제공하는 내장 메커니즘이다. `access/generic_xlog.h`에 정의되어 있다.
 
 제한사항: Generic WAL 레코드는 논리적 디코딩(Logical Decoding) 중에 무시된다.
 
@@ -819,7 +819,7 @@ wal_level = replica
 
 ### 12.1 체크섬
 
-PostgreSQL은 여러 체크섬 메커니즘을 통해 데이터 무결성을 보호:
+PostgreSQL은 여러 체크섬 메커니즘으로 데이터 무결성을 보호한다:
 
 | 구성요소 | 보호 방식 |
 |---------|----------|
@@ -844,7 +844,7 @@ sdparm --clear=WCE  # 쓰기 캐시 비활성화
 
 ### 12.3 pg_test_fsync
 
-I/O 서브시스템 성능 테스트:
+I/O 서브시스템 성능 측정:
 
 ```bash
 $ pg_test_fsync

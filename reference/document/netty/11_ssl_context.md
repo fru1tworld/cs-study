@@ -1,13 +1,12 @@
 # SslContextBuilder와 개인키 (Private Key)
 
-> 이 문서는 Netty 공식 Wiki의 "SslContextBuilder and Private Key" 페이지를 한국어로 번역한 것입니다.
 > 원본: https://netty.io/wiki/sslcontextbuilder-and-private-key.html
 
 ---
 
 `SslContextBuilder`와 Netty의 `SslContext` 구현은 PKCS8 키만 지원합니다.
 
-다른 형식의 키를 가지고 있다면 사용하려면 먼저 PKCS8로 변환해야 합니다. openssl을 사용하면 손쉽게 변환할 수 있습니다.
+다른 형식의 키를 사용하려면 먼저 PKCS8로 변환해야 합니다. openssl을 사용하면 손쉽게 변환할 수 있습니다.
 
 예를 들어 암호화되지 않은 PKCS1 키를 PKCS8로 변환하려면 다음 명령을 사용합니다.
 

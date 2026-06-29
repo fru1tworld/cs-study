@@ -1,7 +1,5 @@
 # OpenTelemetry Collector
 
-> Receiver/Processor/Exporter 파이프라인과 배포 패턴을 정리합니다.
-
 ---
 
 ## 목차
@@ -21,7 +19,7 @@
 
 ## Collector란?
 
-**OpenTelemetry Collector** 는 텔레메트리 데이터를 **수신·가공·전송** 하는 벤더 중립적 에이전트/프록시입니다.
+**OpenTelemetry Collector**는 텔레메트리 데이터를 **수신·가공·전송**하는 벤더 중립적 에이전트/프록시입니다.
 
 특징:
 - Go로 작성된 단일 바이너리 (`otelcol`)
@@ -70,7 +68,7 @@ Collector를 거치면 앱은 **localhost로만 보내고**, Collector가 백엔
 
 ## 아키텍처
 
-Collector는 **컴포넌트 기반** 구조입니다. 데이터는 다음 흐름으로 처리됩니다:
+Collector는 **컴포넌트 기반** 구조입니다. 데이터는 다음 순서로 처리됩니다:
 
 ```
 ┌─────────────┐    ┌──────────────┐    ┌─────────────┐
@@ -84,7 +82,7 @@ Collector는 **컴포넌트 기반** 구조입니다. 데이터는 다음 흐름
 - `metrics` 만 처리하는 컴포넌트
 - 모든 시그널을 처리하는 컴포넌트
 
-이 컴포넌트들을 묶어 **Pipeline** 을 만듭니다 (시그널별로 별도 파이프라인).
+이 컴포넌트들을 묶어 **Pipeline**을 구성합니다 (시그널별로 별도 파이프라인).
 
 ### 추가 컴포넌트
 
@@ -95,7 +93,7 @@ Collector는 **컴포넌트 기반** 구조입니다. 데이터는 다음 흐름
 
 ## Receivers
 
-데이터를 받아들이는 입구. 대표적인 것들:
+데이터를 받아들이는 입구입니다. 대표적인 것들:
 
 ### otlp
 
@@ -321,7 +319,7 @@ OTTL은 SQL/grep 같은 표현식으로 데이터를 가공할 수 있는 mini-l
 
 ## Exporters
 
-데이터를 외부로 내보내는 출구.
+데이터를 외부로 내보내는 출구입니다.
 
 ### otlp / otlphttp
 
@@ -421,7 +419,7 @@ exporters:
 
 ## Connectors
 
-**Connector** 는 한 파이프라인의 exporter처럼 동작하면서 동시에 다른 파이프라인의 receiver처럼 동작합니다 → 시그널 변환·라우팅 가능.
+**Connector**는 한 파이프라인의 exporter처럼 동작하면서 동시에 다른 파이프라인의 receiver처럼 동작합니다 → 시그널 변환·라우팅에 활용됩니다.
 
 ### spanmetrics
 
@@ -438,7 +436,7 @@ connectors:
       - name: http.status_code
 ```
 
-→ Span을 받으면 `calls_total`, `duration_milliseconds_bucket` 등을 만들어 metric 파이프라인으로 흘려보냄.
+→ Span을 받아 `calls_total`, `duration_milliseconds_bucket` 등의 메트릭을 생성하고 metric 파이프라인으로 전달합니다.
 
 ### routing
 
@@ -509,7 +507,7 @@ service:
 
 ### 멀티 파이프라인
 
-같은 시그널에 대해 여러 파이프라인을 만들 수 있음 — 이름 뒤에 `/`로 구분:
+같은 시그널에 대해 여러 파이프라인을 정의할 수 있습니다 — 이름 뒤에 `/`로 구분:
 
 ```yaml
 service:
@@ -611,7 +609,7 @@ exporters:
 
 ## 배포판 (Distribution)
 
-Collector는 컴포넌트가 매우 많아 **모든 컴포넌트를 포함하는 단일 빌드는 무거움**. 따라서 빌드를 분리합니다.
+Collector는 컴포넌트가 매우 많아 **모든 컴포넌트를 포함하는 단일 빌드는 비대**합니다. 따라서 빌드를 분리합니다.
 
 ### Core Distribution
 
@@ -629,7 +627,7 @@ Collector는 컴포넌트가 매우 많아 **모든 컴포넌트를 포함하는
 
 ### Custom Distribution (`ocb`)
 
-OpenTelemetry Collector Builder(`ocb`)로 필요한 컴포넌트만 골라 자체 바이너리 생성. 보안·성능을 위해 큰 조직이 직접 빌드하는 추세.
+OpenTelemetry Collector Builder(`ocb`)로 필요한 컴포넌트만 선택해 자체 바이너리를 생성합니다. 보안·성능을 위해 큰 조직을 중심으로 직접 빌드하는 추세입니다.
 
 ### 벤더 배포판
 

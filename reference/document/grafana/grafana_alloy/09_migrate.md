@@ -1,6 +1,5 @@
 # Alloy 마이그레이션 가이드
 
-> 이 문서는 Grafana Alloy 공식 문서의 "Migrate to Alloy" 섹션을 한국어로 정리한 것입니다.
 > 원본: https://grafana.com/docs/alloy/latest/set-up/migrate/
 
 ---
@@ -27,7 +26,7 @@ Grafana는 다음 도구들에서 Alloy로의 마이그레이션을 권장합니
 | Promtail | Loki 로그 수집 | `alloy convert --source-format=promtail` |
 | Prometheus | 메트릭 수집 | `alloy convert --source-format=prometheus` |
 | Grafana Agent Static | 통합 수집 (Deprecated) | `alloy convert --source-format=static` |
-| Grafana Agent Flow | 통합 수집 (Deprecated) | `alloy convert --source-format=flow` |
+| Grafana Agent Flow | 통합 수집 (Deprecated) | 수동 마이그레이션 (구문 호환) |
 | Grafana Agent Operator | K8s CR 기반 | 수동 마이그레이션 |
 | OpenTelemetry Collector | OTel 표준 | `alloy convert --source-format=otelcol` |
 
@@ -227,8 +226,8 @@ prometheus.remote_write "default" {
 
 ### 주의사항
 
-- Service Discovery (`kubernetes_sd_configs`, `consul_sd_configs` 등)는 `discovery.kubernetes`, `discovery.consul` 등으로 자동 변환
-- Recording Rules / Alerting Rules는 별도 처리 필요 (Mimir Ruler에 등록)
+- Service Discovery(`kubernetes_sd_configs`, `consul_sd_configs` 등)는 `discovery.kubernetes`, `discovery.consul` 등으로 자동 변환됩니다.
+- Recording Rules / Alerting Rules는 별도로 처리해야 합니다(Mimir Ruler에 등록).
 
 ---
 
@@ -285,7 +284,7 @@ alloy convert \
 
 ### 결과
 
-`metrics`, `logs`, `integrations` 섹션이 모두 Alloy 컴포넌트로 변환됩니다.
+`metrics`, `logs`, `integrations` 섹션이 각각 Alloy 컴포넌트로 변환됩니다.
 
 ---
 
@@ -310,14 +309,14 @@ prometheus.remote_write "mimir" {
 }
 ```
 
-### 자동 변환
+### 마이그레이션 방법
 
-```bash
-alloy convert \
-  --source-format=flow \
-  -o alloy-config.alloy \
-  flow-config.river
-```
+Flow → Alloy는 자동 변환 도구(`alloy convert`)를 지원하지 않습니다. 공식 가이드는 수동 마이그레이션을 권장하며, 구체적인 절차는 다음과 같습니다.
+
+1. 지원이 중단된 컴포넌트를 대체 컴포넌트로 교체
+2. 기본 구성으로 Alloy 배포
+3. 데이터 디렉터리 복사
+4. 파이프라인 재구성
 
 ### 차이점
 
@@ -325,7 +324,7 @@ alloy convert \
 
 - 일부 컴포넌트 이름 변경 (예: `prometheus.exporter.unix` → 거의 동일)
 - 일부 deprecated 컴포넌트 제거
-- `--config.format=flow` 플래그 → `alloy` 기본값
+- 클래식 모듈(`module.file`, `module.git`, `module.http`, `module.string`) → `import.*` 블록으로 대체
 
 ### 수동 변경 사항
 
@@ -337,7 +336,7 @@ alloy convert \
   }
 ```
 
-코드 자체는 거의 그대로 동작.
+코드 자체는 대부분 그대로 동작합니다.
 
 ---
 
@@ -352,32 +351,9 @@ Kubernetes Custom Resources를 사용:
 - `LogsInstance`
 - `Integration`
 
-### 마이그레이션 옵션
+### 마이그레이션 방법
 
-#### 옵션 1: Alloy Operator
-
-```bash
-helm install alloy-operator grafana/alloy-operator \
-  --namespace alloy-system \
-  --create-namespace
-```
-
-CR로 관리:
-
-```yaml
-apiVersion: collector.grafana.com/v1alpha1
-kind: Alloy
-metadata:
-  name: prod
-  namespace: monitoring
-spec:
-  controllerKind: deployment
-  replicas: 3
-  config: |
-    // Alloy 구성
-```
-
-#### 옵션 2: Helm Chart
+공식 권장 방식은 `grafana/alloy` Helm Chart를 사용한 직접 배포입니다. Alloy Operator는 별도로 제공되지 않습니다.
 
 ```bash
 helm install alloy grafana/alloy \
@@ -385,7 +361,7 @@ helm install alloy grafana/alloy \
   --values values.yaml
 ```
 
-ConfigMap 또는 values.yaml에 구성 작성.
+`values.yaml` 또는 ConfigMap에 Alloy 구성을 작성합니다.
 
 ### CR → Alloy 매핑
 
@@ -483,9 +459,9 @@ otelcol.exporter.otlp "default" {
 
 ### 주의사항
 
-- 일부 OTel 컴포넌트는 Alloy에서 다른 이름 사용
-- 변환 후 검증 필수
-- Custom processor는 수동 변환
+- 일부 OTel 컴포넌트는 Alloy에서 다른 이름을 사용합니다.
+- 변환 후 반드시 검증해야 합니다.
+- 커스텀 프로세서는 수동으로 변환해야 합니다.
 
 ---
 
@@ -515,7 +491,7 @@ alloy convert \
   prometheus.yml
 ```
 
-`conversion-report.txt`에서 변환 안 된 부분이나 주의사항 확인.
+`conversion-report.txt`에서 변환되지 않은 항목이나 주의사항을 확인합니다.
 
 ### 3. 검증
 
@@ -532,7 +508,7 @@ alloy run --server.http.listen-addr=:0 alloy-config.alloy
 
 ### 4. 메트릭/로그 비교
 
-마이그레이션 전후로 같은 메트릭/로그가 들어가는지 확인:
+마이그레이션 전후에 동일한 메트릭/로그가 수집되는지 확인합니다.
 
 ```promql
 # 메트릭 누락 확인
@@ -544,11 +520,11 @@ group(metric_name) by (instance, job) == group(metric_name) by (instance, job)
 
 ### 5. Helm Chart 사용
 
-새로 시작한다면 공식 Helm Chart의 `values.yaml` 예시를 참고하여 처음부터 Alloy 모범 사례로 시작.
+새로 시작하는 경우, 공식 Helm Chart의 `values.yaml` 예시를 참고하여 처음부터 Alloy 모범 사례를 적용할 수 있습니다.
 
 ### 6. 모듈 활용
 
-[grafana/alloy-modules](https://github.com/grafana/alloy-modules) 의 표준 모듈 사용으로 구성을 단순화.
+[grafana/alloy-modules](https://github.com/grafana/alloy-modules)의 표준 모듈을 활용하면 구성을 단순화할 수 있습니다.
 
 ```alloy
 import.git "modules" {

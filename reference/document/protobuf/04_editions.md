@@ -1,6 +1,5 @@
 # Protobuf Editions
 
-> 이 문서는 Protocol Buffers 공식 문서의 "Protobuf Editions" 가이드를 한국어로 정리한 것입니다.
 > 원본: https://protobuf.dev/programming-guides/editions/
 
 ---
@@ -21,13 +20,13 @@
 
 Protobuf Editions는 그동안 분리되어 있던 **proto2와 proto3 문법을 하나로 통합**한 현대적 방식입니다. 두 문법 버전 중 하나를 고르는 대신, **edition**(현재 2023, 2024)을 선택하고 필요한 **features**를 설정합니다.
 
-이 방식으로 Protocol Buffers는 새로운 병렬 문법을 만들지 않고도 언어를 유연하게 진화시킬 수 있습니다. feature 시스템은 레거시 동작과 최신 모범 사례를 하나의 일관된 틀 안에서 모두 표현할 수 있게 해 줍니다.
+이 방식 덕분에 Protocol Buffers는 새로운 병렬 문법을 추가하지 않고도 언어를 유연하게 발전시킬 수 있습니다. feature 시스템을 통해 레거시 동작과 최신 모범 사례를 하나의 일관된 틀 안에서 표현할 수 있습니다.
 
 ---
 
 ## edition 선언
 
-editions를 사용하는 `.proto` 파일은 첫 번째 비어 있지 않은(주석 제외) 줄에 edition을 선언해야 합니다.
+editions를 사용하는 `.proto` 파일은 첫 번째 비주석 비공백 줄에 edition을 선언해야 합니다.
 
 ```proto
 edition = "2023";
@@ -39,7 +38,7 @@ edition = "2023";
 
 ## 기능 기반(feature) 모델
 
-proto2와 proto3는 동작이 문법에 하드코딩되어 있었습니다. editions는 이를 **설정 가능한 features**로 분리합니다. features는 세 가지 수준에서 설정할 수 있습니다.
+proto2와 proto3는 동작이 문법에 하드코딩되어 있었습니다. editions는 이를 **설정 가능한 features**로 분리합니다. features는 다음 세 가지 수준에서 설정할 수 있습니다.
 
 - **파일 수준**: 파일 내 모든 메시지에 적용
 - **메시지 수준**: 특정 메시지와 그 필드에 적용
@@ -52,7 +51,7 @@ proto2와 proto3는 동작이 문법에 하드코딩되어 있었습니다. edit
 ## 주요 features
 
 ### field_presence
-단일 필드가 "명시적으로 설정되었는지" 추적하는지 제어합니다.
+단일 필드의 "명시적 설정 여부" 추적을 제어합니다.
 
 - `EXPLICIT`: presence 추적함(proto2 `optional`과 유사)
 - `IMPLICIT`: presence 추적 안 함, 미설정 시 기본값 반환(proto3 동작)
@@ -125,7 +124,7 @@ message MyMessage {
 
 ## proto2 / proto3에서 마이그레이션
 
-proto2/proto3 메시지 타입은 editions 메시지에서 import해 사용할 수 있고, 그 반대도 가능합니다. 마이그레이션은 보통 다음과 같이 진행합니다.
+proto2/proto3 메시지 타입을 editions 메시지에서 import해 사용할 수 있으며, 반대 방향도 가능합니다. 마이그레이션은 보통 다음 순서로 진행합니다.
 
 1. `syntax = "proto2";` 또는 `syntax = "proto3";`를 `edition = "2023";`으로 변경
 2. 기존 동작을 보존하도록 features 설정

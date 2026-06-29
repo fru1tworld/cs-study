@@ -1,6 +1,5 @@
 # Profilecli 도구
 
-> 이 문서는 Pyroscope 의 공식 CLI 도구인 `profilecli` 의 주요 명령어와 사용법을 다룹니다.
 > 원본: https://grafana.com/docs/pyroscope/latest/configure-client/profile-cli/
 
 ---
@@ -26,7 +25,7 @@
 - 오브젝트 스토리지 버킷 검사
 - 운영 점검
 
-서버 설정/디버깅 보조 도구이며, 일반 클라이언트는 SDK/Alloy를 사용하면 됩니다.
+서버 설정·디버깅 보조 도구이며, 일반 클라이언트 계측에는 SDK나 Alloy를 사용합니다.
 
 ---
 
@@ -102,7 +101,7 @@ profilecli upload \
 
 ### query — 프로파일 조회
 
-라벨 매처 + 시간 범위로 프로파일을 가져옵니다. 결과는 표준 pprof로 출력되어 `go tool pprof` 등에서 분석 가능.
+라벨 매처와 시간 범위로 프로파일을 가져옵니다. 결과는 표준 pprof 형식으로 출력되므로 `go tool pprof` 등으로 분석할 수 있습니다.
 
 ```bash
 profilecli query \
@@ -169,7 +168,7 @@ profilecli bucket inspect-block \
 
 ## admin 명령
 
-운영자가 사용하는 관리 엔드포인트 wrapper.
+운영자용 관리 엔드포인트 래퍼 명령입니다.
 
 ### admin tenant-stats
 
@@ -185,7 +184,7 @@ profilecli admin tenant-stats --tenant-id=team-a
 
 ### admin flush
 
-Ingester의 헤드 블록을 즉시 flush. 점검 또는 종료 전 사용.
+Ingester의 헤드 블록을 즉시 플러시합니다. 점검 또는 종료 전에 사용합니다.
 
 ---
 

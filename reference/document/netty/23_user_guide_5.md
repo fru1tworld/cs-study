@@ -1,6 +1,5 @@
 # Netty 5.x User Guide
 
-> 이 문서는 Netty 공식 Wiki의 "User Guide for 5.x" 페이지를 한국어로 번역한 것입니다.
 > 원본: https://netty.io/wiki/user-guide-for-5.x.html
 >
 > 4.x User Guide([03_user_guide.md](./03_user_guide.md))와 거의 동일한 내용이며, 5.x에 맞게 일부 클래스명만 다릅니다(예: `ChannelInboundHandlerAdapter` → `ChannelHandlerAdapter`).
@@ -23,13 +22,13 @@
 
 ## 해결책
 
-_[Netty 프로젝트](http://netty.io/)_ 는 유지보수성이 좋고 고성능·고확장성을 갖춘 프로토콜 서버와 클라이언트를 빠르게 개발하기 위한 비동기 이벤트 기반 네트워크 애플리케이션 프레임워크와 도구를 제공하기 위한 노력입니다.
+_[Netty 프로젝트](http://netty.io/)_ 는 유지보수성이 좋고 고성능·고확장성을 갖춘 프로토콜 서버와 클라이언트를 빠르게 개발할 수 있도록, 비동기 이벤트 기반 네트워크 애플리케이션 프레임워크와 도구를 제공하는 프로젝트입니다.
 
 다시 말해, Netty는 프로토콜 서버와 클라이언트 같은 네트워크 애플리케이션을 빠르고 쉽게 개발할 수 있도록 해주는 NIO 클라이언트-서버 프레임워크입니다. TCP·UDP 소켓 서버 개발 같은 네트워크 프로그래밍을 크게 단순화하고 매끄럽게 만들어줍니다.
 
 '빠르고 쉽다'는 것이 결과 애플리케이션이 유지보수성이나 성능 문제로 고생한다는 뜻은 아닙니다. Netty는 FTP, SMTP, HTTP를 비롯한 다양한 바이너리/텍스트 기반 레거시 프로토콜의 구현 경험을 바탕으로 신중하게 설계되었습니다. 그 결과 Netty는 개발 편의성, 성능, 안정성, 유연성을 어느 하나도 타협하지 않고 동시에 달성하는 길을 찾아냈습니다.
 
-같은 장점을 주장하는 다른 네트워크 애플리케이션 프레임워크를 이미 발견한 사용자들도 있을 것이고, 그렇다면 Netty가 그것들과 무엇이 다른지 궁금할 것입니다. 답은 Netty가 기반으로 삼는 철학에 있습니다. Netty는 첫날부터 API와 구현 양쪽 모두에서 가장 편안한 경험을 제공하도록 설계되어 있습니다. 손에 잡히는 무언가는 아니지만, 이 가이드를 읽고 Netty를 다뤄보면 이 철학이 여러분의 삶을 훨씬 편하게 만들어준다는 것을 깨닫게 될 것입니다.
+같은 장점을 주장하는 다른 네트워크 애플리케이션 프레임워크를 이미 발견한 사용자들도 있을 것이고, 그렇다면 Netty가 그것들과 무엇이 다른지 궁금할 것입니다. 답은 Netty가 기반으로 삼는 철학에 있습니다. Netty는 처음부터 API와 구현 양쪽 모두에서 가장 편안한 개발 경험을 제공하도록 설계되었습니다. 딱 잘라 설명하기 어려운 부분이지만, 이 가이드를 읽고 Netty를 직접 다뤄보면 이 철학이 개발을 훨씬 수월하게 만들어준다는 것을 느끼게 될 것입니다.
 
 ## 시작하기 (Getting Started)
 
@@ -164,7 +163,7 @@ public class DiscardServer {
 1. [`NioEventLoopGroup`]은 I/O 작업을 처리하는 멀티스레드 이벤트 루프입니다. Netty는 다양한 종류의 전송(transport)을 위한 여러 [`EventLoopGroup`] 구현체를 제공합니다. 이 예제에서는 서버 사이드 애플리케이션을 구현하므로 두 개의 [`NioEventLoopGroup`]을 사용합니다. 첫 번째는 흔히 'boss'라고 부르며 들어오는 연결을 받아들입니다. 두 번째는 흔히 'worker'라고 부르며, boss가 연결을 수락한 뒤 그 연결을 worker에 등록하면 worker가 그 연결의 트래픽을 처리합니다. 사용되는 스레드 수와 그 스레드들이 생성된 [`Channel`]에 어떻게 매핑되는지는 [`EventLoopGroup`] 구현에 따라 다르며, 생성자를 통해 설정할 수도 있습니다.
 2. [`ServerBootstrap`]은 서버를 설정하는 헬퍼 클래스입니다. [`Channel`]을 직접 사용해 서버를 설정할 수도 있지만, 그건 번거롭고 대부분의 경우 그럴 필요가 없습니다.
 3. 여기서는 들어오는 연결을 수락하기 위해 새로운 [`Channel`]을 인스턴스화할 때 사용할 [`NioServerSocketChannel`] 클래스를 지정합니다.
-4. 여기에 지정한 핸들러는 새로 수락된 [`Channel`]에 의해 항상 평가됩니다. [`ChannelInitializer`]는 사용자가 새 [`Channel`]을 설정할 수 있도록 도와주는 특수한 핸들러입니다. 보통 새 [`Channel`]의 [`ChannelPipeline`]에 `DiscardServerHandler` 같은 핸들러를 추가해 네트워크 애플리케이션을 구현하게 됩니다. 애플리케이션이 복잡해질수록 더 많은 핸들러를 파이프라인에 추가하게 되며, 이 익명 클래스는 결국 별도의 최상위 클래스로 추출하게 됩니다.
+4. 여기에 지정한 핸들러는 새로 수락된 [`Channel`]마다 항상 호출됩니다. [`ChannelInitializer`]는 사용자가 새 [`Channel`]을 설정할 수 있도록 도와주는 특수한 핸들러입니다. 보통 새 [`Channel`]의 [`ChannelPipeline`]에 `DiscardServerHandler` 같은 핸들러를 추가해 네트워크 애플리케이션을 구현하게 됩니다. 애플리케이션이 복잡해질수록 더 많은 핸들러를 파이프라인에 추가하게 되며, 이 익명 클래스는 결국 별도의 최상위 클래스로 추출하게 됩니다.
 5. `Channel` 구현체에 특화된 파라미터도 설정할 수 있습니다. 우리는 TCP/IP 서버를 작성 중이므로 `tcpNoDelay`, `keepAlive` 같은 소켓 옵션을 설정할 수 있습니다. 지원되는 `ChannelOption`의 개요는 [`ChannelOption`] apidoc과 구체적인 [`ChannelConfig`] 구현체를 참고하세요.
 6. `option()`과 `childOption()`의 차이를 눈치채셨나요? `option()`은 들어오는 연결을 수락하는 [`NioServerSocketChannel`]을 위한 것입니다. `childOption()`은 부모 [`ServerChannel`](여기서는 [`NioServerSocketChannel`])이 수락한 [`Channel`]들을 위한 것입니다.
 7. 이제 준비가 끝났습니다. 남은 일은 포트에 바인드하고 서버를 시작하는 것입니다. 여기서는 머신에 있는 모든 NIC(network interface card)의 `8080` 포트에 바인드합니다. (서로 다른 바인드 주소로) `bind()` 메서드를 원하는 만큼 호출할 수도 있습니다.
@@ -257,7 +256,7 @@ public class TimeServerHandler extends ChannelHandlerAdapter {
 }
 ```
 
-(이하 4.x User Guide와 거의 동일한 설명이 이어집니다. 핸들러 베이스 클래스가 `ChannelInboundHandlerAdapter`에서 `ChannelHandlerAdapter`로 바뀐 점만 다릅니다. 자세한 설명은 [03_user_guide.md](./03_user_guide.md)의 같은 섹션을 참고하세요.)
+4.x User Guide와의 차이는 핸들러 베이스 클래스가 `ChannelInboundHandlerAdapter`에서 `ChannelHandlerAdapter`로 바뀐 점뿐입니다. 자세한 설명은 [03_user_guide.md](./03_user_guide.md)의 같은 섹션을 참고하세요.
 
 Time 서버가 의도대로 동작하는지 테스트하려면 UNIX `rdate` 명령을 사용할 수 있습니다.
 
@@ -324,13 +323,13 @@ public class TimeClientHandler extends ChannelHandlerAdapter {
 }
 ```
 
-매우 단순해 보이고 서버 측 예제와 다르지 않게 보입니다. 그러나 이 핸들러는 가끔 `IndexOutOfBoundsException`을 던지며 동작을 거부합니다. 그 이유는 다음 절에서 다룹니다.
+매우 단순해 보이고 서버 측 예제와 크게 다르지 않습니다. 그러나 이 핸들러는 가끔 `IndexOutOfBoundsException`을 던집니다. 그 이유는 다음 절에서 다룹니다.
 
 ### 스트림 기반 전송 다루기
 
 #### 소켓 버퍼의 작은 함정
 
-TCP/IP 같은 스트림 기반 전송에서는 받은 데이터가 소켓 수신 버퍼에 저장됩니다. 안타깝게도 스트림 기반 전송의 버퍼는 패킷의 큐가 아니라 바이트의 큐입니다. (이하 4.x User Guide와 동일한 내용이므로 [03_user_guide.md](./03_user_guide.md)를 참고하세요.)
+TCP/IP 같은 스트림 기반 전송에서는 받은 데이터가 소켓 수신 버퍼에 저장됩니다. 안타깝게도 스트림 기반 전송의 버퍼는 패킷의 큐가 아니라 바이트의 큐입니다. 자세한 내용은 [03_user_guide.md](./03_user_guide.md)를 참고하세요.
 
 #### 첫 번째 해결책
 
@@ -500,7 +499,7 @@ public class TimeEncoder extends MessageToByteEncoder<UnixTime> {
 
 ### 애플리케이션 종료하기
 
-Netty 애플리케이션을 종료하는 일은 보통 생성한 모든 [`EventLoopGroup`]에 대해 `shutdownGracefully()`를 호출하는 것만으로 충분합니다. 이 메서드는 [`Future`]를 반환하며, 이 Future는 [`EventLoopGroup`]이 완전히 종료되고 그 그룹에 속한 모든 [`Channel`]이 닫혔을 때 알림을 줍니다.
+Netty 애플리케이션을 종료할 때는 보통 생성한 모든 [`EventLoopGroup`]에 대해 `shutdownGracefully()`를 호출하는 것으로 충분합니다. 이 메서드는 [`Future`]를 반환하며, [`EventLoopGroup`]이 완전히 종료되고 그 그룹에 속한 모든 [`Channel`]이 닫히면 알림을 받을 수 있습니다.
 
 ### 요약
 

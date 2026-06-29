@@ -1,6 +1,5 @@
 # 운영 및 관리
 
-> 이 문서는 Pyroscope 클러스터의 운영(보안, 멀티테넌시, 한도, 모니터링, 업그레이드)을 다룹니다.
 > 원본: https://grafana.com/docs/pyroscope/latest/configure-server/
 
 ---
@@ -41,7 +40,7 @@ multitenancy_enabled: true
 
 ### 단일 테넌트 운영
 
-소규모 환경에서는 비활성화하면 모든 데이터가 `anonymous` 테넌트에 들어갑니다.
+소규모 환경에서는 멀티테넌시를 비활성화하면 모든 데이터가 `anonymous` 테넌트에 저장됩니다.
 
 ```yaml
 multitenancy_enabled: false
@@ -68,7 +67,7 @@ Pyroscope **자체에는 사용자/패스워드 개념이 없습니다**. 인증
 
 ### 3. Basic Auth (간단한 환경)
 
-nginx-side에서 Basic Auth + 헤더 주입.
+nginx에서 Basic Auth를 처리하고 헤더를 주입합니다.
 
 ```nginx
 location / {
@@ -109,7 +108,7 @@ limits:
 
 ### 동적 적용 (Tenant-Settings)
 
-운영 중에 한도를 변경하려면 Tenant-Settings 컴포넌트를 사용합니다(또는 설정 파일 핫 리로드).
+운영 중에 한도를 변경하려면 Tenant-Settings 컴포넌트를 사용하거나 설정 파일 핫 리로드를 활용합니다.
 
 ### 위반 시 동작
 
@@ -161,17 +160,17 @@ Pyroscope 자체를 모니터링해야 합니다.
 
 ### 자기 자신 프로파일링
 
-Pyroscope는 자체 pprof endpoint를 노출합니다.
+Pyroscope는 자체 pprof 엔드포인트를 노출합니다.
 
 ```yaml
 self_profiling:
-  enabled: true
-  url: http://pyroscope:4040
+  disable_push: false
+  tenant_id: ""
 ```
 
 ### 알람 규칙 권장
 
-- Ingester가 unhealthy 상태가 5분 이상
+- Ingester가 5분 이상 unhealthy 상태 유지
 - 인제스트 에러율 > 1%
 - 쿼리 P99 latency > 임계값
 - Compactor가 이전 사이클 미완료
@@ -192,20 +191,20 @@ self_profiling:
 
 ### 백업 전략
 
-- 오브젝트 스토리지는 통상 SLA가 높음 (S3 99.9999999%) → 별도 백업이 큰 의미 없는 경우가 많음
-- 정말 중요한 경우 cross-region 복제(Replication) 활성화
+- 오브젝트 스토리지는 일반적으로 SLA가 높으므로 (S3 99.9999999%) 별도 백업이 불필요한 경우가 많습니다.
+- 고가용성이 필수인 경우 크로스 리전 복제(Cross-Region Replication)를 활성화합니다.
 
 ### Ingester 노드 손실
 
-- RF=3 이라면 다른 2개 노드가 데이터를 보유 → 데이터 손실 없음
-- WAL이 살아있다면 재시작 시 자동 복구
-- WAL까지 잃으면 최근(미플러시) 프로파일이 유실될 수 있음
+- RF=3이면 나머지 2개 노드가 데이터를 보유하므로 데이터 손실이 없습니다.
+- WAL이 남아 있으면 재시작 시 자동 복구됩니다.
+- WAL까지 손실되면 아직 플러시되지 않은 최근 프로파일이 유실될 수 있습니다.
 
 ### 클러스터 전체 복구
 
 - 새 Pyroscope 클러스터 기동
 - 같은 오브젝트 버킷을 가리키게 설정
-- Compactor가 bucket index를 재구성
+- Compactor가 버킷 인덱스를 재구성합니다.
 
 ---
 
@@ -214,7 +213,7 @@ self_profiling:
 ### 마이너 버전 업
 
 - 통상 무중단 롤링 업데이트 가능
-- Ingester는 PodDisruptionBudget 으로 한 번에 1개씩만 교체
+- Ingester는 PodDisruptionBudget으로 한 번에 1개씩만 교체
 - Distributor/Querier는 자유롭게 교체
 
 ### 메이저 버전 업
@@ -234,14 +233,14 @@ self_profiling:
 
 ### Ingester
 
-- `head.max_block_bytes`: 헤드 블록 크기 (기본 1.6GB) — 메모리에 영향
-- `head.max_block_duration`: 블록 시간 (기본 1h) — 너무 짧으면 작은 블록 생성
+- `head.max_block_bytes`: 헤드 블록 크기 (기본 1.6 GB) — 메모리 사용량에 영향
+- `head.max_block_duration`: 블록 보존 시간 (기본 1h) — 너무 짧으면 소규모 블록이 다수 생성됨
 - WAL fsync 정책: `wal.flush_interval`
 
 ### Querier
 
 - `max_concurrent_queries`: 노드당 동시 쿼리 수
-- `block_sync_concurrency`: 블록 메타 동기화 병렬도
+- `block_sync_concurrency`: 블록 메타데이터 동기화 병렬 처리 수
 
 ### Compactor
 
@@ -250,7 +249,7 @@ self_profiling:
 
 ### Cache
 
-- Memcached 사용 권장 (chunks_cache, metadata_cache)
+- Memcached 사용을 권장합니다 (chunks_cache, metadata_cache).
 
 ```yaml
 chunks_cache:

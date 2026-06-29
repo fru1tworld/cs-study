@@ -24,7 +24,7 @@ libpq를 사용하는 클라이언트 프로그램은 헤더 파일 `libpq-fe.h`
 
 #### PQconnectdbParams
 
-파라미터 배열을 사용하여 새 데이터베이스 연결을 엽니다. 새로운 애플리케이션에 권장되는 방법 입니다.
+파라미터 배열을 사용하여 새 데이터베이스 연결을 엽니다. 새 애플리케이션에 권장하는 방법입니다.
 
 ```c
 PGconn *PQconnectdbParams(const char * const *keywords,
@@ -72,7 +72,7 @@ if (PQstatus(conn) != CONNECTION_OK) {
 
 #### PQsetdbLogin (권장하지 않음)
 
-`PQconnectdb`의 이전 버전으로, 고정된 파라미터들을 사용합니다.
+`PQconnectdb`의 구버전으로, 고정된 파라미터를 사용합니다.
 
 ```c
 PGconn *PQsetdbLogin(const char *pghost,
@@ -169,7 +169,7 @@ while ((pollStatus = PQconnectPoll(conn)) != PGRES_POLLING_OK) {
 void PQfinish(PGconn *conn);
 ```
 
-중요: 연결이 실패한 경우에도 항상 이 함수를 호출해야 합니다.
+중요: 연결에 실패한 경우에도 반드시 이 함수를 호출해야 합니다.
 
 #### PQreset
 
@@ -192,7 +192,7 @@ PostgresPollingStatusType PQresetPoll(PGconn *conn);
 
 #### PQping / PQpingParams
 
-전체 연결 없이 서버 상태를 보고합니다.
+전체 연결 없이 서버 상태를 확인합니다.
 
 ```c
 PGPing PQping(const char *conninfo);
@@ -211,7 +211,7 @@ PGPing PQpingParams(const char * const *keywords,
 
 ## 32.2 연결 상태 함수 (Connection Status Functions)
 
-연결 상태 함수는 기존 데이터베이스 연결 객체의 상태를 조회합니다.
+연결 상태 함수는 기존 데이터베이스 연결 객체의 상태를 조회하는 함수들입니다.
 
 ### 32.2.1 연결 파라미터 함수
 
@@ -271,7 +271,7 @@ ConnStatusType PQstatus(const PGconn *conn);
 - 비동기 연결 절차를 위한 기타 값들
 
 #### PQtransactionStatus
-서버의 현재 트랜잭션 내 상태를 반환합니다.
+서버의 현재 트랜잭션 상태를 반환합니다.
 ```c
 PGTransactionStatusType PQtransactionStatus(const PGconn *conn);
 ```
@@ -315,11 +315,11 @@ char *PQerrorMessage(const PGconn *conn);
 ### 32.2.3 연결 상태 함수
 
 #### PQsocket
-연결 소켓의 파일 디스크립터 번호를 얻습니다.
+연결 소켓의 파일 디스크립터 번호를 반환합니다.
 ```c
 int PQsocket(const PGconn *conn);
 ```
-- 유효한 디스크립터의 경우 ≥ 0, 열린 연결이 없으면 -1 반환
+- 유효한 디스크립터는 0 이상, 열린 연결이 없으면 -1 반환
 
 #### PQbackendPID
 연결을 처리하는 백엔드의 프로세스 ID를 반환합니다.
@@ -328,13 +328,13 @@ int PQbackendPID(const PGconn *conn);
 ```
 
 #### PQconnectionNeedsPassword
-인증에 비밀번호가 필요했지만 사용할 수 없었는지 확인합니다.
+인증에 비밀번호가 필요했으나 제공되지 않았는지 확인합니다.
 ```c
 int PQconnectionNeedsPassword(const PGconn *conn);
 ```
 
 #### PQconnectionUsedPassword
-인증 방법이 비밀번호를 사용했는지 확인합니다.
+인증에 비밀번호가 사용되었는지 확인합니다.
 ```c
 int PQconnectionUsedPassword(const PGconn *conn);
 ```
@@ -342,14 +342,14 @@ int PQconnectionUsedPassword(const PGconn *conn);
 ### 32.2.4 SSL 관련 함수
 
 #### PQsslInUse
-연결이 SSL을 사용하는지 확인합니다.
+연결에 SSL이 사용 중인지 확인합니다.
 ```c
 int PQsslInUse(const PGconn *conn);
 ```
 - SSL 사용 시 1, 미사용 시 0 반환
 
 #### PQsslAttribute
-연결에 대한 SSL 관련 정보를 반환합니다.
+연결의 SSL 관련 정보를 반환합니다.
 ```c
 const char *PQsslAttribute(const PGconn *conn, const char *attribute_name);
 ```
@@ -380,8 +380,8 @@ PGresult *PQexec(PGconn *conn, const char *command);
 - `command`: SQL 명령 문자열 (세미콜론으로 구분된 여러 SQL 명령 포함 가능)
 
 주요 특성:
-- 명시적인 BEGIN/COMMIT가 없으면 단일 트랜잭션에서 여러 SQL 명령 처리
-- 실행된 마지막 명령 의 결과만 설명하는 `PGresult` 반환
+- 명시적인 BEGIN/COMMIT가 없으면 단일 트랜잭션으로 여러 SQL 명령 처리
+- 마지막 명령의 결과를 나타내는 `PGresult` 반환
 - 명령이 실패하면 처리가 중단되고 오류 정보 반환
 - 차단 호출(서버 응답을 기다림)
 
@@ -433,7 +433,7 @@ PGresult *PQexecParams(PGconn *conn,
 - `conn`: 연결 객체
 - `command`: 파라미터 플레이스홀더(`$1`, `$2` 등)가 있는 SQL 명령 문자열
 - `nParams`: 제공된 파라미터 수
-- `paramTypes[]`: 데이터 타입을 지정하는 OID 배열 (서버 추론을 위해 NULL 가능)
+- `paramTypes[]`: 데이터 타입을 지정하는 OID 배열 (서버가 추론하도록 NULL 가능)
 - `paramValues[]`: 파라미터 값 배열 (NULL 포인터 = NULL 값)
 - `paramLengths[]`: 바이너리 파라미터의 바이트 길이 (텍스트 형식 및 NULL 값에서는 무시)
 - `paramFormats[]`: 각 파라미터의 형식 표시기 (0 = 텍스트, 1 = 바이너리)
@@ -442,7 +442,7 @@ PGresult *PQexecParams(PGconn *conn,
 주요 장점:
 - 파라미터 값이 SQL 명령과 분리됨 (SQL 인젝션 방지)
 - 수동 인용 및 이스케이프 불필요
-- 호출당 하나의 SQL 명령 만 지원 (기본 프로토콜의 제한)
+- 호출당 SQL 명령 하나만 지원 (기본 프로토콜의 제한)
 - 바이너리 형식으로 결과 요청 가능
 
 예제:
@@ -491,7 +491,7 @@ PGresult *PQprepare(PGconn *conn,
 - `stmtName`: 준비된 문장의 이름 (이름 없는 문장은 빈 문자열 `""`)
 - `query`: `$1`, `$2` 플레이스홀더가 있는 단일 SQL 명령 문자열
 - `nParams`: 사전 지정된 파라미터 수
-- `paramTypes[]`: 파라미터 타입의 OID 배열 (서버 추론을 위해 NULL 가능)
+- `paramTypes[]`: 파라미터 타입의 OID 배열 (서버가 추론하도록 NULL 가능)
 
 예제:
 ```c
@@ -625,7 +625,7 @@ int PQgetlength(const PGresult *res, int tup_num, int field_num);
 void PQclear(PGresult *res);
 ```
 
-중요: 결과는 명시적으로 해제해야 합니다. 새 명령이 실행되거나 연결이 닫힐 때 자동으로 사라지지 않습니다.
+중요: 결과는 명시적으로 해제해야 합니다. 새 명령이 실행되거나 연결이 닫혀도 자동으로 해제되지 않습니다.
 
 ### 32.3.5 보안 모범 사례
 
@@ -666,7 +666,7 @@ int PQsendQuery(PGconn *conn, const char *command);
 - 반환 값: 성공적으로 전송되면 1, 실패하면 0
 - 오류 정보: 실패 시 `PQerrorMessage()` 사용
 - 사용법: NULL이 반환될 때까지 `PQgetResult()`를 반복 호출해야 함
-- 제한: `PQgetResult()`가 NULL을 반환할 때까지 다시 호출 불가
+- 제한: `PQgetResult()`가 NULL을 반환하기 전까지 재호출 불가
 
 #### PQsendQueryParams
 
@@ -733,7 +733,7 @@ int PQconsumeInput(PGconn *conn);
 ```
 
 - 반환 값: 성공 시 1, 오류 시 0
-- 동작: 들어오는 데이터를 버퍼링; 실제로 데이터가 수신되었는지 표시하지 않음
+- 동작: 수신 데이터를 버퍼링; 실제로 데이터가 도착했는지 여부는 표시하지 않음
 - 사용 사례: `PQisBusy()` 또는 `PQnotifies()` 전에 호출
 
 #### PQisBusy
@@ -757,7 +757,7 @@ int PQsetnonblocking(PGconn *conn, int arg);
 
 - 파라미터: `arg=1`은 비차단, `arg=0`은 차단
 - 반환 값: 성공 시 0, 오류 시 -1
-- 중요: `PQexec()`는 비차단 모드를 무시하고 항상 차단
+- 중요: `PQexec()`는 비차단 모드를 무시하며 항상 차단 방식으로 동작
 
 #### PQisnonblocking
 
@@ -775,7 +775,7 @@ int PQisnonblocking(const PGconn *conn);
 int PQflush(PGconn *conn);
 ```
 
-- 반환 값: 플러시되면 0, 오류 시 -1, 큐에 데이터가 남아있으면 1
+- 반환 값: 모두 플러시되면 0, 오류 시 -1, 전송 대기 중인 데이터가 남아있으면 1
 
 ### 32.4.3 일반적인 애플리케이션 패턴
 
@@ -811,7 +811,7 @@ PQnotifies(conn);
 
 ## 32.5 파이프라인 모드 (Pipeline Mode)
 
-파이프라인 모드를 사용하면 애플리케이션이 이전 결과를 기다리지 않고 여러 쿼리를 전송할 수 있어, 단일 네트워크 트랜잭션에서 여러 쿼리/결과를 결합하여 상당한 성능 향상을 가능하게 합니다.
+파이프라인 모드를 사용하면 이전 결과를 기다리지 않고 여러 쿼리를 연속으로 전송할 수 있어, 하나의 네트워크 왕복에서 여러 쿼리와 결과를 묶어 처리함으로써 상당한 성능 향상을 얻을 수 있습니다.
 
 ### 32.5.1 파이프라인 모드가 도움되는 경우
 
@@ -827,7 +827,7 @@ int PQenterPipelineMode(PGconn *conn);
 ```
 
 - 반환 값: 성공 시 1, 연결이 유휴 상태가 아니면 0
-- 제한: 유휴 연결에서만 호출 가능
+- 제한: 유휴 상태의 연결에서만 호출 가능
 
 #### PQexitPipelineMode
 
@@ -853,8 +853,8 @@ PGpipelineStatus PQpipelineStatus(const PGconn *conn);
 - `PQsendQueryParams()` - 파라미터와 함께 쿼리 전송
 - `PQsendQueryPrepared()` - 준비된 쿼리 전송
 - `PQsendPrepare()` - PREPARE 문장 전송
-- `PQsendDescribePrepared()` - 준비된 문장에 대한 DESCRIBE 전송
-- `PQsendDescribePortal()` - 포털에 대한 DESCRIBE 전송
+- `PQsendDescribePrepared()` - 준비된 문장 DESCRIBE 전송
+- `PQsendDescribePortal()` - 포털 DESCRIBE 전송
 
 ### 32.5.4 파이프라인 모드에서 금지된 함수
 
@@ -881,7 +881,7 @@ int PQpipelineSync(PGconn *conn);
 int PQsendFlushRequest(PGconn *conn);
 ```
 
-- 목적: 동기화 지점을 설정하지 않고 서버가 출력 버퍼를 플러시하게 함
+- 목적: 동기화 지점을 설정하지 않고 서버가 출력 버퍼를 플러시하도록 요청
 
 ### 32.5.6 결과 처리 패턴
 
@@ -912,13 +912,13 @@ while ((result = PQgetResult(conn)) != NULL) {
 
 ## 32.6 결과를 청크로 조회 (Retrieving Query Results in Chunks)
 
-대용량 결과 집합의 경우, `PQsetSingleRowMode`를 사용하여 결과를 한 번에 한 행씩 조회할 수 있습니다.
+대용량 결과 집합의 경우 `PQsetSingleRowMode`를 사용하면 결과를 한 번에 한 행씩 조회할 수 있습니다.
 
 ```c
 int PQsetSingleRowMode(PGconn *conn);
 ```
 
-이 함수는 `PQsendQuery` 또는 유사한 함수 직후, `PQgetResult` 전에 호출해야 합니다.
+이 함수는 `PQsendQuery` 또는 유사한 함수를 호출한 직후, `PQgetResult` 호출 전에 사용해야 합니다.
 
 ---
 
@@ -934,10 +934,10 @@ int PQsetSingleRowMode(PGconn *conn);
 PGcancelConn *PQcancelCreate(PGconn *conn);
 ```
 
-- 쿼리 취소에 재사용할 수 있는 `PGcancelConn` 객체 생성
+- 쿼리 취소에 재사용 가능한 `PGcancelConn` 객체 생성
 - 완료 시 메모리 해제를 위해 `PQcancelFinish()` 호출 필요
-- 원래 연결의 SSL/GSS 암호화 요구 사항 준수
-- 원래 연결에서 쿼리 취소를 위해 스레드 안전
+- 원래 연결의 SSL/GSS 암호화 요구 사항을 따름
+- 스레드 안전
 
 #### PQcancelBlocking
 
@@ -951,7 +951,7 @@ int PQcancelBlocking(PGcancelConn *cancelConn);
 - 취소 요청이 성공적으로 전송되면 1
 - 실패하면 0 (자세한 내용은 `PQcancelErrorMessage()` 사용)
 
-참고: 전송 성공 ≠ 쿼리 종료; 서버가 이미 처리를 완료했을 수 있음
+참고: 취소 요청 전송 성공이 쿼리 종료를 보장하지 않음; 서버가 이미 처리를 완료했을 수 있음
 
 #### PQcancelStart / PQcancelPoll
 
@@ -970,7 +970,7 @@ PostgresPollingStatusType PQcancelPoll(PGcancelConn *cancelConn);
 void PQcancelFinish(PGcancelConn *cancelConn);
 ```
 
-취소 시도가 실패하거나 중단된 경우에도 반드시 호출해야 합니다.
+취소 시도가 실패하거나 중단된 경우에도 반드시 호출해야 메모리 누수를 방지할 수 있습니다.
 
 ### 32.7.2 권장하지 않는 함수 (Obsolete Functions)
 
@@ -978,15 +978,15 @@ void PQcancelFinish(PGcancelConn *cancelConn);
 ```c
 PGcancel *PQgetCancel(PGconn *conn);
 ```
-취소 객체를 생성합니다. 권장하지 않음: 대신 `PQcancelCreate()` 사용
+취소 객체를 생성합니다. 권장하지 않음. 대신 `PQcancelCreate()` 사용.
 
 #### PQcancel (권장하지 않음)
 ```c
 int PQcancel(PGcancel *cancel, char *errbuf, int errbufsize);
 ```
-권장하지 않음: 대신 `PQcancelBlocking()` 사용
+권장하지 않음. 대신 `PQcancelBlocking()` 사용.
 - 유일한 장점: 시그널 핸들러에서 안전하게 호출 가능
-- 보안 취약: 원래 연결이 암호화를 요구해도 암호화 사용하지 않음
+- 보안 취약: 원래 연결이 암호화를 요구하더라도 암호화 없이 취소 요청 전송
 
 ### 32.7.3 보안 고려 사항
 
@@ -1107,12 +1107,12 @@ int PQputCopyEnd(PGconn *conn,
 
 ```c
 int PQgetCopyData(PGconn *conn,
-                  char buffer,
+                  char **buffer,
                   int async);
 ```
 
 파라미터:
-- `buffer`: NULL이 아닌 포인터; 할당된 메모리 또는 NULL을 가리키도록 설정
+- `buffer`: 포인터-to-포인터(`char **`); 함수가 할당한 메모리 주소를 여기에 저장
 - `async`: 비차단 모드는 0이 아닌 값, 차단 모드는 0
 
 반환 값:
@@ -1233,7 +1233,7 @@ libpq가 할당한 메모리를 해제합니다.
 void PQfreemem(void *ptr);
 ```
 
-Windows에서 중요: DLL/애플리케이션 메모리 할당 호환성 요구 사항으로 인해 `free()` 대신 반드시 사용해야 합니다.
+Windows에서 중요: DLL과 애플리케이션 간 메모리 할당 호환성 때문에 `free()` 대신 반드시 이 함수를 사용해야 합니다.
 
 ### PQconninfoFree
 연결 함수가 할당한 데이터 구조를 해제합니다.
@@ -1267,7 +1267,7 @@ int PQlibVersion(void);
 
 ## 32.13 알림 처리 (Notice Processing)
 
-PostgreSQL 서버가 생성한 알림 및 경고 메시지는 쿼리 실패로 반환되지 않고 알림 처리 시스템을 통해 처리됩니다.
+PostgreSQL 서버가 생성한 알림 및 경고 메시지는 쿼리 실패가 아닌 알림 처리 시스템을 통해 전달됩니다.
 
 ### 32.13.1 2계층 아키텍처
 
@@ -1700,4 +1700,3 @@ libpq는 PostgreSQL의 핵심 C 라이브러리로서 다음 기능을 제공합
 7. 알림 처리: `PQnotifies`로 비동기 알림 수신
 8. SSL 지원: 암호화된 연결 설정
 
-libpq를 효과적으로 사용하면 안전하고 효율적인 PostgreSQL 클라이언트 애플리케이션을 개발할 수 있습니다.

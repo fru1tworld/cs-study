@@ -1,6 +1,5 @@
 # Alloy CLI 레퍼런스
 
-> 이 문서는 Grafana Alloy 공식 문서의 CLI 섹션을 한국어로 정리한 것입니다.
 > 원본: https://grafana.com/docs/alloy/latest/reference/cli/
 
 ---
@@ -39,7 +38,7 @@ alloy [global flags] <command> [command flags] [args]
 
 ## `alloy run`
 
-가장 많이 쓰는 명령. Alloy 실행.
+가장 많이 사용하는 명령으로, Alloy를 실행한다.
 
 ```bash
 alloy run [flags] <config-path>
@@ -66,7 +65,7 @@ alloy run [flags] <config-path>
 | 플래그 | 기본값 | 설명 |
 |--------|--------|------|
 | `--config.format` | `alloy` | `alloy`, `prometheus`, `promtail`, `static`, `flow`, `otelcol` |
-| `--config.bypass-conversion-warnings` | false | 변환 경고 무시 |
+| `--config.bypass-conversion-errors` | false | 변환 오류 무시 |
 | `--config.extra-args` | "" | static 변환 시 추가 인자 |
 
 #### Cluster
@@ -82,7 +81,7 @@ alloy run [flags] <config-path>
 | `--cluster.rejoin-interval` | `60s` | 재가입 시도 주기 |
 | `--cluster.max-join-peers` | 5 | 한 번에 가입할 피어 수 |
 | `--cluster.name` | "" | 클러스터 이름 |
-| `--cluster.wait-for-size` | 1 | 시작 전 대기할 클러스터 크기 |
+| `--cluster.wait-for-size` | 0 | 시작 전 대기할 클러스터 크기 |
 | `--cluster.wait-timeout` | `0s` | 클러스터 대기 타임아웃 |
 
 #### Cluster TLS (gossip)
@@ -152,7 +151,7 @@ alloy run --stability.level=experimental /etc/alloy/config.alloy
 alloy run --config.format=prometheus /etc/prometheus/prometheus.yml
 ```
 
-내부적으로 변환 후 실행. 일회성 실행에 유용.
+내부적으로 변환 후 실행하므로, 일회성 실행에 유용하다.
 
 ---
 
@@ -169,7 +168,7 @@ alloy validate [flags] <config-path>
 | 플래그 | 설명 |
 |--------|------|
 | `--config.format` | 구성 형식 |
-| `--config.bypass-conversion-warnings` | 변환 경고 무시 |
+| `--config.bypass-conversion-errors` | 변환 오류 무시 |
 | `--feature.community-components.enabled` | 커뮤니티 컴포넌트 |
 | `--stability.level` | 안정성 레벨 |
 
@@ -212,7 +211,7 @@ alloy fmt [flags] <config-path>
 | 플래그 | 설명 |
 |--------|------|
 | `-w, --write` | 파일을 직접 수정 |
-| `-d, --diff` | diff만 출력 |
+| `-t, --test` | 변경 사항이 있으면 0이 아닌 종료 코드 반환 (파일 미수정) |
 
 ### 사용
 
@@ -223,8 +222,8 @@ alloy fmt config.alloy
 # 파일 수정
 alloy fmt -w config.alloy
 
-# 변경 사항 미리보기
-alloy fmt -d config.alloy
+# 변경 사항이 있으면 비정상 종료 코드 반환 (CI 검증용)
+alloy fmt -t config.alloy
 ```
 
 ### Pre-commit hook
@@ -265,7 +264,6 @@ alloy convert [flags] <input-file>
 | `prometheus` | Prometheus 구성 (메트릭 스크래핑) |
 | `promtail` | Promtail 구성 (Loki 로그) |
 | `static` | Grafana Agent Static |
-| `flow` | Grafana Agent Flow (River) |
 | `otelcol` | OpenTelemetry Collector |
 
 ### 사용 예시
@@ -299,15 +297,6 @@ alloy convert \
   agent-static.yaml
 ```
 
-#### Flow → Alloy
-
-```bash
-alloy convert \
-  --source-format=flow \
-  -o alloy-config.alloy \
-  flow-config.river
-```
-
 #### OTel Collector → Alloy
 
 ```bash
@@ -319,7 +308,7 @@ alloy convert \
 
 ### 변환 보고서
 
-`--report` 옵션으로 변환 시 발생한 경고/에러 기록:
+`--report` 옵션을 사용하면 변환 중 발생한 경고와 오류를 파일에 기록한다.
 
 ```
 === Conversion Report ===
@@ -362,7 +351,7 @@ alloy tools prometheus.remote_write \
 
 ### 향후 추가될 도구
 
-Alloy는 빠르게 진화 중. `alloy tools --help` 로 최신 도구 확인.
+Alloy는 빠르게 발전하고 있으므로 `alloy tools --help`로 최신 도구를 확인한다.
 
 ---
 
@@ -400,7 +389,7 @@ alloy --version
 
 ## 환경 변수
 
-Alloy CLI는 환경변수도 지원.
+Alloy CLI는 환경 변수도 지원한다.
 
 | 환경변수 | 동등 플래그 |
 |---------|-----------|

@@ -1,7 +1,5 @@
 # PostgreSQL 함수와 연산자 (Functions and Operators)
 
-이 문서는 PostgreSQL 공식 문서의 "Chapter 9. Functions and Operators"를 한국어로 번역한 것입니다.
-
 ## 개요
 
 PostgreSQL은 내장 데이터 타입에 대한 다양한 함수와 연산자를 제공합니다. 사용자는 자신만의 함수와 연산자를 정의할 수도 있습니다 (Part V 참조).
@@ -131,7 +129,7 @@ a ISNULL                -- 비표준 구문
 a NOTNULL               -- 비표준 구문
 ```
 
-중요: `expression = NULL`은 절대 사용하지 마세요. 항상 `IS NULL`을 사용하세요.
+주의: `expression = NULL`은 사용하지 마세요. 항상 `IS NULL`을 사용해야 합니다.
 
 ### DISTINCT FROM (NULL-안전 비교)
 
@@ -446,7 +444,7 @@ SELECT rpad('hello', 10, '.');                         -- hello.....
 
 ## format 함수
 
-문자열 포맷팅을 위한 강력한 함수입니다.
+문자열 포맷팅 함수입니다.
 
 ```sql
 format(formatstr text [, formatarg any [, ...] ]) → text
@@ -505,7 +503,7 @@ SELECT concat_ws('-', 2024, 01, 15);           -- 2024-1-15
 
 # 9.5. 이진 문자열 함수와 연산자 (Binary String Functions)
 
-이진 문자열(`bytea`)을 처리하는 함수들입니다.
+이진 문자열(`bytea`) 타입을 처리하는 함수들입니다.
 
 | 함수 | 설명 | 예제 |
 |------|------|------|
@@ -519,7 +517,7 @@ SELECT concat_ws('-', 2024, 01, 15);           -- 2024-1-15
 
 # 9.6. 비트 문자열 함수와 연산자 (Bit String Functions)
 
-비트 문자열(`bit`, `bit varying`)을 처리하는 함수들입니다.
+비트 문자열(`bit`, `bit varying`) 타입을 처리하는 함수들입니다.
 
 | 연산자/함수 | 설명 |
 |-------------|------|
@@ -906,7 +904,7 @@ make_date(year, month, day)
 make_time(hour, min, sec)
 make_timestamp(year, month, day, hour, min, sec)
 make_timestamptz(year, month, day, hour, min, sec [, timezone])
-make_interval([years, months, weeks, days, hours, mins, secs])
+make_interval([years int[, months int[, weeks int[, days int[, hours int[, mins int[, secs double precision]]]]]]])
 ```
 
 ### 예제
@@ -943,7 +941,7 @@ SELECT (DATE '2024-01-01', DATE '2024-02-01') OVERLAPS
 
 # 9.10. 열거형 지원 함수 (Enum Support Functions)
 
-열거형(Enum) 타입을 위한 함수들입니다.
+열거형(Enum) 타입에서 사용할 수 있는 함수들입니다.
 
 | 함수 | 설명 |
 |------|------|
@@ -969,7 +967,7 @@ SELECT enum_range('ok'::mood, 'happy'::mood);  -- {ok,happy}
 
 ## 9.18.1. CASE
 
-if/else 문과 유사한 범용 조건 표현식입니다.
+if/else 문과 유사한 범용 조건 표현식으로, 두 가지 형식을 지원합니다.
 
 일반 형식:
 
@@ -1371,7 +1369,7 @@ SELECT COALESCE(array_agg(name), '{}') FROM employees WHERE 1=0;  -- {}
 
 윈도우 함수는 현재 쿼리 행과 관련된 행 집합에서 계산을 수행합니다. 집계 함수와 달리 행을 단일 출력 행으로 그룹화하지 않습니다.
 
-필수: 윈도우 함수는 반드시 `OVER` 절과 함께 호출해야 합니다.
+윈도우 함수는 반드시 `OVER` 절과 함께 호출해야 합니다.
 
 ## 순위 함수
 
@@ -1530,7 +1528,7 @@ FROM employees;
 
 ## 명명된 윈도우 (Named Window)
 
-반복을 피하기 위해 재사용 가능한 윈도우 사양을 정의합니다.
+반복을 줄이기 위해 `WINDOW` 절로 재사용 가능한 윈도우 사양을 정의할 수 있습니다.
 
 ```sql
 SELECT
@@ -1604,7 +1602,7 @@ expression NOT IN (subquery)
 
 표현식이 서브쿼리의 모든 행과 다르면 `true`를 반환합니다.
 
-주의: NULL 값이 있으면 예상치 못한 결과가 발생할 수 있습니다.
+주의: 서브쿼리 결과에 NULL 값이 포함되면 예상치 못한 결과가 발생할 수 있습니다.
 
 ```sql
 SELECT * FROM employees
@@ -1809,7 +1807,7 @@ SELECT jsonb_strip_nulls('{"a": 1, "b": null, "c": 3}');
 
 ## SQL/JSON 경로 언어
 
-경로 표현식으로 JSON을 쿼리합니다. `$`로 시작합니다.
+경로 표현식으로 JSON을 쿼리하는 언어로, 경로는 `$`로 시작합니다.
 
 ### 경로 쿼리 함수
 
@@ -1852,7 +1850,7 @@ SELECT jsonb_path_query_array('{"a": [1, 2, 3]}', '$.a[*] ? (@ > 1)');
 
 # 9.27. 시스템 정보 함수 (System Information Functions)
 
-PostgreSQL 시스템에 대한 정보를 반환하는 함수들입니다.
+PostgreSQL 시스템 정보를 반환하는 함수들입니다.
 
 ## 세션 정보 함수
 

@@ -1,16 +1,14 @@
 # PostgreSQL 정보 스키마 (Information Schema)
 
-이 문서는 PostgreSQL 공식 문서의 "Chapter 37. The Information Schema"를 한국어로 번역한 것입니다.
-
 ## 개요
 
-정보 스키마(Information Schema) 는 현재 데이터베이스에 정의된 객체들에 대한 정보를 담고 있는 뷰(View)의 집합 입니다. 정보 스키마는 SQL 표준에 정의되어 있으므로 다른 데이터베이스 시스템과의 이식성(portability)과 안정성(stability)이 우수합니다.
+정보 스키마(Information Schema)는 현재 데이터베이스에 정의된 객체 정보를 담는 뷰의 집합입니다. SQL 표준에 정의되어 있으므로 다른 데이터베이스 시스템과의 이식성(portability)과 안정성(stability)이 우수합니다.
 
 ---
 
 ## 37.1. 정보 스키마란?
 
-정보 스키마는 `information_schema`라는 이름의 스키마로, 모든 데이터베이스에 자동으로 존재합니다. 이 스키마의 소유자는 초기 데이터베이스 사용자이며, 해당 사용자는 당연히 이 스키마를 삭제할 수 있지만, 삭제하지 않는 것이 좋습니다.
+정보 스키마는 `information_schema`라는 이름의 스키마로, 모든 데이터베이스에 자동으로 존재합니다. 이 스키마의 소유자는 초기 데이터베이스 사용자이며, 삭제하는 것은 권장하지 않습니다.
 
 ### 시스템 카탈로그와의 차이점
 
@@ -40,8 +38,8 @@ SELECT * FROM tables;
 
 | 타입 | 설명 |
 |------|------|
-| `sql_identifier` | SQL 식별자를 위한 도메인, `character varying(128)` 기반 |
-| `character_data` | 문자 데이터를 위한 도메인, `character varying` 기반 |
+| `sql_identifier` | SQL 식별자를 위한 도메인, `text` 기반 |
+| `character_data` | 문자 데이터를 위한 도메인, `text` 기반 |
 | `cardinal_number` | 음이 아닌 정수를 위한 도메인, `integer` 기반 |
 | `yes_or_no` | 불리언 값을 나타내며, `YES` 또는 `NO` 문자열 |
 | `time_stamp` | 타임스탬프를 위한 도메인 |
@@ -826,7 +824,7 @@ WHERE relnamespace = 'public'::regnamespace;
 
 ### 성능 고려사항
 
-정보 스키마 뷰는 시스템 카탈로그를 기반으로 한 복잡한 뷰입니다. 대규모 데이터베이스에서 자주 쿼리하면 성능에 영향을 줄 수 있습니다. 성능이 중요한 경우 시스템 카탈로그를 직접 사용하는 것이 더 효율적일 수 있습니다.
+정보 스키마 뷰는 시스템 카탈로그를 기반으로 한 복잡한 뷰입니다. 대규모 데이터베이스에서 자주 쿼리하면 성능에 영향을 줄 수 있으므로, 성능이 중요한 경우에는 시스템 카탈로그를 직접 사용하는 편이 더 효율적입니다.
 
 ---
 

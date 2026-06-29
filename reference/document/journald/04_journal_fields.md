@@ -1,6 +1,5 @@
 # Journal Fields 레퍼런스
 
-> 이 문서는 `man systemd.journal-fields` 의 내용을 한국어로 정리한 것입니다.
 > 원본: https://www.freedesktop.org/software/systemd/man/systemd.journal-fields.html
 
 ---
@@ -113,8 +112,8 @@ journald가 메시지 수신 시 커널에서 직접 가져와 추가. 애플리
 | 필드 | 의미 |
 | --- | --- |
 | `_PID` | 프로세스 ID |
-| `_UID` | 실효 UID |
-| `_GID` | 실효 GID |
+| `_UID` | 사용자 UID |
+| `_GID` | 그룹 GID |
 | `_COMM` | 명령어 이름 (`/proc/<pid>/comm`) |
 | `_EXE` | 실행 파일 경로 (`/proc/<pid>/exe` 의 readlink) |
 | `_CMDLINE` | 명령행 (`/proc/<pid>/cmdline`) |
@@ -155,7 +154,7 @@ journald가 메시지 수신 시 커널에서 직접 가져와 추가. 애플리
 | --- | --- |
 | `_TRANSPORT` | `kernel`, `journal`, `stdout`, `syslog`, `audit`, `driver` |
 | `_STREAM_ID` | stdout/stderr 스트림의 고유 ID |
-| `_LINE_BREAK` | stdout 줄이 어떻게 잘렸는지 (`nul`, `line-max`, `eof`) |
+| `_LINE_BREAK` | stdout 줄이 어떻게 잘렸는지 (`nul`, `line-max`, `eof`, `pid-change`) |
 
 ### Namespace
 
@@ -219,7 +218,7 @@ journalctl --since-cursor=...
 journalctl --show-cursor
 ```
 
-cursor를 파일에 저장해뒀다가 재시작 후 그 시점부터 이어서 읽는 패턴이 가능합니다.
+cursor를 파일에 저장해 뒀다가 재시작 후 그 시점부터 이어서 읽는 방식으로 활용할 수 있습니다.
 
 ---
 

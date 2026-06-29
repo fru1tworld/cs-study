@@ -1,6 +1,5 @@
 # Loki 설치 및 설정
 
-> 이 문서는 Grafana Loki 공식 문서의 "Set up Loki" 섹션을 한국어로 정리한 것입니다.
 > 원본: https://grafana.com/docs/loki/latest/setup/install/
 
 ---
@@ -329,7 +328,7 @@ Loki는 시맨틱 버전을 따릅니다.
 2. **백업** — 구성 파일과 가능한 경우 데이터
 3. **단계적 업그레이드** — 한 번에 한 마이너 버전씩 권장
 4. **순서**:
-   - Compactor → Querier → Query Frontend → Ingester → Distributor 순으로 권장
+   - Ingester → Querier 및 나머지 컴포넌트 순으로 권장 (Ingester가 먼저 새 API를 노출해야 Querier가 의존할 수 있음)
    - Microservices 모드의 경우 컴포넌트 의존 관계 고려
 
 ### 주요 업그레이드 시 체크포인트
@@ -345,8 +344,8 @@ Loki는 시맨틱 버전을 따릅니다.
 
 #### Elasticsearch / OpenSearch에서
 
-- 기존 로그를 백필(backfill)하려면 OTel Collector + Loki Exporter
-- 새 로그부터 Loki로 보내고 점진적 전환
+- 기존 로그를 백필(backfill)하려면 OTel Collector + Loki Exporter를 활용
+- 신규 로그부터 Loki로 전송하고 점진적으로 전환
 
 #### Splunk에서
 
@@ -355,7 +354,7 @@ Loki는 시맨틱 버전을 따릅니다.
 
 ### Promtail에서 Alloy로
 
-Promtail은 점진적으로 Alloy로 통합됩니다. 마이그레이션:
+Promtail은 점진적으로 Alloy로 통합되고 있습니다. 마이그레이션 방법:
 
 ```bash
 # Promtail 구성을 Alloy로 변환
@@ -366,7 +365,7 @@ alloy convert --source-format=promtail \
 
 ### 스토리지 백엔드 변경
 
-스토리지 변경 시 `schema_config`에 새 스키마를 추가합니다 (기존 데이터는 그대로).
+스토리지를 변경할 때는 `schema_config`에 새 스키마를 추가합니다. 기존 데이터는 그대로 유지됩니다.
 
 ```yaml
 schema_config:

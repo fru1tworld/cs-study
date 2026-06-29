@@ -1,7 +1,5 @@
 # Tracing과 Observability 활용
 
-> 이 문서는 eBPF를 통한 시스템 관측·트레이싱·프로파일링 활용 패턴을 정리한 것입니다.
-
 ---
 
 ## 목차
@@ -28,7 +26,7 @@
 - **풍부한 컨텍스트**: PID/TID/UID/cgroup/SELinux 등 신뢰 가능한 메타데이터
 - **안전성**: verifier가 시스템 안정성 보장
 
-`strace -p` 는 ptrace 기반이라 syscall 당 두 번의 컨텍스트 스위치가 발생합니다 (수십 배 느림). eBPF는 같은 일을 거의 무료로.
+`strace -p`는 ptrace 기반이라 syscall마다 컨텍스트 스위치가 두 번 발생합니다(수십 배 느림). eBPF는 같은 작업을 거의 무비용으로 처리합니다.
 
 ---
 
@@ -84,7 +82,7 @@ interval:s:30 {
 }'
 ```
 
-99 Hz는 100 Hz와 자연스럽게 어긋나서 lockstep 샘플링 편향을 피합니다.
+99 Hz를 쓰는 이유는 100 Hz와 자연스럽게 어긋나 lockstep 샘플링 편향을 피할 수 있기 때문입니다.
 
 ### Flame Graph
 
@@ -99,7 +97,7 @@ git clone https://github.com/brendangregg/FlameGraph
 xdg-open flame.svg
 ```
 
-각 박스의 너비가 그 함수가 CPU에서 보낸 시간 비율. 가장 넓은 박스가 hot path.
+각 박스의 너비는 해당 함수가 CPU를 점유한 시간 비율을 나타냅니다. 가장 넓은 박스가 hot path입니다.
 
 ### Continuous profiling
 
@@ -109,13 +107,13 @@ xdg-open flame.svg
 - **Perforator** — Yandex
 - **Pixie** — New Relic
 
-이 도구들은 모두 eBPF profile probe를 기반으로 동작합니다.
+위 도구들은 모두 eBPF profile probe를 기반으로 동작합니다.
 
 ---
 
 ## Off-CPU 분석
 
-CPU를 안 쓰지만 시스템이 느리다면 — 프로세스가 어디서 대기하는지가 핵심.
+CPU를 사용하지 않는데도 시스템이 느리다면 — 프로세스가 어디서 대기하는지 파악하는 것이 핵심입니다.
 
 ### offcputime
 
@@ -124,7 +122,7 @@ sudo offcputime -df 30 > out.stacks
 ./FlameGraph/flamegraph.pl --bgcolors=blue < out.stacks > offcpu-flame.svg
 ```
 
-스택의 각 박스 너비가 그 코드 경로에서 대기한 시간.
+스택의 각 박스 너비는 해당 코드 경로에서 대기한 시간을 나타냅니다.
 
 ### bpftrace로
 
@@ -142,7 +140,7 @@ kretprobe:finish_task_switch /@start[arg0]/ {
 
 ### 결합
 
-CPU + Off-CPU 모두 합치면 전체 시간이 어디로 가는지 (CPU 작업 vs 대기) 한눈에 보입니다.
+CPU + Off-CPU를 합산하면 전체 시간이 어디에 쓰이는지(CPU 작업 vs 대기)를 한눈에 파악할 수 있습니다.
 
 ---
 
@@ -189,13 +187,13 @@ sudo biolatency -m 10
 sudo runqlat
 ```
 
-CPU에 들어가기 전 런 큐에서 대기한 시간. CPU 부족이나 우선순위 역전 진단.
+CPU를 할당받기 전 런 큐에서 대기한 시간을 측정합니다. CPU 부족이나 우선순위 역전을 진단할 때 유용합니다.
 
 ---
 
 ## USDT와 애플리케이션 트레이싱
 
-USDT는 애플리케이션이 미리 심어둔 트레이스 포인트. systemtap에서 시작했지만 eBPF에서도 사용.
+USDT는 애플리케이션이 미리 삽입해 둔 트레이스 포인트입니다. systemtap에서 시작했지만 eBPF에서도 활용합니다.
 
 ### 사용 가능한 USDT 보기
 
@@ -310,7 +308,7 @@ sysbench --threads=8 cpu run
 
 ### Sampling
 
-너무 많은 이벤트는 샘플링:
+이벤트가 너무 많을 경우 샘플링을 적용합니다:
 
 ```c
 SEC("kprobe/tcp_v4_connect")
@@ -322,7 +320,7 @@ int trace(struct pt_regs *ctx) {
 
 ### 백프레셔
 
-ringbuf가 가득 차면 새 이벤트가 손실됩니다. 사용자 공간이 충분히 빠른지, 아니면 BPF 측에서 dropping할지 결정.
+ringbuf가 가득 차면 새 이벤트가 손실됩니다. 사용자 공간이 충분히 빠르게 소비하는지, 아니면 BPF 측에서 명시적으로 드롭할지 결정해야 합니다.
 
 ```c
 // 사용자 공간이 못 따라오면 그냥 버림
@@ -335,7 +333,7 @@ if (!e) {
 
 ### 기능 감지
 
-배포할 머신마다 커널이 다를 수 있음:
+배포 대상 머신마다 커널 버전이 다를 수 있습니다:
 
 ```c
 // libbpf

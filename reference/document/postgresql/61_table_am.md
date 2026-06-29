@@ -1,7 +1,5 @@
 # Chapter 62: 테이블 접근 메서드 인터페이스 (Table Access Method Interface Definition)
 
-이 문서는 PostgreSQL 핵심 시스템과 테이블 접근 메서드(Table Access Methods) 간의 인터페이스를 정의합니다. 이 인터페이스를 통해 개발자는 기본 `heap` 구현 외에 완전히 새로운 테이블 저장 방법을 구현할 수 있습니다.
-
 ## 목차
 
 1. [테이블 접근 메서드 개요](#1-테이블-접근-메서드-개요)
@@ -230,7 +228,7 @@ typedef struct TableAmRoutine
 const TupleTableSlotOps* (*slot_callbacks) (Relation rel);
 ```
 
-튜플 테이블 슬롯은 실행기(executor)가 튜플에 대한 참조를 유지하고 컬럼 접근 기능을 제공하는 데 사용됩니다. 커스텀 접근 메서드 개발자는 일반적으로 AM 전용 튜플 테이블 슬롯 타입을 만들어야 합니다.
+튜플 테이블 슬롯은 실행기(executor)가 튜플에 대한 참조를 유지하고 컬럼 접근 기능을 제공하는 데 사용됩니다. 커스텀 접근 메서드 개발자는 일반적으로 AM 전용 튜플 테이블 슬롯 타입을 별도로 구현해야 합니다.
 
 참조 파일: `src/include/executor/tuptable.h`
 
@@ -480,7 +478,7 @@ static void table_tuple_complete_speculative(
 ```c
 static void table_multi_insert(
     Relation rel,
-    TupleTableSlot slots,     /* 삽입할 튜플 슬롯 배열 */
+    TupleTableSlot **slots,   /* 삽입할 튜플 슬롯 배열 */
     int ntuples,                /* 튜플 개수 */
     CommandId cid,
     int options,
@@ -713,7 +711,7 @@ TransactionId (*index_delete_tuples) (
 );
 ```
 
-인덱스 VACUUM 시 죽은 튜플에 대한 처리를 수행합니다.
+인덱스 VACUUM 시 죽은 튜플을 처리합니다.
 
 ### 6.4 인덱스 빌드 지원
 
@@ -889,7 +887,7 @@ typedef ItemPointerData *ItemPointer;
 
 ### 8.3 튜플 테이블 슬롯
 
-커스텀 접근 메서드 개발자는 일반적으로 AM 전용 튜플 테이블 슬롯 타입을 만들어야 합니다.
+커스텀 접근 메서드 개발자는 일반적으로 AM 전용 튜플 테이블 슬롯 타입을 별도로 구현해야 합니다.
 
 참조 파일: `src/include/executor/tuptable.h`
 
@@ -988,11 +986,11 @@ _PG_init(void)
 
 ### 8.6 트랜잭션 지원
 
-단일 트랜잭션 내에서 여러 접근 메서드 간의 크로스-AM 트랜잭션 지원을 위해 `src/backend/access/transam/xlog.c` 기계와 긴밀하게 통합해야 합니다.
+단일 트랜잭션 내에서 여러 접근 메서드 간의 크로스-AM 트랜잭션을 지원하려면 `src/backend/access/transam/xlog.c`의 메커니즘과 긴밀하게 통합해야 합니다.
 
 ### 8.7 참조 구현
 
-새로운 테이블 접근 메서드 개발자는 기존 `heap` 구현을 참조하는 것이 좋습니다.
+새로운 테이블 접근 메서드를 개발할 때는 기존 `heap` 구현을 참고하는 것이 좋습니다.
 
 참조 파일: `src/backend/access/heap/heapam_handler.c`
 

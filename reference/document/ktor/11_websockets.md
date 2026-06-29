@@ -1,7 +1,6 @@
 # 11. WebSocket
 
 > 출처: https://ktor.io/docs/server-websockets.html
-> 한국어 학습 노트입니다.
 
 ---
 
@@ -32,7 +31,7 @@ install(WebSockets) {
 
 ## 엔드포인트 정의
 
-`routing` 블록 안에서 `webSocket("/path") { ... }`로 선언. 람다는 `DefaultWebSocketServerSession`을 컨텍스트로 받습니다.
+`routing` 블록 안에서 `webSocket("/path") { ... }`로 선언합니다. 람다는 `DefaultWebSocketServerSession`을 컨텍스트로 받습니다.
 
 ```kotlin
 routing {
@@ -60,7 +59,7 @@ routing {
 핵심 API:
 
 - `incoming: ReceiveChannel<Frame>` — 들어오는 프레임 채널.
-- `outgoing: SendChannel<Frame>` — 송신 채널. `send("...")`이 헬퍼.
+- `outgoing: SendChannel<Frame>` — 송신 채널. `send("...")`는 헬퍼 함수.
 - `close(CloseReason)` — 정상 종료.
 
 ---
@@ -71,14 +70,14 @@ routing {
 | --- | --- |
 | `Frame.Text` | UTF-8 텍스트. `readText()`로 추출. |
 | `Frame.Binary` | 바이너리 데이터. `readBytes()`. |
-| `Frame.Close` | 종료 프레임. `readReason()`로 코드 확인. |
-| `Frame.Ping` / `Frame.Pong` | keep-alive — 보통 직접 다루지 않음. |
+| `Frame.Close` | 종료 프레임. `readReason()`로 코드 확인. `incoming`에 포함되지 않으며, 직접 다루려면 `webSocketRaw` 사용. |
+| `Frame.Ping` / `Frame.Pong` | keep-alive — `incoming`에 포함되지 않으며, 직접 다루려면 `webSocketRaw` 사용. |
 
 ---
 
-## ContentNegotiation 과 함께 — 객체 송수신
+## 직렬화를 통한 객체 송수신
 
-`ContentNegotiation`이 설치돼 있고 적절한 컨버터가 있으면 `sendSerialized` / `receiveDeserialized`로 객체를 그대로 주고받을 수 있습니다.
+WebSockets 플러그인에 `contentConverter`를 설정하면 `sendSerialized` / `receiveDeserialized`로 객체를 그대로 주고받을 수 있습니다.
 
 ```kotlin
 @Serializable
@@ -118,13 +117,13 @@ webSocket("/room") {
 }
 ```
 
-스레드 안전성과 backpressure가 신경 쓰이는 큰 채팅 시스템에서는 `SharedFlow`로 채널을 분리하는 패턴을 자주 씁니다.
+스레드 안전성과 backpressure가 중요한 대규모 채팅 시스템에서는 `SharedFlow`로 채널을 분리하는 패턴을 자주 씁니다.
 
 ---
 
 ## 예외 처리
 
-`incoming` 루프 바깥에서 던져진 예외는 자동으로 채널 종료 + 비정상 close로 이어집니다. 의도적인 close는 `close(CloseReason(code, message))`를 사용.
+`incoming` 루프 바깥에서 발생한 예외는 자동으로 채널 종료 및 비정상 close로 이어집니다. 의도적으로 종료할 때는 `close(CloseReason(code, message))`를 사용합니다.
 
 ```kotlin
 webSocket("/notify") {

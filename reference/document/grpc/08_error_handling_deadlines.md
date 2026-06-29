@@ -1,6 +1,5 @@
 # gRPC 에러 처리, 데드라인, 신뢰성 기능 (Go)
 
-> 이 문서는 gRPC 공식 문서의 "Error handling", "Status codes", "Deadlines", "Cancellation", "Retry", "Keepalive", "Wait-for-ready", "Health checking", "Server reflection", "Compression" 가이드를 Go 중심으로 정리한 것입니다.
 > 원본: https://grpc.io/docs/guides/error/ , https://grpc.io/docs/guides/status-codes/ , https://grpc.io/docs/guides/deadlines/ , https://grpc.io/docs/guides/cancellation/ , https://grpc.io/docs/guides/retry/ , https://grpc.io/docs/guides/keepalive/ , https://grpc.io/docs/guides/wait-for-ready/ , https://grpc.io/docs/guides/health-checking/ , https://grpc.io/docs/guides/reflection/ , https://grpc.io/docs/guides/compression/
 
 ---
@@ -26,7 +25,7 @@
 호출이 성공하면 서버는 `OK` 상태를 반환합니다. 실패 시에는 상태 코드(status code)와 선택적 에러 메시지(error message)를 반환합니다.
 
 - **표준 에러 모델(standard error model)**: 상태 코드 + 메시지. 모든 gRPC 라이브러리에서 지원합니다.
-- **확장 에러 모델(richer error model)**: protobuf를 쓰는 경우, 트레일링 메타데이터에 하나 이상의 protobuf 메시지로 추가 에러 상세를 담을 수 있습니다(`google.rpc.Status`, `google.rpc.ErrorInfo` 등). C++, Go, Java, Python, Ruby에서 지원됩니다. 단, 표준 HTTP 처리기에서는 상세를 볼 수 없고, 큰 페이로드는 HTTP/2 헤더 압축에 영향을 줄 수 있어 주의가 필요합니다.
+- **확장 에러 모델(richer error model)**: protobuf를 사용하는 경우, 트레일링 메타데이터에 하나 이상의 protobuf 메시지로 추가 에러 상세를 담을 수 있습니다(`google.rpc.Status`, `google.rpc.ErrorInfo` 등). C++, Go, Java, Python, Ruby에서 지원됩니다. 단, 표준 HTTP 처리기에서는 상세를 볼 수 없고, 페이로드가 크면 HTTP/2 헤더 압축 효율이 떨어질 수 있으므로 주의가 필요합니다.
 
 ---
 
@@ -117,7 +116,7 @@ return nil, st.Err()
 
 데드라인(deadline)은 클라이언트가 응답을 기다리는 절대 시각이고, 타임아웃(timeout)은 허용 최대 기간입니다. 타임아웃은 호출 시작 시점에 데드라인으로 변환됩니다.
 
-gRPC의 기본값은 데드라인이 없으므로, 클라이언트는 항상 현실적인 데드라인을 명시하는 것이 좋습니다. 데드라인이 지나면 RPC는 `DEADLINE_EXCEEDED`로 실패합니다.
+gRPC는 기본적으로 데드라인을 설정하지 않으므로, 클라이언트는 항상 현실적인 데드라인을 명시하는 것이 좋습니다. 데드라인이 지나면 RPC는 `DEADLINE_EXCEEDED`로 실패합니다.
 
 ### 클라이언트: 데드라인 설정
 
@@ -137,7 +136,7 @@ if err != nil {
 
 ### 서버: 데드라인 확인
 
-서버는 데드라인이 지나면 자동으로 RPC가 취소되지만, 애플리케이션이 직접 진행 중인 작업을 멈춰야 합니다. 장시간 작업에서는 주기적으로 컨텍스트를 확인합니다.
+데드라인이 지나면 서버 측 RPC는 자동으로 취소되지만, 애플리케이션은 직접 진행 중인 작업을 중단해야 합니다. 장시간 작업에서는 주기적으로 컨텍스트를 확인합니다.
 
 ```go
 func (s *server) LongOp(ctx context.Context, in *pb.Req) (*pb.Resp, error) {
@@ -154,7 +153,7 @@ func (s *server) LongOp(ctx context.Context, in *pb.Req) (*pb.Resp, error) {
 
 ### 데드라인 전파(propagation)
 
-서버가 다시 다른 서비스의 클라이언트로 동작할 때는 원래 데드라인을 전파해야 합니다. Go는 컨텍스트를 그대로 넘기면 자동 전파됩니다. gRPC는 전파 시 데드라인을 타임아웃으로 변환해 경과 시간을 반영하고, 서버 간 시계 오차(clock skew) 문제를 방지합니다.
+서버가 다른 서비스의 클라이언트로 동작할 때는 원래 데드라인을 전파해야 합니다. Go에서는 컨텍스트를 그대로 넘기면 자동으로 전파됩니다. gRPC는 전파 시 데드라인을 타임아웃으로 변환해 경과 시간을 반영함으로써 서버 간 시계 오차(clock skew) 문제를 방지합니다.
 
 ---
 
@@ -178,13 +177,13 @@ if status.Code(err) == codes.Canceled {
 
 ### 서버: 취소 감지
 
-gRPC 라이브러리는 애플리케이션 핸들러를 강제 중단하지 못합니다. 따라서 장시간 핸들러는 주기적으로 `ctx.Done()` 또는 `ctx.Err()`를 확인하고, 취소되었으면 스스로 처리를 멈춰야 합니다. Go는 핸들러가 만든 아웃고잉 RPC도 컨텍스트를 통해 자동 취소됩니다.
+gRPC 라이브러리는 애플리케이션 핸들러를 강제로 중단하지 못합니다. 따라서 장시간 실행되는 핸들러는 주기적으로 `ctx.Done()` 또는 `ctx.Err()`를 확인하고, 취소 시 스스로 처리를 멈춰야 합니다. Go에서는 핸들러가 생성한 아웃고잉 RPC도 컨텍스트를 통해 자동으로 취소됩니다.
 
 ---
 
 ## 재시도(Retry)
 
-재시도는 서비스 신뢰성을 높이는 핵심 패턴입니다. gRPC는 서비스 설정(service config)으로 메서드 단위 재시도 정책을 정의합니다.
+재시도는 서비스 신뢰성을 높이는 핵심 패턴입니다. gRPC는 서비스 설정(service config)을 통해 메서드 단위로 재시도 정책을 정의합니다.
 
 ```json
 {
@@ -216,13 +215,13 @@ conn, err := grpc.NewClient(addr,
 )
 ```
 
-별도 정책 없이도 gRPC는 클라이언트 측 장애나, 서버가 요청을 받았지만 애플리케이션 로직이 처리하기 전 단계의 실패에 대해 투명 재시도(transparent retry)를 수행합니다. 헤징(hedging)은 재시도의 보완 기능으로, 응답을 기다리지 않고 동시에 여러 요청을 보냅니다.
+별도 정책 없이도 gRPC는 요청이 클라이언트를 벗어나지 않은 장애나, 서버가 요청을 수신했지만 애플리케이션 로직이 처리하기 전 단계의 실패에 대해 투명 재시도(transparent retry)를 수행합니다. 헤징(hedging)은 재시도의 보완 기능으로, 응답을 기다리지 않고 동시에 여러 요청을 전송합니다.
 
 ---
 
 ## Keepalive
 
-Keepalive는 데이터 전송이 없는 유휴(idle) 구간에서도 HTTP/2 PING 프레임으로 연결을 살아있게 유지합니다. 죽은 연결을 빠르게 감지하는 데도 쓰입니다.
+Keepalive는 데이터 전송이 없는 유휴(idle) 구간에서도 HTTP/2 PING 프레임으로 연결을 유지합니다. 끊어진 연결을 빠르게 감지하는 데도 활용됩니다.
 
 ### 클라이언트
 
@@ -257,27 +256,27 @@ server := grpc.NewServer(
 )
 ```
 
-주의: keepalive를 너무 짧게(1분 미만) 설정하면 DDoS를 유발할 수 있습니다. 서버는 과도한 PING에 대해 GOAWAY로 연결을 끊을 수 있으므로, 서비스 소유자와 설정을 조율해야 합니다.
+주의: keepalive 간격을 너무 짧게 설정하면 서버에 과도한 부하를 줄 수 있습니다. 서버는 과도한 PING에 대해 GOAWAY로 연결을 끊을 수 있으므로, 서비스 소유자와 설정을 조율해야 합니다.
 
 ---
 
 ## Wait-for-Ready
 
-기본 동작에서는 채널이 서버에 연결되지 못한 상태에서 RPC를 생성하면 즉시 실패합니다. Wait-for-Ready를 켜면 연결이 준비될 때까지 RPC가 큐에 대기합니다(기본값은 비활성).
+기본 동작에서는 채널이 서버에 연결되지 않은 상태에서 RPC를 호출하면 즉시 실패합니다. Wait-for-Ready를 활성화하면 연결이 준비될 때까지 RPC가 큐에 대기합니다(기본값: 비활성).
 
 ```go
 resp, err := client.SayHello(ctx, req, grpc.WaitForReady(true))
 ```
 
 - READY 상태면 즉시 전송, IDLE/CONNECTING/TRANSIENT_FAILURE면 준비될 때까지 대기합니다.
-- 영구 실패(permanent failure)는 설정과 무관하게 실패합니다.
-- 데드라인은 여전히 적용되므로, 데드라인이 지나면 대기가 중단됩니다. 연결 외 다른 이유로도 실패할 수 있으니 에러 처리는 여전히 필요합니다.
+- 영구 실패(permanent failure)는 설정과 무관하게 즉시 실패합니다.
+- 데드라인은 여전히 적용되므로 데드라인이 지나면 대기가 중단됩니다. 연결 외 다른 이유로도 실패할 수 있으므로 에러 처리는 여전히 필요합니다.
 
 ---
 
 ## 헬스 체킹
 
-gRPC는 표준 헬스 체크 서비스 API(`grpc.health.v1.Health`)를 정의합니다. 단방향 `Check` RPC와 스트리밍 `Watch` RPC를 제공합니다.
+gRPC는 표준 헬스 체크 서비스 API(`grpc.health.v1.Health`)를 정의하며, 단방향 `Check` RPC와 서버 스트리밍 `Watch` RPC를 제공합니다.
 
 ```proto
 service Health {
@@ -314,13 +313,13 @@ healthServer.SetServingStatus("helloworld.Greeter", healthpb.HealthCheckResponse
 healthServer.Shutdown()
 ```
 
-클라이언트는 서비스 설정의 `healthCheckConfig.serviceName`으로 헬스 체크를 활성화하면, 연결 시 `Watch`를 호출해 `SERVING`이 될 때까지 요청을 보류합니다.
+클라이언트는 서비스 설정의 `healthCheckConfig.serviceName`으로 헬스 체크를 활성화하면 연결 시 `Watch`를 호출해 `SERVING` 상태가 될 때까지 요청을 보류합니다.
 
 ---
 
 ## 서버 리플렉션
 
-서버 리플렉션(server reflection)은 서버가 노출하는 protobuf API를 표준 RPC 서비스로 선언하는 프로토콜입니다. 클라이언트가 `.proto` 정의를 미리 갖지 않아도 요청을 인코딩/디코딩할 수 있게 합니다. `grpcurl`, Postman 등 디버깅 도구가 이를 활용합니다.
+서버 리플렉션(server reflection)은 서버가 노출하는 protobuf API를 표준 RPC 서비스로 제공하는 프로토콜입니다. 클라이언트가 `.proto` 정의를 미리 보유하지 않아도 요청을 인코딩/디코딩할 수 있습니다. `grpcurl`, Postman 등 디버깅 도구가 이를 활용합니다.
 
 Go에서는 `google.golang.org/grpc/reflection` 패키지로 한 줄로 활성화합니다.
 
@@ -332,13 +331,13 @@ pb.RegisterGreeterServer(grpcServer, &server{})
 reflection.Register(grpcServer) // 리플렉션 활성화
 ```
 
-주의: 공개 API에서 리플렉션을 노출하면 내부 API 구조가 드러날 수 있어 보안상 권장되지 않습니다. 리플렉션은 기본 비활성이며 명시적으로 켜야 합니다.
+주의: 공개 API에서 리플렉션을 노출하면 내부 API 구조가 드러날 수 있으므로 보안상 권장되지 않습니다. 리플렉션은 기본적으로 비활성이며 명시적으로 활성화해야 합니다.
 
 ---
 
 ## 압축(Compression)
 
-압축은 피어 간 통신 대역폭을 줄입니다. 호출 또는 메시지 단위로 켜고 끌 수 있습니다. 요청과 응답이 서로 다른 압축 방식을 쓰는 비대칭 압축(asymmetric compression)도 가능합니다.
+압축은 피어 간 통신 대역폭을 줄입니다. 호출 또는 메시지 단위로 활성화하거나 비활성화할 수 있습니다. 요청과 응답에 서로 다른 압축 방식을 적용하는 비대칭 압축(asymmetric compression)도 가능합니다.
 
 Go에서는 gzip 압축기를 임포트해 등록하고, 호출 옵션으로 압축기를 지정합니다.
 
@@ -351,8 +350,8 @@ import (
 resp, err := client.SayHello(ctx, req, grpc.UseCompressor(gzip.Name))
 ```
 
-서버는 등록된 압축기로 압축된 요청을 자동 해제하고, 클라이언트가 요청한 압축 방식으로 응답합니다. 클라이언트가 서버가 지원하지 않는 알고리즘으로 압축하면 서버는 `UNIMPLEMENTED` 에러와 함께 `grpc-accept-encoding` 헤더로 지원 목록을 알려줍니다.
+서버는 등록된 압축기로 압축된 요청을 자동 해제하고, 클라이언트가 요청한 압축 방식으로 응답합니다. 클라이언트가 서버에서 지원하지 않는 알고리즘으로 압축하면 서버는 `UNIMPLEMENTED` 에러를 반환하고 `grpc-accept-encoding` 헤더로 지원하는 알고리즘 목록을 알려줍니다.
 
-참고: 압축은 BEAST/CRIME 같은 공격 표면이 될 수 있어, 보안에 민감한 경우 의도적으로 비활성화하기도 합니다.
+참고: 압축은 BEAST/CRIME 같은 공격의 표면이 될 수 있어, 보안에 민감한 환경에서는 의도적으로 비활성화하기도 합니다.
 
 ---

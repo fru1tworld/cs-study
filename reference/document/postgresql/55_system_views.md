@@ -4,7 +4,7 @@
 >
 > 원문: https://www.postgresql.org/docs/current/views.html
 
-PostgreSQL은 시스템 카탈로그와 내부 서버 상태에 대한 편리한 접근을 제공하는 내장 시스템 뷰(System Views)를 제공합니다. 이 장에서는 PostgreSQL에서 제공하는 다양한 시스템 뷰의 개요와 주요 뷰들의 상세 정보를 설명합니다.
+PostgreSQL은 시스템 카탈로그와 내부 서버 상태에 편리하게 접근할 수 있도록 내장 시스템 뷰(System Views)를 제공합니다. 이 장에서는 PostgreSQL이 제공하는 다양한 시스템 뷰의 개요와 주요 뷰들의 상세 정보를 설명합니다.
 
 ---
 
@@ -40,7 +40,7 @@ PostgreSQL 시스템 뷰는 두 가지 범주로 나눌 수 있습니다:
 
 ### 1. 카탈로그 접근 뷰 (Catalog Access Views)
 
-시스템 카탈로그에 대한 자주 사용되는 쿼리에 편리하게 접근할 수 있도록 합니다:
+시스템 카탈로그를 자주 사용하는 쿼리에 편리하게 접근할 수 있도록 합니다:
 
 - `pg_tables` - 테이블 정보
 - `pg_indexes` - 인덱스 정보
@@ -61,7 +61,7 @@ PostgreSQL 시스템 뷰는 두 가지 범주로 나눌 수 있습니다:
 
 ### 정보 스키마 (Information Schema)와의 비교
 
-PostgreSQL은 정보 스키마(Information Schema) 도 제공합니다. 정보 스키마는 SQL 표준을 따르는 뷰를 제공하며, 필요한 정보가 모두 제공되는 경우 PostgreSQL 전용 시스템 뷰 대신 사용하는 것이 좋습니다. 이는 다른 데이터베이스 시스템과의 이식성을 보장하기 때문입니다.
+PostgreSQL은 정보 스키마(Information Schema)도 제공합니다. 정보 스키마는 SQL 표준을 따르는 뷰를 제공하며, 필요한 정보를 모두 얻을 수 있는 경우에는 PostgreSQL 전용 시스템 뷰 대신 정보 스키마를 사용하는 것이 좋습니다. 다른 데이터베이스 시스템과의 이식성이 보장되기 때문입니다.
 
 ---
 
@@ -148,6 +148,7 @@ PostgreSQL은 다음과 같은 시스템 뷰들을 제공합니다:
 
 | 값 | 설명 |
 |----|------|
+| `starting` | 초기 시작 중, 클라이언트 인증 진행 중 |
 | `active` | 백엔드가 쿼리를 실행 중 |
 | `idle` | 백엔드가 새 클라이언트 명령을 대기 중 |
 | `idle in transaction` | 트랜잭션 내에서 명령을 대기 중 |
@@ -268,7 +269,7 @@ WHERE cardinality(pg_blocking_pids(pid)) > 0;
 
 ### 54.3.3 pg_settings
 
-`pg_settings` 뷰는 서버의 런타임 설정 매개변수에 대한 접근을 제공합니다. `SHOW`와 `SET` 명령의 대안적인 인터페이스이며, 추가적인 메타데이터를 제공합니다.
+`pg_settings` 뷰는 서버의 런타임 설정 매개변수에 접근하는 인터페이스를 제공합니다. `SHOW`와 `SET` 명령의 대안으로, 추가적인 메타데이터를 함께 제공합니다.
 
 #### 컬럼 정의
 
@@ -462,7 +463,7 @@ WHERE definition LIKE '%users%';
 
 ### 54.3.7 pg_roles
 
-`pg_roles` 뷰는 데이터베이스 역할에 대한 정보를 제공합니다. `pg_authid` 카탈로그 테이블의 공개적으로 읽을 수 있는 뷰이며, 보안을 위해 비밀번호 필드가 숨겨져 있습니다.
+`pg_roles` 뷰는 데이터베이스 역할에 대한 정보를 제공합니다. `pg_authid` 카탈로그 테이블을 누구나 읽을 수 있도록 공개한 뷰이며, 보안을 위해 비밀번호 필드는 숨겨져 있습니다.
 
 #### 컬럼 정의
 
@@ -476,7 +477,7 @@ WHERE definition LIKE '%users%';
 | `rolcanlogin` | `bool` | 로그인 가능 여부 |
 | `rolreplication` | `bool` | 복제 역할 여부 |
 | `rolconnlimit` | `int4` | 최대 동시 연결 수 (-1은 제한 없음) |
-| `rolpassword` | `text` | 비밀번호 (항상 ``로 표시) |
+| `rolpassword` | `text` | 비밀번호 (항상 `********`로 표시) |
 | `rolvaliduntil` | `timestamptz` | 비밀번호 만료 시간 |
 | `rolbypassrls` | `bool` | 행 수준 보안 정책 우회 여부 |
 | `rolconfig` | `text[]` | 역할별 런타임 설정 기본값 |
@@ -509,7 +510,7 @@ WHERE rolconnlimit > 0;
 
 ### 54.3.8 pg_stats
 
-`pg_stats` 뷰는 `pg_statistic` 카탈로그에 저장된 정보를 더 읽기 쉬운 형태로 제공합니다. 사용자가 읽기 권한이 있는 테이블에 대한 통계만 접근할 수 있습니다.
+`pg_stats` 뷰는 `pg_statistic` 카탈로그에 저장된 정보를 더 읽기 쉬운 형태로 제공합니다. 사용자는 읽기 권한이 있는 테이블의 통계에만 접근할 수 있습니다.
 
 #### 컬럼 정의
 
@@ -644,6 +645,7 @@ FROM pg_prepared_statements;
 | `wal_status` | `text` | WAL 파일 가용성 상태 |
 | `safe_wal_size` | `int8` | 안전하게 쓸 수 있는 WAL 바이트 수 |
 | `two_phase` | `bool` | 준비된 트랜잭션 디코딩 활성화 여부 |
+| `two_phase_at` | `pg_lsn` | 준비된 트랜잭션 디코딩이 활성화된 LSN |
 | `inactive_since` | `timestamptz` | 슬롯이 비활성화된 시간 |
 | `conflicting` | `bool` | 복구와 충돌하여 무효화되었는지 여부 |
 | `invalidation_reason` | `text` | 슬롯 무효화 이유 |
@@ -849,7 +851,7 @@ WHERE installed_version IS NULL;
 
 ## 54.4 통계 뷰
 
-PostgreSQL은 데이터베이스 활동을 모니터링하기 위한 다양한 통계 뷰를 제공합니다. 이러한 뷰들은 누적 통계 시스템(Cumulative Statistics System)의 일부입니다.
+PostgreSQL은 데이터베이스 활동을 모니터링하기 위한 다양한 통계 뷰를 제공합니다. 이 뷰들은 누적 통계 시스템(Cumulative Statistics System)의 일부입니다.
 
 ### 주요 통계 뷰 목록
 

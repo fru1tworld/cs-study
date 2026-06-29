@@ -1,6 +1,5 @@
 # Unit 파일
 
-> 이 문서는 `man systemd.unit` 의 내용을 한국어로 정리한 것입니다.
 > 원본: https://www.freedesktop.org/software/systemd/man/systemd.unit.html
 
 ---
@@ -21,7 +20,7 @@
 
 ## Unit이란?
 
-systemd는 모든 관리 대상을 **unit** 으로 추상화합니다. unit은 무엇이든 될 수 있습니다 — 데몬 프로세스, 마운트 지점, 소켓, 타이머, 디바이스 등. unit의 종류는 파일 확장자로 구분됩니다.
+systemd는 모든 관리 대상을 **unit** 으로 추상화합니다. unit은 데몬 프로세스, 마운트 지점, 소켓, 타이머, 디바이스 등 다양한 형태를 가질 수 있으며, 종류는 파일 확장자로 구분됩니다.
 
 | 확장자 | 종류 | 설명 |
 | --- | --- | --- |
@@ -51,7 +50,7 @@ systemd는 다음 디렉터리를 우선순위 순으로 검색합니다.
 | `/run/systemd/system/` | 런타임 생성 |
 | `/usr/lib/systemd/system/` | 패키지 설치 (배포판 기본) |
 
-같은 이름의 unit이 여러 경로에 있으면 위쪽이 이깁니다. 즉 `/etc/systemd/system/sshd.service` 가 있으면 패키지가 제공한 `/usr/lib/systemd/system/sshd.service` 를 완전히 덮어씁니다.
+같은 이름의 unit이 여러 경로에 존재하면 우선순위가 높은 경로가 우선합니다. 예를 들어 `/etc/systemd/system/sshd.service` 가 있으면 패키지가 제공한 `/usr/lib/systemd/system/sshd.service` 를 완전히 덮어씁니다.
 
 ### 사용자 unit
 
@@ -91,7 +90,7 @@ WantedBy=multi-user.target
 ### 값의 형식
 
 - 문자열: 따옴표 없음. 공백 포함 시 `"..."` 또는 `'...'`
-- 불리언: `yes`, `no`, `true`, `false`, `1`, `0`
+- 불리언: `yes`, `no`, `true`, `false`, `on`, `off`, `1`, `0`
 - 시간: `30s`, `5min`, `2h`, `1d` (단위 없으면 초)
 - 크기: `100M`, `1G`, `500K`
 - 리스트: 공백 또는 줄바꿈으로 구분 (지시자를 여러 번 써서 누적 가능)
@@ -139,7 +138,7 @@ WantedBy=multi-user.target
 
 ## [Install] 섹션
 
-`[Install]` 은 `systemctl enable` 이 호출될 때만 의미가 있습니다. unit을 다른 unit의 의존성에 추가하는 심볼릭 링크를 만드는 데 사용됩니다.
+`[Install]` 은 `systemctl enable` 이 호출될 때만 의미가 있습니다. 다른 unit의 의존성에 현재 unit을 추가하는 심볼릭 링크를 생성합니다.
 
 - `WantedBy=`: 가장 흔함. `multi-user.target.wants/` 에 링크
 - `RequiredBy=`: 강한 버전
@@ -157,7 +156,7 @@ Alias=myapp.service
 
 ## Drop-in 디렉터리
 
-기존 unit을 **부분적으로 덮어쓰기** 위한 메커니즘입니다. 패키지가 제공한 unit을 직접 수정하지 않고 일부 옵션만 추가/변경할 수 있어 업그레이드 충돌을 피할 수 있습니다.
+기존 unit을 **부분적으로 재정의** 하기 위한 메커니즘입니다. 패키지가 제공한 unit 파일을 직접 수정하지 않고 일부 옵션만 추가·변경할 수 있어 패키지 업그레이드 시 충돌을 방지할 수 있습니다.
 
 ```
 /etc/systemd/system/<unit-name>.d/
@@ -171,7 +170,7 @@ Alias=myapp.service
 sudo systemctl edit nginx.service
 ```
 
-이 명령은 자동으로 `/etc/systemd/system/nginx.service.d/override.conf` 를 만들어 편집기를 띄웁니다.
+이 명령은 자동으로 `/etc/systemd/system/nginx.service.d/override.conf` 를 생성하고 편집기를 엽니다.
 
 ### 리스트 누적 vs 초기화
 
@@ -182,7 +181,7 @@ ExecStart=
 ExecStart=/new/path/to/binary
 ```
 
-대부분의 리스트형 지시자(`ExecStart`, `Environment` 등)는 빈 값으로 한 번 초기화하지 않으면 누적됩니다.
+대부분의 리스트형 지시자(`ExecStart`, `Environment` 등)는 빈 값으로 먼저 초기화하지 않으면 값이 누적됩니다.
 
 ---
 
@@ -194,7 +193,7 @@ ExecStart=/new/path/to/binary
 
 ### 템플릿 unit
 
-`@` 가 포함된 이름. 인스턴스 매개변수를 받습니다.
+이름에 `@` 가 포함된 unit으로, 인스턴스 매개변수를 받습니다.
 
 ```
 getty@.service          (템플릿)

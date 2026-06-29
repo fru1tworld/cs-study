@@ -284,7 +284,7 @@ SELECT pg_replication_origin_xact_reset();
 
 ### pg_replication_origin 시스템 카탈로그
 
-`pg_replication_origin` 카탈로그는 클러스터에 생성된 모든 복제 원본을 포함합니다. 이것은 공유 시스템 카탈로그 로, 대부분의 다른 시스템 카탈로그와 달리 데이터베이스당 하나가 아닌 클러스터당 하나만 존재합니다.
+`pg_replication_origin` 카탈로그는 클러스터에 생성된 모든 복제 원본을 포함합니다. 이것은 공유 시스템 카탈로그로, 대부분의 다른 시스템 카탈로그와 달리 데이터베이스별이 아닌 클러스터 전체에 하나만 존재합니다.
 
 | 열(Column) | 타입(Type) | 설명 |
 |------------|-----------|------|
@@ -436,8 +436,8 @@ SELECT pg_replication_origin_session_reset();
 
 복잡한 복제 시나리오에서 변경 사항은 생성 세션의 복제 원본으로 태그됩니다. 이를 통해:
 
-1. 출력 플러그인 이 원본에 따라 변경 사항을 다르게 처리할 수 있습니다.
-2. `filter_by_origin_cb` 콜백 을 통해 논리적 디코딩 변경 스트림을 원본별로 효율적으로 필터링할 수 있습니다.
+1. 출력 플러그인이 원본에 따라 변경 사항을 다르게 처리할 수 있습니다.
+2. `filter_by_origin_cb` 콜백을 통해 논리적 디코딩 변경 스트림을 원본별로 효율적으로 필터링할 수 있습니다.
 3. 출력 플러그인 내에서 직접 필터링하는 것보다 더 효율적입니다.
 
 ### 충돌 안전한 진행 추적 구현
@@ -517,13 +517,13 @@ SELECT * FROM replication_origin_summary;
 | `pg_replication_origin_drop(text)` | 복제 원본 삭제 | 슈퍼유저 |
 | `pg_replication_origin_oid(text)` | 복제 원본 OID 조회 | 모든 사용자 |
 | `pg_replication_origin_session_setup(text)` | 세션에 복제 원본 설정 | 슈퍼유저 |
-| `pg_replication_origin_session_reset()` | 세션 복제 원본 해제 | 모든 사용자 |
-| `pg_replication_origin_session_is_setup()` | 세션 설정 여부 확인 | 모든 사용자 |
-| `pg_replication_origin_session_progress(boolean)` | 세션 진행 상태 조회 | 모든 사용자 |
-| `pg_replication_origin_xact_setup(pg_lsn, timestamptz)` | 트랜잭션 원본 정보 설정 | 모든 사용자 |
-| `pg_replication_origin_xact_reset()` | 트랜잭션 원본 정보 해제 | 모든 사용자 |
+| `pg_replication_origin_session_reset()` | 세션 복제 원본 해제 | 슈퍼유저 |
+| `pg_replication_origin_session_is_setup()` | 세션 설정 여부 확인 | 슈퍼유저 |
+| `pg_replication_origin_session_progress(boolean)` | 세션 진행 상태 조회 | 슈퍼유저 |
+| `pg_replication_origin_xact_setup(pg_lsn, timestamptz)` | 트랜잭션 원본 정보 설정 | 슈퍼유저 |
+| `pg_replication_origin_xact_reset()` | 트랜잭션 원본 정보 해제 | 슈퍼유저 |
 | `pg_replication_origin_advance(text, pg_lsn)` | 진행 상태 수동 설정 | 슈퍼유저 |
-| `pg_replication_origin_progress(text, boolean)` | 특정 원본 진행 상태 조회 | 모든 사용자 |
+| `pg_replication_origin_progress(text, boolean)` | 특정 원본 진행 상태 조회 | 슈퍼유저 |
 
 ---
 

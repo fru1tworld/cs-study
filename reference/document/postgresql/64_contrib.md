@@ -1,7 +1,5 @@
 # 부록 F: 추가 제공 모듈 (Additional Supplied Modules)
 
-이 문서는 PostgreSQL 배포판의 `contrib` 디렉토리에서 제공되는 선택적 구성 요소들을 설명합니다. 이들은 핵심 PostgreSQL 시스템의 일부가 아닌 확장 기능(Extension) 및 유틸리티입니다.
-
 ## 목차
 
 1. [개요](#1-개요)
@@ -18,7 +16,7 @@
 
 ## 1. 개요
 
-PostgreSQL은 핵심 데이터베이스 기능 외에도 다양한 추가 모듈을 제공합니다. 이러한 모듈들은 `contrib` 디렉토리에 위치하며, 필요에 따라 선택적으로 설치할 수 있습니다.
+PostgreSQL은 핵심 데이터베이스 기능 외에도 다양한 추가 모듈을 제공합니다. 이 모듈들은 `contrib` 디렉토리에 위치하며, 필요에 따라 선택적으로 설치할 수 있습니다.
 
 ### 1.1 특징
 
@@ -164,7 +162,7 @@ SELECT * FROM pg_extension;
 
 ## 4. pg_stat_statements
 
-`pg_stat_statements`는 PostgreSQL에서 실행되는 모든 SQL 문의 계획(Planning) 및 실행(Execution) 통계를 추적하는 모듈입니다. 성능 분석 및 쿼리 최적화에 필수적인 도구입니다.
+`pg_stat_statements`는 PostgreSQL에서 실행되는 모든 SQL 문의 계획(Planning) 및 실행(Execution) 통계를 추적하는 모듈로, 성능 분석과 쿼리 최적화에 필수적입니다.
 
 ### 4.1 설치 및 활성화
 
@@ -189,7 +187,7 @@ pg_stat_statements.track = all
 # UTILITY 명령어 추적 여부 (기본값: on)
 pg_stat_statements.track_utility = on
 
-# 계획 통계 추적 (성능 영향 있음, 기본값: off)
+# 계획 통계 추적 (기본값: off, 활성화 시 성능 영향 있음)
 pg_stat_statements.track_planning = off
 
 # 서버 종료 시 통계 저장 여부 (기본값: on)
@@ -332,7 +330,7 @@ SELECT pg_stat_statements_reset(0, 0, 0, true);
 
 ### 4.5 보안 고려사항
 
-- 슈퍼유저 또는 `pg_read_all_stats` 역할을 가진 사용자만 다른 사용자의 쿼리 텍스트를 볼 수 있음
+- 슈퍼유저 또는 `pg_read_all_stats` 권한을 가진 사용자만 다른 사용자의 쿼리 텍스트와 `queryid`를 조회할 수 있음
 - 일반 사용자는 자신이 실행한 쿼리만 조회 가능
 - 민감한 쿼리 데이터가 포함될 수 있으므로 접근 권한 관리 필요
 
@@ -340,7 +338,7 @@ SELECT pg_stat_statements_reset(0, 0, 0, true);
 
 ## 5. postgres_fdw
 
-`postgres_fdw`는 외부 PostgreSQL 서버에 저장된 데이터에 투명하게 접근할 수 있는 Foreign Data Wrapper(FDW) 모듈입니다. `dblink`보다 더 표준적이고 성능이 우수합니다.
+`postgres_fdw`는 외부 PostgreSQL 서버에 저장된 데이터에 투명하게 접근할 수 있는 Foreign Data Wrapper(FDW) 모듈입니다. `dblink`에 비해 표준 SQL 인터페이스를 따르며 성능도 우수합니다.
 
 ### 5.1 기본 설정
 
@@ -497,10 +495,10 @@ JOIN remote_orders o ON c.id = o.customer_id;
 ### 5.5 트랜잭션 관리
 
 ```sql
--- 병렬 커밋 활성화 (기본값: false)
+-- 병렬 커밋 활성화 (기본값: off)
 ALTER SERVER remote_server OPTIONS (ADD parallel_commit 'true');
 
--- 병렬 롤백 활성화
+-- 병렬 롤백 활성화 (기본값: off)
 ALTER SERVER remote_server OPTIONS (ADD parallel_abort 'true');
 ```
 
@@ -516,7 +514,7 @@ SELECT postgres_fdw_disconnect('remote_server');
 -- 모든 연결 해제
 SELECT postgres_fdw_disconnect_all();
 
--- 세션 종료 시 연결 유지 여부 설정
+-- 트랜잭션 종료 시 연결 해제 설정 (기본값: on)
 ALTER SERVER remote_server OPTIONS (ADD keep_connections 'off');
 ```
 
@@ -564,11 +562,11 @@ ORDER BY total_spent DESC;
 
 ## 6. pg_trgm
 
-`pg_trgm` 모듈은 삼중문자(Trigram) 매칭을 기반으로 텍스트 유사도를 결정하는 함수와 연산자를 제공합니다. 빠른 유사 문자열 검색과 LIKE/정규식 검색을 위한 인덱스 지원이 핵심 기능입니다.
+`pg_trgm` 모듈은 삼중문자(Trigram) 매칭을 기반으로 텍스트 유사도를 측정하는 함수와 연산자를 제공합니다. 유사 문자열 검색과 LIKE/정규식 검색의 인덱스 지원이 핵심 기능입니다.
 
 ### 6.1 삼중문자(Trigram) 개념
 
-삼중문자는 문자열에서 연속된 3개 문자의 그룹입니다. 두 문자열의 유사도는 공유하는 삼중문자의 개수로 측정됩니다.
+삼중문자는 문자열에서 연속된 3개 문자의 그룹입니다. 두 문자열의 유사도는 공유하는 삼중문자 수로 측정됩니다.
 
 ```sql
 -- 삼중문자 확인
@@ -580,8 +578,8 @@ SELECT show_trgm('hello');
 ```
 
 처리 규칙:
-- 비단어 문자(숫자가 아닌 특수문자)는 무시됨
-- 각 단어 앞에 2개 공백, 뒤에 1개 공백 추가
+- 비단어 문자(영숫자가 아닌 특수문자)는 무시됨
+- 각 단어 앞에 공백 2개, 뒤에 공백 1개를 추가하여 삼중문자를 추출
 - 대소문자 구분 없음
 
 ### 6.2 설치
@@ -654,7 +652,7 @@ SET pg_trgm.strict_word_similarity_threshold = 0.4;
 
 ### 6.6 인덱스 지원
 
-`pg_trgm`은 GiST와 GIN 인덱스를 지원하여 유사도 검색, LIKE, 정규식 검색을 가속화합니다.
+`pg_trgm`은 GiST와 GIN 인덱스를 지원하여 유사도 검색, LIKE 검색, 정규식 검색을 가속화합니다.
 
 #### GIN 인덱스 (권장)
 
@@ -770,7 +768,7 @@ SELECT * FROM fuzzy_search('iphone');
 
 ## 7. hstore
 
-`hstore` 모듈은 단일 PostgreSQL 값 내에 키/값 쌍 집합을 저장하는 데이터 타입입니다. 반정형(Semi-structured) 데이터나 많은 속성을 가진 행을 저장할 때 유용합니다.
+`hstore` 모듈은 단일 PostgreSQL 값에 키/값 쌍 집합을 저장하는 데이터 타입입니다. 반정형(Semi-structured) 데이터나 속성이 많은 행을 저장할 때 유용합니다.
 
 ### 7.1 설치
 
@@ -998,7 +996,7 @@ ORDER BY count DESC;
 
 ## 8. ltree
 
-`ltree` 모듈은 계층적 트리 구조의 데이터를 나타내는 데이터 타입을 구현합니다. 조직도, 카테고리 트리, 파일 시스템 경로 등을 효율적으로 저장하고 검색할 수 있습니다.
+`ltree` 모듈은 계층적 트리 구조 데이터를 표현하는 데이터 타입을 구현합니다. 조직도, 카테고리 트리, 파일 시스템 경로 등을 효율적으로 저장하고 검색할 수 있습니다.
 
 ### 8.1 설치
 
@@ -1428,7 +1426,7 @@ SELECT * FROM dblink(
 
 ### 9.7 pg_buffercache (버퍼 캐시 모니터링)
 
-공유 버퍼 캐시의 상태를 실시간으로 모니터링합니다.
+공유 버퍼 캐시의 상태를 모니터링합니다.
 
 ```sql
 CREATE EXTENSION pg_buffercache;
@@ -1454,7 +1452,7 @@ SELECT * FROM pg_buffercache_usage_counts();
 
 ### 9.8 auto_explain (자동 실행 계획 로깅)
 
-느린 쿼리의 실행 계획을 자동으로 로그에 기록합니다.
+실행 시간이 임계값을 초과하는 쿼리의 실행 계획을 자동으로 로그에 기록합니다.
 
 ```ini
 # postgresql.conf

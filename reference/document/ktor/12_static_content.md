@@ -1,7 +1,6 @@
 # 12. 정적 콘텐츠 (Static Content)
 
 > 출처: https://ktor.io/docs/server-static-content.html
-> 한국어 학습 노트입니다.
 
 ---
 
@@ -37,7 +36,7 @@ staticResources("/", "static", index = "home.html")
 
 ## 사전 압축 (gzip / brotli)
 
-같은 디렉터리에 `app.js`, `app.js.gz`, `app.js.br`이 모두 있다고 가정하고, 클라이언트가 보낸 `Accept-Encoding`에 맞는 것을 골라 응답합니다.
+같은 디렉터리에 `app.js`, `app.js.gz`, `app.js.br`이 모두 있을 때, 클라이언트의 `Accept-Encoding`에 맞는 파일을 골라 응답한다.
 
 ```kotlin
 staticFiles("/", File("public")) {
@@ -77,21 +76,20 @@ staticFiles("/site", File("public")) {
 }
 ```
 
-`default("index.html")`은 SPA에서 `/some/deep/route`도 `index.html`을 돌려주게 만들기 위한 흔한 패턴입니다.
+`default("index.html")`은 SPA에서 `/some/deep/route` 같은 경로도 `index.html`로 응답하는 일반적인 패턴이다.
 
 ---
 
 ## 그 외 옵션
 
-- `staticZip(remotePath, zipFile)` — ZIP 아카이브에서 직접 서빙.
-- `staticJar(remotePath, jarFile)` — JAR 내부 리소스 서빙.
-- `modify { file, call -> ... }` — 응답을 바꾸기 전 후크.
+- `staticZip(remotePath, basePath, zip)` — ZIP 아카이브에서 직접 서빙.
+- `modify { file, call -> ... }` — 응답 전 후크.
 
 ---
 
 ## 권한이 있는 정적 파일
 
-`staticFiles` 안에서도 라우트 스코프 플러그인 적용이 됩니다. 인증을 걸려면 묶음을 `authenticate {}` 안에 두세요.
+`staticFiles`에도 라우트 스코프 플러그인을 적용할 수 있다. 인증이 필요하면 `authenticate {}` 블록으로 감싸면 된다.
 
 ```kotlin
 authenticate("auth-session") {

@@ -78,7 +78,7 @@ REVOKE SELECT ON LARGE OBJECT 12345 FROM username;
 
 ## 3. 클라이언트 인터페이스 (Client Interfaces)
 
-PostgreSQL의 libpq 클라이언트 라이브러리는 대용량 객체 접근 기능을 제공합니다. 이 인터페이스는 Unix 파일 시스템 인터페이스(open, read, write, lseek 등)를 모델링했습니다.
+PostgreSQL의 libpq 클라이언트 라이브러리는 대용량 객체 접근 기능을 제공합니다. 이 인터페이스는 Unix 파일 시스템 인터페이스(open, read, write, lseek 등)를 모델로 삼아 설계되었습니다.
 
 ### 중요 사항
 
@@ -129,7 +129,7 @@ Oid lo_import(PGconn *conn, const char *filename);
 
 운영 체제 파일을 데이터베이스의 대용량 객체로 임포트합니다.
 
-주의: 파일은 클라이언트 측에서 읽습니다(서버가 아님).
+주의: 파일은 서버가 아닌 클라이언트 측에서 읽습니다.
 
 예시:
 ```c
@@ -157,7 +157,7 @@ int lo_export(PGconn *conn, Oid lobjId, const char *filename);
 
 대용량 객체를 운영 체제 파일로 내보냅니다.
 
-주의: 파일은 클라이언트 측에 씁니다(서버가 아님).
+주의: 파일은 서버가 아닌 클라이언트 측에 씁니다.
 
 반환값: 1(성공), -1(실패)
 
@@ -370,7 +370,7 @@ if (lo_unlink(conn, lobjId) < 0) {
 
 ### 오류 처리
 
-오류 발생 시 함수는 불가능한 값(보통 0 또는 -1)을 반환합니다. 오류 메시지는 연결 객체에 저장되며, `PQerrorMessage()` 함수를 사용하여 조회할 수 있습니다.
+오류 발생 시 함수는 유효하지 않은 값(보통 0 또는 -1)을 반환합니다. 오류 메시지는 연결 객체에 저장되며 `PQerrorMessage()`로 조회할 수 있습니다.
 
 ```c
 if (result < 0) {
@@ -487,7 +487,7 @@ WHERE name = 'beautiful image';
 
 ### 4.3 loread / lowrite - 서버측 읽기/쓰기
 
-서버측에서 `lo_read`와 `lo_write`는 언더스코어 없이 loread, lowrite 로 사용됩니다.
+서버측에서는 `lo_read`와 `lo_write` 대신 언더스코어 없는 `loread`, `lowrite`를 사용합니다.
 
 ```sql
 -- 대용량 객체 열기
@@ -507,17 +507,15 @@ SELECT lo_close(0);
 
 lo_import / lo_export 보안 경고:
 - 기본적으로 슈퍼유저만 사용 가능합니다.
-- 이 함수들은 서버 파일 시스템에 접근합니다(서버 소유자 권한으로).
+- 이 함수들은 데이터베이스 소유자 권한으로 서버 파일 시스템에 접근합니다.
 - 비슈퍼유저에게 권한을 부여할 때는 매우 신중하게 검토해야 합니다.
-- 악의적인 사용자가 이 권한을 통해 슈퍼유저 권한을 획득할 수 있습니다.
+- 악의적인 사용자가 이 권한을 이용해 슈퍼유저 권한을 획득할 수 있습니다.
 
 ---
 
 ## 5. 예제 프로그램 (Example Program)
 
-다음은 libpq를 사용하여 대용량 객체 인터페이스를 활용하는 방법을 보여주는 C 프로그램입니다.
-
-이 프로그램은 PostgreSQL 소스 배포의 `src/test/examples/testlo.c`에서도 찾을 수 있습니다.
+다음은 libpq로 대용량 객체 인터페이스를 사용하는 C 예제 프로그램입니다. PostgreSQL 소스 배포의 `src/test/examples/testlo.c`에서도 확인할 수 있습니다.
 
 ```c
 /*-----------------------------------------------------------------
@@ -703,7 +701,7 @@ exit_nicely(PGconn *conn)
 }
 
 int
-main(int argc, char argv)
+main(int argc, char **argv)
 {
     char       *in_filename, *out_filename;
     char       *database;

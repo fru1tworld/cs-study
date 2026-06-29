@@ -1,6 +1,5 @@
 # Grafana Alloy 개요
 
-> 이 문서는 Grafana Alloy 공식 문서의 "Introduction to Alloy" 섹션을 한국어로 정리한 것입니다.
 > 원본: https://grafana.com/docs/alloy/latest/
 
 ---
@@ -31,7 +30,7 @@
 
 ### Alloy가 등장한 배경
 
-기존에는 Grafana Agent (Static, Flow), Promtail, OpenTelemetry Collector 등 **여러 수집기를 별도로 운영** 해야 했습니다. Alloy는 이를 **단일 도구로 통합** 하여 운영 복잡성을 줄이는 것이 목표입니다.
+기존에는 Grafana Agent (Static, Flow), Promtail, OpenTelemetry Collector 등 **여러 수집기를 별도로 운영** 해야 했습니다. Alloy는 이를 **단일 도구로 통합** 해 운영 복잡성을 줄이는 것이 목표입니다.
 
 ---
 
@@ -241,7 +240,7 @@ prometheus.scrape "kubernetes" {
 }
 ```
 
-이 설정은 클러스터 내 Alloy 인스턴스들이 자동으로 타겟을 나눠 가져갑니다.
+이 설정으로 클러스터 내 Alloy 인스턴스들이 자동으로 타겟을 나눠 가져갑니다.
 
 ### 구성 파일 형식
 

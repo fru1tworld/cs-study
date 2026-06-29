@@ -15,21 +15,21 @@
 
 ## 71.1 소개 (Introduction)
 
-BRIN 은 Block Range Index 의 약자입니다. BRIN은 특정 컬럼이 테이블 내의 물리적 위치와 자연스러운 상관관계(correlation)를 가지는 매우 큰 테이블을 처리하기 위해 설계되었습니다.
+BRIN은 Block Range Index의 약자입니다. BRIN은 특정 컬럼이 테이블 내 물리적 위치와 자연스러운 상관관계(correlation)를 갖는 매우 큰 테이블을 처리하기 위해 설계되었습니다.
 
 ### 블록 범위 (Block Range) 개념
 
 BRIN은 블록 범위 (또는 "페이지 범위")를 기준으로 동작합니다. 블록 범위는 테이블에서 물리적으로 인접한 페이지들의 그룹입니다. 각 블록 범위에 대해 인덱스는 요약 정보(summary information)를 저장합니다.
 
-예를 들어, 판매 주문을 저장하는 테이블에서 날짜 컬럼이 있다고 가정해봅시다. 이전 주문이 테이블의 앞부분에 나타나는 경우, 이 컬럼은 물리적 위치와 자연스러운 상관관계를 가집니다.
+예를 들어, 판매 주문 테이블에 날짜 컬럼이 있고 오래된 주문이 테이블 앞부분에 위치한다면, 해당 컬럼은 물리적 위치와 자연스러운 상관관계를 갖습니다.
 
 ### 쿼리 실행 방식
 
 BRIN 인덱스는 일반적인 비트맵 인덱스 스캔(bitmap index scan)을 통해 쿼리를 처리합니다:
 
-1. 요약 정보가 쿼리 조건과 일치하면 해당 범위 내의 모든 페이지에 있는 튜플을 반환합니다
-2. BRIN 인덱스는 손실(lossy) 인덱스 입니다 - 쿼리 실행기(query executor)가 튜플을 다시 확인하고 일치하지 않는 것을 제거해야 합니다
-3. 매우 작은 인덱스 크기로 순차 스캔에 비해 최소한의 오버헤드를 추가하면서 테이블의 큰 부분을 스캔하지 않을 수 있습니다
+1. 요약 정보가 쿼리 조건과 일치하면 해당 범위 내 모든 페이지의 튜플을 반환합니다
+2. BRIN 인덱스는 손실(lossy) 인덱스입니다 — 쿼리 실행기(query executor)가 튜플을 재확인하여 조건에 맞지 않는 것을 제거해야 합니다
+3. 인덱스 크기가 매우 작아, 순차 스캔에 비해 최소한의 오버헤드로 테이블의 상당 부분을 건너뛸 수 있습니다
 
 ### 스토리지와 정밀도
 
@@ -65,8 +65,8 @@ CREATE INDEX idx_brin_custom ON sales_orders USING brin (order_date)
 - 끝에 있는 불완전한 범위도 포함됩니다
 
 지속적인 업데이트:
-- 이미 요약된 페이지 범위에 새 데이터가 삽입되면 요약 정보가 업데이트됩니다
-- 마지막 요약된 범위 이후의 새 페이지는 요약화가 트리거될 때까지 요약되지 않은 상태로 남습니다
+- 이미 요약된 페이지 범위에 새 데이터가 삽입되면 요약 정보가 갱신됩니다
+- 마지막으로 요약된 범위 이후의 새 페이지는 요약화가 실행될 때까지 요약되지 않은 상태로 남습니다
 
 #### 요약화 트리거 방법
 
@@ -88,7 +88,7 @@ SELECT brin_summarize_range('idx_brin'::regclass, 128);
 
 #### 역요약화 (De-summarization)
 
-인덱스 튜플이 더 이상 값을 잘 나타내지 않을 때, `brin_desummarize_range` 함수로 범위의 요약을 해제할 수 있습니다:
+인덱스 튜플이 더 이상 해당 범위의 값을 잘 나타내지 못할 때, `brin_desummarize_range` 함수로 범위 요약을 해제할 수 있습니다:
 
 ```sql
 -- 특정 범위의 요약 해제
@@ -98,7 +98,7 @@ SELECT brin_desummarize_range('idx_brin'::regclass, 128);
 #### Autosummarize 세부사항
 
 - 기본적으로 비활성화되어 있습니다
-- 활성화되면 삽입이 감지될 때 autovacuum이 블록 범위 요약 요청을 받습니다
+- 활성화하면 다음 블록 범위로의 첫 삽입이 감지될 때 autovacuum이 해당 범위의 요약 요청을 수신합니다
 - 요청 큐가 가득 차면 서버 로그에 메시지가 나타납니다:
 
 ```
@@ -244,7 +244,7 @@ CREATE INDEX idx_multi_custom ON orders USING brin (
 
 ## 71.3 확장성 (Extensibility)
 
-BRIN 인터페이스는 높은 수준의 추상화를 제공하여, 액세스 메서드 구현자는 액세스되는 데이터 타입의 의미론(semantics)만 구현하면 됩니다. BRIN 레이어 자체가 동시성, 로깅, 인덱스 구조 검색을 처리합니다.
+BRIN 인터페이스는 높은 수준의 추상화를 제공하므로, 액세스 메서드 구현자는 대상 데이터 타입의 의미론(semantics)만 구현하면 됩니다. 동시성, 로깅, 인덱스 구조 탐색은 BRIN 레이어가 직접 처리합니다.
 
 ### 필수 메서드 (Required Methods)
 
@@ -273,7 +273,7 @@ typedef struct BrinOpcInfo
 bool consistent(BrinDesc *bdesc, BrinValues *column, ScanKey *keys, int nkeys)
 ```
 
-모든 ScanKey 항목이 범위의 인덱싱된 값과 일치하는지 검증합니다. 동일한 속성에 대해 여러 스캔 키를 지원합니다.
+모든 ScanKey 항목이 해당 범위의 인덱싱된 값과 일치하는지 검사합니다. 동일한 속성에 대해 여러 스캔 키를 지원합니다.
 
 이전 버전과의 호환성을 위한 단일 ScanKey 변형:
 ```c
@@ -286,7 +286,7 @@ bool consistent(BrinDesc *bdesc, BrinValues *column, ScanKey key)
 bool addValue(BrinDesc *bdesc, BrinValues *column, Datum newval, bool isnull)
 ```
 
-인덱스 튜플을 수정하여 추가적인 새 값을 나타내도록 합니다. 튜플이 수정되면 `true`를 반환합니다.
+인덱스 튜플이 새 값도 포함하도록 수정합니다. 튜플이 실제로 수정된 경우 `true`를 반환합니다.
 
 #### 4. `unionTuples`
 
@@ -294,7 +294,7 @@ bool addValue(BrinDesc *bdesc, BrinValues *column, Datum newval, bool isnull)
 bool unionTuples(BrinDesc *bdesc, BrinValues *a, BrinValues *b)
 ```
 
-두 인덱스 튜플을 통합하여 첫 번째 튜플이 두 튜플 모두를 나타내도록 수정합니다.
+두 인덱스 튜플을 병합하여 첫 번째 튜플이 두 튜플 모두를 나타내도록 수정합니다.
 
 ### 선택적 메서드 (Optional Method)
 
@@ -304,7 +304,7 @@ bool unionTuples(BrinDesc *bdesc, BrinValues *a, BrinValues *b)
 void options(local_relopts *relopts)
 ```
 
-연산자 클래스 동작을 제어하는 사용자 표시 매개변수를 정의합니다. 옵션은 `PG_HAS_OPCLASS_OPTIONS()`와 `PG_GET_OPCLASS_OPTIONS()` 매크로를 통해 액세스됩니다.
+연산자 클래스 동작을 제어하는 사용자 노출 매개변수를 정의합니다. 옵션은 `PG_HAS_OPCLASS_OPTIONS()`와 `PG_GET_OPCLASS_OPTIONS()` 매크로를 통해 접근합니다.
 
 ### 지원 함수 번호 규칙
 
@@ -315,7 +315,7 @@ void options(local_relopts *relopts)
 
 ### 71.3.1 Minmax 연산자 클래스
 
-단일 연속 구간을 가진 완전 순서 집합(totally ordered set)을 위한 연산자 클래스입니다.
+단일 연속 구간으로 표현 가능한 완전 순서 집합(totally ordered set)을 위한 연산자 클래스입니다.
 
 #### 필수 멤버
 
@@ -352,7 +352,7 @@ CREATE OPERATOR CLASS my_type_minmax_ops
 
 ### 71.3.2 Inclusion 연산자 클래스
 
-다른 타입 내에 포함되는 값을 가진 복잡한 데이터 타입을 위한 연산자 클래스입니다.
+다른 값에 포함되는(containment) 값을 갖는 복잡한 데이터 타입을 위한 연산자 클래스입니다.
 
 #### 필수 멤버
 
@@ -369,10 +369,10 @@ CREATE OPERATOR CLASS my_type_minmax_ops
 
 #### 주요 지원 함수
 
-- 지원 함수 11 (필수): 연산자 클래스와 동일한 데이터 타입의 두 요소를 병합
-- 지원 함수 12: 두 요소가 병합 가능한지 검사 (네트워크 주소 패밀리 등)
-- 지원 함수 13: 요소가 다른 요소에 포함되는지 검사 (성능 향상에 권장)
-- 지원 함수 14: 요소가 비어있는지 검사 (범위 타입용)
+- 지원 함수 11 (필수): 연산자 클래스와 동일한 데이터 타입의 두 요소를 병합합니다
+- 지원 함수 12: 두 요소가 병합 가능한지 검사합니다 (네트워크 주소 패밀리 등)
+- 지원 함수 13: 한 요소가 다른 요소에 포함되는지 검사합니다 (성능 향상에 권장)
+- 지원 함수 14: 요소가 비어 있는지 검사합니다 (범위 타입용)
 
 #### Inclusion 연산자 클래스 사용 예제
 
@@ -412,7 +412,7 @@ CREATE INDEX idx_during ON reservations USING brin (during range_inclusion_ops);
 | 지원 프로시저 11 | 해시 계산 함수 |
 | 연산자 전략 1 | 같음 (`=`) |
 
-지원 프로시저 11: 연산자 클래스와 동일한 데이터 타입의 인수 하나를 받아 해시 값을 반환해야 합니다.
+지원 프로시저 11: 연산자 클래스와 동일한 데이터 타입의 인수 하나를 받아 해시 값을 반환합니다.
 
 #### Bloom 연산자 클래스 사용 예제
 
@@ -442,7 +442,7 @@ CREATE INDEX idx_session_bloom_custom ON user_sessions
 
 ### 71.3.4 Minmax-Multi 연산자 클래스
 
-완전 순서 집합을 위한 minmax의 확장으로, 단일 연속 구간 대신 여러 개의 작은 구간을 허용합니다. 이상치(outlier) 값이 있는 데이터를 더 효과적으로 처리합니다.
+완전 순서 집합을 위한 minmax의 확장판으로, 단일 연속 구간 대신 여러 개의 작은 구간을 저장합니다. 이상치(outlier) 값이 있는 데이터를 더 효과적으로 처리합니다.
 
 #### 필수 멤버
 
@@ -491,8 +491,8 @@ CREATE INDEX idx_amount_multi ON sales
 
 minmax와 inclusion 연산자 클래스 모두 교차 데이터 타입 연산자를 지원합니다:
 
-- Minmax: 동일한 데이터 타입을 가진 전체 연산자 세트가 필요하며, 추가 데이터 타입에 대한 추가 연산자 세트 정의 가능
-- Inclusion: 교차 타입 연산자 사용 시 의존성이 더 복잡해짐
+- Minmax: 동일한 데이터 타입에 대한 전체 연산자 세트가 필요하며, 추가 데이터 타입용 연산자 세트를 별도로 정의할 수 있습니다
+- Inclusion: 교차 타입 연산자를 사용하면 의존성이 더 복잡해집니다
 
 ```sql
 -- 예: float4_minmax_ops는 float4 비교 연산자뿐만 아니라

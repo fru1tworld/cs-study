@@ -1,6 +1,5 @@
 # Networking — XDP와 TC
 
-> 이 문서는 eBPF의 네트워킹 활용(XDP, TC)을 정리한 것입니다.
 > 원본: https://docs.kernel.org/networking/filter.html , https://docs.cilium.io/en/stable/bpf/
 
 ---
@@ -43,13 +42,13 @@
 [NIC] (egress)
 ```
 
-각 hook이 다른 정보를 보고 다른 일을 할 수 있습니다.
+각 hook은 서로 다른 정보에 접근하며 서로 다른 동작을 수행할 수 있습니다.
 
 ---
 
 ## XDP
 
-**eXpress Data Path**. 디바이스 드라이버가 패킷을 받자마자 (skb 할당 전) BPF를 호출. 가장 빠름.
+**eXpress Data Path**. 디바이스 드라이버가 패킷을 수신하자마자 (skb 할당 전) BPF를 호출한다. 가장 빠른 hook 지점.
 
 ### 모드
 
@@ -120,7 +119,7 @@ sudo ip link set dev eth0 xdp off
 
 ### 한계
 
-- 패킷 크기 변경 불가 (단, `bpf_xdp_adjust_head/tail/meta` 로 일부 가능)
+- 패킷 크기 임의 변경은 불가 (단, `bpf_xdp_adjust_head/tail/meta` 로 일부 조정 가능)
 - VLAN/터널 처리는 직접 작성
 - 일부 NIC만 native 지원
 
@@ -135,11 +134,11 @@ sudo ip link set dev eth0 xdp off
 
 ## TC (Traffic Control)
 
-`tc` 의 `clsact` qdisc에 attach. XDP보다 늦은 단계지만 **ingress와 egress 모두** 가능, **skb 변형 가능**.
+`tc` 의 `clsact` qdisc에 attach한다. XDP보다 늦은 단계지만 **ingress와 egress 모두** 지원하며 **skb를 자유롭게 변형**할 수 있다.
 
 ### 컨텍스트
 
-`struct __sk_buff` — skb의 BPF 친화적 뷰. 패킷 헤더, 길이, 인터페이스, 마크 등 풍부.
+`struct __sk_buff` — skb를 BPF 프로그램에서 다루기 위한 추상 뷰. 패킷 헤더, 길이, 인터페이스, 마크 등 다양한 필드를 제공한다.
 
 ### 반환값
 
@@ -170,7 +169,7 @@ sudo tc filter add dev eth0 ingress bpf da obj filter.bpf.o sec tc
 sudo tc filter add dev eth0 egress bpf da obj filter.bpf.o sec tc
 ```
 
-또는 5.x+ tcx (tc express):
+또는 tcx (tc express) 방식:
 
 ```bash
 sudo bpftool net attach tc pinned /sys/fs/bpf/myprog dev eth0
@@ -192,7 +191,7 @@ DDoS drop은 XDP, 라우팅·NAT·QoS는 TC가 일반적.
 
 ## Socket 필터
 
-원조 BPF — 소켓 단위 패킷 필터. tcpdump가 사용.
+원조 BPF — 소켓 단위 패킷 필터. tcpdump가 내부적으로 사용한다.
 
 ```c
 SEC("socket")
@@ -202,21 +201,21 @@ int filter(struct __sk_buff *skb) {
 }
 ```
 
-```bash
-sudo setsockopt(fd, SOL_SOCKET, SO_ATTACH_BPF, &prog_fd, sizeof(prog_fd));
+```c
+setsockopt(fd, SOL_SOCKET, SO_ATTACH_BPF, &prog_fd, sizeof(prog_fd));
 ```
 
-요즘은 거의 쓰지 않고 raw_tracepoint이나 XDP/TC 사용.
+최근에는 raw_tracepoint나 XDP/TC를 주로 사용한다.
 
 ---
 
 ## Sockmap / Sockhash
 
-소켓 fd를 저장하는 BPF map. 소켓 redirect — 사용자 공간을 거치지 않고 커널 안에서 데이터를 다른 소켓으로 점프.
+소켓 fd를 저장하는 BPF 맵. 소켓 redirect에 사용하며, 사용자 공간을 거치지 않고 커널 내부에서 데이터를 다른 소켓으로 전달한다.
 
 ### 활용
 
-- **사이드카 우회**: Envoy/Istio 사이드카가 받은 데이터를 백엔드 소켓으로 직접 redirect (kernel-space)
+- **사이드카 우회**: Envoy/Istio 사이드카가 수신한 데이터를 커널 공간에서 백엔드 소켓으로 직접 redirect
 - **L7 스위칭**
 
 ### 예 (간략)
@@ -241,7 +240,7 @@ int sk_msg(struct sk_msg_md *msg) {
 
 ## Cgroup BPF
 
-cgroup 단위로 attach. 컨테이너/Pod 정책에 활용.
+cgroup 단위로 attach한다. 컨테이너/Pod 네트워크 정책 적용에 활용된다.
 
 | Hook | 용도 |
 | --- | --- |
@@ -270,7 +269,7 @@ int cg_fd = open("/sys/fs/cgroup/restricted", O_RDONLY);
 bpf_prog_attach(prog_fd, cg_fd, BPF_CGROUP_INET4_CONNECT, 0);
 ```
 
-이 cgroup의 모든 프로세스는 192.168.x.x 로 connect 불가.
+이 cgroup에 속한 모든 프로세스는 192.168.x.x 대역으로 connect할 수 없다.
 
 ---
 
@@ -287,11 +286,11 @@ int ddos_filter(struct xdp_md *ctx) {
 }
 ```
 
-Cloudflare, Facebook이 실제로 사용.
+Cloudflare, Facebook이 실제로 적용한 방식이다.
 
 ### 2. L4 로드 밸런서
 
-XDP_REDIRECT_MAP으로 백엔드 NIC 큐에 분산.
+`XDP_REDIRECT`와 redirect map을 사용해 백엔드 NIC 큐에 분산한다.
 
 ```c
 SEC("xdp")
@@ -301,11 +300,11 @@ int xdp_lb(struct xdp_md *ctx) {
 }
 ```
 
-Facebook의 Katran이 대표.
+Facebook의 Katran이 대표적인 구현체다.
 
 ### 3. 컨테이너 네트워킹
 
-Cilium이 iptables를 대체. cgroup BPF + TC + XDP 조합으로:
+Cilium은 iptables를 대체한다. cgroup BPF + TC + XDP 조합으로 다음을 구현한다:
 - L3 라우팅
 - L7 정책 (HTTP path 검사)
 - 서비스 로드밸런싱
@@ -314,7 +313,7 @@ Cilium이 iptables를 대체. cgroup BPF + TC + XDP 조합으로:
 
 ### 4. 프로토콜 디코드
 
-XDP/TC에서 HTTP/gRPC/Kafka 메시지를 파싱해 메트릭 수집. Pixie의 자동 instrumentation.
+XDP/TC에서 HTTP/gRPC/Kafka 메시지를 파싱해 메트릭을 수집한다. Pixie의 자동 instrumentation이 이 방식을 사용한다.
 
 ### 5. 네트워크 디버깅
 
@@ -333,7 +332,7 @@ sudo tcpretrans
 
 ## Cilium 사례
 
-쿠버네티스 CNI의 사실상 표준 중 하나. 거의 모든 네트워크 기능이 eBPF.
+쿠버네티스 CNI의 사실상 표준 중 하나로, 거의 모든 네트워크 기능을 eBPF로 구현한다.
 
 ```
 [Pod A] → cgroup_sock_addr (connect 정책)
@@ -345,7 +344,7 @@ sudo tcpretrans
         → veth → [Pod B]
 ```
 
-iptables 의존이 거의 없어 노드당 룰 수와 상관없이 일정한 성능.
+iptables 의존도가 거의 없어 노드당 룰 수에 관계없이 일정한 성능을 보인다.
 
 ---
 

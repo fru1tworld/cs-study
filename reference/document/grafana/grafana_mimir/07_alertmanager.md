@@ -1,7 +1,6 @@
 # Mimir Alertmanager
 
-> 이 문서는 Grafana Mimir 공식 문서의 Alertmanager/Ruler 섹션을 한국어로 정리한 것입니다.
-> 원본: https://grafana.com/docs/mimir/latest/references/architecture/components/alertmanager/
+> 원본 참고: https://grafana.com/docs/mimir/latest/references/architecture/components/alertmanager/
 
 ---
 
@@ -21,7 +20,7 @@
 
 ## 개요
 
-Mimir는 **Prometheus Alertmanager를 내장** 하여, 별도 구성 없이 알림을 처리할 수 있습니다.
+Mimir는 **Prometheus Alertmanager를 내장**하여 별도 구성 없이 알림을 처리할 수 있습니다.
 
 ### 컴포넌트 흐름
 
@@ -378,7 +377,7 @@ inhibit_rules:
     equal: [cluster, alertname]
 ```
 
-`severity=critical` 알림이 활성 상태이면, 같은 cluster/alertname의 `warning` 알림은 억제.
+`severity=critical` 알림이 활성 상태이면 같은 cluster/alertname의 `warning` 알림은 억제됩니다.
 
 ### Silence: 일시적으로 알림 숨김
 
@@ -407,7 +406,7 @@ curl -X POST -H "X-Scope-OrgID: tenant-1" \
 
 ### 테넌트별 Alertmanager 설정
 
-각 테넌트는 자체 Alertmanager 설정을 가질 수 있습니다.
+테넌트마다 별도의 Alertmanager 설정을 가질 수 있습니다.
 
 #### API로 설정
 
@@ -523,7 +522,7 @@ mimirtool alertmanager verify alertmanager-config.yaml
 
 ### HA 클러스터링
 
-3개 이상의 Alertmanager 인스턴스를 gossip으로 연결:
+Alertmanager 인스턴스 3개 이상을 gossip으로 연결합니다.
 
 ```yaml
 alertmanager:

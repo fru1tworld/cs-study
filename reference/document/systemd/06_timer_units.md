@@ -1,6 +1,5 @@
 # Timer Unit
 
-> 이 문서는 `man systemd.timer` 의 내용을 한국어로 정리한 것입니다.
 > 원본: https://www.freedesktop.org/software/systemd/man/systemd.timer.html
 
 ---
@@ -73,7 +72,7 @@ ExecStart=/usr/local/bin/backup.sh
 
 ## Monotonic 타이머
 
-시스템이 켜진 시점이나 unit이 활성화된 시점 등을 기준으로 동작.
+시스템 부팅 시점이나 unit 활성화 시점 등을 기준으로 동작합니다.
 
 ```ini
 [Timer]
@@ -96,7 +95,7 @@ OnUnitActiveSec=1h
 - `30s`, `5min`, `2h`, `1d`, `1week`, `1month`, `1year`
 - 조합 가능: `1h 30min`
 
-여러 개를 지정하면 모든 조건이 OR로 결합됩니다.
+여러 개를 지정하면 각 조건이 OR로 결합됩니다.
 
 ```ini
 [Timer]
@@ -148,7 +147,7 @@ DayOfWeek Year-Month-Day Hour:Minute:Second
 Mon *-*-* 03:00:00         월요일 03:00
 *-*-01 00:00:00            매월 1일
 *-01,07-01 00:00:00        1월 1일과 7월 1일
-*-*-* 00/15:00             0,15,30,45분마다 (15분 간격)
+*-*-* *:00/15:00           0,15,30,45분마다 (15분 간격)
 2025-12-25 09:00:00        2025년 12월 25일 09:00 (한 번)
 ```
 
@@ -182,7 +181,7 @@ Persistent=true
 AccuracySec=1min
 ```
 
-타이머의 정확도. 기본 1분. 정확도를 낮추면(예: `1h`) 여러 타이머가 같은 시점에 발화하도록 systemd가 묶어주어 절전 효과가 있음. 데스크탑이나 IoT에서 유용.
+타이머 정확도를 지정합니다. 기본값은 1분입니다. 값을 크게 설정하면(예: `1h`) 여러 타이머를 같은 시점에 묶어 발화시킬 수 있어 절전 효과가 있습니다. 데스크탑이나 IoT 환경에서 유용합니다.
 
 매우 정확한 트리거가 필요하면:
 ```ini
@@ -195,7 +194,7 @@ AccuracySec=1us
 RandomizedDelaySec=5min
 ```
 
-발화 시점에 0~지정 시간 사이의 랜덤 지연 추가. 여러 머신에서 같은 cron을 돌릴 때 부하가 한 번에 몰리는 것을 방지.
+발화 시점에 0부터 지정 시간 사이의 무작위 지연을 추가합니다. 여러 머신에서 같은 타이머를 실행할 때 부하가 한 번에 몰리는 것을 방지할 수 있습니다.
 
 ### FixedRandomDelay
 
@@ -203,7 +202,7 @@ RandomizedDelaySec=5min
 FixedRandomDelay=true
 ```
 
-랜덤 지연을 호스트마다 고정값으로 (호스트 ID와 unit 이름 기반). 같은 머신은 항상 같은 지연을 받음.
+무작위 지연을 호스트별로 고정된 값으로 적용합니다(호스트 ID와 unit 이름 기반). 동일한 머신은 항상 같은 지연값을 가집니다.
 
 ### WakeSystem
 
@@ -211,7 +210,7 @@ FixedRandomDelay=true
 WakeSystem=true
 ```
 
-타이머가 발화할 때 시스템을 슬립에서 깨움 (RTC 사용). 노트북 백업 같은 시나리오.
+타이머가 발화할 때 슬립 상태의 시스템을 깨웁니다(RTC 사용). 노트북 백업 같은 시나리오에 유용합니다.
 
 ### OnClockChange / OnTimezoneChange
 
@@ -220,7 +219,7 @@ OnClockChange=true
 OnTimezoneChange=true
 ```
 
-시간이 점프하거나 타임존이 바뀌면 즉시 발화.
+시스템 시간이 점프하거나 타임존이 변경되면 즉시 발화합니다.
 
 ### RemainAfterElapse
 
@@ -228,7 +227,7 @@ OnTimezoneChange=true
 RemainAfterElapse=no
 ```
 
-타이머가 마지막으로 발화한 후 즉시 정리할지. 대부분 기본값 `yes` 가 적절.
+마지막 발화 후 타이머를 즉시 정리할지 여부를 지정합니다. 대부분의 경우 기본값 `yes`가 적절합니다.
 
 ---
 
@@ -238,7 +237,7 @@ RemainAfterElapse=no
 
 ### 누락 작업이 처리되지 않음
 
-cron 사용자가 systemd timer로 옮길 때 가장 자주 부딪치는 문제. 다음 옵션을 추가하세요:
+cron에서 systemd timer로 전환할 때 가장 자주 겪는 문제입니다. 다음 옵션을 추가하세요:
 
 ```ini
 [Timer]
@@ -342,7 +341,7 @@ systemd-analyze calendar --iterations=5 "*-*-* 03:00:00"
 systemctl start backup.service    # 타이머가 아닌 service를 직접 시작
 ```
 
-타이머 자체는 시작하면 다음 발화 시점만 계산할 뿐 즉시 실행하지 않습니다. 즉시 실행은 service를 직접 호출.
+타이머 자체를 시작하면 다음 발화 시점만 계산할 뿐 즉시 실행되지 않습니다. 즉시 실행이 필요하면 service를 직접 시작하면 됩니다.
 
 ### 마지막 실행 결과
 

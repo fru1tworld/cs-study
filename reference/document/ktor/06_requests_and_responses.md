@@ -4,13 +4,12 @@
 > - https://ktor.io/docs/server-requests.html
 > - https://ktor.io/docs/server-responses.html
 >
-> 한국어 학습 노트입니다.
 
 ---
 
 ## ApplicationCall
 
-핸들러 안에서 사용하는 `call`은 `ApplicationCall` 타입이며, 두 개의 핵심 객체를 갖습니다.
+핸들러 안에서 사용하는 `call`은 `ApplicationCall` 타입으로, 두 핵심 객체를 포함합니다.
 
 - `call.request` — 들어온 요청
 - `call.response` — 나갈 응답
@@ -41,7 +40,7 @@ call.request.uri             // 풀 경로(쿼리 포함)
 
 ### 필수값 강제
 
-검증용 헬퍼는 값이 없으면 `MissingRequestParameterException`을 던집니다.
+값이 없으면 `MissingRequestParameterException`을 던지는 검증 헬퍼입니다.
 
 ```kotlin
 val id    = call.requirePathParameter("id")
@@ -60,7 +59,7 @@ val limit = call.requireQueryParameter("limit")
 | `call.receive<ByteArray>()` | 바이트 배열 |
 | `call.receive<ByteReadChannel>()` | 스트리밍 |
 | `call.receive<T>()` | JSON 등으로 역직렬화 (ContentNegotiation 필요) |
-| `call.receiveParameters()` | `application/x-www-form-urlencoded` |
+| `call.receiveParameters()` | `application/x-www-form-urlencoded` 또는 `multipart/form-data` |
 | `call.receiveMultipart()` | `multipart/form-data` |
 
 ### 데이터 클래스 역직렬화
@@ -76,7 +75,7 @@ post("/users") {
 }
 ```
 
-`ContentNegotiation`이 설치되어 있어야 합니다. [08_content_negotiation.md](08_content_negotiation.md) 참고.
+`ContentNegotiation` 플러그인이 필요합니다. [08_content_negotiation.md](08_content_negotiation.md) 참고.
 
 ### Multipart 파일 업로드
 
@@ -90,11 +89,7 @@ post("/upload") {
             }
             is PartData.FileItem -> {
                 val name = part.originalFileName ?: "file"
-                part.streamProvider().use { input ->
-                    File("uploads/$name").outputStream().use { out ->
-                        input.copyTo(out)
-                    }
-                }
+                part.provider().copyAndClose(File("uploads/$name").writeChannel())
             }
             else -> {}
         }

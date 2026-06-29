@@ -1,6 +1,5 @@
 # 필터링과 쿼리 패턴
 
-> 이 문서는 `journalctl` 의 다양한 쿼리 패턴을 실전 예제 위주로 정리한 것입니다.
 > 원본: https://www.freedesktop.org/software/systemd/man/journalctl.html
 
 ---
@@ -72,7 +71,7 @@ journalctl -u nginx --since yesterday --until "today 09:00:00"
 journalctl -b -o short-monotonic | awk '$1 < 30'
 ```
 
-`short-monotonic` 출력은 첫 컬럼이 부팅 후 경과 초.
+`short-monotonic` 출력은 첫 컬럼이 부팅 후 경과 시간(단조 시계 기준)이다.
 
 ### 마지막 5분 + 따라가기
 
@@ -84,7 +83,7 @@ journalctl --since "5 min ago" -fu myapp
 
 ## Cursor 사용
 
-cursor는 journal 엔트리의 고유 식별자. 위치를 저장해뒀다가 그 시점부터 이어서 읽는 패턴에 유용.
+cursor는 journal 엔트리의 고유 식별자로, 위치를 저장해뒀다가 해당 시점부터 이어서 읽을 때 유용하다.
 
 ### 현재 마지막 엔트리의 cursor 저장
 
@@ -121,7 +120,7 @@ fi
 journalctl -u myapp -n 1 --show-cursor | tail -1 | sed 's/^-- cursor: //' > "$CURSOR_FILE"
 ```
 
-이런 식으로 외부 시스템에 누락 없이 로그를 전송할 수 있습니다.
+이 방식으로 외부 시스템에 누락 없이 로그를 전송할 수 있다.
 
 ---
 
@@ -135,11 +134,11 @@ journalctl -g "panic|oops|BUG"
 journalctl --case-sensitive=false -g "out of memory"
 ```
 
-PCRE2 문법. `--case-sensitive=false` 면 대소문자 무시.
+PCRE2 문법. `--case-sensitive=false` 로 지정하면 대소문자를 무시한다.
 
 ### grep과의 차이
 
-`grep` 은 한 줄 단위지만 `--grep` 은 `MESSAGE` 필드 단위로 매칭. 멀티라인 메시지에서도 정확.
+`grep` 은 한 줄 단위로 매칭하지만 `--grep` 은 `MESSAGE` 필드 단위로 매칭한다. 멀티라인 메시지에서도 정확하게 동작한다.
 
 ---
 
@@ -191,7 +190,7 @@ journalctl -u myapp -g "Started" --since today -o short \
 journalctl -b -o short-monotonic _PID=1 | head -50
 ```
 
-PID=1(systemd) 의 메시지로 부팅 진행을 추적.
+PID=1(systemd)의 메시지로 부팅 진행 과정을 추적한다.
 
 ### 메모리 누수 의심 서비스의 OOM 직전 로그
 
@@ -273,10 +272,10 @@ journalctl -b -1 -p err -o json | python3 /usr/local/lib/notify-errors.py
 
 ### 인덱스 활용
 
-journalctl은 cursor와 시간 기반 필터에 인덱스를 사용. 느려질 때:
+journalctl은 cursor와 시간 기반 필터에 인덱스를 활용한다. 느려질 때 점검할 사항:
 - 시간 범위(`--since`)를 좁히기
-- 너무 많은 부팅 데이터 누적 → vacuum
-- 패턴 검색(`--grep`) 은 풀 스캔이라 느림. 필드 필터 우선
+- 부팅 데이터 과다 누적 시 vacuum 실행
+- 패턴 검색(`--grep`)은 풀 스캔이므로 느림 — 필드 필터를 먼저 적용할 것
 
 ### 빠른 vs 느린 패턴
 

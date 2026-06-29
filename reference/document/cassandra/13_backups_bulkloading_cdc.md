@@ -1,6 +1,5 @@
 # Cassandra 백업, 벌크 로딩, CDC
 
-> 이 문서는 Apache Cassandra 공식 문서의 "Backups", "Bulk Loading", "Change Data Capture" 섹션을 한국어로 번역한 것입니다.
 > 원본: https://cassandra.apache.org/doc/latest/cassandra/managing/operating/
 
 ---
@@ -41,11 +40,11 @@
 
 Apache Cassandra는 데이터를 불변(immutable) SSTable 파일에 저장합니다. Apache Cassandra 데이터베이스에서 백업(backup)이란 SSTable 파일로 저장되어 있는 데이터베이스 데이터의 백업 복사본을 의미합니다.
 
-백업은 다음과 같은 핵심 목적을 위해 사용됩니다.
+백업의 핵심 목적은 다음과 같습니다.
 
-- **내구성(durability)을 위해 데이터 복사본을 저장하기 위함** — 데이터 복사본을 보관하여 데이터의 내구성을 확보합니다.
-- **테이블 복원을 위함** — 노드 장애, 파티션 장애, 네트워크 장애로 인해 테이블 데이터가 손실되었을 때 테이블을 복원할 수 있도록 하기 위함입니다.
-- **이식성(portability)을 위함** — SSTable 파일을 다른 머신으로 전송할 수 있도록 하기 위함입니다.
+- **내구성(durability)** — 데이터 복사본을 보관하여 내구성을 확보합니다.
+- **테이블 복원** — 노드 장애, 파티션 장애, 네트워크 장애로 인해 테이블 데이터가 손실되었을 때 복원합니다.
+- **이식성(portability)** — SSTable 파일을 다른 머신으로 전송할 수 있습니다.
 
 ### 1.2 백업의 종류
 
@@ -71,7 +70,7 @@ Cassandra의 디렉터리 구조는 데이터를 키스페이스 디렉터리(ke
 
 ### 1.4 예제 테이블 준비
 
-이 문서는 두 개의 키스페이스(`cqlkeyspace`와 `catalogkeyspace`)와 샘플 테이블을 사용하여 백업 절차를 설명합니다.
+아래 예제는 두 개의 키스페이스(`cqlkeyspace`와 `catalogkeyspace`)와 샘플 테이블을 사용합니다.
 
 먼저 `cqlkeyspace` 키스페이스와 두 개의 테이블 `t`, `t2`를 생성하고 데이터를 삽입합니다.
 
@@ -539,11 +538,11 @@ total 72
 
 Apache Cassandra는 SSTable을 통해 벌크 로딩(bulk loading)을 지원하며, SSTable이 유일하게 지원되는 형식입니다. 공식 문서는 다음과 같이 명시합니다. "Cassandra는 CSV, JSON, XML과 같은 다른 형식의 데이터를 직접 로드하는 것을 지원하지 않습니다."
 
-벌크 로딩은 다음과 같은 세 가지 주요 목적을 위해 사용됩니다.
+벌크 로딩의 주요 목적은 다음 세 가지입니다.
 
-- **증분 백업과 스냅샷 복원** — 이미 SSTable 형식으로 되어 있는 증분 백업과 스냅샷을 복원합니다.
-- **기존 SSTable을 다른 클러스터로 로드** — 노드 수가 다르거나 복제 전략(replication strategy)이 다른 클러스터로 기존 SSTable을 로드합니다.
-- **외부 데이터를 클러스터로 가져오기(import)** — 외부 데이터를 클러스터로 가져옵니다.
+- **증분 백업과 스냅샷 복원** — 이미 SSTable 형식인 증분 백업과 스냅샷을 복원합니다.
+- **기존 SSTable을 다른 클러스터로 로드** — 노드 수나 복제 전략(replication strategy)이 다른 클러스터로 기존 SSTable을 로드합니다.
+- **외부 데이터 가져오기(import)** — 외부 데이터를 클러스터로 가져옵니다.
 
 ### 2.2 주요 도구
 
@@ -687,7 +686,7 @@ CQLSSTableWriter writer = CQLSSTableWriter.builder()
                                          .inDirectory(outputDir)
                                          .withType(type)
                                          .forTable(schema)
-                                         .withBufferSizeInMB(256)
+                                         .withBufferSizeInMiB(256)
                                          .using(insertStmt).build();
 
 UserType userType = writer.getUDType("intType");
@@ -745,7 +744,7 @@ CDC는 일련의 파일 기반 메커니즘을 통해 동작합니다.
 
 #### 3.2.2 인덱스 파일 메커니즘
 
-단순히 클라이언트가 메모리 매핑된(memory-mapped) 핸들에서 로그를 실시간으로 파싱하도록 하는 대신 인덱스 파일을 사용하는 이유는, 데이터가 아직 영속화되지 않고 커널 버퍼(kernel buffer)에 존재할 수 있기 때문입니다. 이 방식은 데이터 내구성을 보장합니다. 소비자(consumer)가 `_cdc.idx` 파일에 명시된 오프셋까지만 읽도록 함으로써, 내구성이 보장된(durable) CDC 데이터만을 파싱하도록 보장합니다.
+메모리 매핑된(memory-mapped) 핸들에서 로그를 실시간으로 파싱하지 않고 인덱스 파일을 사용하는 이유는, 데이터가 아직 영속화되지 않고 커널 버퍼(kernel buffer)에 존재할 수 있기 때문입니다. 소비자(consumer)가 `_cdc.idx` 파일에 명시된 오프셋까지만 읽도록 함으로써, 내구성이 보장된(durable) CDC 데이터만 파싱하도록 보장합니다.
 
 #### 3.2.3 완료 마커(Completion Marker)
 
@@ -793,11 +792,11 @@ ALTER TABLE foo WITH cdc=false;
 
 ### 3.5 CommitLogSegment 읽기
 
-CDC 데이터는 Cassandra의 Java API를 사용하여 프로그래밍 방식으로 소비합니다.
+CDC 데이터는 Cassandra의 Java API를 사용해 프로그래밍 방식으로 읽습니다.
 
 #### 3.5.1 CommitLogReader
 
-`CommitLogReader.java` 클래스를 구현합니다. 이 클래스는 "상당히 직관적인(fairly straightforward)" 사용법을 제공하며 "사용 가능한 다양한 시그니처(signature)"를 갖추고 있습니다. 참조 구현(reference implementation)은 세그먼트 소비를 위한 표준 패턴을 보여줍니다.
+`CommitLogReader.java` 클래스를 사용합니다. 사용법은 비교적 직관적이며 다양한 시그니처(signature)를 지원합니다. 참조 구현(reference implementation)은 세그먼트 처리를 위한 표준 패턴을 보여줍니다.
 
 #### 3.5.2 CommitLogReadHandler
 

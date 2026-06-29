@@ -1,11 +1,10 @@
 # Kafka Connect 설정
 
-> 이 문서는 Apache Kafka 공식 문서의 "Kafka Connect Configuration" 섹션을 한국어로 번역한 것입니다.
 > 원본: https://kafka.apache.org/documentation/#connectconfigs
 
 ## 개요
 
-Kafka Connect는 Apache Kafka와 외부 시스템 간에 데이터를 스트리밍하기 위한 확장 가능하고 신뢰성 있는 프레임워크입니다. 이 문서에서는 Kafka Connect Worker와 커넥터를 구성하는 데 필요한 설정 옵션들을 설명합니다.
+Kafka Connect는 Apache Kafka와 외부 시스템 간에 데이터를 스트리밍하기 위한 확장 가능하고 신뢰성 있는 프레임워크입니다. 여기서는 Kafka Connect Worker와 커넥터를 구성하는 데 필요한 설정 옵션들을 설명합니다.
 
 ---
 
@@ -64,7 +63,7 @@ bootstrap.servers=broker1:9092,broker2:9092,broker3:9092
 #### exactly.once.source.support
 
 - 타입: string
-- 유효값: DISABLED, ENABLED, PREPARING
+- 유효값: disabled, preparing, enabled
 - 기본값: disabled
 - 설명: Source 커넥터에 대한 정확히 한 번(Exactly-Once) 시맨틱스를 활성화합니다. `ENABLED`로 설정하면 Source 커넥터가 트랜잭션을 사용하여 메시지 중복을 방지합니다.
 
@@ -76,7 +75,7 @@ bootstrap.servers=broker1:9092,broker2:9092,broker3:9092
 
 - 타입: int
 - 기본값: 3000 (3초)
-- 설명: 그룹 코디네이터에게 하트비트를 보내는 예상 간격입니다. 하트비트는 Worker의 세션을 활성 상태로 유지하고 새 구성원이 그룹에 참여하거나 떠날 때 리밸런싱을 촉진하는 데 사용됩니다.
+- 설명: 그룹 코디네이터에 하트비트를 보내는 예상 주기입니다. 하트비트는 Worker 세션을 활성 상태로 유지하고, 새 구성원이 그룹에 참여하거나 떠날 때 리밸런싱을 촉진합니다.
 
 #### rebalance.timeout.ms
 
@@ -95,7 +94,7 @@ bootstrap.servers=broker1:9092,broker2:9092,broker3:9092
 - 타입: string
 - 유효값: use_all_dns_ips, resolve_canonical_bootstrap_servers_only
 - 기본값: use_all_dns_ips
-- 설명: 클라이언트가 DNS 조회를 사용하는 방법을 제어합니다. `use_all_dns_ips`를 사용하면 DNS에서 반환된 각 IP 주소에 순차적으로 연결을 시도합니다.
+- 설명: 클라이언트의 DNS 조회 방식을 제어합니다. `use_all_dns_ips`로 설정하면 DNS에서 반환된 각 IP 주소에 순차적으로 연결을 시도합니다.
 
 #### connections.max.idle.ms
 
@@ -245,7 +244,7 @@ listeners=http://0.0.0.0:8083,https://0.0.0.0:8084
 
 - 타입: long
 - 기본값: 300000 (5분)
-- 설명: 새 브로커나 파티션을 사전에 발견하기 위해 파티션 리더십 변경이 없어도 메타데이터를 강제로 새로 고치는 기간입니다.
+- 설명: 파티션 리더십 변경이 없어도 새 브로커나 파티션을 미리 감지하기 위해 메타데이터를 강제로 갱신하는 주기입니다.
 
 #### metric.reporters
 
@@ -283,7 +282,7 @@ listeners=http://0.0.0.0:8083,https://0.0.0.0:8084
 
 - 타입: long
 - 기본값: 5000 (5초)
-- 설명: 레코드가 플러시되기를 기다리는 최대 시간(밀리초)이며, 파티션 오프셋 데이터가 오프셋 저장소에 커밋되기를 기다리는 시간입니다.
+- 설명: 레코드가 플러시되고 파티션 오프셋 데이터가 오프셋 저장소에 커밋되기까지 기다리는 최대 시간(밀리초)입니다.
 
 #### offset.storage.partitions
 

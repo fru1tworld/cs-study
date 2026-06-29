@@ -1,6 +1,5 @@
 # Pyroscope HTTP API
 
-> 이 문서는 Pyroscope 서버가 노출하는 HTTP API 엔드포인트와 사용법을 다룹니다.
 > 원본: https://grafana.com/docs/pyroscope/latest/configure-server/about-the-http-api/
 
 ---
@@ -26,7 +25,7 @@ Pyroscope는 두 종류 API를 제공합니다.
 - **Pyroscope OG API** (HTTP/JSON 기반): `/ingest`, `/render`, `/labels`, `/label-values` 등
 - **Phlare/Connect API** (HTTP/protobuf, gRPC 호환): `/push.v1.PusherService/Push`, `/querier.v1.QuerierService/...`
 
-신규 SDK와 Alloy는 Connect API를 우선 사용하고, 호환성을 위해 OG API도 유지됩니다.
+신규 SDK와 Alloy는 Connect API를 우선 사용하며, 하위 호환성을 위해 OG API도 유지됩니다.
 
 ---
 
@@ -42,7 +41,7 @@ X-Scope-OrgID: team-a
 
 ### 인증
 
-서버 자체는 인증을 하지 않으며, 앞단 게이트웨이가 처리합니다. Grafana Cloud는 Basic Auth 토큰 사용.
+서버 자체는 인증을 처리하지 않으며, 앞단 게이트웨이에서 담당합니다. Grafana Cloud는 Basic Auth 토큰 사용.
 
 ```
 Authorization: Basic <base64(user:token)>
@@ -67,7 +66,7 @@ Authorization: Basic <base64(user:token)>
 
 ## Ingest API
 
-레거시 호환의 단순한 ingest 엔드포인트.
+레거시 호환을 위한 단순 ingest 엔드포인트.
 
 ```
 POST /ingest
@@ -103,7 +102,7 @@ POST /push.v1.PusherService/Push
 Content-Type: application/proto
 ```
 
-요청 본문은 protobuf 메시지 `PushRequest`. 새 SDK들이 사용하는 표준 경로입니다.
+요청 본문은 protobuf 메시지 `PushRequest`이며, 신규 SDK가 사용하는 표준 경로입니다.
 
 ### 요청 메시지
 
@@ -174,7 +173,7 @@ POST /querier.v1.QuerierService/SelectMergeStacktraces
 POST /querier.v1.QuerierService/SelectSeries
 ```
 
-특정 라벨로 그룹 지어 시간별 합 반환.
+특정 라벨로 그룹화하여 시간별 합계를 반환합니다.
 
 ---
 
@@ -254,7 +253,7 @@ GET /api/v1/status/buildinfo
 | `GET /compactor/ring` | compactor ring 상태 |
 | `GET /store-gateway/ring` | store-gateway ring 상태 |
 
-ring 페이지는 HTML로도 표시되어 어떤 노드가 healthy/unhealthy 인지 직관적으로 확인 가능.
+ring 페이지는 HTML로도 표시되므로 어떤 노드가 healthy/unhealthy 상태인지 직관적으로 확인할 수 있습니다.
 
 ---
 

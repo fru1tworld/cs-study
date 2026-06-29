@@ -1,6 +1,5 @@
 # gRPC 메타데이터와 인터셉터 (Go)
 
-> 이 문서는 gRPC 공식 문서의 "Metadata", "Interceptors" 가이드를 Go 중심으로 정리한 것입니다.
 > 원본: https://grpc.io/docs/guides/metadata/ , https://grpc.io/docs/guides/interceptors/
 
 ---
@@ -20,7 +19,7 @@
 
 ## 메타데이터란
 
-메타데이터(metadata)는 RPC에 부가되는 정보를 키-값 쌍으로 주고받는 부가 채널(side channel)입니다. 인증 토큰, 추적 ID(trace ID), 로드 밸런싱/레이트 리밋 힌트 등에 사용합니다. 내부적으로 HTTP/2 헤더로 전송됩니다.
+메타데이터(metadata)는 RPC에 부가 정보를 키-값 쌍으로 주고받는 부가 채널(side channel)입니다. 인증 토큰, 추적 ID(trace ID), 로드 밸런싱/레이트 리밋 힌트 등에 활용합니다. 내부적으로 HTTP/2 헤더로 전송됩니다.
 
 - 키는 대소문자를 구분하지 않으며 ASCII 문자/숫자와 `-`, `_`, `.`로 구성됩니다.
 - 키는 `grpc-` 접두사로 시작할 수 없습니다(gRPC 예약).
@@ -47,19 +46,19 @@ md = metadata.New(map[string]string{
 
 ## 메타데이터 송신 (클라이언트)
 
-클라이언트는 메타데이터를 컨텍스트(context)에 실어 보냅니다. `metadata.NewOutgoingContext`로 아웃고잉 메타데이터를 설정하거나, `metadata.AppendToOutgoingContext`로 추가합니다.
+클라이언트는 메타데이터를 컨텍스트(context)에 담아 전송합니다. `metadata.NewOutgoingContext`로 발신 메타데이터를 설정하거나, `metadata.AppendToOutgoingContext`로 기존 컨텍스트에 추가합니다.
 
 ```go
 md := metadata.Pairs("authorization", "bearer "+token)
 ctx := metadata.NewOutgoingContext(context.Background(), md)
 
-// 또는 기존 컨텍스트에 키-값을 덧붙이기
+// 또는 기존 컨텍스트에 키-값 추가
 ctx = metadata.AppendToOutgoingContext(ctx, "request-id", "abc-123")
 
 resp, err := client.SayHello(ctx, &pb.HelloRequest{Name: "Alice"})
 ```
 
-서버가 보낸 헤더/트레일러 메타데이터를 받으려면 호출 옵션 `grpc.Header`, `grpc.Trailer`를 사용합니다.
+서버가 보낸 헤더/트레일러 메타데이터를 수신하려면 호출 옵션 `grpc.Header`, `grpc.Trailer`를 사용합니다.
 
 ```go
 var header, trailer metadata.MD
@@ -73,7 +72,7 @@ resp, err := client.SayHello(ctx, req,
 
 ## 메타데이터 수신 (서버)
 
-서버 핸들러는 컨텍스트에서 인커밍 메타데이터를 읽습니다.
+서버 핸들러는 컨텍스트에서 수신 메타데이터를 읽습니다.
 
 ```go
 func (s *server) SayHello(ctx context.Context, in *pb.HelloRequest) (*pb.HelloReply, error) {
@@ -114,14 +113,14 @@ grpc.SetTrailer(ctx, metadata.Pairs("server-cost", "42"))
 
 ## 인터셉터란
 
-인터셉터(interceptor)는 RPC 호출 경로에 끼어들어 공통 로직을 적용하는 미들웨어(middleware)입니다. 로깅, 인증/인가, 메트릭, 재시도, 캐싱, 메타데이터 처리 등에 사용합니다. 특정 RPC 메서드와 무관하게 일반적 동작을 적용할 때 적합합니다.
+인터셉터(interceptor)는 RPC 호출 경로에 개입해 공통 로직을 적용하는 미들웨어(middleware)입니다. 로깅, 인증/인가, 메트릭, 재시도, 캐싱, 메타데이터 처리 등에 활용합니다. 특정 RPC 메서드에 무관하게 공통 동작을 적용할 때 적합합니다.
 
 gRPC 인터셉터는 두 축으로 나뉩니다.
 
 - 위치: **서버 측** / **클라이언트 측**
 - RPC 형태: **단방향(unary)** / **스트림(stream)**
 
-인터셉터 순서는 중요합니다. 예를 들어 로깅 인터셉터를 캐싱 인터셉터 앞에 둘지 뒤에 둘지에 따라 측정 대상(네트워크 통신 vs 애플리케이션 동작)이 달라집니다.
+인터셉터 순서는 중요합니다. 예를 들어 로깅 인터셉터를 캐싱 인터셉터 앞에 두느냐 뒤에 두느냐에 따라 측정 대상(네트워크 통신 vs 애플리케이션 동작)이 달라집니다.
 
 > 참고: 클라이언트 인증은 인터셉터로도 가능하지만, gRPC는 이를 위해 별도의 "call credentials" API를 제공하며 그쪽이 더 적합합니다(`07_auth_security.md` 참조).
 
@@ -131,7 +130,7 @@ gRPC 인터셉터는 두 축으로 나뉩니다.
 
 ### 단방향 서버 인터셉터
 
-시그니처는 `grpc.UnaryServerInterceptor`입니다. `handler`를 호출해야 실제 핸들러가 실행됩니다.
+타입은 `grpc.UnaryServerInterceptor`입니다. `handler`를 호출해야 실제 핸들러가 실행됩니다.
 
 ```go
 func loggingUnaryInterceptor(
@@ -152,7 +151,7 @@ func loggingUnaryInterceptor(
 
 ### 스트림 서버 인터셉터
 
-시그니처는 `grpc.StreamServerInterceptor`입니다.
+타입은 `grpc.StreamServerInterceptor`입니다.
 
 ```go
 func loggingStreamInterceptor(
@@ -174,7 +173,7 @@ func loggingStreamInterceptor(
 
 ### 단방향 클라이언트 인터셉터
 
-시그니처는 `grpc.UnaryClientInterceptor`입니다. `invoker`를 호출해야 실제 RPC가 전송됩니다.
+타입은 `grpc.UnaryClientInterceptor`입니다. `invoker`를 호출해야 실제 RPC가 전송됩니다.
 
 ```go
 func authUnaryInterceptor(
@@ -193,7 +192,7 @@ func authUnaryInterceptor(
 
 ### 스트림 클라이언트 인터셉터
 
-시그니처는 `grpc.StreamClientInterceptor`입니다.
+타입은 `grpc.StreamClientInterceptor`입니다.
 
 ```go
 func authStreamInterceptor(
@@ -228,7 +227,7 @@ grpcServer = grpc.NewServer(
 )
 ```
 
-`ChainUnaryInterceptor`에서는 나열한 순서대로 실행됩니다(첫 번째가 가장 바깥쪽).
+`ChainUnaryInterceptor`는 나열한 순서대로 실행됩니다(첫 번째가 가장 바깥쪽).
 
 ### 클라이언트
 

@@ -1,6 +1,5 @@
 # Loki 구성 레퍼런스
 
-> 이 문서는 Grafana Loki 공식 문서의 "Configure Loki" 섹션을 한국어로 정리한 것입니다.
 > 원본: https://grafana.com/docs/loki/latest/configure/
 
 ---
@@ -28,7 +27,7 @@
 
 ## 구성 개요
 
-Loki는 YAML 형식의 구성 파일로 동작합니다. 명령줄 플래그로도 모든 옵션을 설정할 수 있지만, 일반적으로 `-config.file=loki.yaml` 사용이 권장됩니다.
+Loki는 YAML 형식의 구성 파일로 동작합니다. 명령줄 플래그로도 모든 옵션을 설정할 수 있으나, 일반적으로 `-config.file=loki.yaml`을 사용하는 방식이 권장됩니다.
 
 ```bash
 loki -config.file=/etc/loki/loki.yaml
@@ -84,7 +83,7 @@ target: distributor  # 단일 컴포넌트
 
 ### `auth_enabled`
 
-`true`로 설정하면 멀티 테넌시가 활성화되어 모든 요청에 `X-Scope-OrgID` 헤더가 필요합니다. `false`이면 테넌트 ID는 `fake`로 고정됩니다.
+`true`로 설정하면 멀티 테넌시가 활성화되며, 모든 요청에 `X-Scope-OrgID` 헤더가 필요합니다. `false`이면 테넌트 ID가 `fake`로 고정됩니다.
 
 ```yaml
 auth_enabled: true
@@ -92,7 +91,7 @@ auth_enabled: true
 
 ### `ballast_bytes`
 
-GC 최적화를 위한 가상 메모리 예약. 일반적으로 사용 가능 메모리의 10-20%로 설정.
+GC 최적화를 위해 예약하는 가상 메모리 크기. 일반적으로 사용 가능한 메모리의 10~20%로 설정합니다.
 
 ```yaml
 ballast_bytes: 1073741824  # 1GB
@@ -138,7 +137,6 @@ distributor:
     kvstore:
       store: memberlist  # 또는 consul, etcd
   
-  # 클라이언트로부터 받는 라벨에 추가할 라벨
   rate_store:
     ingestion_burst_size_mb: 6
   
@@ -264,7 +262,7 @@ query_range:
 
 ## storage_config
 
-스토리지 백엔드 설정.
+스토리지 백엔드를 설정합니다.
 
 ```yaml
 storage_config:
@@ -312,7 +310,7 @@ storage_config:
 
 ## schema_config
 
-청크 인덱스 스키마와 저장 위치 정의. **여러 시기의 스키마를 누적해서 정의**합니다.
+청크 인덱스 스키마와 저장 위치를 정의합니다. **여러 시기의 스키마를 누적하여 정의**할 수 있습니다.
 
 ```yaml
 schema_config:
@@ -354,7 +352,7 @@ schema_config:
 
 ## chunk_store_config
 
-청크 캐싱 및 보존 설정.
+청크 캐싱 및 보존 기간을 설정합니다.
 
 ```yaml
 chunk_store_config:
@@ -376,7 +374,7 @@ chunk_store_config:
 
 ## limits_config
 
-전역 및 테넌트별 한도. **runtime_config**로 테넌트별 오버라이드 가능.
+전역 및 테넌트별 한도를 설정합니다. **runtime_config**를 통해 테넌트별로 오버라이드할 수 있습니다.
 
 ```yaml
 limits_config:
@@ -449,7 +447,7 @@ compactor:
 
 ## ruler
 
-알림 룰과 Recording 룰 평가.
+알림 룰과 Recording 룰을 평가합니다.
 
 ```yaml
 ruler:
@@ -503,7 +501,7 @@ groups:
 
 ## memberlist
 
-Hashicorp memberlist 기반 클러스터 멤버십.
+Hashicorp memberlist 기반의 클러스터 멤버십을 설정합니다.
 
 ```yaml
 memberlist:
@@ -526,7 +524,7 @@ memberlist:
 
 ## runtime_config
 
-테넌트별 한도 및 설정 동적 오버라이드.
+테넌트별 한도 및 설정을 동적으로 오버라이드합니다.
 
 ```yaml
 runtime_config:

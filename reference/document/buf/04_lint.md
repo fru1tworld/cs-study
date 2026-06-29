@@ -1,6 +1,5 @@
 # 린팅 (buf lint)
 
-> 이 문서는 buf lint의 사용법, 규칙 카테고리, 주요 규칙, 무시(ignore) 설정을 한국어로 정리한 것입니다.
 > 원본: https://buf.build/docs/lint/ , https://buf.build/docs/lint/rules/
 
 ---
@@ -26,7 +25,7 @@ buf lint proto           # 특정 디렉터리 검사
 buf lint --error-format=json
 ```
 
-위반이 있으면 위반 위치와 규칙 ID를 출력하고 0이 아닌 종료 코드를 반환합니다(CI에서 활용).
+위반이 감지되면 위반 위치와 규칙 ID를 출력하고 0이 아닌 종료 코드를 반환합니다(CI 연동에 활용).
 
 ---
 
@@ -125,13 +124,13 @@ lint:
   service_suffix: Service
 ```
 
-v2에서 모듈별로 다른 규칙을 적용하려면 `modules[].lint`에 작성하며, 이는 워크스페이스 설정을 완전히 대체합니다.
+v2에서 모듈별로 다른 규칙을 적용하려면 `modules[].lint`에 작성합니다. 모듈 수준 설정은 워크스페이스 설정을 완전히 대체합니다.
 
 ---
 
 ## 5. 주석 무시 (comment ignores)
 
-특정 위치에서만 규칙을 끄려면 `.proto` 안에 주석을 둡니다. v2에서는 기본 활성화되어 있습니다(v1은 `allow_comment_ignores: true` 필요).
+특정 위치에서만 규칙을 비활성화하려면 `.proto` 파일 안에 주석을 추가합니다. v2에서는 기본으로 활성화되어 있으며, v1에서는 `allow_comment_ignores: true` 설정이 필요합니다.
 
 ```proto
 // buf:lint:ignore SERVICE_SUFFIX
@@ -145,10 +144,10 @@ service Weather {
 
 ## 6. 규칙 목록 확인
 
-현재 설정 또는 카테고리에 포함된 규칙을 확인할 수 있습니다.
+현재 설정 또는 카테고리에 포함된 규칙을 다음 명령으로 확인할 수 있습니다.
 
 ```bash
 buf config ls-lint-rules                 # 현재 설정 기준 활성 규칙
 buf config ls-lint-rules --version v2    # v2 전체 규칙
-buf config ls-lint-rules --configured    # buf.yaml에 설정된 규칙
+buf config ls-lint-rules --configured-only  # buf.yaml에 설정된 규칙
 ```

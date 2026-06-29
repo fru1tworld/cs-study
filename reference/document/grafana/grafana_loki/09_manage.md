@@ -1,6 +1,5 @@
 # Loki 운영 관리
 
-> 이 문서는 Grafana Loki 공식 문서의 "Manage Loki" 섹션을 한국어로 정리한 것입니다.
 > 원본: https://grafana.com/docs/loki/latest/operations/
 
 ---
@@ -38,7 +37,7 @@ auth_enabled: true
 
 ### 테넌트 페더레이션
 
-`limits_config`에서 활성화하면 여러 테넌트를 한 번에 쿼리 가능.
+`limits_config`에서 활성화하면 여러 테넌트를 한 번에 쿼리할 수 있다.
 
 ```yaml
 limits_config:
@@ -57,7 +56,7 @@ Headers:
 
 ### 테넌트별 한도 오버라이드
 
-`runtime_config`로 동적 조정.
+`runtime_config`를 통해 동적으로 조정할 수 있다.
 
 ```yaml
 overrides:
@@ -80,7 +79,7 @@ overrides:
 
 #### Local
 
-각 Distributor 인스턴스가 독립적으로 한도 적용. Distributor 수에 따라 실제 한도가 변동.
+각 Distributor 인스턴스가 독립적으로 한도를 적용한다. Distributor 수에 따라 실제 한도가 달라진다.
 
 ```yaml
 limits_config:
@@ -90,7 +89,7 @@ limits_config:
 
 #### Global (권장)
 
-모든 Distributor가 협력하여 테넌트당 글로벌 한도 적용.
+모든 Distributor가 협력하여 테넌트당 글로벌 한도를 적용한다.
 
 ```yaml
 limits_config:
@@ -158,7 +157,7 @@ limits_config:
 
 ### 스키마 마이그레이션
 
-새 스키마 적용은 **미래 시점부터** 추가:
+새 스키마는 **미래 시점**부터 적용되도록 추가한다.
 
 ```yaml
 schema_config:
@@ -182,7 +181,7 @@ schema_config:
 
 ### 인덱스 게이트웨이 (Index Gateway)
 
-Querier들이 인덱스를 매번 다운로드하지 않도록 중앙화.
+Querier가 인덱스를 매번 다운로드하지 않도록 중앙에서 관리한다.
 
 ```yaml
 storage_config:
@@ -256,7 +255,7 @@ overrides:
 
 ## 로그 삭제
 
-특정 로그를 즉시 삭제하는 API. GDPR 등 컴플라이언스 대응.
+특정 로그를 삭제하는 API로, GDPR 등 컴플라이언스 요건에 대응할 때 사용한다.
 
 ### 활성화
 
@@ -309,7 +308,7 @@ curl -XDELETE "http://loki:3100/loki/api/v1/delete?request_id=<id>" \
 
 ### 쿼리 분할 (Query Splitting)
 
-긴 시간 범위를 작은 단위로 분할.
+긴 시간 범위의 쿼리를 작은 단위로 분할하여 처리한다.
 
 ```yaml
 query_range:
@@ -406,7 +405,7 @@ query_range:
 
 ## WAL (Write-Ahead Log)
 
-Ingester 충돌 시 데이터 복구.
+Ingester가 충돌하더라도 데이터를 복구할 수 있게 한다.
 
 ```yaml
 ingester:
@@ -420,13 +419,13 @@ ingester:
 
 ### 동작
 
-1. 모든 쓰기는 메모리와 WAL 디스크에 동시 기록
-2. 청크가 스토리지로 플러시되면 해당 WAL 항목 정리
-3. Ingester 재시작 시 WAL을 리플레이하여 메모리 복원
+1. 모든 쓰기는 메모리와 WAL 디스크에 동시에 기록된다.
+2. 청크가 스토리지로 플러시되면 해당 WAL 항목이 정리된다.
+3. Ingester 재시작 시 WAL을 리플레이하여 메모리 상태를 복원한다.
 
 ### 디스크 요구사항
 
-`replay_memory_ceiling` × Ingester 수 이상의 디스크 권장.
+`replay_memory_ceiling` × Ingester 수만큼의 디스크 용량 이상을 확보하는 것을 권장한다.
 
 ---
 
@@ -434,7 +433,7 @@ ingester:
 
 ### 무중단 롤링 업데이트
 
-마이크로서비스 모드에서 권장 순서:
+마이크로서비스 모드에서 권장하는 업데이트 순서:
 
 1. **Compactor** (단일 인스턴스, 다운타임 허용)
 2. **Index Gateway**
@@ -464,7 +463,7 @@ ingester:
 
 ### 자체 메트릭
 
-Loki는 Prometheus 형식 메트릭을 `/metrics` 엔드포인트로 노출.
+Loki는 Prometheus 형식의 메트릭을 `/metrics` 엔드포인트로 노출한다.
 
 ### 주요 메트릭
 
@@ -495,7 +494,7 @@ jsonnet -J vendor -m dashboards mixin.libsonnet
 
 ### Self-Monitoring
 
-Loki 자체 로그를 Loki에 보내는 셀프 모니터링 권장.
+Loki 자체 로그를 Loki로 수집하는 셀프 모니터링을 권장한다.
 
 ```alloy
 loki.source.kubernetes "loki_logs" {

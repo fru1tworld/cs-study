@@ -1,6 +1,5 @@
 # Akka 디스커버리와 유틸리티
 
-> 이 문서는 Akka 공식 문서의 "Discovery", "Logging", "Circuit Breaker", "Coordination" 섹션을 한국어로 번역한 것입니다.
 > 원본: https://doc.akka.io/libraries/akka-core/current/
 
 ---
@@ -22,7 +21,7 @@
 
 ### 1.1 목적과 범위
 
-Akka 디스커버리(Akka Discovery) API는 서로 다른 기술을 통해 서비스 디스커버리(service discovery)를 제공할 수 있도록 합니다. 이 API는 엔드포인트(endpoint) 조회(lookup) 기능을 추상화하여, 설정 파일에 값을 하드코딩하는 대신 실행 환경(environment)에 기반해 서비스를 설정할 수 있게 해 줍니다.
+Akka 디스커버리(Akka Discovery) API는 다양한 기술을 통해 서비스 디스커버리(service discovery)를 제공합니다. 엔드포인트(endpoint) 조회(lookup) 기능을 추상화하여, 설정 파일에 값을 하드코딩하는 대신 실행 환경에 따라 서비스를 구성할 수 있게 해 줍니다.
 
 ### 1.2 사용 가능한 디스커버리 방식
 
@@ -50,7 +49,7 @@ libraryDependencies += "com.typesafe.akka" %% "akka-discovery" % AkkaVersion
 
 **Maven:**
 
-BOM 임포트와 함께 `akka-discovery` 아티팩트(artifact)를 사용하며, Scala 바이너리 버전 2.13 을 사용합니다.
+BOM 임포트와 함께 `akka-discovery` 아티팩트를 사용합니다. Scala 바이너리 버전은 2.13을 사용합니다.
 
 **Gradle:**
 
@@ -61,7 +60,7 @@ implementation "akka-discovery_${versions.ScalaBinary}"
 
 ### 1.4 핵심 API 사용법
 
-확장(extension)을 로드하고 조회(lookup)를 수행하는 방법은 다음과 같습니다.
+확장(extension)을 로드하고 조회를 수행하는 방법은 다음과 같습니다.
 
 **Scala:**
 
@@ -78,7 +77,7 @@ ActorSystem as = ActorSystem.create();
 ServiceDiscovery serviceDiscovery = Discovery.get(as).discovery();
 ```
 
-조회는 세 개의 선택적(optional) 파라미터를 사용합니다.
+조회에는 세 개의 선택적(optional) 파라미터를 사용합니다.
 
 - `serviceName` (필수)
 - `portName`
@@ -171,7 +170,7 @@ akka {
 
 ### 1.9 Akka 매니지먼트(1.0.0 이전)로부터의 마이그레이션
 
-커스텀(custom) 디스커버리 구현체는 이제 반드시 `akka.discovery.ServiceDiscovery`를 상속해야 합니다. 설정의 `discovery-method`에는 `akka.discovery` 아래에서 구현체의 완전한 클래스명(fully qualified name)을 지정하는 `class` 속성이 필요합니다.
+커스텀 디스커버리 구현체는 반드시 `akka.discovery.ServiceDiscovery`를 상속해야 합니다. 설정의 `discovery-method`에는 `akka.discovery` 아래에서 구현체의 완전한 클래스명(fully qualified name)을 지정하는 `class` 속성이 필요합니다.
 
 ---
 
@@ -179,17 +178,17 @@ akka {
 
 ### 2.1 핵심 정의
 
-이벤트 스트림(EventStream)은 각 액터 시스템(actor system)의 주요 이벤트 버스(Event Bus)입니다. 로그 메시지(log message)와 데드 레터(Dead Letter)를 전달하는 데 사용되며, 사용자 코드(user code)에서 다른 목적으로도 사용할 수 있습니다. 이벤트 스트림은 관련된 채널들의 집합에 대한 등록을 가능하게 하기 위해 서브채널 분류(Subchannel Classification)를 사용합니다.
+이벤트 스트림(EventStream)은 각 액터 시스템의 주요 이벤트 버스(Event Bus)입니다. 로그 메시지와 데드 레터(Dead Letter) 전달에 사용되며, 사용자 코드에서 다른 목적으로도 활용할 수 있습니다. 관련 채널 집합에 대한 구독을 지원하기 위해 서브채널 분류(Subchannel Classification)를 사용합니다.
 
 ### 2.2 의존성
 
-Akka Actor Typed의 경우, 필요한 의존성은 `com.typesafe.akka:akka-actor-typed` 버전 2.10.19이며 sbt, Maven, Gradle 빌드 도구를 통해 설정합니다.
+Akka Actor Typed의 경우 `com.typesafe.akka:akka-actor-typed` 버전 2.10.19를 sbt, Maven, Gradle 중 하나의 빌드 도구를 통해 추가합니다.
 
 ### 2.3 구독(Subscription) 메커니즘
 
 #### 기본 사용 패턴
 
-액터는 메시지 어댑터(message adapter) 방식을 사용해 이벤트 스트림을 구독합니다. 시스템은 구독자(subscriber)가 종료(terminate)되면 자동으로 구독을 제거하므로, 수동 정리(manual cleanup)가 필요하지 않습니다.
+액터는 메시지 어댑터(message adapter) 방식을 사용해 이벤트 스트림을 구독합니다. 구독자가 종료되면 구독이 자동으로 해제되므로 수동 정리가 필요하지 않습니다.
 
 #### 계층적 구독(Hierarchical Subscriptions)
 
@@ -197,7 +196,7 @@ Akka Actor Typed의 경우, 필요한 의존성은 `com.typesafe.akka:akka-actor
 
 ### 2.4 데드 레터(Dead Letters) 시스템
 
-종료된 액터로 전송된 메시지는 데드 레터 메일박스(dead letter mailbox)로 다시 라우팅되며 `DeadLetter` 객체로 발행(publish)됩니다. 이 객체는 원래의 송신자(sender), 수신자(receiver), 메시지 정보를 담고 있습니다.
+종료된 액터로 전송된 메시지는 데드 레터 메일박스(dead letter mailbox)로 다시 라우팅되어 `DeadLetter` 객체로 발행됩니다. 이 객체는 원래 송신자, 수신자, 메시지 정보를 담고 있습니다.
 
 #### 억제된 데드 레터(Suppressed Dead Letters)
 
@@ -207,7 +206,7 @@ Akka Actor Typed의 경우, 필요한 의존성은 `com.typesafe.akka:akka-actor
 
 EventBus 인터페이스는 네 가지 핵심 연산을 정의합니다: `subscribe()`, `unsubscribe()`, `publish()`, 그리고 일괄(bulk) 구독 해제 기능입니다.
 
-**중요한 제약:** 이벤트 스트림은 발행된 메시지의 송신자를 보존하지 않습니다. 따라서 원래 송신자에 대한 참조가 필요하다면 메시지 페이로드(payload) 안에 포함시켜야 합니다.
+**중요한 제약:** 이벤트 스트림은 발행된 메시지의 송신자 정보를 보존하지 않습니다. 원래 송신자 참조가 필요하다면 메시지 페이로드 안에 포함시켜야 합니다.
 
 #### 추상 타입(Abstract Type) 요구사항
 
@@ -256,7 +255,7 @@ EventBus 인터페이스는 네 가지 핵심 연산을 정의합니다: `subscr
 
 ### 2.8 코드 예제 구조
 
-공식 문서는 모든 구독 패턴, 분류자 구현, 테스트 예시에 대해 Scala와 Java 두 언어의 병렬 구현을 제공하며, 소스 코드 저장소(repository)로의 링크를 함께 제공합니다.
+공식 문서는 모든 구독 패턴, 분류자 구현, 테스트 예시에 대해 Scala와 Java 두 언어의 병렬 구현을 제공하며, 소스 코드 저장소 링크도 함께 제공합니다.
 
 ---
 
@@ -264,7 +263,7 @@ EventBus 인터페이스는 네 가지 핵심 연산을 정의합니다: `subscr
 
 ### 3.1 개요
 
-Akka 타입드(typed) 액터 프레임워크는 로깅에 SLF4J를 사용하며, `ActorContext`를 통해 로거(logger)에 접근할 수 있게 해 줍니다. 공식 문서는 특히 프로덕션(production) 환경에서 성능 영향을 최소화하기 위해 비동기 어펜더(asynchronous appender)를 설정할 것을 강조합니다.
+Akka 타입드(typed) 액터 프레임워크는 로깅에 SLF4J를 사용하며, `ActorContext`를 통해 로거에 접근할 수 있습니다. 공식 문서는 특히 프로덕션 환경에서 성능 영향을 최소화하기 위해 비동기 어펜더(asynchronous appender) 설정을 강조합니다.
 
 ### 3.2 핵심 로깅 개념
 
@@ -294,11 +293,11 @@ context.log.info("Starting up")
 
 #### 중요한 구현 세부사항
 
-`context.log` 또는 `context.getLog()`를 통해 로거를 여러 번 가져오는 것은 오버헤드가 낮으므로 캐싱(caching)할 필요가 없습니다. `ActorContext`의 로깅 관련 메서드는 스레드 안전(thread-safe)하지 않으므로 반드시 액터의 메시지 처리 스레드에서만 호출해야 하며, `Future`나 `CompletionStage` 콜백(callback) 안에서 호출해서는 안 됩니다.
+`context.log` 또는 `context.getLog()`를 통해 로거를 여러 번 가져오는 것은 오버헤드가 낮으므로 캐싱할 필요가 없습니다. `ActorContext`의 로깅 관련 메서드는 스레드 안전(thread-safe)하지 않으므로 반드시 액터의 메시지 처리 스레드에서만 호출해야 하며, `Future`나 `CompletionStage` 콜백 안에서 호출해서는 안 됩니다.
 
 #### 플레이스홀더(Placeholder) 인자
 
-로그 메시지는 인자 치환을 위한 `{}` 플레이스홀더를 지원합니다. 이 방식은 로그 레벨이 비활성화되어 있을 때 불필요한 문자열 연결(string concatenation)을 피하게 해 줍니다. 인자가 1~2개인 메서드는 가변 인자(vararg) 배열을 할당하지 않지만, 인자가 3개 이상이면 로그가 비활성화되어 있더라도 약간의 할당 비용이 발생합니다.
+로그 메시지는 인자 치환을 위한 `{}` 플레이스홀더를 지원합니다. 이 방식은 로그 레벨이 비활성화되어 있을 때 불필요한 문자열 연결을 방지합니다. 인자가 1~2개인 메서드는 가변 인자(vararg) 배열을 할당하지 않지만, 인자가 3개 이상이면 로그가 비활성화된 상태에서도 약간의 할당 비용이 발생합니다.
 
 #### Behaviors.logMessages
 
@@ -313,7 +312,7 @@ Behaviors.logMessages(LogOptions().withLevel(Level.TRACE), BackendManager())
 
 ### 3.3 MDC(Mapped Diagnostic Context)
 
-기본적으로 Akka는 액터 경로(actor path)를 `akkaSource`라는 키로 MDC에 자동으로 추가합니다. 추가 태그(tag)는 `ActorTags`를 통해 부착할 수 있습니다.
+기본적으로 Akka는 액터 경로를 `akkaSource` 키로 MDC에 자동으로 추가합니다. 추가 태그는 `ActorTags`를 통해 부착할 수 있습니다.
 
 ```scala
 context.spawn(myBehavior, "MyActor", ActorTags("processing"))
@@ -335,13 +334,13 @@ Behaviors.withMdc[BackendManager.Command](
 }
 ```
 
-`MDC` API를 직접 사용할 때 주의할 점은, `log`/`getLog()`에 접근한 경우 Akka가 메시지 처리 후 (커스텀 값을 포함한) 전체 MDC를 지운다는 것입니다. 둘 중 어느 것에도 접근하지 않으면 MDC는 자동으로 지워지지 않습니다.
+`MDC` API를 직접 사용할 때 주의할 점은, `log`/`getLog()`에 접근한 경우 Akka가 메시지 처리 후 커스텀 값을 포함한 전체 MDC를 지운다는 것입니다. 둘 중 어느 것에도 접근하지 않으면 MDC는 자동으로 지워지지 않습니다.
 
 ### 3.4 SLF4J 백엔드 설정
 
 #### SLF4J API 호환성
 
-Akka 2.10.0부터는 SLF4J 버전 2.0만 지원됩니다. 한 버전의 로거 백엔드와 더 오래된 버전의 SLF4J API를 혼용하는 것은 호환되지 않습니다.
+Akka 2.10.0부터는 SLF4J 버전 2.0 이상만 지원됩니다. 서로 다른 버전의 로거 백엔드와 SLF4J API를 혼용하면 호환성 문제가 발생합니다.
 
 #### Logback 통합
 
@@ -444,7 +443,7 @@ MDC 속성은 패턴(pattern)에 포함시킬 수 있습니다.
 
 #### 이벤트 버스 아키텍처
 
-Akka의 내부 및 클래식(classic) 액터 로깅은 이벤트 버스를 통해 비동기적으로 동작합니다. `akka-actor-typed`와 `akka-slf4j`가 모두 클래스패스(classpath)에 있으면, `Slf4jLogger`가 자동으로 이벤트를 SLF4J로 방출(emit)합니다. 이 동작은 `akka.use-slf4j=off`로 비활성화할 수 있습니다.
+Akka의 내부 및 클래식(classic) 액터 로깅은 이벤트 버스를 통해 비동기적으로 동작합니다. `akka-actor-typed`와 `akka-slf4j`가 모두 클래스패스에 있으면 `Slf4jLogger`가 자동으로 이벤트를 SLF4J로 방출합니다. 이 동작은 `akka.use-slf4j=off`로 비활성화할 수 있습니다.
 
 #### 로그 레벨 설정
 
@@ -467,7 +466,7 @@ akka {
 
 #### 시작 및 종료 로깅
 
-ActorSystem의 시작과 종료 동안에는 설정된 로거가 우회(bypass)됩니다. 메시지는 기본 레벨 `WARNING`으로 stdout에 출력되며, `akka.stdout-loglevel=OFF`로 설정할 수 있습니다.
+ActorSystem 시작과 종료 중에는 설정된 로거가 우회됩니다. 메시지는 기본 레벨 `WARNING`으로 stdout에 출력되며, `akka.stdout-loglevel=OFF`로 억제할 수 있습니다.
 
 #### 데드 레터 로깅
 
@@ -554,7 +553,7 @@ Akka의 내부 로깅은 비동기적이므로 다음 값들을 제공합니다.
 - `akkaSource` - 액터 경로
 - `sourceActorSystem` - ActorSystem 이름
 - `akkaAddress` - 호스트/포트가 포함된 시스템 주소
-- `akkaTimestamp` - 내부/클래식 액터 로그의 타임스탬프 (타입드 액터는 이 값을 채우지 않음)
+- `akkaTimestamp` - 타입드 액터 로그의 타임스탬프 (내부/클래식 액터는 이 값을 채우지 않음)
 
 #### 마커(Markers)
 
@@ -599,7 +598,7 @@ akka.remote
 
 ### 3.6 테스트에서의 로깅
 
-테스트 시 로깅 캡처(log capturing)와 관련된 유틸리티는 공식 문서의 테스팅(Testing) 섹션에서 다루어집니다.
+테스트 시 로그 캡처 관련 유틸리티는 공식 문서의 Testing 섹션에서 다룹니다.
 
 ---
 
@@ -607,9 +606,9 @@ akka.remote
 
 ### 4.1 목적과 동기
 
-서킷 브레이커(circuit breaker)는 연쇄 장애(cascading failure)를 방지하여 분산 시스템에 안정성을 제공합니다. 공식 문서는 서드파티(third-party) 웹 서비스가 과부하 상태가 되어 타임아웃(timeout)이 발생하고, 이로 인해 사용자가 요청을 반복적으로 새로 고침(refresh)하면서 결국 자원을 고갈시켜 모든 사용자에게 영향을 미치는 시나리오를 예로 듭니다.
+서킷 브레이커(circuit breaker)는 연쇄 장애(cascading failure)를 방지하여 분산 시스템의 안정성을 높입니다. 서드파티 웹 서비스가 과부하 상태가 되어 타임아웃이 발생하고, 이로 인해 사용자가 요청을 반복적으로 재시도하면서 자원을 고갈시켜 전체 사용자에게 영향을 미치는 시나리오가 대표적인 예입니다.
 
-문서에 따르면, 서킷 브레이커를 도입하면 "요청이 빠르게 실패(fail-fast)하기 시작하여 사용자에게 무언가 잘못되었음을 알리게" 되며, 장애를 영향받는 사용자에게만 한정시킬 수 있습니다.
+서킷 브레이커를 도입하면 요청이 빠르게 실패(fail-fast)하기 시작하여 사용자에게 문제 상황을 즉시 알릴 수 있으며, 장애 범위를 영향받는 사용자에게만 한정시킬 수 있습니다.
 
 ### 4.2 3-상태(Three-State) 모델
 
@@ -617,19 +616,19 @@ akka.remote
 
 **닫힘 상태(Closed State, 정상 동작):**
 
-- 예외(exception)가 발생하거나 설정된 타임아웃을 초과하는 호출은 실패 카운터(failure counter)를 증가시킵니다.
+- 예외가 발생하거나 설정된 타임아웃을 초과하는 호출은 실패 카운터를 증가시킵니다.
 - 성공한 호출은 실패 횟수를 0으로 리셋합니다.
-- 실패가 `maxFailures`에 도달하면 브레이커는 열림(Open) 상태로 전환됩니다.
+- 실패 횟수가 `maxFailures`에 도달하면 브레이커는 열림(Open) 상태로 전환됩니다.
 
 **열림 상태(Open State):**
 
 - 모든 호출은 즉시 `CircuitBreakerOpenException`으로 실패합니다.
-- 설정된 `resetTimeout` 이후, 브레이커는 반열림(Half-Open) 상태로 진입합니다.
+- 설정된 `resetTimeout` 이후 브레이커는 반열림(Half-Open) 상태로 진입합니다.
 
 **반열림 상태(Half-Open State):**
 
-- 첫 번째 호출 시도는 즉시 실패하지 않고 통과가 허용됩니다.
-- 그 외의 모든 호출은 열림 상태처럼 빠르게 실패합니다.
+- 첫 번째 호출은 즉시 실패하지 않고 통과가 허용됩니다.
+- 그 외의 모든 호출은 열림 상태와 마찬가지로 빠르게 실패합니다.
 - 첫 번째 호출이 성공하면 브레이커는 닫힘(Closed) 상태로 리셋됩니다.
 - 첫 번째 호출이 실패하면 브레이커는 다시 열림(Open) 상태로 돌아갑니다.
 
@@ -1022,7 +1021,7 @@ static class CircuitBreakingIntermediateActor
 
 ### 4.8 커스텀 실패 함수(Custom Failure Functions)
 
-두 API 모두 `defineFailureFn` 파라미터를 통해 커스텀 실패 로직 정의를 지원합니다. Scala에서는 `Try[T] => Boolean` 함수이고, Java에서는 `BiFunction<Optional[T], Optional[Throwable], Boolean>`입니다. `true`를 반환하면 실패 횟수가 증가하고, `false`를 반환하면 변하지 않습니다. 이를 통해 애플리케이션은 기본 동작과 독립적으로 특정 결과를 실패 또는 성공으로 취급할 수 있습니다.
+두 API 모두 커스텀 실패 로직을 지원합니다. Scala에서는 `Try[T] => Boolean` 함수이고, Java에서는 `BiFunction<Optional<T>, Optional<Throwable>, Boolean>`입니다. `true`를 반환하면 실패 횟수가 증가하고, `false`를 반환하면 변하지 않습니다. 이를 통해 기본 동작과 독립적으로 특정 결과를 실패 또는 성공으로 취급할 수 있습니다.
 
 ---
 
@@ -1030,7 +1029,7 @@ static class CircuitBreakingIntermediateActor
 
 ### 5.1 개요와 의존성
 
-이 헬퍼들은 Akka의 코어 모듈(core module)의 일부입니다. 설정 예제는 다음과 같습니다.
+이 헬퍼들은 Akka 코어 모듈의 일부입니다. 의존성 설정 예제는 다음과 같습니다.
 
 - **sbt:** `"com.typesafe.akka" %% "akka-actor" % "2.10.19"`
 - **Maven:** BOM 임포트와 함께 아티팩트 ID `akka-actor_${scala.binary.version}` 사용
@@ -1104,7 +1103,7 @@ CompletionStage<String> retriedFuture =
 
 ### 6.1 개요
 
-Akka 코디네이션(Akka Coordination)은 분산 코디네이션(distributed coordination)을 위한 도구 모음입니다. 리스(lease) 컴포넌트는 분산 락(distributed lock)을 위한 플러그형(pluggable) API를 제공합니다.
+Akka Coordination은 분산 코디네이션을 위한 도구 모음입니다. 리스(lease) 컴포넌트는 분산 락(distributed lock)을 위한 플러그형(pluggable) API를 제공합니다.
 
 ### 6.2 모듈 정보
 
@@ -1171,7 +1170,7 @@ dependencies {
 
 ### 6.5 리스 사용하기
 
-리스는 세 개의 파라미터로 로드됩니다: 리스 이름, 구현체를 나타내는 설정 위치(configuration location), 그리고 소유자 이름(owner name).
+리스는 세 개의 파라미터로 로드됩니다: 리스 이름, 구현체를 지정하는 설정 위치(configuration location), 소유자 이름(owner name).
 
 #### Scala 사용법
 
@@ -1193,11 +1192,11 @@ CompletionStage<Boolean> released = lease.release();
 
 ### 6.6 리스 연산
 
-**Acquire(획득):** 리스 구현체는 일반적으로 쿠버네티스 API 서버나 주키퍼(Zookeeper) 같은 서드파티 시스템을 통해 구현되므로, 리스를 획득하면 Future/CompletionStage를 반환합니다.
+**Acquire(획득):** 리스 구현체는 일반적으로 쿠버네티스 API 서버나 Zookeeper 같은 서드파티 시스템을 통해 구현되므로, 획득 결과는 Future/CompletionStage로 반환됩니다.
 
-**Check Lease(리스 확인):** 리스를 획득한 후에는 `checkLease`를 호출하여 리스가 여전히 획득된 상태인지 확인할 수 있습니다. 이 호출은 동기(synchronous)이며, 리스가 필요한 연산을 수행하기 전에 호출할 수 있습니다.
+**Check Lease(리스 확인):** 리스를 획득한 후 `checkLease`를 호출하여 리스가 여전히 유효한지 확인할 수 있습니다. 이 호출은 동기(synchronous)이며, 리스가 필요한 연산을 수행하기 전에 호출합니다.
 
-**Reentrant(재진입 가능):** 같은 소유자가 리스를 여러 번 획득하려고 시도하면 성공합니다. 즉, 리스는 재진입 가능(reentrant)합니다.
+**Reentrant(재진입 가능):** 같은 소유자가 리스를 여러 번 획득하려 시도하면 성공합니다. 즉, 리스는 재진입 가능(reentrant)합니다.
 
 ### 6.7 고유한 리스 이름 짓기
 
@@ -1215,13 +1214,13 @@ val owner = Cluster(system).selfAddress.hostPort
 // String owner = Cluster.get(system).selfAddress().hostPort();
 ```
 
-같은 노드에서 여러 개의 리스를 사용하려면 이름에 고유한 무언가를 추가해야 합니다. 예를 들어 클러스터 샤딩(Cluster Sharding)은 리스 이름에 샤드 ID(shard ID)를 포함시킵니다.
+같은 노드에서 여러 개의 리스를 사용하려면 이름에 고유한 식별자를 추가해야 합니다. 예를 들어 Cluster Sharding은 리스 이름에 샤드 ID를 포함시킵니다.
 
 ### 6.8 리스 하트비트(Heartbeat) 설정
 
-리스를 보유한 노드가 크래시(crash)되거나 응답하지 않게 되면, `heartbeat-timeout`은 다른 노드가 리스를 획득할 수 있게 되기까지 걸리는 시간을 의미합니다.
+리스를 보유한 노드가 크래시되거나 응답하지 않게 되면, `heartbeat-timeout`은 다른 노드가 리스를 획득할 수 있을 때까지 걸리는 시간을 의미합니다.
 
-`heartbeat-timeout`은 예상되는 최대 JVM 정지(pause) 시간(가비지 컬렉션 등)보다 길어야 합니다. 그렇지 않으면 원래 소유자가 복구되는 동안 다른 노드가 리스를 획득하여 충돌 구간(conflict window)이 생길 수 있습니다.
+`heartbeat-timeout`은 예상되는 최대 JVM 정지(pause) 시간(가비지 컬렉션 등)보다 길게 설정해야 합니다. 그렇지 않으면 원래 소유자가 복구되는 동안 다른 노드가 리스를 획득하여 충돌 구간(conflict window)이 발생할 수 있습니다.
 
 ### 6.9 리스 구현체
 
@@ -1347,13 +1346,13 @@ docs-lease {
 
 ### 7.1 개요
 
-공식 문서에 따르면, Akka 확장(extension)은 거의 모든 것에 사용할 수 있으며, 전체 ActorSystem에 대해 어떤 클래스의 인스턴스를 단 한 번만 생성하고 어디에서나 접근할 수 있게 해 주는 방법을 제공합니다. 클러스터(Cluster), 직렬화(Serialization), 샤딩(Sharding) 같은 기능들도 그 자체로 Akka 확장으로 구현되어 있습니다.
+Akka 확장(extension)은 매우 다양한 용도로 활용할 수 있으며, ActorSystem 전체에 걸쳐 특정 클래스의 인스턴스를 단 한 번만 생성하고 어디서나 접근할 수 있게 해 줍니다. Cluster, Serialization, Sharding 같은 기능들도 Akka 확장으로 구현되어 있습니다.
 
 대표적인 사용 사례로는 애플리케이션 전반에서 공유되어야 하는 값비싼 데이터베이스 연결 풀(connection pool)을 관리하는 경우가 있습니다.
 
 ### 7.2 핵심 구현 요구사항
 
-문서에는 중요한 경고가 포함되어 있습니다: 확장은 Akka 자체에 후킹(hook)하는 방법이므로, 확장 구현자는 스레드 안전(thread safety)과 논블로킹(non-blocking)을 반드시 보장해야 합니다.
+확장은 Akka 자체에 후킹(hook)하는 방법이므로, 확장 구현자는 스레드 안전(thread safety)과 논블로킹(non-blocking)을 반드시 보장해야 합니다.
 
 ### 7.3 확장 만들기: 단계별 안내
 
@@ -1409,7 +1408,7 @@ public class DatabaseConnectionPool implements Extension {
 }
 ```
 
-확장은 생성자에서 `ActorSystem`을 전달받으므로, 필요하다면 시스템 설정(system settings)으로부터 구성을 로드할 수 있습니다.
+확장은 생성자에서 `ActorSystem`을 전달받으므로, 필요하다면 시스템 설정으로부터 구성을 로드할 수 있습니다.
 
 #### 3단계: ExtensionId 생성
 
@@ -1445,7 +1444,7 @@ public static class Id extends ExtensionId<DatabaseConnectionPool> {
 }
 ```
 
-문서는 Scala에서는 확장(Extension)의 동반 객체(companion object)를 ExtensionId로 두는 것이 좋은 관례라고 언급하며, Java에서는 ExtensionId를 확장의 정적 내부 클래스(static inner class)로 정의하는 것이 좋다고 안내합니다.
+Scala에서는 확장의 동반 객체(companion object)를 ExtensionId로 두는 것이 좋은 관례이며, Java에서는 ExtensionId를 확장의 정적 내부 클래스(static inner class)로 정의하는 것이 권장됩니다.
 
 ### 7.4 확장에 접근하기
 
@@ -1476,7 +1475,7 @@ Behaviors.setup(
 
 ### 7.5 설정으로부터 로드하기
 
-확장은 ActorSystem이 시작될 때 설정에 명시함으로써 즉시(eagerly) 로드되도록 할 수 있습니다. 이는 선택사항이며 일종의 최적화(optimization)에 해당합니다.
+확장은 ActorSystem 시작 시 설정에 명시함으로써 즉시(eagerly) 로드되도록 할 수 있습니다. 이는 선택사항이며 일종의 최적화입니다.
 
 `akka.actor.typed.extensions` 설정 섹션에 완전한 클래스명을 추가합니다.
 
@@ -1494,7 +1493,7 @@ akka.actor.typed {
 }
 ```
 
-이 설정이 없으면 확장은 시작 시점이 아니라 최초 접근(first access) 시점에 인스턴스화되고 등록됩니다.
+이 설정이 없으면 확장은 시작 시점이 아니라 최초 접근 시점에 인스턴스화되고 등록됩니다.
 
 ---
 

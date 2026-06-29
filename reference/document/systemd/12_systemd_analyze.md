@@ -1,6 +1,5 @@
 # systemd-analyze (부팅 분석과 진단)
 
-> 이 문서는 `man systemd-analyze` 의 내용을 한국어로 정리한 것입니다.
 > 원본: https://www.freedesktop.org/software/systemd/man/systemd-analyze.html
 
 ---
@@ -59,7 +58,7 @@ $ systemd-analyze blame
   ...
 ```
 
-가장 오래 걸린 unit부터 정렬. 부팅 단축의 첫 출발점.
+가장 오래 걸린 unit부터 정렬. 부팅 시간 단축 작업의 출발점으로 활용할 수 있습니다.
 
 > 주의: 병렬로 실행되는 unit이 많으므로 blame 시간을 단순히 합치면 실제 부팅 시간과 다릅니다. 진짜 critical path는 `critical-chain` 에서 봐야 합니다.
 
@@ -170,7 +169,7 @@ systemd-analyze security --no-pager nginx.service | less
 
 ## 캘린더 표현식
 
-`OnCalendar=` 표현식이 다음 발화 시점을 어떻게 해석하는지 검증.
+`OnCalendar=` 표현식이 다음 실행 시점을 어떻게 해석하는지 검증.
 
 ```bash
 $ systemd-analyze calendar "Mon..Fri 09:00"
@@ -180,7 +179,7 @@ Normalized form: Mon..Fri *-*-* 09:00:00
        From now: 4 days left
 ```
 
-여러 번의 발화를 미리 보기:
+여러 번의 실행 시점을 미리 보기:
 ```bash
 $ systemd-analyze calendar --iterations=5 "*-*-* 03:00:00"
   Original form: *-*-* 03:00:00
@@ -248,7 +247,7 @@ NAME                       STATUS  CLASS
 EXIT_USER                  217     systemd
 ```
 
-서비스가 이상한 코드로 죽었을 때.
+서비스가 알 수 없는 종료 코드로 실패했을 때 사용.
 
 ### syscall-filter
 

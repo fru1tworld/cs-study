@@ -1,6 +1,5 @@
 # Go 생성 코드 (protoc-gen-go)
 
-> 이 문서는 Protocol Buffers 공식 문서의 "Go Generated Code Guide"를 한국어로 정리한 것입니다.
 > 원본: https://protobuf.dev/reference/go/go-generated/
 > 기준 런타임: `google.golang.org/protobuf` v1.36.x (`protoc-gen-go`)
 
@@ -37,9 +36,9 @@ protoc --go_out=. --go_opt=paths=source_relative addressbook.proto
 
 **출력 경로 모드(`--go_opt=paths=...`)**
 
-- `paths=import` (기본): Go 패키지 import 경로 이름의 디렉터리에 출력 파일을 둡니다.
-- `paths=source_relative`: 입력 파일과 같은 상대 디렉터리에 출력합니다(일반적으로 권장).
-- `module=$PREFIX`: import 경로에서 접두사를 제거해 출력 위치를 정합니다(Go 모듈용).
+- `paths=import` (기본): Go 패키지 import 경로에 해당하는 디렉터리에 출력 파일을 생성합니다.
+- `paths=source_relative`: 입력 파일과 동일한 상대 디렉터리에 출력합니다(일반적으로 권장).
+- `module=$PREFIX`: import 경로에서 지정한 접두사를 제거해 출력 위치를 결정합니다(Go 모듈용).
 
 **M 플래그** — 특정 proto 파일을 Go import 경로로 매핑합니다.
 
@@ -59,9 +58,9 @@ buf 원격 플러그인을 쓸 경우 `protocolbuffers/go:v1.34.2` 같은 플러
 option go_package = "github.com/protocolbuffers/protobuf/examples/go/tutorialpb";
 ```
 
-- 이 import 경로는 다른 proto가 이 파일에 의존할 때 어떤 패키지를 import할지와, 출력 파일 이름에 영향을 줍니다.
+- 이 import 경로는 다른 proto 파일이 이 파일에 의존할 때 import할 패키지와 출력 파일 위치에 영향을 줍니다.
 - 패키지 이름은 import 경로의 마지막 요소에서 자동으로 유도됩니다(위 예시는 `tutorialpb`).
-- `"경로;패키지명"`처럼 세미콜론으로 패키지명을 따로 줄 수도 있으나, 자동 유도를 권장하므로 지양합니다.
+- `"경로;패키지명"` 형식으로 세미콜론을 사용해 패키지명을 명시할 수도 있으나, 자동 유도가 권장되므로 지양합니다.
 
 ---
 
@@ -94,7 +93,7 @@ type Artist struct { /* 필드들 */ }
 func (m *Artist) GetBirthYear() int32 { /* 값 또는 기본값 반환 */ }
 ```
 
-메시지 필드 getter는 수신자가 `nil`이어도 안전하게 동작하므로, 중간 nil 검사 없이 체이닝(chaining)할 수 있습니다.
+메시지 필드 getter는 수신자가 `nil`이어도 안전하게 동작하므로 중간에 nil 검사 없이 체이닝(chaining)할 수 있습니다.
 
 ---
 
@@ -205,7 +204,7 @@ message Profile {
 }
 ```
 
-oneof 필드는 인터페이스 + 래퍼(wrapper) 구조체로 생성됩니다.
+oneof 필드는 인터페이스와 래퍼(wrapper) 구조체로 생성됩니다.
 
 ```go
 type Profile struct {
@@ -219,7 +218,7 @@ type Profile_ImageUrl struct { ImageUrl string }
 type Profile_ImageData struct { ImageData []byte }
 ```
 
-어떤 멤버가 설정됐는지는 타입 스위치로 확인합니다.
+설정된 멤버는 타입 스위치로 확인합니다.
 
 ```go
 switch x := m.Avatar.(type) {
@@ -232,13 +231,13 @@ case nil:
 }
 ```
 
-각 멤버에 대한 getter(`GetImageUrl()` 등)도 생성되며, 미설정 시 제로 값을 반환합니다.
+각 멤버에 대한 getter(`GetImageUrl()` 등)도 함께 생성되며, 미설정 시 제로 값을 반환합니다.
 
 ---
 
 ## 중첩 타입
 
-중첩 메시지는 부모 이름을 접두사로 붙여 생성됩니다.
+중첩 메시지는 부모 메시지 이름을 접두사로 붙여 생성됩니다.
 
 ```proto
 message Artist {
@@ -253,7 +252,7 @@ type Artist_Name struct { /* ... */ }
 
 ## Marshal / Unmarshal
 
-`google.golang.org/protobuf/proto` 패키지로 (역)직렬화합니다.
+`google.golang.org/protobuf/proto` 패키지를 사용해 직렬화·역직렬화합니다.
 
 ```go
 import "google.golang.org/protobuf/proto"
@@ -288,7 +287,7 @@ p := &pb.Person{
 
 ## 서비스
 
-Go 코드 생성기는 **기본적으로 서비스(rpc)에 대한 코드를 생성하지 않습니다.** gRPC 서비스 코드가 필요하면 `protoc-gen-go-grpc` 플러그인을 사용합니다.
+Go 코드 생성기는 **기본적으로 서비스(rpc) 코드를 생성하지 않습니다.** gRPC 서비스 코드가 필요하면 `protoc-gen-go-grpc` 플러그인을 사용합니다.
 
 ```bash
 protoc --go_out=. --go_opt=paths=source_relative \

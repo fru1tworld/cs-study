@@ -1,6 +1,5 @@
 # Alloy 표준 라이브러리
 
-> 이 문서는 Grafana Alloy 공식 문서의 Standard Library 섹션을 한국어로 정리한 것입니다.
 > 원본: https://grafana.com/docs/alloy/latest/reference/stdlib/
 
 ---
@@ -25,7 +24,7 @@
 
 ## 개요
 
-Alloy 표준 라이브러리는 구성 파일에서 표현식 작성에 사용하는 내장 함수/상수.
+Alloy 표준 라이브러리는 구성 파일의 표현식에서 사용할 수 있는 내장 함수와 상수를 제공한다.
 
 ### 사용 위치
 
@@ -61,7 +60,7 @@ url      = sys.env("MIMIR_URL")
 password = sys.env("API_KEY")
 ```
 
-존재하지 않으면 빈 문자열 반환.
+환경 변수가 존재하지 않으면 빈 문자열을 반환한다.
 
 기본값:
 ```alloy
@@ -85,7 +84,7 @@ password = file.contents("/run/secrets/mimir-pass")
 
 #### 자동 리로드
 
-`file.contents()` 결과는 파일 변경 시 자동으로 갱신되어, 의존하는 컴포넌트가 재평가됨. 시크릿 로테이션에 유용.
+`file.contents()` 결과는 파일이 변경되면 자동으로 갱신되며, 이 값에 의존하는 컴포넌트가 재평가된다. 시크릿 로테이션에 유용하다.
 
 #### 사용 예 (TLS)
 
@@ -185,16 +184,13 @@ all_targets = array.concat(
 )
 ```
 
-### `array.combine_maps(maps...)`
+### `array.combine_maps(maps1, maps2, keys)`
 
-여러 맵 결합 (키 충돌 시 나중 것 우선).
+두 `list(map(string))`을 지정한 키 기준으로 결합한다. 실험적(Experimental) 함수.
 
 ```alloy
-labels = array.combine_maps(
-  {env = "prod"},
-  {cluster = sys.env("CLUSTER")},
-  {hostname = constants.hostname},
-)
+// map 리스트 두 개를 "instance" 키를 기준으로 결합
+combined = array.combine_maps(list1, list2, ["instance"])
 ```
 
 ---
@@ -245,7 +241,7 @@ json = encoding.to_json({a = 1, b = "hello"})
 
 ### `convert.nonsensitive(secret)`
 
-`secret` 타입을 일반 문자열로 (UI/로그에 표시될 수 있음, 신중히).
+`secret` 타입을 일반 문자열로 변환한다. UI나 로그에 노출될 수 있으므로 신중하게 사용해야 한다.
 
 ```alloy
 // 일반적으로 권장하지 않음
@@ -260,7 +256,7 @@ visible_pass = convert.nonsensitive(sys.env("PASSWORD"))
 
 ## `coalesce`
 
-여러 값 중 비어있지 않은 첫 번째 반환.
+여러 값 중 비어 있지 않은 첫 번째 값을 반환한다.
 
 ```alloy
 url = coalesce(
@@ -270,13 +266,13 @@ url = coalesce(
 )
 ```
 
-null, 빈 문자열, 빈 리스트/맵을 빈 값으로 간주.
+null, 빈 문자열, 빈 리스트, 빈 맵을 빈 값으로 간주한다.
 
 ---
 
 ## `concat`
 
-리스트 결합 (alias로 `array.concat`).
+리스트를 결합한다 (`array.concat`의 전역 alias).
 
 ```alloy
 all = concat(list1, list2, list3)
@@ -307,13 +303,11 @@ JSONPath 문법:
 
 ## `format`
 
-문자열 포맷팅 (alias).
+문자열 포맷팅 함수로, `string.format`의 전역 alias다.
 
 ```alloy
 msg = format("server %s on port %d", host, port)
 ```
-
-`string.format`과 동일.
 
 ---
 
@@ -343,7 +337,7 @@ external_labels = {
 
 ### `to_lower(s)` / `to_upper(s)`
 
-전역 alias (`string.to_lower` / `string.to_upper`).
+`string.to_lower` / `string.to_upper`의 전역 alias.
 
 ### 산술 연산자
 
@@ -451,19 +445,18 @@ prometheus.remote_write "mimir" {
 }
 ```
 
-비밀 변경 시 자동 리로드.
+시크릿 파일이 변경되면 자동으로 리로드된다.
 
 ### 4. 라벨 동적 생성
 
 ```alloy
-external_labels = array.combine_maps(
-  {
-    cluster  = sys.env("CLUSTER"),
-    region   = sys.env("REGION"),
-    hostname = constants.hostname,
-  },
-  encoding.from_json(file.contents("/etc/extra-labels.json")),
-)
+// array.combine_maps는 두 list(map(string))을 지정 키로 결합하는 함수다.
+// 단순 맵 병합에는 alloy의 맵 리터럴 병합 표현식을 사용한다.
+external_labels = {
+  cluster  = sys.env("CLUSTER"),
+  region   = sys.env("REGION"),
+  hostname = constants.hostname,
+}
 ```
 
 ### 5. 조건부 컴포넌트

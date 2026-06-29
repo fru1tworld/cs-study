@@ -1,6 +1,5 @@
 # BPF Helper 함수
 
-> 이 문서는 BPF helper 함수의 카테고리와 주요 helper들을 정리한 것입니다.
 > 원본: https://docs.kernel.org/bpf/helpers.html , `man 7 bpf-helpers`
 
 ---
@@ -176,7 +175,7 @@ u64 ts = bpf_ktime_get_ns();
 
 ### bpf_ktime_get_coarse_ns
 
-5.10+. 빠르지만 jiffy 정밀도. 많이 호출하는 경우 유리.
+5.10+. 빠르지만 jiffy 정밀도. 호출 빈도가 높을 때 유리.
 
 ### bpf_jiffies64
 
@@ -321,13 +320,13 @@ bpf_send_signal(SIGKILL);          // 현재 태스크에 시그널
 
 ## Kfunc (Kernel Function)
 
-helper와 별개로 5.x 후반에 도입된 메커니즘. **커널 함수를 직접 BPF에서 호출** 할 수 있게 노출.
+helper와 별개로 5.x 후반에 도입된 메커니즘. **커널 함수를 직접 BPF에서 호출**할 수 있게 노출.
 
 ```c
 extern int bpf_dynptr_from_skb(struct sk_buff *skb, ...) __ksym;
 ```
 
-helper는 커널 ABI가 안정적이지만 새로 추가하기 까다로움. kfunc는 더 유연하지만 ABI 보장 약함.
+helper는 커널 ABI가 안정적이지만 새로 추가하기가 까다롭고, kfunc는 더 유연하지만 ABI 보장이 약하다.
 
 지원 kfunc 목록:
 ```bash

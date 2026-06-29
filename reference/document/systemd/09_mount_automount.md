@@ -1,6 +1,5 @@
 # Mount와 Automount Unit
 
-> 이 문서는 `man systemd.mount` , `man systemd.automount` 의 내용을 한국어로 정리한 것입니다.
 > 원본: https://www.freedesktop.org/software/systemd/man/systemd.mount.html , https://www.freedesktop.org/software/systemd/man/systemd.automount.html
 
 ---
@@ -13,13 +12,13 @@
 4. [Automount unit](#automount-unit)
 5. [Idle Timeout](#idle-timeout)
 6. [실전 예제](#실전-예제)
-7. [참고 자료</](#참고-자료)
+7. [참고 자료](#참고-자료)
 
 ---
 
 ## Mount unit
 
-`.mount` unit은 파일시스템 마운트를 표현합니다. unit 이름은 마운트 지점을 이스케이프한 것 — 슬래시는 `-` 로, 다른 특수 문자는 `\xNN` 으로.
+`.mount` unit은 파일시스템 마운트를 표현합니다. unit 이름은 마운트 지점을 이스케이프한 형태로, 슬래시는 `-`로, 그 외 특수 문자는 `\xNN` 형식으로 변환됩니다.
 
 | 마운트 지점 | unit 이름 |
 | --- | --- |
@@ -120,14 +119,14 @@ systemd는 다음을 자동으로 추가합니다:
 
 ## Automount unit
 
-`.automount` unit은 마운트 지점을 **참조하는 순간** 마운트를 트리거합니다. 사용하지 않을 때는 마운트 해제 — NFS나 CIFS처럼 사용 빈도가 낮은 마운트에 유용.
+`.automount` unit은 마운트 지점에 **접근하는 순간** 마운트를 트리거합니다. 사용하지 않는 동안에는 마운트가 해제되므로, NFS나 CIFS처럼 사용 빈도가 낮은 마운트에 유용합니다.
 
 작동 방식:
-- automount만 부팅 시 활성화
-- 누군가 마운트 지점에 접근 (`ls /srv/data`)
+- automount unit만 부팅 시 활성화
+- 프로세스가 마운트 지점에 접근 (`ls /srv/data`)
 - 커널이 systemd에 알림
 - systemd가 mount unit 활성화
-- 마운트 완료 후 원래 호출 진행
+- 마운트 완료 후 원래 요청 처리 재개
 
 ```ini
 # /etc/systemd/system/srv-data.automount
@@ -154,7 +153,7 @@ WantedBy=multi-user.target
 TimeoutIdleSec=10min
 ```
 
-마지막 접근 후 이 시간이 지나면 자동 unmount. 0 이면 비활성화 (수동 unmount만).
+마지막 접근 후 이 시간이 지나면 자동으로 unmount합니다. `0`으로 설정하면 idle timeout을 비활성화합니다(수동 unmount만 가능).
 
 NFS 마운트가 많은 서버에서 idle timeout을 짧게 두면 메모리/소켓 부담이 줄어듭니다.
 

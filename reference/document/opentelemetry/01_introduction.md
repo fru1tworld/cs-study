@@ -1,6 +1,5 @@
 # OpenTelemetry 소개
 
-> 이 문서는 OpenTelemetry 공식 문서와 CNCF 자료를 한국어로 정리한 것입니다.
 > 원본: https://opentelemetry.io/docs/ , https://github.com/open-telemetry/opentelemetry-specification
 
 ---
@@ -44,11 +43,11 @@ OpenTelemetry는 "**관측 가능성(Observability)을 위한 USB-C**"라고 비
 
 ### 2. 신호 분리 문제
 
-Trace, Metric, Log가 서로 다른 라이브러리·포맷·전송 채널을 사용해 **상관관계를 잃어버림**. 같은 요청에 대한 trace와 log를 연결하려면 수동으로 trace_id를 주입해야 했습니다.
+Trace, Metric, Log가 서로 다른 라이브러리·포맷·전송 채널을 사용해 **상관관계를 추적하기 어려웠습니다**. 같은 요청의 trace와 log를 연결하려면 trace_id를 수동으로 주입해야 했습니다.
 
 ### 3. 표준의 부재
 
-용어가 통일되지 않음:
+용어가 통일되지 않았습니다:
 - "request"인가 "span"인가
 - "service.name"인가 "app"인가 "process"인가
 - HTTP 상태 코드를 attribute로 어떻게 기록할 것인가
@@ -95,7 +94,7 @@ OpenTelemetry는 다음 레이어로 구성됩니다:
 
 ### 1. Specification
 
-언어 중립적 사양. 모든 구현이 따라야 하는 기준.
+언어 중립적 사양으로, 모든 구현이 따라야 하는 기준입니다.
 - **API Specification** — 사용자 코드가 호출하는 인터페이스
 - **SDK Specification** — API의 표준 구현 동작
 - **Data Specification** — 데이터 모델, OTLP 포맷
@@ -127,14 +126,14 @@ API의 구체적 구현. Sampling, Batching, Export 등 실제 동작을 담당.
 
 ### 5. Collector
 
-벤더 중립적 텔레메트리 파이프라인. 별도의 프로세스/사이드카로 동작.
+벤더 중립적 텔레메트리 파이프라인으로, 별도의 프로세스 또는 사이드카로 동작합니다.
 - 다양한 포맷 수신 (OTLP, Jaeger, Zipkin, Prometheus, Fluentd, ...)
 - 필터링, 가공, 샘플링
 - 다양한 백엔드로 전송
 
 ### 6. OTLP
 
-**OpenTelemetry Protocol**. 시그널을 전송하는 표준 와이어 프로토콜.
+**OpenTelemetry Protocol**. 텔레메트리 시그널을 전송하는 표준 와이어 프로토콜입니다.
 - gRPC (포트 4317) 또는 HTTP/protobuf (포트 4318)
 - Protobuf 기반 데이터 모델
 
@@ -209,7 +208,7 @@ OTLP를 직접 수신하는 백엔드:
 
 ## 학습 출발점
 
-OpenTelemetry는 표면적이 넓어 단계적 접근이 효율적입니다.
+OpenTelemetry는 다루는 범위가 넓기 때문에 단계적으로 접근하는 것이 효율적입니다.
 
 ### 1단계: 개념 이해
 

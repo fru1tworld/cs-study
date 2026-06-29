@@ -1,6 +1,5 @@
 # Mimir 프로덕션 운영
 
-> 이 문서는 Grafana Mimir 공식 문서의 "Run in production" 섹션을 한국어로 정리한 것입니다.
 > 원본: https://grafana.com/docs/mimir/latest/manage/run-production-environment/
 
 ---
@@ -171,7 +170,7 @@ ingester:
           topologyKey: kubernetes.io/hostname
 ```
 
-같은 노드에 여러 Ingester 배치 방지.
+같은 노드에 Ingester가 여러 개 배치되는 것을 방지한다.
 
 ### PodDisruptionBudget
 
@@ -522,7 +521,7 @@ ingester:
       tag: 2.11.0-rc1
 ```
 
-검증 후 전체 롤아웃.
+검증이 완료되면 전체 롤아웃을 진행한다.
 
 ### Breaking Changes
 
@@ -570,7 +569,7 @@ curl -X POST http://mimir-ingester:9009/ingester/ring/forget?id=<unhealthy-insta
 
 ### Object Storage
 
-가장 중요한 백업.
+가장 중요한 백업 대상이다.
 
 #### S3 Cross-Region Replication
 
@@ -619,7 +618,7 @@ GitOps:
 - Prometheus가 양쪽으로 push
 - Querier가 두 리전 페더레이션
 
-복잡하지만 가용성 최고.
+구성이 복잡하지만 가용성이 가장 높다.
 
 ---
 
@@ -682,4 +681,4 @@ GitOps:
 )
 ```
 
-소진 추세 대시보드로 시각화 → 변경 결정 지원.
+소진 추세를 대시보드로 시각화하여 변경 결정에 활용한다.
