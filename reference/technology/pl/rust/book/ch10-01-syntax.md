@@ -187,7 +187,7 @@ impl<X1, Y1> Point<X1, Y1> {
 
 ### 단형화 (Monomorphization)
 
-Rust는 컴파일 타임에 **단형화(monomorphization)**를 수행합니다. 이는 제네릭 코드를 구체적인 타입으로 채워 특정 코드로 변환하는 과정입니다.
+Rust는 컴파일 타임에 **단형화**(monomorphization)를 수행합니다. 이는 제네릭 코드를 구체적인 타입으로 채워 특정 코드로 변환하는 과정입니다.
 
 **제네릭 코드:**
 

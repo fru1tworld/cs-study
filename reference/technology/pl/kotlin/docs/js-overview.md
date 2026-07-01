@@ -4,7 +4,7 @@
 
 ## Kotlin/JS란?
 
-**Kotlin/JavaScript (Kotlin/JS)**는 Kotlin 코드, Kotlin 표준 라이브러리 및 호환 가능한 의존성을 JavaScript로 트랜스파일할 수 있게 해줍니다. 이를 통해 JavaScript를 지원하는 모든 환경에서 Kotlin 애플리케이션을 실행할 수 있습니다.
+**Kotlin/JavaScript **(Kotlin/JS)는 Kotlin 코드, Kotlin 표준 라이브러리 및 호환 가능한 의존성을 JavaScript로 트랜스파일할 수 있게 해줍니다. 이를 통해 JavaScript를 지원하는 모든 환경에서 Kotlin 애플리케이션을 실행할 수 있습니다.
 
 주요 기능:
 - **Kotlin Multiplatform Gradle 플러그인** (`kotlin.multiplatform`)을 통해 구성 및 관리
@@ -75,7 +75,7 @@ Kotlin으로 비즈니스 로직을 한 번 작성하고 각 플랫폼에서 네
 
 ## 커뮤니티 및 지원
 
-커뮤니티 및 Kotlin/JS 팀과 연결하려면 공식 [Kotlin Slack](https://surveys.jetbrains.com/s3/kotlin-slack-sign-up)의 **[#javascript 채널](https://kotlinlang.slack.com/archives/C0B8L3U69)**에 참여하세요.
+커뮤니티 및 Kotlin/JS 팀과 연결하려면 공식 [Kotlin Slack](https://surveys.jetbrains.com/s3/kotlin-slack-sign-up)의 **[#javascript 채널]**(https://kotlinlang.slack.com/archives/C0B8L3U69)에 참여하세요.
 
 ---
 

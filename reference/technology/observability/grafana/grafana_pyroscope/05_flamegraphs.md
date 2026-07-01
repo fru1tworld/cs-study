@@ -111,7 +111,7 @@ service_name="checkout", deployment="v1.1"
 
 ## Sandwich 뷰
 
-특정 함수에 집중하여 **호출자(callers)**와 **피호출자(callees)**를 한 화면에 보여줍니다.
+특정 함수에 집중하여 **호출자**(callers)와 **피호출자**(callees)를 한 화면에 보여줍니다.
 
 ```
 ┌──────── 호출자(Callers) - Reverse ────────┐

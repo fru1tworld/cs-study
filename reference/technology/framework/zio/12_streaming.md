@@ -117,25 +117,25 @@ ZStream.fromFileName("file.txt")
 
 ## 2. 세 가지 핵심 추상화: ZStream, ZSink, ZPipeline(Core Abstractions)
 
-ZIO 스트리밍은 세 가지 핵심 추상화로 구성됩니다. 비유하면 파이프(pipe)와 같습니다. **ZStream은 값을 생산하는 소스(source)**, **ZSink은 값을 소비하는 수용기(receptacle)**, **ZPipeline은 값을 변환하는 변환기(transformer)**입니다.
+ZIO 스트리밍은 세 가지 핵심 추상화로 구성됩니다. 비유하면 파이프(pipe)와 같습니다. **ZStream은 값을 생산하는 소스(source)**, **ZSink은 값을 소비하는 수용기(receptacle)**, **ZPipeline은 값을 변환하는 변환기**(transformer)입니다.
 
 ### ZStream (소스 / 생산자)
 
-- 값을 **생산(produce)**하는 소스 역할을 합니다.
+- 값을 **생산**(produce)하는 소스 역할을 합니다.
 - `ZIO[R, E, A]`와 유사하지만, 단 하나가 아니라 0개 이상의 요소를 생산합니다.
 - "비어 있지 않은(non-empty) `ZStream`이라는 것은 존재하지 않습니다. 모든 `ZStream`은 비어 있으며, 임의 개수의 `A`를 생산할 수 있습니다."
 - 극도로 게으르며(lazy), 소비하지 않고서는 비어 있는지조차 확인할 수 없습니다.
 
 ### ZSink (수용기 / 소비자)
 
-- 값을 **소비(consume)**하는 수용기 역할을 합니다.
+- 값을 **소비**(consume)하는 수용기 역할을 합니다.
 - "어떤 타입의 값을 소비하고, 작업이 끝나면 종료됩니다." 파서(parser)나 데이터베이스에 비유할 수 있습니다.
 - "범주론(category theory)에서 스트림과 싱크는 쌍대(dual) 관계입니다. 하나는 값을 생산하고, 다른 하나는 값을 소비합니다."
 - 합성(compositional) 가능하고 변환(transformable) 가능합니다.
 
 ### ZPipeline (변환기)
 
-- 값을 **변환(transform)**하는 변환기 역할을 합니다.
+- 값을 **변환**(transform)하는 변환기 역할을 합니다.
 - 타입 `A`에서 타입 `B`로 상태를 가진(stateful) 변환을 수행합니다.
 - 사용 사례: 분할/카운팅(예: 줄을 단어로), 코덱(codec)(예: 바이트 → JSON → 사용자 정의 타입).
 - 스트림 위에 쌓아 요소 타입을 바꾸거나, 싱크 위에 쌓아 입력 타입을 바꿀 수 있습니다.

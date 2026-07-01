@@ -69,13 +69,13 @@ type IO[E, A]   = ZIO[Any, E, A]            // 환경 없음, 커스텀 오류
 
 각 별칭의 의미는 다음과 같습니다.
 
-- **UIO[A]** — `ZIO[Any, Nothing, A]`. 특정 환경을 요구하지 않고, 실패할 수 없으며(cannot fail), 타입 `A`의 값으로 성공하는 효과입니다. 문서는 이를 **예외 없는 효과(unexceptional effect)**라고 부릅니다. Scala에서 `Nothing`은 거주 불가능한 타입(uninhabitable type)이므로, `UIO[A]` 값은 "오류를 낼 수 없는(infallible)" 효과로 간주됩니다. 즉, `A`를 산출할 수는 있어도 절대 실패하지 않습니다.
+- **UIO[A]** — `ZIO[Any, Nothing, A]`. 특정 환경을 요구하지 않고, 실패할 수 없으며(cannot fail), 타입 `A`의 값으로 성공하는 효과입니다. 문서는 이를 **예외 없는 효과**(unexceptional effect)라고 부릅니다. Scala에서 `Nothing`은 거주 불가능한 타입(uninhabitable type)이므로, `UIO[A]` 값은 "오류를 낼 수 없는(infallible)" 효과로 간주됩니다. 즉, `A`를 산출할 수는 있어도 절대 실패하지 않습니다.
 - **URIO[R, A]** — `ZIO[R, Nothing, A]`. 환경 `R`을 요구하지만 실패할 수 없는 효과입니다.
 - **Task[A]** — `ZIO[Any, Throwable, A]`. 환경을 요구하지 않으며, 오류 타입이 `Throwable`로 고정된 효과입니다.
 - **RIO[R, A]** — `ZIO[R, Throwable, A]`. 환경 `R`을 요구하고, 오류 타입이 `Throwable`로 고정된 효과입니다.
 - **IO[E, A]** — `ZIO[Any, E, A]`. 환경을 요구하지 않으며, 커스텀 오류 타입 `E`를 가지는 효과입니다.
 
-`Task`와 `RIO`는 오류 파라미터가 `Throwable`로 고정된 **예외적 효과(exceptional effect)**이고, `UIO`와 `URIO`는 오류 파라미터가 `Nothing`으로 고정되어 실패할 수 없음을 나타내는 **예외 없는 효과(unexceptional effect)**입니다.
+`Task`와 `RIO`는 오류 파라미터가 `Throwable`로 고정된 **예외적 효과**(exceptional effect)이고, `UIO`와 `URIO`는 오류 파라미터가 `Nothing`으로 고정되어 실패할 수 없음을 나타내는 **예외 없는 효과**(unexceptional effect)입니다.
 
 ### 2.1 UIO 예제(Fibonacci)
 
@@ -99,7 +99,7 @@ def fib(n: Int): UIO[Int] =
 
 ### 2.2 설계 철학: 최소 권한의 원칙(Principle of Least Power)
 
-문서는 **최소 권한의 원칙(Principle of Least Power)**을 강조합니다. 더 약한(덜 강력한) 효과 타입으로 충분하다면 범용 `ZIO` 타입 대신 가장 적합한 특화된 타입 별칭을 사용하도록 권장합니다. 예를 들어 실패하지 않는 효과라면 `Task`나 `ZIO`보다 `UIO`를 사용하는 것이 타입으로 더 많은 정보를 표현합니다.
+문서는 **최소 권한의 원칙**(Principle of Least Power)을 강조합니다. 더 약한(덜 강력한) 효과 타입으로 충분하다면 범용 `ZIO` 타입 대신 가장 적합한 특화된 타입 별칭을 사용하도록 권장합니다. 예를 들어 실패하지 않는 효과라면 `Task`나 `ZIO`보다 `UIO`를 사용하는 것이 타입으로 더 많은 정보를 표현합니다.
 
 ---
 
@@ -646,7 +646,7 @@ val noneExit: Exit[String, Option[Nothing]] = Exit.none
 
 `Cause` 데이터 타입은 ZIO의 내부 오류 표현 메커니즘(underlying error representation mechanism)입니다. 공식 문서는 다음과 같이 설명합니다.
 
-> "ZIO는 실패의 전체 이야기(full story of failure)를 저장하기 위해 `Cause[E]`를 사용하므로, 그 오류 모델은 **무손실(lossless)**이다."
+> "ZIO는 실패의 전체 이야기(full story of failure)를 저장하기 위해 `Cause[E]`를 사용하므로, 그 오류 모델은 **무손실**(lossless)이다."
 
 즉, ZIO는 예기치 않은 오류(unexpected errors), 스택 트레이스(stack traces), 실행 추적(execution traces), 파이버 인터럽트 원인(fiber interruption causes) 등 실패와 관련된 모든 정보를 보존합니다. `ZIO[R, E, A]`의 오류 타입 `E`는 다형적(polymorphic)이지만, `Cause` 데이터 구조는 임의의 오류 타입만으로는 담을 수 없는 세부 정보까지 포착합니다.
 

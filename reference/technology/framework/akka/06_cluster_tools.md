@@ -21,7 +21,7 @@
 
 ### 개요와 목적
 
-클러스터 샤딩(Cluster Sharding)은 액터(actor)들을 클러스터의 여러 노드(node)에 분산 배치하면서도, 상호작용 시에는 물리적 위치를 신경 쓰지 않고 **논리적 식별자(logical identifier)**만으로 다룰 수 있게 해주는 기능이다. 공식 문서에 따르면, 샤딩은 "여러 노드에 액터를 분산시키되, 그 물리적 위치를 신경 쓰지 않고 논리적 식별자로 상호작용하고 싶을 때 유용하다."
+클러스터 샤딩(Cluster Sharding)은 액터(actor)들을 클러스터의 여러 노드(node)에 분산 배치하면서도, 상호작용 시에는 물리적 위치를 신경 쓰지 않고 **논리적 식별자**(logical identifier)만으로 다룰 수 있게 해주는 기능이다. 공식 문서에 따르면, 샤딩은 "여러 노드에 액터를 분산시키되, 그 물리적 위치를 신경 쓰지 않고 논리적 식별자로 상호작용하고 싶을 때 유용하다."
 
 샤딩은 주로 **상태를 가진 "엔티티(entity)" 액터**에 사용된다. 이러한 엔티티는 도메인 주도 설계(Domain-Driven Design, DDD)에서의 애그리거트 루트(aggregate root)인 경우가 많다. 상태를 가진 액터가 너무 많아 단일 머신의 자원으로는 감당하기 어려울 때 적합하다. 반대로 상태를 가진 액터가 소수라면, 더 단순한 클러스터 싱글톤(Cluster Singleton)을 사용하는 편이 낫다.
 
@@ -57,7 +57,7 @@ Entity.of(typeKey, ctx -> entity.create(ctx.getEntityId()))
 
 #### 이벤트 소싱과 함께 사용
 
-엔티티는 일반적으로 영속(persistent) 상태를 위해 `EventSourcedBehavior`를 사용한다. Akka Persistence의 **단일 작성자 원칙(single-writer principle)**은 동일한 `PersistenceId`를 가진 영속 액터가 오직 하나만 활성화되도록 보장한다. 클러스터 샤딩은 동일한 ID를 가진 엔티티가 클러스터 전체에서 한 번만 실행되도록 보장함으로써 이 원칙을 충족시킨다.
+엔티티는 일반적으로 영속(persistent) 상태를 위해 `EventSourcedBehavior`를 사용한다. Akka Persistence의 **단일 작성자 원칙**(single-writer principle)은 동일한 `PersistenceId`를 가진 영속 액터가 오직 하나만 활성화되도록 보장한다. 클러스터 샤딩은 동일한 ID를 가진 엔티티가 클러스터 전체에서 한 번만 실행되도록 보장함으로써 이 원칙을 충족시킨다.
 
 #### EntityRef 직렬화
 
@@ -113,7 +113,7 @@ akka.cluster.sharding.passivation.default-idle-strategy.idle-entity.timeout
 - **LFU (Least Frequently Used, 최소 빈도 사용)**: 가장 인기 없는 엔티티를 패시베이션한다. 빈도(frequency)가 중요한 워크로드에 좋다.
 - **동적 에이징(Dynamic Aging)을 적용한 LFU**: 인기도 변화에 적응한다.
 
-**복합 전략(Composite Strategy)**은 어드미션 윈도우(새로운 엔티티를 한 정책으로 추적)와 메인 영역(main area, 자리잡은 엔티티를 다른 정책으로 추적)을 결합하며, 선택적으로 빈도 스케치(frequency-sketch) 어드미션 필터를 둔다. 어드미션 윈도우 옵티마이저(optimizer)는 힐 클라이밍(hill-climbing) 기법으로 윈도우 크기를 동적으로 조정한다.
+**복합 전략**(Composite Strategy)은 어드미션 윈도우(새로운 엔티티를 한 정책으로 추적)와 메인 영역(main area, 자리잡은 엔티티를 다른 정책으로 추적)을 결합하며, 선택적으로 빈도 스케치(frequency-sketch) 어드미션 필터를 둔다. 어드미션 윈도우 옵티마이저(optimizer)는 힐 클라이밍(hill-climbing) 기법으로 윈도우 크기를 동적으로 조정한다.
 
 커스텀 전략은 설정 섹션을 만들고 `strategy` 설정으로 선택하여 구성한다.
 
@@ -330,7 +330,7 @@ SingletonActor(behavior, "name").withStopMessage(ShutdownCommand)
 
 ### 목적과 핵심 개념
 
-Akka 분산 데이터(Distributed Data)는 키-값(key-value) 저장소 인터페이스를 통해 Akka 클러스터의 노드 간에 데이터를 공유할 수 있게 해준다. **충돌 없는 복제 데이터 타입(Conflict-Free Replicated Data Types, CRDT)**을 구현하므로, 조율(coordination) 없이도 어떤 노드에서든 업데이트가 가능하다. 공식 문서에 따르면, 데이터는 "최종적으로 일관되며(eventually consistent), 낮은 지연(latency)으로 높은 읽기/쓰기 가용성(파티션 내성, partition tolerance)을 제공하도록 설계되었다."
+Akka 분산 데이터(Distributed Data)는 키-값(key-value) 저장소 인터페이스를 통해 Akka 클러스터의 노드 간에 데이터를 공유할 수 있게 해준다. **충돌 없는 복제 데이터 타입**(Conflict-Free Replicated Data Types, CRDT)을 구현하므로, 조율(coordination) 없이도 어떤 노드에서든 업데이트가 가능하다. 공식 문서에 따르면, 데이터는 "최종적으로 일관되며(eventually consistent), 낮은 지연(latency)으로 높은 읽기/쓰기 가용성(파티션 내성, partition tolerance)을 제공하도록 설계되었다."
 
 ### 레플리케이터 패턴 (Replicator Pattern)
 

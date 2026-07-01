@@ -17,7 +17,7 @@
 
 ## 프로파일이란
 
-**프로파일(Profile)**은 짧은 시간 동안 애플리케이션이 어디서 어떻게 자원을 사용했는지를 **콜 스택(call stack)** 의 집합으로 표현한 데이터입니다.
+**프로파일**(Profile)은 짧은 시간 동안 애플리케이션이 어디서 어떻게 자원을 사용했는지를 **콜 스택(call stack)** 의 집합으로 표현한 데이터입니다.
 
 기본 단위는 다음과 같습니다.
 
@@ -59,7 +59,7 @@ Profile {
 
 ### 라벨 (Labels)
 
-Pyroscope는 pprof의 표준 필드에 추가로 **외부 라벨(external labels)**을 사용해 시리즈를 구분합니다.
+Pyroscope는 pprof의 표준 필드에 추가로 **외부 라벨**(external labels)을 사용해 시리즈를 구분합니다.
 
 ```
 service_name="checkout"

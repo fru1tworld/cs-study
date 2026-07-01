@@ -1244,7 +1244,7 @@ object MainApp extends ZIOAppDefault {
 
 ## 20. 에러 누적(Error Accumulation)
 
-ZIO의 순차 컴비네이터인 `zip`, `foreach`는 빠른 실패(fail-fast) 에러 처리를 사용합니다. 그러나 일부 연산자는 첫 실패에서 멈추지 않고 **에러를 누적(accumulate)**합니다.
+ZIO의 순차 컴비네이터인 `zip`, `foreach`는 빠른 실패(fail-fast) 에러 처리를 사용합니다. 그러나 일부 연산자는 첫 실패에서 멈추지 않고 **에러를 누적**(accumulate)합니다.
 
 ### 20.1 ZIO#validate
 
@@ -1441,7 +1441,7 @@ res.debug
 
 ### 세미링 구조(Semiring Structure)
 
-이 구현은 함수형 프로그래밍의 자료 구조인 **세미링(semiring)**을 사용하여, 모든 실패 정보를 보존하면서 순차(`++`) 및 병렬(`&&`) 에러 합성을 가능하게 합니다.
+이 구현은 함수형 프로그래밍의 자료 구조인 **세미링**(semiring)을 사용하여, 모든 실패 정보를 보존하면서 순차(`++`) 및 병렬(`&&`) 에러 합성을 가능하게 합니다.
 
 ### 주요 메서드
 
@@ -1456,7 +1456,7 @@ res.debug
 
 ### 22.1 에러 모델링에 대수적 데이터 타입(ADT) 사용하기
 
-핵심 권고는 "같은 도메인(domain) 또는 하위 도메인(subdomain) 내에서 에러를 모델링할 때 **대수적 데이터 타입(algebraic data types, ADTs)**을 사용하라"는 것입니다.
+핵심 권고는 "같은 도메인(domain) 또는 하위 도메인(subdomain) 내에서 에러를 모델링할 때 **대수적 데이터 타입**(algebraic data types, ADTs)을 사용하라"는 것입니다.
 
 봉인된 트레이트(sealed trait)가 이 접근의 기반이 됩니다.
 

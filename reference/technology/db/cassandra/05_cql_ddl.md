@@ -114,7 +114,7 @@ CREATE KEYSPACE excalibur
 
 위 예제는 `DC1` 데이터센터에 1개의 복제본을, `DC2` 데이터센터에 3개의 복제본을 둡니다.
 
-`NetworkTopologyStrategy`는 새로운 데이터센터가 추가될 때 복제 계수를 자동으로 확장(auto-expansion)하는 기능을 제공합니다. 또한 **일시적 복제(transient replication)**를 지원하여 `'DC1': '3/1'`과 같은 형식으로 지정할 수 있습니다. 여기서 `3`은 전체 복제본 수이고, `1`은 그 중 일시적 복제본(transient replica) 수를 의미합니다.
+`NetworkTopologyStrategy`는 새로운 데이터센터가 추가될 때 복제 계수를 자동으로 확장(auto-expansion)하는 기능을 제공합니다. 또한 **일시적 복제**(transient replication)를 지원하여 `'DC1': '3/1'`과 같은 형식으로 지정할 수 있습니다. 여기서 `3`은 전체 복제본 수이고, `1`은 그 중 일시적 복제본(transient replica) 수를 의미합니다.
 
 ### durable_writes
 
@@ -254,7 +254,7 @@ CREATE TABLE loads (
 
 ### 기본 키(Primary Key)
 
-모든 테이블 정의는 반드시 **하나의 기본 키(PRIMARY KEY)**를 정의해야 하며, 단 하나만 가질 수 있습니다. 기본 키는 두 부분으로 구성됩니다.
+모든 테이블 정의는 반드시 **하나의 기본 키**(PRIMARY KEY)를 정의해야 하며, 단 하나만 가질 수 있습니다. 기본 키는 두 부분으로 구성됩니다.
 
 ```
 primary_key::= partition_key [ ',' clustering_columns ]
@@ -265,13 +265,13 @@ primary_key::= partition_key [ ',' clustering_columns ]
 
 ### 파티션 키(Partition Key)와 클러스터링 컬럼(Clustering Columns)
 
-**파티션 키(Partition Key)**는 해당 행(들)이 어느 노드에 저장될지를 결정합니다. 파티션 키는 단일 컬럼일 수도 있고, 여러 컬럼을 괄호로 묶은 **복합 파티션 키(composite partition key)**일 수도 있습니다. 동일한 파티션 키 값을 가진 행들은 같은 파티션(partition)에 저장됩니다.
+**파티션 키**(Partition Key)는 해당 행(들)이 어느 노드에 저장될지를 결정합니다. 파티션 키는 단일 컬럼일 수도 있고, 여러 컬럼을 괄호로 묶은 **복합 파티션 키**(composite partition key)일 수도 있습니다. 동일한 파티션 키 값을 가진 행들은 같은 파티션(partition)에 저장됩니다.
 
 ```
 partition_key::= column_name  | '(' column_name ( ',' column_name )* ')'
 ```
 
-**클러스터링 컬럼(Clustering Columns)**은 파티션 키 뒤에 위치하며, 파티션 내에서 행들의 정렬 순서(ordering)를 정의합니다. 클러스터링 컬럼은 행에 유일성(uniqueness)을 추가하며, 효율적인 범위 쿼리(range query)를 가능하게 합니다.
+**클러스터링 컬럼**(Clustering Columns)은 파티션 키 뒤에 위치하며, 파티션 내에서 행들의 정렬 순서(ordering)를 정의합니다. 클러스터링 컬럼은 행에 유일성(uniqueness)을 추가하며, 효율적인 범위 쿼리(range query)를 가능하게 합니다.
 
 테이블의 클러스터링 컬럼은 해당 테이블 파티션의 클러스터링 순서(clustering order)를 정의합니다. 주어진 파티션 내에서 모든 행은 이 클러스터링 순서에 따라 정렬됩니다.
 

@@ -28,12 +28,12 @@
 
 ## 개요
 
-CQL은 데이터를 변환하는 데 사용할 수 있는 여러 종류의 **함수(function)**를 지원합니다. 함수는 크게 두 가지로 나뉩니다.
+CQL은 데이터를 변환하는 데 사용할 수 있는 여러 종류의 **함수**(function)를 지원합니다. 함수는 크게 두 가지로 나뉩니다.
 
 - **스칼라 함수(scalar functions)**: 입력으로 받은 값을 새로운 값으로 변환합니다. 결과 집합의 각 행(row)마다 평가됩니다.
 - **집계 함수(aggregate functions)**: 여러 행에 걸쳐 값을 집계하여 단일 결과 값을 만들어 냅니다.
 
-각 분류에는 Cassandra가 기본으로 제공하는 **내장 함수(native function)**와, 사용자가 직접 코드를 작성하여 정의하는 **사용자 정의 함수(user-defined function, UDF)** 및 **사용자 정의 집계(user-defined aggregate, UDA)**가 존재합니다.
+각 분류에는 Cassandra가 기본으로 제공하는 **내장 함수**(native function)와, 사용자가 직접 코드를 작성하여 정의하는 **사용자 정의 함수(user-defined function, UDF)** 및 **사용자 정의 집계**(user-defined aggregate, UDA)가 존재합니다.
 
 > 참고: 스칼라 함수와 집계 함수는 조정자(coordinator) 노드에서 평가됩니다. 결과 집합이 클 경우, 클라이언트에 데이터를 반환하기 전에 조정자에서 계산이 수행된다는 점에 유의해야 합니다.
 
@@ -48,7 +48,7 @@ CQL은 데이터를 변환하는 데 사용할 수 있는 여러 종류의 **함
 Cassandra는 다양한 내장 스칼라 함수를 제공합니다.
 
 > **결정성(deterministic)과 단조성(monotonicity)에 관한 참고**
-> 일부 내장 함수는 **결정적(deterministic)**이지 않습니다. 즉, 동일한 입력에 대해 항상 동일한 결과를 보장하지 않습니다. 대표적으로 `uuid()`, `now()`와 같은 함수가 그렇습니다. 이러한 비결정적 함수를 사용자 정의 집계(UDA) 내부에서 사용하면 집계가 결정적 동작을 전제로 하기 때문에 예측 불가능한 결과가 나올 수 있습니다.
+> 일부 내장 함수는 **결정적**(deterministic)이지 않습니다. 즉, 동일한 입력에 대해 항상 동일한 결과를 보장하지 않습니다. 대표적으로 `uuid()`, `now()`와 같은 함수가 그렇습니다. 이러한 비결정적 함수를 사용자 정의 집계(UDA) 내부에서 사용하면 집계가 결정적 동작을 전제로 하기 때문에 예측 불가능한 결과가 나올 수 있습니다.
 
 ---
 
@@ -266,7 +266,7 @@ SELECT abs(temperature), round(score) FROM measurements;
 | `collection_sum(collection)` | 숫자 컬렉션의 원소 합을 반환합니다. |
 | `collection_avg(collection)` | 숫자 컬렉션의 원소 평균을 반환합니다. |
 
-> `collection_sum`과 `collection_avg`는 숫자 타입 컬렉션에 대해서만 동작합니다. 결과는 입력 타입과 동일한 타입으로 반환되므로, 합계가 해당 타입의 최대값을 초과하는 경우 **오버플로(overflow)**가 발생할 수 있다는 점에 유의해야 합니다.
+> `collection_sum`과 `collection_avg`는 숫자 타입 컬렉션에 대해서만 동작합니다. 결과는 입력 타입과 동일한 타입으로 반환되므로, 합계가 해당 타입의 최대값을 초과하는 경우 **오버플로**(overflow)가 발생할 수 있다는 점에 유의해야 합니다.
 
 예시:
 
@@ -430,7 +430,7 @@ DROP FUNCTION afunction ( int );
 DROP FUNCTION afunction ( text );
 ```
 
-> 동일한 이름의 함수가 여러 개 **오버로드(overload)**되어 있는 경우, 인자 시그니처(`( int )`, `( text )` 등)를 명시하여 삭제할 함수를 특정해야 합니다.
+> 동일한 이름의 함수가 여러 개 **오버로드**(overload)되어 있는 경우, 인자 시그니처(`( int )`, `( text )` 등)를 명시하여 삭제할 함수를 특정해야 합니다.
 
 ---
 
@@ -478,7 +478,7 @@ SELECT MIN(players), MAX(players) FROM plays;
 SELECT SUM(players) FROM plays;
 ```
 
-> 합계가 컬럼 타입의 최대값을 초과하는 경우 **오버플로(overflow)**가 발생할 수 있으므로 주의해야 합니다.
+> 합계가 컬럼 타입의 최대값을 초과하는 경우 **오버플로**(overflow)가 발생할 수 있으므로 주의해야 합니다.
 
 #### Avg
 

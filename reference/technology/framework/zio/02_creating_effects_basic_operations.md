@@ -41,7 +41,7 @@ import zio.{ ZIO, Task, UIO, URIO, IO }
 val s1 = ZIO.succeed(42)
 ```
 
-`succeed` 메서드는 **이름에 의한 파라미터(by-name parameter)**를 받습니다. 메서드에 전달된 코드는 ZIO 이펙트 내부에 저장되어 ZIO가 관리하므로, 재시도(retries), 타임아웃(timeouts), 자동 오류 로깅(automatic error logging) 같은 기능을 활용할 수 있습니다.
+`succeed` 메서드는 **이름에 의한 파라미터**(by-name parameter)를 받습니다. 메서드에 전달된 코드는 ZIO 이펙트 내부에 저장되어 ZIO가 관리하므로, 재시도(retries), 타임아웃(timeouts), 자동 오류 로깅(automatic error logging) 같은 기능을 활용할 수 있습니다.
 
 ---
 
@@ -217,7 +217,7 @@ val login: ZIO[Any, AuthError, User] =
 
 ## 6. 블로킹 동기 코드(Blocking Synchronous Code)
 
-일부 동기 코드는 이른바 **블로킹 IO(blocking IO)**를 수행합니다. 이는 운영체제 호출(operating system call)이 완료되기를 기다리는 동안 스레드를 대기 상태(waiting state)에 빠뜨립니다. 처리량(throughput)을 극대화하려면, 이러한 코드는 애플리케이션의 주 스레드 풀(primary thread pool)이 아니라 블로킹 연산에 전용으로 할당된 특수한 스레드 풀(special thread pool)에서 실행되어야 합니다.
+일부 동기 코드는 이른바 **블로킹 IO**(blocking IO)를 수행합니다. 이는 운영체제 호출(operating system call)이 완료되기를 기다리는 동안 스레드를 대기 상태(waiting state)에 빠뜨립니다. 처리량(throughput)을 극대화하려면, 이러한 코드는 애플리케이션의 주 스레드 풀(primary thread pool)이 아니라 블로킹 연산에 전용으로 할당된 특수한 스레드 풀(special thread pool)에서 실행되어야 합니다.
 
 ZIO는 런타임(runtime)에 블로킹 스레드 풀(blocking thread pool)을 내장하고 있으며, `ZIO.blocking`을 사용하여 그곳에서 이펙트를 실행할 수 있습니다.
 
@@ -260,9 +260,9 @@ def accept(l: ServerSocket) =
 
 ## 7. 기본 연산 개요(Basic Operations Overview)
 
-`String` 데이터 타입이나 Scala의 컬렉션 데이터 타입(`List`, `Map`, `Set` 등)과 마찬가지로, ZIO 이펙트는 **불변(immutable)**이며 변경할 수 없습니다.
+`String` 데이터 타입이나 Scala의 컬렉션 데이터 타입(`List`, `Map`, `Set` 등)과 마찬가지로, ZIO 이펙트는 **불변**(immutable)이며 변경할 수 없습니다.
 
-ZIO 이펙트를 변환(transform)하거나 조합(combine)하려면, ZIO 데이터 타입의 메서드들을 사용하면 됩니다. 이 메서드들은 지정된 변환이나 조합이 적용된 **새로운 이펙트(new effects)**를 반환합니다.
+ZIO 이펙트를 변환(transform)하거나 조합(combine)하려면, ZIO 데이터 타입의 메서드들을 사용하면 됩니다. 이 메서드들은 지정된 변환이나 조합이 적용된 **새로운 이펙트**(new effects)를 반환합니다.
 
 ZIO 데이터 타입의 메서드에는 두 가지 범주(categories)가 있습니다.
 
@@ -296,7 +296,7 @@ val failed: ZIO[Any, Exception, Unit] =
   ZIO.fail("No no!").mapError(msg => new Exception(msg))
 ```
 
-이펙트의 오류 값이나 성공 값을 매핑하는 것은, 그 이펙트가 실패하는지 성공하는지 **여부 자체(whether or not)**를 바꾸지 않는다는 점에 유의하세요. 이는 Scala의 `Either` 데이터 타입에 대한 매핑이 그 `Either`가 `Left`인지 `Right`인지를 바꾸지 않는 것과 유사합니다.
+이펙트의 오류 값이나 성공 값을 매핑하는 것은, 그 이펙트가 실패하는지 성공하는지 **여부 자체**(whether or not)를 바꾸지 않는다는 점에 유의하세요. 이는 Scala의 `Either` 데이터 타입에 대한 매핑이 그 `Either`가 `Left`인지 `Right`인지를 바꾸지 않는 것과 유사합니다.
 
 ---
 
@@ -317,7 +317,7 @@ val sequenced: ZIO[Any, IOException, Unit] =
 
 ## 10. for 컴프리헨션(For Comprehensions)
 
-ZIO 데이터 타입은 `flatMap`과 `map`을 모두 지원하므로, Scala의 **for 컴프리헨션(for comprehensions)**을 사용하여 명령형(imperative) 이펙트를 구성할 수 있습니다.
+ZIO 데이터 타입은 `flatMap`과 `map`을 모두 지원하므로, Scala의 **for 컴프리헨션**(for comprehensions)을 사용하여 명령형(imperative) 이펙트를 구성할 수 있습니다.
 
 ```scala
 val program: ZIO[Any, IOException, Unit] =

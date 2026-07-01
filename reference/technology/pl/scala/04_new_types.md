@@ -40,7 +40,7 @@ Scala 3 레퍼런스의 이 절은 Scala 3에서 새롭게 사용할 수 있는 
 
 ### 개요
 
-Scala 3는 타입에 `&` 연산자를 사용하여 교집합 타입(intersection type)을 도입합니다. 타입 `S & T`는 **"동시에 타입 `S`이면서 타입 `T`인 값들을 표현"**합니다.
+Scala 3는 타입에 `&` 연산자를 사용하여 교집합 타입(intersection type)을 도입합니다. 타입 `S & T`는 "**동시에 타입 `S`이면서 타입 `T`인 값들을 표현**"합니다.
 
 > 📘 **처음 배우는 분께 — 교집합 타입이란**
 >
@@ -160,7 +160,7 @@ if true then name else password
 
 > ⚠️ **짚고 넘어가기 — 합집합 타입은 "내가 적어줘야" 유지된다**
 >
-> 위 예제가 헷갈리기 쉬운 부분입니다. `if true then name else password`를 쓰면 컴파일러는 결과 타입을 `UserName | Password`로 두지 않고, 둘의 공통 부모인 `ID`로 **확장(widen)**해 버립니다. 즉, 합집합 타입은 기본적으로 추론되지 않습니다. 정밀한 합집합 타입이 필요하면 `val x: Password | UserName = ...`처럼 타입을 직접 적어주거나, 아래의 `transparent trait`를 써야 합니다. "왜 내 합집합 타입이 사라졌지?" 싶을 때 이 규칙을 떠올리세요.
+> 위 예제가 헷갈리기 쉬운 부분입니다. `if true then name else password`를 쓰면 컴파일러는 결과 타입을 `UserName | Password`로 두지 않고, 둘의 공통 부모인 `ID`로 **확장**(widen)해 버립니다. 즉, 합집합 타입은 기본적으로 추론되지 않습니다. 정밀한 합집합 타입이 필요하면 `val x: Password | UserName = ...`처럼 타입을 직접 적어주거나, 아래의 `transparent trait`를 써야 합니다. "왜 내 합집합 타입이 사라졌지?" 싶을 때 이 규칙을 떠올리세요.
 
 정밀한 합집합 타입을 얻으려면 명시적인 타입 어노테이션이 필요합니다.
 
@@ -265,7 +265,7 @@ S match { P1 => T1 ... Pn => Tn }
 
 > ⚠️ **짚고 넘어가기 — "스크루티니"와 "환원"이라는 말**
 >
-> 낯선 번역어 두 개만 짚고 갑니다. **스크루티니(scrutinee)**는 "검사 대상", 즉 `match` 앞에 놓인 입력 타입(`S`)을 가리키는 전문 용어입니다. **환원(reduce)**은 "이 매치 타입이 실제로 어떤 타입으로 결정되는가"를 계산해 내는 것을 말합니다. `Elem[String]`이 `Char`로 "환원된다"는 건, 컴파일러가 패턴을 따져 결국 `Char`로 확정한다는 뜻입니다.
+> 낯선 번역어 두 개만 짚고 갑니다. **스크루티니**(scrutinee)는 "검사 대상", 즉 `match` 앞에 놓인 입력 타입(`S`)을 가리키는 전문 용어입니다. **환원**(reduce)은 "이 매치 타입이 실제로 어떤 타입으로 결정되는가"를 계산해 내는 것을 말합니다. `Elem[String]`이 `Char`로 "환원된다"는 건, 컴파일러가 패턴을 따져 결국 `Char`로 확정한다는 뜻입니다.
 
 ### 핵심 예제
 
@@ -356,7 +356,7 @@ def leafElem[X](x: X): LeafElem[X] = x match
 - 서로 다른 상수 타입(constant type)의 분리
 - 싱글톤 경로(singleton path)의 유일성(uniqueness)
 
-타입 파라미터의 인스턴스화(instantiation)는 **최소(minimal)**로 유지됩니다. 즉, 공변(covariant) 위치에 나타나는 변수는 최대한 축소(shrink)되고, 반공변(contravariant) 위치에 나타나는 변수는 최대한 확장(expand)됩니다.
+타입 파라미터의 인스턴스화(instantiation)는 **최소**(minimal)로 유지됩니다. 즉, 공변(covariant) 위치에 나타나는 변수는 최대한 축소(shrink)되고, 반공변(contravariant) 위치에 나타나는 변수는 최대한 확장(expand)됩니다.
 
 ### 와일드카드 매치 타입의 환원(Reducing Wildcard Match Types)
 
@@ -419,7 +419,7 @@ type L[X] = X match
 
 ### 핵심 개념
 
-**"의존 함수 타입이란 결과가 함수의 파라미터에 의존하는 함수 타입"**입니다. 이전에는 Scala가 의존 메서드(dependent method)는 지원했지만, 이를 함수 값(function value)으로 표현하는 문법이 없었습니다. Scala 3는 이 간극을 메웁니다.
+"**의존 함수 타입이란 결과가 함수의 파라미터에 의존하는 함수 타입**"입니다. 이전에는 Scala가 의존 메서드(dependent method)는 지원했지만, 이를 함수 값(function value)으로 표현하는 문법이 없었습니다. Scala 3는 이 간극을 메웁니다.
 
 > 💡 **왜 필요한가 — 메서드만 되던 걸 "값"으로도 다루려고**
 >
@@ -452,7 +452,7 @@ Function1[Entry, Entry#Key]:
 
 ### 의의(Significance)
 
-이 기능은 Scala 타입 시스템의 한 가지 간극을 메웁니다. 즉, **"결과 타입이 일부 파라미터를 참조하는 메서드"**를, 변수에 할당하고 인자로 전달할 수 있는 함수 값(function value)으로 포착(capture)할 수 있게 해 줍니다.
+이 기능은 Scala 타입 시스템의 한 가지 간극을 메웁니다. 즉, "**결과 타입이 일부 파라미터를 참조하는 메서드**"를, 변수에 할당하고 인자로 전달할 수 있는 함수 값(function value)으로 포착(capture)할 수 있게 해 줍니다.
 
 ---
 
@@ -460,7 +460,7 @@ Function1[Entry, Entry#Key]:
 
 ### 개요
 
-다형 함수 타입(polymorphic function type)은 함수가 타입 파라미터(type parameter)를 받을 수 있게 하여, 다형 메서드(polymorphic method)와 일급 함수 값(first-class function value) 사이의 간극을 메웁니다. **"다형 함수 타입이란 타입 파라미터를 받는 함수 타입"**입니다.
+다형 함수 타입(polymorphic function type)은 함수가 타입 파라미터(type parameter)를 받을 수 있게 하여, 다형 메서드(polymorphic method)와 일급 함수 값(first-class function value) 사이의 간극을 메웁니다. "**다형 함수 타입이란 타입 파라미터를 받는 함수 타입**"입니다.
 
 > 📘 **처음 배우는 분께 — 다형 함수 타입이란 "타입 파라미터까지 가진 함수 값"**
 >
@@ -522,7 +522,7 @@ val e1 = mapSubexpressions(e0)(
 
 ### 타입 람다(Type Lambdas)와의 구분
 
-다형 함수 타입은 타입 람다(type lambda)와 근본적으로 다릅니다. **"타입 람다는 타입(types) 안에서 적용되는 반면, 다형 함수는 항(terms) 안에서 적용"**됩니다.
+다형 함수 타입은 타입 람다(type lambda)와 근본적으로 다릅니다. "**타입 람다는 타입(types) 안에서 적용되는 반면, 다형 함수는 항(terms) 안에서 적용**"됩니다.
 
 > ⚠️ **짚고 넘어가기 — 타입 람다(`=>>`)와 다형 함수(`=>`)를 헷갈리지 말 것**
 >

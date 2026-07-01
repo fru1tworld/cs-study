@@ -301,7 +301,7 @@ ExtMethod  ::=  {Annotation [nl]} {Modifier} 'def' DefDef
 >
 > 여기서 "닫힌 데이터 타입"이란 enum이나 `sealed trait`처럼 "더 이상 케이스를 추가할 수 없게 봉인된 타입"이 아니라, 단순히 "내가 손댈 수 없는, 이미 완성되어 닫혀 있는 타입(예: 표준 라이브러리 타입)"을 가리키는 뜻으로 읽으면 됩니다. 핵심은 "그 타입의 소스를 못 고쳐도 기능을 더할 수 있다"는 것입니다.
 
-타입 클래스(type class)는 추상적이고 매개변수화된(parameterized) 타입으로, 닫힌(closed) 데이터 타입에 서브타이핑(subtyping) 없이 새로운 동작을 추가할 수 있게 합니다. Scala 3에서 타입 클래스는 타입 파라미터를 가진 트레이트(trait)이며, 구현은 `extends` 키워드 대신 **주어진 인스턴스(given instance)**로 제공합니다.
+타입 클래스(type class)는 추상적이고 매개변수화된(parameterized) 타입으로, 닫힌(closed) 데이터 타입에 서브타이핑(subtyping) 없이 새로운 동작을 추가할 수 있게 합니다. Scala 3에서 타입 클래스는 타입 파라미터를 가진 트레이트(trait)이며, 구현은 `extends` 키워드 대신 **주어진 인스턴스**(given instance)로 제공합니다.
 
 ### 2.2. 세미그룹(Semigroup)과 모노이드(Monoid)
 

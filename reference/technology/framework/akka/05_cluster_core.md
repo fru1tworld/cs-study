@@ -331,7 +331,7 @@ Phi Accrual 장애 감지기(Phi Accrual Failure Detector)는 Akka의 Remote Dea
 
 ### 4.2 핵심 개념 (Core Concept)
 
-이 감지기는 단순한 "up" 또는 "down"의 이진(binary) 답변을 제공하는 대신, 노드가 장애를 일으켰을 통계적 가능성(statistical likelihood)을 나타내는 **phi 값(phi value)**을 반환합니다. 이는 모니터링(monitoring)과 해석(interpretation)을 분리(decouple)하여, 다양한 네트워크 조건에 적응할 수 있게 합니다.
+이 감지기는 단순한 "up" 또는 "down"의 이진(binary) 답변을 제공하는 대신, 노드가 장애를 일으켰을 통계적 가능성(statistical likelihood)을 나타내는 **phi 값**(phi value)을 반환합니다. 이는 모니터링(monitoring)과 해석(interpretation)을 분리(decouple)하여, 다양한 네트워크 조건에 적응할 수 있게 합니다.
 
 감지기는 수신한 하트비트로부터 과거 통계(historical statistics)를 유지하고, 단순한 예/아니오(yes/no) 판단에 의존하는 대신 이러한 지표를 사용하여 노드 상태를 통계적으로 평가합니다.
 

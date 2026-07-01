@@ -25,7 +25,7 @@
 
 ## 1. ZIO Test 소개(Introduction)
 
-ZIO Test는 "효과적인 프로그램(effectual programs)을 손쉽게 테스트할 수 있게 해 주는, 의존성이 전혀 없는(zero dependency) 테스팅 라이브러리"입니다. ZIO Test에서는 **모든 테스트가 불변 값(immutable values)**이며, 테스트가 ZIO와 긴밀하게 통합(tightly integrated)되어 있어, 효과적인 프로그램을 테스트하는 것이 순수한(pure) 프로그램을 테스트하는 것만큼이나 자연스럽습니다.
+ZIO Test는 "효과적인 프로그램(effectual programs)을 손쉽게 테스트할 수 있게 해 주는, 의존성이 전혀 없는(zero dependency) 테스팅 라이브러리"입니다. ZIO Test에서는 **모든 테스트가 불변 값**(immutable values)이며, 테스트가 ZIO와 긴밀하게 통합(tightly integrated)되어 있어, 효과적인 프로그램을 테스트하는 것이 순수한(pure) 프로그램을 테스트하는 것만큼이나 자연스럽습니다.
 
 ### 동기(Motivation)
 

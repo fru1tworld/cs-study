@@ -276,7 +276,7 @@ akka://actor-system-name@hostname:port
 
 ### 정상 종료(Graceful shutdown)
 
-롤링 업데이트는 클러스터에서 노드가 정상적으로 떠나도록(graceful departure) **코디네이티드 셧다운(Coordinated Shutdown)**을 활용해야 합니다. 코디네이티드 셧다운은 노드가 자신을 `Exiting`(탈퇴 중) 상태로 감지하면 SIGTERM 신호에 의해 자동으로 활성화됩니다.
+롤링 업데이트는 클러스터에서 노드가 정상적으로 떠나도록(graceful departure) **코디네이티드 셧다운**(Coordinated Shutdown)을 활용해야 합니다. 코디네이티드 셧다운은 노드가 자신을 `Exiting`(탈퇴 중) 상태로 감지하면 SIGTERM 신호에 의해 자동으로 활성화됩니다.
 
 쿠버네티스는 노드 종료 시 SIGTERM 신호를 전송하므로, JVM 래퍼 스크립트(wrapper script)가 이 신호를 JVM에 올바르게 전달(forward)하도록 보장해야 합니다. 클러스터 싱글톤(Cluster Singleton)과 클러스터 샤딩(Cluster Sharding)은 정상 종료를 자동으로 처리합니다.
 
@@ -303,7 +303,7 @@ akka://actor-system-name@hostname:port
 
 그 외의 다른 예외들은 전송(transport)의 손상을 의미할 수 있으므로, 해당 연결(connection)을 끊습니다.
 
-무중단으로 직렬화 전략을 진화(evolve)시키려면, 직렬화기(serializer)를 전환하는 **2단계 접근법(two-step approach)**과 영속성 스키마 진화(persistence schema evolution)에 대한 가이드를 참고하십시오.
+무중단으로 직렬화 전략을 진화(evolve)시키려면, 직렬화기(serializer)를 전환하는 **2단계 접근법**(two-step approach)과 영속성 스키마 진화(persistence schema evolution)에 대한 가이드를 참고하십시오.
 
 ---
 
@@ -323,7 +323,7 @@ akka.cluster.app-version = 1.2.3
 
 롤링 업데이트 중에는 리밸런싱(rebalancing)이 비활성화됩니다. 중지된 노드의 샤드는 메시지가 도착할 때 신 버전 노드로 마이그레이션되기 때문입니다. Akka Management를 사용하는 경우, 클러스터 샤딩에 대한 헬스 체크(health check)를 권장합니다. 이를 통해 초기화가 완료될 때까지 트래픽 유입을 지연시킬 수 있습니다.
 
-특정 샤딩 설정의 변경은 **전체 클러스터 재시작(full cluster restart)**이 필요합니다.
+특정 샤딩 설정의 변경은 **전체 클러스터 재시작**(full cluster restart)이 필요합니다.
 
 - `extractShardId` 함수
 - 샤드 영역 역할(shard region role)
@@ -384,7 +384,7 @@ Receptionist 또는 Cluster Receptionist를 사용하면서 2.5에서 2.6으로 
 
 ### 전체 종료가 필요한 경우
 
-다음과 같은 변경은 롤링 업데이트가 아니라 **전체 클러스터 종료(full shutdown)**가 필요합니다.
+다음과 같은 변경은 롤링 업데이트가 아니라 **전체 클러스터 종료**(full shutdown)가 필요합니다.
 
 #### 클러스터 샤딩 설정 변경
 

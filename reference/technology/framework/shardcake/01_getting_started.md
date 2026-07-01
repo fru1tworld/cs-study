@@ -23,13 +23,13 @@
 
 **Shardcake**는 여러 서버에 엔티티(entity)를 분산시키고, 각 엔티티의 실제 위치를 몰라도 ID만으로 상호작용하게 해 주는 **Scala 오픈소스 라이브러리**입니다. 이렇게 위치를 알 필요가 없는 특성을 *위치 투명성(location transparency)*이라고 합니다.
 
-Shardcake는 **순수 함수형 API(purely functional API)**를 제공하며 [ZIO](https://zio.dev)에 크게 의존합니다. 이 문서를 읽으려면 ZIO에 익숙한 것이 좋습니다.
+Shardcake는 **순수 함수형 API**(purely functional API)를 제공하며 [ZIO](https://zio.dev)에 크게 의존합니다. 이 문서를 읽으려면 ZIO에 익숙한 것이 좋습니다.
 
 ---
 
 ## 2. 간단한 사용 사례
 
-**사용자(user)**가 **길드(guild)**에 가입할 수 있는 멀티플레이어 게임을 만든다고 하겠습니다. 게임이 성공하리라 기대하므로, 부하를 감당하기 위해 여러 서버에 배포하여 확장(scale out)할 수 있어야 합니다.
+**사용자**(user)가 **길드**(guild)에 가입할 수 있는 멀티플레이어 게임을 만든다고 하겠습니다. 게임이 성공하리라 기대하므로, 부하를 감당하기 위해 여러 서버에 배포하여 확장(scale out)할 수 있어야 합니다.
 
 길드 정원은 30명입니다. 이미 29명이 있는 길드에 두 사용자가 정확히 동시에 가입을 시도하는 경우를 생각해 봅시다.
 
@@ -42,7 +42,7 @@ Shardcake는 **순수 함수형 API(purely functional API)**를 제공하며 [ZI
 - **전역 락(Global lock)** 방식: 길드원을 확인할 때 여러 게임 서버가 공유하는 락(lock)을 획득하고, 새 길드원을 저장한 뒤에 해제합니다. 이렇게 하면 두 게임 서버가 동시에 작업을 시도해도 두 번째 서버는 첫 번째 서버가 끝날 때까지 대기합니다.
 - **단일 기록자(Single writer)** 방식: 두 요청을 두 게임 서버에서 동시에 처리하는 대신, 하나의 엔티티로 넘겨 순차적으로 처리하게 합니다.
 
-**엔티티 샤딩(Entity Sharding)**은 두 번째 방식을 구현하는 방법입니다. 이 경우 엔티티(여기서는 길드)는 게임 서버 전체에 흩어져 배치되며, 각 엔티티는 한 시점에 오직 한 곳에만 존재합니다.
+**엔티티 샤딩**(Entity Sharding)은 두 번째 방식을 구현하는 방법입니다. 이 경우 엔티티(여기서는 길드)는 게임 서버 전체에 흩어져 배치되며, 각 엔티티는 한 시점에 오직 한 곳에만 존재합니다.
 
 ![single writer diagram](https://devsisters.github.io/shardcake/usecase2.png)
 
@@ -69,9 +69,9 @@ def joinGuild(guildId: GuildId): ZIO[Context, Throwable, GuildState] =
 
 더 나아가기 전에 몇 가지 용어를 정의합니다.
 
-- **엔티티(entity)**는 ID로 지정할 수 있는 작은 메시지 핸들러입니다. 예를 들어 `User A`나 `Guild B`가 엔티티이며, 이때 `User`와 `Guild`는 **엔티티 타입(entity type)**이라고 합니다.
-- **파드(pod)**는 엔티티를 호스팅할 수 있는 애플리케이션 서버입니다. 엔티티는 보통 여러 파드에서 실행되지만, 하나의 엔티티는 한 시점에 하나의 파드에서만 실행됩니다. 같은 엔티티가 서로 다른 두 파드에서 동시에 실행되는 일은 결코 없습니다.
-- **샤드(shard)**는 항상 같은 파드에 위치하는 엔티티의 논리적 그룹입니다. 엔티티는 수백만 개가 될 수 있으므로, 엔티티-파드 매핑을 수백만 개 유지하는 대신 엔티티를 샤드로 묶어 적당한 크기의 샤드-파드 매핑만 유지합니다.
+- **엔티티**(entity)는 ID로 지정할 수 있는 작은 메시지 핸들러입니다. 예를 들어 `User A`나 `Guild B`가 엔티티이며, 이때 `User`와 `Guild`는 **엔티티 타입**(entity type)이라고 합니다.
+- **파드**(pod)는 엔티티를 호스팅할 수 있는 애플리케이션 서버입니다. 엔티티는 보통 여러 파드에서 실행되지만, 하나의 엔티티는 한 시점에 하나의 파드에서만 실행됩니다. 같은 엔티티가 서로 다른 두 파드에서 동시에 실행되는 일은 결코 없습니다.
+- **샤드**(shard)는 항상 같은 파드에 위치하는 엔티티의 논리적 그룹입니다. 엔티티는 수백만 개가 될 수 있으므로, 엔티티-파드 매핑을 수백만 개 유지하는 대신 엔티티를 샤드로 묶어 적당한 크기의 샤드-파드 매핑만 유지합니다.
 
 ![terminology diagram](https://devsisters.github.io/shardcake/terminology.png)
 
@@ -82,7 +82,7 @@ def joinGuild(guildId: GuildId): ZIO[Context, Throwable, GuildState] =
 Shardcake는 두 가지 주요 구성 요소로 이루어집니다.
 
 - **Shard Manager**는 인스턴스 하나만 실행되면 되는 독립 구성 요소입니다. 샤드를 파드에 할당하는 일을 담당합니다.
-- **엔티티(Entities)**는 애플리케이션 서버에서 실행되며 자신에게 전달된 메시지를 처리합니다. 엔티티 동작(엔티티 영속화 포함)은 전적으로 사용자가 정의합니다. Shardcake는 올바른 파드에서 엔티티를 시작하고 엔티티끼리 통신하게 하는 일만 담당합니다.
+- **엔티티**(Entities)는 애플리케이션 서버에서 실행되며 자신에게 전달된 메시지를 처리합니다. 엔티티 동작(엔티티 영속화 포함)은 전적으로 사용자가 정의합니다. Shardcake는 올바른 파드에서 엔티티를 시작하고 엔티티끼리 통신하게 하는 일만 담당합니다.
 
 원하는 기술로 직접 구현할 수 있는 교체 가능한(pluggable) 부분이 4가지 있습니다.
 
@@ -152,7 +152,7 @@ object GuildMessage {
 }
 ```
 
-**엔티티 타입(Entity Type)**도 정의해야 합니다. `EntityType`을 상속하면서 메시지 타입과 이 타입을 식별하는 고유한 `String` 식별자를 지정하면 됩니다.
+**엔티티 타입**(Entity Type)도 정의해야 합니다. `EntityType`을 상속하면서 메시지 타입과 이 타입을 식별하는 고유한 `String` 식별자를 지정하면 됩니다.
 
 ```scala
 object Guild extends EntityType[GuildMessage]("guild")
@@ -279,7 +279,7 @@ Failure(java.lang.Exception: Guild is already full!)
 > - Shardcake는 `ZIO` 기반의 **순수 함수형 라이브러리**인 반면, Akka는 "더 나은 Java" 스타일의 Scala에 가까운 라이브러리이며 `Future` 기반입니다.
 > - Akka에서는 모든 애플리케이션 서버가 **클러스터의 일부여야** 합니다. 이는 특히 설정이 까다롭고 온갖 종류의 장애에 민감합니다. Shardcake에서는 Shard Manager가 외부 구성 요소이고 파드 상태 감시를 Kubernetes 같은 시스템에 맡기므로 이런 문제가 없습니다.
 > - Akka는 단순한 샤딩 라이브러리를 훨씬 넘어서는, 사실상 기능이 아주 많은 프레임워크 전체입니다. 반면 Shardcake는 훨씬 **단순하고 모듈화**되어 있어, 파드 간 메시징 프로토콜을 비롯한 여러 요소를 직접 커스터마이징할 수 있습니다.
-> - Akka는 **상용 지원(commercial support)**을 제공하는 [Lightbend](https://www.lightbend.com)가 뒷받침하는 반면, Shardcake는 [Devsisters](https://www.devsisters.com)와 **ZIO 커뮤니티**가 뒷받침합니다.
+> - Akka는 **상용 지원**(commercial support)을 제공하는 [Lightbend](https://www.lightbend.com)가 뒷받침하는 반면, Shardcake는 [Devsisters](https://www.devsisters.com)와 **ZIO 커뮤니티**가 뒷받침합니다.
 
 ---
 

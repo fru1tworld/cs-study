@@ -24,10 +24,10 @@
 ![architecture diagram](https://devsisters.github.io/shardcake/arch2.png)
 
 - **Shard Manager**는 파드와 샤드의 할당 관계를 유지하는 일을 담당하는 단일 노드입니다. 어느 시점에나 Shard Manager는 하나만 살아 있어야 합니다.
-- 파드는 시작할 때 Shard Manager에 **등록(register)**하고, 중지할 때 **등록 해제(unregister)**합니다.
-- 파드는 Storage 계층에서 샤드 할당 정보를 **읽어**(갱신분 포함) 로컬에 캐시합니다. Shard Manager는 파드에 샤드를 **할당(assign)**하거나 **할당 해제(unassign)**할 때 해당 파드에 직접 알립니다.
+- 파드는 시작할 때 Shard Manager에 **등록**(register)하고, 중지할 때 **등록 해제**(unregister)합니다.
+- 파드는 Storage 계층에서 샤드 할당 정보를 **읽어**(갱신분 포함) 로컬에 캐시합니다. Shard Manager는 파드에 샤드를 **할당**(assign)하거나 **할당 해제**(unassign)할 때 해당 파드에 직접 알립니다.
 - 파드가 특정 엔티티에 **메시지를 보낼** 때는, 그 엔티티가 어느 샤드에 속하는지 확인하고 해당 샤드를 담당하는 파드로 메시지를 넘깁니다. 그 파드는 엔티티가 아직 시작되지 않았다면 로컬에서 엔티티 동작을 시작합니다.
-- 엔티티에 할당되는 **샤드 ID(Shard ID)**는 다음과 같이 계산됩니다. `shardId = abs(entityId.hashCode % numberOfShards) + 1`. 즉, 1부터 샤드 개수 사이의 안정적인(stable) 숫자입니다.
+- 엔티티에 할당되는 **샤드 ID**(Shard ID)는 다음과 같이 계산됩니다. `shardId = abs(entityId.hashCode % numberOfShards) + 1`. 즉, 1부터 샤드 개수 사이의 안정적인(stable) 숫자입니다.
 - 파드가 **응답하지 않으면(unresponsive)** 다른 파드들이 Shard Manager에 알리고, Shard Manager는 Health API로 그 파드가 여전히 살아 있는지 확인합니다. 파드가 살아 있지 않을 때만 그 파드의 샤드를 할당 해제합니다(살아 있는 동안에는 샤드를 재할당할 수 없습니다. 그렇게 하면 하나의 엔티티가 서로 다른 두 파드에서 동시에 살아 있을 수 있기 때문입니다).
 
 > **💡 단일 장애점이 없음**

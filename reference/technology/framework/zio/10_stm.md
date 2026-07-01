@@ -27,11 +27,11 @@
 
 ## 1. STM 개요(Software Transactional Memory)
 
-**소프트웨어 트랜잭셔널 메모리(Software Transactional Memory, STM)**는 여러 메모리 연산을 하나의 트랜잭션 안에서 원자적으로 실행할 수 있게 해 주는 모듈식이고 조합 가능한 동시성 데이터 구조입니다.
+**소프트웨어 트랜잭셔널 메모리**(Software Transactional Memory, STM)는 여러 메모리 연산을 하나의 트랜잭션 안에서 원자적으로 실행할 수 있게 해 주는 모듈식이고 조합 가능한 동시성 데이터 구조입니다.
 
 STM은 데이터베이스의 트랜잭션 개념을 메모리 연산에 적용한 것입니다. 여러 메모리 읽기/쓰기 연산을 묶어 하나의 트랜잭션으로 만들면, 전부 성공하거나(커밋) 전부 실패하여 아무 효과도 남기지 않는 것(롤백)이 보장됩니다.
 
-ZIO의 STM은 락을 직접 다루지 않고도 동시성 문제를 안전하게 해결할 수 있으며, **조합 가능성(composability)**을 핵심 장점으로 갖습니다. 여러 작은 트랜잭션을 결합하여 더 큰 하나의 원자적 트랜잭션을 만들 수 있습니다.
+ZIO의 STM은 락을 직접 다루지 않고도 동시성 문제를 안전하게 해결할 수 있으며, **조합 가능성**(composability)을 핵심 장점으로 갖습니다. 여러 작은 트랜잭션을 결합하여 더 큰 하나의 원자적 트랜잭션을 만들 수 있습니다.
 
 ---
 
@@ -73,7 +73,7 @@ def transfer(from: Ref[Int], to: Ref[Int], amount: Int) = for {
 
 ### STM을 통한 해결
 
-`Ref`를 **`TRef`(Transactional Reference, 트랜잭셔널 참조)**로 바꾸고 `STM`을 사용하면 이 문제를 해결할 수 있습니다.
+`Ref`를 **`TRef`**(Transactional Reference, 트랜잭셔널 참조)로 바꾸고 `STM`을 사용하면 이 문제를 해결할 수 있습니다.
 
 ```scala
 def withdraw(accountBalance: TRef[Int], amount: Int): STM[String, Unit] =

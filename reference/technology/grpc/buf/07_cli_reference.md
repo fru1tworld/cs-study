@@ -23,7 +23,7 @@
 
 ## 1. 공통 사항
 
-- 대부분 명령은 **입력(input)**을 받습니다: 디렉터리(기본 `.`), Git 저장소, tarball/zip, BSR 모듈, buf 이미지.
+- 대부분 명령은 **입력**(input)을 받습니다: 디렉터리(기본 `.`), Git 저장소, tarball/zip, BSR 모듈, buf 이미지.
 - 자주 쓰는 전역 플래그: `--error-format=json`, `--disable-symlinks`, `--config`, `--debug`.
 - 각 명령 상세는 `buf <command> --help`로 확인합니다.
 

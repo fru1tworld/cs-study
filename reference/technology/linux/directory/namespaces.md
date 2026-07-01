@@ -2,7 +2,7 @@
 
 > "A namespace wraps a global system resource in an abstraction that makes it appear to the processes within the namespace that they have their own isolated instance of the global resource." — `namespaces(7)`
 
-컨테이너의 핵심 기반. **cgroup이 "얼마나 쓸 수 있냐"라면 namespace는 "무엇이 보이냐"**다. 호스트 커널은 그대로 공유하면서, 각 프로세스에게 자기만의 글로벌 자원이 있는 것처럼 보이게 한다.
+컨테이너의 핵심 기반. **cgroup이 "얼마나 쓸 수 있냐"라면 namespace는 "무엇이 보이냐"다**. 호스트 커널은 그대로 공유하면서, 각 프로세스에게 자기만의 글로벌 자원이 있는 것처럼 보이게 한다.
 
 ## 1. 8가지 namespace 종류
 

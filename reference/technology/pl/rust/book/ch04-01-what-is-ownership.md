@@ -88,7 +88,7 @@ fn main() {
 }
 ```
 
-이 패턴(수명이 끝날 때 리소스 해제)을 **RAII(Resource Acquisition Is Initialization)**라고 합니다.
+이 패턴(수명이 끝날 때 리소스 해제)을 **RAII**(Resource Acquisition Is Initialization)라고 합니다.
 
 ## 이동(Move)과 변수 데이터 상호작용
 
@@ -136,7 +136,7 @@ fn main() {
 
 오류 메시지: `error[E0382]: borrow of moved value: s1`
 
-이 연산을 **이동(move)**이라고 합니다 (첫 번째 변수가 무효화되므로 얕은 복사가 아님).
+이 연산을 **이동**(move)이라고 합니다 (첫 번째 변수가 무효화되므로 얕은 복사가 아님).
 
 ## 스코프와 할당
 

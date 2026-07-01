@@ -238,7 +238,7 @@ logback 로거의 기본 동작은 다음과 같습니다.
 
 ## 데이터 삽입 및 조회
 
-Cassandra와 상호작용하는 기본 API는 **CQL(Cassandra Query Language)**이며, 다음 세 가지 방법으로 사용할 수 있습니다.
+Cassandra와 상호작용하는 기본 API는 **CQL**(Cassandra Query Language)이며, 다음 세 가지 방법으로 사용할 수 있습니다.
 
 1. **cqlsh** — 명령줄 셸(command-line shell)
 2. **클라이언트 드라이버(client drivers)** — 커뮤니티에서 제공하는 라이브러리

@@ -217,7 +217,7 @@ for {
 
 ## 7. 인터럽션 모델(Interruption Model)
 
-ZIO는 **비동기 인터럽션(asynchronous interruption)**을 구현합니다. 한 파이버가 다른 파이버를, 대상 파이버가 인터럽션 상태를 폴링(poll)하지 않아도 종료시킬 수 있습니다. 이 방식은 완전히 함수형(fully functional)이며 ZIO의 패러다임과 호환되고, 명령형 언어에서 쓰이는 폴링 기반 해법과는 다릅니다.
+ZIO는 **비동기 인터럽션**(asynchronous interruption)을 구현합니다. 한 파이버가 다른 파이버를, 대상 파이버가 인터럽션 상태를 폴링(poll)하지 않아도 종료시킬 수 있습니다. 이 방식은 완전히 함수형(fully functional)이며 ZIO의 패러다임과 호환되고, 명령형 언어에서 쓰이는 폴링 기반 해법과는 다릅니다.
 
 ### 인터럽션이 일어나는 경우
 

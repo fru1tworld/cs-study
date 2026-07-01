@@ -237,7 +237,7 @@ suspend fun main() {
 
 ## 코루틴 취소 시 값 안전하게 처리
 
-일시 중단된 코루틴이 취소되면 값이 사용 가능하더라도 값을 반환하는 대신 `CancellationException`으로 재개됩니다. 이를 **즉시 취소(prompt cancellation)**라고 합니다.
+일시 중단된 코루틴이 취소되면 값이 사용 가능하더라도 값을 반환하는 대신 `CancellationException`으로 재개됩니다. 이를 **즉시 취소**(prompt cancellation)라고 합니다.
 
 ### 예제: 적절한 리소스 처리
 

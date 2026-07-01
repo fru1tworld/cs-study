@@ -18,7 +18,7 @@
 
 ## 1. Schedule 소개(Introduction)
 
-`Schedule[Env, In, Out]`는 **반복적인(recurring) 효과적(effectful) 스케줄을 기술(describe)하는 불변 값(immutable value)**입니다. 이 스케줄은 어떤 환경(environment) `Env`에서 실행되며, 타입 `In`의 값(재시도(`retry`)의 경우에는 오류(error), 반복(`repeat`)의 경우에는 값)을 소비(consume)한 후, 타입 `Out`의 값을 생성(produce)합니다. 그리고 매 단계(step)마다 입력 값(input value)과 내부 상태(internal state)에 기반하여, 중단(halt)할지 아니면 어떤 지연(delay) **d** 이후에 계속(continue)할지를 결정합니다.
+`Schedule[Env, In, Out]`는 **반복적인(recurring) 효과적(effectful) 스케줄을 기술(describe)하는 불변 값**(immutable value)입니다. 이 스케줄은 어떤 환경(environment) `Env`에서 실행되며, 타입 `In`의 값(재시도(`retry`)의 경우에는 오류(error), 반복(`repeat`)의 경우에는 값)을 소비(consume)한 후, 타입 `Out`의 값을 생성(produce)합니다. 그리고 매 단계(step)마다 입력 값(input value)과 내부 상태(internal state)에 기반하여, 중단(halt)할지 아니면 어떤 지연(delay) **d** 이후에 계속(continue)할지를 결정합니다.
 
 스케줄(Schedule)은 시간(time)에 걸쳐 펼쳐진, 잠재적으로 무한한(possibly infinite) 구간(interval)들의 집합으로 정의됩니다. 각 구간은 반복(recurrence)이 가능한 윈도우(window)를 정의합니다.
 
@@ -26,7 +26,7 @@
 
 스케줄이 효과(effect)를 반복하거나 재시도하는 데 사용될 때, 스케줄이 생성하는 각 구간의 시작 경계(starting boundary)가 그 효과가 다시 실행될 시점(moment)으로 사용됩니다.
 
-스케줄은 유연한 반복 스케줄(flexible recurrence schedule)을 정의하고 조합(compose)할 수 있게 해 주며, 이를 이용해 액션(action)을 **반복(repeat)**하거나, 오류가 발생한 경우에 액션을 **재시도(retry)**할 수 있습니다.
+스케줄은 유연한 반복 스케줄(flexible recurrence schedule)을 정의하고 조합(compose)할 수 있게 해 주며, 이를 이용해 액션(action)을 **반복**(repeat)하거나, 오류가 발생한 경우에 액션을 **재시도**(retry)할 수 있습니다.
 
 스케줄을 변환(transform)하고 결합(combine)하기 위한 다양한 [조합자(combinator)](#5-스케줄-조합자schedule-combinators)가 존재하며, `Schedule`의 컴패니언 객체(companion object)에는 재시도와 반복을 수행하기 위한 [모든 일반적인 유형의 스케줄](#4-내장-스케줄built-in-schedules)이 들어 있습니다.
 
@@ -174,17 +174,17 @@ val spaced = Schedule.spaced(10.milliseconds)
 
 ### 4.8 fixed
 
-**고정 간격(fixed interval)**으로 반복하는 스케줄입니다. 지금까지의 스케줄 반복 횟수(number of repetitions)를 반환합니다.
+**고정 간격**(fixed interval)으로 반복하는 스케줄입니다. 지금까지의 스케줄 반복 횟수(number of repetitions)를 반환합니다.
 
 ```scala
 val fixed = Schedule.fixed(10.seconds)
 ```
 
-> `spaced`와 `fixed`의 차이: `spaced`는 직전 실행이 **끝난 시점**으로부터 지정된 시간만큼 간격을 두지만, `fixed`는 실행의 소요 시간과 무관하게 **고정된 주기(period)**에 맞춰 반복합니다.
+> `spaced`와 `fixed`의 차이: `spaced`는 직전 실행이 **끝난 시점**으로부터 지정된 시간만큼 간격을 두지만, `fixed`는 실행의 소요 시간과 무관하게 **고정된 주기**(period)에 맞춰 반복합니다.
 
 ### 4.9 exponential
 
-**지수 백오프(exponential backoff)**를 사용하여 반복하는 스케줄입니다.
+**지수 백오프**(exponential backoff)를 사용하여 반복하는 스케줄입니다.
 
 ```scala
 val exponential = Schedule.exponential(10.milliseconds)
@@ -230,7 +230,7 @@ val unfold = Schedule.unfold(0)(_ + 1)
 
 #### 합집합(Union)
 
-두 스케줄을 합집합으로 결합합니다. 두 스케줄 중 **어느 하나라도** 반복하기를 원하면 반복하며, 두 지연 중 **최솟값(minimum)**을 반복 간 지연으로 사용합니다.
+두 스케줄을 합집합으로 결합합니다. 두 스케줄 중 **어느 하나라도** 반복하기를 원하면 반복하며, 두 지연 중 **최솟값**(minimum)을 반복 간 지연으로 사용합니다.
 
 |                     | `s1`                | `s2`                | `s1` &#124;&#124; `s2`    |
 |---------------------|---------------------|---------------------|---------------------------|
@@ -247,7 +247,7 @@ val expCapped = Schedule.exponential(100.milliseconds) || Schedule.spaced(1.seco
 
 #### 교집합(Intersection)
 
-두 스케줄을 교집합으로 결합합니다. 두 스케줄이 **모두** 반복하기를 원하는 경우에만 반복하며, 두 지연 중 **최댓값(maximum)**을 반복 간 지연으로 사용합니다.
+두 스케줄을 교집합으로 결합합니다. 두 스케줄이 **모두** 반복하기를 원하는 경우에만 반복하며, 두 지연 중 **최댓값**(maximum)을 반복 간 지연으로 사용합니다.
 
 |                     | `s1`                | `s2`                | `s1 && s2`               |
 |---------------------|---------------------|---------------------|--------------------------|

@@ -293,9 +293,9 @@ HTTP 서비스를 구축하고 소비하기 위한 도구를 제공하는 별도
 
 ### 5.1 동시성 vs. 병렬성(Concurrency vs. Parallelism)
 
-**동시성(Concurrency)**은 "두 개 이상의 작업이 동시에 실행되지는 않더라도 진행을 이루어 가는 것(making progress)"을 의미합니다. 이는 시간 분할(time slicing)을 통해 달성될 수 있습니다.
+**동시성**(Concurrency)은 "두 개 이상의 작업이 동시에 실행되지는 않더라도 진행을 이루어 가는 것(making progress)"을 의미합니다. 이는 시간 분할(time slicing)을 통해 달성될 수 있습니다.
 
-**병렬성(Parallelism)**은 "실행이 진정으로 동시에(truly simultaneous) 이루어질 때" 발생합니다.
+**병렬성**(Parallelism)은 "실행이 진정으로 동시에(truly simultaneous) 이루어질 때" 발생합니다.
 
 ### 5.2 비동기 vs. 동기(Asynchronous vs. Synchronous)
 
@@ -307,23 +307,23 @@ HTTP 서비스를 구축하고 소비하기 위한 도구를 제공하는 별도
 
 ### 5.3 논블로킹 vs. 블로킹(Non-blocking vs. Blocking)
 
-**블로킹(Blocking)**은 "한 스레드의 지연이 다른 스레드들 중 일부를 무한정 지연시킬 수 있을 때" 발생합니다.
+**블로킹**(Blocking)은 "한 스레드의 지연이 다른 스레드들 중 일부를 무한정 지연시킬 수 있을 때" 발생합니다.
 
-**논블로킹(Non-blocking)**은 "어떤 스레드도 다른 스레드들을 무한정 지연시킬 수 없음"을 의미합니다.
+**논블로킹**(Non-blocking)은 "어떤 스레드도 다른 스레드들을 무한정 지연시킬 수 없음"을 의미합니다.
 
 문서는 블로킹 API를 항상 피할 수는 없지만, 신중하게 관리(careful management)되어야 한다고 언급합니다.
 
 ### 5.4 교착 상태 vs. 기아 상태 vs. 라이브락(Deadlock vs. Starvation vs. Livelock)
 
-**교착 상태(Deadlock)**는 참여자들이 서로가 진행하기를 기다리면서 "Catch-22" 상황을 만들어내고, 그 결과 "영향을 받은 모든 하위 시스템이 멈추는(stall)" 경우에 발생합니다.
+**교착 상태**(Deadlock)는 참여자들이 서로가 진행하기를 기다리면서 "Catch-22" 상황을 만들어내고, 그 결과 "영향을 받은 모든 하위 시스템이 멈추는(stall)" 경우에 발생합니다.
 
-**기아 상태(Starvation)**는 일부 참여자는 진행할 수 있지만 다른 참여자들은 진행할 수 없을 때(흔히 스케줄링 편향(scheduling bias) 때문에) 발생합니다.
+**기아 상태**(Starvation)는 일부 참여자는 진행할 수 있지만 다른 참여자들은 진행할 수 없을 때(흔히 스케줄링 편향(scheduling bias) 때문에) 발생합니다.
 
-**라이브락(Livelock)**은 교착 상태와 유사하지만, "참여자들이 상태를 계속해서 변경(continuously change their state)"한다는 점에서 다릅니다. 즉, 멈춰 있는 것이 아니라 계속 움직이지만 진전을 이루지는 못합니다.
+**라이브락**(Livelock)은 교착 상태와 유사하지만, "참여자들이 상태를 계속해서 변경(continuously change their state)"한다는 점에서 다릅니다. 즉, 멈춰 있는 것이 아니라 계속 움직이지만 진전을 이루지는 못합니다.
 
 ### 5.5 경쟁 조건(Race Condition)
 
-**경쟁 조건(race condition)**은 "어떤 이벤트 집합의 순서(ordering)에 대한 가정이 외부의 비결정적 효과(external non-deterministic effects)에 의해 위반될 수 있을 때" 발생합니다. Akka는 특정 액터 쌍(specific actor pairs) 사이의 메시지 순서(message ordering)를 보장합니다.
+**경쟁 조건**(race condition)은 "어떤 이벤트 집합의 순서(ordering)에 대한 가정이 외부의 비결정적 효과(external non-deterministic effects)에 의해 위반될 수 있을 때" 발생합니다. Akka는 특정 액터 쌍(specific actor pairs) 사이의 메시지 순서(message ordering)를 보장합니다.
 
 ### 5.6 논블로킹 보장(Non-blocking Guarantees)
 
@@ -505,7 +505,7 @@ Akka가 일부 다른 액터 모델 구현과 다른 중요한 특징은, 현재
 
 ### 9.1 액터 참조(Actor References)
 
-**액터 참조(Actor References)**는 `ActorRef`의 하위 타입(subtypes)으로, 액터에게 메시지를 보낼 수 있게 합니다. 문서는 다음과 같이 언급합니다: "액터 참조는 단일 액터(single actor)를 가리키며, 그 참조의 생명 주기는 그 액터의 생명 주기와 일치한다."
+**액터 참조**(Actor References)는 `ActorRef`의 하위 타입(subtypes)으로, 액터에게 메시지를 보낼 수 있게 합니다. 문서는 다음과 같이 언급합니다: "액터 참조는 단일 액터(single actor)를 가리키며, 그 참조의 생명 주기는 그 액터의 생명 주기와 일치한다."
 
 시스템 설정에 따라 다양한 참조 타입이 존재합니다.
 
@@ -516,7 +516,7 @@ Akka가 일부 다른 액터 모델 구현과 다른 중요한 특징은, 현재
 
 ### 9.2 액터 경로(Actor Paths)
 
-**액터 경로(Actor Paths)**는 액터 시스템 내의 계층적 이름(hierarchical name)을 나타냅니다. 중요한 점은, "액터 경로는 액터가 거주할(inhabited) 수도 있고 그렇지 않을 수도 있는 이름을 나타내며, 경로 자체는 생명 주기를 가지지 않고 결코 무효화되지 않는다(never becomes invalid)"는 것입니다.
+**액터 경로**(Actor Paths)는 액터 시스템 내의 계층적 이름(hierarchical name)을 나타냅니다. 중요한 점은, "액터 경로는 액터가 거주할(inhabited) 수도 있고 그렇지 않을 수도 있는 이름을 나타내며, 경로 자체는 생명 주기를 가지지 않고 결코 무효화되지 않는다(never becomes invalid)"는 것입니다.
 
 ### 9.3 핵심적 구분(Critical Distinction)
 
@@ -562,14 +562,14 @@ Akka는 "누수 추상화(leaky abstraction)"를 만드는 대신, 이러한 실
 
 ### 10.3 로컬 vs. 원격 동작(Local vs. Remote Behavior)
 
-**로컬(JVM 내부) 송신(Local (in-JVM) sends)**은 메시지가 네트워크 문제 없이 직접 전달되므로 실질적으로 더 강한 신뢰성을 가집니다. 그러나 다음과 같은 이유로 여전히 실패할 수 있습니다.
+**로컬(JVM 내부) 송신**(Local (in-JVM) sends)은 메시지가 네트워크 문제 없이 직접 전달되므로 실질적으로 더 강한 신뢰성을 가집니다. 그러나 다음과 같은 이유로 여전히 실패할 수 있습니다.
 
 - 스택 오버플로(stack overflow)
 - 메모리 부족 오류(out-of-memory errors)
 - 가득 찬 경계 메일박스(full bounded mailboxes)
 - 액터 종료(actor termination)
 
-**원격 송신(Remote sends)**은 추가적인 지연(latency) 과제에 직면합니다. 메시지 순서 보장은, 네트워크 전달 시간이 가변적이기 때문에 중개자(intermediaries)를 가로질러 이행적으로(transitively) 확장되지 않습니다.
+**원격 송신**(Remote sends)은 추가적인 지연(latency) 과제에 직면합니다. 메시지 순서 보장은, 네트워크 전달 시간이 가변적이기 때문에 중개자(intermediaries)를 가로질러 이행적으로(transitively) 확장되지 않습니다.
 
 ### 10.4 더 강한 신뢰성 구축(Building Stronger Reliability)
 

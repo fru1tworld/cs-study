@@ -39,9 +39,9 @@ Akka Streams API는 최종 사용자(end-user)를 지향하는 반면, Akka Stre
 
 권장되는 학습 순서는 다음과 같습니다.
 
-- 먼저 **퀵스타트 가이드(Quick Start Guide)**부터 시작하십시오.
-- 하향식(top-down)으로 학습하고 싶다면 **설계 원칙(Design Principles)**을 검토하십시오.
-- 상향식(bottom-up)으로 학습하고 싶다면 **Streams 쿡북(Cookbook)**을 살펴보십시오.
+- 먼저 **퀵스타트 가이드**(Quick Start Guide)부터 시작하십시오.
+- 하향식(top-down)으로 학습하고 싶다면 **설계 원칙**(Design Principles)을 검토하십시오.
+- 상향식(bottom-up)으로 학습하고 싶다면 **Streams 쿡북**(Cookbook)을 살펴보십시오.
 - 내장된 처리 연산자(operator)에 대해서는 연산자 인덱스(operator index)를 참조하십시오.
 - 그 외 섹션들은 순서대로 읽거나 필요에 따라 참조하십시오.
 

@@ -4,7 +4,7 @@
 
 ## Kotlin Multiplatform이란?
 
-**Kotlin Multiplatform (KMP)**은 JetBrains의 오픈소스 기술로, **Android, iOS, 데스크톱, 웹, 서버** 간에 코드를 공유하면서도 네이티브 개발의 장점을 유지할 수 있게 해줍니다.
+**Kotlin Multiplatform **(KMP)은 JetBrains의 오픈소스 기술로, **Android, iOS, 데스크톱, 웹, 서버** 간에 코드를 공유하면서도 네이티브 개발의 장점을 유지할 수 있게 해줍니다.
 
 **Compose Multiplatform**을 사용하면 여러 플랫폼에서 UI 코드도 공유하여 코드 재사용을 극대화할 수 있습니다.
 
