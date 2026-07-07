@@ -95,8 +95,10 @@ RFC 문서 한국어 번역/요약 모음입니다.
 | [RFC 2119](./Common/RFC2119-Key-Words.md) | Key Words | RFC 요구사항 키워드 (MUST, SHOULD, MAY) |
 | [RFC 1122](./Common/RFC1122-Internet-Host-Requirements.md) | Internet Host Requirements | 인터넷 호스트 통신 계층 요구사항 |
 | [RFC 4648](./Common/RFC4648-Base-Encodings.md) | Base Encodings | Base64, Base64URL, Base32, Base16 인코딩 |
-| [RFC 9106](./Common/RFC9106-Argon2.md) | Argon2 | 패스워드 해싱용 메모리 하드 함수 |
+| [RFC 5116](./Common/RFC5116-AEAD.md) | AEAD Interface | 인증 암호화(AEAD) 인터페이스 및 알고리즘 정의 |
 | [RFC 7468](./Common/RFC7468-PEM-Textual-Encodings.md) | PEM Textual Encodings | PKIX/PKCS/CMS 구조의 PEM 텍스트 인코딩 |
+| [RFC 8439](./Common/RFC8439-ChaCha20-Poly1305.md) | ChaCha20-Poly1305 | IETF 프로토콜을 위한 ChaCha20 스트림 암호 및 Poly1305 인증자 |
+| [RFC 9106](./Common/RFC9106-Argon2.md) | Argon2 | 패스워드 해싱용 메모리 하드 함수 |
 
 ---
 
