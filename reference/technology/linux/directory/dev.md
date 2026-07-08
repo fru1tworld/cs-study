@@ -107,6 +107,6 @@ brw-rw---- 1 root disk 8, 0 May 13 12:00 /dev/sda     # b = block
 
 ## 컨테이너 / namespace 측면
 
-- 컨테이너는 보통 **자체 `/dev`**를 마운트한다 (devtmpfs를 새로 또는 일부만 bind-mount).
+- 컨테이너는 보통 **자체** `/dev`를 마운트한다 (devtmpfs를 새로 또는 일부만 bind-mount).
 - 보안을 위해 `/dev/mem`, `/dev/kmsg`, 디스크 노드는 보통 노출 안 함.
 - `--device` 옵션(Docker/Podman)은 특정 노드만 컨테이너 안으로 통과시킨다.

@@ -209,7 +209,7 @@ UN  127.0.1.3  4.69 GiB   1            100.0%            9dc1a293-2cc0-40fa-a6fd
 - **Status** = `U`(Up) / `D`(Down)
 - **State** = `N`(Normal) / `L`(Leaving) / `J`(Joining) / `M`(Moving)
 
-예를 들어 `UN`은 Up이면서 Normal 상태를 의미합니다. 노드가 `DN`으로 표시된다면 해당 노드가 다운된 것이므로 우선적으로 조사해야 합니다. **Load**는 디스크에 저장된 데이터 양, **Owns **(effective)는 복제 인자(replication factor)를 반영한 유효 데이터 소유 비율을 나타냅니다.
+예를 들어 `UN`은 Up이면서 Normal 상태를 의미합니다. 노드가 `DN`으로 표시된다면 해당 노드가 다운된 것이므로 우선적으로 조사해야 합니다. **Load**는 디스크에 저장된 데이터 양, **Owns**(effective)는 복제 인자(replication factor)를 반영한 유효 데이터 소유 비율을 나타냅니다.
 
 ### 코디네이터 쿼리 지연 (nodetool proxyhistograms)
 

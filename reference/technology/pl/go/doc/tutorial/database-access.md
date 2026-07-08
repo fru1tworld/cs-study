@@ -355,10 +355,10 @@ func addAlbum(alb Album) (int64, error) {
 
 ## 핵심 요점
 
-- **`sql.Open()`**은 데이터베이스 핸들을 초기화합니다
-- **`db.Ping()`**은 연결을 확인합니다
-- **`db.Query()`**는 여러 행을 반환합니다; `rows.Next()`와 `rows.Scan()`을 사용합니다
-- **`db.QueryRow()`**는 단일 행을 반환합니다
-- **`db.Exec()`**는 데이터를 반환하지 않는 문을 실행합니다
+- `sql.Open()`은 데이터베이스 핸들을 초기화합니다
+- `db.Ping()`은 연결을 확인합니다
+- `db.Query()`는 여러 행을 반환합니다; `rows.Next()`와 `rows.Scan()`을 사용합니다
+- `db.QueryRow()`는 단일 행을 반환합니다
+- `db.Exec()`는 데이터를 반환하지 않는 문을 실행합니다
 - **매개변수화된 쿼리**(`?` 사용)는 SQL 인젝션을 방지합니다
 - 리소스를 해제하기 위해 `defer rows.Close()`를 사용합니다

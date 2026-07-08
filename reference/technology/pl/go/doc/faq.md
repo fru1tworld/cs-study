@@ -95,7 +95,7 @@ Go 프로젝트에는 사용자 정의 IDE가 포함되어 있지 않지만, 잘
 
 ### Go는 Google의 프로토콜 버퍼를 지원하나요?
 
-예, **github.com/golang/protobuf/**의 별도 오픈 소스 프로젝트를 통해 지원합니다.
+예, **github.com/golang/protobuf**/의 별도 오픈 소스 프로젝트를 통해 지원합니다.
 
 ## 설계
 

@@ -5,6 +5,8 @@
 
 [면접 질문 리스트](https://github.com/fru1tworld/cs-basic/blob/main/interview/interview.md)
 
+이 저장소는 [mdv](https://github.com/AljosaMohorovic/mdv)(pulldown-cmark 기반 CommonMark 파서)에 최적화되어 있습니다. 코드/다이어그램은 코드 펜스로 감싸고, 볼드·이탤릭은 구두점으로 끝난 채 뒤에 공백 없이 글자가 붙지 않게 주의하세요.
+
 # CS-Study
 
 예전에는 책으로 공부했어요.

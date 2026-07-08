@@ -14,7 +14,7 @@
 
 ### Maven 설정
 
-**IntelliJ IDEA 2025.3+**는 Maven 프로젝트에 첫 번째 Kotlin 파일을 추가할 때 `pom.xml`을 자동으로 업데이트합니다.
+**IntelliJ IDEA 2025.3**+는 Maven 프로젝트에 첫 번째 Kotlin 파일을 추가할 때 `pom.xml`을 자동으로 업데이트합니다.
 
 수동으로 구성하려면:
 

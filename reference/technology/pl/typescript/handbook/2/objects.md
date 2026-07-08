@@ -357,7 +357,7 @@ function createSquare(config: SquareConfig): { color: string; area: number } {
 let mySquare = createSquare({ colour: "red", width: 100 });
 ```
 
-`createSquare`에 주어진 인수가 `color` 대신 _`colour`_로 철자가 되어 있는 것에 주목하세요.
+`createSquare`에 주어진 인수가 `color` 대신 `colour`로 철자가 되어 있는 것에 주목하세요.
 일반 JavaScript에서 이런 종류의 일은 조용히 실패합니다.
 
 이 프로그램이 올바르게 타입화되었다고 주장할 수 있습니다. `width` 속성이 호환되고, `color` 속성이 없으며, 추가 `colour` 속성은 중요하지 않기 때문입니다.

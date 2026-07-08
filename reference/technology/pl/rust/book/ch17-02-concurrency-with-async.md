@@ -191,4 +191,4 @@ trpl::join!(tx1_fut, tx_fut, rx_fut);
 1. **Async 블록은 내부적으로 순차적으로 실행됨** - 동시성을 위해 `trpl::join`과 함께 별도의 async 블록 사용
 2. **값을 드롭해야 할 때 `async move` 사용** (예: 채널 송신자)
 3. **`trpl::join`은 공정함** - 결정적인 실행 순서 제공
-4. **`while let Some(value) = rx.recv().await`**는 알 수 없는 수의 async 메시지를 처리
+4. `while let Some(value) = rx.recv().await`는 알 수 없는 수의 async 메시지를 처리
