@@ -567,6 +567,8 @@ W3C는 브라우저에서 사용할 수 있는 수많은 Web API의 표준화를
 | Permissions API | WD | 권한 상태 쿼리/요청 |
 | Screen Wake Lock API | WD | 화면 꺼짐 방지 |
 | Badging API | WD | 앱 아이콘 배지 표시 |
+| [CSP3](./csp3.md) | WD | 출처 기반 리소스 로드 제한, nonce/hash, Trusted Types 연계 |
+| [WebMCP](./webmcp.md) | WICG 초안 | 웹 페이지가 AI 에이전트에 함수형 도구를 노출하는 실험적 API |
 
 #### Service Workers 상세
 
@@ -935,7 +937,8 @@ WCAG의 모든 성공 기준은 네 가지 원칙 아래 조직된다:
 
 | 사양 | 설명 |
 |------|------|
-| WAI-ARIA 1.2 | 동적 콘텐츠와 고급 UI의 접근성 |
+| [WAI-ARIA 1.2](./wai-aria.md) | 동적 콘텐츠와 고급 UI의 접근성 |
+| [Core-AAM 1.2](./core-aam.md) | ARIA를 OS 접근성 API(UIA/AX/ATK)로 매핑하는 규칙 |
 | ARIA Authoring Practices Guide (APG) | ARIA 위젯/패턴 구현 가이드 |
 | ATAG 2.0 | 저작 도구의 접근성 가이드라인 |
 | UAAG 2.0 | 사용자 에이전트(브라우저 등)의 접근성 가이드라인 |

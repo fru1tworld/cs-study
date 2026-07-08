@@ -63,14 +63,24 @@ RFC 문서 한국어 번역/요약 모음입니다.
 | [RFC 6750](./Layer7-Application/RFC6750-OAuth2-Bearer-Token.md) | OAuth 2.0 Bearer Token | Bearer 토큰 사용법 |
 | [RFC 6819](./Layer7-Application/RFC6819-OAuth2-Threat-Model.md) | OAuth 2.0 Threat Model | OAuth 2.0 위협 모델 및 보안 고려사항 |
 | [RFC 7636](./Layer7-Application/RFC7636-PKCE.md) | PKCE | OAuth 2.0 보안 강화 (모바일/SPA) |
+| [RFC 8628](./Layer7-Application/Auth/RFC8628-OAuth2-Device-Grant.md) | Device Authorization Grant | 입력 제약 기기(스마트 TV, CLI)용 OAuth 흐름 |
 | [RFC 7519](./Layer7-Application/RFC7519-JWT.md) | JWT | JSON 기반 토큰 형식 |
 | [RFC 8725](./Layer7-Application/RFC8725-JWT-BCP.md) | JWT Best Practices | JWT 보안 권장사항 |
 | [RFC 9700](./Layer7-Application/RFC9700-OAuth2-Security-BCP.md) | OAuth 2.0 Security BCP | OAuth 2.0 보안 최선의 현행 관행 |
 | [RFC 6265](./Layer7-Application/RFC6265-HTTP-Cookies.md) | HTTP Cookies | Set-Cookie, 쿠키 보안 속성 |
+| [6265bis (초안)](./Layer7-Application/HTTP/RFC6265bis-SameSite-Draft.md) | SameSite (초안) | SameSite/Secure 강제, `__Host-` 접두사 |
 | [RFC 6454](./Layer7-Application/RFC6454-Web-Origin.md) | Web Origin | Same-Origin Policy 기반 |
 | [RFC 6797](./Layer7-Application/RFC6797-HSTS.md) | HSTS | HTTPS 강제 적용 |
 | [RFC 8446](./Layer7-Application/RFC8446-TLS1.3.md) | TLS 1.3 | 전송 계층 보안 |
 | [RFC 4226](./Layer7-Application/Auth/RFC4226-HOTP.md) | HOTP | HMAC 기반 일회용 비밀번호 알고리즘 |
+| [RFC 6238](./Layer7-Application/Auth/RFC6238-TOTP.md) | TOTP | 시간 기반 일회용 비밀번호 알고리즘 |
+
+#### IMAP
+| RFC | 제목 | 설명 |
+|-----|------|------|
+| [RFC 9051](./Layer7-Application/IMAP/RFC9051-IMAP4rev2.md) | IMAP4rev2 | 현행 IMAP 표준 (UTF-8/NAMESPACE/ID 기본 통합) |
+| [RFC 3501](./Layer7-Application/IMAP/RFC3501-IMAP-Obsolete.md) | IMAP4rev1 (Obsolete) | 구 IMAP 표준, IMAP4rev2로 대체됨 |
+| [RFC 2177](./Layer7-Application/IMAP/RFC2177-IMAP-IDLE.md) | IMAP IDLE | 폴링 없는 실시간 메일함 변경 알림 확장 |
 
 #### 데이터 형식 & URI
 | RFC | 제목 | 설명 |
