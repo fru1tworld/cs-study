@@ -61,6 +61,7 @@ VRRP는 "LAN 상의 VRRP 라우터들 중 하나에게
 | Virtual Rtr ID (VRID) | 8비트 | 가상 라우터 식별자 (1-255) |
 | Priority | 8비트 | 라우터 우선순위 (0-255) |
 | Count IPvX Addr | 8비트 | 패킷 내 IP 주소 수 |
+| (rsvd) | 4비트 | 예약됨, 전송 시 0으로 설정, 수신 시 무시 |
 | Max Adver Int | 12비트 | 광고 간격 (센티초 단위) |
 | Checksum | 16비트 | 패킷 검증용 체크섬 |
 

@@ -1234,6 +1234,9 @@ try {
 - `Transfer-Encoding`
 - `Upgrade`
 - `Via`
+- `X-HTTP-Method` (조건부 금지: 메서드 오버라이드 목적 사용 시)
+- `X-HTTP-Method-Override` (조건부 금지: 메서드 오버라이드 목적 사용 시)
+- `X-Method-Override` (조건부 금지: 메서드 오버라이드 목적 사용 시)
 - `Proxy-` 접두사로 시작하는 모든 헤더
 - `Sec-` 접두사로 시작하는 모든 헤더
 

@@ -48,6 +48,8 @@ navigator.modelContext.registerTool({
 | `inputSchema` | MCP와 마찬가지로 JSON Schema로 입력 형식을 정의 |
 | `execute` | 실제로 페이지 내부 상태를 조작하는 함수 (에이전트가 직접 DOM을 건드리지 않음) |
 
+> 스펙 원문 vs 구현 불일치: WICG Explainer 원문은 이 API를 `partial interface Document { readonly attribute ModelContext modelContext; }`로 정의해 `document.modelContext`를 통해 접근하도록 규정한다. 반면 Chrome의 현재 Origin Trial 구현은 `navigator.modelContext`를 사용한다. 아직 초안 단계라 스펙 텍스트와 실제 구현이 어긋나 있는 상태이며, 어느 한쪽이 "틀렸다"기보다 앞으로 조율될 여지가 있는 부분이다. 이 문서는 개발자가 실제로 마주치는 Chrome 구현 기준으로 `navigator.modelContext`를 사용한다.
+
 ---
 
 ## 3. 왜 필요한가

@@ -205,7 +205,7 @@ interface NotificationOptions {
     tag?: string;               // 알림 그룹 태그 (교체용)
     renotify?: boolean;         // 교체 시 다시 알림 (기본: false)
     requireInteraction?: boolean; // 사용자 상호작용까지 유지 (기본: false)
-    silent?: boolean;           // 무음 알림 (기본: false)
+    silent?: boolean | null;    // 무음 알림 (기본: null, OS 알림 설정을 따름)
 
     // 메타데이터
     data?: any;                 // 알림에 연결할 임의의 데이터
@@ -218,12 +218,16 @@ interface NotificationOptions {
     // 사용자 피드백
     vibrate?: number | number[]; // 진동 패턴
     actions?: NotificationAction[]; // 알림 액션 버튼
+
+    // 네비게이션
+    navigate?: string;          // 알림(본체) 클릭 시 이동할 URL (USVString, 기본: 현재 문서 URL)
 }
 
 interface NotificationAction {
     action: string;             // 액션 식별자
     title: string;              // 액션 버튼 텍스트
     icon?: string;              // 액션 버튼 아이콘 URL
+    navigate?: string;          // 액션 클릭 시 이동할 URL (USVString)
 }
 ```
 
@@ -246,7 +250,7 @@ console.log(notification.data);               // { messageId: 42 }
 console.log(notification.dir);                // "auto"
 console.log(notification.lang);               // ""
 console.log(notification.requireInteraction); // false
-console.log(notification.silent);             // false
+console.log(notification.silent);             // null (옵션을 지정하지 않은 경우 기본값)
 console.log(notification.timestamp);          // 생성 시 Date.now() 값
 console.log(notification.image);              // ""
 console.log(notification.badge);              // ""
@@ -505,7 +509,7 @@ new Notification('SOS', {
 ### 4.11 actions (액션)
 
 ```javascript
-// 알림에 액션 버튼 추가 (Service Worker에서만 완전 지원)
+// 알림에 액션 버튼 추가 (Service Worker의 지속 알림에서만 사용 가능)
 self.registration.showNotification('새 메시지', {
     body: '김철수: 내일 시간 되세요?',
     actions: [
@@ -521,6 +525,15 @@ self.registration.showNotification('새 메시지', {
         }
     ]
 });
+
+// 페이지 컨텍스트(new Notification())에서 actions를 지정하면 TypeError 발생
+try {
+    new Notification('알림', {
+        actions: [{ action: 'reply', title: '답장' }]
+    });
+} catch (e) {
+    console.error(e instanceof TypeError); // true
+}
 
 // 최대 액션 수 확인
 console.log('최대 액션 수:', Notification.maxActions);

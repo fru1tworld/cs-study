@@ -140,6 +140,7 @@ interface Event {
   undefined stopImmediatePropagation();
   undefined preventDefault();
   readonly attribute boolean defaultPrevented;
+  sequence<EventTarget> composedPath();
 };
 ```
 
@@ -163,6 +164,17 @@ interface Event {
 document.getElementById('parent').addEventListener('click', (e) => {
   console.log(e.target);        // button#child (클릭한 실제 요소)
   console.log(e.currentTarget); // div#parent   (리스너가 등록된 요소)
+});
+```
+
+### composedPath
+
+`composedPath()`는 이벤트가 실제로 통과한 전체 경로를 타겟에서 최상위 순서로 배열로 반환한다. Shadow DOM 내부에서 발생한 이벤트는 `target`이 호스트 요소로 리타게팅되어 원래 발생 지점을 알기 어려운데, `composedPath()`는 리타게팅 이전의 실제 경로(Shadow 경계 포함)를 그대로 보여준다.
+
+```js
+shadow.addEventListener('click', (e) => {
+  console.log(e.composedPath());
+  // [실제 클릭된 요소, ..., shadowRoot, 호스트 요소, ..., document, window]
 });
 ```
 

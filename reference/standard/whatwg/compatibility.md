@@ -167,7 +167,7 @@ Compatibility Standard에서 가장 큰 비중을 차지하는 것이 CSS `-webk
 
 ### 3.5 -webkit-appearance
 
-`-webkit-appearance`는 폼 요소의 네이티브 스타일링을 제어하는 속성이다.
+`-webkit-appearance`는 폼 요소의 네이티브 스타일링을 제어하는 속성이다. 다만 이 속성과 표준 `appearance`의 매핑은 현재 Compatibility Standard가 아니라 CSS Basic User Interface Module(CSS-UI)에서 정의한다. Compatibility Standard는 초기에 이 매핑을 다뤘지만 이후 해당 CSS 모듈로 이관되었다.
 
 ```css
 /* 네이티브 스타일 제거 */
@@ -328,7 +328,7 @@ body {
 | `-webkit-transition` | `transition` | |
 | `-webkit-animation` | `animation` | |
 | `-webkit-filter` | `filter` | |
-| `-webkit-appearance` | `appearance` | |
+| `-webkit-appearance` | `appearance` | CSS-UI 모듈에서 정의 (Compatibility Standard 범위 아님) |
 | `-webkit-background-clip` | `background-clip` | `text` 값 포함 |
 | `-webkit-opacity` | `opacity` | |
 | `-webkit-order` | `order` | |
@@ -447,23 +447,24 @@ screen.orientation.addEventListener('change', function() {
 | 잠금 기능 | 없음 | `lock()`, `unlock()` |
 | Compatibility Standard | 포함 | W3C Screen Orientation API |
 
-### 4.4 webkit 접두사 DOM API
+### 4.4 webkit 접두사 DOM API (참고: 현재 스펙 범위 밖)
+
+`webkitRequestAnimationFrame`, `webkitCancelAnimationFrame`, `webkitURL`, `video.webkitEnterFullscreen()` 등은 과거 여러 브라우저에서 흔히 쓰이던 webkit 접두사 API지만, 현재 Compatibility Standard 문서에는 이들을 표준화한다는 내용이 없다. 아래 코드는 실제로 브라우저에 남아 있는 레거시 API를 소개하는 것일 뿐, Compatibility Standard가 규정한 내용이 아니므로 참고용으로만 확인한다.
 
 ```javascript
-// webkitRequestAnimationFrame
-// Compatibility Standard에서 표준화
+// webkitRequestAnimationFrame (레거시, 표준 아님)
 window.webkitRequestAnimationFrame(callback);
-// → window.requestAnimationFrame(callback) 으로 매핑
+// 표준: window.requestAnimationFrame(callback)
 
-// webkitCancelAnimationFrame
+// webkitCancelAnimationFrame (레거시, 표준 아님)
 window.webkitCancelAnimationFrame(id);
-// → window.cancelAnimationFrame(id) 으로 매핑
+// 표준: window.cancelAnimationFrame(id)
 
-// webkitURL
+// webkitURL (레거시, 표준 아님)
 window.webkitURL;
-// → window.URL 으로 매핑
+// 표준: window.URL
 
-// HTMLVideoElement의 webkit 접두사 메서드
+// HTMLVideoElement의 webkit 접두사 메서드 (레거시, 표준 아님)
 video.webkitEnterFullscreen();
 video.webkitExitFullscreen();
 video.webkitDisplayingFullscreen;   // 읽기 전용 속성
@@ -472,11 +473,11 @@ video.webkitSupportsFullscreen;     // 읽기 전용 속성
 
 ---
 
-## 5. 터치 이벤트 호환성
+## 5. 터치 이벤트 호환성 (참고: 현재 스펙 범위 밖)
 
 ### 5.1 터치 이벤트 모델
 
-Compatibility Standard는 터치 이벤트의 호환성 동작도 정의한다. WebKit에서 처음 구현된 터치 이벤트 모델은 이후 W3C Touch Events 사양으로 표준화되었지만, 일부 호환성 관련 동작은 Compatibility Standard에서 다룬다.
+터치 이벤트는 WebKit에서 처음 구현되어 이후 W3C Touch Events 사양으로 표준화된 것으로, 현재 Compatibility Standard 문서에는 터치 이벤트를 다루는 내용이 없다. 아래 내용은 실무에서 자주 마주치는 터치 이벤트 관련 호환성 이슈를 정리한 참고 자료다.
 
 ```javascript
 // 기본 터치 이벤트
@@ -528,16 +529,15 @@ click
 ### 5.3 ontouchstart 속성
 
 ```javascript
-// Compatibility Standard에서 정의하는 ontouchstart 등의 이벤트 핸들러
-// 이 속성들이 존재하는지 확인하여 터치 지원을 감지하는 코드가 많음
+// ontouchstart 등의 이벤트 핸들러 속성이 존재하는지 확인하여
+// 터치 지원을 감지하는 코드가 많음
 
 // 흔한 (하지만 부정확한) 터치 감지 방법
 if ('ontouchstart' in window) {
     // 터치 디바이스로 판단
 }
 
-// Compatibility Standard는 데스크톱 브라우저에서도
-// ontouchstart가 존재할 수 있음을 명시
+// 데스크톱 브라우저에서도 ontouchstart가 존재할 수 있으므로
 // → 터치 감지에 이 방법만 사용하면 안 됨
 
 // 더 나은 방법
@@ -560,7 +560,6 @@ element.addEventListener('touchstart', function(e) {
 }, { passive: false });
 
 // Chrome은 성능을 위해 touchstart를 passive로 기본 설정
-// Compatibility Standard는 이 동작도 문서화
 
 // Touch 인터페이스의 호환성 속성
 element.addEventListener('touchstart', function(e) {
@@ -576,7 +575,7 @@ element.addEventListener('touchstart', function(e) {
     touch.pageX;
     touch.pageY;
 
-    // WebKit 비표준 속성 (Compatibility Standard)
+    // WebKit 비표준 속성 (Compatibility Standard 범위 밖)
     touch.radiusX;     // 터치 영역 반경 X
     touch.radiusY;     // 터치 영역 반경 Y
     touch.rotationAngle; // 터치 영역 회전각
@@ -604,12 +603,12 @@ html {
    가로 모드 전환 시 텍스트가 확대됨 */
 ```
 
-### 6.2 -webkit-line-clamp
+### 6.2 -webkit-line-clamp (참고: 현재 스펙 범위 밖)
 
-여러 줄 텍스트 말줄임 처리를 위한 비표준 속성으로, 매우 널리 사용된다.
+여러 줄 텍스트 말줄임 처리를 위한 비표준 속성으로, 매우 널리 사용되어 왔다. 다만 이는 Compatibility Standard가 아니라 CSS Overflow Module 영역이며, 현재 스펙 문서에는 이 속성을 다루는 내용이 없다. 최근에는 대부분의 주요 브라우저가 접두사 없는 표준 `line-clamp` 속성도 지원하기 시작했다.
 
 ```css
-/* 3줄 말줄임 */
+/* 3줄 말줄임 (레거시 방식) */
 .multiline-ellipsis {
     display: -webkit-box;
     -webkit-line-clamp: 3;
@@ -617,16 +616,14 @@ html {
     overflow: hidden;
 }
 
-/* Compatibility Standard에 의해 모든 브라우저가 지원해야 함 */
-/* 이 세 가지 속성의 조합이 필수 */
-/*
-    display: -webkit-box;      → line-clamp의 전제 조건
-    -webkit-box-orient: vertical; → 세로 방향 설정
-    -webkit-line-clamp: N;     → N줄 제한
-*/
+/* 표준 line-clamp (최신 브라우저) */
+.multiline-ellipsis-standard {
+    line-clamp: 3;
+    overflow: hidden;
+}
 ```
 
-### 6.3 -webkit-tap-highlight-color
+### 6.3 -webkit-tap-highlight-color (참고: 현재 스펙 범위 밖)
 
 모바일에서 터치 시 나타나는 하이라이트 색상을 제어한다.
 
@@ -643,7 +640,7 @@ a, button {
 }
 ```
 
-### 6.4 -webkit-overflow-scrolling
+### 6.4 -webkit-overflow-scrolling (참고: 현재 스펙 범위 밖)
 
 iOS에서 관성(momentum) 스크롤을 활성화하는 속성이다.
 
@@ -659,7 +656,7 @@ iOS에서 관성(momentum) 스크롤을 활성화하는 속성이다.
 */
 ```
 
-### 6.5 -webkit-user-select
+### 6.5 -webkit-user-select (참고: 현재 스펙 범위 밖)
 
 텍스트 선택 가능 여부를 제어한다.
 
@@ -742,7 +739,7 @@ iOS에서 관성(momentum) 스크롤을 활성화하는 속성이다.
 ```css
 /* 2024년 기준 여전히 -webkit- 필요한 경우 */
 
-/* -webkit-line-clamp (대안 없음) */
+/* -webkit-line-clamp (표준 line-clamp를 지원하지 않는 구형 브라우저 대응) */
 .truncate {
     display: -webkit-box;
     -webkit-line-clamp: 3;
@@ -769,22 +766,20 @@ button {
 
 ### 8.1 Compatibility Standard 지원 현황
 
-| 기능 | Chrome | Firefox | Safari | Edge |
-|------|--------|---------|--------|------|
-| `-webkit-transform` | 지원 | 지원 | 지원 | 지원 |
-| `-webkit-transition` | 지원 | 지원 | 지원 | 지원 |
-| `-webkit-animation` | 지원 | 지원 | 지원 | 지원 |
-| `-webkit-appearance` | 지원 | 지원 | 지원 | 지원 |
-| `-webkit-filter` | 지원 | 지원 | 지원 | 지원 |
-| `-webkit-flex` | 지원 | 지원 | 지원 | 지원 |
-| `display: -webkit-box` | 지원 | 지원 | 지원 | 지원 |
-| `-webkit-line-clamp` | 지원 | 지원 | 지원 | 지원 |
-| `-webkit-text-size-adjust` | 지원 | 지원 | 지원 | 지원 |
-| `-webkit-text-fill-color` | 지원 | 지원 | 지원 | 지원 |
-| `-webkit-text-stroke` | 지원 | 지원 | 지원 | 지원 |
-| `window.orientation` | 지원 | 지원 | 지원 | 지원 |
-| `orientationchange` | 지원 | 지원 | 지원 | 지원 |
-| `-webkit-user-select` | 지원 | 지원 | 지원 | 지원 |
+Compatibility Standard(https://compat.spec.whatwg.org/)가 실제로 규정하는 항목은 `-webkit-text-fill-color`, `-webkit-text-stroke`(및 `-width`/`-color`), `window.orientation`/`orientationchange` 정도로 많지 않다. 나머지 `-webkit-` 속성들은 앞서 각 절에서 밝혔듯 CSS-UI, CSS Overflow Module 등 다른 스펙이 다루거나 아예 표준화되지 않은 채 관행적으로 구현된 것이다.
+
+| 기능 | Chrome | Firefox | Safari | Edge | 근거 스펙 |
+|------|--------|---------|--------|------|-----------|
+| `-webkit-text-fill-color` | 지원 | 지원 | 지원 | 지원 | Compatibility Standard |
+| `-webkit-text-stroke` | 지원 | 지원 | 지원 | 지원 | Compatibility Standard |
+| `window.orientation` | 지원 | 지원 | 지원 | 지원 | Compatibility Standard |
+| `orientationchange` | 지원 | 지원 | 지원 | 지원 | Compatibility Standard |
+| `-webkit-appearance` | 지원 | 지원 | 지원 | 지원 | CSS Basic User Interface (CSS-UI) |
+| `-webkit-line-clamp` | 지원 | 지원 | 지원 | 지원 | CSS Overflow Module (범위 밖) |
+| `-webkit-transform`/`-transition`/`-animation`/`-filter`/`-flex` 등 | 지원 | 지원 | 지원 | 지원 | 각 CSS 모듈에 흡수, Compatibility Standard 범위 밖 |
+| `display: -webkit-box` | 지원 | 지원 | 지원 | 지원 | 표준화되지 않음 (레거시 Flexbox, 범위 밖) |
+| `-webkit-text-size-adjust` | 지원 | Firefox 46+ | 지원 | 지원 | 범위 밖 |
+| `-webkit-user-select` | 지원 | 지원 | 지원 | 지원 | 범위 밖 |
 
 ### 8.2 Firefox의 -webkit- 접두사 지원 이력
 

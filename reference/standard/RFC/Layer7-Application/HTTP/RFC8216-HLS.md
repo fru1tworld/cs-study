@@ -539,8 +539,8 @@ seg103.ts
 | 3 | EXTINF 부동소수점 지속시간 |
 | 4 | EXT-X-BYTERANGE, EXT-X-I-FRAMES-ONLY |
 | 5 | KEYFORMAT, KEYFORMATVERSIONS, I-프레임용 EXT-X-MAP |
-| 6 | 일반 EXT-X-MAP 사용, EXT-X-I-FRAME-STREAM-INF 없이 CLOSED-CAPTIONS 없음 불가 |
-| 7 | EXT-X-MEDIA의 추가 기능 |
+| 6 | EXT-X-I-FRAMES-ONLY가 없는 미디어 플레이리스트에서 EXT-X-MAP 사용 |
+| 7 | EXT-X-MEDIA의 INSTREAM-ID="SERVICE..." 값 지원, EXT-X-ALLOW-CACHE 태그 제거 |
 
 ## 8. 플레이리스트 예시
 

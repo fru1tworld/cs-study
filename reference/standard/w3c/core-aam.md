@@ -1,6 +1,6 @@
 # Core Accessibility API Mappings (Core-AAM) 1.2
 
-> W3C Recommendation, 2019년 12월
+> W3C Candidate Recommendation Draft (진행 중, 아직 정식 REC 아님). 현재 확정된 버전은 Core-AAM 1.1(W3C Recommendation, 2017년 12월 14일)이며, 1.2는 이를 갱신해 향후 대체할 예정이다.
 
 ## 1. 개요
 

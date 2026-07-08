@@ -22,6 +22,8 @@ Content-Security-Policy: default-src 'self'; script-src 'self' 'nonce-r4nd0m123'
 | Reporting 지시자 | `report-to`, `report-uri`(구) | 정책 위반 시 보고 대상 |
 | Other 지시자 | `upgrade-insecure-requests`, `require-trusted-types-for` | HTTP→HTTPS 자동 승격, Trusted Types 강제 |
 
+> 참고: `worker-src`는 동작 방식은 다른 Fetch 지시자와 유사하지만, CSP3 스펙 원문의 절 구성상으로는 `webrtc`와 함께 "Other Directives"로 분류된다. 또한 `upgrade-insecure-requests`와 `require-trusted-types-for`는 CSP3가 직접 정의하는 지시자가 아니라, 각각 [Upgrade Insecure Requests](https://www.w3.org/TR/upgrade-insecure-requests/)와 [Trusted Types](https://www.w3.org/TR/trusted-types/) 스펙에서 정의하고 CSP 헤더 문법에 통합되는 것이다.
+
 ---
 
 ## 3. 소스 표현식(Source Expression)
