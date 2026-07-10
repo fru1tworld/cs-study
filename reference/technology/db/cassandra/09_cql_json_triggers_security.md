@@ -1,6 +1,6 @@
 # CQL JSON, 트리거, 보안
 
-> 원본: https://cassandra.apache.org/doc/latest/cassandra/cql/
+> 원본: https://cassandra.apache.org/doc/latest/cassandra/developing/cql/
 
 ---
 
@@ -643,6 +643,6 @@ LIST SELECT PERMISSIONS OF carlos;
 ## 참고 자료
 
 - [Apache Cassandra 공식 문서](https://cassandra.apache.org/doc/latest/)
-- [CQL JSON](https://cassandra.apache.org/doc/latest/cassandra/cql/json.html)
-- [CQL Triggers](https://cassandra.apache.org/doc/latest/cassandra/cql/triggers.html)
-- [CQL Security](https://cassandra.apache.org/doc/latest/cassandra/cql/security.html)
+- [CQL JSON](https://cassandra.apache.org/doc/latest/cassandra/developing/cql/json.html)
+- [CQL Triggers](https://cassandra.apache.org/doc/latest/cassandra/developing/cql/triggers.html)
+- [CQL Security](https://cassandra.apache.org/doc/latest/cassandra/developing/cql/security.html)

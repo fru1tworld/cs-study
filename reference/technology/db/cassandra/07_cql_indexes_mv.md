@@ -1,6 +1,6 @@
 # CQL 보조 인덱스와 구체화된 뷰
 
-> 원본: https://cassandra.apache.org/doc/latest/cassandra/cql/
+> 원본: https://cassandra.apache.org/doc/latest/cassandra/developing/cql/
 
 ---
 

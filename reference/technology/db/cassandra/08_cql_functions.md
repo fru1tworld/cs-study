@@ -1,6 +1,6 @@
 # CQL 함수와 집계
 
-> 원본: https://cassandra.apache.org/doc/latest/cassandra/cql/functions.html
+> 원본: https://cassandra.apache.org/doc/latest/cassandra/developing/cql/functions.html
 
 ---
 
@@ -606,4 +606,4 @@ DROP AGGREGATE someAggregate ( text );
 ## 참고 자료
 
 - [Apache Cassandra 공식 문서](https://cassandra.apache.org/doc/latest/)
-- [CQL Functions](https://cassandra.apache.org/doc/latest/cassandra/cql/functions.html)
+- [CQL Functions](https://cassandra.apache.org/doc/latest/cassandra/developing/cql/functions.html)
