@@ -1096,7 +1096,7 @@ def decodeTuple[T <: Tuple](decoders: T): Decoder[...]
 Tuple.Map[(A1, A2, ..., AN), Decoder]
 ```
 
-`Tuple.Map`은 "[match type](https://docs.scala-lang.org/scala3/reference/new-types/match-types.html)"이라 불리는 특별한 종류의 타입입니다. 패턴과 재귀 호출을 작성하여 타입 간의 비자명한 관계를 명시할 수 있습니다. `Tuple.Map`의 정의는 대략 다음과 같습니다:
+`Tuple.Map`은 "[match type](https://docs.scala-lang.org/scala3/reference/new-types/match-types.html)"이라 불리는 특별한 종류의 타입입니다. 패턴과 재귀 호출을 작성하여 타입 간의 복잡한 관계를 명시할 수 있습니다. `Tuple.Map`의 정의는 대략 다음과 같습니다:
 
 ```scala
 type Map[T <: Tuple, F[_]] <: Tuple = // 1

@@ -105,7 +105,7 @@ def lastComponentOf[T](thing: T): ConstituentPartOf[T] = thing match
     else l.last
 ```
 
-이로써 통합을 통해 문제를 해결했다.
+이렇게 통합함으로써 문제를 해결했다.
 
 ---
 

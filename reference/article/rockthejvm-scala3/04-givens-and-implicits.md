@@ -13,7 +13,7 @@
 - Scala 3: Given and Using Clauses
 - Scala 3: Givens vs Implicits Quickly Explained
 
-Scala 3에서 given/using 조합이 도입된 이유는, 오용하기 쉬운 `implicit` 키워드의 권한을 줄이기 위해서다. implicit이 담당하던 주요 역할은 다음과 같다:
+Scala 3에서 given/using 조합이 도입된 이유는, 오용하기 쉬운 `implicit` 키워드의 영향력(역할)을 줄이기 위해서다. implicit이 담당하던 주요 역할은 다음과 같다:
 
 - 암시적 인자(implicit argument) — 이제 given/using으로 해결
 - 타입 클래스(type class) — 역시 given/using으로 해결
@@ -33,7 +33,7 @@ Scala 3의 given 인스턴스와 using 절은 기존의 implicit val/object + im
 
 그렇다면 implicit이 잔뜩 있는 기존 코드베이스에서 새로운 given 기반 메커니즘을 어떻게 쓸 수 있을까?
 
-`given` 메커니즘은 메서드에 필요한 인스턴스를 찾아 삽입하는 목적에서 `implicit` 메커니즘과 동일하게 동작한다. 구체적으로, `using` 절을 지정하면 컴파일러는 다음 위치에서 순서대로 `given` 인스턴스를 탐색한다:
+`given` 메커니즘은 메서드에 필요한 인스턴스를 찾아 삽입한다는 점에서 `implicit` 메커니즘과 동일하게 동작한다. 구체적으로, `using` 절을 지정하면 컴파일러는 다음 위치에서 순서대로 `given` 인스턴스를 탐색한다:
 
 - 메서드가 정의된 로컬 스코프
 - 명시적으로 import된 모든 클래스, 객체, 패키지의 스코프

@@ -20,7 +20,7 @@
 
 ## 왜 중요한가
 
-테스트 작성은 중요하다. 하지만 테스트는 샘플일 뿐이다. 깨질 것 같은 부분만 검사한다. 반면 컴파일러는 *구조에 대해 빠짐없이 검사*한다. 모든 필드, 모든 타입이 매번 일치하는지 증명할 수 있다.
+테스트 작성은 중요하다. 하지만 테스트는 샘플일 뿐이다. 깨질 것 같은 부분만 검사한다. 반면 컴파일러는 *구조를 빠짐없이 검사*한다. 모든 필드, 모든 타입이 매번 일치하는지 증명할 수 있다.
 
 실제 프로젝트에서 스키마는 수시로 바뀐다. 그때 이런 원칙이 필요하다:
 
@@ -536,7 +536,7 @@ PrimitiveShape("String")
   → SequenceShape(PrimitiveShape("String"))
 ```
 
-잠깐, `Option`은 어디 갔나? 소비되었다! `typeShapeOf`가 `Option`을 만나면 내부 타입에 대해 재귀할 뿐이다. 이것이 앞서 언급한 엣지 케이스다. 요소 수준의 optionality가 사라진다.
+잠깐, `Option`은 어디 갔나? 소비되었다! `typeShapeOf`가 `Option`을 만나면 내부 타입으로 재귀할 뿐이다. 이것이 앞서 언급한 엣지 케이스다. 요소 수준의 optionality가 사라진다.
 
 ### case class 처리:
 
@@ -570,7 +570,7 @@ if isCaseClass(t) then {
   - **`optionArg(ptpe).fold(...)`** - 필드 타입이 Option[T]인지 확인:
     - 맞으면: T를 추출, `isOpt = true`
     - 아니면: 타입 그대로, `isOpt = false`
-  - **`typeShapeOf(uT)`** - **재귀!** 필드의 기저 타입에 대해 shape를 만든다
+  - **`typeShapeOf(uT)`** - **재귀!** 필드의 기저 타입의 shape를 만든다
 
 ### 예제:
 
@@ -666,7 +666,7 @@ optionArg(t).map(typeShapeOf).getOrElse {
 따라서 `List[Option[String]]`은:
 
 - `seqArg`이 List를 감지 → `Option[String]` 추출
-- `Option[String]`에 대해 재귀 → `typeShapeOf(Option[String])`
+- `Option[String]`으로 재귀 → `typeShapeOf(Option[String])`
 - `optionArg`이 Option을 감지 → `String` 추출
 - 기저 케이스: `PrimitiveShape("String")`
 
@@ -984,8 +984,8 @@ val evDeepOk: SchemaConforms[OrderOut, OrderContract, SchemaPolicy.Backward.type
 **여기서 무슨 일이 일어나는가:**
 
 - **중첩된 case class** - `OrderOut` 안의 `Address`. 매크로가 재귀한다: `Option[Address]`를 보면 `Address`로 언랩하고, `Address`가 case class인지 확인한 뒤 다시 재귀해서 필드를 가져온다.
-- **컬렉션** - `List[LineItem]` vs `Seq[LineItem]`. `seqArg`이 둘 다 동등하게 취급하므로 일치한다. 매크로는 "LineItem의 시퀀스"를 보고 `LineItem`에 대해 재귀한다.
-- **Map** - `attrs`의 `Map[String, String]`. 매크로가 key 타입(atomic이어야 함)을 검사한 뒤 value 타입에 대해 재귀한다.
+- **컬렉션** - `List[LineItem]` vs `Seq[LineItem]`. `seqArg`이 둘 다 동등하게 취급하므로 일치한다. 매크로는 "LineItem의 시퀀스"를 보고 `LineItem`으로 재귀한다.
+- **Map** - `attrs`의 `Map[String, String]`. 매크로가 key 타입(atomic이어야 함)을 검사한 뒤 value 타입으로 재귀한다.
 - **기본값** - `tags: Seq[String] = Nil`은 기본값이 있다. Backward 정책 하에서 `OrderOut`에 `tags`가 없으면 계약에 기본값이 있으므로 OK다.
 
 이것이 TypeInspector 패턴이 중요한 이유다. 특수한 경우 처리 없이 임의의 중첩을 다룬다.

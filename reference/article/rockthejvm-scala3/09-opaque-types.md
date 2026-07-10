@@ -89,7 +89,7 @@ object Graphics {
 }
 ```
 
-`Color`와 `ColorFilter`는 클래스 계층에서 가능한 치환과 같은 방식으로 사용할 수 있다.
+`Color`와 `ColorFilter`는 클래스 계층에서의 치환(substitution)과 동일한 방식으로 사용할 수 있다.
 
 ```scala
 import Graphics._

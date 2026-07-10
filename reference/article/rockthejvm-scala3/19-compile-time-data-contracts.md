@@ -51,7 +51,7 @@
 
 ## 왜 중요한가
 
-테스트를 작성하는 건 중요하다. 하지만 테스트는 샘플일 뿐이다 - 깨질 것 같다고 생각하는 부분만 확인한다. 반면 컴파일러는 _구조에 대해 빠짐없이 검증한다_. 스키마가 일치하는지 증명할 수 있다 - 모든 필드, 모든 타입, 매번.
+테스트를 작성하는 건 중요하다. 하지만 테스트는 샘플일 뿐이다 - 깨질 것 같다고 생각하는 부분만 확인한다. 반면 컴파일러는 _구조를 빠짐없이 검증한다_. 스키마가 일치하는지 증명할 수 있다 - 모든 필드, 모든 타입, 매번.
 
 실제 프로젝트에서 스키마는 수시로 바뀐다. 그리고 바뀔 때:
 
@@ -637,7 +637,7 @@ optionArg(t).map(typeShapeOf).getOrElse {
 따라서 `List[Option[String]]`은 다음과 같이 처리된다:
 
   1. `seqArg`가 List를 감지 -> `Option[String]` 추출
-  2. `Option[String]`에 대해 재귀 -> `typeShapeOf(Option[String])`
+  2. `Option[String]`으로 재귀 -> `typeShapeOf(Option[String])`
   3. `optionArg`가 Option을 감지 -> `String` 추출
   4. 기본 케이스: `PrimitiveShape("String")`
 
@@ -927,9 +927,9 @@ val evDeepOk: SchemaConforms[OrderOut, OrderContract, SchemaPolicy.Backward.type
 
   1. **중첩된 case class** - `OrderOut` 안의 `Address`. 매크로가 재귀한다: `Option[Address]`를 만나면 언래핑하여 `Address`를 꺼내고, `Address`가 case class인지 확인한 다음 다시 재귀하여 필드를 가져온다.
 
-  2. **컬렉션** - `List[LineItem]` vs `Seq[LineItem]`. `seqArg`가 이들을 동등하게 취급하므로 둘 다 일치한다. 매크로는 "LineItem의 시퀀스"로 보고 `LineItem`에 대해 재귀한다.
+  2. **컬렉션** - `List[LineItem]` vs `Seq[LineItem]`. `seqArg`가 이들을 동등하게 취급하므로 둘 다 일치한다. 매크로는 "LineItem의 시퀀스"로 보고 `LineItem`으로 재귀한다.
 
-  3. **Map** - `attrs`의 `Map[String, String]`. 매크로가 키 타입(원자 타입이어야 함)을 확인한 후 값 타입에 대해 재귀한다.
+  3. **Map** - `attrs`의 `Map[String, String]`. 매크로가 키 타입(원자 타입이어야 함)을 확인한 후 값 타입으로 재귀한다.
 
   4. **기본값** - `tags: Seq[String] = Nil`은 기본값이 있다. Backward 정책에서 `OrderOut`에 `tags`가 없으면, 계약에 기본값이 있으므로 허용된다.
 
