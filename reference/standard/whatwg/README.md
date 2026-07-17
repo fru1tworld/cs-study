@@ -128,7 +128,7 @@ Ian "Hixie" Hickson은 WHATWG의 핵심 인물이다:
 │              Workstream Editors                   │
 │                                                  │
 │   각 Living Standard의 편집 담당자                  │
-│   - HTML: Domenic Denicola 등                     │
+│   - HTML: Simon Pieters                           │
 │   - DOM: Anne van Kesteren 등                     │
 │   - Fetch: Anne van Kesteren 등                   │
 │   - URL: Anne van Kesteren 등                     │
@@ -241,13 +241,13 @@ WHATWG는 현재 다음 Living Standard들을 관리한다:
 
 | # | 표준 | 설명 | 주요 에디터 | 규모 |
 |---|------|------|-----------|------|
-| 1 | [HTML](html.md) | 웹의 핵심 마크업 언어 및 API | Domenic Denicola 등 | 매우 큼 |
+| 1 | [HTML](html.md) | 웹의 핵심 마크업 언어 및 API | Simon Pieters | 매우 큼 |
 | 2 | [DOM](dom.md) | 문서 객체 모델 | Anne van Kesteren | 큼 |
 | 3 | [Fetch](fetch.md) | 네트워크 요청 및 응답 | Anne van Kesteren | 중간 |
 | 4 | [URL](url.md) | URL 파싱 및 직렬화 | Anne van Kesteren | 중간 |
-| 5 | [Streams](streams.md) | 스트림 API | Adam Rice, Domenic Denicola | 중간 |
+| 5 | [Streams](streams.md) | 스트림 API | Mattias Buelens | 중간 |
 | 6 | [Encoding](encoding.md) | 문자 인코딩 | Anne van Kesteren | 중간 |
-| 7 | [Console](console.md) | 콘솔 API | Domenic Denicola, Terin Stock | 작음 |
+| 7 | [Console](console.md) | 콘솔 API | Dominic Farolino, Robert Kowalski, Terin Stock | 작음 |
 | 8 | [XMLHttpRequest](xhr.md) | XHR API | Anne van Kesteren | 중간 |
 | 9 | [Compatibility](compatibility.md) | 웹 호환성 | Mike Taylor | 작음 |
 | 10 | [Notifications API](notifications.md) | 알림 API | Anne van Kesteren | 작음 |
@@ -255,7 +255,7 @@ WHATWG는 현재 다음 Living Standard들을 관리한다:
 | 12 | [Storage](storage.md) | 스토리지 관리 | Anne van Kesteren | 작음 |
 | 13 | [Quirks Mode](quirks.md) | 쿼크 모드 동작 | Simon Pieters | 작음 |
 | 14 | [MIME Sniffing](mime-sniffing.md) | MIME 타입 감지 | Gordon P. Hemsley | 중간 |
-| 15 | [Infra](infra.md) | 기반 자료 구조 및 알고리즘 | Anne van Kesteren, Domenic Denicola | 중간 |
+| 15 | [Infra](infra.md) | 기반 자료 구조 및 알고리즘 | Anne van Kesteren | 중간 |
 
 ### 표준 간의 관계도
 

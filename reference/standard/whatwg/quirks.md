@@ -53,7 +53,7 @@ Quirks Mode Standard는 WHATWG에서 관리하는 Living Standard로, 웹 브라
 |------|------|
 | 별칭 | 호환성 모드 (Compatibility Mode) |
 | 활성화 조건 | DOCTYPE이 없거나 특정 구형 DOCTYPE |
-| CSS 박스 모델 | IE 박스 모델 (border-box) |
+| CSS 박스 모델 | `display: table-cell` 요소의 높이 계산에 한해 IE 박스 모델(border-box) 적용 |
 | 렌더링 | 1990년대 브라우저 동작 재현 |
 | `document.compatMode` | `"BackCompat"` |
 
@@ -91,17 +91,16 @@ Quirks Mode    Limited-quirks Mode    No-quirks Mode
 ```
 [핵심 차이점 요약]
 
-                    Quirks      Limited-quirks   No-quirks
-박스 모델           border-box   content-box      content-box
-인라인 이미지 갭    없음         없음(*)          있음(기본)
-body 배경 전파      특수 규칙    표준             표준
-% height 계산      특수         표준             표준
-font-size 상속     특수         표준             표준
-스크롤 요소        body         html             html
-ID 대소문자        무시         구분             구분
+                          Quirks           Limited-quirks   No-quirks
+테이블 셀 높이 계산       border-box(*)    content-box      content-box
+line-height 관련 quirks   적용             적용             미적용
+body 배경 전파           특수 규칙        표준             표준
+% height 계산            특수             표준             표준
+스크롤 요소              body             html             html
+ID 대소문자              무시             구분             구분
 
-(*) limited-quirks의 핵심 quirk:
-    테이블 셀에서의 인라인 요소 기준선 처리
+(*) `display: table-cell` 요소의 height/min-height/max-height 계산에 한정된 quirk.
+    width 계산에는 영향을 주지 않는다.
 ```
 
 ---
@@ -234,9 +233,9 @@ DOCTYPE 존재?
 
 ## 4. 쿼크 모드의 CSS 차이점
 
-### 4.1 박스 모델 차이
+### 4.1 박스 모델 차이 (테이블 셀 높이 계산)
 
-쿼크 모드에서 가장 중요한 차이점은 CSS 박스 모델이다.
+쿼크 모드의 CSS 박스 모델 quirk는 전체 요소에 적용되는 것이 아니라, `display: table-cell`인 요소의 `height`/`min-height`/`max-height` 계산에만 한정된다. `width` 계산에는 영향을 주지 않는다.
 
 ```
 [표준 박스 모델 (No-quirks Mode)]
@@ -258,7 +257,7 @@ width와 height는 content 영역만을 의미
 전체 너비 = width + padding-left + padding-right + border-left + border-right
 
 
-[IE 박스 모델 (Quirks Mode)]
+[IE 박스 모델 (Quirks Mode, table-cell 요소의 높이 계산에 한정)]
 box-sizing: border-box
 
 ┌─────────── margin ──────────┐
@@ -279,21 +278,19 @@ content 너비 = width - padding-left - padding-right - border-left - border-rig
 ```
 
 ```css
-/* 실제 차이 예시 */
-.box {
-    width: 200px;
+/* 실제 차이 예시: table-cell 요소의 높이 계산에서만 나타남 */
+td {
+    height: 100px;
     padding: 20px;
     border: 5px solid black;
 }
 
-/* No-quirks Mode (표준):
-   전체 너비 = 200 + 20*2 + 5*2 = 250px
-   content 너비 = 200px
+/* No-quirks Mode (표준): height는 content 영역만 의미
+   → 셀 전체 높이 = 100 + 20*2 + 5*2 = 150px
 */
 
-/* Quirks Mode:
-   전체 너비 = 200px
-   content 너비 = 200 - 20*2 - 5*2 = 150px
+/* Quirks Mode: height가 border까지 포함하는 것으로 계산
+   → 셀 전체 높이 = 100px, content 높이 = 100 - 20*2 - 5*2 = 50px
 */
 ```
 
@@ -315,22 +312,22 @@ td {
 }
 ```
 
-### 4.3 인라인 요소의 크기
+### 4.3 테이블 셀 내 이미지의 줄바꿈
 
-```css
-/* 쿼크 모드에서 인라인 요소에 width/height 적용 가능 */
+```
+[Quirks Mode 전용 quirk]
 
-/* No-quirks Mode: span에 width/height 무시됨 */
-span {
-    width: 100px;   /* 무시됨 */
-    height: 50px;   /* 무시됨 */
-}
+너비가 auto인 테이블 셀 안의 이미지는 줄바꿈(개행) 기회를 갖지 못한다.
+No-quirks Mode에서는 이런 제약이 없다.
+```
 
-/* Quirks Mode: 일부 인라인 요소에 width/height가 적용됨 */
-span {
-    width: 100px;   /* 적용될 수 있음 */
-    height: 50px;   /* 적용될 수 있음 */
-}
+### 4.3.1 nowrap 셀의 최소 너비
+
+```
+[Quirks Mode 전용 quirk]
+
+width와 nowrap 속성이 함께 지정된 테이블 셀은,
+지정된 width와 콘텐츠의 min-content 너비 중 더 큰 값을 사용한다.
 ```
 
 ### 4.4 Percentage Height 계산
@@ -372,25 +369,23 @@ span {
 */
 ```
 
-### 4.6 Font Size 상속
+### 4.6 테이블의 색상 상속과 장식
 
 ```css
-/* 테이블에서의 폰트 크기 상속 */
+/* Quirks Mode 전용 quirk: 테이블은 body의 color를 별도 규칙("quirk-inherit")으로 상속받는다.
+   또한 text-decoration(밑줄 등)은 테이블 요소 경계를 넘어 전파되지 않는다. */
 
 body {
-    font-size: 14px;
+    color: blue;
+    text-decoration: underline;
 }
 
 table {
-    /* No-quirks Mode: body의 font-size를 상속받음 → 14px */
-    /* Quirks Mode: 브라우저 기본 font-size를 사용할 수 있음 → medium (~16px) */
-}
-
-/* 해결 방법: 명시적으로 지정 */
-table {
-    font-size: inherit;  /* 또는 font-size: 100%; */
+    /* Quirks Mode: color는 상속되지만 밑줄은 테이블 내부까지 이어지지 않음 */
 }
 ```
+
+빈 테이블(행 그룹이나 채워진 열 그룹이 없는 `<table>`)은 Quirks Mode에서 높이 0, `border-style: none`으로 축소된다.
 
 ### 4.7 이미지 주변의 공백
 
@@ -464,20 +459,23 @@ body {
 /* 3. 잘못된 구문 처리가 더 관대함 */
 ```
 
+> 위 두 quirk(단위 없는 길이값, 잘못된 색상값 파싱)는 quirks mode뿐 아니라 limited-quirks mode에도 동일하게 적용된다.
+
 ### 4.10 전체 CSS 차이점 요약표
 
 | CSS 동작 | No-quirks Mode | Quirks Mode |
 |----------|---------------|-------------|
-| 박스 모델 | content-box | border-box |
+| table-cell 높이 계산 | content-box | border-box |
 | % height (부모 height 없을 때) | auto로 처리 | 가장 가까운 높이 기준 |
-| 테이블 font-size 상속 | 부모로부터 상속 | 브라우저 기본값 사용 가능 |
-| 인라인 이미지 아래 공간 | 있음 (baseline) | 없음 |
+| 테이블의 color 상속 | 표준 상속 규칙 | quirk-inherit 규칙 |
+| 테이블 경계를 넘는 text-decoration | 전파됨 | 전파 안 됨 |
+| 빈 테이블(행 그룹 없음) | 일반 규칙대로 렌더링 | 높이 0, border-style: none으로 축소 |
 | 단위 없는 길이값 | 무효 (무시) | px로 해석 |
 | 잘못된 색상값 | 무효 (무시) | 16진수 파싱 시도 |
 | body 배경 전파 | 표준 규칙 | 특수 규칙 |
-| :hover on non-links | 동작 | 제한적 |
-| 인라인 요소 크기 지정 | 불가 | 일부 가능 |
-| table height | min-height 의미 | 고정 height 가능 |
+| :active/:hover (단순 셀렉터) | 항상 매칭 | :any-link에 매칭되는 요소만 |
+| 테이블 셀 내 auto 너비 이미지 | 줄바꿈 가능 | 줄바꿈 불가 |
+| nowrap + width 지정 셀 | 지정된 width | max(지정된 width, min-content) |
 
 ---
 
@@ -625,11 +623,11 @@ document.all[0];     // 첫 번째 요소 (정상 동작)
 
 ### 6.1 개요
 
-Limited-quirks mode는 "Almost Standards Mode"라고도 불리며, 표준 모드와 거의 동일하지만 딱 하나의 주요 quirk를 포함한다.
+Limited-quirks mode는 "Almost Standards Mode"라고도 불리며, 표준 모드와 거의 동일하지만 소수의 quirk를 포함한다. 대표적인 것이 테이블 셀 내 인라인 이미지의 기준선 처리이며, 이 외에 line-height 계산과 관련된 quirk도 두 가지 적용된다(quirks mode와 공유).
 
 ### 6.2 인라인 이미지의 기준선 처리
 
-이것이 limited-quirks mode의 유일한(그리고 핵심적인) quirk이다.
+이것이 limited-quirks mode에서 가장 잘 알려진 핵심 quirk이다.
 
 ```css
 /* 테이블 셀 내에서의 인라인 이미지/요소 배치 */
@@ -671,6 +669,18 @@ Limited-quirks Mode:
 │  │                  │    │
 │  └──────────────────┘    │  ← 기준선이 하단으로 (빈 공간 없음)
 └──────────────────────────┘
+```
+
+### 6.2-1 line-height 관련 quirk (quirks mode와 공유)
+
+limited-quirks mode에는 line-height 계산과 관련된 quirk 두 가지가 추가로 적용된다(quirks mode에서도 동일하게 적용됨).
+
+```
+1. 테두리와 패딩이 없고 텍스트가 없거나 공백만 있는 인라인 박스는
+   line-height: 0으로 취급된다.
+
+2. 인라인 레벨 콘텐츠를 가진 블록 컨테이너는 줄 상자의 최소 높이("strut")를
+   계산할 때 line-height 속성을 무시한다.
 ```
 
 ### 6.3 왜 Limited-quirks Mode가 필요한가
@@ -1006,8 +1016,8 @@ DOM/JavaScript
      document.body.scrollTop → document.documentElement.scrollTop
 □ 4. 테이블 레이아웃의 이미지 간격 확인
      이미지에 display: block 또는 vertical-align: bottom 추가
-□ 5. 테이블의 font-size 상속 확인
-     table { font-size: inherit; } 추가
+□ 5. 테이블 내부의 text-decoration 전파 여부 확인
+     필요하면 자식 요소에 직접 text-decoration 지정
 □ 6. 단위 없는 숫자 값 수정
      width: 100 → width: 100px
 □ 7. ID/class 대소문자 일관성 확인

@@ -10,6 +10,12 @@ Category: Standards Track                                    M. Mealling
         A Universally Unique IDentifier (UUID) URN Namespace
         범용 고유 식별자 (UUID) URN 네임스페이스
 
+> **참고**: RFC 4122는 2024년 5월 RFC 9562로 대체(obsolete)되었다. RFC 9562는
+> 버전 1-5를 그대로 유지하면서 버전 6(시간 기반 필드를 재정렬해 정렬 순서를
+> 개선한 UUID), 버전 7(유닉스 타임스탬프 기반 UUID로 시간순 정렬이 자연스러워
+> 데이터베이스 기본 키로 널리 쓰임), 버전 8(사용자 정의 목적용)을 새로 정의한다.
+> 아래 본문은 RFC 4122 원문 번역이며, 최신 규격이 필요하면 RFC 9562를 참고한다.
+
 본 메모의 상태
 
    본 문서는 인터넷 커뮤니티를 위한 인터넷 표준 추적 프로토콜을 규정하며,

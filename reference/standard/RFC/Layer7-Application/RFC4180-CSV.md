@@ -86,8 +86,8 @@ RFC 4180       Common Format and MIME Type for CSV Files    October 2005
    3.  파일의 첫 번째 줄로 선택적인 헤더 줄이 나타날 수 있으며, 이는 일반
        레코드 줄과 동일한 형식을 가진다. 이 헤더는 파일의 필드에 대응하는
        이름들을 포함하며, 파일의 나머지 레코드들과 동일한 개수의 필드를
-       포함해야 한다(헤더 줄의 존재 여부는 이 MIME 타입의 선택적 "header"
-       매개변수를 통해 표시되어야 한다). 예를 들어:
+       포함하는 것이 권장된다(헤더 줄의 존재 여부는 이 MIME 타입의 선택적
+       "header" 매개변수를 통해 표시하는 것이 권장된다). 예를 들어:
 
        field_name,field_name,field_name CRLF
        aaa,bbb,ccc CRLF
@@ -104,9 +104,9 @@ RFC 4180       Common Format and MIME Type for CSV Files    October 2005
 
 
    4.  헤더와 각 레코드 안에는 쉼표로 구분된 하나 이상의 필드가 있을 수
-       있다. 각 줄은 파일 전체에 걸쳐 동일한 개수의 필드를 포함해야 한다.
-       공백은 필드의 일부로 간주되며 무시되어서는 안 된다. 레코드의 마지막
-       필드 뒤에는 쉼표가 와서는 안 된다. 예를 들어:
+       있다. 각 줄은 파일 전체에 걸쳐 동일한 개수의 필드를 포함하는 것이
+       권장된다. 공백은 필드의 일부로 간주되며 무시하지 않는 것이 권장된다.
+       레코드의 마지막 필드 뒤에는 쉼표가 와서는 안 된다. 예를 들어:
 
        aaa,bbb,ccc
 
@@ -119,7 +119,7 @@ RFC 4180       Common Format and MIME Type for CSV Files    October 2005
        zzz,yyy,xxx
 
    6.  줄 바꿈(CRLF), 큰따옴표, 쉼표를 포함하는 필드는 큰따옴표로
-       둘러싸여야 한다. 예를 들어:
+       둘러싸는 것이 권장된다. 예를 들어:
 
        "aaa","b CRLF
        bb","ccc" CRLF

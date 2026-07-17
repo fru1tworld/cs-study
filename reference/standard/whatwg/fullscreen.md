@@ -79,6 +79,7 @@ element.requestFullscreen()
 ```typescript
 interface FullscreenOptions {
     navigationUI?: 'auto' | 'show' | 'hide';
+    keyboardLock?: 'browser' | 'none'; // 기본값 'none'
 }
 ```
 
@@ -94,6 +95,13 @@ element.requestFullscreen({ navigationUI: 'show' });
 
 // 'hide': 네비게이션 UI 숨김
 element.requestFullscreen({ navigationUI: 'hide' });
+```
+
+`keyboardLock` 옵션은 전체 화면 진입과 동시에 키보드 잠금을 적용할지를 지정한다. `'browser'`로 지정하면 별도로 `navigator.keyboard.lock()`을 호출하지 않아도 Esc 등 브라우저가 예약한 키까지 캡처할 수 있고, 기본값인 `'none'`은 잠금을 적용하지 않는다.
+
+```javascript
+// requestFullscreen()에 keyboardLock을 통합한 방식
+await element.requestFullscreen({ keyboardLock: 'browser' });
 ```
 
 ```
@@ -967,6 +975,14 @@ async function enterFullscreenWithKeyboardLock(element) {
         await navigator.keyboard.lock(['Escape']);
         console.log('키보드 잠금 활성화');
     }
+}
+
+// 더 간단한 방법: requestFullscreen()의 keyboardLock 옵션으로 통합 처리
+async function enterFullscreenWithKeyboardLockOption(element) {
+    // navigator.keyboard.lock()을 별도로 호출할 필요 없이
+    // 전체 화면 진입과 동시에 키보드 잠금까지 함께 적용된다
+    await element.requestFullscreen({ keyboardLock: 'browser' });
+    console.log('전체 화면 + 키보드 잠금 동시 활성화');
 }
 ```
 

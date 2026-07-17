@@ -21,6 +21,10 @@ Category: Best Current Practice                            D. Karrenberg
    Practices)를 명시하며, 개선을 위한 논의와 제안을 요청합니다.
    이 메모의 배포에는 제한이 없습니다.
 
+※ 이 RFC는 이후 RFC 6761에 의해 갱신(Updated)되었다. RFC 6761은
+사설 주소 범위에 대한 역방향 DNS(in-addr.arpa) 조회를 특수 용도로
+취급하는 처리 방침을 추가로 규정한다.
+
 1. 소개
 
    역사적 배경을 위해, 이 문서에서 "기업(enterprise)"이란 TCP/IP를 사용하여

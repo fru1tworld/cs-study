@@ -575,7 +575,7 @@ application/vnd.android.package-archive  APK (Android)
        └── 단, 스크립트/스타일 컨텍스트에서는 추가 검증
 
 3. sniffing context에 따른 분기:
-   ├── navigation context → HTML/XML/기타 감지
+   ├── browsing context → HTML/XML/기타 감지
    ├── image context → 이미지 타입 감지
    ├── audio/video context → 미디어 타입 감지
    ├── plugin context → 플러그인 타입 감지
@@ -636,12 +636,12 @@ supplied type이 없거나 `application/octet-stream`일 때 사용되는 알고
 │ GIF89a   │ 47 49 46 38 39 61          │ GIF89a             │
 │ BMP      │ 42 4D                       │ BM                 │
 │ WebP     │ 52 49 46 46 xx xx xx xx    │ RIFF....           │
-│          │ 57 45 42 50                │ WEBP               │
+│          │ 57 45 42 50 56 50          │ WEBPVP             │
 │ ICO      │ 00 00 01 00                │ ....               │
 │ CUR      │ 00 00 02 00                │ ....               │
-│ AVIF     │ xx xx xx xx 66 74 79 70    │ ....ftyp           │
-│          │ 61 76 69 66                │ avif               │
 └──────────┴─────────────────────────────┴────────────────────┘
+
+참고: AVIF는 `image/avif` MIME 타입 자체는 정의되어 있지만, MIME Sniffing Standard의 매직 바이트 패턴 매칭 목록에는 포함되어 있지 않다(스니핑 대상이 아님).
 
 오디오/비디오:
 ┌─────────────────────────────────────────────────────────────┐
@@ -649,7 +649,7 @@ supplied type이 없거나 `application/octet-stream`일 때 사용되는 알고
 ├──────────┼─────────────────────────────┼────────────────────┤
 │ MP3      │ 49 44 33                    │ ID3 (ID3 태그)     │
 │          │ FF FB/F3/F2                │ (프레임 동기)       │
-│ OGG      │ 4F 67 67 53                │ OggS               │
+│ OGG      │ 4F 67 67 53 00             │ OggS + NUL         │
 │ WAV      │ 52 49 46 46 xx xx xx xx    │ RIFF....           │
 │          │ 57 41 56 45                │ WAVE               │
 │ FLAC     │ 66 4C 61 43                │ fLaC               │
@@ -758,9 +758,9 @@ supplied type이 없거나 `application/octet-stream`일 때 사용되는 알고
 
 바이너리 데이터로 판별하는 바이트값:
 - 0x00 ~ 0x08 (C0 제어 문자)
+- 0x0B (VT)
 - 0x0E ~ 0x1A (C0 제어 문자)
 - 0x1C ~ 0x1F (C0 제어 문자)
-- 0x7F (DEL)
 
 예외 (바이너리가 아닌 것으로 판별):
 - 0x09 (탭)
@@ -768,6 +768,7 @@ supplied type이 없거나 `application/octet-stream`일 때 사용되는 알고
 - 0x0C (폼 피드)
 - 0x0D (캐리지 리턴, CR)
 - 0x1B (ESC)
+- 0x7F (DEL, 스펙상 바이너리 바이트에 포함되지 않음)
 
 위의 "바이너리 바이트"가 하나도 없으면 → text/plain
 하나라도 있으면 → application/octet-stream
@@ -804,11 +805,12 @@ function detectFileType(buffer) {
         return 'image/bmp';
     }
 
-    // WebP: RIFF....WEBP
+    // WebP: RIFF....WEBPVP
     if (bytes[0] === 0x52 && bytes[1] === 0x49 &&
         bytes[2] === 0x46 && bytes[3] === 0x46 &&
         bytes[8] === 0x57 && bytes[9] === 0x45 &&
-        bytes[10] === 0x42 && bytes[11] === 0x50) {
+        bytes[10] === 0x42 && bytes[11] === 0x50 &&
+        bytes[12] === 0x56 && bytes[13] === 0x50) {
         return 'image/webp';
     }
 
@@ -846,9 +848,10 @@ function detectFileType(buffer) {
         return 'audio/mpeg';
     }
 
-    // OGG: OggS
+    // OGG: OggS + NUL
     if (bytes[0] === 0x4F && bytes[1] === 0x67 &&
-        bytes[2] === 0x67 && bytes[3] === 0x53) {
+        bytes[2] === 0x67 && bytes[3] === 0x53 &&
+        bytes[4] === 0x00) {
         return 'audio/ogg';
     }
 
@@ -863,9 +866,9 @@ function detectFileType(buffer) {
 function isTextContent(bytes) {
     const binaryBytes = new Set([
         ...range(0x00, 0x08),
+        0x0B,
         ...range(0x0E, 0x1A),
-        ...range(0x1C, 0x1F),
-        0x7F
+        ...range(0x1C, 0x1F)
     ]);
 
     const checkLength = Math.min(bytes.length, 512);
@@ -905,7 +908,7 @@ MIME 스니핑의 동작은 리소스가 사용되는 컨텍스트에 따라 달
 
 | 컨텍스트 | 설명 | 스니핑 대상 |
 |----------|------|------------|
-| navigation | 페이지 내비게이션 | HTML, XML, 이미지, 미디어, PDF 등 |
+| browsing context | 페이지 내비게이션 | HTML, XML, 이미지, 미디어, PDF 등 |
 | image | `<img>`, CSS `background-image` | 이미지 타입만 |
 | audio/video | `<audio>`, `<video>` | 오디오/비디오 타입만 |
 | plugin | `<embed>`, `<object>` | 플러그인 타입 |
@@ -915,10 +918,10 @@ MIME 스니핑의 동작은 리소스가 사용되는 컨텍스트에 따라 달
 | text track | `<track>` | WebVTT |
 | cache manifest | 매니페스트 | text/cache-manifest |
 
-### 8.2 Navigation Context 스니핑
+### 8.2 Browsing Context 스니핑
 
 ```
-[Navigation Context 스니핑 알고리즘]
+[Browsing Context 스니핑 알고리즘]
 
 1. nosniff가 설정되어 있으면
    └── supplied type 그대로 사용
@@ -1234,7 +1237,7 @@ class FileTypeValidator {
             {
                 checks: [
                     { offset: 0, bytes: [0x52, 0x49, 0x46, 0x46] },
-                    { offset: 8, bytes: [0x57, 0x45, 0x42, 0x50] }
+                    { offset: 8, bytes: [0x57, 0x45, 0x42, 0x50, 0x56, 0x50] }
                 ],
                 mime: 'image/webp'
             },
@@ -1432,13 +1435,13 @@ Chrome/Edge (Chromium):
 ├── style 컨텍스트: 엄격 (비CSS MIME 차단)
 ├── image 컨텍스트: 경고
 ├── font 컨텍스트: 경고/차단
-└── navigation: 적용 안 됨
+└── browsing context: 적용 안 됨
 
 Firefox:
 ├── script 컨텍스트: 엄격
 ├── style 컨텍스트: 엄격
 ├── image 컨텍스트: 경고
-└── navigation: 적용 안 됨
+└── browsing context: 적용 안 됨
 
 Safari:
 ├── script 컨텍스트: 부분 적용

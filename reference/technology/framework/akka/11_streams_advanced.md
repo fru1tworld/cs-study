@@ -417,7 +417,7 @@ Akka는 TLS 변형을 제공합니다. `outgoingConnectionWithTls`, `bindWithTls
 
 ### 5.6 Pub/Sub 연동
 
-공식 문서는 Akka 타입드 액터 토픽(topic) 시스템에 메시지를 구독하고 발행하기 위한 **`Topic.source`**와 **`Topic.sink`**를 언급합니다.
+공식 문서는 Akka 타입드 액터 토픽(topic) 시스템에 메시지를 구독하고 발행하기 위한 `Topic.source`와 `Topic.sink`를 언급합니다.
 
 ### 5.7 중요한 구현 고려사항
 
@@ -528,13 +528,13 @@ Akka Stream은 액터와 기본적으로 통합됩니다. `Sink.actorRef` 컴포
 
 전용 `akka-stream-testkit` 모듈은 두 가지 주요 컴포넌트, `TestSource`와 `TestSink`를 제공합니다.
 
-**`TestSink.probe`**는 구독 프로브(subscription probe)로 머티리얼라이즈되어, "수요에 대한 수동 제어와 다운스트림으로 내려오는 요소에 대한 단언(manual control over demand and assertions over elements coming downstream)"을 가능하게 합니다. 주요 메서드:
+`TestSink.probe`는 구독 프로브(subscription probe)로 머티리얼라이즈되어, "수요에 대한 수동 제어와 다운스트림으로 내려오는 요소에 대한 단언(manual control over demand and assertions over elements coming downstream)"을 가능하게 합니다. 주요 메서드:
 
 - `request(n)`: 수요(demand)를 신호합니다.
 - `expectNext()`: 특정 요소를 검증합니다.
 - `expectComplete()`: 스트림 종료를 단언합니다.
 
-**`TestSource.probe`**는 다운스트림 컴포넌트를 테스트하기 위한 역방향 제어를 제공합니다.
+`TestSource.probe`는 다운스트림 컴포넌트를 테스트하기 위한 역방향 제어를 제공합니다.
 
 - `sendNext()`: 요소를 주입합니다.
 - `sendError()`: 실패 조건을 트리거합니다.

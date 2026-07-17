@@ -995,8 +995,9 @@ console.log("100%%"); // 구현에 따라 다름
 
 ### 7.8 CSS 스타일의 보안 고려사항
 
-표준에서는 `%c`를 통한 CSS 스타일 적용 시 보안상 이유로 허용되는 CSS 속성을 제한할 것을
-권고한다. 일반적으로 브라우저는 다음과 같은 속성만 허용한다.
+표준은 `%c` 처리 부분을 "TODO: process %c"로 남겨두고 있어, 허용되는 CSS 속성 목록을
+직접 규정하지 않는다. 아래 표는 표준의 요구사항이 아니라 Chrome 등 주요 브라우저 구현체가
+보안상 이유로 실제 적용하고 있는 관행을 정리한 것이다.
 
 | 허용되는 CSS 속성 | 설명 |
 |-----------------|------|
@@ -1021,14 +1022,16 @@ console.log("100%%"); // 구현에 따라 다름
 
 ### 8.1 로그 레벨(Log Level)
 
-Console Standard에서는 네 가지 로그 레벨을 정의한다. 각 로그 레벨은 콘솔 메서드와
-매핑되어 있으며, 개발자 도구에서 필터링하는 데 사용된다.
+Console Standard에서는 네 가지 로그 레벨 그룹을 문서화한다. 다만 표준은 이 그룹을
+"common practices를 문서화하기 위한 것일 뿐, 구현체가 각 메서드에 특별한 동작을 부여하는
+것을 제약하지 않는다"라고 명시하는 비규범적(informative) 안내로 규정한다. 즉 아래 표는
+강제 규칙이 아니라 참고용 분류다.
 
 | 로그 레벨 | 해당 메서드 | 의미 |
 |----------|-----------|------|
-| `"log"` | `console.log()`, `console.trace()`, `console.dir()`, `console.dirxml()` | 일반 로그 메시지 |
+| `"log"` | `console.log()`, `console.trace()`, `console.dir()`, `console.dirxml()`, `console.group()`, `console.groupCollapsed()`, `console.debug()`, `console.timeLog()` | 일반 로그 메시지 |
 | `"info"` | `console.info()`, `console.count()`, `console.timeEnd()` | 정보성 메시지 |
-| `"warn"` | `console.warn()`, `console.countReset()` (경고 시), `console.time()` (경고 시) | 경고 메시지 |
+| `"warn"` | `console.warn()`, `console.countReset()` | 경고 메시지 |
 | `"error"` | `console.error()`, `console.assert()` (실패 시) | 에러 메시지 |
 
 ### 8.2 Logger 추상 연산
@@ -1104,7 +1107,7 @@ console.debug("msg")   → Logger("debug", ["msg"])   → Printer("debug", ["msg
    data[0] = "Assertion failed: " + data[0]
 4. 그렇지 않으면:
    data 앞에 "Assertion failed" 삽입
-5. Logger("error", data) 호출
+5. Logger("assert", data) 호출
 ```
 
 #### console.trace(...data)
@@ -1112,7 +1115,7 @@ console.debug("msg")   → Logger("debug", ["msg"])   → Printer("debug", ["msg
 ```
 1. 포매팅을 수행한다 (data에 대해).
 2. 결과에 호출 스택(stack trace)을 추가한다.
-3. Printer("log", result) 호출
+3. Printer("trace", result) 호출
 ```
 
 ---

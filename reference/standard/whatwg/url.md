@@ -1647,7 +1647,7 @@ console.log(merged.toString()); // "a=1&b=2&c=3&d=4&e=5"
 
 `URLPattern`은 URL 패턴 매칭을 위한 API로, WHATWG URL Standard와는 별도의 사양(URLPattern Standard)이지만 밀접하게 관련되어 있다. 라우팅, URL 필터링 등에 활용된다.
 
-> 참고: URLPattern은 Chrome 95+, Edge 95+, Deno에서 지원된다. Firefox와 Safari에서는 아직 제한적이다.
+> 참고: URLPattern은 Chrome/Edge 95+, Deno에 이어 Firefox 142+, Safari 26+에서도 지원되어 현재는 주요 브라우저 전반에서 폭넓게 사용할 수 있다.
 
 ### 10.2 기본 사용법
 
@@ -2473,7 +2473,7 @@ console.log(key1 === key2); // true
 | URL.parse() | 126+ | 126+ | 18+ | 126+ |
 | URLSearchParams | 49+ | 44+ | 10.1+ | 17+ |
 | URLSearchParams.sort() | 61+ | 54+ | 11+ | 61+ |
-| URLPattern | 95+ | 미지원 | 미지원 | 95+ |
+| URLPattern | 95+ | 142+ | 26+ | 95+ |
 | URLSearchParams.delete(name, value) | 117+ | 115+ | 17+ | 117+ |
 | URLSearchParams.has(name, value) | 117+ | 115+ | 17+ | 117+ |
 

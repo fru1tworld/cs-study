@@ -364,6 +364,11 @@ Source Quench 메시지
 
       Code 0은 게이트웨이 또는 호스트에서 수신될 수 있다.
 
+      ※ Source Quench(Type 4)는 혼잡 제어 메커니즘으로서 효과가 없고
+      오히려 악용될 수 있다는 이유로 RFC 6633에 의해 공식적으로
+      폐기(deprecated)되었다. 라우터와 호스트는 이 메시지를 생성하지
+      않아야 한다(SHOULD NOT).
+
 
 Redirect 메시지
 
@@ -642,6 +647,10 @@ Information Request 또는 Information Reply 메시지
       값들을 동일하게 반환한다.
 
       Code 0은 게이트웨이 또는 호스트에서 수신될 수 있다.
+
+      ※ Information Request/Reply(Type 15/16)는 실질적으로 사용되지
+      않게 되어 RFC 6918에 의해 공식적으로 폐기(deprecated)되었다.
+      호스트는 이 메시지를 생성하지 않아야 한다(SHOULD NOT).
 
 
 메시지 타입 요약(Summary of Message Types)

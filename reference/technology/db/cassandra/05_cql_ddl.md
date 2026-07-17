@@ -1,6 +1,6 @@
 # CQL 데이터 정의 (DDL)
 
-> 원본: https://cassandra.apache.org/doc/latest/cassandra/cql/ddl.html
+> 원본: https://cassandra.apache.org/doc/latest/cassandra/developing/cql/ddl.html
 
 ---
 
@@ -545,4 +545,4 @@ TRUNCATE TABLE monkey_species;
 ## 참고 자료
 
 - [Apache Cassandra 공식 문서](https://cassandra.apache.org/doc/latest/)
-- [CQL DDL](https://cassandra.apache.org/doc/latest/cassandra/cql/ddl.html)
+- [CQL DDL](https://cassandra.apache.org/doc/latest/cassandra/developing/cql/ddl.html)

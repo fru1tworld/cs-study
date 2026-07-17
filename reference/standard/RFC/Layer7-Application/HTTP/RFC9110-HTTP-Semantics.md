@@ -1,7 +1,7 @@
 # RFC 9110 - HTTP Semantics
 
 > 발행일: 2022년 6월
-> 대체 문서: RFC 2616, RFC 7231 등
+> 대체 문서: RFC 7230(일부), RFC 7231, RFC 7232, RFC 7233, RFC 7235, RFC 7538, RFC 7615
 > 상태: Standards Track
 
 ## 1. 개요
@@ -127,7 +127,8 @@ Host: api.example.com
 | 405 | Method Not Allowed | 허용되지 않는 메서드 |
 | 409 | Conflict | 리소스 상태 충돌 |
 | 413 | Content Too Large | 페이로드가 처리 한계 초과 |
-| 429 | Too Many Requests | 요청 속도 제한 초과 |
+
+> 429 Too Many Requests는 RFC 9110이 아닌 RFC 6585에서 정의된 상태 코드입니다.
 
 ### 3.5 5xx - 서버 오류 (Server Error)
 
@@ -182,7 +183,12 @@ Host: api.example.com
 | 헤더 | 설명 |
 |------|------|
 | Vary | 표현 선택에 영향을 준 헤더 |
-| Allow | 지원되는 메서드 열거 |
+
+### 4.6 제어 데이터 필드
+
+| 헤더 | 설명 |
+|------|------|
+| Allow | 405 응답 등에서 대상 리소스가 지원하는 메서드 열거 (캐싱과 무관) |
 
 ## 5. 콘텐츠 협상 (Content Negotiation)
 

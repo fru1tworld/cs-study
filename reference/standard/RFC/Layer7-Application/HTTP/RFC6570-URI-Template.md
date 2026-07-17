@@ -147,10 +147,13 @@ ISSN: 2070-1721                                                    Adobe
    물음표("?") 연산자로 시작하는 표현식의 확장 과정은 World Wide Web의
    폼 스타일 인터페이스와 동일한 패턴을 따른다:
 
-     http://www.example.com/foo{?query,number}
-                               \_____________/
-                                  |
-                                  |
+```
+http://www.example.com/foo{?query,number}
+                          \_____________/
+                             |
+                             |
+```
+
              [ 'query', 'number' ] 내의 정의된 각 변수에 대해,
              첫 번째 대체이면 "?"를 그 이후에는 "&"를 대체하고,
              변수 이름, '=', 그리고 변수의 값을 뒤에 붙인다.

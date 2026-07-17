@@ -506,6 +506,30 @@ try {
 }
 ```
 
+#### 3.2.13 duplex
+
+요청 본문을 스트림으로 보낼 때 지정해야 하는 옵션이다. 현재는 `'half'`만 유효한 값이며, 요청을 반이중(half-duplex)으로 전송함을(본문을 다 보내기 전에는 응답을 읽지 않음) 명시한다. `ReadableStream`을 `body`로 사용할 때 필수다.
+
+```javascript
+await fetch('/api/upload', {
+  method: 'POST',
+  body: readableStream,
+  duplex: 'half',
+});
+```
+
+#### 3.2.14 priority
+
+요청의 상대적 우선순위를 브라우저에 알려준다. `"high"`, `"low"`, `"auto"`(기본값) 중 하나를 지정한다.
+
+```javascript
+// 중요한 API 응답은 높은 우선순위로
+await fetch('/api/critical-data', { priority: 'high' });
+
+// 백그라운드 프리페치는 낮은 우선순위로
+await fetch('/api/prefetch-data', { priority: 'low' });
+```
+
 ### 3.3 반환값 (Promise<Response>)
 
 `fetch()`는 항상 `Promise<Response>`를 반환한다. 중요한 점은 HTTP 에러 상태(4xx, 5xx)에서도 Promise가 reject되지 않는다는 것이다. 오직 네트워크 에러(네트워크 단절, DNS 실패 등)에서만 reject된다.
@@ -612,20 +636,24 @@ console.log(request.bodyUsed);        // false
 // ""            - fetch() 직접 호출
 // "audio"       - <audio> 태그
 // "audioworklet" - AudioWorklet
-// "document"    - <iframe>, 내비게이션
+// "document"    - 내비게이션
 // "embed"       - <embed> 태그
 // "font"        - CSS @font-face
 // "frame"       - <frame> 태그
+// "iframe"      - <iframe> 태그
 // "image"       - <img>, CSS background-image 등
+// "json"        - import ... with { type: "json" } 등 JSON 모듈
 // "manifest"    - <link rel="manifest">
 // "object"      - <object> 태그
 // "paintworklet" - CSS Paint API
 // "report"      - CSP report, NEL report
 // "script"      - <script> 태그
+// "serviceworker" - Service Worker 등록
 // "sharedworker" - SharedWorker
 // "style"       - <link rel="stylesheet">, CSS @import
 // "track"       - <track> 태그
 // "video"       - <video> 태그
+// "webidentity" - FedCM(Federated Credential Management)
 // "worker"      - Worker
 // "xslt"        - XSLT 스타일시트
 ```
@@ -980,6 +1008,19 @@ const headerArray = [...headers]; // [["accept", "text/html"], ["content-type", 
 const headerObj = Object.fromEntries(headers);
 ```
 
+#### getSetCookie()
+
+`Set-Cookie` 헤더는 여러 개가 존재할 수 있지만 `get()`은 값을 콤마로 합쳐 반환하기 때문에 개별 쿠키를 구분하기 어렵다. `getSetCookie()`는 모든 `Set-Cookie` 값을 배열로 그대로 반환한다. 주로 서비스 워커나 Deno, Node.js 같은 서버/워커 환경에서 응답의 `Set-Cookie` 헤더를 다룰 때 유용하다.
+
+```javascript
+const headers = new Headers();
+headers.append('Set-Cookie', 'a=1');
+headers.append('Set-Cookie', 'b=2');
+
+headers.get('Set-Cookie');        // "a=1, b=2" (구분이 애매함)
+headers.getSetCookie();           // ["a=1", "b=2"]
+```
+
 ### 6.3 Headers Guard
 
 Headers 객체에는 "guard"라는 내부 속성이 있어 특정 헤더의 변경을 제한한다. 이는 API를 통해 직접 접근할 수 없지만, 동작 방식을 이해하는 것이 중요하다.
@@ -1007,9 +1048,11 @@ const errorResp = Response.error();
 // errorResp.headers.set('X-Custom', 'test'); // TypeError
 ```
 
-Forbidden Header Names (브라우저가 자동 관리하는 헤더):
+Forbidden Header Names (요청에서 스크립트가 직접 설정할 수 없는, 브라우저가 자동 관리하는 헤더):
 
-`Accept-Charset`, `Accept-Encoding`, `Access-Control-Request-Headers`, `Access-Control-Request-Method`, `Connection`, `Content-Length`, `Cookie`, `Cookie2`, `Date`, `DNT`, `Expect`, `Host`, `Keep-Alive`, `Origin`, `Referer`, `Set-Cookie`, `TE`, `Trailer`, `Transfer-Encoding`, `Upgrade`, `Via`, `Proxy-*`, `Sec-*`
+`Accept-Charset`, `Accept-Encoding`, `Access-Control-Request-Headers`, `Access-Control-Request-Method`, `Connection`, `Content-Length`, `Cookie`, `Cookie2`, `Date`, `DNT`, `Expect`, `Host`, `Keep-Alive`, `Origin`, `Referer`, `TE`, `Trailer`, `Transfer-Encoding`, `Upgrade`, `Via`, `Proxy-*`, `Sec-*`
+
+> 참고: `Set-Cookie`는 위 목록과는 별개로 forbidden **response** header name이다. 즉 요청 헤더가 아니라 응답 헤더로서 스크립트가 `Response.headers`를 통해 읽거나 설정할 수 없도록 금지된 것이며, `"request"` guard가 아니라 `"response"`/`"immutable"` guard가 적용되는 개념이다.
 
 ---
 

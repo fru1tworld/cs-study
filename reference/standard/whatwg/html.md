@@ -15,7 +15,7 @@ WHATWG(Web Hypertext Application Technology Working Group)가 관리하는 HTML 
 | 항목 | W3C HTML5 | WHATWG HTML Living Standard |
 |------|-----------|----------------------------|
 | 버전 관리 | 스냅샷(HTML5, 5.1, 5.2) | 버전 없음, 지속 업데이트 |
-| 상태 | 2021년 이후 개발 중단 | 현재 유일한 공식 표준 |
+| 상태 | 2019년 이후 개발 중단 | 현재 유일한 공식 표준 |
 | 범위 | HTML 마크업 중심 | HTML + 관련 API 전체 포함 |
 | 갱신 주기 | 수년 단위 | 수시(거의 매일) |
 

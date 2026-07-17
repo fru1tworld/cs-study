@@ -146,8 +146,8 @@ console.log(comment.nodeType);                // 8 (COMMENT_NODE)
 console.log(document.nodeType);               // 9 (DOCUMENT_NODE)
 console.log(document.doctype.nodeType);       // 10 (DOCUMENT_TYPE_NODE)
 
-// 참고: ATTRIBUTE_NODE(2)는 레거시이며, Attr은 더 이상 Node를 상속하지 않는다고
-// 간주하지만 하위 호환성을 위해 nodeType 값은 여전히 2를 반환한다.
+// 참고: ATTRIBUTE_NODE(2)는 레거시 상수로 취급되지만, Attr은 현재 스펙에서도
+// 여전히 Node를 상속하며 nodeType 값도 그대로 2를 반환한다.
 ```
 
 ### 2.2 Node 속성 (Properties)
@@ -1338,7 +1338,7 @@ slot.addEventListener('slotchange', () => {
 
 ## 5. Attr 인터페이스
 
-Attr 인터페이스는 요소의 속성을 나타낸다. 역사적으로 Attr은 Node를 상속했지만, 현재 Living Standard에서는 별도의 인터페이스로 취급된다(하위 호환성을 위해 nodeType은 여전히 2를 반환).
+Attr 인터페이스는 요소의 속성을 나타낸다. 현재 Living Standard의 IDL에서도 `interface Attr : Node`로 여전히 Node를 상속하며, nodeType은 하위 호환성을 위해 2(ATTRIBUTE_NODE)를 반환한다. Attr을 Node에서 분리하자는 제안(whatwg/dom #102)이 논의된 적은 있지만, 이는 아직 병합되지 않은 오픈 이슈일 뿐 스펙에 반영되지 않았다.
 
 ```javascript
 // Attr 객체 얻기
@@ -1921,6 +1921,20 @@ console.log(active.className);              // "item active"
 
 const allItems = frag.querySelectorAll('.item');
 console.log(allItems.length);               // 2
+```
+
+#### moveBefore()
+
+2025년 3월경 ParentNode mixin에 병합된 메서드로, `insertBefore()`처럼 노드를 특정 위치로 옮기지만 내부적으로 제거 후 재삽입하는 대신 원자적(atomic)으로 이동시켜 노드의 상태를 보존한다. iframe 로딩 상태, 비디오 재생, 포커스, 애니메이션/트랜지션 상태 등이 유지되며, Interop 2026 주요 관심 영역 중 하나이기도 하다.
+
+```javascript
+// insertBefore()와 시그니처는 동일하지만 상태를 보존한다
+parent.moveBefore(movedNode, referenceNode); // referenceNode가 null이면 끝에 추가
+
+// 예: iframe을 다른 부모로 옮겨도 로드 상태가 유지됨
+const iframe = document.querySelector('iframe');
+newContainer.moveBefore(iframe, null);
+// appendChild(iframe)을 사용했다면 iframe이 다시 로드되었을 것
 ```
 
 ### 9.2 ChildNode Mixin

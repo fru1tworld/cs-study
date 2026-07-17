@@ -341,23 +341,27 @@ RFC 4226                     HOTP Algorithm                December 2005
    다음 코드 예시는 hmac_result가 HMAC-SHA-1 결과를 담은 바이트 배열일 때
    동적 이진 코드의 추출을 설명한다:
 
-        int offset   =  hmac_result[19] & 0xf ;
-        int bin_code = (hmac_result[offset]  & 0x7f) << 24
-           | (hmac_result[offset+1] & 0xff) << 16
-           | (hmac_result[offset+2] & 0xff) <<  8
-           | (hmac_result[offset+3] & 0xff) ;
+```
+int offset   =  hmac_result[19] & 0xf ;
+int bin_code = (hmac_result[offset]  & 0x7f) << 24
+   | (hmac_result[offset+1] & 0xff) << 16
+   | (hmac_result[offset+2] & 0xff) <<  8
+   | (hmac_result[offset+3] & 0xff) ;
+```
 
    SHA-1 HMAC 바이트 (예시)
 
-   -------------------------------------------------------------
-   | 바이트 번호                                               |
-   -------------------------------------------------------------
-   |00|01|02|03|04|05|06|07|08|09|10|11|12|13|14|15|16|17|18|19|
-   -------------------------------------------------------------
-   | 바이트 값                                                 |
-   -------------------------------------------------------------
-   |1f|86|98|69|0e|02|ca|16|61|85|50|ef|7f|19|da|8e|94|5b|55|5a|
-   -------------------------------***********----------------++|
+```
+-------------------------------------------------------------
+| 바이트 번호                                               |
+-------------------------------------------------------------
+|00|01|02|03|04|05|06|07|08|09|10|11|12|13|14|15|16|17|18|19|
+-------------------------------------------------------------
+| 바이트 값                                                 |
+-------------------------------------------------------------
+|1f|86|98|69|0e|02|ca|16|61|85|50|ef|7f|19|da|8e|94|5b|55|5a|
+-------------------------------***********----------------++|
+```
 
 
 
@@ -917,19 +921,21 @@ RFC 4226                     HOTP Algorithm                December 2005
 
    게임 실행 - 공격자 B에게 다음 두 가지 오라클이 제공된다:
 
-   Oracle AuthO()
-   --------------
-      A = ALG(K,C)
-      C = C + 1
-      Return O to B
+```
+Oracle AuthO()
+--------------
+   A = ALG(K,C)
+   C = C + 1
+   Return O to B
 
-   Oracle VerO(A)
-   --------------
-      i = C
-      While (i <= C + s - 1 and Win == FALSE) do
-         If A == ALG(K,i) then Win = TRUE; C = i + 1
-         Else i = i + 1
-      Return Win to B
+Oracle VerO(A)
+--------------
+   i = C
+   While (i <= C + s - 1 and Win == FALSE) do
+      If A == ALG(K,i) then Win = TRUE; C = i + 1
+      Else i = i + 1
+   Return Win to B
+```
 
    AuthO()는 인증자 오라클이고 VerO(A)는 검증 오라클이다.
 
@@ -1380,6 +1386,7 @@ M'Raihi, et al.              Informational                     [Page 27]
 RFC 4226                     HOTP Algorithm                December 2005
 
 
+```
    /**
     * This class contains static methods that are used to calculate the
     * One-Time Password (OTP) using
@@ -1561,6 +1568,7 @@ RFC 4226                     HOTP Algorithm                December 2005
      return result;
        }
    }
+```
 
 
 

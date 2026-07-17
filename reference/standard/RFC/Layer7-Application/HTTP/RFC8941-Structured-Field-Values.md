@@ -7,6 +7,8 @@ ISSN: 2070-1721                                The Varnish Cache Project
 
                     HTTP를 위한 구조화된 필드 값(Structured Field Values)
 
+> 폐기: RFC 9651로 대체됨 (하위 호환, Date/DisplayString 타입 추가)
+
 초록
 
    이 문서는 "구조화된 필드(Structured Fields)", "구조화된 헤더(Structured
