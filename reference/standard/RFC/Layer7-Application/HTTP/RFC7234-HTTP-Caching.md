@@ -564,7 +564,8 @@ Cache-Control: no-transform
 Cache-Control: only-if-cached
 ```
 
-클라이언트가 저장된 응답만 얻기를 원한다는 것을 나타냅니다. 캐시된 응답이 없으면 `504 Gateway Timeout`을 반환합니다.
+클라이언트가 저장된 응답만 얻기를 원한다는 것을 나타냅니다.
+ 캐시된 응답이 없으면 `504 Gateway Timeout`을 반환합니다.
 
 ### 7.3 응답 캐시 지시어 (Response Cache-Control Directives)
 
@@ -626,7 +627,8 @@ Cache-Control: no-transform
 Cache-Control: public
 ```
 
-어떤 캐시든 응답을 저장할 수 있음을 나타냅니다. 일반적으로 캐시 불가능하거나 개인 캐시에서만 캐시 가능한 응답도 저장할 수 있게 합니다.
+어떤 캐시든 응답을 저장할 수 있음을 나타냅니다.
+ 일반적으로 캐시 불가능하거나 개인 캐시에서만 캐시 가능한 응답도 저장할 수 있게 합니다.
 
 ```
 예시: Authorization 헤더가 있는 요청에 대한 응답을
@@ -1076,7 +1078,8 @@ Cache-Control: public, max-age=600, stale-while-revalidate=30
 
 ## 15. RFC 9111과의 차이점
 
-RFC 7234는 2022년 6월 RFC 9111에 의해 폐기되었습니다. 주요 변경사항:
+RFC 7234는 2022년 6월 RFC 9111에 의해 폐기되었습니다.
+ 주요 변경사항:
 
 | 항목 | RFC 7234 | RFC 9111 |
 |------|----------|----------|

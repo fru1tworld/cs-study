@@ -151,7 +151,8 @@ Hop-by-Hop Options와 Destination Options 헤더는 Type-Length-Value 형식을 
 | 10 | 패킷 폐기 및 ICMP Parameter Problem 전송 |
 | 11 | 패킷 폐기 및 조건부 ICMP 전송 (목적지가 멀티캐스트가 아닌 경우에만) |
 
-> 참고: RFC 9673은 상위 2비트가 01/10/11일 때 강제되던 "MUST 폐기" 또는 "MUST ICMP 전송" 동작을 MAY로 완화했다. 즉, 노드가 알 수 없는 옵션에 대해 반드시 이 표대로 동작할 필요는 없어졌다.
+> 참고: RFC 9673은 상위 2비트가 01/10/11일 때 강제되던 "MUST 폐기" 또는 "MUST ICMP 전송" 동작을 MAY로 완화했다.
+ 즉, 노드가 알 수 없는 옵션에 대해 반드시 이 표대로 동작할 필요는 없어졌다.
 
 ### 세 번째 비트 의미
 

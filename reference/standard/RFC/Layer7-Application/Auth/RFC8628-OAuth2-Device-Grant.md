@@ -5,7 +5,8 @@
 
 ## 1. 개요
 
-Device Authorization Grant(흔히 "Device Flow" 또는 "Device Code Flow")는 브라우저나 편리한 입력 수단이 없는 기기(스마트 TV, CLI 도구, IoT 기기, 콘솔 등)가 OAuth 2.0으로 사용자를 인증시키는 방식이다. 기기 자체에서 로그인 화면을 띄우는 대신, 사용자가 스마트폰이나 PC 같은 별도 기기의 브라우저에서 짧은 코드를 입력해 인가를 완료한다.
+Device Authorization Grant(흔히 "Device Flow" 또는 "Device Code Flow")는 브라우저나 편리한 입력 수단이 없는 기기(스마트 TV, CLI 도구, IoT 기기, 콘솔 등)가 OAuth 2.0으로 사용자를 인증시키는 방식이다.
+ 기기 자체에서 로그인 화면을 띄우는 대신, 사용자가 스마트폰이나 PC 같은 별도 기기의 브라우저에서 짧은 코드를 입력해 인가를 완료한다.
 
 [RFC 6749 OAuth2](./RFC6749-OAuth2.md)의 4가지 기본 Grant Type(Authorization Code, Implicit, Password, Client Credentials)로는 다루기 어려운 "입력 제약 기기(input-constrained device)" 시나리오를 위한 확장 Grant Type이다.
 

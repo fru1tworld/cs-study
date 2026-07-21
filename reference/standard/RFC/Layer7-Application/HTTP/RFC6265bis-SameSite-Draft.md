@@ -5,7 +5,8 @@
 
 ## 1. 개요
 
-`draft-ietf-httpbis-rfc6265bis`는 2011년 발행된 [RFC 6265 HTTP Cookies](./RFC6265-HTTP-Cookies.md)를 대체하기 위한 초안으로, 현재 대부분의 브라우저가 실제로 구현·강제하는 쿠키 동작(특히 `SameSite` 속성)을 표준 문서에 반영하는 것이 핵심이다. RFC 6265에는 `SameSite` 속성 자체가 없었고, 이후 브라우저 벤더들이 CSRF 방어를 위해 독자적으로 도입한 것을 이 초안이 표준화한다.
+`draft-ietf-httpbis-rfc6265bis`는 2011년 발행된 [RFC 6265 HTTP Cookies](./RFC6265-HTTP-Cookies.md)를 대체하기 위한 초안으로, 현재 대부분의 브라우저가 실제로 구현·강제하는 쿠키 동작(특히 `SameSite` 속성)을 표준 문서에 반영하는 것이 핵심이다.
+ RFC 6265에는 `SameSite` 속성 자체가 없었고, 이후 브라우저 벤더들이 CSRF 방어를 위해 독자적으로 도입한 것을 이 초안이 표준화한다.
 
 | 구분 | RFC 6265 (2011) | 6265bis 초안 |
 |------|------------------|----------------|
@@ -34,7 +35,8 @@ Set-Cookie: sso_token=xyz789; SameSite=None; Secure
 
 ### 2.1 기본값 변경의 영향
 
-`SameSite`를 명시하지 않은 쿠키는 브라우저가 `Lax`로 취급한다. 이 때문에:
+`SameSite`를 명시하지 않은 쿠키는 브라우저가 `Lax`로 취급한다.
+ 이 때문에:
 
 - 크로스 사이트 POST 요청에 쿠키가 자동 전송되지 않아 CSRF 위험이 줄어듦
 - 서드파티 iframe에서 세션 쿠키가 필요한 서비스(예: 결제 위젯, SSO)는 `SameSite=None; Secure`를 명시해야 정상 동작

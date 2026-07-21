@@ -7,13 +7,15 @@ ISSN: 2070-1721                                            Penango, Inc.
 
              PKIX, PKCS, CMS 구조의 텍스트 인코딩
 
-초록
+### Abstract
 
    이 문서는 공개키 기반구조 X.509(Public-Key Infrastructure X.509,
    PKIX), 공개키 암호화 표준(Public-Key Cryptography Standards, PKCS),
    암호화 메시지 구문(Cryptographic Message Syntax, CMS)의 텍스트 인코딩을
-   설명하고 논의한다. 이 텍스트 인코딩은 널리 알려져 있고, 여러 애플리케이션과
-   라이브러리에 구현되어 있으며, 광범위하게 배포되어 있다. 이 문서는 기존
+   설명하고 논의한다.
+ 이 텍스트 인코딩은 널리 알려져 있고, 여러 애플리케이션과
+   라이브러리에 구현되어 있으며, 광범위하게 배포되어 있다.
+ 이 문서는 기존
    구현체들이 동작하는 사실상의(de facto) 규칙을 명확히 기술하고, 향후
    구현체들이 상호운용될 수 있도록 이를 정의한다.
 
@@ -21,9 +23,12 @@ ISSN: 2070-1721                                            Penango, Inc.
 
    이 문서는 인터넷 표준 트랙(Internet Standards Track) 문서이다.
 
-   이 문서는 인터넷 엔지니어링 태스크 포스(IETF)의 산출물이다. 이 문서는
-   IETF 커뮤니티의 합의를 나타낸다. 이 문서는 공개 검토를 거쳤으며, 인터넷
-   엔지니어링 운영 그룹(IESG)에 의해 출판이 승인되었다. 인터넷 표준에 대한
+   이 문서는 인터넷 엔지니어링 태스크 포스(IETF)의 산출물이다.
+ 이 문서는
+   IETF 커뮤니티의 합의를 나타낸다.
+ 이 문서는 공개 검토를 거쳤으며, 인터넷
+   엔지니어링 운영 그룹(IESG)에 의해 출판이 승인되었다.
+ 인터넷 표준에 대한
    추가 정보는 RFC 5741의 2절에서 확인할 수 있다.
 
    이 문서의 현재 상태, 정오표, 그리고 이에 대한 피드백을 제공하는 방법에
@@ -37,7 +42,8 @@ ISSN: 2070-1721                                            Penango, Inc.
    이 문서는 BCP 78 및 이 문서의 출판일에 유효한 IETF Trust의 IETF 문서에
    관한 법적 조항(http://trustee.ietf.org/license-info)의 적용을 받는다.
    이 문서들은 이 문서에 관한 귀하의 권리와 제한 사항을 기술하므로 주의 깊게
-   검토하기 바란다. 이 문서에서 추출된 코드 구성요소(Code Components)는
+   검토하기 바란다.
+ 이 문서에서 추출된 코드 구성요소(Code Components)는
    Trust 법적 조항의 4.e절에 기술된 대로 Simplified BSD License 텍스트를
    반드시 포함해야 하며, Simplified BSD License에 기술된 대로 보증 없이
    제공된다.
@@ -82,7 +88,8 @@ RFC 7468                 PKIX Textual Encodings               April 2015
    인터넷에서 사용되는 여러 보안 관련 표준들은 보통 기본 인코딩 규칙(Basic
    Encoding Rules, BER) 또는 구별 인코딩 규칙(Distinguished Encoding
    Rules, DER) [X.690]을 사용하여 인코딩되는 ASN.1 데이터 형식을 정의하는데,
-   이들은 이진(binary), 옥텟 지향(octet-oriented) 인코딩이다. 이 문서는 다음
+   이들은 이진(binary), 옥텟 지향(octet-oriented) 인코딩이다.
+ 이 문서는 다음
    형식들의 텍스트 인코딩에 관한 것이다:
 
    1.  인터넷 X.509 공개키 기반구조 인증서 및 인증서 폐기 목록(CRL) 프로파일
@@ -104,7 +111,8 @@ Josefsson & Leonard          Standards Track                    [Page 2]
 RFC 7468                 PKIX Textual Encodings               April 2015
 
 
-   5.  PKCS #8: Private-Key Information Syntax [RFC5208]. 이는
+   5.  PKCS #8: Private-Key Information Syntax [RFC5208].
+ 이는
        Asymmetric Key Package [RFC5958]에서 One Asymmetric Key로
        명칭이 변경되었으며, 같은 문서들에서 Encrypted Private-Key
        Information Syntax도 정의된다.
@@ -113,27 +121,35 @@ RFC 7468                 PKIX Textual Encodings               April 2015
        [RFC5755]의 속성 인증서(Attribute Certificate).
 
    이진 데이터 형식의 단점은 이메일이나 텍스트 문서와 같은 텍스트 전송
-   수단으로 교환될 수 없다는 점이다. 텍스트 기반 인코딩의 한 가지 장점은
-   일반적인 텍스트 편집기를 사용하여 손쉽게 수정할 수 있다는 것이다. 예를 들어,
+   수단으로 교환될 수 없다는 점이다.
+ 텍스트 기반 인코딩의 한 가지 장점은
+   일반적인 텍스트 편집기를 사용하여 손쉽게 수정할 수 있다는 것이다.
+ 예를 들어,
    사용자는 복사-붙여넣기 작업으로 여러 인증서를 이어 붙여 인증서 체인을 구성할
    수 있다.
 
    RFC 시리즈 내의 전통은 Marshall Rose가 Message Encapsulation [RFC934]에서
    제안한 내용에 기반한 Privacy-Enhanced Mail(PEM) [RFC1421]까지 거슬러
-   올라갈 수 있다. 원래 "PEM encapsulation mechanism", "encapsulated PEM
+   올라갈 수 있다.
+ 원래 "PEM encapsulation mechanism", "encapsulated PEM
    message", 또는 (논쟁의 여지가 있지만) "PEM printable encoding"이라
-   불렸으며, 오늘날 이 형식은 때때로 "PEM encoding"이라고 불린다. 그 변형으로는
+   불렸으며, 오늘날 이 형식은 때때로 "PEM encoding"이라고 불린다.
+ 그 변형으로는
    OpenPGP ASCII armor [RFC4880]와 OpenSSH 키 파일 형식 [RFC4716]이 있다.
 
    기본적으로 비조정(non-coordination) 또는 부주의로 귀결되는 이유들로 인해,
    많은 PKIX, PKCS, CMS 라이브러리들은 PEM 인코딩과 유사하지만 동일하지는
-   않은 텍스트 기반 인코딩을 구현한다. 이 문서는 _텍스트 인코딩_ 형식을
+   않은 텍스트 기반 인코딩을 구현한다.
+ 이 문서는 _텍스트 인코딩_ 형식을
    명세하고, 대부분의 구현체가 동작하는 사실상의(de facto) 규칙을 명확히
-   기술하며, 앞으로의 상호운용성을 증진할 권고사항을 제공한다. 또한 이 문서는
+   기술하며, 앞으로의 상호운용성을 증진할 권고사항을 제공한다.
+ 또한 이 문서는
    이 사실상 표준 형식의 진화를 반영하여 구문 요소들에 대한 공통 명명법을
-   제공한다. Peter Gutmann의 "X.509 Style Guide" [X.509SG]에는 형식들을
+   제공한다.
+ Peter Gutmann의 "X.509 Style Guide" [X.509SG]에는 형식들을
    설명하고 이 문서와 유사한 제안들을 담고 있는 "base64 Encoding"이라는 절이
-   있다. 모든 그림은 실제로 동작하는 기능적 예시이며, 키 길이와 내부 내용은
+   있다.
+ 모든 그림은 실제로 동작하는 기능적 예시이며, 키 길이와 내부 내용은
    실용적으로 가능한 한 작게 선택되었다.
 
    이 문서에서 키워드 "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
@@ -143,7 +159,8 @@ RFC 7468                 PKIX Textual Encodings               April 2015
 2.  일반적 고려사항
 
    텍스트 인코딩은 "-----BEGIN ", 레이블(label), "-----"로 구성된 줄로
-   시작하고, "-----END ", 레이블, "-----"로 구성된 줄로 끝난다. 이 줄들,
+   시작하고, "-----END ", 레이블, "-----"로 구성된 줄로 끝난다.
+ 이 줄들,
    즉 "캡슐화 경계(encapsulation boundaries)" 사이에는 [RFC4648]의 4절에
    따라 base64로 인코딩된 데이터가 위치한다. (PEM [RFC1421]은 이 데이터를
 
@@ -156,20 +173,27 @@ RFC 7468                 PKIX Textual Encodings               April 2015
 
    "캡슐화된 텍스트 부분(encapsulated text portion)"이라고 불렀다.) 캡슐화
    경계 앞의 데이터는 허용되며, 파서(parser)는 그러한 데이터를 처리할 때
-   오작동해서는 안 된다(MUST NOT). 더 나아가, 파서는 공백(whitespace) 및
+   오작동해서는 안 된다(MUST NOT).
+ 더 나아가, 파서는 공백(whitespace) 및
    기타 비-base64 문자를 무시해야 하며(SHOULD), 서로 다른 개행(newline)
    관례를 처리해야 한다(MUST).
 
    인코딩된 데이터의 유형은 "-----BEGIN " 줄(캡슐화 이전 경계,
-   pre-encapsulation boundary)의 유형 레이블에 따라 표시된다. 예를 들어,
+   pre-encapsulation boundary)의 유형 레이블에 따라 표시된다.
+ 예를 들어,
    해당 줄이 "-----BEGIN CERTIFICATE-----"라면 그 내용이 PKIX 인증서임을
-   나타낸다(아래에서 더 자세히 설명한다). 생성기(generator)는 "-----END "
+   나타낸다(아래에서 더 자세히 설명한다).
+ 생성기(generator)는 "-----END "
    줄(캡슐화 이후 경계, post-encapsulation boundary)에 대응하는
-   "-----BEGIN " 줄과 동일한 레이블을 넣어야 한다(MUST). 레이블은 형식적으로
-   대소문자를 구별하며, 대문자이고, 0개 이상의 문자로 구성된다. 레이블은 연속된
+   "-----BEGIN " 줄과 동일한 레이블을 넣어야 한다(MUST).
+ 레이블은 형식적으로
+   대소문자를 구별하며, 대문자이고, 0개 이상의 문자로 구성된다.
+ 레이블은 연속된
    공백이나 하이픈-마이너스(hyphen-minus)를 포함하지 않으며, 양쪽 끝에 공백이나
-   하이픈-마이너스를 포함하지도 않는다. 파서는 레이블 불일치가 있을 경우 오류를
-   알리는 대신 캡슐화 이후 경계의 레이블을 무시해도 된다(MAY). 일부 기존
+   하이픈-마이너스를 포함하지도 않는다.
+ 파서는 레이블 불일치가 있을 경우 오류를
+   알리는 대신 캡슐화 이후 경계의 레이블을 무시해도 된다(MAY).
+ 일부 기존
    구현체는 레이블이 일치할 것을 요구하지만, 그렇지 않은 구현체도 있다.
 
    "BEGIN" 또는 "END"와 레이블 사이에는 정확히 하나의 공백 문자(SP)가 있다.
@@ -178,11 +202,15 @@ RFC 7468                 PKIX Textual Encodings               April 2015
 
    레이블 유형은 인코딩된 데이터가 명시된 구문을 따른다는 것을 함의한다.
    파서는 비준수(non-conforming) 데이터를 우아하게(gracefully) 처리해야
-   한다(MUST). 그러나 이 문서 이전의 모든 파서나 생성기가 일관되게 동작하지는
-   않는다. 준수하는 파서는 내용을 다른 레이블 유형으로 해석해도 되지만(MAY),
-   보안 고려사항 절에서 논의하는 보안 함의를 인식하고 있어야 한다. 이 문서에서
+   한다(MUST).
+ 그러나 이 문서 이전의 모든 파서나 생성기가 일관되게 동작하지는
+   않는다.
+ 준수하는 파서는 내용을 다른 레이블 유형으로 해석해도 되지만(MAY),
+   보안 고려사항 절에서 논의하는 보안 함의를 인식하고 있어야 한다.
+ 이 문서에서
    설명하는 레이블들은 특정 암호화 알고리즘에 한정되지 않는 컨테이너 형식을
-   식별하며, 이는 알고리즘 민첩성(algorithm agility)과 일관되는 속성이다. 이
+   식별하며, 이는 알고리즘 민첩성(algorithm agility)과 일관되는 속성이다.
+ 이
    형식들은 [RFC5280]의 4.1.1.2절에 기술된 ASN.1 AlgorithmIdentifier 구조를
    사용한다.
 
@@ -195,7 +223,8 @@ RFC 7468                 PKIX Textual Encodings               April 2015
 
    구현자는 기존 파서들이 공백 처리에 있어 상당히 다르다는 점을 인식해야 한다.
    이 문서에서 "공백(whitespace)"은 활자 조판에서 수평 또는 수직 공간을
-   나타내는 임의의 문자 또는 일련의 문자를 의미한다. US-ASCII에서 공백은
+   나타내는 임의의 문자 또는 일련의 문자를 의미한다.
+ US-ASCII에서 공백은
    HT(0x09), VT(0x0B), FF(0x0C), SP(0x20), CR
 
 
@@ -205,29 +234,40 @@ Josefsson & Leonard          Standards Track                    [Page 4]
 RFC 7468                 PKIX Textual Encodings               April 2015
 
 
-   (0x0D), LF(0x0A)를 의미한다. "blank"는 HT와 SP를 의미한다. 줄은 CRLF, CR,
-   또는 LF로 나뉜다. 일반적인 ABNF 생성 규칙 WSP는 "blank"와 합치하며,
+   (0x0D), LF(0x0A)를 의미한다. "blank"는 HT와 SP를 의미한다.
+ 줄은 CRLF, CR,
+   또는 LF로 나뉜다.
+ 일반적인 ABNF 생성 규칙 WSP는 "blank"와 합치하며,
    "whitespace"를 위해 새로운 생성 규칙 W가 사용된다. 3절의 ABNF는
-   US-ASCII에 한정된다. 이 텍스트 인코딩들은 여러 다양한 시스템뿐만 아니라
+   US-ASCII에 한정된다.
+ 이 텍스트 인코딩들은 여러 다양한 시스템뿐만 아니라
    종이나 조각(engraving)과 같은 장기 보존용 저장 매체에서도 사용될 수 있으므로,
    구현자는 엄밀히 US-ASCII로 한정되지 않는 환경에서 이 형식들을 생성하거나
    파싱할 때 규칙의 문구보다는 그 정신(spirit)을 따라야 한다.
 
-   대부분의 기존 파서는 줄 끝의 blank를 무시한다. 줄 시작 부분이나 base64
-   인코딩된 데이터 중간의 blank는 호환성이 훨씬 떨어진다. 이러한 관찰은
-   그림 1에 성문화되어 있다. 가장 느슨한 파서 구현은 줄 지향(line-oriented)이
+   대부분의 기존 파서는 줄 끝의 blank를 무시한다.
+ 줄 시작 부분이나 base64
+   인코딩된 데이터 중간의 blank는 호환성이 훨씬 떨어진다.
+ 이러한 관찰은
+   그림 1에 성문화되어 있다.
+ 가장 느슨한 파서 구현은 줄 지향(line-oriented)이
    전혀 아니며 캡슐화 경계 바깥의 어떤 공백 조합이든 받아들인다(그림 2 참조).
    그러한 느슨한 파싱은 애초에 받아들이려고 의도하지 않았던 텍스트(예: 그것이
    일부 단편이거나 샘플이었기 때문)를 받아들일 위험을 감수할 수 있다.
 
    생성기는 base64 인코딩된 줄을 줄바꿈하여 각 줄이 정확히 64자로 구성되도록
-   해야 한다(MUST). 다만 마지막 줄은 (64자 줄 경계 내에서) 데이터의 나머지를
-   인코딩하며, 생성기는 불필요한 공백을 출력해서는 안 된다(MUST NOT). 파서는
-   다른 줄 크기를 처리해도 된다(MAY). 이 요구사항들은 PEM [RFC1421]과
+   해야 한다(MUST).
+ 다만 마지막 줄은 (64자 줄 경계 내에서) 데이터의 나머지를
+   인코딩하며, 생성기는 불필요한 공백을 출력해서는 안 된다(MUST NOT).
+ 파서는
+   다른 줄 크기를 처리해도 된다(MAY).
+ 이 요구사항들은 PEM [RFC1421]과
    일관된다.
 
-   파일은 여러 개의 텍스트 인코딩 인스턴스를 포함해도 된다(MAY). 이는 예를 들어
-   파일이 여러 인증서를 포함할 때 사용된다. 인스턴스들이 정렬되어 있는지
+   파일은 여러 개의 텍스트 인코딩 인스턴스를 포함해도 된다(MAY).
+ 이는 예를 들어
+   파일이 여러 인증서를 포함할 때 사용된다.
+ 인스턴스들이 정렬되어 있는지
    여부는 맥락에 따라 다르다.
 
 3.  ABNF
@@ -300,7 +340,8 @@ RFC 7468                 PKIX Textual Encodings               April 2015
                           Figure 3: ABNF (Strict)
 
    새로운 구현체는 위에 명시된 엄격(strict) 형식(그림 3)을 출력해야 한다
-   (SHOULD). 파싱 전략의 선택은 사용 맥락에 따라 다르다.
+   (SHOULD).
+ 파싱 전략의 선택은 사용 맥락에 따라 다르다.
 
 
 
@@ -344,7 +385,8 @@ Sec. Label                  ASN.1 Type              Reference Module
  id-aKPV1   OBJECT IDENTIFIER ::= {id-sm-mod mod-asymmetricKeyPkgV1(50)}
  id-cms2004 OBJECT IDENTIFIER ::= {id-sm-mod cms-2004(24)}
 
-   * 이 OID는 실제로는 PKCS #7 v1.5 [RFC2315]에 나타나지 않는다. 이 OID는
+   * 이 OID는 실제로는 PKCS #7 v1.5 [RFC2315]에 나타나지 않는다.
+ 이 OID는
    PKCS #7 v1.6 [P7v1.6]의 ASN.1 모듈에서 정의되었으며, PKCS #12 [RFC7292]를
    통해 계승되어 왔다.
 
@@ -366,7 +408,8 @@ RFC 7468                 PKIX Textual Encodings               April 2015
 
 5.1.  인코딩
 
-   공개키 인증서는 "CERTIFICATE" 레이블을 사용하여 인코딩된다. 인코딩된
+   공개키 인증서는 "CERTIFICATE" 레이블을 사용하여 인코딩된다.
+ 인코딩된
    데이터는 [RFC5280]의 4절에 기술된 대로 BER(DER 강력 권장; 부록 B 참조)로
    인코딩된 ASN.1 Certificate 구조여야 한다(MUST).
 
@@ -388,9 +431,11 @@ l4wOuDwKQa+upc8GftXE2C//4mKANBC6It01gUaTIpo=
                        Figure 6: Certificate Example
 
    역사적으로 레이블 "X509 CERTIFICATE"가 사용되었고, 또한 덜 일반적으로
-   "X.509 CERTIFICATE"도 사용되었다. 이 문서를 준수하는 생성기는
+   "X.509 CERTIFICATE"도 사용되었다.
+ 이 문서를 준수하는 생성기는
    "CERTIFICATE" 레이블을 생성해야 하며(MUST), "X509 CERTIFICATE"나
-   "X.509 CERTIFICATE" 레이블을 생성해서는 안 된다(MUST NOT). 파서는
+   "X.509 CERTIFICATE" 레이블을 생성해서는 안 된다(MUST NOT).
+ 파서는
    "X509 CERTIFICATE"나 "X.509 CERTIFICATE"를 "CERTIFICATE"와 동등하게
    취급해서는 안 되지만(SHOULD NOT), 하위 호환성을 위한 (잠재적으로 경고와
    함께 하는) 유효한 예외는 있을 수 있다.
@@ -420,7 +465,8 @@ RFC 7468                 PKIX Textual Encodings               April 2015
 
    많은 도구들이 PKIX 인증서에 대해 다른 어떤 유형보다도 더 많이, BEGIN 줄
    앞과 END 줄 뒤에 설명 텍스트(explanatory text)를 출력하는 것으로 알려져
-   있다. 그러한 텍스트가 출력된다면, 인증서 내 핵심 데이터 요소들의 텍스트
+   있다.
+ 그러한 텍스트가 출력된다면, 인증서 내 핵심 데이터 요소들의 텍스트
    표현을 제공하는 등 인증서와 관련된 것이어야 한다(SHOULD).
 
 Subject: CN=Atlantis
@@ -444,8 +490,10 @@ ILwpnZ1izL4MlI9eCSHhVQBHEp2uQdXJB+d5Byg=
 
    PKIX 구조의 텍스트 인코딩은 어디에서나 나타날 수 있지만, 많은 도구들이
    PKIX 구조를 직렬화할 때 이 인코딩을 출력하는 옵션을 제공하는 것으로 알려져
-   있다. 상호운용성을 증진하고 DER 인코딩을 텍스트 인코딩과 분리하기 위해,
-   인증서의 텍스트 인코딩에는 확장자 ".crt"를 사용해야 한다(SHOULD). 구현자는
+   있다.
+ 상호운용성을 증진하고 DER 인코딩을 텍스트 인코딩과 분리하기 위해,
+   인증서의 텍스트 인코딩에는 확장자 ".crt"를 사용해야 한다(SHOULD).
+ 구현자는
    이 권고에도 불구하고 많은 도구들이 여전히 이 텍스트 인코딩으로 인코딩된
    인증서를 기본적으로 확장자 ".cer"로 저장한다는 점을 인식해야 한다.
 
@@ -471,7 +519,8 @@ RFC 7468                 PKIX Textual Encodings               April 2015
 6.  인증서 폐기 목록의 텍스트 인코딩
 
    인증서 폐기 목록(Certificate Revocation List, CRL)은 "X509 CRL"
-   레이블을 사용하여 인코딩된다. 인코딩된 데이터는 [RFC5280]의 5절에 기술된
+   레이블을 사용하여 인코딩된다.
+ 인코딩된 데이터는 [RFC5280]의 5절에 기술된
    대로 BER(DER 강력 권장; 부록 B 참조)로 인코딩된 ASN.1 CertificateList
    구조여야 한다(MUST).
 
@@ -491,11 +540,15 @@ c3DGMNR+oUmSjKZ0jIhAYmeLxaPHfQwR
 
                            Figure 8: CRL Example
 
-   역사적으로 레이블 "CRL"은 거의 사용되지 않았다. 오늘날 그것은 흔하지 않으며
-   많은 인기 도구들이 그 레이블을 이해하지 못한다. 따라서 이 문서는
-   상호운용성과 하위 호환성을 증진하기 위해 "X509 CRL"을 표준화한다. 이 문서를
+   역사적으로 레이블 "CRL"은 거의 사용되지 않았다.
+ 오늘날 그것은 흔하지 않으며
+   많은 인기 도구들이 그 레이블을 이해하지 못한다.
+ 따라서 이 문서는
+   상호운용성과 하위 호환성을 증진하기 위해 "X509 CRL"을 표준화한다.
+ 이 문서를
    준수하는 생성기는 "X509 CRL" 레이블을 생성해야 하며(MUST), "CRL" 레이블을
-   생성해서는 안 된다(MUST NOT). 파서는 "CRL"을 "X509 CRL"과 동등하게
+   생성해서는 안 된다(MUST NOT).
+ 파서는 "CRL"을 "X509 CRL"과 동등하게
    취급해서는 안 된다(SHOULD NOT).
 
 
@@ -522,7 +575,8 @@ RFC 7468                 PKIX Textual Encodings               April 2015
 7.  PKCS #10 인증 요청 구문의 텍스트 인코딩
 
    PKCS #10 인증 요청(Certification Request)은 "CERTIFICATE REQUEST"
-   레이블을 사용하여 인코딩된다. 인코딩된 데이터는 [RFC2986]에 기술된 대로
+   레이블을 사용하여 인코딩된다.
+ 인코딩된 데이터는 [RFC2986]에 기술된 대로
    BER(DER 강력 권장; 부록 B 참조)로 인코딩된 ASN.1 CertificationRequest
    구조여야 한다(MUST).
 
@@ -539,15 +593,18 @@ dEQc8B8jAcnuOrfU
 
                         Figure 9: PKCS #10 Example
 
-   레이블 "NEW CERTIFICATE REQUEST" 또한 널리 사용된다. 이 문서를 준수하는
-   생성기는 "CERTIFICATE REQUEST" 레이블을 생성해야 한다(MUST). 파서는
+   레이블 "NEW CERTIFICATE REQUEST" 또한 널리 사용된다.
+ 이 문서를 준수하는
+   생성기는 "CERTIFICATE REQUEST" 레이블을 생성해야 한다(MUST).
+ 파서는
    "NEW CERTIFICATE REQUEST"를 "CERTIFICATE REQUEST"와 동등하게 취급해도
    된다(MAY).
 
 8.  PKCS #7 암호화 메시지 구문의 텍스트 인코딩
 
    PKCS #7 암호화 메시지 구문(Cryptographic Message Syntax) 구조는 "PKCS7"
-   레이블을 사용하여 인코딩된다. 인코딩된 데이터는 [RFC2315]에 기술된 대로
+   레이블을 사용하여 인코딩된다.
+ 인코딩된 데이터는 [RFC2315]에 기술된 대로
    BER로 인코딩된 ASN.1 ContentInfo 구조여야 한다(MUST).
 
 -----BEGIN PKCS7-----
@@ -561,9 +618,12 @@ OsYGYUFdAH0RNc1p4VbKEAQUM2Xo8PMHBoYdqEcsbTodlCFAZH4=
                         Figure 10: PKCS #7 Example
 
    레이블 "CERTIFICATE CHAIN"은 인증서 목록만을 포함하는 퇴화된(degenerate)
-   PKCS #7 구조를 나타내기 위해 사용되어 왔다([RFC2315]의 9절 참조). 여러
-   현대 도구들은 이 레이블을 지원하지 않는다. 생성기는 "CERTIFICATE CHAIN"
-   레이블을 생성해서는 안 된다(MUST NOT). 파서는 "CERTIFICATE CHAIN"을
+   PKCS #7 구조를 나타내기 위해 사용되어 왔다([RFC2315]의 9절 참조).
+ 여러
+   현대 도구들은 이 레이블을 지원하지 않는다.
+ 생성기는 "CERTIFICATE CHAIN"
+   레이블을 생성해서는 안 된다(MUST NOT).
+ 파서는 "CERTIFICATE CHAIN"을
    "PKCS7"과 동등하게 취급해서는 안 된다(SHOULD NOT).
 
 
@@ -574,13 +634,15 @@ Josefsson & Leonard          Standards Track                   [Page 11]
 RFC 7468                 PKIX Textual Encodings               April 2015
 
 
-   PKCS #7은 CMS [RFC5652]로 오래전에 대체된 오래된 명세이다. 구현체는 CMS가
+   PKCS #7은 CMS [RFC5652]로 오래전에 대체된 오래된 명세이다.
+ 구현체는 CMS가
    대안으로 존재할 때 PKCS #7을 생성해서는 안 된다(SHOULD NOT).
 
 9.  암호화 메시지 구문의 텍스트 인코딩
 
    암호화 메시지 구문(Cryptographic Message Syntax) 구조는 "CMS" 레이블을
-   사용하여 인코딩된다. 인코딩된 데이터는 [RFC5652]에 기술된 대로 BER로
+   사용하여 인코딩된다.
+ 인코딩된 데이터는 [RFC5652]에 기술된 대로 BER로
    인코딩된 ASN.1 ContentInfo 구조여야 한다(MUST).
 
 -----BEGIN CMS-----
@@ -591,8 +653,10 @@ dvb05OXi5XLPLEtViMwvLVLwSE0sKlFIVHAqSk3MBkkBAJv0Fx0=
 
                           Figure 11: CMS Example
 
-   CMS는 PKCS #7의 IETF 후속(successor)이다. [RFC5652]의 1.1.1절은 PKCS #7
-   v1.5 이후의 변경 사항을 설명한다. 구현체는 CMS가 대안으로 존재할 때 CMS를
+   CMS는 PKCS #7의 IETF 후속(successor)이다.
+ [RFC5652]의 1.1.1절은 PKCS #7
+   v1.5 이후의 변경 사항을 설명한다.
+ 구현체는 CMS가 대안으로 존재할 때 CMS를
    생성하여 상호운용성과 상위 호환성(forwards-compatibility)을 증진해야
    한다(SHOULD).
 
@@ -600,10 +664,12 @@ dvb05OXi5XLPLEtViMwvLVLwSE0sKlFIVHAqSk3MBkkBAJv0Fx0=
 
    암호화되지 않은 PKCS #8 Private Key Information Syntax 구조
    (PrivateKeyInfo)는 Asymmetric Key Packages(OneAsymmetricKey)로 명칭이
-   변경되었으며, "PRIVATE KEY" 레이블을 사용하여 인코딩된다. 인코딩된 데이터는
+   변경되었으며, "PRIVATE KEY" 레이블을 사용하여 인코딩된다.
+ 인코딩된 데이터는
    PKCS #8 [RFC5208]에 기술된 대로 BER(DER 권장; 부록 B 참조)로 인코딩된
    ASN.1 PrivateKeyInfo 구조이거나, [RFC5958]에 기술된 대로
-   OneAsymmetricKey 구조여야 한다(MUST). 이 둘은 의미상 동일하며 버전 번호로
+   OneAsymmetricKey 구조여야 한다(MUST).
+ 이 둘은 의미상 동일하며 버전 번호로
    구별할 수 있다.
 
 -----BEGIN PRIVATE KEY-----
@@ -630,7 +696,8 @@ RFC 7468                 PKIX Textual Encodings               April 2015
 
    암호화된 PKCS #8 Private Key Information Syntax 구조
    (EncryptedPrivateKeyInfo)는 [RFC5958]에서도 동일하게 불리며,
-   "ENCRYPTED PRIVATE KEY" 레이블을 사용하여 인코딩된다. 인코딩된 데이터는
+   "ENCRYPTED PRIVATE KEY" 레이블을 사용하여 인코딩된다.
+ 인코딩된 데이터는
    PKCS #8 [RFC5208]과 [RFC5958]에 기술된 대로 BER(DER 권장; 부록 B 참조)로
    인코딩된 ASN.1 EncryptedPrivateKeyInfo 구조여야 한다(MUST).
 
@@ -647,7 +714,8 @@ QC7k0NNzUHTV9yGDwfqMbw==
 12.  속성 인증서의 텍스트 인코딩
 
    속성 인증서(Attribute Certificate)는 "ATTRIBUTE CERTIFICATE" 레이블을
-   사용하여 인코딩된다. 인코딩된 데이터는 [RFC5755]에 기술된 대로 BER(DER
+   사용하여 인코딩된다.
+ 인코딩된 데이터는 [RFC5755]에 기술된 대로 BER(DER
    강력 권장; 부록 B 참조)로 인코딩된 ASN.1 AttributeCertificate 구조여야
    한다(MUST).
 
@@ -683,7 +751,8 @@ RFC 7468                 PKIX Textual Encodings               April 2015
 
 13.  Subject Public Key Info의 텍스트 인코딩
 
-   공개키는 "PUBLIC KEY" 레이블을 사용하여 인코딩된다. 인코딩된 데이터는
+   공개키는 "PUBLIC KEY" 레이블을 사용하여 인코딩된다.
+ 인코딩된 데이터는
    [RFC5280]의 4.1.2.7절에 기술된 대로 BER(DER 권장; 부록 B 참조)로
    인코딩된 ASN.1 SubjectPublicKeyInfo 구조여야 한다(MUST).
 
@@ -702,11 +771,15 @@ Nkn3Eos8EiZByi9DVsyfy9eejh+8AXgp
 
    정규(canonical) 표현이나 특정 데이터 객체의 지문(fingerprint)을 생성하는
    능력에 의존하는 구현체를 만드는 구현자는, 이 문서가 정규 인코딩을 정의하지
-   않는다는 점을 이해해야 한다. 첫 번째 모호성은 이진 BER 또는 DER 인코딩 대신
+   않는다는 점을 이해해야 한다.
+ 첫 번째 모호성은 이진 BER 또는 DER 인코딩 대신
    텍스트 인코딩 표현을 허용함으로써 발생하지만, 여러 레이블이 유사하게
-   취급될 때 추가적인 모호성이 발생한다. 공백 및 비-base64 알파벳 문자의
-   변형은 추가적인 모호성을 만들 수 있다. 데이터 인코딩 모호성은 또한 측면
-   채널(side channel)의 기회를 만든다. 정규 인코딩이 필요하다면, 인코딩된
+   취급될 때 추가적인 모호성이 발생한다.
+ 공백 및 비-base64 알파벳 문자의
+   변형은 추가적인 모호성을 만들 수 있다.
+ 데이터 인코딩 모호성은 또한 측면
+   채널(side channel)의 기회를 만든다.
+ 정규 인코딩이 필요하다면, 인코딩된
    구조를 디코딩하여 정규 형식(즉, DER 인코딩)으로 처리해야 한다.
 
 15.  참고문헌
@@ -839,8 +912,10 @@ RFC 7468                 PKIX Textual Encodings               April 2015
 부록 A.  비준수 예시
 
    이 부록은 이 문서 앞부분에서 설명한, 권장되지 않는 레이블 변형들에 대한
-   예시를 담고 있다. 앞서 논의한 바와 같이, 이들을 지원하는 것은 요구되지
-   않으며 때로는 권장되지 않는다. 그럼에도 불구하고 이들은 상호운용성 테스트와
+   예시를 담고 있다.
+ 앞서 논의한 바와 같이, 이들을 지원하는 것은 요구되지
+   않으며 때로는 권장되지 않는다.
+ 그럼에도 불구하고 이들은 상호운용성 테스트와
    손쉬운 참조를 위해 유용할 수 있다.
 
 -----BEGIN X509 CERTIFICATE-----
@@ -903,13 +978,17 @@ OsYGYUFdAH0RNc1p4VbKEAQUM2Xo8PMHBoYdqEcsbTodlCFAZH4=
 
 부록 B.  DER에 대한 기대사항
 
-   이 부록은 참고용(informative)이다. 규범적 규칙에 대해서는 각각의 해당
+   이 부록은 참고용(informative)이다.
+ 규범적 규칙에 대해서는 각각의 해당
    표준을 참조하라.
 
-   DER은 BER [X.690]의 제한된 프로파일이다. 따라서 데이터 값의 모든 DER
+   DER은 BER [X.690]의 제한된 프로파일이다.
+ 따라서 데이터 값의 모든 DER
    인코딩은 BER 인코딩이지만, BER 인코딩 중 단 하나만이 어떤 데이터 값에 대한
-   DER 인코딩이다. 정규(canonical) 인코딩은 암호화 연산을 수행할 때 중요하다.
-   추가로, 정규 인코딩은 파서에게 특정한 효율성 이점을 제공한다. DER로
+   DER 인코딩이다.
+ 정규(canonical) 인코딩은 암호화 연산을 수행할 때 중요하다.
+   추가로, 정규 인코딩은 파서에게 특정한 효율성 이점을 제공한다.
+ DER로
    인코딩하는 데에는 세 가지 주요 이유가 있다:
 
    1.  디지털 서명은 의미적 내용(semantic content)의 DER 인코딩에 대해
@@ -919,9 +998,11 @@ OsYGYUFdAH0RNc1p4VbKEAQUM2Xo8PMHBoYdqEcsbTodlCFAZH4=
 
    2.  실제로, 암호화 해시는 식별을 위해 DER 인코딩에 대해 계산된다.
 
-   3.  실제로, 내용은 작다. DER은 데이터 값을 항상 확정 길이
+   3.  실제로, 내용은 작다.
+ DER은 데이터 값을 항상 확정 길이
        (definite-length) 형식(길이가 인코딩의 시작 부분에 명시되는 형식)으로
-       인코딩한다. 따라서 파서는 메모리나 자원 사용량을 미리 예측할 수 있다.
+       인코딩한다.
+ 따라서 파서는 메모리나 자원 사용량을 미리 예측할 수 있다.
 
 
 
@@ -957,13 +1038,16 @@ RFC 7468                 PKIX Textual Encodings               April 2015
                      Figure 20: Guide for DER Encoding
 
    * 암호화 메시지 구문(Cryptographic Message Syntax)은 임의 길이의 내용을
-     위해 설계되었다. 부정 길이(indefinite-length) 인코딩은 인코딩을 생성할 때
-     단일 패스 처리(원패스 처리, 스트리밍)를 가능하게 한다. 특정 부분, 즉
+     위해 설계되었다.
+ 부정 길이(indefinite-length) 인코딩은 인코딩을 생성할 때
+     단일 패스 처리(원패스 처리, 스트리밍)를 가능하게 한다.
+ 특정 부분, 즉
      서명된(signed) 속성과 인증된(authenticated) 속성만이 DER로 인코딩되어야
      한다.
 
    ~ 항상 "작지는" 않지만, 이 인코딩된 구조들은 특별히 "크지"(예: 16킬로바이트
-     이상) 않아야 한다. 어떤 경우든 파서는 큰 것들에 대해 미리 통지받아야 한다.
+     이상) 않아야 한다.
+ 어떤 경우든 파서는 큰 것들에 대해 미리 통지받아야 한다.
      이것은 애초에 이것들을 DER로 인코딩해야 하는 또 다른 이유이다.
 
                      Figure 20: Guide for DER Encoding

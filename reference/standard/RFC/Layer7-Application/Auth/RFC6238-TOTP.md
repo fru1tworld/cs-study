@@ -5,7 +5,8 @@
 
 ## 1. 개요
 
-TOTP(Time-based One-Time Password)는 [RFC 4226 HOTP](./RFC4226-HOTP.md)의 이동 인자(moving factor)를 카운터 대신 현재 시각으로 바꾼 알고리즘이다. 서버와 클라이언트가 카운터 값을 동기화할 필요 없이, 둘 다 같은 시계(clock)를 기준으로 같은 시간 구간에 있으면 동일한 OTP 값을 계산할 수 있다.
+TOTP(Time-based One-Time Password)는 [RFC 4226 HOTP](./RFC4226-HOTP.md)의 이동 인자(moving factor)를 카운터 대신 현재 시각으로 바꾼 알고리즘이다.
+ 서버와 클라이언트가 카운터 값을 동기화할 필요 없이, 둘 다 같은 시계(clock)를 기준으로 같은 시간 구간에 있으면 동일한 OTP 값을 계산할 수 있다.
 
 | 구분 | HOTP | TOTP |
 |------|------|------|
@@ -31,7 +32,8 @@ T = floor((현재 UNIX 시각 - T0) / X)
 | X | 시간 구간 길이(초) | 30 |
 | T | 시간 구간 카운터 값 (HOTP의 C 자리에 대입) | - |
 
-HOTP와 마찬가지로 HMAC 결과를 동적 절단(dynamic truncation)하여 지정한 자릿수(보통 6자리)로 축약한다. HMAC 해시 함수로는 SHA-1(기본), SHA-256, SHA-512를 사용할 수 있다.
+HOTP와 마찬가지로 HMAC 결과를 동적 절단(dynamic truncation)하여 지정한 자릿수(보통 6자리)로 축약한다.
+ HMAC 해시 함수로는 SHA-1(기본), SHA-256, SHA-512를 사용할 수 있다.
 
 ### 2.1 계산 예시 (의사코드)
 

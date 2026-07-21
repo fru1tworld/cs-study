@@ -6,7 +6,8 @@
 
 ## 1. 개요
 
-RFC 8446은 TLS(Transport Layer Security) 프로토콜의 최신 버전인 TLS 1.3 을 정의합니다. HTTPS의 핵심 보안 프로토콜로, 클라이언트-서버 간 통신의 기밀성(confidentiality) 과 무결성(integrity) 을 보장합니다.
+RFC 8446은 TLS(Transport Layer Security) 프로토콜의 최신 버전인 TLS 1.3 을 정의합니다.
+ HTTPS의 핵심 보안 프로토콜로, 클라이언트-서버 간 통신의 기밀성(confidentiality) 과 무결성(integrity) 을 보장합니다.
 
 ### TLS가 제공하는 세 가지 보안 보장
 

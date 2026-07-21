@@ -7,7 +7,7 @@ ISSN: 2070-1721
 
                             JSON Merge Patch
 
-초록
+### Abstract
 
    이 명세는 JSON merge patch 형식과 처리 규칙을 정의한다. merge patch
    형식은 주로 HTTP PATCH 메서드와 함께 대상 리소스의 콘텐츠에 대한
@@ -18,9 +18,11 @@ ISSN: 2070-1721
    이 문서는 Internet Standards Track 문서이다.
 
    이 문서는 Internet Engineering Task Force (IETF)의 산출물이다.
-   이것은 IETF 커뮤니티의 합의를 대표한다. 이 문서는 공개 검토를
+   이것은 IETF 커뮤니티의 합의를 대표한다.
+ 이 문서는 공개 검토를
    받았으며 Internet Engineering Steering Group (IESG)에 의해 발행이
-   승인되었다. Internet Standards에 대한 추가 정보는 RFC 5741의
+   승인되었다.
+ Internet Standards에 대한 추가 정보는 RFC 5741의
    섹션 2에서 확인할 수 있다.
 
    이 문서의 현재 상태, 정오표, 그리고 이에 대한 피드백을 제공하는
@@ -36,7 +38,8 @@ ISSN: 2070-1721
    IETF 문서에 관한 법적 조항
    (http://trustee.ietf.org/license-info)의 적용을 받는다.
    이 문서들은 이 문서에 관한 귀하의 권리와 제한 사항을 기술하고
-   있으므로 주의 깊게 검토하기 바란다. 이 문서에서 추출된
+   있으므로 주의 깊게 검토하기 바란다.
+ 이 문서에서 추출된
    코드 구성요소는 Trust Legal Provisions의 섹션 4.e에 기술된
    Simplified BSD License 텍스트를 포함해야 하며, Simplified BSD
    License에 기술된 대로 보증 없이 제공된다.
@@ -70,9 +73,11 @@ RFC 7396                    JSON Merge Patch                October 2014
    JSON merge patch 문서는 수정되는 문서를 밀접하게 모방하는 구문을
    사용하여 대상 JSON 문서에 적용할 변경 사항을 기술한다. merge patch
    문서의 수신자는 제공된 패치의 내용을 대상 문서의 현재 내용과
-   비교하여 요청되는 정확한 변경 사항 집합을 결정한다. 제공된
+   비교하여 요청되는 정확한 변경 사항 집합을 결정한다.
+ 제공된
    merge patch에 대상 내에 존재하지 않는 멤버가 포함되어 있으면
-   해당 멤버가 추가된다. 대상에 해당 멤버가 이미 포함되어 있으면
+   해당 멤버가 추가된다.
+ 대상에 해당 멤버가 이미 포함되어 있으면
    값이 대체된다. merge patch의 null 값은 대상에서 기존 값의 제거를
    나타내는 특별한 의미가 부여된다.
 
@@ -121,10 +126,13 @@ RFC 7396                    JSON Merge Patch                October 2014
    현재 콘텐츠와 비교할 책임이 있다.
 
    merge patch 문서를 대상 리소스에 적용하기 위해, 시스템은 의사
-   코드로 기술된 다음 함수의 효과를 실현한다. 이 설명에서 함수는
+   코드로 기술된 다음 함수의 효과를 실현한다.
+ 이 설명에서 함수는
    MergePatch라 불리며, 두 개의 인수를 취한다: 대상 리소스 문서와
-   merge patch 문서. Target 인수는 임의의 JSON 값이거나 undefined일
-   수 있다. Patch 인수는 임의의 JSON 값일 수 있다.
+   merge patch 문서.
+ Target 인수는 임의의 JSON 값이거나 undefined일
+   수 있다.
+ Patch 인수는 임의의 JSON 값일 수 있다.
 
 Hoffman & Snell              Standards Track                    [Page 3]
 
@@ -145,15 +153,18 @@ RFC 7396                    JSON Merge Patch                October 2014
      else:
        return Patch
 
-   이 함수에 대해 몇 가지 주목할 점이 있다. 패치가 객체가 아닌 다른
+   이 함수에 대해 몇 가지 주목할 점이 있다.
+ 패치가 객체가 아닌 다른
    것이면, 결과는 항상 전체 대상을 전체 패치로 대체하는 것이 된다.
    또한, 객체가 아닌 대상의 일부를 패치하는 것은 불가능한데, 예를 들어
    배열의 일부 값만 교체하는 것과 같은 경우이다.
 
    MergePatch 작업은 텍스트 표현 수준이 아닌 데이터 항목 수준에서
-   동작하도록 정의된다. MergePatch 작업이 공백, 멤버 순서, 대상
+   동작하도록 정의된다.
+ MergePatch 작업이 공백, 멤버 순서, 대상
    구현에서 사용 가능한 것 이상의 숫자 정밀도 등과 같은 텍스트 표현
-   수준의 특성을 보존할 것이라는 기대는 없다. 또한, 대상 구현이
+   수준의 특성을 보존할 것이라는 기대는 없다.
+ 또한, 대상 구현이
    동일한 이름을 가진 여러 이름/값 쌍을 허용하더라도, 그러한 객체에
    대한 MergePatch 작업의 결과는 정의되지 않는다.
 
@@ -256,9 +267,11 @@ RFC 7396                    JSON Merge Patch                October 2014
 
    "application/merge-patch+json" 미디어 타입은 사용자 에이전트가
    서버에게 대상 리소스에 적용할 구체적인 변경 작업 집합을 결정하도록
-   하려는 의도를 나타낼 수 있게 한다. 따라서 주어진 변경의 적절성과
+   하려는 의도를 나타낼 수 있게 한다.
+ 따라서 주어진 변경의 적절성과
    그러한 변경을 요청하는 사용자 에이전트의 권한을 결정하는 것은
-   서버의 책임이다. 그러한 결정이 어떻게 이루어지는지는 이 명세의
+   서버의 책임이다.
+ 그러한 결정이 어떻게 이루어지는지는 이 명세의
    범위 밖으로 간주된다.
 
    [RFC5789]의 섹션 5에서 논의된 모든 보안 고려사항은
@@ -343,7 +356,8 @@ RFC 7396                    JSON Merge Patch                October 2014
 
 감사의 글
 
-   많은 사람들이 이 문서에 중요한 아이디어를 기여하였다. 이 사람들에는
+   많은 사람들이 이 문서에 중요한 아이디어를 기여하였다.
+ 이 사람들에는
    James Manger, Matt Miller, Carsten Bormann, Bjoern Hoehrmann,
    Pete Resnick, Richard Barnes가 포함되지만 이에 국한되지 않는다.
 

@@ -4,7 +4,8 @@
 
 ## 1. 개요
 
-DHCP(Dynamic Host Configuration Protocol)는 TCP/IP 네트워크의 호스트에 설정 정보를 자동으로 전달하는 프로토콜입니다. BOOTP를 기반으로 하며, 자동 주소 할당과 추가 설정 옵션 기능을 제공합니다.
+DHCP(Dynamic Host Configuration Protocol)는 TCP/IP 네트워크의 호스트에 설정 정보를 자동으로 전달하는 프로토콜입니다.
+ BOOTP를 기반으로 하며, 자동 주소 할당과 추가 설정 옵션 기능을 제공합니다.
 
 ### 핵심 목적
 - 클라이언트의 수동 IP 설정 제거
@@ -308,7 +309,8 @@ secs 필드 업데이트:
 
 클라이언트의 OFFER 선택 기준:
 
-RFC 2131은 클라이언트가 여러 DHCPOFFER 중 무엇을 고를지를 "구현에 따라 다름(implementation dependent)"이라고 명시할 뿐, 구체적인 선택 알고리즘을 규정하지 않습니다. 아래 표는 RFC가 규정한 것이 아니라 일반적인 구현 관행입니다:
+RFC 2131은 클라이언트가 여러 DHCPOFFER 중 무엇을 고를지를 "구현에 따라 다름(implementation dependent)"이라고 명시할 뿐, 구체적인 선택 알고리즘을 규정하지 않습니다.
+ 아래 표는 RFC가 규정한 것이 아니라 일반적인 구현 관행입니다:
 
 | 우선순위 | 기준 | 설명 |
 |---------|------|------|

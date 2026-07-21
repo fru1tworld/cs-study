@@ -6,7 +6,8 @@
 
 ## 1. 개요
 
-RFC 9112는 HTTP/1.1의 메시지 문법과 파싱 에 집중한 문서입니다. HTTP 의미론(RFC 9110)과 분리되어, HTTP/1.1 프로토콜의 전송 형식을 정의합니다.
+RFC 9112는 HTTP/1.1의 메시지 문법과 파싱 에 집중한 문서입니다.
+ HTTP 의미론(RFC 9110)과 분리되어, HTTP/1.1 프로토콜의 전송 형식을 정의합니다.
 
 ## 2. 메시지 형식
 
@@ -153,7 +154,8 @@ Subject: This is a
 Subject: This is a very long subject line
 ```
 
-요청에서 obs-fold를 수신한 서버는 이를 400 Bad Request로 거부하는 편이 권장됩니다(요청 스머글링 방지 목적). 다만 구현체 선택에 따라 공백(SP)으로 치환해 처리하는 것도 허용됩니다. 반면 응답을 수신하는 사용자 에이전트 쪽에서는 obs-fold를 공백으로 대체해야 합니다(MUST).
+요청에서 obs-fold를 수신한 서버는 이를 400 Bad Request로 거부하는 편이 권장됩니다(요청 스머글링 방지 목적). 다만 구현체 선택에 따라 공백(SP)으로 치환해 처리하는 것도 허용됩니다.
+ 반면 응답을 수신하는 사용자 에이전트 쪽에서는 obs-fold를 공백으로 대체해야 합니다(MUST).
 
 ### 4.4 헤더 필드 순서
 
@@ -292,7 +294,8 @@ Checksum: abc123\r\n
 
 - 동일 본문에 청크 인코딩 2회 이상 적용 불가
 - 메시지에 Transfer-Encoding이 있으면 Content-Length는 무시
-- Transfer-Encoding과 Content-Length가 동시에 존재하면 요청 스머글링 시도로 의심해야 하며, 수신자는 이를 오류로 처리하여 메시지를 거부하고 연결을 종료해야 합니다(MUST). 단순히 Content-Length를 무시하고 넘어가서는 안 됩니다.
+- Transfer-Encoding과 Content-Length가 동시에 존재하면 요청 스머글링 시도로 의심해야 하며, 수신자는 이를 오류로 처리하여 메시지를 거부하고 연결을 종료해야 합니다(MUST).
+ 단순히 Content-Length를 무시하고 넘어가서는 안 됩니다.
 
 ## 7. 연결 관리
 
