@@ -1,0 +1,296 @@
+# Ktor 플러그인과 Content Negotiation
+
+## 07. 플러그인 (Plugins)
+
+> 출처: https://ktor.io/docs/server-plugins.html
+
+---
+
+### 플러그인이란
+
+Ktor의 **플러그인(Plugin)** 은 요청/응답 파이프라인을 가로채는 컴포넌트입니다. 직렬화, 인증, 로깅, 압축, CORS 같은 횡단 관심사를 한 줄의 `install`로 끼울 수 있게 해줍니다.
+
+> Ktor의 라우팅조차 내부적으로 플러그인입니다 — `"Routing is a Plugin"`.
+
+---
+
+### 설치 패턴
+
+플러그인은 **Application 레벨** 또는 **Route 레벨**에서 설치할 수 있습니다.
+
+```kotlin
+fun Application.module() {
+    install(ContentNegotiation) { json() }   // Application 레벨
+    install(CORS) { anyHost() }
+    install(CallLogging)
+
+    routing {
+        route("/admin") {
+            install(SomePlugin) { /* 이 서브트리만 */ }
+        }
+    }
+}
+```
+
+같은 플러그인을 외부 범위와 내부 범위 모두에 설치한 경우, **더 안쪽(라우트) 설정이 전역 설정을 덮어씁니다.**
+
+---
+
+### 주요 내장 플러그인
+
+| 플러그인 | 역할 |
+| --- | --- |
+| `ContentNegotiation` | JSON/XML/CBOR 등 자동 직렬화·역직렬화 |
+| `StatusPages` | 예외/상태 코드별 응답 핸들러 |
+| `Authentication` | Basic / JWT / OAuth / Session 등 인증 |
+| `Sessions` | 세션 트랜스포트 + 저장 |
+| `CORS` | Cross-Origin Resource Sharing 허용 |
+| `Compression` | gzip / deflate 응답 압축 |
+| `CallLogging` | 요청별 로그 |
+| `CallId` | 요청에 추적 ID 부여 |
+| `DefaultHeaders` | `Server`, `Date` 등 기본 응답 헤더 |
+| `AutoHeadResponse` | `GET` 라우트에 대한 자동 `HEAD` 응답 |
+| `ForwardedHeaders`, `XForwardedHeaders` | 프록시 뒤에서 원본 IP 인식 |
+| `HSTS` | HTTPS 강제 헤더 |
+| `WebSockets` | WebSocket 지원 |
+| `IgnoreTrailingSlash` | `/foo` ↔ `/foo/` 동일 취급 |
+| `RateLimit` | 요청 빈도 제한 |
+| `RequestValidation` | 요청 바디 검증 |
+| `MicrometerMetrics`, `DropwizardMetrics` | 메트릭 수출 |
+
+설치 예시:
+
+```kotlin
+install(Compression) {
+    gzip()
+    deflate()
+}
+
+install(CallLogging) {
+    level = Level.INFO
+    filter { call -> call.request.path().startsWith("/api") }
+}
+
+install(CORS) {
+    allowHost("example.com", schemes = listOf("https"))
+    allowMethod(HttpMethod.Put)
+    allowHeader(HttpHeaders.ContentType)
+    allowCredentials = true
+}
+
+install(DefaultHeaders) {
+    header(HttpHeaders.Server, "MyServer")
+}
+```
+
+---
+
+### 커스텀 플러그인 만들기
+
+Ktor는 두 가지 빌더를 제공합니다.
+
+| 빌더 | 스코프 |
+| --- | --- |
+| `createApplicationPlugin` | Application 전역 |
+| `createRouteScopedPlugin` | Route 단위로 다른 설정 가능 |
+
+#### 단순한 예: 모든 응답에 헤더 추가
+
+```kotlin
+val RequestTimer = createApplicationPlugin("RequestTimer") {
+    onCall { call ->
+        val t0 = System.nanoTime()
+        call.attributes.put(AttributeKey("t0"), t0)
+    }
+    onCallRespond { call, _ ->
+        val t0 = call.attributes[AttributeKey<Long>("t0")]
+        val dt = (System.nanoTime() - t0) / 1_000_000
+        call.response.header("X-Response-Time-Ms", dt.toString())
+    }
+}
+
+fun Application.module() {
+    install(RequestTimer)
+}
+```
+
+#### 설정값을 받는 플러그인
+
+```kotlin
+class MyPluginConfig {
+    var greeting: String = "Hello"
+}
+
+val MyPlugin = createApplicationPlugin(
+    name = "MyPlugin",
+    createConfiguration = ::MyPluginConfig,
+) {
+    val greeting = pluginConfig.greeting
+    onCall { call ->
+        call.response.header("X-Greet", greeting)
+    }
+}
+
+install(MyPlugin) {
+    greeting = "Hi"
+}
+```
+
+#### 라우트 스코프
+
+```kotlin
+val RouteOnly = createRouteScopedPlugin("RouteOnly") {
+    onCall { call -> call.response.header("X-Where", "scoped") }
+}
+
+routing {
+    route("/admin") {
+        install(RouteOnly)
+        get { call.respondText("admin") }
+    }
+}
+```
+
+---
+
+### 훅(Hooks)
+
+플러그인 내부에서 사용할 수 있는 주요 훅입니다.
+
+| 훅 | 시점 |
+| --- | --- |
+| `onCall` | 라우트 핸들러보다 먼저 |
+| `onCallReceive` | 본문 수신 전후 변환 |
+| `onCallRespond` | 응답을 만들 때 |
+| `on(CallFailed)` | 예외 발생 시 |
+| `on(ResponseSent)` | 응답 전송 완료 후 |
+
+이 훅들을 통해 `StatusPages` 같은 플러그인을 구현할 수 있습니다.
+
+---
+
+## 08. Content Negotiation 과 직렬화
+
+> 출처: https://ktor.io/docs/server-serialization.html
+
+---
+
+### 무엇을 하는 플러그인인가
+
+`ContentNegotiation`은 두 가지를 동시에 처리합니다.
+
+1. **콘텐츠 협상**: 클라이언트의 `Accept` 헤더와 서버가 지원하는 포맷을 매칭.
+2. **직렬화/역직렬화**: JSON / XML / CBOR / ProtoBuf 등을 객체 ↔ 본문으로 자동 변환.
+
+이게 없으면 `call.receive<MyDto>()`나 `call.respond(myDto)`가 동작하지 않습니다.
+
+---
+
+### 의존성
+
+- 코어: `io.ktor:ktor-server-content-negotiation`
+- 포맷별 컨버터: `ktor-serialization-kotlinx-json`, `-xml`, `-cbor`, `-protobuf`, `ktor-serialization-jackson`, `ktor-serialization-gson` 등
+
+`build.gradle.kts` 예:
+
+```kotlin
+dependencies {
+    implementation("io.ktor:ktor-server-content-negotiation:$ktor_version")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
+}
+```
+
+---
+
+### 설치
+
+```kotlin
+install(ContentNegotiation) {
+    json()       // kotlinx.serialization
+    // xml()
+    // cbor()
+}
+```
+
+설정을 전달하는 경우:
+
+```kotlin
+install(ContentNegotiation) {
+    json(Json {
+        prettyPrint = true
+        ignoreUnknownKeys = true
+        encodeDefaults = false
+    })
+}
+```
+
+여러 포맷을 동시에 등록해 두면 `Accept` 헤더에 따라 자동 선택됩니다.
+
+---
+
+### 사용 흐름
+
+#### 응답 직렬화
+
+```kotlin
+@Serializable
+data class User(val id: Long, val name: String)
+
+get("/users/{id}") {
+    val user = service.find(call.parameters["id"]!!)
+    call.respond(user)        // Accept: application/json → JSON
+}
+```
+
+#### 요청 역직렬화
+
+```kotlin
+@Serializable
+data class CreateUser(val name: String, val email: String)
+
+post("/users") {
+    val req = call.receive<CreateUser>()
+    val created = service.create(req)
+    call.respond(HttpStatusCode.Created, created)
+}
+```
+
+---
+
+### 라이브러리별 비교
+
+| 라이브러리 | 강점 | 비고 |
+| --- | --- | --- |
+| **kotlinx.serialization** | Kotlin-native, 멀티플랫폼, `@Serializable` | Ktor 공식 권장 |
+| **Jackson** | 풍부한 모듈 / 어노테이션 생태계 | 리플렉션 기반 |
+| **Gson** | 단순함 | 코틀린 null/default 처리에서 가끔 함정 |
+
+---
+
+### 커스텀 컨버터
+
+`ContentConverter` 인터페이스를 직접 구현해 임의의 미디어 타입을 처리할 수 있습니다.
+
+```kotlin
+class CsvConverter : ContentConverter {
+    override suspend fun serialize(
+        contentType: ContentType, charset: Charset, typeInfo: TypeInfo, value: Any
+    ): OutgoingContent? = TODO()
+
+    override suspend fun deserialize(
+        charset: Charset, typeInfo: TypeInfo, content: ByteReadChannel
+    ): Any? = TODO()
+}
+
+install(ContentNegotiation) {
+    register(ContentType.Text.CSV, CsvConverter())
+}
+```
+
+---
+
+### 주의할 점
+
+- `@Serializable`이 없는 일반 클래스는 kotlinx.serialization에서 처리하지 못합니다.
+- 클라이언트가 `Accept: */*`인 경우 등록 순서대로 첫 컨버터가 쓰입니다.
+- `respondNullable`이 아닌 `respond`에 `null`을 넘기면 예외가 납니다.
