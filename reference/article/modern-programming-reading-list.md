@@ -82,7 +82,7 @@
 - [The Wrong Abstraction (Sandi Metz)](https://sandimetz.com/blog/2016/1/20/the-wrong-abstraction) — 잘못된 추상화보다 중복이 싸다. 추상화를 되돌리는(inline) 리팩터링을 정당화해 주는 글.
 - [Write code that is easy to delete, not easy to extend (tef)](https://programmingisterrible.com/post/139222674273/write-code-that-is-easy-to-delete-not-easy-to) — 확장성 대신 삭제 가능성을 최적화하라. 레이어링과 결합에 대한 관점을 뒤집는 에세이.
 - [Goodbye, Clean Code (Dan Abramov)](https://overreacted.io/goodbye-clean-code/) — 중복 제거 리팩터링이 오히려 코드를 나쁘게 만든 경험담. "clean code는 목표가 아니라 수단"이라는 교훈.
-- [The Law of Leaky Abstractions (Joel Spolsky)](https://www.joelonsoftware.com/2002/11/11/the-law-of-leaky-abstractions/) — 모든 비자명한 추상화는 샌다. 추상화 아래 계층을 알아야 하는 이유.
+- [The Law of Leaky Abstractions (Joel Spolsky)](https://www.joelonsoftware.com/2002/11/11/the-law-of-leaky-abstractions/) — 조금이라도 복잡한 추상화는 모두 샌다. 추상화 아래 계층을 알아야 하는 이유.
 - [Things You Should Never Do, Part I (Joel Spolsky)](https://www.joelonsoftware.com/2000/04/06/things-you-should-never-do-part-i/) — "처음부터 다시 짜기"가 최악의 전략적 실수인 이유. Netscape 사례.
 - [Big Ball of Mud (Foote & Yoder)](http://www.laputan.org/mud/) — 가장 흔한 실제 아키텍처는 진흙 덩어리라는 것을 인정하고 분석한 논문.
 - [The Rise of Worse is Better (Richard Gabriel)](https://www.dreamsongs.com/RiseOfWorseIsBetter.html) — 단순한 구현이 올바른 설계를 이기는 이유. Unix/C의 성공을 설명하는 고전.
