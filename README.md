@@ -28,7 +28,7 @@
 요즘IT : https://yozm.wishket.com/ (국내 IT매거진)  
 인프랩테크: https://tech.inflab.com/ (인프랩 기술블로그)  
 네이버D2: https://d2.naver.com/home  
-eoplanet : https://eopla.net/
+eoplanet : https://eopla.net/  
 카카오임팩트:https://www.kakaoimpact.org/ (ai top 100 주최)
 
 ## 학습자료
@@ -39,7 +39,7 @@ csapp: https://csapp.cs.cmu.edu/ (한국어:https://product.kyobobook.co.kr/deta
 모던자바스크립트 튜토리얼: https://ko.javascript.info/  
 개발 로드맵: https://roadmap.sh/  
 프리코드캠프: https://www.freecodecamp.org/ (입문자 추천)  
-구글스터디잼 : https://sites.google.com/view/2026-study-jams/home (구글굿즈 수령가능하고 구글스킬스 학습)  
+구글스터디잼 : https://sites.google.com/view/2026-study-jams/home (구글굿즈 수령 및 구글스킬스 학습)  
 웹개발 실습중심 프로젝트: https://www.theodinproject.com/
 
 ## 온라인 강의
