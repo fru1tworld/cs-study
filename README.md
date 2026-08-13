@@ -46,13 +46,14 @@ csapp: https://csapp.cs.cmu.edu/ (한국어:https://product.kyobobook.co.kr/deta
 
 인프런: https://www.inflearn.com (한국 IT강의)  
 유데미: https://www.udemy.com/ (강의가 저렴함 할인할때 권장)  
-제미니의 개발실무: https://www.youtube.com/@geminikims (이력서 작성꿅팁)  
+제미니의 개발실무: https://www.youtube.com/@geminikims (이력서 작성 꿀팁)
+
 개발바닥: https://www.youtube.com/@devbadak (인프런CTO분이 운영합니다)  
 이정환의 한입IT: https://www.youtube.com/@%EC%9D%B4%EC%A0%95%ED%99%98%EC%9D%98-%ED%95%9C%EC%9E%85-IT  
 혁펜하임: https://www.youtube.com/@hyukppen (딥러닝 수학강의)  
 앤트로픽(claude)학습: https://www.anthropic.com/learn (수료증 가능)  
 open ai 아카데미: https://openai.com/ko-KR/academy/ (수료증 가능)  
-구글 스킬스: https://openai.com/ko-KR/academy/ (수료증 가능)
+구글 스킬스: https://www.skills.google/ (수료증 가능)
 
 ## 대외활동 하기좋은곳
 
