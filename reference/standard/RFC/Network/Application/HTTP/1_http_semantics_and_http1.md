@@ -8,38 +8,36 @@
 
 ### 1. 개요
 
-RFC 9110은 HTTP의 핵심 의미론(Semantics)을 정의하는 문서입니다.
- HTTP/1.1, HTTP/2, HTTP/3 모든 버전에 공통으로 적용되는 의미론을 버전별 메시지 문법과 분리하여 정리했습니다.
+RFC 9110: HTTP의 핵심 의미론(Semantics) 정의 문서.
+HTTP/1.1·HTTP/2·HTTP/3 모든 버전에 공통 적용되는 의미론을 버전별 메시지 문법과 분리해 정리.
 
 #### HTTP란?
 
 > "HTTP는 분산, 협업, 하이퍼텍스트 정보 시스템을 위한 무상태(stateless) 애플리케이션 레벨 프로토콜"
 
-HTTP는 균일한 인터페이스(uniform interface) 를 통해 클라이언트가 리소스 자체가 아닌 표현(representation) 을 주고받으며 리소스와 상호작용합니다.
+- 균일한 인터페이스(uniform interface)를 통해 클라이언트가 리소스 자체가 아닌 표현(representation)을 주고받으며 리소스와 상호작용
 
 ### 2. HTTP 메서드
 
 #### 2.1 메서드 개요
 
-| 메서드 | 설명 | 안전 | 멱등 |
-|--------|------|:----:|:----:|
-| GET | 리소스의 표현 조회 | ✓ | ✓ |
-| HEAD | GET과 동일하나 본문 제외 | ✓ | ✓ |
-| POST | 리소스가 정의한 의미에 따라 표현 처리 | ✗ | ✗ |
-| PUT | 대상 리소스의 상태를 생성 또는 교체 | ✗ | ✓ |
-| DELETE | 대상 리소스와의 연결 제거 | ✗ | ✓ |
-| CONNECT | 중개자를 통한 터널 설정 | ✗ | ✗ |
-| OPTIONS | 대상 리소스의 통신 옵션 설명 | ✓ | ✓ |
-| TRACE | 메시지 루프백 진단 수행 | ✓ | ✓ |
+- GET: 리소스의 표현 조회 — 안전·멱등
+- HEAD: GET과 동일하나 본문 제외 — 안전·멱등
+- POST: 리소스가 정의한 의미에 따라 표현 처리 — 비안전·비멱등
+- PUT: 대상 리소스의 상태를 생성 또는 교체 — 비안전·멱등
+- DELETE: 대상 리소스와의 연결 제거 — 비안전·멱등
+- CONNECT: 중개자를 통한 터널 설정 — 비안전·비멱등
+- OPTIONS: 대상 리소스의 통신 옵션 설명 — 안전·멱등
+- TRACE: 메시지 루프백 진단 수행 — 안전·멱등
 
 #### 2.2 안전한 메서드 (Safe Methods)
 
-서버 상태를 변경하지 않는 읽기 전용 메서드입니다:
+서버 상태를 변경하지 않는 읽기 전용 메서드:
 - GET, HEAD, OPTIONS, TRACE
 
 #### 2.3 멱등성 (Idempotent Methods)
 
-동일한 요청을 여러 번 수행해도 결과가 동일한 메서드입니다:
+동일한 요청을 여러 번 수행해도 결과가 동일한 메서드:
 - GET, HEAD, PUT, DELETE, OPTIONS, TRACE
 
 ```
@@ -56,7 +54,7 @@ HTTP는 균일한 인터페이스(uniform interface) 를 통해 클라이언트�
 GET /users/123 HTTP/1.1
 Host: api.example.com
 ```
-- 지정된 리소스의 표현을 검색
+- 지정된 리소스의 표현 검색
 - 가장 빈번하게 사용되는 메서드
 
 ##### POST
@@ -79,7 +77,7 @@ Content-Type: application/json
 
 {"name": "홍길동", "email": "newemail@example.com"}
 ```
-- 대상 리소스의 전체 상태 를 교체
+- 대상 리소스의 전체 상태를 교체
 - 리소스가 없으면 생성
 
 ##### DELETE
@@ -93,111 +91,89 @@ Host: api.example.com
 
 #### 3.1 1xx - 정보성 응답 (Informational)
 
-| 코드 | 이름 | 설명 |
-|------|------|------|
-| 100 | Continue | 요청 본문 전송 진행 |
-| 101 | Switching Protocols | 프로토콜 업그레이드 승인 |
+- 100 Continue: 요청 본문 전송 진행
+- 101 Switching Protocols: 프로토콜 업그레이드 승인
 
 #### 3.2 2xx - 성공 (Successful)
 
-| 코드 | 이름 | 설명 |
-|------|------|------|
-| 200 | OK | 요청 성공 |
-| 201 | Created | 새 리소스 생성됨 (POST/PUT) |
-| 202 | Accepted | 요청이 처리를 위해 접수됨 |
-| 204 | No Content | 성공했으나 응답 본문 없음 |
-| 206 | Partial Content | 범위 요청 충족 |
+- 200 OK: 요청 성공
+- 201 Created: 새 리소스 생성됨 (POST/PUT)
+- 202 Accepted: 요청이 처리를 위해 접수됨
+- 204 No Content: 성공했으나 응답 본문 없음
+- 206 Partial Content: 범위 요청 충족
 
 #### 3.3 3xx - 리다이렉션 (Redirection)
 
-| 코드 | 이름 | 설명 |
-|------|------|------|
-| 300 | Multiple Choices | 여러 표현 옵션 존재 |
-| 301 | Moved Permanently | 영구적 URI 변경 |
-| 302 | Found | 임시 URI 리다이렉션 |
-| 304 | Not Modified | 조건부 요청 - 변경 없음 |
-| 307 | Temporary Redirect | 임시 리다이렉션 (메서드 유지) |
-| 308 | Permanent Redirect | 영구 리다이렉션 (메서드 유지) |
+- 300 Multiple Choices: 여러 표현 옵션 존재
+- 301 Moved Permanently: 영구적 URI 변경
+- 302 Found: 임시 URI 리다이렉션
+- 304 Not Modified: 조건부 요청 - 변경 없음
+- 307 Temporary Redirect: 임시 리다이렉션 (메서드 유지)
+- 308 Permanent Redirect: 영구 리다이렉션 (메서드 유지)
 
 #### 3.4 4xx - 클라이언트 오류 (Client Error)
 
-| 코드 | 이름 | 설명 |
-|------|------|------|
-| 400 | Bad Request | 잘못된 문법 |
-| 401 | Unauthorized | 인증 필요 |
-| 403 | Forbidden | 권한 없음 |
-| 404 | Not Found | 리소스 없음 |
-| 405 | Method Not Allowed | 허용되지 않는 메서드 |
-| 409 | Conflict | 리소스 상태 충돌 |
-| 413 | Content Too Large | 페이로드가 처리 한계 초과 |
+- 400 Bad Request: 잘못된 문법
+- 401 Unauthorized: 인증 필요
+- 403 Forbidden: 권한 없음
+- 404 Not Found: 리소스 없음
+- 405 Method Not Allowed: 허용되지 않는 메서드
+- 409 Conflict: 리소스 상태 충돌
+- 413 Content Too Large: 페이로드가 처리 한계 초과
 
-> 429 Too Many Requests는 RFC 9110이 아닌 RFC 6585에서 정의된 상태 코드입니다.
+> 429 Too Many Requests: RFC 9110이 아닌 RFC 6585에서 정의된 상태 코드.
 
 #### 3.5 5xx - 서버 오류 (Server Error)
 
-| 코드 | 이름 | 설명 |
-|------|------|------|
-| 500 | Internal Server Error | 예상치 못한 서버 상태 |
-| 501 | Not Implemented | 기능 미지원 |
-| 502 | Bad Gateway | 게이트웨이가 잘못된 응답 수신 |
-| 503 | Service Unavailable | 일시적 서버 사용 불가 |
-| 504 | Gateway Timeout | 게이트웨이 시간 초과 |
+- 500 Internal Server Error: 예상치 못한 서버 상태
+- 501 Not Implemented: 기능 미지원
+- 502 Bad Gateway: 게이트웨이가 잘못된 응답 수신
+- 503 Service Unavailable: 일시적 서버 사용 불가
+- 504 Gateway Timeout: 게이트웨이 시간 초과
 
 ### 4. 헤더 필드
 
 #### 4.1 표현 메타데이터 (Representation Metadata)
 
-| 헤더 | 설명 | 예시 |
-|------|------|------|
-| Content-Type | 미디어 타입과 파라미터 | `application/json; charset=utf-8` |
-| Content-Length | 페이로드 옥텟 수 | `1234` |
-| Content-Encoding | 적용된 변환 | `gzip`, `deflate`, `br` |
-| Content-Language | 콘텐츠 언어 태그 | `ko-KR`, `en-US` |
-| Content-Location | 식별된 리소스 URI | `/documents/123` |
+- Content-Type: 미디어 타입과 파라미터 — 예: `application/json; charset=utf-8`
+- Content-Length: 페이로드 옥텟 수 — 예: `1234`
+- Content-Encoding: 적용된 변환 — 예: `gzip`, `deflate`, `br`
+- Content-Language: 콘텐츠 언어 태그 — 예: `ko-KR`, `en-US`
+- Content-Location: 식별된 리소스 URI — 예: `/documents/123`
 
 #### 4.2 검증자 필드 (Validator Fields)
 
-조건부 요청에 사용됩니다:
+조건부 요청에 사용:
 
-| 헤더 | 설명 | 예시 |
-|------|------|------|
-| ETag | 비교용 불투명 엔티티 태그 | `"33a64df5"` |
-| Last-Modified | 리소스 수정 타임스탬프 | `Sat, 29 Oct 2022 19:43:31 GMT` |
+- ETag: 비교용 불투명 엔티티 태그 — 예: `"33a64df5"`
+- Last-Modified: 리소스 수정 타임스탬프 — 예: `Sat, 29 Oct 2022 19:43:31 GMT`
 
 #### 4.3 요청 컨텍스트 필드
 
-| 헤더 | 설명 | 예시 |
-|------|------|------|
-| User-Agent | 클라이언트 소프트웨어 식별 | `Mozilla/5.0 (...)` |
-| Referer | 참조 리소스 URI | `https://example.com/page` |
-| Host | 요청 대상 권한 | `api.example.com` |
-| Accept | 선호 표현 형식 | `application/json` |
+- User-Agent: 클라이언트 소프트웨어 식별 — 예: `Mozilla/5.0 (...)`
+- Referer: 참조 리소스 URI — 예: `https://example.com/page`
+- Host: 요청 대상 권한 — 예: `api.example.com`
+- Accept: 선호 표현 형식 — 예: `application/json`
 
 #### 4.4 응답 컨텍스트 필드
 
-| 헤더 | 설명 | 예시 |
-|------|------|------|
-| Server | 오리진 서버 소프트웨어 | `nginx/1.18.0` |
-| Location | 리다이렉트 또는 생성된 리소스 URI | `/users/456` |
-| Retry-After | 재시도 권장 시간 | `120` 또는 날짜 |
+- Server: 오리진 서버 소프트웨어 — 예: `nginx/1.18.0`
+- Location: 리다이렉트 또는 생성된 리소스 URI — 예: `/users/456`
+- Retry-After: 재시도 권장 시간 — 예: `120` 또는 날짜
 
 #### 4.5 캐시 관련 필드
 
-| 헤더 | 설명 |
-|------|------|
-| Vary | 표현 선택에 영향을 준 헤더 |
+- Vary: 표현 선택에 영향을 준 헤더
 
 #### 4.6 제어 데이터 필드
 
-| 헤더 | 설명 |
-|------|------|
-| Allow | 405 응답 등에서 대상 리소스가 지원하는 메서드 열거 (캐싱과 무관) |
+- Allow: 405 응답 등에서 대상 리소스가 지원하는 메서드 열거 (캐싱과 무관)
 
 ### 5. 콘텐츠 협상 (Content Negotiation)
 
 #### 5.1 사전 협상 (Proactive Negotiation)
 
-클라이언트가 선호도를 미리 전송합니다:
+클라이언트가 선호도를 미리 전송:
 
 ```http
 GET /document HTTP/1.1
@@ -215,7 +191,7 @@ Accept-Charset: utf-8
 
 #### 5.2 반응 협상 (Reactive Negotiation)
 
-서버가 요청 특성에 따라 표현을 선택하거나, 300 (Multiple Choices) 응답으로 옵션을 제공합니다.
+서버가 요청 특성에 따라 표현을 선택 → 또는 300 (Multiple Choices) 응답으로 옵션 제공
 
 #### 5.3 Vary 헤더
 
@@ -223,21 +199,19 @@ Accept-Charset: utf-8
 Vary: Accept-Language, Accept-Encoding
 ```
 
-어떤 요청 헤더가 표현 선택에 영향을 주었는지 문서화하여 캐시 효율성을 높입니다.
+어떤 요청 헤더가 표현 선택에 영향을 주었는지 문서화 → 캐시 효율성 향상
 
 ### 6. 조건부 요청 (Conditional Requests)
 
-효율적인 리소스 동기화를 위한 메커니즘입니다.
+효율적인 리소스 동기화 메커니즘.
 
 #### 6.1 사전 조건 필드
 
-| 헤더 | 설명 | 용도 |
-|------|------|------|
-| If-Match | ETag 일치 요구 | 충돌 방지 업데이트 |
-| If-None-Match | ETag 불일치 요구 | 캐시 검증 |
-| If-Modified-Since | 타임스탬프 이후 수정 요구 | 캐시 검증 |
-| If-Unmodified-Since | 타임스탬프 이후 미변경 요구 | 충돌 방지 |
-| If-Range | 검증자 일치 시 부분 검색 | 범위 요청 |
+- If-Match: ETag 일치 요구 — 용도: 충돌 방지 업데이트
+- If-None-Match: ETag 불일치 요구 — 용도: 캐시 검증
+- If-Modified-Since: 타임스탬프 이후 수정 요구 — 용도: 캐시 검증
+- If-Unmodified-Since: 타임스탬프 이후 미변경 요구 — 용도: 충돌 방지
+- If-Range: 검증자 일치 시 부분 검색 — 용도: 범위 요청
 
 #### 6.2 캐시 검증 예시
 
@@ -267,13 +241,13 @@ Content-Type: application/json
 {"content": "updated data"}
 ```
 
-ETag가 일치하지 않으면 412 Precondition Failed 반환
+ETag 불일치 → 412 Precondition Failed 반환
 
 ### 7. 인증 (Authentication)
 
 #### 7.1 인증 체계 구조
 
-Challenge와 Credential은 체계 이름과 선택적 파라미터로 구성됩니다:
+Challenge와 Credential은 체계 이름과 선택적 파라미터로 구성:
 - Basic: Base64 인코딩된 사용자명:비밀번호
 - Bearer: 토큰 기반 인증
 - Digest: 해시 기반 인증
@@ -298,16 +272,14 @@ Challenge와 Credential은 체계 이름과 선택적 파라미터로 구성됩�
 
 #### 7.3 인증 관련 헤더
 
-| 헤더 | 방향 | 용도 |
-|------|------|------|
-| WWW-Authenticate | 서버→클라이언트 | 오리진 서버 Challenge |
-| Authorization | 클라이언트→서버 | 오리진 서버 Credential |
-| Proxy-Authenticate | 프록시→클라이언트 | 프록시 Challenge |
-| Proxy-Authorization | 클라이언트→프록시 | 프록시 Credential |
+- WWW-Authenticate: 서버→클라이언트 — 용도: 오리진 서버 Challenge
+- Authorization: 클라이언트→서버 — 용도: 오리진 서버 Credential
+- Proxy-Authenticate: 프록시→클라이언트 — 용도: 프록시 Challenge
+- Proxy-Authorization: 클라이언트→프록시 — 용도: 프록시 Credential
 
 #### 7.4 보호 공간 (Protection Spaces)
 
-Realm 은 동일한 자격 증명이 필요한 리소스를 그룹화합니다:
+Realm: 동일한 자격 증명이 필요한 리소스를 그룹화
 
 ```http
 WWW-Authenticate: Basic realm="Admin Area"
@@ -316,16 +288,16 @@ WWW-Authenticate: Basic realm="User Area"
 
 #### 7.5 주의사항
 
-> URI 내 자격 증명 (userinfo)은 노출 위험으로 인해 사용 중단(deprecated) 됨
+> URI 내 자격 증명(userinfo): 노출 위험 → 사용 중단(deprecated)
 
 ```
-❌ https://user:password@example.com/api
-✓ Authorization 헤더 사용
+비권장: https://user:password@example.com/api
+권장: Authorization 헤더 사용
 ```
 
 ### 요약
 
-RFC 9110은 HTTP의 핵심 의미론을 정의합니다:
+RFC 9110 핵심 요약:
 - 메서드: 리소스에 대한 작업 정의 (GET, POST, PUT, DELETE 등)
 - 상태 코드: 요청 결과 표현 (1xx-5xx)
 - 헤더 필드: 메타데이터 전달
@@ -333,7 +305,7 @@ RFC 9110은 HTTP의 핵심 의미론을 정의합니다:
 - 조건부 요청: 효율적인 캐싱과 충돌 방지
 - 인증: 리소스 접근 제어
 
-이 문서는 HTTP/1.1, HTTP/2, HTTP/3 모든 버전에 공통으로 적용되는 통합된 HTTP 바이블 입니다.
+HTTP/1.1·HTTP/2·HTTP/3 모든 버전에 공통 적용되는 통합 HTTP 명세.
 
 ---
 
@@ -345,14 +317,14 @@ RFC 9110은 HTTP의 핵심 의미론을 정의합니다:
 
 ### 1. 개요
 
-RFC 9112는 HTTP/1.1의 메시지 문법과 파싱 에 집중한 문서입니다.
- HTTP 의미론(RFC 9110)과 분리되어, HTTP/1.1 프로토콜의 전송 형식을 정의합니다.
+RFC 9112: HTTP/1.1의 메시지 문법과 파싱에 집중한 문서.
+HTTP 의미론(RFC 9110)과 분리 → HTTP/1.1 프로토콜의 전송 형식 정의.
 
 ### 2. 메시지 형식
 
 #### 2.1 기본 구조
 
-HTTP/1.1 메시지는 다음 순서로 구성됩니다:
+HTTP/1.1 메시지 구성 순서:
 
 ```
 시작 라인 (start-line)
@@ -397,13 +369,11 @@ Connection: keep-alive
 method SP request-target SP HTTP-version CRLF
 ```
 
-| 구성 요소 | 설명 | 예시 |
-|-----------|------|------|
-| method | HTTP 메서드 토큰 | GET, POST, PUT |
-| SP | 공백 (0x20) | ` ` |
-| request-target | 요청 대상 | `/users/123` |
-| HTTP-version | 프로토콜 버전 | `HTTP/1.1` |
-| CRLF | 줄바꿈 | `\r\n` |
+- method: HTTP 메서드 토큰 — 예: GET, POST, PUT
+- SP: 공백 (0x20)
+- request-target: 요청 대상 — 예: `/users/123`
+- HTTP-version: 프로토콜 버전 — 예: `HTTP/1.1`
+- CRLF: 줄바꿈 — `\r\n`
 
 예시:
 ```
@@ -414,12 +384,10 @@ DELETE /resources/456 HTTP/1.1
 
 #### 3.2 요청 대상 형식 (Request Target Forms)
 
-| 형식 | 용도 | 예시 |
-|------|------|------|
-| origin-form | 일반 요청 | `/path/to/resource?query=value` |
-| absolute-form | 프록시 요청 | `http://example.com/path` |
-| authority-form | CONNECT 메서드 | `example.com:443` |
-| asterisk-form | OPTIONS 전체 | `*` |
+- origin-form: 일반 요청 — 예: `/path/to/resource?query=value`
+- absolute-form: 프록시 요청 — 예: `http://example.com/path`
+- authority-form: CONNECT 메서드 — 예: `example.com:443`
+- asterisk-form: OPTIONS 전체 — 예: `*`
 
 #### 3.3 상태 라인 (Status Line)
 
@@ -427,11 +395,9 @@ DELETE /resources/456 HTTP/1.1
 HTTP-version SP status-code SP [reason-phrase] CRLF
 ```
 
-| 구성 요소 | 설명 | 예시 |
-|-----------|------|------|
-| HTTP-version | 프로토콜 버전 | `HTTP/1.1` |
-| status-code | 3자리 상태 코드 | `200`, `404` |
-| reason-phrase | 이유 문구 (선택) | `OK`, `Not Found` |
+- HTTP-version: 프로토콜 버전 — 예: `HTTP/1.1`
+- status-code: 3자리 상태 코드 — 예: `200`, `404`
+- reason-phrase: 이유 문구 (선택) — 예: `OK`, `Not Found`
 
 예시:
 ```
@@ -440,18 +406,18 @@ HTTP/1.1 404 Not Found
 HTTP/1.1 500 Internal Server Error
 ```
 
-> 참고: 이유 문구(reason-phrase)는 선택 사항이며, 클라이언트는 이를 무시해도 됩니다.
+> 참고: 이유 문구(reason-phrase)는 선택 사항 → 클라이언트는 무시 가능.
 
 #### 3.4 Host 헤더 필수
 
-모든 HTTP/1.1 요청에서 Host 헤더는 필수입니다.
+모든 HTTP/1.1 요청에서 Host 헤더 필수.
 
 ```http
 GET /index.html HTTP/1.1
 Host: www.example.com
 ```
 
-Host 헤더가 없거나 여러 개이면 400 Bad Request 응답
+Host 헤더가 없거나 여러 개 → 400 Bad Request 응답
 
 ### 4. 헤더 필드 문법
 
@@ -461,28 +427,26 @@ Host 헤더가 없거나 여러 개이면 400 Bad Request 응답
 field-name ":" OWS field-value OWS
 ```
 
-| 요소 | 설명 |
-|------|------|
-| field-name | 필드 이름 (대소문자 구분 없음) |
-| `:` | 콜론 구분자 |
-| OWS | 선택적 공백 (Optional Whitespace) |
-| field-value | 필드 값 |
+- field-name: 필드 이름 (대소문자 구분 없음)
+- `:`: 콜론 구분자
+- OWS: 선택적 공백 (Optional Whitespace)
+- field-value: 필드 값
 
 #### 4.2 규칙
 
 ```
-✓ 올바른 형식:
+올바른 형식:
 Content-Type: application/json
 Content-Type:application/json
 Content-Type:  application/json
 
-✗ 잘못된 형식:
+잘못된 형식:
 Content-Type : application/json  (필드명과 콜론 사이에 공백)
 ```
 
 #### 4.3 라인 폴딩 (Line Folding)
 
-더 이상 생성해서는 안 됨 (obs-fold):
+더 이상 생성 금지 (obs-fold):
 
 ```http
 # 구식 (사용 금지)
@@ -493,13 +457,14 @@ Subject: This is a
 Subject: This is a very long subject line
 ```
 
-요청에서 obs-fold를 수신한 서버는 이를 400 Bad Request로 거부하는 편이 권장됩니다(요청 스머글링 방지 목적). 다만 구현체 선택에 따라 공백(SP)으로 치환해 처리하는 것도 허용됩니다.
- 반면 응답을 수신하는 사용자 에이전트 쪽에서는 obs-fold를 공백으로 대체해야 합니다(MUST).
+- 요청에서 obs-fold 수신 시: 400 Bad Request로 거부 권장 (요청 스머글링 방지 목적)
+  - 구현체 선택에 따라 공백(SP)으로 치환해 처리하는 것도 허용
+- 응답을 수신하는 사용자 에이전트: obs-fold를 공백으로 대체 필수(MUST)
 
 #### 4.4 헤더 필드 순서
 
 - 동일한 필드명의 헤더는 쉼표로 구분된 값 목록과 동일하게 처리
-- 순서가 의미를 가지는 경우 (예: Set-Cookie) 순서 유지 필요
+- 순서가 의미를 가지는 경우(예: Set-Cookie) → 순서 유지 필요
 
 ```http
 # 다음 두 표현은 동일
@@ -513,7 +478,7 @@ Cache-Control: no-cache, no-store
 
 #### 5.1 본문 길이 결정
 
-메시지 본문의 길이는 다음 우선순위로 결정됩니다:
+메시지 본문 길이 결정 우선순위:
 
 ```
 1. Transfer-Encoding이 있는 경우
@@ -531,15 +496,13 @@ Cache-Control: no-cache, no-store
 
 #### 5.2 본문이 없는 응답
 
-다음 응답에는 본문이 없습니다:
+다음 응답에는 본문 없음:
 
-| 조건 | 설명 |
-|------|------|
-| HEAD 요청에 대한 응답 | 본문 제외 |
-| 1xx 상태 코드 | 정보성 응답 |
-| 204 No Content | 콘텐츠 없음 |
-| 304 Not Modified | 수정 없음 |
-| CONNECT 요청의 2xx 응답 | 터널 설정 |
+- HEAD 요청에 대한 응답: 본문 제외
+- 1xx 상태 코드: 정보성 응답
+- 204 No Content: 콘텐츠 없음
+- 304 Not Modified: 수정 없음
+- CONNECT 요청의 2xx 응답: 터널 설정
 
 #### 5.3 예시
 
@@ -556,7 +519,7 @@ Content-Length: 27
 
 #### 6.1 개요
 
-Transfer-Encoding은 메시지 속성 이지 표현 특성이 아닙니다.
+Transfer-Encoding: 메시지 속성 — 표현 특성 아님.
 
 ```http
 HTTP/1.1 200 OK
@@ -568,7 +531,7 @@ Transfer-Encoding: chunked
 
 #### 6.2 청크 전송 코딩 (Chunked Transfer Coding)
 
-필수 지원: 모든 HTTP/1.1 구현체는 청크 전송을 파싱할 수 있어야 합니다.
+필수 지원: 모든 HTTP/1.1 구현체는 청크 전송 파싱 가능해야 함
 
 ##### 청크 형식
 
@@ -616,7 +579,7 @@ data......\r\n
 
 #### 6.4 트레일러 섹션 (Trailer Section)
 
-청크 전송이 완료된 후 추가 헤더 필드를 전송할 수 있습니다:
+청크 전송 완료 후 추가 헤더 필드 전송 가능:
 
 ```http
 Transfer-Encoding: chunked
@@ -633,14 +596,14 @@ Checksum: abc123\r\n
 
 - 동일 본문에 청크 인코딩 2회 이상 적용 불가
 - 메시지에 Transfer-Encoding이 있으면 Content-Length는 무시
-- Transfer-Encoding과 Content-Length가 동시에 존재하면 요청 스머글링 시도로 의심해야 하며, 수신자는 이를 오류로 처리하여 메시지를 거부하고 연결을 종료해야 합니다(MUST).
- 단순히 Content-Length를 무시하고 넘어가서는 안 됩니다.
+- Transfer-Encoding과 Content-Length가 동시에 존재 → 요청 스머글링 시도로 의심 → 수신자는 오류로 처리해 메시지 거부·연결 종료 필수(MUST)
+  - 단순히 Content-Length를 무시하고 넘어가는 방식은 금지
 
 ### 7. 연결 관리
 
 #### 7.1 지속 연결 (Persistent Connections)
 
-HTTP/1.1은 기본적으로 지속 연결 을 사용합니다.
+HTTP/1.1: 기본적으로 지속 연결 사용.
 
 ```
 HTTP/1.0: 기본 비지속, Connection: keep-alive로 유지
@@ -684,11 +647,9 @@ Client                           Server
 
 ##### 파이프라이닝 규칙
 
-| 규칙 | 설명 |
-|------|------|
-| 순서 보장 | 요청 순서와 응답 순서가 일치해야 함 |
-| 안전한 메서드만 | GET, HEAD 등 멱등/안전 메서드만 파이프라인 가능 |
-| 재시도 주의 | 연결 끊김 시 비멱등 요청은 자동 재시도 금지 |
+- 순서 보장: 요청 순서와 응답 순서 일치 필요
+- 안전한 메서드만: GET, HEAD 등 멱등/안전 메서드만 파이프라인 가능
+- 재시도 주의: 연결 끊김 시 비멱등 요청은 자동 재시도 금지
 
 #### 7.3 연결 종료 처리
 
@@ -705,7 +666,7 @@ TLS 연결:
 
 #### 7.4 연결 타임아웃
 
-서버는 유휴 연결에 타임아웃을 적용할 수 있습니다:
+서버는 유휴 연결에 타임아웃 적용 가능:
 
 ```
 유휴 시간 초과 → 연결 종료
@@ -726,26 +687,22 @@ Host: example.com
 
 #### 8.2 잘못된 요청 처리
 
-| 오류 | 응답 |
-|------|------|
-| 유효하지 않은 요청 라인 | 400 Bad Request |
-| 지원하지 않는 HTTP 버전 | 505 HTTP Version Not Supported |
-| 너무 긴 URI | 414 URI Too Long |
-| 너무 긴 헤더 | 431 Request Header Fields Too Large |
+- 유효하지 않은 요청 라인: 400 Bad Request
+- 지원하지 않는 HTTP 버전: 505 HTTP Version Not Supported
+- 너무 긴 URI: 414 URI Too Long
+- 너무 긴 헤더: 431 Request Header Fields Too Large
 
 ### 9. HTTP/1.1 vs HTTP/1.0 비교
 
-| 기능 | HTTP/1.0 | HTTP/1.1 |
-|------|----------|----------|
-| 지속 연결 | 선택적 (keep-alive) | 기본 |
-| Host 헤더 | 선택적 | 필수 |
-| 청크 전송 | 미지원 | 필수 지원 |
-| 파이프라이닝 | 미지원 | 지원 |
-| 캐시 제어 | 제한적 | 향상됨 |
+- 지속 연결: HTTP/1.0 선택적(keep-alive) · HTTP/1.1 기본
+- Host 헤더: HTTP/1.0 선택적 · HTTP/1.1 필수
+- 청크 전송: HTTP/1.0 미지원 · HTTP/1.1 필수 지원
+- 파이프라이닝: HTTP/1.0 미지원 · HTTP/1.1 지원
+- 캐시 제어: HTTP/1.0 제한적 · HTTP/1.1 향상됨
 
 ### 요약
 
-RFC 9112는 HTTP/1.1의 메시지 형식을 정의합니다:
+RFC 9112 핵심 요약:
 
 - 메시지 구조: 시작 라인 + 헤더 + 빈 줄 + 본문
 - 요청 라인: `메서드 SP 요청대상 SP HTTP버전`

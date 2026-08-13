@@ -19,15 +19,15 @@
 
 ### 1.1 gRPC란
 
-gRPC(gRPC Remote Procedure Call)는 Google이 개발한 고성능, 오픈소스 원격 프로시저 호출(RPC) 프레임워크다. 클라이언트 애플리케이션이 마치 로컬 메서드를 호출하듯이 다른 머신에 있는 서버 애플리케이션의 메서드를 직접 호출할 수 있게 해준다. HTTP/2를 전송 프로토콜로 사용하며, Protocol Buffers를 기본 직렬화 포맷으로 채택하고 있다.
+gRPC(gRPC Remote Procedure Call)는 Google이 개발한 고성능 오픈소스 RPC 프레임워크임. 클라이언트 애플리케이션이 로컬 메서드를 호출하듯 다른 머신의 서버 메서드를 직접 호출 가능. HTTP/2를 전송 프로토콜로, Protocol Buffers를 기본 직렬화 포맷으로 사용함.
 
-gRPC의 "g"는 버전마다 의미가 달라지는 것으로 알려져 있으며(good, green, groovy 등), 공식적으로 고정된 의미는 없다.
+gRPC의 "g"는 버전마다 의미가 달라짐(good, green, groovy 등) → 공식적으로 고정된 의미 없음.
 
 ### 1.2 Protocol Buffers란
 
-Protocol Buffers(줄여서 Protobuf)는 Google이 개발한 언어 중립적이고 플랫폼 중립적인 구조화된 데이터 직렬화 메커니즘이다. XML이나 JSON과 유사한 역할을 하지만, 바이너리 형식으로 인코딩되어 훨씬 작고, 빠르며, 단순하다.
+Protocol Buffers(Protobuf)는 Google이 개발한 언어·플랫폼 중립적 구조화 데이터 직렬화 메커니즘임. XML·JSON과 유사한 역할이지만 바이너리 형식으로 인코딩 → 크기가 작고 속도가 빠름.
 
-`.proto` 파일에 데이터 구조를 정의하면, `protoc` 컴파일러가 다양한 프로그래밍 언어로 직렬화/역직렬화 코드를 자동 생성해준다.
+`.proto` 파일에 데이터 구조를 정의하면 `protoc` 컴파일러가 다양한 프로그래밍 언어로 직렬화/역직렬화 코드를 자동 생성함.
 
 ### 1.3 gRPC와 Protocol Buffers의 관계
 
@@ -45,10 +45,10 @@ Protocol Buffers(줄여서 Protobuf)는 Google이 개발한 언어 중립적이�
    인터셉터, 메타데이터         바이너리 인코딩
 ```
 
-- Protocol Buffers는 IDL(Interface Definition Language) 겸 직렬화 포맷의 역할을 한다.
-- gRPC는 Protocol Buffers로 정의된 서비스 인터페이스를 기반으로 RPC 통신 프레임워크를 제공한다.
-- gRPC는 Protocol Buffers 없이도 사용할 수 있다(예: JSON, FlatBuffers 등). 그러나 기본이자 권장 조합은 gRPC + Protocol Buffers다.
-- Protocol Buffers는 gRPC 없이도 단독으로 데이터 직렬화 용도로 널리 사용된다.
+- Protocol Buffers는 IDL(Interface Definition Language) 겸 직렬화 포맷 역할
+- gRPC는 Protocol Buffers로 정의된 서비스 인터페이스 기반의 RPC 통신 프레임워크
+- gRPC는 Protocol Buffers 없이도 사용 가능(예: JSON, FlatBuffers 등). 단 기본이자 권장 조합은 gRPC + Protocol Buffers
+- Protocol Buffers는 gRPC 없이도 단독으로 데이터 직렬화 용도로 널리 사용됨
 
 ---
 
@@ -56,25 +56,21 @@ Protocol Buffers(줄여서 Protobuf)는 Google이 개발한 언어 중립적이�
 
 ### 2.1 Google 내부의 Stubby에서 gRPC로
 
-| 시기 | 사건 |
-|------|------|
-| 2001년경 | Google 내부에서 Stubby라는 단일 범용 RPC 인프라를 개발. Google의 모든 마이크로서비스 간 통신에 사용됨. 초당 수십억 건의 요청을 처리. |
-| 2004-2014 | Stubby가 Google 내부에서 10년 이상 핵심 인프라로 운영됨. 그러나 Stubby는 Google의 내부 인프라에 강하게 결합되어 있어 외부 공개가 어려웠음. |
-| 2015년 2월 | Google이 Stubby의 차세대 버전을 오픈소스로 공개하겠다고 발표. 이것이 gRPC. |
-| 2015년 3월 | gRPC가 공식적으로 GitHub에 오픈소스로 공개됨. |
-| 2016년 8월 | gRPC 1.0 정식 릴리스. |
-| 2017년 3월 | gRPC가 CNCF(Cloud Native Computing Foundation) 인큐베이팅 프로젝트로 합류. |
-| 2019년 4월 | CNCF 졸업(Graduated) 프로젝트로 승격. Kubernetes, Prometheus, Envoy 등과 동급. |
+- 2001년경: Google 내부에서 Stubby라는 단일 범용 RPC 인프라 개발. 모든 마이크로서비스 간 통신에 사용 → 초당 수십억 건 처리
+- 2004-2014: Stubby가 10년 이상 핵심 인프라로 운영됨. Google 내부 인프라에 강하게 결합 → 외부 공개 어려움
+- 2015년 2월: Google이 Stubby의 차세대 버전을 오픈소스로 공개 발표. 이것이 gRPC
+- 2015년 3월: gRPC가 GitHub에 오픈소스 공개
+- 2016년 8월: gRPC 1.0 정식 릴리스
+- 2017년 3월: gRPC가 CNCF(Cloud Native Computing Foundation) 인큐베이팅 프로젝트로 합류
+- 2019년 4월: CNCF 졸업(Graduated) 프로젝트로 승격. Kubernetes·Prometheus·Envoy 등과 동급
 
 ### 2.2 Protocol Buffers의 탄생
 
-| 시기 | 사건 |
-|------|------|
-| 2001년경 | Google 내부에서 인덱스 서버의 요청/응답 프로토콜을 위해 Protocol Buffers 초기 버전 개발. 기존에는 수동으로 요청을 마샬링/언마샬링하고 있었는데, 이 방식이 버전 관리에 심각한 문제를 일으켰음. |
-| 2001-2008 | `proto1` 형식이 Google 내부에서 발전. 수많은 내부 서비스에서 데이터 교환 포맷으로 채택됨. |
-| 2008년 7월 | Google이 Protocol Buffers를 proto2 형식으로 오픈소스 공개. |
-| 2014년 | 문법을 단순화하고 새로운 언어 지원을 강화한 proto3 발표. |
-| 2023년 | Protocol Buffers Editions 도입. proto2/proto3의 구분 대신 에디션 기반 기능 선택 모델로 전환 시작. |
+- 2001년경: Google 내부에서 인덱스 서버의 요청/응답 프로토콜용으로 Protocol Buffers 초기 버전 개발. 기존 수동 마샬링/언마샬링 방식이 버전 관리에 심각한 문제를 일으킴
+- 2001-2008: `proto1` 형식이 Google 내부에서 발전. 수많은 내부 서비스에서 데이터 교환 포맷으로 채택
+- 2008년 7월: Google이 Protocol Buffers를 proto2 형식으로 오픈소스 공개
+- 2014년: 문법 단순화 및 새로운 언어 지원을 강화한 proto3 발표
+- 2023년: Protocol Buffers Editions 도입. proto2/proto3 구분 대신 에디션 기반 기능 선택 모델로 전환 시작
 
 ---
 
@@ -82,11 +78,11 @@ Protocol Buffers(줄여서 Protobuf)는 Google이 개발한 언어 중립적이�
 
 ### 3.1 .proto 파일 문법
 
-`.proto` 파일은 Protocol Buffers의 스키마 정의 파일이다. 이 파일에 메시지 구조와 서비스 인터페이스를 선언한다.
+`.proto` 파일은 Protocol Buffers의 스키마 정의 파일임. 메시지 구조와 서비스 인터페이스를 선언함.
 
 #### 3.1.1 syntax 선언
 
-모든 `.proto` 파일은 최상단에 사용할 프로토콜 버전을 선언해야 한다.
+모든 `.proto` 파일은 최상단에 사용할 프로토콜 버전을 선언해야 함.
 
 ```protobuf
 syntax = "proto3";
@@ -94,7 +90,7 @@ syntax = "proto3";
 
 #### 3.1.2 package
 
-네임스페이스 충돌을 방지하기 위한 패키지 선언이다.
+네임스페이스 충돌 방지를 위한 패키지 선언.
 
 ```protobuf
 package mycompany.myproject.v1;
@@ -102,7 +98,7 @@ package mycompany.myproject.v1;
 
 #### 3.1.3 import
 
-다른 `.proto` 파일의 정의를 가져올 수 있다.
+다른 `.proto` 파일의 정의를 가져올 수 있음.
 
 ```protobuf
 import "google/protobuf/timestamp.proto";
@@ -112,7 +108,7 @@ import public "other_protos.proto";  // 전이적(transitive) import
 
 #### 3.1.4 message
 
-Protocol Buffers의 핵심 구조체. 필드들의 집합으로 구성된다.
+Protocol Buffers의 핵심 구조체. 필드들의 집합으로 구성됨.
 
 ```protobuf
 message Person {
@@ -122,7 +118,7 @@ message Person {
 }
 ```
 
-각 필드는 타입, 이름, 고유 필드 번호로 구성된다. 필드 번호는 바이너리 인코딩에서 해당 필드를 식별하는 데 사용되며, 한번 사용되면 변경하면 안 된다.
+각 필드는 타입·이름·고유 필드 번호로 구성됨. 필드 번호는 바이너리 인코딩에서 해당 필드를 식별하는 데 사용 → 한번 사용하면 변경 금지.
 
 - 필드 번호 1~15: 1바이트로 인코딩됨 (자주 사용하는 필드에 할당 권장)
 - 필드 번호 16~2047: 2바이트로 인코딩됨
@@ -138,9 +134,9 @@ message Example {
 }
 ```
 
-- singular (기본): 0 또는 1개의 값을 가질 수 있다. proto3에서는 기본값이면 직렬화에서 생략된다.
-- optional: singular와 동일하지만, `has_` 메서드를 통해 필드가 명시적으로 설정되었는지 확인 가능하다.
-- repeated: 순서가 유지되는 동적 크기의 배열이다. 0개 이상의 값을 가진다.
+- singular (기본): 0 또는 1개의 값을 가질 수 있음. proto3에서는 기본값이면 직렬화에서 생략됨
+- optional: singular와 동일하지만 `has_` 메서드로 필드가 명시적으로 설정되었는지 확인 가능
+- repeated: 순서가 유지되는 동적 크기 배열. 0개 이상의 값을 가짐
 
 #### 3.1.6 enum
 
@@ -162,11 +158,11 @@ enum PhoneType {
 }
 ```
 
-proto3에서 enum의 첫 번째 값은 반드시 0이어야 하며, 이는 기본값으로 사용된다. 이름 충돌을 방지하기 위해 enum 값에 접두사를 붙이는 것이 관례다.
+proto3에서 enum의 첫 번째 값은 반드시 0이어야 하며 기본값으로 사용됨. 이름 충돌 방지를 위해 enum 값에 접두사를 붙이는 것이 관례임.
 
 #### 3.1.7 oneof
 
-여러 필드 중 최대 하나만 설정될 수 있는 필드 그룹이다.
+여러 필드 중 최대 하나만 설정 가능한 필드 그룹.
 
 ```protobuf
 message Profile {
@@ -184,13 +180,13 @@ message Profile {
 }
 ```
 
-- `oneof` 내의 필드 중 하나를 설정하면 나머지는 자동으로 클리어된다.
-- `oneof` 안에는 `repeated` 필드를 넣을 수 없다.
-- `oneof` 안에는 `map` 필드를 넣을 수 없다.
+- `oneof` 내의 필드 중 하나를 설정하면 나머지는 자동 클리어됨
+- `oneof` 안에 `repeated` 필드 불가
+- `oneof` 안에 `map` 필드 불가
 
 #### 3.1.8 map
 
-키-값 쌍의 연관 맵이다.
+키-값 쌍의 연관 맵.
 
 ```protobuf
 message Project {
@@ -200,10 +196,10 @@ message Project {
 }
 ```
 
-- 키 타입: 정수형 또는 string만 가능 (float, double, bytes, enum, message는 불가)
+- 키 타입: 정수형 또는 string만 가능 (float·double·bytes·enum·message 불가)
 - 값 타입: map을 제외한 모든 타입 가능
-- map 필드는 `repeated`일 수 없다.
-- 순서가 보장되지 않는다.
+- map 필드는 `repeated`일 수 없음
+- 순서 보장 안 됨
 
 #### 3.1.9 중첩 타입
 
@@ -233,7 +229,7 @@ message Other {
 
 #### 3.1.10 reserved
 
-이전에 사용했지만 더 이상 사용하지 않는 필드 번호나 이름을 예약하여 재사용을 방지한다.
+이전에 사용했지만 더 이상 사용하지 않는 필드 번호나 이름을 예약하여 재사용을 방지함.
 
 ```protobuf
 message Foo {
@@ -254,25 +250,38 @@ service Greeter {
 
 ### 3.2 스칼라 타입
 
-Protocol Buffers는 다양한 스칼라 타입을 지원하며, 각 타입은 프로그래밍 언어별로 매핑된다.
+Protocol Buffers는 다양한 스칼라 타입을 지원하며 각 타입은 프로그래밍 언어별로 매핑됨.
 
-| Proto 타입 | 설명 | C++ | Java | Python | Go | 기본값 |
-|-----------|------|-----|------|--------|----|-------|
-| `double` | 64비트 부동소수점 | double | double | float | float64 | 0 |
-| `float` | 32비트 부동소수점 | float | float | float | float32 | 0 |
-| `int32` | 가변 길이 인코딩. 음수에 비효율적 | int32 | int | int | int32 | 0 |
-| `int64` | 가변 길이 인코딩. 음수에 비효율적 | int64 | long | int/long | int64 | 0 |
-| `uint32` | 가변 길이 인코딩 | uint32 | int | int/long | uint32 | 0 |
-| `uint64` | 가변 길이 인코딩 | uint64 | long | int/long | uint64 | 0 |
-| `sint32` | 가변 길이 인코딩. 음수에 효율적 (ZigZag 인코딩) | int32 | int | int | int32 | 0 |
-| `sint64` | 가변 길이 인코딩. 음수에 효율적 (ZigZag 인코딩) | int64 | long | int/long | int64 | 0 |
-| `fixed32` | 항상 4바이트. 값이 자주 2^28 이상이면 uint32보다 효율적 | uint32 | int | int/long | uint32 | 0 |
-| `fixed64` | 항상 8바이트. 값이 자주 2^56 이상이면 uint64보다 효율적 | uint64 | long | int/long | uint64 | 0 |
-| `sfixed32` | 항상 4바이트 | int32 | int | int | int32 | 0 |
-| `sfixed64` | 항상 8바이트 | int64 | long | int/long | int64 | 0 |
-| `bool` | 불리언 | bool | boolean | bool | bool | false |
-| `string` | UTF-8 또는 7비트 ASCII 텍스트 | string | String | str | string | "" |
-| `bytes` | 임의의 바이트 시퀀스 | string | ByteString | bytes | []byte | 빈 바이트 |
+- `double`: 64비트 부동소수점. 기본값 0
+  - C++ double, Java double, Python float, Go float64
+- `float`: 32비트 부동소수점. 기본값 0
+  - C++ float, Java float, Python float, Go float32
+- `int32`: 가변 길이 인코딩. 음수에 비효율적. 기본값 0
+  - C++ int32, Java int, Python int, Go int32
+- `int64`: 가변 길이 인코딩. 음수에 비효율적. 기본값 0
+  - C++ int64, Java long, Python int/long, Go int64
+- `uint32`: 가변 길이 인코딩. 기본값 0
+  - C++ uint32, Java int, Python int/long, Go uint32
+- `uint64`: 가변 길이 인코딩. 기본값 0
+  - C++ uint64, Java long, Python int/long, Go uint64
+- `sint32`: 가변 길이 인코딩. 음수에 효율적 (ZigZag 인코딩). 기본값 0
+  - C++ int32, Java int, Python int, Go int32
+- `sint64`: 가변 길이 인코딩. 음수에 효율적 (ZigZag 인코딩). 기본값 0
+  - C++ int64, Java long, Python int/long, Go int64
+- `fixed32`: 항상 4바이트. 값이 자주 2^28 이상이면 uint32보다 효율적. 기본값 0
+  - C++ uint32, Java int, Python int/long, Go uint32
+- `fixed64`: 항상 8바이트. 값이 자주 2^56 이상이면 uint64보다 효율적. 기본값 0
+  - C++ uint64, Java long, Python int/long, Go uint64
+- `sfixed32`: 항상 4바이트. 기본값 0
+  - C++ int32, Java int, Python int, Go int32
+- `sfixed64`: 항상 8바이트. 기본값 0
+  - C++ int64, Java long, Python int/long, Go int64
+- `bool`: 불리언. 기본값 false
+  - C++ bool, Java boolean, Python bool, Go bool
+- `string`: UTF-8 또는 7비트 ASCII 텍스트. 기본값 ""
+  - C++ string, Java String, Python str, Go string
+- `bytes`: 임의의 바이트 시퀀스. 기본값 빈 바이트
+  - C++ string, Java ByteString, Python bytes, Go []byte
 
 정수 타입 선택 가이드:
 
@@ -283,37 +292,59 @@ Protocol Buffers는 다양한 스칼라 타입을 지원하며, 각 타입은 �
 
 ### 3.3 proto2 vs proto3 차이
 
-| 항목 | proto2 | proto3 |
-|------|--------|--------|
-| 문법 선언 | `syntax = "proto2";` | `syntax = "proto3";` |
-| 필드 규칙 | `required`, `optional`, `repeated` | `singular`(기본), `optional`, `repeated` |
-| required 필드 | 지원 (반드시 값이 있어야 함) | 제거됨 (하위 호환성 문제의 주범으로 판단) |
-| 기본값 | 사용자가 직접 지정 가능 (`default = 42`) | 사용자 지정 불가. 타입별 고정 기본값 사용 (0, "", false 등) |
-| 필드 존재 추적 | 모든 `optional` 필드에 `has_` 메서드 제공 | 기본적으로 제공하지 않음. `optional` 키워드를 명시하면 제공 |
-| enum 기본값 | 첫 번째 선언된 값 | 반드시 0번 값이어야 함 |
-| Unknown fields | 보존 | 초기에는 폐기했으나, 3.5부터 보존으로 변경 |
-| 확장(extensions) | 지원 | 제거됨. `Any` 타입으로 대체 |
-| 그룹(groups) | 지원 (사용 비권장) | 제거됨 |
-| JSON 매핑 | 제한적 | 공식 JSON 매핑 제공 |
-| map 타입 | 미지원 (초기) -> 이후 추가 | 기본 지원 |
+- 문법 선언
+  - proto2: `syntax = "proto2";`
+  - proto3: `syntax = "proto3";`
+- 필드 규칙
+  - proto2: `required`, `optional`, `repeated`
+  - proto3: `singular`(기본), `optional`, `repeated`
+- required 필드
+  - proto2: 지원 (반드시 값이 있어야 함)
+  - proto3: 제거됨 (하위 호환성 문제의 주범으로 판단)
+- 기본값
+  - proto2: 사용자가 직접 지정 가능 (`default = 42`)
+  - proto3: 사용자 지정 불가. 타입별 고정 기본값 사용 (0, "", false 등)
+- 필드 존재 추적
+  - proto2: 모든 `optional` 필드에 `has_` 메서드 제공
+  - proto3: 기본 제공 안 함. `optional` 키워드를 명시하면 제공
+- enum 기본값
+  - proto2: 첫 번째 선언된 값
+  - proto3: 반드시 0번 값이어야 함
+- Unknown fields
+  - proto2: 보존
+  - proto3: 초기에는 폐기 → 3.5부터 보존으로 변경
+- 확장(extensions)
+  - proto2: 지원
+  - proto3: 제거됨. `Any` 타입으로 대체
+- 그룹(groups)
+  - proto2: 지원 (사용 비권장)
+  - proto3: 제거됨
+- JSON 매핑
+  - proto2: 제한적
+  - proto3: 공식 JSON 매핑 제공
+- map 타입
+  - proto2: 미지원 (초기) → 이후 추가
+  - proto3: 기본 지원
 
 proto3를 사용해야 하는 경우:
-- 새로운 프로젝트를 시작할 때
-- gRPC 서비스를 개발할 때 (gRPC는 proto3가 기본)
+
+- 새로운 프로젝트 시작 시
+- gRPC 서비스 개발 시 (gRPC는 proto3가 기본)
 - JSON 호환성이 중요할 때
 
 proto2를 유지해야 하는 경우:
-- 기존 proto2 기반 시스템과의 호환성이 필요할 때
+
+- 기존 proto2 기반 시스템과의 호환성 필요 시
 - `required` 필드가 반드시 필요할 때
 - 사용자 정의 기본값이 필요할 때
 
 ### 3.4 직렬화/역직렬화 원리 (바이너리 인코딩)
 
-Protocol Buffers는 바이너리 인코딩을 사용하여 데이터를 직렬화한다. 이 인코딩은 자기 서술적(self-describing)이지 않으므로, 디코딩하려면 `.proto` 스키마가 필요하다.
+Protocol Buffers는 바이너리 인코딩으로 데이터를 직렬화함. 이 인코딩은 자기 서술적(self-describing)이지 않음 → 디코딩하려면 `.proto` 스키마 필요.
 
 #### 3.4.1 기본 구조: Tag-Length-Value (TLV)
 
-각 필드는 다음과 같은 형태로 인코딩된다.
+각 필드는 다음 형태로 인코딩됨.
 
 ```
 [Tag] [Length (타입에 따라)] [Value]
@@ -323,18 +354,16 @@ Tag = (field_number << 3) | wire_type
 
 #### 3.4.2 Wire Types
 
-| Wire Type | 의미 | 사용 타입 |
-|-----------|------|----------|
-| 0 | Varint | int32, int64, uint32, uint64, sint32, sint64, bool, enum |
-| 1 | 64-bit | fixed64, sfixed64, double |
-| 2 | Length-delimited | string, bytes, embedded messages, packed repeated fields |
-| 5 | 32-bit | fixed32, sfixed32, float |
+- 0 (Varint): int32, int64, uint32, uint64, sint32, sint64, bool, enum
+- 1 (64-bit): fixed64, sfixed64, double
+- 2 (Length-delimited): string, bytes, embedded messages, packed repeated fields
+- 5 (32-bit): fixed32, sfixed32, float
 
-(Wire type 3, 4는 deprecated된 "group" 관련 타입이었다.)
+Wire type 3, 4는 deprecated된 "group" 관련 타입.
 
 #### 3.4.3 Varint 인코딩
 
-가변 길이 정수 인코딩이다. 작은 숫자는 적은 바이트로, 큰 숫자는 많은 바이트로 인코딩한다.
+가변 길이 정수 인코딩. 작은 숫자는 적은 바이트로, 큰 숫자는 많은 바이트로 인코딩함.
 
 ```
 값 1   -> 0x01              (1바이트)
@@ -344,9 +373,10 @@ Tag = (field_number << 3) | wire_type
 ```
 
 인코딩 방식:
-1. 값을 7비트씩 쪼갠다 (LSB 우선).
-2. 마지막 바이트를 제외하고, 각 바이트의 MSB(최상위 비트)를 1로 설정한다.
-3. 마지막 바이트의 MSB는 0으로 설정한다.
+
+1. 값을 7비트씩 분리 (LSB 우선)
+2. 마지막 바이트를 제외하고 각 바이트의 MSB(최상위 비트)를 1로 설정
+3. 마지막 바이트의 MSB는 0으로 설정
 
 예시: 300 (0b100101100) 인코딩
 
@@ -364,7 +394,7 @@ MSB 추가:       10101100  00000010
 
 #### 3.4.4 ZigZag 인코딩 (sint32, sint64)
 
-음수를 효율적으로 인코딩하기 위한 방식이다. 일반 `int32`에서 음수는 항상 10바이트를 차지하지만, ZigZag을 사용하면 절대값이 작은 음수도 적은 바이트로 인코딩된다.
+음수를 효율적으로 인코딩하기 위한 방식. 일반 `int32`에서 음수는 항상 10바이트를 차지하지만, ZigZag을 사용하면 절대값이 작은 음수도 적은 바이트로 인코딩됨.
 
 ```
 원본 값    ZigZag 인코딩 값
@@ -406,35 +436,31 @@ message Test {
   (총 12바이트)
 ```
 
-같은 데이터를 JSON으로 표현하면 `{"a":150,"b":"testing"}` = 24바이트이다. Protocol Buffers는 절반의 크기로 인코딩된다.
+같은 데이터를 JSON으로 표현하면 `{"a":150,"b":"testing"}` = 24바이트. Protocol Buffers는 절반 크기로 인코딩됨.
 
 ### 3.5 하위 호환성 규칙
 
-Protocol Buffers의 핵심 설계 목표 중 하나는 하위 호환성(backward compatibility) 이다. 스키마를 진화시키면서도 기존 코드가 깨지지 않도록 하기 위한 규칙들이 있다.
+Protocol Buffers의 핵심 설계 목표 중 하나는 하위 호환성(backward compatibility). 스키마를 진화시키면서도 기존 코드가 깨지지 않도록 하기 위한 규칙이 있음.
 
 #### 안전한 변경 (DO)
 
-| 변경 | 설명 |
-|------|------|
-| 새 필드 추가 | 이전 코드는 새 필드를 무시한다 (unknown field). |
-| 필드 제거 | 이전 코드는 해당 필드를 기본값으로 읽는다. 제거한 필드 번호를 `reserved`로 등록해야 한다. |
-| int32, uint32, int64, uint64, bool 간 변환 | Wire type이 같으므로 호환된다 (값 잘림 주의). |
-| sint32 <-> sint64 변환 | ZigZag 인코딩 호환. |
-| bytes <-> string 변환 | string이 유효한 UTF-8이면 호환. |
-| fixed32 <-> sfixed32, fixed64 <-> sfixed64 | Wire type이 같으므로 호환. |
-| 단수 필드를 oneof 멤버로 이동 | 바이너리 호환. |
-| optional <-> singular 변환 | 바이너리 호환 (API 차이만 존재). |
+- 새 필드 추가: 이전 코드는 새 필드를 무시함 (unknown field)
+- 필드 제거: 이전 코드는 해당 필드를 기본값으로 읽음. 제거한 필드 번호를 `reserved`로 등록 필요
+- int32, uint32, int64, uint64, bool 간 변환: Wire type이 같으므로 호환됨 (값 잘림 주의)
+- sint32 <-> sint64 변환: ZigZag 인코딩 호환
+- bytes <-> string 변환: string이 유효한 UTF-8이면 호환
+- fixed32 <-> sfixed32, fixed64 <-> sfixed64: Wire type이 같으므로 호환
+- 단수 필드를 oneof 멤버로 이동: 바이너리 호환
+- optional <-> singular 변환: 바이너리 호환 (API 차이만 존재)
 
 #### 위험한 변경 (DON'T)
 
-| 변경 | 위험성 |
-|------|--------|
-| 필드 번호 변경 | 기존 데이터를 완전히 읽을 수 없게 됨. |
-| 필드 타입을 비호환 타입으로 변경 | Wire type이 다르면 파싱 실패. |
-| 필드 번호 재사용 | 이전 데이터를 잘못된 타입/의미로 해석. |
-| repeated <-> scalar 변경 | 데이터 손실 가능. |
-| int32 <-> sint32 변경 | 다른 인코딩 방식이라 값이 깨짐. |
-| enum의 기존 값 번호 변경 | 기존 데이터의 의미가 달라짐. |
+- 필드 번호 변경: 기존 데이터를 완전히 읽을 수 없게 됨
+- 필드 타입을 비호환 타입으로 변경: Wire type이 다르면 파싱 실패
+- 필드 번호 재사용: 이전 데이터를 잘못된 타입/의미로 해석
+- repeated <-> scalar 변경: 데이터 손실 가능
+- int32 <-> sint32 변경: 다른 인코딩 방식 → 값이 깨짐
+- enum의 기존 값 번호 변경: 기존 데이터의 의미가 달라짐
 
 #### 권장 사항
 
@@ -455,11 +481,11 @@ message MyMessage {
 
 ### 4.1 4가지 통신 패턴
 
-gRPC는 4가지 서비스 메서드 유형을 지원한다.
+gRPC는 4가지 서비스 메서드 유형을 지원함.
 
 #### 4.1.1 Unary RPC (단항 RPC)
 
-가장 기본적인 형태. 클라이언트가 하나의 요청을 보내고, 서버가 하나의 응답을 반환한다.
+가장 기본적인 형태. 클라이언트가 하나의 요청을 보내고 서버가 하나의 응답을 반환함.
 
 ```protobuf
 service UserService {
@@ -476,11 +502,11 @@ Client                    Server
   |                         |
 ```
 
-일반적인 HTTP 요청/응답과 유사하며, 대부분의 API 호출에 사용된다.
+일반적인 HTTP 요청/응답과 유사 → 대부분의 API 호출에 사용됨.
 
 #### 4.1.2 Server Streaming RPC (서버 스트리밍)
 
-클라이언트가 하나의 요청을 보내면, 서버가 여러 개의 응답을 스트림으로 반환한다.
+클라이언트가 하나의 요청을 보내면 서버가 여러 개의 응답을 스트림으로 반환함.
 
 ```protobuf
 service StockService {
@@ -501,11 +527,11 @@ Client                     Server
   |                          |
 ```
 
-실시간 데이터 피드, 대량 데이터 다운로드 등에 적합하다.
+실시간 데이터 피드·대량 데이터 다운로드 등에 적합.
 
 #### 4.1.3 Client Streaming RPC (클라이언트 스트리밍)
 
-클라이언트가 여러 개의 요청을 스트림으로 보내고, 서버가 하나의 응답을 반환한다.
+클라이언트가 여러 개의 요청을 스트림으로 보내고 서버가 하나의 응답을 반환함.
 
 ```protobuf
 service UploadService {
@@ -526,11 +552,11 @@ Client                     Server
   |                          |
 ```
 
-파일 업로드, 센서 데이터 전송 등에 적합하다.
+파일 업로드·센서 데이터 전송 등에 적합.
 
 #### 4.1.4 Bidirectional Streaming RPC (양방향 스트리밍)
 
-클라이언트와 서버가 모두 스트림으로 데이터를 주고받는다. 두 스트림은 독립적으로 동작한다.
+클라이언트와 서버가 모두 스트림으로 데이터를 주고받음. 두 스트림은 독립적으로 동작함.
 
 ```protobuf
 service ChatService {
@@ -550,11 +576,11 @@ Client                     Server
   |         ...              |
 ```
 
-채팅, 실시간 협업, 양방향 데이터 동기화 등에 적합하다. 두 스트림은 독립적이므로 클라이언트와 서버가 임의의 순서로 읽고 쓸 수 있다.
+채팅·실시간 협업·양방향 데이터 동기화 등에 적합. 두 스트림이 독립적이므로 클라이언트와 서버가 임의의 순서로 읽고 쓸 수 있음.
 
 ### 4.2 HTTP/2 기반 전송
 
-gRPC는 HTTP/2를 전송 프로토콜로 사용한다. HTTP/2의 핵심 기능이 gRPC의 성능을 뒷받침한다.
+gRPC는 HTTP/2를 전송 프로토콜로 사용함. HTTP/2의 핵심 기능이 gRPC의 성능을 뒷받침함.
 
 #### 4.2.1 HTTP/2의 주요 특징
 
@@ -571,14 +597,12 @@ gRPC는 HTTP/2를 전송 프로토콜로 사용한다. HTTP/2의 핵심 기능�
 +------------------------------------------------------+
 ```
 
-| HTTP/2 특징 | gRPC에서의 활용 |
-|------------|---------------|
-| 멀티플렉싱(Multiplexing) | 하나의 TCP 연결에서 여러 RPC 호출을 동시에 처리. 연결 수립 오버헤드 감소. |
-| 바이너리 프레이밍 | 텍스트 기반 HTTP/1.1 대비 파싱 효율성 향상. Protocol Buffers의 바이너리 특성과 잘 맞음. |
-| 헤더 압축 (HPACK) | 반복되는 헤더를 압축하여 네트워크 사용량 감소. |
-| 서버 푸시 | 서버 스트리밍의 기반. |
-| 흐름 제어 (Flow Control) | 스트림 단위, 연결 단위로 흐름을 제어하여 과부하 방지. |
-| 스트림 우선순위 | 중요한 RPC에 더 많은 리소스를 할당 가능. |
+- 멀티플렉싱(Multiplexing): 하나의 TCP 연결에서 여러 RPC 호출을 동시에 처리 → 연결 수립 오버헤드 감소
+- 바이너리 프레이밍: 텍스트 기반 HTTP/1.1 대비 파싱 효율 향상. Protocol Buffers의 바이너리 특성과 잘 맞음
+- 헤더 압축 (HPACK): 반복되는 헤더를 압축 → 네트워크 사용량 감소
+- 서버 푸시: 서버 스트리밍의 기반
+- 흐름 제어 (Flow Control): 스트림 단위·연결 단위로 흐름 제어 → 과부하 방지
+- 스트림 우선순위: 중요한 RPC에 더 많은 리소스 할당 가능
 
 #### 4.2.2 gRPC의 HTTP/2 매핑
 
@@ -609,7 +633,7 @@ gRPC는 HTTP/2를 전송 프로토콜로 사용한다. HTTP/2의 핵심 기능�
 
 #### 4.3.1 Channel
 
-Channel은 gRPC 서버와의 연결을 추상화한 객체다. 실제 TCP 연결의 생성, 관리, 풀링 등을 담당한다.
+Channel은 gRPC 서버와의 연결을 추상화한 객체. 실제 TCP 연결의 생성·관리·풀링 등을 담당함.
 
 ```
 +------------------+         +------------------+
@@ -624,11 +648,12 @@ Channel은 gRPC 서버와의 연결을 추상화한 객체다. 실제 TCP 연결
 ```
 
 주요 특성:
+
 - 연결 상태 관리: IDLE, CONNECTING, READY, TRANSIENT_FAILURE, SHUTDOWN
-- 자동 재연결: 연결이 끊어지면 자동으로 재연결 시도
-- 연결 풀링: 내부적으로 여러 서브채널을 관리
+- 자동 재연결: 연결 끊김 시 자동 재연결 시도
+- 연결 풀링: 내부적으로 여러 서브채널 관리
 - 로드 밸런싱: 여러 백엔드 서버에 대한 부하 분산
-- 스레드 안전: 여러 스레드에서 동시에 사용 가능
+- 스레드 안전: 여러 스레드에서 동시 사용 가능
 
 ```go
 // Go 예시
@@ -642,14 +667,12 @@ defer conn.Close()
 
 #### 4.3.2 Stub
 
-Stub은 `.proto` 파일에서 자동 생성되는 클라이언트 측 코드로, RPC 메서드를 로컬 메서드처럼 호출할 수 있게 해준다.
+Stub은 `.proto` 파일에서 자동 생성되는 클라이언트 측 코드로, RPC 메서드를 로컬 메서드처럼 호출 가능하게 함.
 
-gRPC는 보통 두 종류의 stub을 생성한다:
+gRPC는 보통 두 종류의 stub을 생성함:
 
-| Stub 유형 | 설명 |
-|----------|------|
-| Blocking Stub (동기) | RPC 호출이 완료될 때까지 현재 스레드를 블로킹. Unary와 서버 스트리밍에만 사용 가능. |
-| Async Stub (비동기) | 비블로킹 방식으로 RPC를 호출. 콜백 또는 Future로 결과를 받음. 모든 패턴에 사용 가능. |
+- Blocking Stub (동기): RPC 호출 완료까지 현재 스레드를 블로킹. Unary와 서버 스트리밍에만 사용 가능
+- Async Stub (비동기): 비블로킹 방식으로 RPC 호출. 콜백 또는 Future로 결과를 받음. 모든 패턴에 사용 가능
 
 ```java
 // Java 예시
@@ -673,7 +696,7 @@ asyncStub.getUser(request, new StreamObserver<GetUserResponse>() {
 
 ### 4.4 메타데이터(Metadata)
 
-Metadata는 gRPC 호출에 부가 정보를 전달하기 위한 키-값 쌍이다. HTTP 헤더와 유사한 역할을 한다.
+Metadata는 gRPC 호출에 부가 정보를 전달하기 위한 키-값 쌍. HTTP 헤더와 유사한 역할.
 
 ```
 Client                          Server
@@ -688,16 +711,14 @@ Client                          Server
 
 #### 메타데이터의 종류
 
-| 종류 | 시점 | 설명 |
-|------|------|------|
-| Request Metadata | 클라이언트 -> 서버 (요청 시) | 인증 토큰, 트레이싱 ID, 커스텀 헤더 등 |
-| Initial Metadata | 서버 -> 클라이언트 (응답 시작) | 서버 정보, 커스텀 헤더 등 |
-| Trailing Metadata | 서버 -> 클라이언트 (응답 종료) | gRPC 상태 코드, 에러 상세 정보 등 |
+- Request Metadata: 클라이언트 → 서버 (요청 시). 인증 토큰·트레이싱 ID·커스텀 헤더 등
+- Initial Metadata: 서버 → 클라이언트 (응답 시작). 서버 정보·커스텀 헤더 등
+- Trailing Metadata: 서버 → 클라이언트 (응답 종료). gRPC 상태 코드·에러 상세 정보 등
 
 #### 키 규칙
 
-- 일반 키: ASCII 문자열. 값도 ASCII 문자열.
-- 바이너리 키: `-bin` 접미사를 붙이면 값을 바이너리(Base64 인코딩)로 전달 가능.
+- 일반 키: ASCII 문자열. 값도 ASCII 문자열
+- 바이너리 키: `-bin` 접미사를 붙이면 값을 바이너리(Base64 인코딩)로 전달 가능
 
 ```python
 # Python 예시
@@ -716,7 +737,7 @@ trailing_metadata = call.trailing_metadata()
 
 ### 4.5 인터셉터(Interceptor)
 
-Interceptor는 RPC 호출의 전후에 공통 로직을 삽입할 수 있는 미들웨어 메커니즘이다. HTTP의 미들웨어, Java의 서블릿 필터와 유사하다.
+Interceptor는 RPC 호출 전후에 공통 로직을 삽입할 수 있는 미들웨어 메커니즘. HTTP의 미들웨어·Java의 서블릿 필터와 유사함.
 
 ```
 Client                                              Server
@@ -737,18 +758,16 @@ Client                                              Server
 
 #### 인터셉터 유형
 
-| 유형 | 클라이언트 | 서버 |
-|------|-----------|------|
-| Unary | UnaryClientInterceptor | UnaryServerInterceptor |
-| Stream | StreamClientInterceptor | StreamServerInterceptor |
+- Unary: 클라이언트 UnaryClientInterceptor, 서버 UnaryServerInterceptor
+- Stream: 클라이언트 StreamClientInterceptor, 서버 StreamServerInterceptor
 
 #### 일반적인 활용 사례
 
 - 로깅: 요청/응답 로깅, 소요 시간 측정
 - 인증/인가: 토큰 검증, 권한 확인
-- 메트릭 수집: Prometheus, OpenTelemetry 연동
+- 메트릭 수집: Prometheus·OpenTelemetry 연동
 - 에러 처리: 공통 에러 변환, 재시도 로직
-- 트레이싱: 분산 추적 컨텍스트 전파 (Jaeger, Zipkin 등)
+- 트레이싱: 분산 추적 컨텍스트 전파 (Jaeger·Zipkin 등)
 - 레이트 리미팅: 요청 속도 제한
 
 ```go
@@ -784,33 +803,31 @@ server := grpc.NewServer(
 
 ### 4.6 에러 처리 (Status Codes)
 
-gRPC는 자체적인 상태 코드 체계를 가지고 있다. HTTP 상태 코드와는 별도로 정의되며, `grpc-status` 트레일러로 전달된다.
+gRPC는 자체 상태 코드 체계를 가짐. HTTP 상태 코드와 별도로 정의되며 `grpc-status` 트레일러로 전달됨.
 
 #### gRPC Status Codes
 
-| 코드 | 이름 | 설명 |
-|------|------|------|
-| 0 | OK | 성공 |
-| 1 | CANCELLED | 클라이언트가 호출을 취소함 |
-| 2 | UNKNOWN | 알 수 없는 에러 (예: 서버에서 처리되지 않은 예외) |
-| 3 | INVALID_ARGUMENT | 클라이언트가 잘못된 인자를 전달함 (HTTP 400) |
-| 4 | DEADLINE_EXCEEDED | 데드라인 초과 (HTTP 408) |
-| 5 | NOT_FOUND | 리소스를 찾을 수 없음 (HTTP 404) |
-| 6 | ALREADY_EXISTS | 리소스가 이미 존재함 (HTTP 409) |
-| 7 | PERMISSION_DENIED | 권한 없음 (HTTP 403) |
-| 8 | RESOURCE_EXHAUSTED | 리소스 한도 초과 (HTTP 429) |
-| 9 | FAILED_PRECONDITION | 전제 조건 실패 (HTTP 400) |
-| 10 | ABORTED | 동시성 충돌 등으로 중단 (HTTP 409) |
-| 11 | OUT_OF_RANGE | 유효 범위 초과 (HTTP 400) |
-| 12 | UNIMPLEMENTED | 메서드 미구현 (HTTP 501) |
-| 13 | INTERNAL | 서버 내부 에러 (HTTP 500) |
-| 14 | UNAVAILABLE | 서비스 일시 불가 (HTTP 503). 재시도 가능. |
-| 15 | DATA_LOSS | 복구 불가능한 데이터 손실 (HTTP 500) |
-| 16 | UNAUTHENTICATED | 인증 실패 (HTTP 401) |
+- 0 OK: 성공
+- 1 CANCELLED: 클라이언트가 호출을 취소함
+- 2 UNKNOWN: 알 수 없는 에러 (예: 서버에서 처리되지 않은 예외)
+- 3 INVALID_ARGUMENT: 잘못된 인자 전달 (HTTP 400)
+- 4 DEADLINE_EXCEEDED: 데드라인 초과 (HTTP 408)
+- 5 NOT_FOUND: 리소스를 찾을 수 없음 (HTTP 404)
+- 6 ALREADY_EXISTS: 리소스가 이미 존재함 (HTTP 409)
+- 7 PERMISSION_DENIED: 권한 없음 (HTTP 403)
+- 8 RESOURCE_EXHAUSTED: 리소스 한도 초과 (HTTP 429)
+- 9 FAILED_PRECONDITION: 전제 조건 실패 (HTTP 400)
+- 10 ABORTED: 동시성 충돌 등으로 중단 (HTTP 409)
+- 11 OUT_OF_RANGE: 유효 범위 초과 (HTTP 400)
+- 12 UNIMPLEMENTED: 메서드 미구현 (HTTP 501)
+- 13 INTERNAL: 서버 내부 에러 (HTTP 500)
+- 14 UNAVAILABLE: 서비스 일시 불가 (HTTP 503). 재시도 가능
+- 15 DATA_LOSS: 복구 불가능한 데이터 손실 (HTTP 500)
+- 16 UNAUTHENTICATED: 인증 실패 (HTTP 401)
 
 #### 풍부한 에러 모델 (Rich Error Model)
 
-기본 상태 코드 외에 구조화된 에러 상세 정보를 전달할 수 있다.
+기본 상태 코드 외에 구조화된 에러 상세 정보를 전달 가능.
 
 ```protobuf
 // google/rpc/error_details.proto에 정의된 표준 에러 상세 타입들
@@ -838,7 +855,7 @@ return nil, st.Err()
 
 ### 4.7 데드라인/타임아웃
 
-gRPC에서 데드라인(deadline) 은 RPC가 완료되어야 하는 절대 시점이고, 타임아웃(timeout) 은 상대적인 시간이다. 내부적으로 데드라인은 `grpc-timeout` 헤더로 전달된다.
+gRPC에서 데드라인(deadline)은 RPC가 완료되어야 하는 절대 시점이고, 타임아웃(timeout)은 상대적인 시간임. 내부적으로 데드라인은 `grpc-timeout` 헤더로 전달됨.
 
 ```
 Client (deadline: 5초 후)
@@ -853,9 +870,10 @@ Client (deadline: 5초 후)
 ```
 
 핵심 특징:
-- 전파(Propagation): 데드라인은 서비스 체인을 따라 자동으로 전파된다. 서버 A가 서버 B를 호출할 때, 남은 시간이 자동으로 전달된다.
-- DEADLINE_EXCEEDED: 데드라인이 초과되면 양쪽 모두에서 `DEADLINE_EXCEEDED` 에러가 발생한다.
-- 권장 사항: 모든 RPC 호출에 데드라인을 설정하는 것이 권장된다. 설정하지 않으면 실패한 요청이 서버 리소스를 무한히 점유할 수 있다.
+
+- 전파(Propagation): 데드라인은 서비스 체인을 따라 자동 전파됨. 서버 A가 서버 B를 호출할 때 남은 시간이 자동 전달됨
+- DEADLINE_EXCEEDED: 데드라인 초과 시 양쪽 모두에서 `DEADLINE_EXCEEDED` 에러 발생
+- 모든 RPC 호출에 데드라인을 설정하는 것이 권장됨. 미설정 시 실패한 요청이 서버 리소스를 무한히 점유 가능
 
 ```go
 // Go 예시
@@ -882,7 +900,7 @@ except grpc.RpcError as e:
 
 ### 4.8 로드 밸런싱
 
-gRPC는 다양한 로드 밸런싱 전략을 지원한다.
+gRPC는 다양한 로드 밸런싱 전략을 지원함.
 
 #### 4.8.1 프록시 기반 로드 밸런싱 (L7)
 
@@ -893,9 +911,9 @@ Clients -----> [L7 Load Balancer] -----> gRPC Servers
                                           (Server 3)
 ```
 
-- gRPC는 HTTP/2 기반이므로, L4(TCP) 로드 밸런서는 부적합하다.
-- HTTP/2 멀티플렉싱 때문에 하나의 TCP 연결에 모든 요청이 몰리는 문제 발생.
-- L7 로드 밸런서(Envoy, NGINX 등)가 HTTP/2 프레임을 이해하고 요청 단위로 분산해야 한다.
+- gRPC는 HTTP/2 기반 → L4(TCP) 로드 밸런서는 부적합
+- HTTP/2 멀티플렉싱으로 하나의 TCP 연결에 모든 요청이 몰리는 문제 발생
+- L7 로드 밸런서(Envoy·NGINX 등)가 HTTP/2 프레임을 이해하고 요청 단위로 분산해야 함
 
 #### 4.8.2 클라이언트 사이드 로드 밸런싱
 
@@ -907,12 +925,10 @@ Client (내장 LB) ---+-> Server 2
 
 gRPC 클라이언트에 내장된 로드 밸런싱:
 
-| 정책 | 설명 |
-|------|------|
-| pick_first (기본) | 리스트의 첫 번째 가용 서버에 연결 |
-| round_robin | 모든 서버에 순차적으로 요청 분산 |
-| grpclb | 외부 밸런서 서비스에 질의 (deprecated) |
-| xDS | xDS 프로토콜 기반 (Envoy 호환). 가장 진보된 방식 |
+- pick_first (기본): 리스트의 첫 번째 가용 서버에 연결
+- round_robin: 모든 서버에 순차적으로 요청 분산
+- grpclb: 외부 밸런서 서비스에 질의 (deprecated)
+- xDS: xDS 프로토콜 기반 (Envoy 호환). 가장 진보된 방식
 
 ```go
 // 클라이언트 사이드 라운드 로빈
@@ -932,7 +948,7 @@ Client ---- xDS ----> Control Plane (istiod, etc.)
   +---- RPC 호출 ---------> gRPC Servers
 ```
 
-xDS(eXtensible Discovery Service) 프로토콜을 사용하여 Istio, Traffic Director 등의 서비스 메시와 통합된다.
+xDS(eXtensible Discovery Service) 프로토콜을 사용하여 Istio·Traffic Director 등의 서비스 메시와 통합됨.
 
 ---
 
@@ -940,7 +956,7 @@ xDS(eXtensible Discovery Service) 프로토콜을 사용하여 Istio, Traffic Di
 
 ### 5.1 protoc 개요
 
-`protoc`은 Protocol Buffers 컴파일러로, `.proto` 파일을 읽어서 다양한 프로그래밍 언어의 소스 코드를 생성한다.
+`protoc`은 Protocol Buffers 컴파일러로, `.proto` 파일을 읽어서 다양한 프로그래밍 언어의 소스 코드를 생성함.
 
 ```
                         +-- protoc-gen-go ---------> user.pb.go
@@ -1014,19 +1030,17 @@ protoc \
 
 ### 5.5 생성되는 코드
 
-`.proto` 파일에서 다음이 생성된다:
+`.proto` 파일에서 다음이 생성됨:
 
-| 구분 | 생성 내용 |
-|------|----------|
-| 메시지 | 각 `message`에 대한 구조체/클래스, getter/setter, 직렬화/역직렬화 메서드 |
-| Enum | 각 `enum`에 대한 상수 정의 |
-| 서비스 (서버) | 서비스 인터페이스. 개발자가 이를 구현(implement)함 |
-| 서비스 (클라이언트) | Stub 클래스. RPC 메서드를 호출하는 클라이언트 코드 |
-| 빌더 | (Java 등) 메시지 객체를 생성하기 위한 빌더 패턴 코드 |
+- 메시지: 각 `message`에 대한 구조체/클래스, getter/setter, 직렬화/역직렬화 메서드
+- Enum: 각 `enum`에 대한 상수 정의
+- 서비스 (서버): 서비스 인터페이스. 개발자가 이를 구현(implement)함
+- 서비스 (클라이언트): Stub 클래스. RPC 메서드를 호출하는 클라이언트 코드
+- 빌더: (Java 등) 메시지 객체를 생성하기 위한 빌더 패턴 코드
 
 ### 5.6 Buf (차세대 도구)
 
-`protoc`의 대안으로 Buf 도구가 등장했다. lint, breaking change 감지, 의존성 관리 등 더 현대적인 워크플로우를 제공한다.
+`protoc`의 대안으로 Buf 도구가 등장함. lint·breaking change 감지·의존성 관리 등 더 현대적인 워크플로우를 제공함.
 
 ```yaml
 # buf.yaml
@@ -1058,33 +1072,29 @@ buf breaking --against '.git#branch=main'
 
 ### 6.1 공식 지원 언어
 
-| 언어 | 패키지/라이브러리 | 비고 |
-|------|-----------------|------|
-| C/C++ | `grpc`, `protobuf` | 핵심 구현체. 다른 언어 바인딩의 기반 |
-| Java | `grpc-java`, `protobuf-java` | Android 지원 포함 (grpc-android) |
-| Go | `google.golang.org/grpc`, `google.golang.org/protobuf` | Kubernetes 생태계에서 특히 활발 |
-| Python | `grpcio`, `grpcio-tools` | asyncio 지원 |
-| C#/.NET | `Grpc.Net.Client`, `Google.Protobuf` | ASP.NET Core 통합 |
-| Node.js | `@grpc/grpc-js` | 순수 JavaScript 구현 |
-| Ruby | `grpc` gem | |
-| Objective-C | `gRPC-ProtoRPC` | iOS 개발용 |
-| PHP | `grpc/grpc` | |
-| Dart | `grpc` package | Flutter 지원 |
-| Kotlin | `grpc-kotlin` | 코루틴 기반 API |
-| Swift | `grpc-swift` | Apple 플랫폼용. SwiftNIO 기반 |
+- C/C++: `grpc`, `protobuf`. 핵심 구현체로 다른 언어 바인딩의 기반
+- Java: `grpc-java`, `protobuf-java`. Android 지원 포함 (grpc-android)
+- Go: `google.golang.org/grpc`, `google.golang.org/protobuf`. Kubernetes 생태계에서 특히 활발
+- Python: `grpcio`, `grpcio-tools`. asyncio 지원
+- C#/.NET: `Grpc.Net.Client`, `Google.Protobuf`. ASP.NET Core 통합
+- Node.js: `@grpc/grpc-js`. 순수 JavaScript 구현
+- Ruby: `grpc` gem
+- Objective-C: `gRPC-ProtoRPC`. iOS 개발용
+- PHP: `grpc/grpc`
+- Dart: `grpc` package. Flutter 지원
+- Kotlin: `grpc-kotlin`. 코루틴 기반 API
+- Swift: `grpc-swift`. Apple 플랫폼용. SwiftNIO 기반
 
 ### 6.2 주요 생태계 도구
 
-| 도구 | 역할 |
-|------|------|
-| grpc-gateway | gRPC 서비스를 RESTful JSON API로 노출하는 리버스 프록시 |
-| grpcurl | gRPC 서버를 curl처럼 호출하는 CLI 도구 |
-| grpc-web | 브라우저에서 gRPC를 사용하기 위한 JavaScript 클라이언트 |
-| Evans | gRPC용 인터랙티브 CLI 클라이언트 |
-| Buf | Protobuf 린팅, 호환성 검사, 코드 생성 도구 |
-| BloomRPC / Postman | gRPC용 GUI 클라이언트 |
-| protoc-gen-doc | `.proto` 파일에서 문서 자동 생성 |
-| protoc-gen-validate | 메시지 필드 유효성 검사 코드 생성 |
+- grpc-gateway: gRPC 서비스를 RESTful JSON API로 노출하는 리버스 프록시
+- grpcurl: gRPC 서버를 curl처럼 호출하는 CLI 도구
+- grpc-web: 브라우저에서 gRPC를 사용하기 위한 JavaScript 클라이언트
+- Evans: gRPC용 인터랙티브 CLI 클라이언트
+- Buf: Protobuf 린팅·호환성 검사·코드 생성 도구
+- BloomRPC / Postman: gRPC용 GUI 클라이언트
+- protoc-gen-doc: `.proto` 파일에서 문서 자동 생성
+- protoc-gen-validate: 메시지 필드 유효성 검사 코드 생성
 
 ---
 
@@ -1092,20 +1102,39 @@ buf breaking --against '.git#branch=main'
 
 ### 7.1 개괄 비교
 
-| 항목 | gRPC | REST | GraphQL |
-|------|------|------|---------|
-| 프로토콜 | HTTP/2 | HTTP/1.1 (주로) | HTTP/1.1 (주로) |
-| 데이터 포맷 | Protocol Buffers (바이너리) | JSON/XML (텍스트) | JSON (텍스트) |
-| 인터페이스 정의 | `.proto` 파일 (필수) | OpenAPI/Swagger (선택) | Schema (필수) |
-| 코드 생성 | 내장 (protoc) | 서드파티 도구 | 서드파티 도구 |
-| 스트리밍 | 양방향 스트리밍 네이티브 지원 | SSE, WebSocket (별도) | Subscription (별도) |
-| 브라우저 지원 | 제한적 (grpc-web 필요) | 네이티브 | 네이티브 |
-| 타입 안전성 | 강타입 (컴파일 타임) | 약타입 (런타임) | 강타입 (런타임) |
-| 성능 | 높음 | 중간 | 중간 |
-| 페이로드 크기 | 작음 (바이너리) | 큼 (텍스트) | 중간 (필요한 필드만) |
-| 학습 곡선 | 높음 | 낮음 | 중간 |
-| 디버깅 | 어려움 (바이너리) | 쉬움 (텍스트) | 중간 |
-| 캐싱 | 어려움 (POST 기반) | 쉬움 (HTTP 캐싱) | 어려움 (POST 기반) |
+- 프로토콜
+  - gRPC: HTTP/2
+  - REST: HTTP/1.1 (주로)
+  - GraphQL: HTTP/1.1 (주로)
+- 데이터 포맷
+  - gRPC: Protocol Buffers (바이너리)
+  - REST: JSON/XML (텍스트)
+  - GraphQL: JSON (텍스트)
+- 인터페이스 정의
+  - gRPC: `.proto` 파일 (필수)
+  - REST: OpenAPI/Swagger (선택)
+  - GraphQL: Schema (필수)
+- 코드 생성
+  - gRPC: 내장 (protoc)
+  - REST: 서드파티 도구
+  - GraphQL: 서드파티 도구
+- 스트리밍
+  - gRPC: 양방향 스트리밍 네이티브 지원
+  - REST: SSE·WebSocket (별도)
+  - GraphQL: Subscription (별도)
+- 브라우저 지원
+  - gRPC: 제한적 (grpc-web 필요)
+  - REST: 네이티브
+  - GraphQL: 네이티브
+- 타입 안전성
+  - gRPC: 강타입 (컴파일 타임)
+  - REST: 약타입 (런타임)
+  - GraphQL: 강타입 (런타임)
+- 성능: gRPC 높음, REST 중간, GraphQL 중간
+- 페이로드 크기: gRPC 작음 (바이너리), REST 큼 (텍스트), GraphQL 중간 (필요한 필드만)
+- 학습 곡선: gRPC 높음, REST 낮음, GraphQL 중간
+- 디버깅: gRPC 어려움 (바이너리), REST 쉬움 (텍스트), GraphQL 중간
+- 캐싱: gRPC 어려움 (POST 기반), REST 쉬움 (HTTP 캐싱), GraphQL 어려움 (POST 기반)
 
 ### 7.2 성능 비교
 
@@ -1128,15 +1157,13 @@ buf breaking --against '.git#branch=main'
 
 ### 7.3 적합한 사용 사례
 
-| 기술 | 적합한 사례 |
-|------|-----------|
-| gRPC | 마이크로서비스 간 내부 통신, 실시간 스트리밍, 고성능 요구, 폴리글랏(다언어) 환경 |
-| REST | 공개 API, 웹 애플리케이션, CRUD 기반 서비스, 단순한 인터페이스 |
-| GraphQL | 복잡한 데이터 요구사항, 프론트엔드 주도 개발, 다양한 클라이언트 지원, 오버페칭/언더페칭 해결 |
+- gRPC: 마이크로서비스 간 내부 통신·실시간 스트리밍·고성능 요구·폴리글랏(다언어) 환경
+- REST: 공개 API·웹 애플리케이션·CRUD 기반 서비스·단순한 인터페이스
+- GraphQL: 복잡한 데이터 요구사항·프론트엔드 주도 개발·다양한 클라이언트 지원·오버페칭/언더페칭 해결
 
 ### 7.4 혼합 사용 패턴
 
-실무에서는 이 세 기술을 함께 사용하는 경우가 많다.
+실무에서는 세 기술을 함께 사용하는 경우가 많음.
 
 ```
                   +-- REST API ---------> 외부 클라이언트
@@ -1157,32 +1184,28 @@ API Gateway ------+-- GraphQL API ------> 모바일/웹 앱
 
 ### 8.1 장점
 
-| 장점 | 설명 |
-|------|------|
-| 고성능 | 바이너리 직렬화(Protobuf)와 HTTP/2 멀티플렉싱으로 REST 대비 최대 10배 빠른 처리 가능 |
-| 강력한 타입 시스템 | `.proto` 파일로 계약을 명확하게 정의. 컴파일 타임에 타입 오류 발견 |
-| 코드 자동 생성 | `protoc`이 10개 이상의 언어에 대해 클라이언트/서버 코드를 자동 생성. 보일러플레이트 제거 |
-| 양방향 스트리밍 | HTTP/2 기반 네이티브 양방향 스트리밍. 실시간 통신에 최적 |
-| 하위 호환성 | Protobuf의 필드 번호 시스템으로 스키마 진화가 안전 |
-| 언어 중립 | 다양한 언어 지원으로 폴리글랏 마이크로서비스에 적합 |
-| 효율적인 네트워크 사용 | 작은 페이로드, 헤더 압축, 멀티플렉싱으로 대역폭 절약 |
-| 데드라인 전파 | 서비스 체인을 따라 타임아웃이 자동 전파. 연쇄 장애 방지 |
-| 인터셉터 | 인증, 로깅, 메트릭 등을 위한 미들웨어 패턴 내장 |
-| 서비스 메시 통합 | Envoy, Istio 등과의 깊은 통합 |
+- 고성능: 바이너리 직렬화(Protobuf)와 HTTP/2 멀티플렉싱으로 REST 대비 최대 10배 빠른 처리 가능
+- 강력한 타입 시스템: `.proto` 파일로 계약을 명확하게 정의 → 컴파일 타임에 타입 오류 발견
+- 코드 자동 생성: `protoc`이 10개 이상의 언어에 대해 클라이언트/서버 코드를 자동 생성 → 보일러플레이트 제거
+- 양방향 스트리밍: HTTP/2 기반 네이티브 양방향 스트리밍 → 실시간 통신에 최적
+- 하위 호환성: Protobuf의 필드 번호 시스템으로 스키마 진화가 안전
+- 언어 중립: 다양한 언어 지원으로 폴리글랏 마이크로서비스에 적합
+- 효율적인 네트워크 사용: 작은 페이로드·헤더 압축·멀티플렉싱으로 대역폭 절약
+- 데드라인 전파: 서비스 체인을 따라 타임아웃이 자동 전파 → 연쇄 장애 방지
+- 인터셉터: 인증·로깅·메트릭 등을 위한 미들웨어 패턴 내장
+- 서비스 메시 통합: Envoy·Istio 등과의 깊은 통합
 
 ### 8.2 단점
 
-| 단점 | 설명 |
-|------|------|
-| 브라우저 지원 제한 | 브라우저에서 HTTP/2 트레일러를 직접 사용할 수 없어 grpc-web 프록시 필요 |
-| 디버깅 어려움 | 바이너리 포맷이라 curl이나 브라우저로 직접 확인 불가. 별도 도구(grpcurl 등) 필요 |
-| 학습 곡선 | Protobuf, HTTP/2, 스트리밍 개념 등 이해해야 할 것이 많음 |
-| HTTP 캐싱 불가 | 모든 요청이 POST이므로 HTTP 캐시(CDN, 브라우저 캐시)를 활용할 수 없음 |
-| 텍스트 비가독성 | JSON과 달리 사람이 직접 읽을 수 없는 바이너리 포맷 |
-| Protobuf 제한 | null 값 표현 불가(wrapper type 필요), union type 불편, 상속 미지원 |
-| 로드 밸런싱 복잡 | HTTP/2 멀티플렉싱 때문에 L4 로드 밸런서가 부적합. L7 필요 |
-| 생태계 성숙도 | REST에 비해 도구, 라이브러리, 커뮤니티 자원이 적음 |
-| 에러 처리 | HTTP 상태 코드에 익숙한 개발자에게 gRPC 상태 코드가 낯설 수 있음 |
+- 브라우저 지원 제한: 브라우저에서 HTTP/2 트레일러를 직접 사용 불가 → grpc-web 프록시 필요
+- 디버깅 어려움: 바이너리 포맷이라 curl이나 브라우저로 직접 확인 불가 → 별도 도구(grpcurl 등) 필요
+- 학습 곡선: Protobuf·HTTP/2·스트리밍 개념 등 이해해야 할 것이 많음
+- HTTP 캐싱 불가: 모든 요청이 POST → HTTP 캐시(CDN·브라우저 캐시) 활용 불가
+- 텍스트 비가독성: JSON과 달리 사람이 직접 읽을 수 없는 바이너리 포맷
+- Protobuf 제한: null 값 표현 불가(wrapper type 필요)·union type 불편·상속 미지원
+- 로드 밸런싱 복잡: HTTP/2 멀티플렉싱으로 인해 L4 로드 밸런서 부적합 → L7 필요
+- 생태계 성숙도: REST에 비해 도구·라이브러리·커뮤니티 자원이 적음
+- 에러 처리: HTTP 상태 코드에 익숙한 개발자에게 gRPC 상태 코드가 낯설 수 있음
 
 ---
 
@@ -1644,7 +1667,7 @@ if __name__ == "__main__":
 
 ### 10.1 마이크로서비스 간 내부 통신
 
-gRPC의 가장 대표적인 활용 사례다.
+gRPC의 가장 대표적인 활용 사례.
 
 ```
 [API Gateway]
@@ -1663,10 +1686,10 @@ gRPC의 가장 대표적인 활용 사례다.
 
 - 높은 성능: JSON/REST 대비 바이너리 직렬화로 처리량 증가
 - 강력한 계약: `.proto` 파일이 서비스 간 계약서 역할
-- 다언어 지원: Go 서비스와 Java 서비스, Python 서비스가 원활히 통신
+- 다언어 지원: Go 서비스와 Java 서비스·Python 서비스가 원활히 통신
 - 데드라인 전파: 서비스 체인 전체에 걸친 타임아웃 관리
 
-실제 사용 기업: Google, Netflix, Square, Dropbox, Uber, Slack, CoreOS(etcd), Cockroach Labs(CockroachDB)
+실제 사용 기업: Google·Netflix·Square·Dropbox·Uber·Slack·CoreOS(etcd)·Cockroach Labs(CockroachDB)
 
 ### 10.2 모바일 애플리케이션
 
@@ -1681,10 +1704,11 @@ gRPC의 가장 대표적인 활용 사례다.
 ```
 
 gRPC가 모바일에 적합한 이유:
+
 - 작은 페이로드: 제한된 모바일 네트워크에서 데이터 사용량 절감
-- 빠른 직렬화: CPU, 배터리 절약
+- 빠른 직렬화: CPU·배터리 절약
 - 양방향 스트리밍: 실시간 기능 구현에 용이
-- 코드 생성: iOS(Swift/Obj-C), Android(Java/Kotlin) 클라이언트 자동 생성
+- 코드 생성: iOS(Swift/Obj-C)·Android(Java/Kotlin) 클라이언트 자동 생성
 
 ### 10.3 실시간 데이터 스트리밍
 
@@ -1712,20 +1736,18 @@ gRPC가 모바일에 적합한 이유:
      |-- [Istio Control Plane] (xDS protocol = gRPC)
 ```
 
-- Kubernetes: 내부 컴포넌트(kubelet, API server) 간 gRPC 사용
+- Kubernetes: 내부 컴포넌트(kubelet·API server) 간 gRPC 사용
 - Istio/Envoy: 제어 평면과 데이터 평면 간 xDS 프로토콜 (gRPC 기반)
 - etcd: Raft 합의 프로토콜에 gRPC 사용
 - containerd: 컨테이너 런타임 API가 gRPC
 
 ### 10.5 데이터베이스 및 스토리지
 
-| 시스템 | gRPC 활용 |
-|--------|----------|
-| CockroachDB | 노드 간 통신 |
-| TiDB/TiKV | 분산 트랜잭션 및 데이터 전송 |
-| etcd | 클라이언트 API 및 피어 통신 |
-| Google Spanner | 클라이언트 라이브러리 |
-| Google Bigtable | 클라이언트 라이브러리 |
+- CockroachDB: 노드 간 통신
+- TiDB/TiKV: 분산 트랜잭션 및 데이터 전송
+- etcd: 클라이언트 API 및 피어 통신
+- Google Spanner: 클라이언트 라이브러리
+- Google Bigtable: 클라이언트 라이브러리
 
 ### 10.6 ML/AI 서빙
 
@@ -1738,6 +1760,7 @@ gRPC가 모바일에 적합한 이유:
 ```
 
 ML 모델 서빙에서 gRPC가 선호되는 이유:
+
 - 대용량 텐서 데이터를 효율적으로 전송 (바이너리 인코딩)
 - 낮은 지연시간 (실시간 추론)
 - 스트리밍으로 배치 추론 결과 전달

@@ -14,7 +14,7 @@
 
 ---
 
-[시작하기](01_getting_started.md#4-핵심-구성-요소key-components)에서 보았듯이, 시스템에는 자유롭게 커스터마이징할 수 있는 부분이 여러 곳 있습니다. Shardcake는 이런 부분마다 최소한 테스트용 가짜(fake) 구현과 흔히 쓰이는 기술로 만든 프로덕션용 구현을 함께 제공합니다. 물론 직접 구현해 써도 좋습니다.
+[시작하기](01_getting_started.md#4-핵심-구성-요소key-components)에서 보았듯이 시스템에는 자유롭게 커스터마이징할 수 있는 부분이 여러 곳 존재. Shardcake는 이런 부분마다 최소한 테스트용 가짜(fake) 구현과 흔히 쓰이는 기술로 만든 프로덕션용 구현을 함께 제공. 직접 구현해 사용도 가능.
 
 ![architecture diagram](https://devsisters.github.io/shardcake/arch.png)
 
@@ -22,7 +22,11 @@
 
 ## 1. Storage
 
-`Storage` 트레이트는 파드와 샤드 할당 정보를 저장하고 읽어 오는 방법을 정의합니다. 메서드는 다섯 개입니다. 할당 정보를 다루는 `getAssignments`/`saveAssignments`, 파드를 다루는 `getPods`/`savePods`, 그리고 할당 갱신 사항을 전달받는 `assignmentsStream`입니다.
+`Storage` 트레이트는 파드와 샤드 할당 정보를 저장하고 읽어 오는 방법을 정의. 메서드는 다섯 개.
+
+- 할당 정보를 다루는 `getAssignments`/`saveAssignments`
+- 파드를 다루는 `getPods`/`savePods`
+- 할당 갱신 사항을 전달받는 `assignmentsStream`
 
 ```scala
 trait Storage {
@@ -36,22 +40,22 @@ trait Storage {
 }
 ```
 
-테스트할 때는 데이터를 메모리에 담아 두는 `Storage.memory` 레이어를 쓰면 됩니다.
+테스트할 때는 데이터를 메모리에 담아 두는 `Storage.memory` 레이어를 사용.
 
-Shardcake는 Redis4cats 라이브러리로 Redis 위에 구현한 `Storage`를 제공합니다(Redisson 기반 대안도 있습니다). 사용하려면 다음 의존성을 추가하세요.
+Shardcake는 Redis4cats 라이브러리로 Redis 위에 구현한 `Storage`를 제공(Redisson 기반 대안도 존재). 사용하려면 다음 의존성을 추가.
 
 ```scala
 libraryDependencies += "com.devsisters" %% "shardcake-storage-redis" % "2.7.1"
 ```
 
-그리고 `StorageRedis.live` 레이어를 그대로 가져다 쓰면 됩니다.
+그리고 `StorageRedis.live` 레이어를 그대로 가져다 사용.
 
-이 레이어에는 다음 옵션을 담은 `RedisConfig`가 필요합니다.
+이 레이어에는 다음 옵션을 담은 `RedisConfig`가 필요.
 
 - `assignmentsKey`: 샤드 할당 정보를 Redis에 저장할 때 쓰는 키
 - `podsKey`: 등록된 파드를 Redis에 저장할 때 쓰는 키
 
-여기에 `Redis` 객체도 필요합니다. 내부적으로 쓰는 [redis4cats](https://redis4cats.profunktor.dev/) 라이브러리의 `RedisCommands[Task, String, String] with PubSubCommands[fs2Stream, String, String]`를 가리키는 별칭입니다. 만드는 예시는 다음과 같습니다.
+여기에 `Redis` 객체도 필요. 내부적으로 쓰는 [redis4cats](https://redis4cats.profunktor.dev/) 라이브러리의 `RedisCommands[Task, String, String] with PubSubCommands[fs2Stream, String, String]`를 가리키는 별칭. 만드는 예시는 다음과 같음.
 
 ```scala
 import com.devsisters.shardcake.StorageRedis.Redis
@@ -84,7 +88,7 @@ val redis: ZLayer[Any, Throwable, Redis] =
 
 ## 2. 메시징 프로토콜(Messaging Protocol)
 
-`Pods` 트레이트는 원격 파드와 통신하는 방법을 정의합니다. Shard Manager가 샤드를 할당하거나 해제할 때, 그리고 파드끼리 내부 통신(서로 메시지를 주고받는 일)을 할 때 모두 쓰입니다.
+`Pods` 트레이트는 원격 파드와 통신하는 방법을 정의. Shard Manager가 샤드를 할당하거나 해제할 때, 그리고 파드끼리 내부 통신(서로 메시지를 주고받는 일)을 할 때 모두 사용.
 
 ```scala
 trait Pods {
@@ -97,23 +101,23 @@ trait Pods {
 }
 ```
 
-테스트할 때는 아무 일도 하지 않는 `Pods.noop` 레이어를 쓰면 됩니다.
+테스트할 때는 아무 일도 하지 않는 `Pods.noop` 레이어를 사용.
 
-Shardcake는 gRPC 프로토콜로 만든 `Pods` 구현을 제공합니다. 사용하려면 다음 의존성을 추가하세요.
+Shardcake는 gRPC 프로토콜로 만든 `Pods` 구현을 제공. 사용하려면 다음 의존성을 추가.
 
 ```scala
 libraryDependencies += "com.devsisters" %% "shardcake-protocol-grpc" % "2.7.1"
 ```
 
-그리고 `GrpcPods.live` 레이어를 그대로 가져다 쓰면 됩니다.
+그리고 `GrpcPods.live` 레이어를 그대로 가져다 사용.
 
-파드 쪽에서는 gRPC API도 노출해야 합니다. 환경에 `GrpcShardingService.live` 레이어를 추가하면 됩니다. 다만 이 레이어는 Shard Manager에는 필요하지 않습니다.
+파드 쪽에서는 gRPC API도 노출 필요. 환경에 `GrpcShardingService.live` 레이어를 추가하면 됨. 다만 이 레이어는 Shard Manager에는 불필요.
 
 ---
 
 ## 3. 직렬화(Serialization)
 
-`Serialization` 트레이트는 파드 사이에 오가는 사용자 메시지를 직렬화하는 방법을 정의합니다. 특정 타입을 바이트로, 바이트를 다시 타입으로 바꾸는 `encode`와 `decode` 두 메서드로 이루어집니다.
+`Serialization` 트레이트는 파드 사이에 오가는 사용자 메시지를 직렬화하는 방법을 정의. 특정 타입을 바이트로, 바이트를 다시 타입으로 바꾸는 `encode`와 `decode` 두 메서드로 구성.
 
 ```scala
 trait Serialization {
@@ -122,22 +126,22 @@ trait Serialization {
 }
 ```
 
-테스트할 때는 Java 직렬화(Java Serialization)를 쓰는 `Serialization.javaSerialization` 레이어를 활용할 수 있습니다(다만 프로덕션에서는 권장하지 않습니다).
+테스트할 때는 Java 직렬화(Java Serialization)를 쓰는 `Serialization.javaSerialization` 레이어 활용 가능(다만 프로덕션에서는 비권장).
 
-Shardcake는 [Kryo](https://github.com/EsotericSoftware/kryo) 바이너리 직렬화 라이브러리로 만든 `Serialization` 구현을 제공합니다. 사용하려면 다음 의존성을 추가하세요.
+Shardcake는 [Kryo](https://github.com/EsotericSoftware/kryo) 바이너리 직렬화 라이브러리로 만든 `Serialization` 구현을 제공. 사용하려면 다음 의존성을 추가.
 
 ```scala
 libraryDependencies += "com.devsisters" %% "shardcake-serialization-kryo" % "2.7.1"
 ```
 
-그리고 `KryoSerialization.live` 레이어를 그대로 가져다 쓰면 됩니다.
+그리고 `KryoSerialization.live` 레이어를 그대로 가져다 사용.
 
-> **💡 서버 업데이트와 메시지 버전 관리**
+> **서버 업데이트와 메시지 버전 관리**
 >
-> - 메시지는 영속화되지 않습니다. 따라서 시스템 전체를 멈췄다가 다시 켠다면 메시지 형식은 얼마든지 바꿔도 됩니다.
-> - 반면 롤링 업데이트(다운타임 없이 서버를 조금씩 교체하는 방식)를 한다면 메시지 형식을 바꿀 때 조심해야 합니다.
-> - 어디까지 바꿀 수 있는지는 직렬화 방식에 크게 달려 있습니다. 변경을 넉넉히 허용하는 방식이 있는가 하면 매우 빡빡한 방식도 있습니다. [Kryo](https://github.com/EsotericSoftware/kryo)는 기본값이 꽤 엄격해 대부분의 변경을 받아 주지 않지만, 성능이나 메시지 크기를 어느 정도 내주고 변경 폭을 넓히는 설정도 있습니다.
-> - 기존 메시지를 손댈 수 없다면, 롤링 업데이트가 끝날 때까지는 쓰이지 않을 새 메시지를 따로 만드는 것도 한 방법입니다. 이렇게 하면 오래된 노드가 새 메시지를 받는 일이 생기지 않습니다.
+> - 메시지는 영속화되지 않음 → 시스템 전체를 멈췄다가 다시 켠다면 메시지 형식은 얼마든지 변경 가능
+> - 반면 롤링 업데이트(다운타임 없이 서버를 조금씩 교체하는 방식)를 한다면 메시지 형식 변경 시 주의 필요
+> - 어디까지 바꿀 수 있는지는 직렬화 방식에 크게 좌우. 변경을 넉넉히 허용하는 방식이 있는가 하면 매우 빡빡한 방식도 존재. [Kryo](https://github.com/EsotericSoftware/kryo)는 기본값이 꽤 엄격해 대부분의 변경을 받아 주지 않지만, 성능이나 메시지 크기를 어느 정도 내주고 변경 폭을 넓히는 설정도 존재
+> - 기존 메시지를 손댈 수 없다면, 롤링 업데이트가 끝날 때까지는 쓰이지 않을 새 메시지를 따로 만드는 것도 한 방법. 이렇게 하면 오래된 노드가 새 메시지를 받는 일이 발생하지 않음
 
 ---
 

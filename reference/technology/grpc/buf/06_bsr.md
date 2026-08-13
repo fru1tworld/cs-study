@@ -18,23 +18,23 @@
 
 ## 1. BSR이란
 
-Buf Schema Registry는 버전 관리되는 `.proto` 묶음을 다루는 Protobuf 전용 레지스트리입니다. 공개 서비스는 `buf.build`에서 동작하며(예: `buf.build/connectrpc/eliza`), 조직용으로는 Pro/Enterprise/온프레미스로 비공개 운영할 수 있습니다.
+Buf Schema Registry는 버전 관리되는 `.proto` 묶음을 다루는 Protobuf 전용 레지스트리. 공개 서비스는 `buf.build`에서 동작함(예: `buf.build/connectrpc/eliza`), 조직용으로는 Pro/Enterprise/온프레미스로 비공개 운영 가능.
 
 BSR이 해결하는 문제:
 
-- **빌드 보장**: 깨진 push를 거부해 소비자가 잘못된 스키마를 받지 않게 함.
-- **단일 진실 공급원(single source of truth)**: 이름(`buf.build/owner/name`)으로 주소화되어 드리프트 방지.
-- **패키지 매니저 통합**: vendoring이나 로컬 protoc 호출 없이 생성 SDK를 네이티브 패키지로 설치.
+- 빌드 보장: 깨진 push를 거부해 소비자가 잘못된 스키마를 받지 않게 함
+- 단일 진실 공급원(single source of truth): 이름(`buf.build/owner/name`)으로 주소화되어 드리프트 방지
+- 패키지 매니저 통합: vendoring이나 로컬 protoc 호출 없이 생성 SDK를 네이티브 패키지로 설치
 
 ---
 
 ## 2. 모듈과 저장소, 커밋·라벨
 
-- 모듈은 `.proto` 파일과 의존성을 담은 버전 관리 묶음이며, BSR의 한 저장소에 대응합니다.
-- 사용자는 **생산자(producer)**(스키마 개발)와 **소비자(consumer)**(SDK 설치, 문서 열람, API 테스트, 의존)로 나뉩니다.
-- **커밋(commit)**: 매 push마다 생성되어 변경 이력을 추적합니다.
-- **라벨(label)**: 특정 커밋을 가리키는 이름(기본 라벨이 릴리스를 추적). 의존성/입력 지정 시 라벨이나 커밋을 명시할 수 있습니다.
-- 각 커밋은 문법 강조 및 상호 참조가 가능한 문서를 자동 생성합니다.
+- 모듈은 `.proto` 파일과 의존성을 담은 버전 관리 묶음 → BSR의 한 저장소에 대응함
+- 사용자는 생산자(producer)(스키마 개발)와 소비자(consumer)(SDK 설치, 문서 열람, API 테스트, 의존)로 나뉨
+- 커밋(commit): 매 push마다 생성되어 변경 이력을 추적함
+- 라벨(label): 특정 커밋을 가리키는 이름(기본 라벨이 릴리스를 추적) → 의존성/입력 지정 시 라벨이나 커밋을 명시 가능
+- 각 커밋은 문법 강조 및 상호 참조가 가능한 문서를 자동 생성함
 
 ---
 
@@ -46,7 +46,7 @@ buf registry whoami         # 현재 신원 확인
 buf registry logout
 ```
 
-CI에서는 `BUF_TOKEN` 환경 변수로 인증할 수 있습니다.
+CI에서는 `BUF_TOKEN` 환경 변수로 인증 가능.
 
 ---
 
@@ -59,11 +59,11 @@ buf push                    # 현재 워크스페이스의 모듈을 BSR에 게�
 buf push --label v1.2.0     # 라벨을 붙여 게시
 ```
 
-매 push마다 커밋이 생성되며, BSR은 제출된 스키마를 컴파일·검증(lint/breaking 검사/리뷰 정책)한 뒤 통과한 경우에만 수용합니다.
+매 push마다 커밋이 생성되며, BSR은 제출된 스키마를 컴파일·검증(lint/breaking 검사/리뷰 정책)한 뒤 통과한 경우에만 수용함.
 
 ### export
 
-모듈/입력의 `.proto` 파일을 로컬 디렉터리로 추출합니다.
+모듈/입력의 `.proto` 파일을 로컬 디렉터리로 추출함.
 
 ```bash
 buf export buf.build/connectrpc/eliza --output ./out
@@ -74,7 +74,7 @@ buf export . --output ./vendor          # 로컬 입력 추출
 
 ## 5. 의존성 관리
 
-`buf.yaml`의 `deps`에 BSR 모듈을 선언한 뒤 해석합니다.
+`buf.yaml`의 `deps`에 BSR 모듈을 선언한 뒤 해석함.
 
 ```yaml
 # buf.yaml
@@ -88,13 +88,13 @@ buf dep graph      # 의존성 그래프 출력
 buf dep prune      # 사용하지 않는 의존성 제거 (v2)
 ```
 
-`buf.lock`이 의존성을 특정 커밋으로 고정하여 재현 가능한 빌드를 보장합니다(상세는 `02_modules_workspaces.md` 참고).
+`buf.lock`이 의존성을 특정 커밋으로 고정하여 재현 가능한 빌드를 보장함(상세는 `02_modules_workspaces.md` 참고).
 
 ---
 
 ## 6. 원격 플러그인
 
-BSR이 호스팅하는 플러그인을 사용하면 로컬 protoc/플러그인 설치 없이 코드를 생성할 수 있습니다. `buf.gen.yaml`에서 `remote`로 참조합니다.
+BSR이 호스팅하는 플러그인을 사용하면 로컬 protoc/플러그인 설치 없이 코드 생성 가능. `buf.gen.yaml`에서 `remote`로 참조함.
 
 ```yaml
 version: v2
@@ -105,13 +105,13 @@ plugins:
     out: gen/go
 ```
 
-코드 생성은 BSR 서버에서 수행되며, 버전을 명시(`:v1.34.2`)해 재현성을 확보합니다.
+코드 생성은 BSR 서버에서 수행됨 → 버전을 명시(`:v1.34.2`)해 재현성 확보.
 
 ---
 
 ## 7. Generated SDK
 
-소비자는 모듈에서 생성된 SDK를 각 언어 패키지 매니저로 바로 설치할 수 있습니다.
+소비자는 모듈에서 생성된 SDK를 각 언어 패키지 매니저로 바로 설치 가능.
 
 ```bash
 # Go (예: protocolbuffers/go + connectrpc/go 생성물)
@@ -124,4 +124,4 @@ npm install @buf/<owner>_<module>
 cargo add buf_<owner>_<module>
 ```
 
-vendoring이나 직접 코드 생성 없이 최신 스키마 기반 클라이언트/서버 코드를 바로 사용할 수 있습니다.
+vendoring이나 직접 코드 생성 없이 최신 스키마 기반 클라이언트/서버 코드를 바로 사용 가능.

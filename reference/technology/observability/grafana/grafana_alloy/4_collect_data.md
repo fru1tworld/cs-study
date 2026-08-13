@@ -22,17 +22,15 @@
 
 ### 개요
 
-Alloy는 OpenTelemetry Collector의 컴포넌트를 모두 사용할 수 있습니다. 모든 OTel 컴포넌트는 `otelcol.*` 네임스페이스에 있습니다.
+Alloy는 OpenTelemetry Collector의 컴포넌트를 모두 사용 가능 → 모든 OTel 컴포넌트는 `otelcol.*` 네임스페이스에 위치.
 
 #### 컴포넌트 카테고리
 
-| 종류 | 네임스페이스 | 예 |
-|------|------------|------|
-| Receivers | `otelcol.receiver.*` | `otlp`, `prometheus`, `jaeger`, `zipkin` |
-| Processors | `otelcol.processor.*` | `batch`, `memory_limiter`, `transform`, `tail_sampling` |
-| Exporters | `otelcol.exporter.*` | `otlp`, `otlphttp`, `prometheus`, `loki` |
-| Connectors | `otelcol.connector.*` | `spanmetrics`, `servicegraph` |
-| Extensions | `otelcol.extension.*` | `basicauth`, `bearertokenauth` |
+- Receivers: 네임스페이스 `otelcol.receiver.*` · 예 `otlp`, `prometheus`, `jaeger`, `zipkin`
+- Processors: 네임스페이스 `otelcol.processor.*` · 예 `batch`, `memory_limiter`, `transform`, `tail_sampling`
+- Exporters: 네임스페이스 `otelcol.exporter.*` · 예 `otlp`, `otlphttp`, `prometheus`, `loki`
+- Connectors: 네임스페이스 `otelcol.connector.*` · 예 `spanmetrics`, `servicegraph`
+- Extensions: 네임스페이스 `otelcol.extension.*` · 예 `basicauth`, `bearertokenauth`
 
 #### 기본 데이터 흐름
 
@@ -40,7 +38,7 @@ Alloy는 OpenTelemetry Collector의 컴포넌트를 모두 사용할 수 있습�
 [Receiver] → [Processor 1] → [Processor 2] → ... → [Exporter]
 ```
 
-각 컴포넌트는 입력(input)과 출력(output)을 가집니다.
+각 컴포넌트는 입력(input)과 출력(output)을 가짐.
 
 ---
 
@@ -116,7 +114,7 @@ otelcol.receiver.otlp "default" {
 
 #### batch
 
-여러 작은 신호를 묶어 처리. **거의 항상 권장**.
+여러 작은 신호를 묶어 처리 → 거의 항상 권장.
 
 ```alloy
 otelcol.processor.batch "default" {
@@ -134,7 +132,7 @@ otelcol.processor.batch "default" {
 
 #### memory_limiter
 
-메모리 폭증 방지. **모든 파이프라인 시작에 권장**.
+메모리 폭증 방지 → 모든 파이프라인 시작에 권장.
 
 ```alloy
 otelcol.processor.memory_limiter "default" {
@@ -518,11 +516,9 @@ otelcol.processor.memory_limiter "default" {
 
 #### batch 권장 값
 
-| 신호 | send_batch_size | timeout |
-|------|----------------|---------|
-| Traces | 8192 | 200ms |
-| Metrics | 1024 | 5s |
-| Logs | 1024 | 5s |
+- Traces: `send_batch_size` 8192 · `timeout` 200ms
+- Metrics: `send_batch_size` 1024 · `timeout` 5s
+- Logs: `send_batch_size` 1024 · `timeout` 5s
 
 ---
 
@@ -706,15 +702,13 @@ otelcol.exporter.otlp "tempo" {
 
 ### 개요
 
-Alloy는 OpenTelemetry 외에도 Grafana 에코시스템 전용 컴포넌트로 다양한 신호를 수집합니다.
+Alloy는 OpenTelemetry 외에도 Grafana 에코시스템 전용 컴포넌트로 다양한 신호 수집 가능.
 
-| 신호 | 컴포넌트 네임스페이스 | 백엔드 |
-|------|--------------------|------|
-| Metrics | `prometheus.*` | Mimir, Prometheus, Cortex, Thanos |
-| Logs | `loki.*` | Loki |
-| Profiles | `pyroscope.*` | Pyroscope |
-| Frontend | `faro.*` | Faro/Loki/Tempo |
-| eBPF | `beyla.*` | Tempo (트레이스), Mimir (메트릭) |
+- Metrics: 컴포넌트 네임스페이스 `prometheus.*` · 백엔드 Mimir, Prometheus, Cortex, Thanos
+- Logs: 컴포넌트 네임스페이스 `loki.*` · 백엔드 Loki
+- Profiles: 컴포넌트 네임스페이스 `pyroscope.*` · 백엔드 Pyroscope
+- Frontend: 컴포넌트 네임스페이스 `faro.*` · 백엔드 Faro/Loki/Tempo
+- eBPF: 컴포넌트 네임스페이스 `beyla.*` · 백엔드 Tempo(트레이스), Mimir(메트릭)
 
 ---
 

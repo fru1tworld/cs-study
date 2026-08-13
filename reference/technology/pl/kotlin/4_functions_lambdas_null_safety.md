@@ -4,11 +4,11 @@
 
 ## 함수
 
-> **원문:** https://kotlinlang.org/docs/functions.html
+> 원문: https://kotlinlang.org/docs/functions.html
 
 ### 함수 선언
 
-**기본 문법:**
+기본 문법:
 ```kotlin
 fun double(x: Int): Int {
     return 2 * x
@@ -19,34 +19,34 @@ fun main() {
 }
 ```
 
-**핵심 포인트:**
+핵심 포인트:
 - `fun` 키워드 사용
 - 괄호 안에 명시적 타입과 함께 매개변수 지정
 - 필요한 경우 반환 타입 포함
 
 ### 함수 사용
 
-**표준 함수 호출:**
+표준 함수 호출:
 ```kotlin
 val result = double(2)
 ```
 
-**멤버/확장 함수:**
+멤버/확장 함수:
 ```kotlin
 Stream().read()
 ```
 
 ### 매개변수
 
-**선언 (파스칼 표기법):**
+선언(파스칼 표기법):
 ```kotlin
 fun powerOf(number: Int, exponent: Int): Int { /*...*/ }
 ```
 
-**핵심 규칙:**
+핵심 규칙:
 - 매개변수는 읽기 전용(`val`)
 - 쉼표로 매개변수 구분
-- 쉬운 리팩토링을 위해 후행 쉼표 허용:
+- 쉬운 리팩토링 위해 후행 쉼표 허용:
 ```kotlin
 fun powerOf(
     number: Int,
@@ -56,7 +56,7 @@ fun powerOf(
 
 ### 기본값이 있는 매개변수
 
-**기본 문법:**
+기본 문법:
 ```kotlin
 fun read(
     b: ByteArray,
@@ -65,11 +65,11 @@ fun read(
 ) { /*...*/ }
 ```
 
-**기본값 규칙:**
-- 기본값이 있는 매개변수 뒤에는 명명된 인수가 와야 함
-- 예외: 후행 람다는 이 규칙을 따르지 않아도 됨
+기본값 규칙:
+- 기본값이 있는 매개변수 뒤에는 명명된 인수 필요
+- 예외: 후행 람다는 이 규칙 적용 안 됨
 
-**예제:**
+예제:
 ```kotlin
 fun greeting(
     userId: Int = 0,
@@ -82,7 +82,7 @@ fun main() {
 }
 ```
 
-**후행 람다 (예외):**
+후행 람다(예외):
 ```kotlin
 fun greeting(
     userId: Int = 0,
@@ -92,7 +92,7 @@ fun greeting(
 greeting() { println("Hello!") } // 유효
 ```
 
-**비상수 기본값:**
+비상수 기본값:
 ```kotlin
 fun read(
     b: ByteArray,
@@ -101,11 +101,11 @@ fun read(
 ) { /*...*/ }
 ```
 
-**참고:** 다른 매개변수를 참조하는 매개변수는 순서상 더 뒤에 선언되어야 합니다.
+참고: 다른 매개변수를 참조하는 매개변수는 순서상 더 뒤에 선언 필요.
 
 ### 명명된 인수
 
-**사용:**
+사용:
 ```kotlin
 fun reformat(
     str: String,
@@ -135,7 +135,7 @@ reformat(
 )
 ```
 
-**명명된 인수와 가변 인수:**
+명명된 인수와 가변 인수:
 ```kotlin
 fun mergeStrings(vararg strings: String) { /*...*/ }
 mergeStrings(strings = arrayOf("a", "b", "c"))
@@ -143,14 +143,14 @@ mergeStrings(strings = arrayOf("a", "b", "c"))
 
 ### 반환 타입
 
-**규칙:**
-- 블록 본문 함수는 명시적 반환 타입 필요 (`Unit` 제외)
+규칙:
+- 블록 본문 함수는 명시적 반환 타입 필요(`Unit` 제외)
 - 단일 표현식 함수는 반환 타입 생략 가능
 - 복잡한 제어 흐름에는 추론 없음
 
 ### 단일 표현식 함수
 
-**기본 문법:**
+기본 문법:
 ```kotlin
 fun double(x: Int): Int = x * 2
 
@@ -158,13 +158,13 @@ fun double(x: Int): Int = x * 2
 fun double(x: Int) = x * 2
 ```
 
-**명시적 타입이 필요한 경우:**
+명시적 타입이 필요한 경우:
 - 재귀 또는 상호 재귀 함수
 - 타입 없는 표현식이 있는 함수: `fun empty() = null`
 
 ### Unit 반환 함수
 
-**문법:**
+문법:
 ```kotlin
 fun printHello(name: String?, action: () -> Unit) {
     if (name != null) println("Hello $name")
@@ -179,17 +179,17 @@ fun main() {
 }
 ```
 
-**참고:** `Unit` 반환 타입을 지정하거나 명시적으로 반환할 필요 없음.
+참고: `Unit` 반환 타입 지정이나 명시적 반환 불필요.
 
-**표현식 본문 사용:**
+표현식 본문 사용:
 ```kotlin
 fun getDisplayNameOrDefault(userId: String?): String =
     getDisplayName(userId ?: return "default")
 ```
 
-### 가변 인수 (Varargs)
+### 가변 인수(Varargs)
 
-**문법:**
+문법:
 ```kotlin
 fun <T> asList(vararg ts: T): List<T> {
     val result = ArrayList<T>()
@@ -201,25 +201,25 @@ fun <T> asList(vararg ts: T): List<T> {
 val list = asList(1, 2, 3) // [1, 2, 3]
 ```
 
-**스프레드 연산자:**
+스프레드 연산자:
 ```kotlin
 val a = arrayOf(1, 2, 3)
 val list = asList(-1, 0, *a, 4) // [-1, 0, 1, 2, 3, 4]
 ```
 
-**기본 타입 배열:**
+기본 타입 배열:
 ```kotlin
 val a = intArrayOf(1, 2, 3)
 val list = asList(-1, 0, *a.toTypedArray(), 4)
 ```
 
-**규칙:**
+규칙:
 - `vararg` 매개변수는 하나만 허용
-- 마지막이 아닌 vararg의 경우 후속 매개변수에 명명된 인수 필요
+- 마지막이 아닌 vararg 사용 시 후속 매개변수에 명명된 인수 필요
 
 ### 중위 표기법
 
-**선언:**
+선언:
 ```kotlin
 infix fun Int.shl(x: Int): Int { /*...*/ }
 
@@ -230,19 +230,19 @@ infix fun Int.shl(x: Int): Int { /*...*/ }
 1 shl 2
 ```
 
-**요구사항:**
+요구사항:
 - 멤버 또는 확장 함수여야 함
 - 단일 매개변수만
 - 매개변수는 `vararg`이거나 기본값을 가질 수 없음
 
-**우선순위:**
+우선순위:
 ```kotlin
 1 shl 2 + 3        // ≡ 1 shl (2 + 3)
 0 until n * 2      // ≡ 0 until (n * 2)
 xs union ys as Set // ≡ xs union (ys as Set<*>)
 ```
 
-**명시적 수신자 필요:**
+명시적 수신자 필요:
 ```kotlin
 class MyStringCollection {
     val items = mutableListOf<String>()
@@ -262,15 +262,15 @@ class MyStringCollection {
 
 ### 함수 스코프
 
-함수는 다음에서 선언될 수 있습니다:
+함수 선언 가능 위치:
 - 파일의 최상위 수준
-- 지역적으로 (다른 함수 내부)
+- 지역적으로(다른 함수 내부)
 - 멤버 함수로
 - 확장 함수로
 
 ### 지역 함수
 
-**깊이 우선 탐색 예제:**
+깊이 우선 탐색 예제:
 ```kotlin
 class Person(val name: String) {
     val friends = mutableListOf<Person>()
@@ -289,7 +289,7 @@ fun dfs(graph: SocialGraph) {
 }
 ```
 
-**클로저 접근:**
+클로저 접근:
 ```kotlin
 fun dfs(graph: SocialGraph) {
     val visited = HashSet<Person>()
@@ -305,7 +305,7 @@ fun dfs(graph: SocialGraph) {
 
 ### 멤버 함수
 
-**선언:**
+선언:
 ```kotlin
 class Sample {
     fun foo() {
@@ -318,14 +318,14 @@ Stream().read()
 
 ### 제네릭 함수
 
-**문법:**
+문법:
 ```kotlin
 fun <T> singletonList(item: T): List<T> { /*...*/ }
 ```
 
 ### 꼬리 재귀 함수
 
-**문법:**
+문법:
 ```kotlin
 import kotlin.math.cos
 import kotlin.math.abs
@@ -336,7 +336,7 @@ tailrec fun findFixPoint(x: Double = 1.0): Double =
     if (abs(x - cos(x)) < eps) x else findFixPoint(cos(x))
 ```
 
-**동등한 루프 버전:**
+동등한 루프 버전:
 ```kotlin
 private fun findFixPoint(): Double {
     var x = 1.0
@@ -348,12 +348,12 @@ private fun findFixPoint(): Double {
 }
 ```
 
-**요구사항:**
+요구사항:
 - 컴파일러가 재귀를 루프로 최적화
 - 함수는 마지막 연산으로 자신을 호출해야 함
-- 재귀 호출 후 코드를 사용할 수 없음
-- `try`/`catch`/`finally` 블록에서 사용할 수 없음
-- `open`일 수 없음
+- 재귀 호출 후 코드 사용 불가
+- `try`/`catch`/`finally` 블록에서 사용 불가
+- `open` 불가
 
 ### 관련 문서
 
@@ -368,15 +368,16 @@ private fun findFixPoint(): Double {
 
 ## 고차 함수와 람다
 
-> **원문:** https://kotlinlang.org/docs/lambdas.html
+> 원문: https://kotlinlang.org/docs/lambdas.html
 
 ### 개요
 
-Kotlin 함수는 **일급**입니다. 즉 변수에 저장하고, 인수로 전달하고, 다른 함수에서 반환할 수 있습니다. Kotlin은 **함수 타입** 계열과 **람다 표현식** 같은 언어 구조를 사용하여 이를 용이하게 합니다.
+Kotlin 함수는 일급(first-class) → 변수에 저장·인수로 전달·다른 함수에서 반환 모두 가능.
+- 함수 타입 계열과 람다 표현식 같은 언어 구조로 이를 지원
 
 ### 고차 함수
 
-**고차 함수**는 함수를 매개변수로 받거나 함수를 반환합니다.
+고차 함수: 함수를 매개변수로 받거나 함수를 반환하는 함수.
 
 #### 예제: `fold`
 ```kotlin
@@ -417,30 +418,30 @@ fun main() {
 
 ### 함수 타입
 
-함수 타입은 매개변수와 반환 값이 있는 함수 시그니처를 나타냅니다.
+함수 타입: 매개변수와 반환 값이 있는 함수 시그니처를 나타냄.
 
 #### 문법
 
-- **기본**: `(A, B) -> C` - 타입 A와 B를 받아 C 반환
-- **매개변수 없음**: `() -> A`
-- **수신자 포함**: `A.(B) -> C`
-- **일시 중단**: `suspend () -> Unit` 또는 `suspend A.(B) -> C`
-- **널 가능**: `((Int, Int) -> Int)?`
-- **타입 별칭**: `typealias ClickHandler = (Button, ClickEvent) -> Unit`
+- 기본: `(A, B) -> C` — 타입 A와 B를 받아 C 반환
+- 매개변수 없음: `() -> A`
+- 수신자 포함: `A.(B) -> C`
+- 일시 중단: `suspend () -> Unit` 또는 `suspend A.(B) -> C`
+- 널 가능: `((Int, Int) -> Int)?`
+- 타입 별칭: `typealias ClickHandler = (Button, ClickEvent) -> Unit`
 
 #### 함수 타입 인스턴스화
 
-**1. 람다 표현식:**
+1. 람다 표현식:
 ```kotlin
 { a, b -> a + b }
 ```
 
-**2. 익명 함수:**
+2. 익명 함수:
 ```kotlin
 fun(s: String): Int { return s.toIntOrNull() ?: 0 }
 ```
 
-**3. 호출 가능 참조:**
+3. 호출 가능 참조:
 ```kotlin
 ::isOdd
 String::toInt
@@ -448,7 +449,7 @@ List<Int>::size
 ::Regex
 ```
 
-**4. 함수 타입을 구현하는 커스텀 클래스:**
+4. 함수 타입을 구현하는 커스텀 클래스:
 ```kotlin
 class IntTransformer: (Int) -> Int {
     override operator fun invoke(x: Int): Int = TODO()
@@ -473,12 +474,12 @@ println(2.intPlus(3))  // 확장과 같은 호출
 
 #### 람다 표현식 문법
 
-**전체 형식:**
+전체 형식:
 ```kotlin
 val sum: (Int, Int) -> Int = { x: Int, y: Int -> x + y }
 ```
 
-**축약 형식:**
+축약 형식:
 ```kotlin
 val sum = { x: Int, y: Int -> x + y }
 ```
@@ -490,20 +491,20 @@ val sum = { x: Int, y: Int -> x + y }
 
 #### 후행 람다
 
-마지막 매개변수가 함수면 람다를 괄호 밖에 배치할 수 있습니다:
+마지막 매개변수가 함수면 람다를 괄호 밖에 배치 가능:
 
 ```kotlin
 val product = items.fold(1) { acc, e -> acc * e }
 ```
 
-람다가 유일한 인수면 괄호를 생략할 수 있습니다:
+람다가 유일한 인수면 괄호 생략 가능:
 ```kotlin
 run { println("...") }
 ```
 
 #### 암시적 `it` 매개변수
 
-단일 매개변수 람다의 경우 암시적 `it`을 사용합니다:
+단일 매개변수 람다는 암시적 `it` 사용:
 
 ```kotlin
 ints.filter { it > 0 }  // 타입: (it: Int) -> Boolean
@@ -511,12 +512,12 @@ ints.filter { it > 0 }  // 타입: (it: Int) -> Boolean
 
 #### 람다에서 반환
 
-**암시적 반환** (마지막 표현식):
+암시적 반환(마지막 표현식):
 ```kotlin
 ints.filter { val shouldFilter = it > 0; shouldFilter }
 ```
 
-**명시적 한정된 반환:**
+명시적 한정된 반환:
 ```kotlin
 ints.filter { val shouldFilter = it > 0; return@filter shouldFilter }
 ```
@@ -529,7 +530,7 @@ map.forEach { (_, value) -> println("$value!") }
 
 #### 익명 함수
 
-반환 타입을 명시적으로 지정해야 할 때 사용합니다:
+반환 타입을 명시적으로 지정해야 할 때 사용.
 
 ```kotlin
 fun(x: Int, y: Int): Int = x + y
@@ -543,11 +544,11 @@ fun(x: Int, y: Int): Int {
 ints.filter(fun(item) = item > 0)
 ```
 
-**핵심 차이점:** 익명 함수에서 `return`은 둘러싸는 함수가 아닌 함수 자체에서 반환됩니다.
+핵심 차이점: 익명 함수에서 `return`은 둘러싸는 함수가 아닌 함수 자체에서 반환.
 
 ### 클로저
 
-람다는 외부 스코프의 변수에 접근하고 수정할 수 있습니다:
+람다는 외부 스코프의 변수에 접근·수정 가능:
 
 ```kotlin
 var sum = 0
@@ -557,7 +558,7 @@ print(sum)
 
 ### 수신자가 있는 함수 리터럴
 
-수신자 타입 `A.(B) -> C`가 있는 함수는 수신자를 암시적 `this`로 접근할 수 있습니다:
+수신자 타입 `A.(B) -> C`가 있는 함수는 수신자를 암시적 `this`로 접근 가능:
 
 ```kotlin
 val sum: Int.(Int) -> Int = { other -> plus(other) }
@@ -588,19 +589,19 @@ html {
 
 ## 인라인 함수
 
-> **원문:** https://kotlinlang.org/docs/inline-functions.html
+> 원문: https://kotlinlang.org/docs/inline-functions.html
 
 ### 개요
 
-인라인 함수는 호출 위치에 람다 표현식을 인라인하여 고차 함수의 런타임 패널티를 제거하고, 함수 객체 생성과 클로저 할당 오버헤드를 피합니다.
+인라인 함수: 호출 위치에 람다 표현식을 인라인 → 고차 함수의 런타임 패널티 제거, 함수 객체 생성·클로저 할당 오버헤드 회피.
 
 ### 주요 섹션
 
 #### 1. 기본 인라인 함수
 
-`inline` 수정자는 컴파일러에게 함수와 그 람다 매개변수 모두를 호출 위치에 인라인하도록 지시합니다.
+`inline` 수정자 → 컴파일러가 함수와 그 람다 매개변수 모두를 호출 위치에 인라인.
 
-**예제:**
+예제:
 ```kotlin
 inline fun <T> lock(lock: Lock, body: () -> T): T { ... }
 ```
@@ -622,19 +623,19 @@ try {
 
 #### 2. noinline 수정자
 
-다른 것은 인라인하면서 특정 람다 매개변수의 인라인을 방지합니다:
+다른 것은 인라인하면서 특정 람다 매개변수의 인라인을 방지:
 
 ```kotlin
 inline fun foo(inlined: () -> Unit, noinline notInlined: () -> Unit) { ... }
 ```
 
-`noinline` 람다는 필드에 저장하고 자유롭게 전달할 수 있지만, 인라인 가능한 람다는 그렇지 않습니다.
+`noinline` 람다는 필드에 저장·자유롭게 전달 가능 ↔ 인라인 가능한 람다는 불가.
 
 #### 3. 비지역 점프 표현식
 
 ##### 반환
 
-인라인 함수는 람다에서 `return` 문을 사용하여 둘러싸는 함수를 빠져나갈 수 있습니다:
+인라인 함수는 람다에서 `return` 문으로 둘러싸는 함수를 빠져나갈 수 있음:
 
 ```kotlin
 inline fun inlined(block: () -> Unit) {
@@ -650,7 +651,7 @@ fun foo() {
 
 ##### Break와 Continue
 
-인라인 함수는 람다에서 `break`와 `continue`를 지원합니다:
+인라인 함수는 람다에서 `break`와 `continue` 지원:
 
 ```kotlin
 fun processList(elements: List<Int>): Boolean {
@@ -667,7 +668,7 @@ fun processList(elements: List<Int>): Boolean {
 
 ##### crossinline 수정자
 
-람다가 다른 컨텍스트에서 실행될 때 비지역 반환을 금지합니다:
+람다가 다른 컨텍스트에서 실행될 때 비지역 반환 금지:
 
 ```kotlin
 inline fun f(crossinline body: () -> Unit) {
@@ -679,7 +680,7 @@ inline fun f(crossinline body: () -> Unit) {
 
 #### 4. 구체화된 타입 매개변수
 
-인라인 함수는 `reified` 타입 매개변수를 가질 수 있어, 리플렉션 없이 런타임에 타입 정보에 접근할 수 있습니다:
+인라인 함수는 `reified` 타입 매개변수 가능 → 리플렉션 없이 런타임에 타입 정보 접근 가능:
 
 ```kotlin
 inline fun <reified T> TreeNode.findParentOfType(): T? {
@@ -709,7 +710,7 @@ treeNode.findParentOfType(MyTreeNode::class.java)
 
 #### 5. 인라인 프로퍼티
 
-`inline` 수정자는 프로퍼티 접근자에 어노테이션할 수 있습니다:
+`inline` 수정자는 프로퍼티 접근자에 어노테이션 가능:
 
 ```kotlin
 val foo: Foo
@@ -727,9 +728,9 @@ inline var bar: Bar
 
 #### 6. 공개 API 인라인 함수 제한
 
-- public/protected 인라인 함수는 본문에서 private/internal 선언을 사용할 수 없음
+- public/protected 인라인 함수는 본문에서 private/internal 선언 사용 불가
 - 바이너리 비호환성 문제 방지
-- `@PublishedApi` 어노테이션은 public 인라인 함수에서 internal 선언을 허용합니다:
+- `@PublishedApi` 어노테이션 → public 인라인 함수에서 internal 선언 허용:
 
 ```kotlin
 @PublishedApi
@@ -751,36 +752,54 @@ public inline fun useMyClass() {
 
 ## Kotlin 스코프 함수
 
-> **원문:** https://kotlinlang.org/docs/scope-functions.html
+> 원문: https://kotlinlang.org/docs/scope-functions.html
 
 ### 개요
 
-스코프 함수는 객체의 컨텍스트 내에서 코드 블록을 실행하는 Kotlin 표준 라이브러리의 함수입니다. 이름을 직접 사용하지 않고도 객체에 접근할 수 있게 해줍니다. **5가지 스코프 함수**가 있습니다: `let`, `run`, `with`, `apply`, `also`.
+스코프 함수: 객체의 컨텍스트 내에서 코드 블록을 실행하는 Kotlin 표준 라이브러리 함수.
+- 이름을 직접 쓰지 않고도 객체 접근 가능
+- 5가지: `let`, `run`, `with`, `apply`, `also`
 
 ---
 
 ### 함수 선택 가이드
 
-#### 비교 표
+#### 비교
 
-| 함수 | 객체 참조 | 반환 값 | 확장 함수 여부 |
-|------|----------|---------|---------------|
-| `let` | `it` | 람다 결과 | 예 |
-| `run` | `this` | 람다 결과 | 예 |
-| `run` (비확장) | — | 람다 결과 | 아니오 |
-| `with` | `this` | 람다 결과 | 아니오 |
-| `apply` | `this` | 컨텍스트 객체 | 예 |
-| `also` | `it` | 컨텍스트 객체 | 예 |
+- `let`
+  - 객체 참조: `it`
+  - 반환 값: 람다 결과
+  - 확장 함수: 예
+- `run`
+  - 객체 참조: `this`
+  - 반환 값: 람다 결과
+  - 확장 함수: 예
+- `run`(비확장)
+  - 객체 참조: 없음
+  - 반환 값: 람다 결과
+  - 확장 함수: 아니오
+- `with`
+  - 객체 참조: `this`
+  - 반환 값: 람다 결과
+  - 확장 함수: 아니오
+- `apply`
+  - 객체 참조: `this`
+  - 반환 값: 컨텍스트 객체
+  - 확장 함수: 예
+- `also`
+  - 객체 참조: `it`
+  - 반환 값: 컨텍스트 객체
+  - 확장 함수: 예
 
 #### 빠른 선택 가이드
 
-- **널이 아닌 객체**: `let`
-- **표현식을 지역 변수로 도입**: `let`
-- **객체 구성**: `apply`
-- **구성 + 결과 계산**: `run`
-- **표현식이 필요한 곳에서 문장**: 비확장 `run`
-- **추가 효과**: `also`
-- **객체에 대한 함수 호출 그룹화**: `with`
+- 널이 아닌 객체: `let`
+- 표현식을 지역 변수로 도입: `let`
+- 객체 구성: `apply`
+- 구성 + 결과 계산: `run`
+- 표현식이 필요한 곳에서 문장: 비확장 `run`
+- 추가 효과: `also`
+- 객체에 대한 함수 호출 그룹화: `with`
 
 ---
 
@@ -788,7 +807,7 @@ public inline fun useMyClass() {
 
 #### 1. 컨텍스트 객체 참조: `this` vs `it`
 
-##### `this` (수신자 참조)
+##### `this`(수신자 참조)
 사용: `run`, `with`, `apply`
 
 ```kotlin
@@ -798,10 +817,10 @@ val adam = Person("Adam").apply {
 }
 ```
 
-**장점**: 더 깔끔한 구문, 멤버에 접근할 때 `this` 생략 가능
-**적합한 용도**: 객체의 멤버와 함수에 대한 작업
+- 장점: 더 깔끔한 구문, 멤버 접근 시 `this` 생략 가능
+- 적합한 용도: 객체의 멤버·함수에 대한 작업
 
-##### `it` (인자 참조)
+##### `it`(인자 참조)
 사용: `let`, `also`
 
 ```kotlin
@@ -812,8 +831,8 @@ fun getRandomInt(): Int {
 }
 ```
 
-**장점**: 더 짧고 읽기 쉬움, 여러 변수에 더 좋음
-**적합한 용도**: 객체를 함수 호출의 인자로 사용
+- 장점: 더 짧고 읽기 쉬움, 여러 변수에 유리
+- 적합한 용도: 객체를 함수 호출의 인자로 사용
 
 #### 2. 반환 값
 
@@ -849,13 +868,12 @@ val countEndsWithE = numbers.run {
 
 #### `let`
 
-**컨텍스트 객체**: `it` (인자)
-**반환**: 람다 결과
-
-**사용 사례**:
-- 호출 체인 결과에 함수 호출
-- 널 가능 객체에 안전 호출
-- 제한된 스코프로 지역 변수 도입
+- 컨텍스트 객체: `it`(인자)
+- 반환: 람다 결과
+- 사용 사례:
+  - 호출 체인 결과에 함수 호출
+  - 널 가능 객체에 안전 호출
+  - 제한된 스코프로 지역 변수 도입
 
 ```kotlin
 // 널 확인과 함께 안전 호출
@@ -877,13 +895,12 @@ numbers.map { it.length }.filter { it > 3 }.let(::println)
 
 #### `with`
 
-**컨텍스트 객체**: `this` (수신자)
-**반환**: 람다 결과
-**참고**: 확장 함수가 아님
-
-**사용 사례**:
-- 결과가 필요 없이 함수 호출
-- 헬퍼 객체 도입
+- 컨텍스트 객체: `this`(수신자)
+- 반환: 람다 결과
+- 참고: 확장 함수가 아님
+- 사용 사례:
+  - 결과가 필요 없이 함수 호출
+  - 헬퍼 객체 도입
 
 ```kotlin
 val numbers = mutableListOf("one", "two", "three")
@@ -900,13 +917,12 @@ val firstAndLast = with(numbers) {
 
 #### `run`
 
-**컨텍스트 객체**: `this` (수신자)
-**반환**: 람다 결과
-**참고**: 확장 함수 (비확장 버전도 있음)
-
-**사용 사례**:
-- 객체 초기화와 반환 값 계산
-- 표현식이 필요한 곳에서 문장 실행
+- 컨텍스트 객체: `this`(수신자)
+- 반환: 람다 결과
+- 참고: 확장 함수(비확장 버전도 있음)
+- 사용 사례:
+  - 객체 초기화와 반환 값 계산
+  - 표현식이 필요한 곳에서 문장 실행
 
 ```kotlin
 val result = service.run {
@@ -925,13 +941,12 @@ val hexNumberRegex = run {
 
 #### `apply`
 
-**컨텍스트 객체**: `this` (수신자)
-**반환**: 컨텍스트 객체 자체
-
-**사용 사례**:
-- 객체 구성
-- 값을 반환하지 않는 코드 블록
-- 복잡한 처리 체인
+- 컨텍스트 객체: `this`(수신자)
+- 반환: 컨텍스트 객체 자체
+- 사용 사례:
+  - 객체 구성
+  - 값을 반환하지 않는 코드 블록
+  - 복잡한 처리 체인
 
 ```kotlin
 val adam = Person("Adam").apply {
@@ -942,13 +957,12 @@ val adam = Person("Adam").apply {
 
 #### `also`
 
-**컨텍스트 객체**: `it` (인자)
-**반환**: 컨텍스트 객체 자체
-
-**사용 사례**:
-- 객체를 인자로 사용하는 작업
-- 외부 `this`를 가리지 않으려 할 때
-- 체이닝 중 부수 효과
+- 컨텍스트 객체: `it`(인자)
+- 반환: 컨텍스트 객체 자체
+- 사용 사례:
+  - 객체를 인자로 사용하는 작업
+  - 외부 `this`를 가리지 않으려 할 때
+  - 체이닝 중 부수 효과
 
 ```kotlin
 val numbers = mutableListOf("one", "two", "three")
@@ -961,11 +975,10 @@ numbers
 
 ### `takeIf`와 `takeUnless`
 
-호출 체인에 상태 확인을 포함합니다.
+호출 체인에 상태 확인 포함.
 
-**`takeIf`**: 조건이 true이면 객체 반환, 아니면 `null`
-
-**`takeUnless`**: 조건이 false이면 객체 반환, 아니면 `null`
+- `takeIf`: 조건 true면 객체 반환, 아니면 `null`
+- `takeUnless`: 조건 false면 객체 반환, 아니면 `null`
 
 ```kotlin
 val number = Random.nextInt(100)
@@ -988,33 +1001,34 @@ fun displaySubstringPosition(input: String, sub: String) {
 
 ### 모범 사례
 
-**남용 피하기**: 스코프 함수는 코드를 읽기 어렵게 만들 수 있음
-**중첩 피하기**: 컨텍스트 객체와 `this`/`it`에 대해 혼란스러워지기 쉬움
-**프로젝트 규칙 따르기**: 팀 일관성에 기반하여 선택
+- 남용 피하기: 스코프 함수는 코드를 읽기 어렵게 만들 수 있음
+- 중첩 피하기: 컨텍스트 객체와 `this`/`it` 혼동 유발
+- 프로젝트 규칙 따르기: 팀 일관성 기준으로 선택
 
 ---
 
 ## 타입 안전 빌더
 
-> **원문:** https://kotlinlang.org/docs/type-safe-builders.html
+> 원문: https://kotlinlang.org/docs/type-safe-builders.html
 
 ### 개요
 
-Kotlin의 타입 안전 빌더는 잘 명명된 함수와 **수신자가 있는 함수 리터럴**을 결합하여 **도메인 특화 언어**(DSL)를 만들 수 있게 합니다. 반선언적 방식으로 복잡한 계층적 데이터 구조를 구축할 수 있습니다.
+Kotlin의 타입 안전 빌더: 잘 명명된 함수와 수신자가 있는 함수 리터럴을 결합 → 도메인 특화 언어(DSL) 생성 가능.
+- 반선언적 방식으로 복잡한 계층적 데이터 구조 구축 가능
 
 #### 사용 사례
 
-- 마크업 생성 (HTML, XML)
-- 웹 서버 라우트 구성 (예: Ktor)
+- 마크업 생성(HTML, XML)
+- 웹 서버 라우트 구성(예: Ktor)
 
 ### 작동 방식
 
 #### 기본 개념
 
 타입 안전 빌더가 활용하는 것:
-1. **수신자가 있는 함수 리터럴** - 특정 타입에서 동작하는 람다 전달
-2. **확장 함수** - 태그 클래스에 기능 추가
-3. **암시적 수신자** - 명시적 `this` 없이 메서드 호출
+- 수신자가 있는 함수 리터럴: 특정 타입에서 동작하는 람다 전달
+- 확장 함수: 태그 클래스에 기능 추가
+- 암시적 수신자: 명시적 `this` 없이 메서드 호출
 
 #### 예제: HTML 빌더
 
@@ -1054,7 +1068,7 @@ fun html(init: HTML.() -> Unit): HTML {
 }
 ```
 
-매개변수 타입 `HTML.() -> Unit`은 **수신자가 있는 함수 타입**입니다:
+매개변수 타입 `HTML.() -> Unit`은 수신자가 있는 함수 타입:
 - 수신자: `HTML` 인스턴스
 - 반환: `Unit`
 - 암시적 `this` 또는 생략을 통해 접근
@@ -1074,7 +1088,7 @@ fun body(init: Body.() -> Unit) = initTag(Body(), init)
 
 #### 텍스트 내용 추가
 
-단항 플러스 연산자(`+`)가 문자열을 래핑합니다:
+단항 플러스 연산자(`+`)가 문자열을 래핑:
 
 ```kotlin
 abstract class TagWithText(name: String) : Tag(name) {
@@ -1093,7 +1107,7 @@ title { +"XML encoding with Kotlin" }
 
 #### 문제
 
-스코프 제어 없이 중첩된 DSL 컨텍스트는 외부 수신자 메서드 호출을 허용합니다:
+스코프 제어 없이 중첩된 DSL 컨텍스트는 외부 수신자 메서드 호출을 허용:
 
 ```kotlin
 html {
@@ -1122,7 +1136,7 @@ abstract class Tag(val name: String) : Element { ... }
 
 #### 효과
 
-컴파일러가 스코프를 가장 가까운 암시적 수신자로 제한합니다:
+컴파일러가 스코프를 가장 가까운 암시적 수신자로 제한:
 
 ```kotlin
 html {
@@ -1134,7 +1148,7 @@ html {
 
 #### 명시적 접근
 
-외부 수신자에 접근하려면 한정된 `this`를 사용합니다:
+외부 수신자에 접근하려면 한정된 `this` 사용:
 
 ```kotlin
 html {
@@ -1264,23 +1278,24 @@ fun html(init: HTML.() -> Unit): HTML {
 
 ## Kotlin 널 안전성
 
-> **원문:** https://kotlinlang.org/docs/null-safety.html
+> 원문: https://kotlinlang.org/docs/null-safety.html
 
 ### 개요
 
-널 안전성은 널 참조 (10억 달러의 실수)의 위험을 크게 줄이도록 설계된 Kotlin 기능입니다. Java와 달리 Kotlin은 타입 시스템에서 널 가능성을 명시적으로 지원하여 런타임이 아닌 컴파일 타임에 잠재적인 널 관련 문제를 잡습니다.
+널 안전성: 널 참조(10억 달러의 실수) 위험을 크게 줄이도록 설계된 Kotlin 기능.
+- Java와 달리 타입 시스템에서 널 가능성을 명시적으로 지원 → 런타임이 아닌 컴파일 타임에 잠재적 널 관련 문제 검출
 
 ### 핵심 개념
 
 #### 널 가능 vs 널 불가능 타입
 
-**널 불가능 타입**은 `null`을 가질 수 없습니다:
+널 불가능 타입은 `null`을 가질 수 없음:
 ```kotlin
 var a: String = "abc"
 a = null  // 컴파일러 오류
 ```
 
-**널 가능 타입**은 `?`로 선언되며 `null`을 가질 수 있습니다:
+널 가능 타입은 `?`로 선언, `null` 가능:
 ```kotlin
 var b: String? = "abc"
 b = null  // 유효
@@ -1296,7 +1311,7 @@ print(l)  // -1
 ```
 
 #### 2. 안전 호출 연산자 `?.`
-예외를 던지는 대신 `null`을 반환합니다:
+예외를 던지는 대신 `null` 반환:
 ```kotlin
 val a: String? = "Kotlin"
 val b: String? = null
@@ -1304,27 +1319,27 @@ println(a?.length)  // 6
 println(b?.length)  // null
 ```
 
-**안전 호출 체이닝:**
+안전 호출 체이닝:
 ```kotlin
 bob?.department?.head?.name
 ```
 
 #### 3. 엘비스 연산자 `?:`
-왼쪽이 `null`이면 대안 값을 제공합니다:
+왼쪽이 `null`이면 대안 값 제공:
 ```kotlin
 val b: String? = null
 val l = b?.length ?: 0
 println(l)  // 0
 ```
 
-`return`이나 `throw`도 사용할 수 있습니다:
+`return`이나 `throw`도 사용 가능:
 ```kotlin
 val parent = node.getParent() ?: return null
 val name = node.getName() ?: throw IllegalArgumentException("name expected")
 ```
 
 #### 4. 널 아님 단언 연산자 `!!`
-널 가능 타입을 널 불가능으로 강제 처리합니다. 값이 `null`이면 NPE를 던집니다:
+널 가능 타입을 널 불가능으로 강제 처리 → 값이 `null`이면 NPE 발생:
 ```kotlin
 val b: String? = "Kotlin"
 val l = b!!.length
@@ -1335,14 +1350,14 @@ val l = b!!.length  // 예외: NullPointerException
 ```
 
 #### 5. 널 가능 수신자
-확장 함수는 널 가능 수신자와 함께 작동할 수 있습니다:
+확장 함수는 널 가능 수신자와 함께 작동 가능:
 ```kotlin
 val person: Person? = null
 println(person.toString())  // null
 ```
 
 #### 6. let 함수
-널이 아닌 값에서만 코드를 실행하기 위해 안전 호출과 `let`을 결합합니다:
+널이 아닌 값에서만 코드 실행 위해 안전 호출과 `let` 결합:
 ```kotlin
 val listWithNulls: List<String?> = listOf("Kotlin", null)
 for (item in listWithNulls) {
@@ -1351,7 +1366,7 @@ for (item in listWithNulls) {
 ```
 
 #### 7. 안전 캐스트 `as?`
-캐스트가 실패하면 `null`을 반환합니다:
+캐스트 실패 시 `null` 반환:
 ```kotlin
 val a: Any = "Hello, Kotlin!"
 val aInt: Int? = a as? Int      // null
@@ -1359,7 +1374,7 @@ val aString: String? = a as? String  // "Hello, Kotlin!"
 ```
 
 #### 8. 널 가능 타입의 컬렉션
-널 값을 제거하려면 `filterNotNull()`을 사용합니다:
+널 값 제거는 `filterNotNull()` 사용:
 ```kotlin
 val nullableList: List<Int?> = listOf(1, 2, null, 4)
 val intList: List<Int> = nullableList.filterNotNull()
@@ -1368,14 +1383,14 @@ println(intList)  // [1, 2, 4]
 
 ### Kotlin에서 NPE의 가능한 원인
 
-1. 명시적 `throw NullPointerException()`
-2. 널 아님 단언 연산자 `!!` 사용
-3. 초기화 중 데이터 불일치 (this 누출, 초기화되지 않은 슈퍼클래스)
-4. 플랫폼 타입과 제네릭을 사용한 Java 상호운용 문제
+- 명시적 `throw NullPointerException()`
+- 널 아님 단언 연산자 `!!` 사용
+- 초기화 중 데이터 불일치(this 누출, 초기화되지 않은 슈퍼클래스)
+- 플랫폼 타입과 제네릭을 사용한 Java 상호운용 문제
 
 ### 관련 예외
 
-**`UninitializedPropertyAccessException`** - 초기화되지 않은 `lateinit` 프로퍼티에 접근할 때 던져집니다.
+`UninitializedPropertyAccessException`: 초기화되지 않은 `lateinit` 프로퍼티 접근 시 발생.
 
 ### 다음 단계
 - Java와 Kotlin 상호운용에서 널 가능성 처리

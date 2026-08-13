@@ -26,9 +26,14 @@
 
 #### 1.1 URL Standard란
 
-WHATWG URL Standard는 웹에서 사용되는 URL(Uniform Resource Locator)의 파싱, 직렬화, 조작에 관한 살아있는 표준(Living Standard)이다. 이 표준은 브라우저가 실제로 URL을 처리하는 방식을 정의하며, 모든 주요 웹 브라우저 벤더(Google, Mozilla, Apple, Microsoft)가 참여하여 유지보수한다.
+WHATWG URL Standard: 웹에서 사용되는 URL(Uniform Resource Locator)의 파싱·직렬화·조작에 관한 살아있는 표준(Living Standard).
 
-URL은 웹의 가장 기본적인 요소 중 하나로, 리소스의 위치를 식별하고 접근하는 데 사용된다. 매일 수십억 개의 URL이 파싱되고 처리되므로, 이 동작의 정확한 정의가 필수적이다.
+- 브라우저가 실제로 URL을 처리하는 방식을 정의
+- 모든 주요 웹 브라우저 벤더(Google·Mozilla·Apple·Microsoft)가 참여해 유지보수
+
+URL: 웹의 가장 기본적인 요소 중 하나 → 리소스의 위치를 식별하고 접근하는 데 사용.
+
+- 매일 수십억 개의 URL이 파싱·처리 → 이 동작의 정확한 정의가 필수
 
 - 공식 문서: https://url.spec.whatwg.org/
 - 유지보수 주체: WHATWG (Web Hypertext Application Technology Working Group)
@@ -36,18 +41,16 @@ URL은 웹의 가장 기본적인 요소 중 하나로, 리소스의 위치를 �
 
 #### 1.2 역사: RFC 3986/3987과의 관계
 
-URL의 역사는 복잡하다. 초기에는 IETF(Internet Engineering Task Force)에서 관련 표준을 관리했다.
+URL의 역사: 복잡함. 초기에는 IETF(Internet Engineering Task Force)에서 관련 표준을 관리.
 
-| 표준 | 연도 | 내용 |
-|------|------|------|
-| RFC 1738 | 1994 | 최초의 URL 명세 |
-| RFC 2396 | 1998 | URI(Uniform Resource Identifier) 일반 구문 |
-| RFC 2732 | 1999 | IPv6 주소에 대한 URL 형식 |
-| RFC 3986 | 2005 | URI 일반 구문 (RFC 2396 대체) |
-| RFC 3987 | 2005 | IRI(Internationalized Resource Identifier) |
-| WHATWG URL | 2012~ | 브라우저 호환 URL 파싱 표준 |
+- RFC 1738 (1994): 최초의 URL 명세
+- RFC 2396 (1998): URI(Uniform Resource Identifier) 일반 구문
+- RFC 2732 (1999): IPv6 주소에 대한 URL 형식
+- RFC 3986 (2005): URI 일반 구문 (RFC 2396 대체)
+- RFC 3987 (2005): IRI(Internationalized Resource Identifier)
+- WHATWG URL (2012~): 브라우저 호환 URL 파싱 표준
 
-RFC 3986은 URI의 이론적 구문을 정의하지만, 실제 브라우저 구현과 상당한 차이가 있었다. 예를 들어:
+RFC 3986: URI의 이론적 구문을 정의하지만 실제 브라우저 구현과 상당한 차이 존재. 예시:
 
 ```
 # RFC 3986에서는 유효하지 않지만 브라우저에서는 동작하는 URL들
@@ -59,23 +62,26 @@ http://example.com/foo/../bar  (경로 정규화)
 
 #### 1.3 왜 별도 표준이 필요한가
 
-WHATWG URL Standard가 등장한 핵심 이유는 다음과 같다.
+WHATWG URL Standard 등장의 핵심 이유:
 
 1) 브라우저 호환성 문제
 
-RFC 3986은 이론적으로 정확하지만, 실제 웹에서 사용되는 URL 중 상당수가 RFC를 위반한다. 브라우저들은 이러한 "잘못된" URL도 합리적으로 처리해야 했고, 각 브라우저가 서로 다른 방식으로 처리하면서 호환성 문제가 발생했다.
+- RFC 3986: 이론적으로 정확하나, 실제 웹에서 사용되는 URL 중 상당수가 RFC를 위반
+- 브라우저들은 이런 "잘못된" URL도 합리적으로 처리해야 함 → 각 브라우저가 서로 다른 방식으로 처리 → 호환성 문제 발생
 
 2) 단일 파싱 알고리즘의 부재
 
-RFC 3986은 URL의 구문만 정의할 뿐, 구체적인 파싱 알고리즘을 제공하지 않는다. WHATWG URL Standard는 상태 머신 기반의 구체적인 파싱 알고리즘을 정의하여 모든 구현이 동일한 결과를 내도록 한다.
+- RFC 3986: URL의 구문만 정의, 구체적인 파싱 알고리즘은 미제공
+- WHATWG URL Standard: 상태 머신 기반의 구체적인 파싱 알고리즘을 정의 → 모든 구현이 동일한 결과를 내도록 함
 
 3) 국제화 지원
 
-RFC 3987(IRI)이 국제화를 다루지만, WHATWG URL Standard는 이를 통합하여 하나의 표준에서 처리한다. 도메인의 IDNA 처리, 비ASCII 문자의 percent-encoding 등을 포괄적으로 다룬다.
+- RFC 3987(IRI)이 국제화를 다루지만, WHATWG URL Standard는 이를 통합해 하나의 표준에서 처리
+- 도메인의 IDNA 처리·비ASCII 문자의 percent-encoding 등을 포괄적으로 다룸
 
 4) 웹 플랫폼 API 정의
 
-`URL`, `URLSearchParams` 같은 JavaScript API를 표준에서 직접 정의하여, 웹 개발자가 프로그래밍 방식으로 URL을 조작할 수 있는 통일된 인터페이스를 제공한다.
+- `URL`, `URLSearchParams` 같은 JavaScript API를 표준에서 직접 정의 → 웹 개발자가 프로그래밍 방식으로 URL을 조작할 수 있는 통일된 인터페이스 제공
 
 ```javascript
 // WHATWG URL API를 사용한 URL 파싱
@@ -97,7 +103,7 @@ console.log(url.hash);     // "#frag"
 
 #### 2.1 URL의 내부 표현
 
-WHATWG URL Standard에서 URL은 단순한 문자열이 아니라 구조화된 객체(record)이다. 파싱된 URL은 다음 구성 요소를 가진다.
+WHATWG URL Standard에서 URL: 단순한 문자열이 아니라 구조화된 객체(record). 파싱된 URL의 구성 요소:
 
 ```
  https://user:password@www.example.com:443/path/to/resource?key=value#section
@@ -110,7 +116,7 @@ WHATWG URL Standard에서 URL은 단순한 문자열이 아니라 구조화된 �
 
 ##### scheme (스킴)
 
-URL의 프로토콜을 나타낸다. 항상 소문자 ASCII 영문자로 정규화된다.
+URL의 프로토콜을 나타냄. 항상 소문자 ASCII 영문자로 정규화됨.
 
 ```javascript
 const url = new URL('HTTPS://example.com');
@@ -121,20 +127,18 @@ console.log(url.protocol); // "https:" (소문자로 정규화)
 // 무효: 1http, -ftp
 ```
 
-특수 스킴(special scheme)은 별도의 기본 포트와 처리 규칙이 있다:
+특수 스킴(special scheme): 별도의 기본 포트와 처리 규칙 존재.
 
-| 스킴 | 기본 포트 |
-|------|-----------|
-| ftp | 21 |
-| file | (없음) |
-| http | 80 |
-| https | 443 |
-| ws | 80 |
-| wss | 443 |
+- ftp: 기본 포트 21
+- file: 기본 포트 없음
+- http: 기본 포트 80
+- https: 기본 포트 443
+- ws: 기본 포트 80
+- wss: 기본 포트 443
 
 ##### username (사용자 이름)
 
-인증에 사용되는 사용자 이름이다. 기본값은 빈 문자열이다.
+인증에 사용되는 사용자 이름. 기본값: 빈 문자열.
 
 ```javascript
 const url = new URL('https://admin@example.com');
@@ -147,7 +151,9 @@ console.log(url2.username); // "user%40name"
 
 ##### password (비밀번호)
 
-인증에 사용되는 비밀번호이다. 기본값은 빈 문자열이다. 보안상 URL에 비밀번호를 포함하는 것은 권장되지 않는다.
+인증에 사용되는 비밀번호. 기본값: 빈 문자열.
+
+- 보안상 URL에 비밀번호를 포함하는 것은 권장되지 않음
 
 ```javascript
 const url = new URL('https://user:p%40ss@example.com');
@@ -161,7 +167,7 @@ console.log(url2.password); // "secret"
 
 ##### host (호스트)
 
-리소스가 위치한 서버를 식별한다. 다음 형태 중 하나일 수 있다:
+리소스가 위치한 서버를 식별. 다음 형태 중 하나:
 
 - 도메인(domain): `example.com`
 - IPv4 주소: `192.168.1.1`
@@ -189,7 +195,7 @@ console.log(url3.hostname); // "[::1]"
 
 ##### port (포트)
 
-네트워크 포트 번호이다. 기본 포트와 동일하면 빈 문자열로 표현된다.
+네트워크 포트 번호. 기본 포트와 동일하면 빈 문자열로 표현됨.
 
 ```javascript
 const url1 = new URL('https://example.com:443/');
@@ -209,7 +215,7 @@ try {
 
 ##### path (경로)
 
-리소스의 경로를 나타낸다. 특수 스킴에서는 항상 `/`로 시작하며, `.`과 `..` 세그먼트가 정규화된다.
+리소스의 경로를 나타냄. 특수 스킴에서는 항상 `/`로 시작 → `.`과 `..` 세그먼트가 정규화됨.
 
 ```javascript
 const url1 = new URL('https://example.com/a/b/../c');
@@ -225,7 +231,7 @@ console.log(url3.pathname); // "user@example.com"
 
 ##### query (쿼리)
 
-`?` 뒤에 오는 키-값 쌍의 문자열이다. 기본값은 null이다.
+`?` 뒤에 오는 키-값 쌍의 문자열. 기본값: null.
 
 ```javascript
 const url = new URL('https://example.com/search?q=hello&lang=ko');
@@ -238,7 +244,7 @@ console.log(url.searchParams.get('lang')); // "ko"
 
 ##### fragment (프래그먼트)
 
-`#` 뒤에 오는 문서 내 위치 식별자이다. 서버로 전송되지 않는다. 기본값은 null이다.
+`#` 뒤에 오는 문서 내 위치 식별자. 서버로 전송되지 않음. 기본값: null.
 
 ```javascript
 const url = new URL('https://example.com/page#section-2');
@@ -251,30 +257,53 @@ console.log(url.hash); // "#section-2"
 
 #### 2.3 URL 구성 요소 요약표
 
-| 구성 요소 | 기본값 | 직렬화 시 접두사/접미사 | 예시 |
-|-----------|--------|----------------------|------|
-| scheme | (필수) | `:` 접미사 | `https` |
-| username | `""` | `@` 앞 (password와 함께) | `user` |
-| password | `""` | `:` 접두사, `@` 접미사 | `pass` |
-| host | null | `//` 접두사 | `example.com` |
-| port | null | `:` 접두사 | `8080` |
-| path | `[]` 또는 `""` | `/`로 결합 | `/a/b/c` |
-| query | null | `?` 접두사 | `key=value` |
-| fragment | null | `#` 접두사 | `section` |
+- scheme
+  - 기본값: (필수)
+  - 직렬화 시 접두사/접미사: `:` 접미사
+  - 예시: `https`
+- username
+  - 기본값: `""`
+  - 직렬화 시 접두사/접미사: `@` 앞 (password와 함께)
+  - 예시: `user`
+- password
+  - 기본값: `""`
+  - 직렬화 시 접두사/접미사: `:` 접두사, `@` 접미사
+  - 예시: `pass`
+- host
+  - 기본값: null
+  - 직렬화 시 접두사/접미사: `//` 접두사
+  - 예시: `example.com`
+- port
+  - 기본값: null
+  - 직렬화 시 접두사/접미사: `:` 접두사
+  - 예시: `8080`
+- path
+  - 기본값: `[]` 또는 `""`
+  - 직렬화 시 접두사/접미사: `/`로 결합
+  - 예시: `/a/b/c`
+- query
+  - 기본값: null
+  - 직렬화 시 접두사/접미사: `?` 접두사
+  - 예시: `key=value`
+- fragment
+  - 기본값: null
+  - 직렬화 시 접두사/접미사: `#` 접두사
+  - 예시: `section`
 
 ---
-
 ### 3. URL 파싱 알고리즘
 
 #### 3.1 상태 머신 개요
 
-WHATWG URL 파싱 알고리즘은 유한 상태 머신(Finite State Machine)으로 구현된다. 입력 문자열을 한 문자씩 순회하면서, 현재 상태와 읽은 문자에 따라 다음 상태로 전이하고 URL의 각 구성 요소를 채워나간다.
+WHATWG URL 파싱 알고리즘: 유한 상태 머신(Finite State Machine)으로 구현.
+- 입력 문자열을 한 문자씩 순회
+- 현재 상태와 읽은 문자에 따라 다음 상태로 전이 → URL의 각 구성 요소를 채워나감
 
 ```
 [입력 문자열] → [전처리] → [상태 머신 파싱] → [URL 레코드 또는 실패]
 ```
 
-전처리 단계에서는 다음을 수행한다:
+전처리 단계 수행 내용:
 - 선행/후행 C0 제어 문자 및 공백 제거
 - 탭(`\t`)과 줄바꿈(`\n`, `\r`) 제거
 
@@ -286,11 +315,12 @@ console.log(url.href); // "https://example.com/"
 
 #### 3.2 주요 파싱 상태 상세
 
-파싱 알고리즘에는 약 30개의 상태가 있다. 주요 상태를 순서대로 설명한다.
+파싱 알고리즘: 약 30개의 상태로 구성. 주요 상태를 순서대로 설명.
 
 ##### Scheme Start State
 
-파싱의 시작 상태이다. 첫 번째 문자가 ASCII 영문자이면 소문자로 변환하고 버퍼에 추가한 후 Scheme State로 전이한다.
+파싱의 시작 상태.
+- 첫 번째 문자가 ASCII 영문자 → 소문자로 변환 후 버퍼에 추가 → Scheme State로 전이
 
 ```
 입력: "Https://example.com"
@@ -299,16 +329,16 @@ console.log(url.href); // "https://example.com/"
 동작: 'H' → 소문자 'h' → 버퍼에 추가 → Scheme State로 전이
 ```
 
-첫 문자가 영문자가 아니고, state override가 없으면 No Scheme State로 전이한다.
+첫 문자가 영문자가 아니고 state override가 없으면 → No Scheme State로 전이.
 
 ##### Scheme State
 
-스킴의 나머지 부분을 읽는다. ASCII 영문자, 숫자, `+`, `-`, `.`이 올 수 있다.
+스킴의 나머지 부분을 읽음. 허용 문자: ASCII 영문자·숫자·`+`·`-`·`.`
 
 `:` 문자를 만나면:
-- 버퍼에 모인 문자열이 스킴이 된다
-- 특수 스킴인지 확인한다
-- 이후 `//`가 오면 Authority State로, 그렇지 않으면 다른 적절한 상태로 전이한다
+- 버퍼에 모인 문자열이 스킴이 됨
+- 특수 스킴 여부 확인
+- 이후 `//`가 오면 Authority State로 전이 · 그렇지 않으면 다른 적절한 상태로 전이
 
 ```
 입력: "https://example.com"
@@ -333,7 +363,8 @@ try {
 
 ##### Authority State
 
-`//` 뒤에서 authority(인증 정보 + 호스트 + 포트) 파싱을 시작한다. `@` 문자를 발견하면 그 앞은 userinfo이고, 그 뒤부터가 호스트이다.
+`//` 뒤에서 authority(인증 정보 + 호스트 + 포트) 파싱 시작.
+- `@` 문자 발견 시 → 그 앞은 userinfo · 그 뒤부터는 호스트
 
 ```
 입력: "https://user:pass@example.com:8080/path"
@@ -343,7 +374,9 @@ try {
 
 ##### Host State
 
-호스트 문자열을 파싱한다. `[`를 만나면 IPv6 파싱 모드로 들어가고, `:`이나 `/`, `?`, `#`을 만나면 호스트 파싱을 종료한다.
+호스트 문자열 파싱.
+- `[`를 만나면 → IPv6 파싱 모드로 진입
+- `:`·`/`·`?`·`#`을 만나면 → 호스트 파싱 종료
 
 ```
 입력: "https://example.com:8080/path"
@@ -353,7 +386,9 @@ try {
 
 ##### Port State
 
-`:` 이후의 포트 번호를 파싱한다. 숫자만 허용되며, 파싱 완료 시 기본 포트와 비교하여 동일하면 null로 설정한다.
+`:` 이후의 포트 번호 파싱.
+- 숫자만 허용
+- 파싱 완료 시 기본 포트와 비교 → 동일하면 null로 설정
 
 ```
 입력: "https://example.com:8080/path"
@@ -370,7 +405,7 @@ console.log(url.href); // "https://example.com/path" (포트 생략)
 
 ##### Path Start State / Path State
 
-경로를 파싱한다. 특수 스킴에서는 `\`도 `/`와 동일하게 경로 구분자로 취급한다.
+경로 파싱. 특수 스킴에서는 `\`도 `/`와 동일하게 경로 구분자로 취급.
 
 ```javascript
 // 백슬래시가 슬래시로 정규화된다 (특수 스킴에서만)
@@ -382,7 +417,7 @@ const url2 = new URL('custom://host/a\\b\\c');
 console.log(url2.pathname); // "/a%5Cb%5Cc"
 ```
 
-경로 세그먼트에서 `.`과 `..`은 특별히 처리된다:
+경로 세그먼트에서 `.`과 `..`은 특별히 처리됨:
 
 ```javascript
 // 단일 점(.) - 현재 디렉토리, 세그먼트 제거
@@ -405,9 +440,9 @@ console.log(url4.pathname); // "/b"
 
 ##### Query State
 
-`?` 이후의 쿼리 문자열을 파싱한다. `#`을 만나면 쿼리 파싱 종료 후 Fragment State로 전이한다.
+`?` 이후의 쿼리 문자열 파싱. `#`을 만나면 → 쿼리 파싱 종료 후 Fragment State로 전이.
 
-특수 스킴과 비특수 스킴에서 percent-encoding 규칙이 다르다:
+특수 스킴과 비특수 스킴은 percent-encoding 규칙이 다름:
 - 특수 스킴: special-query percent-encode set 사용
 - 비특수 스킴: query percent-encode set 사용
 
@@ -418,7 +453,7 @@ console.log(url.search); // "?q=hello%20world&lang=%ED%95%9C%EA%B5%AD%EC%96%B4"
 
 ##### Fragment State
 
-`#` 이후의 프래그먼트를 파싱한다. 입력 끝까지 읽는다.
+`#` 이후의 프래그먼트 파싱. 입력 끝까지 읽음.
 
 ```javascript
 const url = new URL('https://example.com/page#섹션-1');
@@ -478,7 +513,7 @@ invalidURLs.forEach(input => {
 
 #### 3.5 유효성 검사 오류(Validation Errors)
 
-파싱이 성공하더라도 입력에 문제가 있을 수 있다. 표준은 이를 "validation error"로 정의한다. 예를 들어:
+파싱 성공하더라도 입력에 문제가 있을 수 있음 → 표준은 이를 "validation error"로 정의. 예:
 
 - `INVALID_URL_UNIT`: URL에 허용되지 않는 문자가 포함
 - `SPECIAL_SCHEME_MISSING_FOLLOWING_SOLIDUS`: 특수 스킴 뒤에 `//`가 없음
@@ -498,7 +533,7 @@ console.log(url.href); // "https://example.com/" (자동 보정됨)
 
 #### 4.1 호스트 타입
 
-WHATWG URL Standard에서 호스트(host)는 다음 중 하나이다:
+WHATWG URL Standard에서 호스트(host)는 다음 중 하나:
 
 1. 도메인(domain): DNS에서 해석되는 문자열 (예: `example.com`)
 2. IPv4 주소: 32비트 숫자 주소 (예: `192.168.1.1`)
@@ -508,7 +543,7 @@ WHATWG URL Standard에서 호스트(host)는 다음 중 하나이다:
 
 #### 4.2 도메인 파싱
 
-도메인 파싱은 다음 단계를 거친다:
+도메인 파싱 단계:
 
 1. 도메인-유니코드 변환: 입력 문자열을 유니코드로 디코딩
 2. IDNA 처리: 국제화 도메인 이름을 ASCII로 변환 (domain to ASCII)
@@ -534,7 +569,7 @@ console.log(url3.hostname); // "example.com"
 
 #### 4.3 IPv4 주소 파싱
 
-IPv4 주소 파싱은 단순한 점 표기법 이상을 처리한다. 역사적 이유로 다양한 형식을 지원한다.
+IPv4 주소 파싱: 단순한 점 표기법 이상을 처리 → 역사적 이유로 다양한 형식 지원.
 
 ```javascript
 // 표준 점 표기법
@@ -560,7 +595,7 @@ console.log(url5.hostname); // "192.168.1.1"
 
 IPv4 파싱 알고리즘:
 1. 점(`.`)으로 분할
-2. 각 부분의 숫자 형식 감지 (10진, 16진, 8진)
+2. 각 부분의 숫자 형식 감지 (10진·16진·8진)
 3. 숫자로 변환
 4. 범위 검증 (각 옥텟: 0~255, 또는 축약 시 마지막 부분에 따라 다름)
 5. 32비트 정수로 결합
@@ -568,7 +603,7 @@ IPv4 파싱 알고리즘:
 
 #### 4.4 IPv6 주소 파싱
 
-IPv6 주소는 `[`와 `]`로 감싸져야 한다.
+IPv6 주소는 `[`와 `]`로 감싸야 함.
 
 ```javascript
 // 완전한 IPv6 주소
@@ -599,7 +634,7 @@ IPv6 직렬화 규칙:
 
 #### 4.5 불투명 호스트(Opaque Host)
 
-비특수 스킴에서는 호스트가 불투명 호스트로 파싱된다. 금지 문자를 제외한 모든 문자를 percent-encoding하여 저장한다.
+비특수 스킴에서는 호스트가 불투명 호스트로 파싱됨. 금지 문자를 제외한 모든 문자를 percent-encoding하여 저장.
 
 ```javascript
 const url = new URL('custom://my host name/path');
@@ -609,7 +644,8 @@ console.log(url.hostname); // "my%20host%20name"
 
 #### 4.6 IDNA (Internationalized Domain Names in Applications)
 
-IDNA는 비ASCII 문자가 포함된 도메인 이름을 ASCII 호환 인코딩(ACE)으로 변환하는 프로토콜이다. WHATWG URL Standard는 IDNA 2008의 변형인 UTS46(Unicode IDNA Compatibility Processing)을 사용한다.
+IDNA: 비ASCII 문자가 포함된 도메인 이름을 ASCII 호환 인코딩(ACE)으로 변환하는 프로토콜.
+- WHATWG URL Standard는 IDNA 2008의 변형인 UTS46(Unicode IDNA Compatibility Processing)을 사용
 
 ```javascript
 // IDNA 변환 과정
@@ -628,12 +664,10 @@ console.log(url.hostname); // Punycode로 변환된 형태
 
 IDNA 처리에서 중요한 개념:
 
-| 용어 | 설명 |
-|------|------|
-| A-label | ASCII 호환 형태 (`xn--...`) |
-| U-label | 유니코드 원본 형태 |
-| Punycode | 유니코드를 ASCII로 인코딩하는 알고리즘 |
-| UTS46 | IDNA 2003/2008 호환성 처리 |
+- A-label: ASCII 호환 형태 (`xn--...`)
+- U-label: 유니코드 원본 형태
+- Punycode: 유니코드를 ASCII로 인코딩하는 알고리즘
+- UTS46: IDNA 2003/2008 호환성 처리
 
 ---
 
@@ -641,7 +675,9 @@ IDNA 처리에서 중요한 개념:
 
 #### 5.1 개념
 
-Percent-encoding(퍼센트 인코딩)은 URL에서 허용되지 않는 바이트를 `%HH` 형태(H는 16진수)로 인코딩하는 메커니즘이다. UTF-8로 인코딩한 후 각 바이트를 percent-encode한다.
+Percent-encoding(퍼센트 인코딩): URL에서 허용되지 않는 바이트를 `%HH` 형태(H는 16진수)로 인코딩하는 메커니즘.
+
+- UTF-8로 인코딩 → 각 바이트를 percent-encode
 
 ```javascript
 // 한글 "안녕"의 percent-encoding
@@ -653,11 +689,15 @@ console.log(encoded); // "%EC%95%88%EB%85%95"
 
 #### 5.2 Percent-encode Set (인코딩 대상 집합)
 
-WHATWG URL Standard는 URL의 각 부분에서 인코딩해야 하는 문자 집합을 정의한다. 더 제한적인 위치일수록 더 많은 문자를 인코딩한다.
+WHATWG URL Standard: URL의 각 부분마다 인코딩해야 하는 문자 집합을 정의.
+
+- 더 제한적인 위치일수록 더 많은 문자를 인코딩
 
 ##### C0 Control Percent-encode Set
 
-가장 기본적인 집합. C0 제어 문자(U+0000~U+001F)와 U+007F 이상의 모든 코드 포인트를 포함한다.
+가장 기본적인 집합.
+
+- 포함 범위: C0 제어 문자(U+0000~U+001F)·U+007F 이상의 모든 코드 포인트
 
 ```
 범위: U+0000 ~ U+001F, U+007E 초과
@@ -665,7 +705,7 @@ WHATWG URL Standard는 URL의 각 부분에서 인코딩해야 하는 문자 집
 
 ##### Fragment Percent-encode Set
 
-C0 control set에 추가로: 공백(` `), `"`, `<`, `>`, 백틱(`` ` ``)
+- C0 control set + 공백(` `)·`"`·`<`·`>`·백틱(`` ` ``)
 
 ```javascript
 const url = new URL('https://example.com/page#hello world<>');
@@ -674,7 +714,7 @@ console.log(url.hash); // "#hello%20world%3C%3E"
 
 ##### Query Percent-encode Set
 
-C0 control set에 추가로: 공백(` `), `"`, `#`, `<`, `>`
+- C0 control set + 공백(` `)·`"`·`#`·`<`·`>`
 
 ```
 인코딩 대상: C0 controls, space, ", #, <, >
@@ -682,9 +722,8 @@ C0 control set에 추가로: 공백(` `), `"`, `#`, `<`, `>`
 
 ##### Special-query Percent-encode Set
 
-Query set에 추가로: `'` (작은따옴표)
-
-특수 스킴(http, https 등)의 쿼리에서는 작은따옴표도 인코딩한다.
+- Query set + `'`(작은따옴표)
+- 특수 스킴(http, https 등)의 쿼리에서는 작은따옴표도 인코딩
 
 ```javascript
 // 특수 스킴에서 작은따옴표 인코딩
@@ -698,7 +737,7 @@ console.log(url2.search); // "?q=it's"
 
 ##### Path Percent-encode Set
 
-Query set에 추가로: `?`, `` ` ``, `{`, `}`
+- Query set + `?`·`` ` ``·`{`·`}`
 
 ```javascript
 const url = new URL('https://example.com/path with {braces}');
@@ -707,7 +746,7 @@ console.log(url.pathname); // "/path%20with%20%7Bbraces%7D"
 
 ##### Userinfo Percent-encode Set
 
-Path set에 추가로: `/`, `:`, `;`, `=`, `@`, `[`, `\`, `]`, `^`, `|`
+- Path set + `/`·`:`·`;`·`=`·`@`·`[`·`\`·`]`·`^`·`|`
 
 ```javascript
 const url = new URL('https://example.com');
@@ -719,9 +758,8 @@ console.log(url.href);
 
 ##### Component Percent-encode Set
 
-Userinfo set에 추가로: `$`, `%`, `&`, `+`, `,`
-
-`URLSearchParams`에서 사용되며, `application/x-www-form-urlencoded` 인코딩과 관련된다.
+- Userinfo set + `$`·`%`·`&`·`+`·`,`
+- `URLSearchParams`에서 사용 → `application/x-www-form-urlencoded` 인코딩과 관련
 
 #### 5.3 Percent-encode Set 포함 관계
 
@@ -763,7 +801,7 @@ function utf8PercentEncode(codePoint, percentEncodeSet) {
 
 #### 5.5 Percent-decode 알고리즘
 
-Percent-decoding은 `%HH` 시퀀스를 원래 바이트로 복원한다.
+Percent-decoding: `%HH` 시퀀스를 원래 바이트로 복원.
 
 ```
 function percentDecode(input):
@@ -805,11 +843,11 @@ console.log(decoded); // "안녕"
 
 #### 5.6 application/x-www-form-urlencoded
 
-HTML 폼에서 사용되는 특별한 인코딩 방식으로, percent-encoding의 변형이다.
+HTML 폼에서 사용되는 특별한 인코딩 방식 → percent-encoding의 변형.
 
 주요 차이점:
 - 공백을 `%20`이 아닌 `+`로 인코딩
-- `*`, `-`, `.`, `_` 이외의 비ASCII/비영숫자 문자를 모두 인코딩
+- `*`·`-`·`.`·`_` 이외의 비ASCII/비영숫자 문자를 모두 인코딩
 
 ```javascript
 // URLSearchParams는 application/x-www-form-urlencoded를 사용
@@ -829,7 +867,9 @@ console.log(params.toString());
 
 #### 6.1 URL 직렬화 알고리즘
 
-URL 직렬화(serialization)는 파싱된 URL 레코드를 다시 문자열로 변환하는 과정이다. 이 과정은 URL을 정규화(normalize)하는 효과가 있다.
+URL 직렬화(serialization): 파싱된 URL 레코드를 다시 문자열로 변환하는 과정.
+
+- 이 과정 자체가 URL을 정규화(normalize)하는 효과를 가짐
 
 직렬화 알고리즘:
 
@@ -887,7 +927,7 @@ examples.forEach(input => {
 
 #### 6.3 호스트 직렬화
 
-호스트 타입에 따라 직렬화 방식이 다르다.
+호스트 타입에 따라 직렬화 방식이 다름.
 
 ```javascript
 // 도메인: 그대로 출력
@@ -916,7 +956,7 @@ console.log(url.hostname); // "[2001:db8:0:1::1]"
 
 #### 6.4 프래그먼트 제외 직렬화
 
-일부 컨텍스트(예: HTTP 요청)에서는 프래그먼트를 제외하고 직렬화해야 한다.
+일부 컨텍스트(예: HTTP 요청)에서는 프래그먼트를 제외하고 직렬화해야 함.
 
 ```javascript
 // URL API에서는 직접적인 exclude-fragment 옵션이 없지만
@@ -938,15 +978,18 @@ console.log(withoutFragment); // "https://example.com/path?q=1"
 
 #### 7.1 Origin이란
 
-Origin(출처)은 웹 보안의 핵심 개념으로, 리소스가 어디에서 왔는지를 식별한다. 동일 출처 정책(Same-Origin Policy)의 기반이 되며, WHATWG URL Standard에서 정의된다.
+Origin(출처): 웹 보안의 핵심 개념 → 리소스가 어디에서 왔는지를 식별.
 
-Origin은 두 가지 종류가 있다:
-- tuple origin: (scheme, host, port, domain) 으로 구성
+- 동일 출처 정책(Same-Origin Policy)의 기반
+- WHATWG URL Standard에서 정의
+
+Origin의 두 종류:
+- tuple origin: (scheme, host, port, domain)으로 구성
 - opaque origin: 내부적으로 고유한 식별자를 가지는 불투명한 origin
 
 #### 7.2 Tuple Origin
 
-특수 스킴(http, https, ftp, ws, wss)과 file 스킴에 대해 tuple origin이 생성된다.
+- 특수 스킴(http, https, ftp, ws, wss)과 file 스킴에 대해 tuple origin 생성
 
 ```javascript
 // tuple origin 예시
@@ -962,7 +1005,8 @@ console.log(url3.origin); // "http://localhost:3000"
 
 #### 7.3 Opaque Origin
 
-비특수 스킴의 URL은 opaque origin을 가진다. Opaque origin은 다른 어떤 origin과도 동일하지 않다(자기 자신과도 동일하지 않음).
+- 비특수 스킴의 URL은 opaque origin을 가짐
+- opaque origin은 다른 어떤 origin과도 동일하지 않음(자기 자신과도 동일하지 않음)
 
 ```javascript
 // opaque origin 예시
@@ -1029,7 +1073,9 @@ console.log(sameOrigin(
 
 #### 7.5 Same Origin-Domain
 
-`document.domain`을 통해 설정된 도메인까지 고려한 비교이다. 이 기능은 보안상의 이유로 점차 폐지(deprecated)되고 있다.
+`document.domain`을 통해 설정된 도메인까지 고려한 비교.
+
+- 보안상의 이유로 점차 폐지(deprecated) 진행 중
 
 ```javascript
 // same origin-domain은 document.domain 설정을 고려
@@ -1080,7 +1126,7 @@ urls.forEach(u => {
 
 #### 8.1 URL 생성자
 
-`URL` 생성자는 문자열을 파싱하여 URL 객체를 만든다.
+`URL` 생성자: 문자열을 파싱하여 URL 객체 생성.
 
 ```javascript
 // 기본 사용법
@@ -1115,7 +1161,8 @@ console.log(failed); // null
 
 ##### href
 
-전체 URL 문자열이다. 설정 시 URL이 재파싱된다.
+- 전체 URL 문자열
+- 설정 시 URL 재파싱
 
 ```javascript
 const url = new URL('https://example.com');
@@ -1138,7 +1185,8 @@ try {
 
 ##### origin (읽기 전용)
 
-URL의 origin을 반환한다. 읽기 전용이므로 설정할 수 없다.
+- URL의 origin 반환
+- 읽기 전용 → 설정 불가
 
 ```javascript
 const url = new URL('https://example.com:8443/path');
@@ -1149,7 +1197,7 @@ console.log(url.origin); // "https://example.com:8443"
 
 ##### protocol
 
-스킴에 `:`을 붙인 문자열이다.
+- 스킴에 `:`을 붙인 문자열
 
 ```javascript
 const url = new URL('https://example.com');
@@ -1187,7 +1235,8 @@ console.log(fileUrl.username); // ""
 
 ##### host / hostname
 
-`host`는 호스트+포트, `hostname`은 호스트만 포함한다.
+- `host`: 호스트+포트
+- `hostname`: 호스트만
 
 ```javascript
 const url = new URL('https://example.com:8443/path');
@@ -1267,7 +1316,7 @@ console.log(url2.pathname); // "user@example.com"
 
 ##### search
 
-쿼리 문자열이다. `?`를 포함하여 반환된다.
+- 쿼리 문자열, `?` 포함하여 반환
 
 ```javascript
 const url = new URL('https://example.com/path?key=value&foo=bar');
@@ -1293,7 +1342,7 @@ console.log(url.searchParams.get('a')); // "1"
 
 ##### hash
 
-프래그먼트이다. `#`을 포함하여 반환된다.
+- 프래그먼트, `#` 포함하여 반환
 
 ```javascript
 const url = new URL('https://example.com/page#section');
@@ -1356,7 +1405,8 @@ console.log(url.search); // "?new=value&extra=data"
 
 #### 9.1 생성자
 
-`URLSearchParams`는 쿼리 문자열을 구조적으로 조작하기 위한 API이다. 여러 형태의 입력을 받는다.
+- `URLSearchParams`: 쿼리 문자열을 구조적으로 조작하기 위한 API
+- 여러 형태의 입력 지원
 
 ##### 문자열로 생성
 
@@ -1399,7 +1449,7 @@ console.log(params2.toString()); // "num=42&bool=true&nil=null"
 
 ##### 배열(이터러블)로 생성
 
-동일한 키에 여러 값을 설정할 때 유용하다.
+- 동일한 키에 여러 값을 설정할 때 유용
 
 ```javascript
 // 배열의 배열
@@ -1419,7 +1469,8 @@ console.log(params2.toString()); // "key1=value1&key2=value2"
 
 #### 9.2 append(name, value)
 
-새 키-값 쌍을 추가한다. 이미 같은 키가 있어도 새로 추가된다.
+- 새 키-값 쌍 추가
+- 같은 키가 이미 있어도 새로 추가됨
 
 ```javascript
 const params = new URLSearchParams();
@@ -1432,7 +1483,7 @@ console.log(params.getAll('tag')); // ["javascript", "web", "url"]
 
 #### 9.3 delete(name, value?)
 
-지정된 키(및 선택적으로 값)의 항목을 제거한다.
+- 지정된 키(및 선택적으로 값)의 항목 제거
 
 ```javascript
 const params = new URLSearchParams('a=1&b=2&a=3&c=4');
@@ -1449,6 +1500,9 @@ console.log(params2.toString()); // "color=red&color=green"
 
 #### 9.4 get(name) / getAll(name)
 
+- `get`: 첫 번째 값만 반환, 없으면 null
+- `getAll`: 모든 값을 배열로 반환, 없으면 빈 배열
+
 ```javascript
 const params = new URLSearchParams('lang=ko&lang=en&region=asia');
 
@@ -1464,7 +1518,7 @@ console.log(params.getAll('missing')); // []
 
 #### 9.5 has(name, value?)
 
-지정된 키(및 선택적으로 값)의 존재 여부를 반환한다.
+- 지정된 키(및 선택적으로 값)의 존재 여부 반환
 
 ```javascript
 const params = new URLSearchParams('color=red&color=blue&size=large');
@@ -1479,7 +1533,9 @@ console.log(params.has('color', 'green')); // false
 
 #### 9.6 set(name, value)
 
-지정된 키의 첫 번째 항목의 값을 설정하고, 나머지 동일 키 항목은 제거한다. 키가 없으면 새로 추가한다.
+- 지정된 키의 첫 번째 항목의 값 설정
+- 나머지 동일 키 항목은 제거
+- 키가 없으면 새로 추가
 
 ```javascript
 const params = new URLSearchParams('color=red&size=large&color=blue');
@@ -1495,7 +1551,8 @@ console.log(params.toString()); // "color=green&size=large&weight=100"
 
 #### 9.7 sort()
 
-키 이름을 기준으로 모든 항목을 정렬한다. 동일한 키를 가진 항목들의 상대적 순서는 보존된다(안정 정렬).
+- 키 이름 기준으로 모든 항목 정렬
+- 동일한 키를 가진 항목들의 상대적 순서는 보존(안정 정렬)
 
 ```javascript
 const params = new URLSearchParams('z=3&a=1&m=2&a=4');
@@ -1515,7 +1572,7 @@ console.log(normalizeQueryString('b=2&a=1') === normalizeQueryString('a=1&b=2'))
 
 #### 9.8 toString()
 
-모든 항목을 `application/x-www-form-urlencoded` 형식으로 직렬화한다.
+- 모든 항목을 `application/x-www-form-urlencoded` 형식으로 직렬화
 
 ```javascript
 const params = new URLSearchParams();
@@ -1534,7 +1591,7 @@ console.log(params.toString());
 
 #### 9.9 이터레이션
 
-`URLSearchParams`는 이터러블이므로 다양한 방법으로 순회할 수 있다.
+- `URLSearchParams`는 이터러블 → 다양한 방법으로 순회 가능
 
 ```javascript
 const params = new URLSearchParams('a=1&b=2&c=3');
@@ -1647,9 +1704,11 @@ console.log(merged.toString()); // "a=1&b=2&c=3&d=4&e=5"
 
 #### 10.1 URLPattern API 개요
 
-`URLPattern`은 URL 패턴 매칭을 위한 API로, WHATWG URL Standard와는 별도의 사양(URLPattern Standard)이지만 밀접하게 관련되어 있다. 라우팅, URL 필터링 등에 활용된다.
+- `URLPattern`: URL 패턴 매칭을 위한 API
+- WHATWG URL Standard와는 별도의 사양(URLPattern Standard)이지만 밀접하게 관련
+- 라우팅·URL 필터링 등에 활용
 
-> 참고: URLPattern은 Chrome/Edge 95+, Deno에 이어 Firefox 142+, Safari 26+에서도 지원되어 현재는 주요 브라우저 전반에서 폭넓게 사용할 수 있다.
+참고: URLPattern은 Chrome/Edge 95+, Deno에 이어 Firefox 142+, Safari 26+에서도 지원 → 현재는 주요 브라우저 전반에서 폭넓게 사용 가능.
 
 #### 10.2 기본 사용법
 
@@ -1761,7 +1820,7 @@ self.addEventListener('fetch', (event) => {
 
 #### 11.1 특수 스킴이란
 
-WHATWG URL Standard는 6개의 스킴을 "특수 스킴(special schemes)"으로 정의한다. 이들은 다른 스킴과 다르게 처리되는 규칙이 여러 가지 있다.
+WHATWG URL Standard는 6개의 스킴을 "특수 스킴(special schemes)"으로 정의함 → 다른 스킴과 다르게 처리되는 규칙이 여러 가지 존재.
 
 ```javascript
 // 특수 스킴과 기본 포트
@@ -1848,7 +1907,8 @@ console.log(url3.href); // "https://example.com/path?q=1"
 
 #### 11.3 file: 스킴의 특수성
 
-`file:` 스킴은 로컬 파일 시스템을 참조하며, 다른 특수 스킴과 차별화된다.
+- `file:` 스킴: 로컬 파일 시스템을 참조하는 스킴
+  - 다른 특수 스킴과 차별화된 처리 규칙 적용
 
 ```javascript
 // 기본 file URL
@@ -1909,7 +1969,9 @@ console.log(url2.origin); // "wss://secure.example.com:8443"
 
 #### 12.1 Blob URL 개요
 
-Blob URL(`blob:` 스킴)은 메모리에 있는 `Blob` 또는 `File` 객체를 참조하는 URL이다. 브라우저의 현재 세션에서만 유효하며, `URL.createObjectURL()`로 생성하고 `URL.revokeObjectURL()`로 해제한다.
+- Blob URL(`blob:` 스킴): 메모리에 있는 `Blob`·`File` 객체를 참조하는 URL
+  - 브라우저의 현재 세션에서만 유효
+  - `URL.createObjectURL()`로 생성, `URL.revokeObjectURL()`로 해제
 
 #### 12.2 createObjectURL
 
@@ -1967,7 +2029,7 @@ URL.revokeObjectURL(url);
 
 #### 12.4 Blob URL의 Origin
 
-Blob URL의 origin은 해당 URL을 생성한 환경의 origin을 상속한다.
+- Blob URL의 origin: 해당 URL을 생성한 환경의 origin을 상속
 
 ```javascript
 // https://example.com에서 생성된 blob URL
@@ -1993,7 +2055,8 @@ scheme   origin 부분              UUID (고유 식별자)
 
 #### 13.1 data: URL 구조
 
-`data:` URL은 데이터를 URL 자체에 인라인으로 포함한다. 작은 파일을 외부 요청 없이 사용할 때 유용하다.
+- `data:` URL: 데이터를 URL 자체에 인라인으로 포함
+  - 작은 파일을 외부 요청 없이 사용할 때 유용
 
 ```
 data:[<mediatype>][;base64],<data>
@@ -2015,7 +2078,7 @@ const jsonUrl = `data:application/json,${encodeURIComponent(JSON.stringify({ key
 
 #### 13.2 data: URL 파싱
 
-WHATWG Fetch Standard에서 정의하는 data URL 처리 알고리즘:
+WHATWG Fetch Standard에서 정의하는 data URL 처리 알고리즘
 
 ```javascript
 // data: URL 파싱 구현 예시
@@ -2065,7 +2128,7 @@ console.log(result);
 
 #### 13.3 data: URL의 Origin
 
-`data:` URL은 항상 opaque origin을 가진다. 이는 보안에 중요한 의미를 가진다.
+- `data:` URL: 항상 opaque origin을 가짐 → 보안상 중요한 의미
 
 ```javascript
 const url = new URL('data:text/plain,hello');
@@ -2115,7 +2178,8 @@ console.log(dataUrl); // "data:text/plain;base64,SGVsbG8sIFdvcmxkIQ=="
 
 #### 14.1 기본 개념
 
-상대 URL은 base URL을 기준으로 절대 URL로 해석된다. 이는 HTML의 `<base>` 태그, 링크, 리소스 참조 등에서 널리 사용된다.
+- 상대 URL: base URL을 기준으로 절대 URL로 해석됨
+  - HTML의 `<base>` 태그·링크·리소스 참조 등에서 널리 사용
 
 ```javascript
 const base = 'https://example.com/a/b/c';
@@ -2151,7 +2215,8 @@ console.log(new URL('//other.com/path', base).href);
 
 #### 14.2 상대 URL 해석 알고리즘
 
-상대 URL 해석은 URL 파싱 알고리즘의 일부로 수행된다. 스킴이 없는 입력이 주어지면, base URL을 기반으로 절대 URL을 구성한다.
+- 상대 URL 해석: URL 파싱 알고리즘의 일부로 수행
+  - 스킴이 없는 입력이 주어지면 → base URL을 기반으로 절대 URL 구성
 
 ```
 1. 입력이 스킴으로 시작 → 절대 URL로 파싱
@@ -2194,7 +2259,7 @@ new URL('d/e', base).href;
 
 #### 14.3 경로 정규화
 
-상대 경로 해석 후 `.`과 `..` 세그먼트가 정규화된다.
+- 상대 경로 해석 후 `.`·`..` 세그먼트가 정규화됨
 
 ```javascript
 const base = 'https://example.com/a/b/c/d';
@@ -2220,7 +2285,7 @@ new URL('./../../e/./f/../g', base).href;
 
 #### 14.4 빈 문자열 상대 URL
 
-빈 문자열은 현재 URL의 복사본을 만든다(프래그먼트 제외).
+- 빈 문자열: 현재 URL의 복사본을 만듦(프래그먼트 제외)
 
 ```javascript
 const base = 'https://example.com/path?q=1#frag';
@@ -2268,7 +2333,8 @@ function resolveUrl(relative) {
 
 #### 15.1 URL 비교의 어려움
 
-URL 비교는 단순한 문자열 비교보다 복잡하다. 동일한 리소스를 가리키는 URL이 여러 가지 문자열 표현을 가질 수 있기 때문이다.
+- URL 비교: 단순 문자열 비교보다 복잡
+  - 동일한 리소스를 가리키는 URL이 여러 문자열 표현을 가질 수 있음 → 단순 비교로는 동일성 판단 불가
 
 ```javascript
 // 모두 같은 리소스를 가리키지만 문자열이 다른 URL들
@@ -2287,7 +2353,7 @@ console.log(urls[0] === urls[1]); // false
 
 #### 15.2 URL 정규화를 통한 비교
 
-WHATWG URL Standard의 파싱 + 직렬화를 통해 URL을 정규화할 수 있다.
+- WHATWG URL Standard의 파싱 + 직렬화 → URL 정규화 가능
 
 ```javascript
 // URL 정규화 함수
@@ -2346,7 +2412,8 @@ console.log(urlEquals(
 
 #### 15.3 WHATWG 표준에서 정의하는 등가성
 
-표준은 두 URL이 "동일(equal)"한지 판단할 때 직렬화 결과를 비교한다. exclude-fragment 플래그를 사용하여 프래그먼트를 제외할 수 있다.
+- 표준: 두 URL의 동일(equal) 여부 판단 시 직렬화 결과를 비교
+  - exclude-fragment 플래그로 프래그먼트 제외 가능
 
 ```
 URL A와 B가 동일한가?
@@ -2357,7 +2424,7 @@ URL A와 B가 동일한가?
 
 #### 15.4 정규화되지 않는 차이점
 
-URL 파싱으로도 정규화되지 않는 차이점이 있다.
+- URL 파싱으로도 정규화되지 않는 차이점 존재
 
 ```javascript
 // 1. 쿼리 파라미터 순서
@@ -2430,7 +2497,7 @@ console.log(semanticUrlEquals(
 
 #### 15.6 캐시 키로서의 URL
 
-브라우저 캐시에서 URL을 키로 사용할 때는 정규화된 형태를 사용한다.
+- 브라우저 캐시에서 URL을 키로 사용할 때 → 정규화된 형태 사용
 
 ```javascript
 // 캐시 친화적 URL 정규화
@@ -2456,28 +2523,32 @@ console.log(key1 === key2); // true
 
 ### 부록 A: 주요 참고 자료
 
-| 자료 | URL |
-|------|-----|
-| WHATWG URL Standard | https://url.spec.whatwg.org/ |
-| MDN - URL API | https://developer.mozilla.org/ko/docs/Web/API/URL |
-| MDN - URLSearchParams | https://developer.mozilla.org/ko/docs/Web/API/URLSearchParams |
-| URLPattern Standard | https://urlpattern.spec.whatwg.org/ |
-| RFC 3986 (URI) | https://datatracker.ietf.org/doc/html/rfc3986 |
-| RFC 3987 (IRI) | https://datatracker.ietf.org/doc/html/rfc3987 |
-| UTS #46 (IDNA) | https://unicode.org/reports/tr46/ |
+- WHATWG URL Standard: https://url.spec.whatwg.org/
+- MDN - URL API: https://developer.mozilla.org/ko/docs/Web/API/URL
+- MDN - URLSearchParams: https://developer.mozilla.org/ko/docs/Web/API/URLSearchParams
+- URLPattern Standard: https://urlpattern.spec.whatwg.org/
+- RFC 3986 (URI): https://datatracker.ietf.org/doc/html/rfc3986
+- RFC 3987 (IRI): https://datatracker.ietf.org/doc/html/rfc3987
+- UTS #46 (IDNA): https://unicode.org/reports/tr46/
 
 ### 부록 B: 브라우저 호환성 요약
 
-| 기능 | Chrome | Firefox | Safari | Edge |
-|------|--------|---------|--------|------|
-| URL() 생성자 | 32+ | 26+ | 7+ | 12+ |
-| URL.canParse() | 120+ | 115+ | 17+ | 120+ |
-| URL.parse() | 126+ | 126+ | 18+ | 126+ |
-| URLSearchParams | 49+ | 44+ | 10.1+ | 17+ |
-| URLSearchParams.sort() | 61+ | 54+ | 11+ | 61+ |
-| URLPattern | 95+ | 142+ | 26+ | 95+ |
-| URLSearchParams.delete(name, value) | 117+ | 115+ | 17+ | 117+ |
-| URLSearchParams.has(name, value) | 117+ | 115+ | 17+ | 117+ |
+- URL() 생성자
+  - Chrome 32+ · Firefox 26+ · Safari 7+ · Edge 12+
+- URL.canParse()
+  - Chrome 120+ · Firefox 115+ · Safari 17+ · Edge 120+
+- URL.parse()
+  - Chrome 126+ · Firefox 126+ · Safari 18+ · Edge 126+
+- URLSearchParams
+  - Chrome 49+ · Firefox 44+ · Safari 10.1+ · Edge 17+
+- URLSearchParams.sort()
+  - Chrome 61+ · Firefox 54+ · Safari 11+ · Edge 61+
+- URLPattern
+  - Chrome 95+ · Firefox 142+ · Safari 26+ · Edge 95+
+- URLSearchParams.delete(name, value)
+  - Chrome 117+ · Firefox 115+ · Safari 17+ · Edge 117+
+- URLSearchParams.has(name, value)
+  - Chrome 117+ · Firefox 115+ · Safari 17+ · Edge 117+
 
 ### 부록 C: Node.js에서의 URL 처리
 
@@ -2621,7 +2692,7 @@ function parseURL(input, base = null):
 
 ---
 
-이 문서는 WHATWG URL Standard(https://url.spec.whatwg.org/)를 기반으로 작성되었다. URL 표준은 Living Standard로서 지속적으로 업데이트되므로, 최신 내용은 공식 사양 문서를 참고하기 바란다.
+이 문서는 WHATWG URL Standard(https://url.spec.whatwg.org/)를 기반으로 작성함. URL 표준은 Living Standard로서 지속적으로 업데이트됨 → 최신 내용은 공식 사양 문서 참고.
 
 ---
 
@@ -2655,38 +2726,61 @@ function parseURL(input, base = null):
 
 #### 1.1 Fetch Standard란?
 
-Fetch Standard는 WHATWG(Web Hypertext Application Technology Working Group)에서 정의한 웹 표준으로, 네트워크 요청과 응답을 처리하는 통합된 아키텍처를 제공한다. 이 표준은 단순히 `fetch()` API만을 정의하는 것이 아니라, 브라우저가 리소스를 가져오는 전체 과정 - 요청(Request)의 생성, 네트워크 전송, 응답(Response) 처리, CORS 정책 적용 등 - 을 포괄적으로 명세한다.
+- Fetch Standard: WHATWG(Web Hypertext Application Technology Working Group)에서 정의한 웹 표준
+  - 네트워크 요청·응답 처리를 위한 통합 아키텍처 제공
+  - `fetch()` API 정의뿐 아니라 브라우저가 리소스를 가져오는 전체 과정을 포괄적으로 명세
+    - 요청(Request) 생성
+    - 네트워크 전송
+    - 응답(Response) 처리
+    - CORS 정책 적용
 
-Fetch Standard의 핵심 목표는 다음과 같다:
-
-- 통합된 리소스 획득 모델: HTML의 `<img>`, `<script>`, `<link>` 태그를 통한 리소스 로딩, CSS의 `@import`, JavaScript의 `fetch()` 호출 등 모든 리소스 획득 과정을 하나의 일관된 모델로 정의한다.
-- 보안 모델의 명확화: Same-Origin Policy와 CORS 메커니즘을 정확히 명세하여 크로스 오리진 리소스 접근에 대한 보안 규칙을 통일한다.
-- Promise 기반의 현대적 API: 콜백 기반의 레거시 API를 대체하는 깔끔하고 조합 가능한 비동기 인터페이스를 제공한다.
+- Fetch Standard의 핵심 목표
+  - 통합된 리소스 획득 모델: HTML `<img>`·`<script>`·`<link>` 태그를 통한 리소스 로딩, CSS `@import`, JavaScript `fetch()` 호출 등 모든 리소스 획득 과정을 하나의 일관된 모델로 정의
+  - 보안 모델의 명확화: Same-Origin Policy와 CORS 메커니즘을 정확히 명세 → 크로스 오리진 리소스 접근에 대한 보안 규칙 통일
+  - Promise 기반의 현대적 API: 콜백 기반 레거시 API를 대체하는 깔끔하고 조합 가능한 비동기 인터페이스 제공
 
 #### 1.2 왜 필요한가?
 
-Fetch Standard 이전에는 네트워크 요청을 위한 명확한 단일 표준이 없었다. `XMLHttpRequest`는 사실상의 표준으로 사용되었지만, 여러 한계를 가지고 있었다:
-
-1. 이벤트 기반의 복잡한 인터페이스: 콜백 지옥(callback hell)을 야기하기 쉬웠다.
-2. 스트리밍 미지원: 응답 전체가 도착해야만 데이터에 접근할 수 있었다.
-3. Service Worker에서 사용 불가: XHR은 Service Worker 컨텍스트에서 동작하지 않는다.
-4. 요청/응답 객체의 부재: 요청과 응답을 일급(first-class) 객체로 다룰 수 없었다.
-5. 일관성 부족: 브라우저의 내부 리소스 로딩 과정과 JavaScript API 사이에 모델이 달랐다.
+- Fetch Standard 이전 → 네트워크 요청을 위한 명확한 단일 표준 부재
+- `XMLHttpRequest`가 사실상의 표준으로 사용되었으나 여러 한계 존재
+  - 이벤트 기반의 복잡한 인터페이스 → 콜백 지옥(callback hell) 야기
+  - 스트리밍 미지원 → 응답 전체가 도착해야만 데이터 접근 가능
+  - Service Worker에서 사용 불가 → XHR은 Service Worker 컨텍스트에서 동작하지 않음
+  - 요청/응답 객체의 부재 → 요청과 응답을 일급(first-class) 객체로 다룰 수 없음
+  - 일관성 부족 → 브라우저의 내부 리소스 로딩 과정과 JavaScript API 사이 모델이 다름
 
 #### 1.3 XMLHttpRequest와의 비교
 
-| 특성 | XMLHttpRequest | fetch() |
-|---|---|---|
-| API 스타일 | 이벤트 기반 (콜백) | Promise 기반 |
-| 요청 취소 | `abort()` 메서드 | `AbortController` / `AbortSignal` |
-| 스트리밍 | 제한적 (`responseType` 의존) | `ReadableStream` 네이티브 지원 |
-| 요청/응답 객체 | 없음 (단일 객체가 모든 것을 관리) | `Request`, `Response` 분리 |
-| Service Worker | 사용 불가 | 네이티브 지원 |
-| CORS 처리 | 암묵적 | `mode` 옵션으로 명시적 제어 |
-| 쿠키 전송 | 기본적으로 전송 | `credentials` 옵션으로 명시적 제어 |
-| 진행 상황 추적 | `onprogress` 이벤트 | `ReadableStream`으로 구현 가능 |
-| 타임아웃 | `timeout` 속성 | `AbortSignal.timeout()` 활용 |
-| 동기 요청 | 지원 (비권장) | 미지원 (비동기 전용) |
+- API 스타일
+  - XMLHttpRequest: 이벤트 기반(콜백)
+  - fetch(): Promise 기반
+- 요청 취소
+  - XMLHttpRequest: `abort()` 메서드
+  - fetch(): `AbortController` / `AbortSignal`
+- 스트리밍
+  - XMLHttpRequest: 제한적(`responseType` 의존)
+  - fetch(): `ReadableStream` 네이티브 지원
+- 요청/응답 객체
+  - XMLHttpRequest: 없음(단일 객체가 모든 것을 관리)
+  - fetch(): `Request`, `Response` 분리
+- Service Worker
+  - XMLHttpRequest: 사용 불가
+  - fetch(): 네이티브 지원
+- CORS 처리
+  - XMLHttpRequest: 암묵적
+  - fetch(): `mode` 옵션으로 명시적 제어
+- 쿠키 전송
+  - XMLHttpRequest: 기본적으로 전송
+  - fetch(): `credentials` 옵션으로 명시적 제어
+- 진행 상황 추적
+  - XMLHttpRequest: `onprogress` 이벤트
+  - fetch(): `ReadableStream`으로 구현 가능
+- 타임아웃
+  - XMLHttpRequest: `timeout` 속성
+  - fetch(): `AbortSignal.timeout()` 활용
+- 동기 요청
+  - XMLHttpRequest: 지원(비권장)
+  - fetch(): 미지원(비동기 전용)
 
 ```javascript
 // XMLHttpRequest 방식
@@ -2718,22 +2812,23 @@ async function fetchDataFetch(url) {
 
 #### 1.4 역사
 
-- 2011-2012년: WHATWG 내에서 XHR을 대체할 새로운 API에 대한 논의가 시작되었다.
-- 2014년: Fetch Standard 초안이 작성되기 시작했다. 당시 "Fetch"라는 이름은 브라우저가 리소스를 "가져오는(fetch)" 내부 동작을 표준화한다는 의미에서 채택되었다.
-- 2015년: Chrome 42, Firefox 39에서 `fetch()` API가 구현되기 시작했다.
-- 2015-2017년: `Request`, `Response`, `Headers` 인터페이스와 `AbortController` 지원이 점진적으로 추가되었다.
-- 2017-2018년: Edge, Safari 등 주요 브라우저에서 완전한 지원이 이루어졌다.
-- 현재: Fetch Standard는 Living Standard로서 지속적으로 업데이트되고 있으며, 스트리밍, `Response.json()` 정적 메서드 등 새로운 기능이 계속 추가되고 있다.
+- 2011-2012년: WHATWG 내에서 XHR을 대체할 새로운 API 논의 시작
+- 2014년: Fetch Standard 초안 작성 시작 → "Fetch"라는 이름은 브라우저가 리소스를 "가져오는(fetch)" 내부 동작을 표준화한다는 의미에서 채택
+- 2015년: Chrome 42, Firefox 39에서 `fetch()` API 구현 시작
+- 2015-2017년: `Request`, `Response`, `Headers` 인터페이스와 `AbortController` 지원 점진적 추가
+- 2017-2018년: Edge, Safari 등 주요 브라우저에서 완전한 지원 이루어짐
+- 현재: Fetch Standard는 Living Standard로서 지속적으로 업데이트 중 → 스트리밍, `Response.json()` 정적 메서드 등 새로운 기능 계속 추가
 
 ---
 
 ### 2. 기본 개념
 
-Fetch Standard는 네 가지 핵심 인터페이스를 중심으로 설계되어 있다.
+Fetch Standard는 네 가지 핵심 인터페이스를 중심으로 설계됨.
 
 #### 2.1 Request
 
-`Request`는 리소스에 대한 요청을 나타내는 객체다. HTTP 메서드, URL, 헤더, 본문(body) 등 요청에 필요한 모든 정보를 캡슐화한다.
+- `Request`: 리소스에 대한 요청을 나타내는 객체
+  - HTTP 메서드·URL·헤더·본문(body) 등 요청에 필요한 모든 정보를 캡슐화
 
 ```javascript
 // Request 객체 생성
@@ -2751,7 +2846,8 @@ console.log(request.url);     // "https://api.example.com/data"
 
 #### 2.2 Response
 
-`Response`는 요청에 대한 응답을 나타내는 객체다. 상태 코드, 헤더, 본문 등 응답 정보를 포함한다.
+- `Response`: 요청에 대한 응답을 나타내는 객체
+  - 상태 코드·헤더·본문 등 응답 정보 포함
 
 ```javascript
 // fetch()가 반환하는 Response
@@ -2769,7 +2865,8 @@ const customResponse = new Response(JSON.stringify({ message: 'Hello' }), {
 
 #### 2.3 Headers
 
-`Headers`는 HTTP 헤더의 이름-값 쌍 목록을 나타내는 객체다. 대소문자를 구분하지 않는 이름으로 헤더를 관리한다.
+- `Headers`: HTTP 헤더의 이름-값 쌍 목록을 나타내는 객체
+  - 대소문자를 구분하지 않는 이름으로 헤더 관리
 
 ```javascript
 const headers = new Headers();
@@ -2782,7 +2879,8 @@ console.log(headers.has('X-Custom-Header')); // true
 
 #### 2.4 Body
 
-`Body`는 Request와 Response 모두에 포함될 수 있는 본문 데이터를 나타낸다. Body mixin은 본문 데이터를 다양한 형식(JSON, Text, Blob, ArrayBuffer, FormData)으로 읽을 수 있는 메서드를 제공한다.
+- `Body`: Request와 Response 모두에 포함될 수 있는 본문 데이터
+  - Body mixin → 본문 데이터를 다양한 형식(JSON, Text, Blob, ArrayBuffer, FormData)으로 읽을 수 있는 메서드 제공
 
 ```javascript
 // Response body를 다양한 형식으로 읽기
@@ -2796,7 +2894,9 @@ const response2 = await fetch('https://api.example.com/data');
 const textData = await response2.text();
 ```
 
-중요: Body는 한 번만 소비(consume)할 수 있다. `bodyUsed` 속성으로 이미 소비되었는지 확인할 수 있으며, 여러 번 읽어야 할 경우 `clone()`을 사용해야 한다.
+- 주의: Body는 한 번만 소비(consume) 가능
+  - `bodyUsed` 속성 → 이미 소비되었는지 확인 가능
+  - 여러 번 읽어야 할 경우 `clone()` 사용 필요
 
 ```javascript
 const response = await fetch('https://api.example.com/data');
@@ -2821,7 +2921,8 @@ const text = await cloned.text();
 
 #### 3.1 기본 사용법
 
-`fetch()` 함수는 전역(global) 스코프에서 사용 가능한 함수로, 네트워크 요청을 수행하고 `Promise<Response>`를 반환한다.
+- `fetch()` 함수: 전역(global) 스코프에서 사용 가능
+  - 네트워크 요청 수행 → `Promise<Response>` 반환
 
 ```javascript
 // 가장 기본적인 사용
@@ -2852,15 +2953,15 @@ fetch(input: RequestInfo | URL, init?: RequestInit): Promise<Response>
 ```
 
 - `input`: URL 문자열, `URL` 객체, 또는 `Request` 객체
-- `init`: 요청 설정 옵션 (선택적)
+- `init`: 요청 설정 옵션(선택적)
 
 #### 3.2 옵션 (RequestInit)
 
-`fetch()`의 두 번째 매개변수로 전달하는 옵션 객체의 전체 속성을 살펴보자.
+`fetch()`의 두 번째 매개변수로 전달하는 옵션 객체의 전체 속성.
 
 ##### 3.2.1 method
 
-HTTP 요청 메서드를 지정한다. 기본값은 `"GET"`이다.
+- HTTP 요청 메서드 지정. 기본값 `"GET"`
 
 ```javascript
 // GET 요청 (기본값)
@@ -2887,7 +2988,7 @@ await fetch('/api/users', { method: 'OPTIONS' });
 
 ##### 3.2.2 headers
 
-요청에 포함할 HTTP 헤더를 지정한다.
+- 요청에 포함할 HTTP 헤더 지정
 
 ```javascript
 // 객체 리터럴 사용
@@ -2917,7 +3018,8 @@ await fetch('/api/data', {
 
 ##### 3.2.3 body
 
-요청 본문을 지정한다. `GET`과 `HEAD` 메서드에서는 body를 사용할 수 없다.
+- 요청 본문 지정
+- `GET`과 `HEAD` 메서드에서는 body 사용 불가
 
 ```javascript
 // JSON 본문
@@ -2960,7 +3062,7 @@ await fetch('/api/upload', { method: 'POST', body: stream, duplex: 'half' });
 
 ##### 3.2.4 mode
 
-요청의 모드를 지정한다. CORS 동작을 제어한다.
+- 요청의 모드 지정 → CORS 동작 제어
 
 ```javascript
 // cors (기본값) - 크로스 오리진 요청 허용, CORS 헤더 필요
@@ -2977,7 +3079,7 @@ await fetch('/api/data', { mode: 'same-origin' });
 
 ##### 3.2.5 credentials
 
-요청에 자격 증명(쿠키, HTTP 인증 등)을 포함할지 여부를 결정한다.
+- 요청에 자격 증명(쿠키, HTTP 인증 등) 포함 여부 결정
 
 ```javascript
 // same-origin (기본값) - 같은 오리진일 때만 자격 증명 포함
@@ -2992,7 +3094,7 @@ await fetch('/api/public-data', { credentials: 'omit' });
 
 ##### 3.2.6 cache
 
-HTTP 캐시와의 상호작용 방식을 지정한다.
+- HTTP 캐시와의 상호작용 방식 지정
 
 ```javascript
 // default - 브라우저 기본 캐시 동작
@@ -3016,7 +3118,7 @@ await fetch('/api/data', { cache: 'only-if-cached', mode: 'same-origin' });
 
 ##### 3.2.7 redirect
 
-리다이렉트 처리 방식을 지정한다.
+- 리다이렉트 처리 방식 지정
 
 ```javascript
 // follow (기본값) - 리다이렉트 자동 추적
@@ -3031,7 +3133,7 @@ await fetch('/api/old-endpoint', { redirect: 'manual' });
 
 ##### 3.2.8 referrer
 
-요청의 referrer를 지정한다.
+- 요청의 referrer 지정
 
 ```javascript
 // 기본값 - 현재 페이지 URL이 referrer
@@ -3049,7 +3151,7 @@ await fetch('/api/data', { referrer: 'about:client' });
 
 ##### 3.2.9 referrerPolicy
 
-Referrer 헤더에 포함되는 정보의 범위를 제어한다.
+- Referrer 헤더에 포함되는 정보의 범위 제어
 
 ```javascript
 await fetch('/api/data', { referrerPolicy: 'no-referrer' });
@@ -3064,7 +3166,7 @@ await fetch('/api/data', { referrerPolicy: 'unsafe-url' });
 
 ##### 3.2.10 integrity
 
-Subresource Integrity(SRI) 해시를 지정하여 응답 본문의 무결성을 검증한다.
+- Subresource Integrity(SRI) 해시 지정 → 응답 본문의 무결성 검증
 
 ```javascript
 await fetch('https://cdn.example.com/lib.js', {
@@ -3074,7 +3176,7 @@ await fetch('https://cdn.example.com/lib.js', {
 
 ##### 3.2.11 keepalive
 
-페이지가 종료(unload)된 후에도 요청이 완료될 수 있도록 한다. 분석 데이터 전송 등에 유용하다.
+- 페이지가 종료(unload)된 후에도 요청이 완료될 수 있도록 함 → 분석 데이터 전송 등에 유용
 
 ```javascript
 // 페이지 종료 시 분석 데이터 전송
@@ -3102,7 +3204,7 @@ document.addEventListener('visibilitychange', () => {
 
 ##### 3.2.12 signal
 
-`AbortSignal` 객체를 전달하여 요청을 취소할 수 있게 한다.
+- `AbortSignal` 객체를 전달 → 요청 취소 가능
 
 ```javascript
 const controller = new AbortController();
@@ -3135,7 +3237,10 @@ try {
 
 ##### 3.2.13 duplex
 
-요청 본문을 스트림으로 보낼 때 지정해야 하는 옵션이다. 현재는 `'half'`만 유효한 값이며, 요청을 반이중(half-duplex)으로 전송함을(본문을 다 보내기 전에는 응답을 읽지 않음) 명시한다. `ReadableStream`을 `body`로 사용할 때 필수다.
+- 요청 본문을 스트림으로 보낼 때 지정해야 하는 옵션
+  - 현재는 `'half'`만 유효한 값
+  - 요청을 반이중(half-duplex)으로 전송함(본문을 다 보내기 전에는 응답을 읽지 않음)을 명시
+  - `ReadableStream`을 `body`로 사용할 때 필수
 
 ```javascript
 await fetch('/api/upload', {
@@ -3147,7 +3252,8 @@ await fetch('/api/upload', {
 
 ##### 3.2.14 priority
 
-요청의 상대적 우선순위를 브라우저에 알려준다. `"high"`, `"low"`, `"auto"`(기본값) 중 하나를 지정한다.
+- 요청의 상대적 우선순위를 브라우저에 알려줌
+  - `"high"`, `"low"`, `"auto"`(기본값) 중 하나 지정
 
 ```javascript
 // 중요한 API 응답은 높은 우선순위로
@@ -3159,7 +3265,9 @@ await fetch('/api/prefetch-data', { priority: 'low' });
 
 #### 3.3 반환값 (Promise<Response>)
 
-`fetch()`는 항상 `Promise<Response>`를 반환한다. 중요한 점은 HTTP 에러 상태(4xx, 5xx)에서도 Promise가 reject되지 않는다는 것이다. 오직 네트워크 에러(네트워크 단절, DNS 실패 등)에서만 reject된다.
+- `fetch()`는 항상 `Promise<Response>` 반환
+- 중요: HTTP 에러 상태(4xx, 5xx)에서도 Promise가 reject되지 않음
+  - 오직 네트워크 에러(네트워크 단절, DNS 실패 등)에서만 reject
 
 ```javascript
 // HTTP 404도 fulfilled 상태로 resolve됨
@@ -3191,7 +3299,7 @@ async function safeFetch(url, options) {
 
 #### 4.1 생성
 
-`Request` 생성자는 두 가지 형태로 호출할 수 있다.
+Request 생성자 호출 형태 - 두 가지.
 
 ```javascript
 // 1. URL 문자열 + 옵션
@@ -3256,7 +3364,9 @@ console.log(request.bodyUsed);        // false
 
 ##### destination 속성
 
-`destination`은 요청이 어떤 종류의 리소스를 위한 것인지 나타낸다. 프로그래밍 방식의 `fetch()` 호출에서는 빈 문자열이지만, 브라우저의 내부 리소스 로딩에서는 다양한 값을 가진다.
+- destination: 요청이 어떤 종류의 리소스를 위한 것인지 나타내는 속성
+  - 프로그래밍 방식 fetch() 호출 → 빈 문자열
+  - 브라우저 내부 리소스 로딩 → 다양한 값을 가짐
 
 ```javascript
 // destination 가능한 값들:
@@ -3306,7 +3416,8 @@ self.addEventListener('fetch', (event) => {
 
 #### 4.3 clone()
 
-`Request` 객체를 복제한다. body가 이미 소비된 Request는 복제할 수 없다.
+- Request 객체를 복제
+- body가 이미 소비된 Request → 복제 불가
 
 ```javascript
 const original = new Request('/api/data', {
@@ -3370,7 +3481,8 @@ const streamResponse = new Response(stream);
 
 ##### Response.error()
 
-네트워크 에러를 나타내는 Response를 생성한다. `type`이 `"error"`인 Response를 반환한다.
+- 네트워크 에러를 나타내는 Response 생성
+- type이 "error"인 Response 반환
 
 ```javascript
 const errorResponse = Response.error();
@@ -3388,7 +3500,8 @@ self.addEventListener('fetch', (event) => {
 
 ##### Response.redirect()
 
-리다이렉트 응답을 생성한다. status는 301, 302, 303, 307, 308 중 하나여야 한다.
+- 리다이렉트 응답 생성
+- status는 301·302·303·307·308 중 하나여야 함
 
 ```javascript
 const redirect301 = Response.redirect('https://example.com/new-url', 301);
@@ -3409,7 +3522,8 @@ self.addEventListener('fetch', (event) => {
 
 ##### Response.json()
 
-JSON 데이터로부터 Response를 생성하는 편의 메서드다. `Content-Type`이 자동으로 `application/json`으로 설정된다.
+- JSON 데이터로부터 Response를 생성하는 편의 메서드
+- Content-Type이 자동으로 application/json으로 설정됨
 
 ```javascript
 // 기존 방식
@@ -3525,7 +3639,8 @@ const headers4 = new Headers(headers2);
 
 ##### append(name, value)
 
-기존 헤더에 값을 추가한다. 같은 이름의 헤더가 이미 있으면 값이 결합된다.
+- 기존 헤더에 값을 추가
+- 같은 이름의 헤더가 이미 있으면 → 값이 결합됨
 
 ```javascript
 const headers = new Headers();
@@ -3540,7 +3655,8 @@ console.log(headers.get('X-Custom')); // "value1, value2"
 
 ##### set(name, value)
 
-헤더의 값을 설정한다. 이미 존재하면 대체하고, 없으면 새로 추가한다.
+- 헤더의 값을 설정
+- 이미 존재하면 대체, 없으면 새로 추가
 
 ```javascript
 const headers = new Headers();
@@ -3553,7 +3669,8 @@ console.log(headers.get('Content-Type')); // "application/json" (대체됨)
 
 ##### get(name)
 
-헤더의 값을 반환한다. 없으면 `null`을 반환한다.
+- 헤더의 값을 반환
+- 없으면 null 반환
 
 ```javascript
 const headers = new Headers({ 'Content-Type': 'application/json' });
@@ -3564,7 +3681,7 @@ console.log(headers.get('X-Nonexistent'));   // null
 
 ##### has(name)
 
-해당 이름의 헤더가 존재하는지 확인한다.
+- 해당 이름의 헤더가 존재하는지 확인
 
 ```javascript
 const headers = new Headers({ 'Content-Type': 'application/json' });
@@ -3574,7 +3691,7 @@ console.log(headers.has('Authorization')); // false
 
 ##### delete(name)
 
-해당 이름의 헤더를 삭제한다.
+- 해당 이름의 헤더를 삭제
 
 ```javascript
 const headers = new Headers({
@@ -3587,7 +3704,7 @@ console.log(headers.has('Authorization')); // false
 
 ##### forEach(callback)
 
-모든 헤더를 순회한다.
+- 모든 헤더를 순회
 
 ```javascript
 const headers = new Headers({
@@ -3607,7 +3724,7 @@ headers.forEach((value, name) => {
 
 ##### entries(), keys(), values()
 
-이터레이터를 반환한다.
+- 이터레이터를 반환
 
 ```javascript
 const headers = new Headers({
@@ -3637,7 +3754,9 @@ const headerObj = Object.fromEntries(headers);
 
 ##### getSetCookie()
 
-`Set-Cookie` 헤더는 여러 개가 존재할 수 있지만 `get()`은 값을 콤마로 합쳐 반환하기 때문에 개별 쿠키를 구분하기 어렵다. `getSetCookie()`는 모든 `Set-Cookie` 값을 배열로 그대로 반환한다. 주로 서비스 워커나 Deno, Node.js 같은 서버/워커 환경에서 응답의 `Set-Cookie` 헤더를 다룰 때 유용하다.
+- Set-Cookie 헤더는 여러 개가 존재할 수 있음 → get()은 값을 콤마로 합쳐 반환 → 개별 쿠키 구분이 어려움
+- getSetCookie() → 모든 Set-Cookie 값을 배열로 그대로 반환
+- 주로 서비스 워커·Deno·Node.js 같은 서버/워커 환경에서 응답의 Set-Cookie 헤더를 다룰 때 유용
 
 ```javascript
 const headers = new Headers();
@@ -3650,15 +3769,21 @@ headers.getSetCookie();           // ["a=1", "b=2"]
 
 #### 6.3 Headers Guard
 
-Headers 객체에는 "guard"라는 내부 속성이 있어 특정 헤더의 변경을 제한한다. 이는 API를 통해 직접 접근할 수 없지만, 동작 방식을 이해하는 것이 중요하다.
+- Headers 객체에는 "guard"라는 내부 속성 존재 → 특정 헤더의 변경을 제한
+- API를 통해 직접 접근은 불가하지만, 동작 방식 이해는 중요
 
-| Guard | 설명 | 적용 대상 |
-|---|---|---|
-| `"none"` | 제한 없음 | `new Headers()` |
-| `"request"` | forbidden header name 수정 불가 | `Request` 객체의 headers |
-| `"request-no-cors"` | CORS-safelisted 헤더만 허용 | `no-cors` 모드 Request의 headers |
-| `"response"` | forbidden response header name 수정 불가 | `Response` 객체의 headers |
-| `"immutable"` | 모든 수정 불가 | `error()`, `redirect()` 등의 응답 headers |
+Guard 종류 및 적용 대상.
+
+- "none": 제한 없음
+  - 적용 대상: `new Headers()`
+- "request": forbidden header name 수정 불가
+  - 적용 대상: Request 객체의 headers
+- "request-no-cors": CORS-safelisted 헤더만 허용
+  - 적용 대상: no-cors 모드 Request의 headers
+- "response": forbidden response header name 수정 불가
+  - 적용 대상: Response 객체의 headers
+- "immutable": 모든 수정 불가
+  - 적용 대상: error(), redirect() 등의 응답 headers
 
 ```javascript
 // "none" guard - 제한 없음
@@ -3675,21 +3800,22 @@ const errorResp = Response.error();
 // errorResp.headers.set('X-Custom', 'test'); // TypeError
 ```
 
-Forbidden Header Names (요청에서 스크립트가 직접 설정할 수 없는, 브라우저가 자동 관리하는 헤더):
+- Forbidden Header Names: 요청에서 스크립트가 직접 설정할 수 없는, 브라우저가 자동 관리하는 헤더
 
 `Accept-Charset`, `Accept-Encoding`, `Access-Control-Request-Headers`, `Access-Control-Request-Method`, `Connection`, `Content-Length`, `Cookie`, `Cookie2`, `Date`, `DNT`, `Expect`, `Host`, `Keep-Alive`, `Origin`, `Referer`, `TE`, `Trailer`, `Transfer-Encoding`, `Upgrade`, `Via`, `Proxy-*`, `Sec-*`
 
-> 참고: `Set-Cookie`는 위 목록과는 별개로 forbidden **response** header name이다. 즉 요청 헤더가 아니라 응답 헤더로서 스크립트가 `Response.headers`를 통해 읽거나 설정할 수 없도록 금지된 것이며, `"request"` guard가 아니라 `"response"`/`"immutable"` guard가 적용되는 개념이다.
+- 참고: Set-Cookie는 위 목록과는 별개로 forbidden response header name → 요청 헤더가 아니라 응답 헤더로서 스크립트가 Response.headers를 통해 읽거나 설정할 수 없도록 금지됨 → "request" guard가 아니라 "response"/"immutable" guard가 적용되는 개념
 
 ---
 
 ### 7. Body Mixin
 
-Body mixin은 `Request`와 `Response` 모두에 구현되어 있으며, 본문 데이터를 다양한 형식으로 읽을 수 있는 메서드를 제공한다.
+- Body mixin은 Request·Response 모두에 구현됨
+- 본문 데이터를 다양한 형식으로 읽을 수 있는 메서드 제공
 
 #### 7.1 text()
 
-본문을 UTF-8 문자열로 읽는다.
+- 본문을 UTF-8 문자열로 읽음
 
 ```javascript
 const response = await fetch('/api/data');
@@ -3705,7 +3831,7 @@ const doc = parser.parseFromString(html, 'text/html');
 
 #### 7.2 json()
 
-본문을 JSON으로 파싱한다.
+- 본문을 JSON으로 파싱
 
 ```javascript
 const response = await fetch('/api/users');
@@ -3725,7 +3851,7 @@ try {
 
 #### 7.3 blob()
 
-본문을 Blob 객체로 읽는다.
+- 본문을 Blob 객체로 읽음
 
 ```javascript
 // 이미지 다운로드
@@ -3749,7 +3875,7 @@ URL.revokeObjectURL(downloadUrl);
 
 #### 7.4 arrayBuffer()
 
-본문을 ArrayBuffer로 읽는다.
+- 본문을 ArrayBuffer로 읽음
 
 ```javascript
 // 바이너리 데이터 처리
@@ -3772,7 +3898,8 @@ const wasmModule = await WebAssembly.instantiate(wasmBuffer);
 
 #### 7.5 formData()
 
-본문을 FormData 객체로 파싱한다. `multipart/form-data` 또는 `application/x-www-form-urlencoded` 형식이어야 한다.
+- 본문을 FormData 객체로 파싱
+- multipart/form-data 또는 application/x-www-form-urlencoded 형식이어야 함
 
 ```javascript
 // multipart/form-data 응답 파싱
@@ -3792,7 +3919,7 @@ self.addEventListener('fetch', async (event) => {
 
 #### 7.6 body (ReadableStream)
 
-`body` 속성은 본문의 `ReadableStream`에 직접 접근할 수 있게 한다.
+- body 속성은 본문의 ReadableStream에 직접 접근할 수 있게 함
 
 ```javascript
 const response = await fetch('/api/large-data');
@@ -3831,7 +3958,9 @@ try {
 
 #### 8.1 Same-Origin Policy (동일 출처 정책)
 
-동일 출처 정책은 웹 보안의 핵심 메커니즘이다. "출처(origin)"는 프로토콜(scheme), 호스트(host), 포트(port)의 조합으로 정의된다.
+동일 출처 정책은 웹 보안의 핵심 메커니즘.
+
+- "출처(origin)": 프로토콜(scheme)·호스트(host)·포트(port)의 조합으로 정의
 
 ```
 https://example.com:443/path/page.html
@@ -3852,7 +3981,7 @@ scheme   host       port
 
 #### 8.2 CORS 메커니즘
 
-CORS는 서버가 HTTP 응답 헤더를 통해 다른 출처의 요청을 허용할 수 있게 하는 메커니즘이다.
+CORS: 서버가 HTTP 응답 헤더를 통해 다른 출처의 요청을 허용할 수 있게 하는 메커니즘.
 
 ```
 [브라우저]                             [서버 (https://api.example.com)]
@@ -3870,17 +3999,17 @@ CORS는 서버가 HTTP 응답 헤더를 통해 다른 출처의 요청을 허용
 
 #### 8.3 Simple Request (단순 요청)
 
-다음 조건을 모두 만족하는 요청은 Preflight 없이 바로 전송된다:
+다음 조건을 모두 만족하는 요청 → Preflight 없이 바로 전송:
 
-1. 메서드: `GET`, `HEAD`, `POST` 중 하나
-2. 헤더: CORS-safelisted request header만 사용
-   - `Accept`
-   - `Accept-Language`
-   - `Content-Language`
-   - `Content-Type` (단, 값이 다음 중 하나: `application/x-www-form-urlencoded`, `multipart/form-data`, `text/plain`)
-   - `Range` (단순 범위 헤더 값만)
-3. ReadableStream body 미사용
-4. 이벤트 리스너: `XMLHttpRequestUpload`에 이벤트 리스너 미등록
+- 메서드: `GET`·`HEAD`·`POST` 중 하나
+- 헤더: CORS-safelisted request header만 사용
+  - `Accept`
+  - `Accept-Language`
+  - `Content-Language`
+  - `Content-Type` (단, 값이 다음 중 하나: `application/x-www-form-urlencoded`·`multipart/form-data`·`text/plain`)
+  - `Range` (단순 범위 헤더 값만)
+- ReadableStream body 미사용
+- 이벤트 리스너: `XMLHttpRequestUpload`에 이벤트 리스너 미등록
 
 ```javascript
 // 단순 요청의 예
@@ -3895,7 +4024,7 @@ await fetch('https://api.other.com/submit', {
 
 #### 8.4 Preflight Request (사전 요청)
 
-단순 요청 조건을 만족하지 않는 크로스 오리진 요청은 실제 요청 전에 OPTIONS 메서드로 Preflight 요청을 보낸다.
+단순 요청 조건을 만족하지 않는 크로스 오리진 요청 → 실제 요청 전에 OPTIONS 메서드로 Preflight 요청을 보냄.
 
 ```
 [브라우저]                                   [서버]
@@ -3946,22 +4075,24 @@ await fetch('https://api.other.com/data', {
 
 ##### 응답 헤더 (서버 -> 클라이언트)
 
-| 헤더 | 설명 | 예시 |
-|---|---|---|
-| `Access-Control-Allow-Origin` | 허용할 출처 | `https://example.com` 또는 `*` |
-| `Access-Control-Allow-Methods` | 허용할 HTTP 메서드 | `GET, POST, PUT, DELETE` |
-| `Access-Control-Allow-Headers` | 허용할 요청 헤더 | `Content-Type, Authorization` |
-| `Access-Control-Expose-Headers` | JS에서 접근 가능한 응답 헤더 | `X-Total-Count, X-Request-Id` |
-| `Access-Control-Max-Age` | Preflight 캐시 시간(초) | `86400` |
-| `Access-Control-Allow-Credentials` | 자격 증명 허용 여부 | `true` |
+- `Access-Control-Allow-Origin`: 허용할 출처
+  - 예시: `https://example.com` 또는 `*`
+- `Access-Control-Allow-Methods`: 허용할 HTTP 메서드
+  - 예시: `GET, POST, PUT, DELETE`
+- `Access-Control-Allow-Headers`: 허용할 요청 헤더
+  - 예시: `Content-Type, Authorization`
+- `Access-Control-Expose-Headers`: JS에서 접근 가능한 응답 헤더
+  - 예시: `X-Total-Count, X-Request-Id`
+- `Access-Control-Max-Age`: Preflight 캐시 시간(초)
+  - 예시: `86400`
+- `Access-Control-Allow-Credentials`: 자격 증명 허용 여부
+  - 예시: `true`
 
 ##### 요청 헤더 (클라이언트 -> 서버, Preflight에서 사용)
 
-| 헤더 | 설명 |
-|---|---|
-| `Origin` | 요청 출처 |
-| `Access-Control-Request-Method` | 실제 요청에서 사용할 메서드 |
-| `Access-Control-Request-Headers` | 실제 요청에서 사용할 헤더 |
+- `Origin`: 요청 출처
+- `Access-Control-Request-Method`: 실제 요청에서 사용할 메서드
+- `Access-Control-Request-Headers`: 실제 요청에서 사용할 헤더
 
 ```javascript
 // 서버 측 CORS 설정 예시 (Node.js/Express)
@@ -3982,7 +4113,7 @@ app.use((req, res, next) => {
 
 #### 8.6 Opaque Response (불투명 응답)
 
-`mode: 'no-cors'`로 크로스 오리진 요청을 하면, 서버가 CORS 헤더를 보내지 않아도 요청 자체는 성공하지만 "opaque" 응답을 받게 된다.
+`mode: 'no-cors'`로 크로스 오리진 요청을 하면 → 서버가 CORS 헤더를 보내지 않아도 요청 자체는 성공하지만 "opaque" 응답을 받게 됨.
 
 ```javascript
 const response = await fetch('https://other-domain.com/resource', {
@@ -4002,7 +4133,7 @@ console.log(response.url);        // "" (접근 불가)
 
 #### 8.7 CORS-safelisted 헤더
 
-응답 헤더 중 기본적으로 JavaScript에서 접근 가능한 헤더는 다음과 같다:
+응답 헤더 중 기본적으로 JavaScript에서 접근 가능한 헤더:
 
 - `Cache-Control`
 - `Content-Language`
@@ -4012,7 +4143,7 @@ console.log(response.url);        // "" (접근 불가)
 - `Last-Modified`
 - `Pragma`
 
-그 외의 헤더에 접근하려면 서버가 `Access-Control-Expose-Headers`로 명시해야 한다.
+그 외의 헤더에 접근 → 서버가 `Access-Control-Expose-Headers`로 명시해야 함.
 
 ```javascript
 // 서버가 Access-Control-Expose-Headers를 설정하지 않은 경우
@@ -4032,7 +4163,7 @@ console.log(response2.headers.get('X-Total-Count')); // "42" (접근 가능)
 
 #### 9.1 cors (기본값)
 
-크로스 오리진 요청이 가능하며, CORS 프로토콜에 따라 동작한다.
+크로스 오리진 요청이 가능하며, CORS 프로토콜에 따라 동작.
 
 ```javascript
 // cors 모드 (기본값)
@@ -4045,7 +4176,7 @@ const response = await fetch('https://api.other-domain.com/data', {
 
 #### 9.2 no-cors
 
-CORS 헤더 없이도 크로스 오리진 요청을 보낼 수 있지만, 응답은 "opaque"가 되어 내용에 접근할 수 없다. 단순 요청만 가능하다.
+CORS 헤더 없이도 크로스 오리진 요청을 보낼 수 있으나 → 응답은 "opaque"가 되어 내용에 접근 불가. 단순 요청만 가능.
 
 ```javascript
 // no-cors 모드
@@ -4067,7 +4198,7 @@ self.addEventListener('fetch', (event) => {
 
 #### 9.3 same-origin
 
-같은 출처의 요청만 허용한다. 크로스 오리진 요청을 하면 TypeError가 발생한다.
+같은 출처의 요청만 허용. 크로스 오리진 요청을 하면 TypeError 발생.
 
 ```javascript
 // same-origin 모드
@@ -4082,7 +4213,7 @@ try {
 
 #### 9.4 navigate
 
-문서 내비게이션에 사용되는 모드로, 일반 JavaScript 코드에서는 설정할 수 없다. 브라우저가 내부적으로 사용한다.
+문서 내비게이션에 사용되는 모드 → 일반 JavaScript 코드에서는 설정 불가. 브라우저가 내부적으로 사용.
 
 ```javascript
 // Service Worker에서 navigate 모드 감지
@@ -4102,7 +4233,7 @@ self.addEventListener('fetch', (event) => {
 
 #### 10.1 omit
 
-어떤 경우에도 쿠키, HTTP 인증 정보, TLS 클라이언트 인증서를 요청에 포함하지 않는다.
+어떤 경우에도 쿠키·HTTP 인증 정보·TLS 클라이언트 인증서를 요청에 포함하지 않음.
 
 ```javascript
 await fetch('/api/public-data', { credentials: 'omit' });
@@ -4111,7 +4242,7 @@ await fetch('/api/public-data', { credentials: 'omit' });
 
 #### 10.2 same-origin (기본값)
 
-같은 출처의 요청에만 자격 증명을 포함한다.
+같은 출처의 요청에만 자격 증명을 포함.
 
 ```javascript
 await fetch('/api/profile', { credentials: 'same-origin' });
@@ -4121,7 +4252,7 @@ await fetch('/api/profile', { credentials: 'same-origin' });
 
 #### 10.3 include
 
-항상 자격 증명을 포함한다. 크로스 오리진 요청에도 쿠키를 보낸다.
+항상 자격 증명을 포함. 크로스 오리진 요청에도 쿠키를 보냄.
 
 ```javascript
 await fetch('https://api.other-domain.com/profile', {
@@ -4159,7 +4290,10 @@ for (const url of urls) {
 
 #### 11.1 default
 
-브라우저의 표준 HTTP 캐시 동작을 따른다. 캐시에 신선한(fresh) 응답이 있으면 사용하고, 만료되었으면 조건부 요청(If-None-Match, If-Modified-Since)으로 검증한다.
+브라우저의 표준 HTTP 캐시 동작을 따름.
+
+- 캐시에 신선한(fresh) 응답이 있으면 사용
+- 만료되었으면 조건부 요청(If-None-Match, If-Modified-Since)으로 검증
 
 ```javascript
 // 기본 캐시 동작
@@ -4170,7 +4304,7 @@ await fetch('/api/data');
 
 #### 11.2 no-store
 
-캐시를 완전히 우회한다. 캐시를 확인하지도 않고, 응답을 캐시에 저장하지도 않는다.
+캐시를 완전히 우회 → 캐시를 확인하지도 않고, 응답을 캐시에 저장하지도 않음.
 
 ```javascript
 // 매번 새로운 요청, 캐시 저장 안 함
@@ -4180,7 +4314,7 @@ await fetch('/api/sensitive-data', { cache: 'no-store' });
 
 #### 11.3 reload
 
-캐시에 있는 응답을 무시하고 항상 네트워크에서 새로 가져온다. 가져온 응답은 캐시를 업데이트할 수 있다.
+캐시에 있는 응답을 무시하고 항상 네트워크에서 새로 가져옴. 가져온 응답은 캐시를 업데이트할 수 있음.
 
 ```javascript
 // 캐시 무시, 항상 네트워크에서 가져옴
@@ -4190,7 +4324,7 @@ await fetch('/api/data', { cache: 'reload' });
 
 #### 11.4 no-cache
 
-항상 서버에 조건부 요청을 보내 캐시의 유효성을 검증한다. 서버가 304 Not Modified를 응답하면 캐시된 응답을 사용한다.
+항상 서버에 조건부 요청을 보내 캐시의 유효성을 검증. 서버가 304 Not Modified를 응답하면 캐시된 응답을 사용.
 
 ```javascript
 // 항상 서버에 검증 요청
@@ -4200,7 +4334,7 @@ await fetch('/api/data', { cache: 'no-cache' });
 
 #### 11.5 force-cache
 
-캐시에 응답이 있으면 만료 여부와 관계없이 그 응답을 사용한다. 캐시에 없을 때만 네트워크 요청을 한다.
+캐시에 응답이 있으면 만료 여부와 관계없이 그 응답을 사용. 캐시에 없을 때만 네트워크 요청.
 
 ```javascript
 // 캐시 우선, 만료되어도 사용
@@ -4210,7 +4344,7 @@ await fetch('/api/rarely-changing-data', { cache: 'force-cache' });
 
 #### 11.6 only-if-cached
 
-캐시에 있을 때만 응답을 반환한다. 캐시에 없으면 네트워크 에러가 발생한다. `mode: 'same-origin'`과 함께 사용해야 한다.
+캐시에 있을 때만 응답을 반환. 캐시에 없으면 네트워크 에러 발생. `mode: 'same-origin'`과 함께 사용해야 함.
 
 ```javascript
 // 캐시에 있을 때만 사용
@@ -4243,7 +4377,7 @@ try {
 
 #### 12.1 follow (기본값)
 
-리다이렉트를 자동으로 따라간다. 최대 20회까지 리다이렉트를 추적한다.
+리다이렉트를 자동으로 따라감. 최대 20회까지 리다이렉트를 추적.
 
 ```javascript
 const response = await fetch('/old-url', { redirect: 'follow' });
@@ -4255,7 +4389,7 @@ console.log(response.status);     // 200 (최종 응답의 상태)
 
 #### 12.2 error
 
-리다이렉트 발생 시 네트워크 에러로 처리한다.
+리다이렉트 발생 시 네트워크 에러로 처리.
 
 ```javascript
 try {
@@ -4276,7 +4410,7 @@ async function fetchNoRedirect(url) {
 
 #### 12.3 manual
 
-리다이렉트를 자동으로 추적하지 않고, `opaqueredirect` 타입의 응답을 반환한다. 리다이렉트 정보에 직접 접근하려면 이 모드를 사용한다.
+리다이렉트를 자동으로 추적하지 않고, `opaqueredirect` 타입의 응답을 반환. 리다이렉트 정보에 직접 접근하려면 이 모드를 사용.
 
 ```javascript
 const response = await fetch('/old-url', { redirect: 'manual' });
@@ -4306,24 +4440,46 @@ self.addEventListener('fetch', (event) => {
 
 ### 13. Referrer Policy
 
-Referrer Policy는 요청 시 `Referer` 헤더에 포함되는 URL 정보의 범위를 제어한다.
+Referrer Policy: 요청 시 `Referer` 헤더에 포함되는 URL 정보의 범위를 제어.
 
 #### 13.1 정책별 동작
 
-| 정책 | 동일 출처 | 크로스 오리진 (HTTPS->HTTPS) | 다운그레이드 (HTTPS->HTTP) |
-|---|---|---|---|
-| `no-referrer` | 없음 | 없음 | 없음 |
-| `no-referrer-when-downgrade` | 전체 URL | 전체 URL | 없음 |
-| `same-origin` | 전체 URL | 없음 | 없음 |
-| `origin` | 출처만 | 출처만 | 출처만 |
-| `strict-origin` | 출처만 | 출처만 | 없음 |
-| `origin-when-cross-origin` | 전체 URL | 출처만 | 출처만 |
-| `strict-origin-when-cross-origin` | 전체 URL | 출처만 | 없음 |
-| `unsafe-url` | 전체 URL | 전체 URL | 전체 URL |
+- `no-referrer`
+  - 동일 출처: 없음
+  - 크로스 오리진 (HTTPS->HTTPS): 없음
+  - 다운그레이드 (HTTPS->HTTP): 없음
+- `no-referrer-when-downgrade`
+  - 동일 출처: 전체 URL
+  - 크로스 오리진 (HTTPS->HTTPS): 전체 URL
+  - 다운그레이드 (HTTPS->HTTP): 없음
+- `same-origin`
+  - 동일 출처: 전체 URL
+  - 크로스 오리진 (HTTPS->HTTPS): 없음
+  - 다운그레이드 (HTTPS->HTTP): 없음
+- `origin`
+  - 동일 출처: 출처만
+  - 크로스 오리진 (HTTPS->HTTPS): 출처만
+  - 다운그레이드 (HTTPS->HTTP): 출처만
+- `strict-origin`
+  - 동일 출처: 출처만
+  - 크로스 오리진 (HTTPS->HTTPS): 출처만
+  - 다운그레이드 (HTTPS->HTTP): 없음
+- `origin-when-cross-origin`
+  - 동일 출처: 전체 URL
+  - 크로스 오리진 (HTTPS->HTTPS): 출처만
+  - 다운그레이드 (HTTPS->HTTP): 출처만
+- `strict-origin-when-cross-origin`
+  - 동일 출처: 전체 URL
+  - 크로스 오리진 (HTTPS->HTTPS): 출처만
+  - 다운그레이드 (HTTPS->HTTP): 없음
+- `unsafe-url`
+  - 동일 출처: 전체 URL
+  - 크로스 오리진 (HTTPS->HTTPS): 전체 URL
+  - 다운그레이드 (HTTPS->HTTP): 전체 URL
 
-> "전체 URL" = `https://example.com/path/page?query=1`
-> "출처만" = `https://example.com/`
-> "없음" = Referer 헤더를 보내지 않음
+- "전체 URL" = `https://example.com/path/page?query=1`
+- "출처만" = `https://example.com/`
+- "없음" = Referer 헤더를 보내지 않음
 
 #### 13.2 사용 예시
 
@@ -4367,11 +4523,11 @@ await fetch('http://insecure.com/api', {
 
 #### 14.1 개념
 
-SRI는 가져온 리소스가 의도한 것과 일치하는지 브라우저가 검증할 수 있게 하는 보안 기능이다. CDN이 해킹되어 악성 코드가 삽입된 경우를 방어할 수 있다.
+SRI: 가져온 리소스가 의도한 것과 일치하는지 브라우저가 검증할 수 있게 하는 보안 기능. CDN이 해킹되어 악성 코드가 삽입된 경우를 방어할 수 있음.
 
 #### 14.2 integrity 속성
 
-`integrity` 값은 `해시알고리즘-base64인코딩된해시값` 형식이다.
+`integrity` 값: `해시알고리즘-base64인코딩된해시값` 형식.
 
 ```javascript
 // SHA-256 해시를 사용한 무결성 검증
@@ -4432,13 +4588,15 @@ try {
 
 ---
 
+
 ### 15. Fetch 알고리즘
 
-Fetch Standard는 리소스를 가져오는 과정을 여러 단계의 알고리즘으로 정의한다. 이 알고리즘들은 브라우저 내부에서 순차적으로 실행된다.
+Fetch Standard는 리소스를 가져오는 과정을 여러 단계의 알고리즘으로 정의함 → 브라우저 내부에서 순차적으로 실행됨.
 
 #### 15.1 Main Fetch
 
-전체 fetch 과정의 진입점이다. 요청(Request)을 받아서 최종 응답(Response)을 반환하는 최상위 알고리즘이다.
+- 전체 fetch 과정의 진입점
+- 요청(Request)을 받아 최종 응답(Response)을 반환하는 최상위 알고리즘
 
 ```
 Main Fetch 알고리즘 흐름:
@@ -4483,7 +4641,7 @@ function mainFetch(request, recursive = false) {
 
 #### 15.2 HTTP Fetch
 
-HTTP/HTTPS 요청을 처리하는 알고리즘이다.
+- HTTP/HTTPS 요청을 처리하는 알고리즘
 
 ```
 HTTP Fetch 알고리즘 흐름:
@@ -4502,7 +4660,7 @@ HTTP Fetch 알고리즘 흐름:
 
 #### 15.3 HTTP-network-or-cache Fetch
 
-캐시와 네트워크 사이의 상호작용을 관리하는 알고리즘이다.
+- 캐시와 네트워크 사이의 상호작용을 관리하는 알고리즘
 
 ```
 HTTP-network-or-cache Fetch:
@@ -4523,7 +4681,7 @@ HTTP-network-or-cache Fetch:
 
 #### 15.4 HTTP-network Fetch
 
-실제 네트워크 연결을 수행하는 가장 낮은 수준의 알고리즘이다.
+- 실제 네트워크 연결을 수행하는 가장 낮은 수준의 알고리즘
 
 ```
 HTTP-network Fetch:
@@ -4544,7 +4702,7 @@ HTTP-network Fetch:
 
 #### 15.5 CORS-preflight Fetch
 
-CORS preflight 요청을 처리하는 알고리즘이다.
+- CORS preflight 요청을 처리하는 알고리즘
 
 ```
 CORS-preflight Fetch:
@@ -4591,7 +4749,8 @@ await fetch('https://api.other.com/data', {
 
 #### 16.1 FetchEvent
 
-Service Worker는 페이지에서 발생하는 모든 네트워크 요청을 `fetch` 이벤트로 가로챌 수 있다. 이는 Fetch Standard와 Service Worker API의 핵심적인 연결 지점이다.
+- Service Worker는 페이지에서 발생하는 모든 네트워크 요청을 `fetch` 이벤트로 가로챌 수 있음
+- Fetch Standard와 Service Worker API의 핵심적인 연결 지점
 
 ```javascript
 // service-worker.js
@@ -4608,7 +4767,7 @@ self.addEventListener('fetch', (event) => {
 
 #### 16.2 respondWith()
 
-`FetchEvent.respondWith()`는 커스텀 응답으로 요청에 대응할 수 있게 한다.
+- `FetchEvent.respondWith()` → 커스텀 응답으로 요청에 대응 가능
 
 ```javascript
 // 캐시 우선 전략 (Cache First)
@@ -4720,7 +4879,7 @@ self.addEventListener('fetch', (event) => {
 
 #### 17.1 Response Body 스트리밍 읽기
 
-Fetch API는 `ReadableStream`을 통해 응답 본문을 청크(chunk) 단위로 읽을 수 있다.
+- Fetch API는 `ReadableStream`을 통해 응답 본문을 청크(chunk) 단위로 읽음
 
 ```javascript
 // 기본 스트리밍 읽기
@@ -5112,11 +5271,11 @@ try {
 
 #### 19.1 에러 유형 분류
 
-Fetch API에서 발생할 수 있는 에러는 크게 세 가지로 분류된다:
+Fetch API에서 발생 가능한 에러는 크게 세 가지로 분류:
 
-1. 네트워크 에러 (TypeError): 네트워크 연결 실패, DNS 실패, CORS 위반 등
-2. 중단 에러 (AbortError / TimeoutError): `AbortController`로 취소되었거나 타임아웃
-3. HTTP 에러 상태 코드: 4xx, 5xx 응답 (Promise가 reject되지 않음!)
+- 네트워크 에러 (TypeError) → 네트워크 연결 실패·DNS 실패·CORS 위반 등
+- 중단 에러 (AbortError / TimeoutError) → `AbortController`로 취소되거나 타임아웃 발생
+- HTTP 에러 상태 코드 → 4xx·5xx 응답 (Promise가 reject되지 않음)
 
 ```javascript
 // 중요한 차이점:
@@ -5528,4 +5687,3 @@ async function uploadFileWithProgress(file, url, onProgress) {
 - [MDN Web Docs - AbortController](https://developer.mozilla.org/ko/docs/Web/API/AbortController)
 - [MDN Web Docs - ReadableStream](https://developer.mozilla.org/ko/docs/Web/API/ReadableStream)
 - [MDN Web Docs - Service Worker API](https://developer.mozilla.org/ko/docs/Web/API/Service_Worker_API)
-- [MDN Web Docs - CORS](https://developer.mozilla.org/ko/docs/Web/HTTP/CORS)

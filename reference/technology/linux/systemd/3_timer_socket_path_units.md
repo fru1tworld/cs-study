@@ -22,12 +22,12 @@
 
 ### Timer란?
 
-`.timer` unit은 **다른 unit(보통 service)을 일정 시점/주기에 활성화**하는 unit입니다. cron 작업을 systemd 방식으로 표현하는 도구입니다.
+`.timer` unit은 다른 unit(보통 service)을 일정 시점·주기에 활성화하는 unit → cron 작업을 systemd 방식으로 표현하는 도구.
 
 기본 패턴:
 - `backup.timer` 가 `backup.service` 를 실행
-- 두 파일은 보통 **같은 이름의 짝(pair)**
-- `Unit=` 으로 다른 이름의 service를 지정할 수도 있음
+- 두 파일은 보통 같은 이름의 짝(pair)
+- `Unit=` 으로 다른 이름의 service를 지정 가능
 
 ```ini
 # /etc/systemd/system/backup.timer
@@ -53,28 +53,26 @@ Type=oneshot
 ExecStart=/usr/local/bin/backup.sh
 ```
 
-`backup.timer` 만 enable하면 됩니다 — `backup.service` 는 enable 불필요.
+`backup.timer` 만 enable하면 됨 → `backup.service` 는 enable 불필요.
 
 ---
 
 ### Timer와 cron의 차이
 
-| 항목 | cron | systemd timer |
-| --- | --- | --- |
-| 표현 형식 | crontab 5필드 | OnCalendar 자연어 |
-| 로깅 | 별도 메일/로그 | journald 통합 |
-| 의존성 | 없음 | unit 의존성 활용 |
-| 실패 처리 | 사용자 책임 | Restart, OnFailure |
-| 부팅 후 누락 작업 | 없음 | Persistent 옵션 |
-| 리소스 제어 | 없음 | cgroup으로 제한 가능 |
-| 보안 격리 | 없음 | systemd.exec 옵션 모두 사용 |
-| 사용자 단위 | crontab -e | `systemctl --user` |
+- 표현 형식: cron은 crontab 5필드 · systemd timer는 OnCalendar 자연어
+- 로깅: cron은 별도 메일/로그 · systemd timer는 journald 통합
+- 의존성: cron은 없음 · systemd timer는 unit 의존성 활용
+- 실패 처리: cron은 사용자 책임 · systemd timer는 Restart, OnFailure
+- 부팅 후 누락 작업: cron은 없음 · systemd timer는 Persistent 옵션
+- 리소스 제어: cron은 없음 · systemd timer는 cgroup으로 제한 가능
+- 보안 격리: cron은 없음 · systemd timer는 systemd.exec 옵션 전부 사용 가능
+- 사용자 단위: cron은 `crontab -e` · systemd timer는 `systemctl --user`
 
 ---
 
 ### Monotonic 타이머
 
-시스템 부팅 시점이나 unit 활성화 시점 등을 기준으로 동작합니다.
+시스템 부팅 시점이나 unit 활성화 시점 등을 기준으로 동작.
 
 ```ini
 [Timer]
@@ -84,20 +82,18 @@ OnUnitActiveSec=1h
 
 #### 종류
 
-| 옵션 | 기준 |
-| --- | --- |
-| `OnActiveSec=` | timer가 active가 된 시점부터 |
-| `OnBootSec=` | 시스템 부팅 시점부터 |
-| `OnStartupSec=` | systemd 시작 시점부터 |
-| `OnUnitActiveSec=` | 연관 unit이 마지막으로 active가 된 시점부터 |
-| `OnUnitInactiveSec=` | 연관 unit이 마지막으로 inactive가 된 시점부터 |
+- `OnActiveSec=`: timer가 active가 된 시점부터
+- `OnBootSec=`: 시스템 부팅 시점부터
+- `OnStartupSec=`: systemd 시작 시점부터
+- `OnUnitActiveSec=`: 연관 unit이 마지막으로 active가 된 시점부터
+- `OnUnitInactiveSec=`: 연관 unit이 마지막으로 inactive가 된 시점부터
 
 #### 시간 표기
 
 - `30s`, `5min`, `2h`, `1d`, `1week`, `1month`, `1year`
 - 조합 가능: `1h 30min`
 
-여러 개를 지정하면 각 조건이 OR로 결합됩니다.
+여러 개를 지정하면 각 조건이 OR로 결합.
 
 ```ini
 [Timer]
@@ -109,7 +105,7 @@ OnUnitActiveSec=1h        # 그 다음부터 1시간마다
 
 ### Realtime 타이머 (OnCalendar)
 
-벽시계 시간 기준의 캘린더 표현식.
+벽시계 시간 기준의 캘린더 표현식 사용.
 
 ```ini
 OnCalendar=Mon..Fri 09:00
@@ -123,23 +119,21 @@ OnCalendar=hourly
 DayOfWeek Year-Month-Day Hour:Minute:Second
 ```
 
-- `*` 은 모든 값
-- `..` 은 범위 (`Mon..Fri`)
-- `,` 은 목록 (`Mon,Wed,Fri`)
-- `/` 은 간격 (`*/5` = 5의 배수)
+- `*`: 모든 값
+- `..`: 범위 (`Mon..Fri`)
+- `,`: 목록 (`Mon,Wed,Fri`)
+- `/`: 간격 (`*/5` = 5의 배수)
 
 #### 자주 쓰는 단축어
 
-| 단축어 | 의미 |
-| --- | --- |
-| `minutely` | 매분 |
-| `hourly` | 매 시 정각 (`*-*-* *:00:00`) |
-| `daily` | 매일 자정 |
-| `weekly` | 매주 월요일 자정 |
-| `monthly` | 매월 1일 자정 |
-| `yearly` / `annually` | 매년 1월 1일 |
-| `quarterly` | 분기마다 |
-| `semiannually` | 6개월마다 |
+- `minutely`: 매분
+- `hourly`: 매 시 정각 (`*-*-* *:00:00`)
+- `daily`: 매일 자정
+- `weekly`: 매주 월요일 자정
+- `monthly`: 매월 1일 자정
+- `yearly` / `annually`: 매년 1월 1일
+- `quarterly`: 분기마다
+- `semiannually`: 6개월마다
 
 #### 예시
 
@@ -173,9 +167,9 @@ Normalized form: Mon..Fri *-*-* 09:00:00
 Persistent=true
 ```
 
-`OnCalendar` 와 함께 사용. 시스템이 꺼져 있어 타이머를 놓친 경우, 부팅 후 즉시 한 번 실행. cron의 `anacron` 동작과 비슷.
+`OnCalendar` 와 함께 사용 → 시스템이 꺼져 있어 타이머를 놓친 경우, 부팅 후 즉시 한 번 실행 (cron의 `anacron` 동작과 유사).
 
-`/var/lib/systemd/timers/` 에 마지막 실행 시각을 저장합니다.
+`/var/lib/systemd/timers/` 에 마지막 실행 시각 저장.
 
 #### Accuracy
 
@@ -183,9 +177,9 @@ Persistent=true
 AccuracySec=1min
 ```
 
-타이머 정확도를 지정합니다. 기본값은 1분입니다. 값을 크게 설정하면(예: `1h`) 여러 타이머를 같은 시점에 묶어 발화시킬 수 있어 절전 효과가 있습니다. 데스크탑이나 IoT 환경에서 유용합니다.
+타이머 정확도 지정 → 기본값 1분. 값을 크게 설정하면(예: `1h`) 여러 타이머를 같은 시점에 묶어 발화시켜 절전 효과 있음 → 데스크탑·IoT 환경에 유용.
 
-매우 정확한 트리거가 필요하면:
+매우 정확한 트리거가 필요한 경우:
 ```ini
 AccuracySec=1us
 ```
@@ -196,7 +190,7 @@ AccuracySec=1us
 RandomizedDelaySec=5min
 ```
 
-발화 시점에 0부터 지정 시간 사이의 무작위 지연을 추가합니다. 여러 머신에서 같은 타이머를 실행할 때 부하가 한 번에 몰리는 것을 방지할 수 있습니다.
+발화 시점에 0부터 지정 시간 사이의 무작위 지연 추가 → 여러 머신에서 같은 타이머를 실행할 때 부하 집중 방지 용도.
 
 #### FixedRandomDelay
 
@@ -204,7 +198,7 @@ RandomizedDelaySec=5min
 FixedRandomDelay=true
 ```
 
-무작위 지연을 호스트별로 고정된 값으로 적용합니다(호스트 ID와 unit 이름 기반). 동일한 머신은 항상 같은 지연값을 가집니다.
+무작위 지연을 호스트별로 고정된 값으로 적용(호스트 ID와 unit 이름 기반) → 동일한 머신은 항상 같은 지연값 사용.
 
 #### WakeSystem
 
@@ -212,7 +206,7 @@ FixedRandomDelay=true
 WakeSystem=true
 ```
 
-타이머가 발화할 때 슬립 상태의 시스템을 깨웁니다(RTC 사용). 노트북 백업 같은 시나리오에 유용합니다.
+타이머 발화 시 슬립 상태의 시스템을 깨움(RTC 사용) → 노트북 백업 같은 시나리오에 유용.
 
 #### OnClockChange / OnTimezoneChange
 
@@ -221,7 +215,7 @@ OnClockChange=true
 OnTimezoneChange=true
 ```
 
-시스템 시간이 점프하거나 타임존이 변경되면 즉시 발화합니다.
+시스템 시간이 점프하거나 타임존이 변경되면 즉시 발화.
 
 #### RemainAfterElapse
 
@@ -229,17 +223,17 @@ OnTimezoneChange=true
 RemainAfterElapse=no
 ```
 
-마지막 발화 후 타이머를 즉시 정리할지 여부를 지정합니다. 대부분의 경우 기본값 `yes`가 적절합니다.
+마지막 발화 후 타이머를 즉시 정리할지 여부 지정 → 대부분의 경우 기본값 `yes`가 적절.
 
 ---
 
 ### Persistent와 Accuracy
 
-타이머를 다룰 때 가장 흔한 실수가 두 가지입니다.
+타이머를 다룰 때 가장 흔한 실수 두 가지.
 
 #### 누락 작업이 처리되지 않음
 
-cron에서 systemd timer로 전환할 때 가장 자주 겪는 문제입니다. 다음 옵션을 추가하세요:
+cron에서 systemd timer로 전환할 때 가장 자주 겪는 문제 → 다음 옵션 추가 필요:
 
 ```ini
 [Timer]
@@ -247,7 +241,7 @@ OnCalendar=daily
 Persistent=true
 ```
 
-`Persistent=true` 가 없으면 시스템이 꺼져 있던 동안의 작업은 실행되지 않습니다.
+`Persistent=true` 가 없으면 시스템이 꺼져 있던 동안의 작업은 실행 안 됨.
 
 #### 여러 머신이 동시에 실행
 
@@ -257,7 +251,7 @@ OnCalendar=hourly
 RandomizedDelaySec=10min
 ```
 
-이렇게 하면 매 시 정각이 아니라 정각~정각+10분 사이에 분산되어 실행됩니다.
+이렇게 하면 매 시 정각이 아니라 정각~정각+10분 사이에 분산되어 실행됨.
 
 ---
 
@@ -305,14 +299,14 @@ Persistent=false
 
 #### 4. 사용자 timer
 
-`~/.config/systemd/user/sync.timer` 에 작성 후:
+`~/.config/systemd/user/sync.timer` 에 작성 후 다음 실행:
 
 ```bash
 systemctl --user enable --now sync.timer
 loginctl enable-linger $USER   # 사용자 로그아웃 후에도 동작
 ```
 
-`enable-linger` 가 없으면 사용자가 로그인해 있는 동안만 timer가 동작합니다.
+`enable-linger` 가 없으면 사용자가 로그인해 있는 동안만 timer 동작.
 
 ---
 
@@ -343,7 +337,7 @@ systemd-analyze calendar --iterations=5 "*-*-* 03:00:00"
 systemctl start backup.service    # 타이머가 아닌 service를 직접 시작
 ```
 
-타이머 자체를 시작하면 다음 발화 시점만 계산할 뿐 즉시 실행되지 않습니다. 즉시 실행이 필요하면 service를 직접 시작하면 됩니다.
+타이머 자체를 시작하면 다음 발화 시점만 계산할 뿐 즉시 실행되지 않음 → 즉시 실행이 필요하면 service를 직접 시작.
 
 #### 마지막 실행 결과
 
@@ -384,7 +378,7 @@ systemctl status backup.timer
 
 ### 소켓 활성화란?
 
-전통적인 `inetd`의 systemd 버전입니다. systemd가 포트(또는 유닉스 소켓)를 미리 열어 두고, 첫 연결이 들어오면 서비스를 시작해 해당 소켓을 넘겨줍니다.
+전통적인 `inetd`의 systemd 버전 → systemd가 포트(또는 유닉스 소켓)를 미리 열어 두고, 첫 연결이 들어오면 서비스를 시작해 해당 소켓을 넘겨줌.
 
 ```
 [부팅]
@@ -405,29 +399,29 @@ systemctl status backup.timer
 
 #### 1. 부팅 가속
 
-서비스 자체를 시작하지 않고 소켓만 열어두면 되므로 부팅이 빠릅니다. systemd가 모든 서비스의 소켓을 동시에 열어두면, 의존 관계가 있는 서비스들도 병렬로 기동할 수 있습니다.
+서비스 자체를 시작하지 않고 소켓만 열어두면 되므로 부팅이 빠름 → systemd가 모든 서비스의 소켓을 동시에 열어두면, 의존 관계가 있는 서비스들도 병렬로 기동 가능.
 
 #### 2. 의존성 단순화
 
-A 서비스가 B 서비스에 연결한다고 가정합니다. 일반적으로는 A가 B의 시작을 기다려야 합니다. 그러나 B의 **소켓**만 열려 있으면 A는 즉시 연결을 시도할 수 있고, 커널 버퍼에 쌓인 데이터는 B가 시작된 뒤 처리됩니다. 즉 **순서 의존성이 사라집니다**.
+A 서비스가 B 서비스에 연결하는 경우 가정. 일반적으로는 A가 B의 시작을 기다려야 함. 그러나 B의 소켓만 열려 있으면 A는 즉시 연결을 시도할 수 있고, 커널 버퍼에 쌓인 데이터는 B가 시작된 뒤 처리 → 순서 의존성이 사라짐.
 
 #### 3. 서비스 재시작에도 연결 유지
 
-서비스를 재시작해도 소켓은 systemd가 들고 있으므로 클라이언트 연결이 끊기지 않습니다.
+서비스를 재시작해도 소켓은 systemd가 들고 있으므로 클라이언트 연결이 끊기지 않음.
 
 #### 4. 권한 분리
 
-systemd가 소켓을 열고 권한 있는 fd를 비특권 서비스에 넘겨주면, 서비스 자체는 root 권한 없이도 동작합니다. (1024 미만 포트 포함)
+systemd가 소켓을 열고 권한 있는 fd를 비특권 서비스에 넘겨주면, 서비스 자체는 root 권한 없이도 동작(1024 미만 포트 포함).
 
 #### 5. 온디맨드 시작
 
-거의 사용되지 않는 서비스는 평소에 메모리를 점유하지 않다가, 필요할 때만 시작됩니다.
+거의 사용되지 않는 서비스는 평소에 메모리를 점유하지 않다가, 필요할 때만 시작됨.
 
 ---
 
 ### 기본 구조
 
-소켓 유닛과 서비스 유닛은 같은 이름을 가져야 자동으로 연결됩니다.
+소켓 유닛과 서비스 유닛은 같은 이름을 가져야 자동으로 연결됨.
 
 ```ini
 # /etc/systemd/system/echo.socket
@@ -453,7 +447,7 @@ ExecStart=/usr/local/bin/echo-server
 StandardInput=socket
 ```
 
-`Service=` 로 다른 이름의 서비스를 지정할 수도 있습니다.
+`Service=` 로 다른 이름의 서비스를 지정 가능.
 
 ---
 
@@ -469,7 +463,7 @@ ListenStream=/run/myapp.sock     # Unix domain socket
 ListenStream=@abstract           # abstract namespace (Linux 전용)
 ```
 
-여러 개 지정 가능. 각각 별도 fd로 서비스에 전달됩니다.
+여러 개 지정 가능 → 각각 별도 fd로 서비스에 전달됨.
 
 #### ListenDatagram — UDP 또는 Unix dgram
 
@@ -480,7 +474,7 @@ ListenDatagram=/run/log.sock
 
 #### ListenSequentialPacket — Unix SEQPACKET
 
-`SOCK_SEQPACKET` 형. 메시지 경계를 유지하는 신뢰성 있는 양방향 소켓.
+`SOCK_SEQPACKET` 형 → 메시지 경계를 유지하는 신뢰성 있는 양방향 소켓.
 
 #### ListenFIFO — 명명된 파이프
 
@@ -510,11 +504,11 @@ USB Gadget 모드의 functionfs 인스턴스.
 
 #### Accept=no (기본, 권장)
 
-소켓 fd 자체를 서비스에 넘깁니다. 서비스는 단일 인스턴스로 실행되며, 직접 `accept(2)`를 호출해 연결을 처리합니다. nginx, sshd처럼 자체 멀티플렉싱이 가능한 데몬에 적합합니다.
+소켓 fd 자체를 서비스에 넘김 → 서비스는 단일 인스턴스로 실행되며, 직접 `accept(2)`를 호출해 연결 처리 → nginx·sshd처럼 자체 멀티플렉싱이 가능한 데몬에 적합.
 
 #### Accept=yes
 
-연결마다 서비스를 새 인스턴스로 fork합니다. 서비스는 stdin/stdout이 클라이언트와 연결된 단순한 프로그램이면 됩니다. 옛 `inetd` 스타일로, 간단한 echo 서버나 ftp 같은 용도에 적합합니다.
+연결마다 서비스를 새 인스턴스로 fork → 서비스는 stdin/stdout이 클라이언트와 연결된 단순한 프로그램이면 충분 → 옛 `inetd` 스타일로, 간단한 echo 서버나 ftp 같은 용도에 적합.
 
 ```ini
 [Socket]
@@ -522,7 +516,7 @@ ListenStream=2323
 Accept=yes
 ```
 
-이때 서비스는 **템플릿** 이어야 합니다:
+이때 서비스는 템플릿이어야 함:
 
 ```ini
 # echo@.service
@@ -543,7 +537,7 @@ SocketGroup=nginx
 SocketMode=0660
 ```
 
-Unix 소켓의 소유자 및 권한을 설정합니다.
+Unix 소켓의 소유자 및 권한 설정.
 
 #### Backlog
 
@@ -551,7 +545,7 @@ Unix 소켓의 소유자 및 권한을 설정합니다.
 Backlog=128
 ```
 
-`listen(2)` backlog 큐 크기를 설정합니다.
+`listen(2)` backlog 큐 크기 설정.
 
 #### KeepAlive
 
@@ -562,7 +556,7 @@ KeepAliveIntervalSec=75
 KeepAliveProbes=9
 ```
 
-TCP keepalive를 설정합니다.
+TCP keepalive 설정.
 
 #### NoDelay (TCP_NODELAY)
 
@@ -570,7 +564,7 @@ TCP keepalive를 설정합니다.
 NoDelay=yes
 ```
 
-Nagle 알고리즘을 비활성화합니다. 작은 패킷의 전송 지연을 줄입니다.
+Nagle 알고리즘 비활성화 → 작은 패킷의 전송 지연 감소.
 
 #### FreeBind
 
@@ -578,7 +572,7 @@ Nagle 알고리즘을 비활성화합니다. 작은 패킷의 전송 지연을 �
 FreeBind=yes
 ```
 
-존재하지 않거나 아직 구성되지 않은 IP 주소에도 바인딩을 허용합니다. floating IP 환경에서 유용합니다.
+존재하지 않거나 아직 구성되지 않은 IP 주소에도 바인딩 허용 → floating IP 환경에 유용.
 
 #### Transparent
 
@@ -586,7 +580,7 @@ FreeBind=yes
 Transparent=yes
 ```
 
-`IP_TRANSPARENT`. 투명 프록시 구현에 사용합니다.
+`IP_TRANSPARENT` → 투명 프록시 구현에 사용.
 
 #### ReusePort
 
@@ -594,7 +588,7 @@ Transparent=yes
 ReusePort=yes
 ```
 
-`SO_REUSEPORT`. 여러 프로세스가 동일한 포트에 바인딩할 수 있습니다 (커널 수준 로드 밸런싱).
+`SO_REUSEPORT` → 여러 프로세스가 동일한 포트에 바인딩 가능(커널 수준 로드 밸런싱).
 
 #### MaxConnections
 
@@ -603,7 +597,7 @@ MaxConnections=100
 MaxConnectionsPerSource=10
 ```
 
-`Accept=yes` 모드에서 동시 연결 수를 제한합니다.
+`Accept=yes` 모드에서 동시 연결 수 제한.
 
 #### TriggerLimit
 
@@ -612,20 +606,20 @@ TriggerLimitIntervalSec=2s
 TriggerLimitBurst=200
 ```
 
-소켓 활성화 트리거 빈도를 제한합니다 (DoS 방지).
+소켓 활성화 트리거 빈도 제한(DoS 방지).
 
 ---
 
 ### sd_listen_fds 프로토콜
 
-소켓 활성화를 지원하는 서비스는 fd를 다음과 같이 전달받습니다.
+소켓 활성화를 지원하는 서비스는 fd를 다음과 같이 전달받음.
 
-systemd는 다음 환경 변수를 설정한 뒤 서비스를 실행합니다:
+systemd는 다음 환경 변수를 설정한 뒤 서비스를 실행:
 - `LISTEN_FDS=N`: 전달된 fd 개수
-- `LISTEN_PID=<pid>`: 현재 PID (다른 프로세스에서 받지 않도록 검증용)
-- `LISTEN_FDNAMES=name1:name2`: fd 이름 (선택적)
+- `LISTEN_PID=<pid>`: 현재 PID(다른 프로세스에서 받지 않도록 검증용)
+- `LISTEN_FDNAMES=name1:name2`: fd 이름(선택적)
 
-fd는 `3`부터 시작하는 정수로 전달됩니다 (3, 4, 5, ...).
+fd는 `3`부터 시작하는 정수로 전달(3, 4, 5, ...).
 
 #### libsystemd C API
 
@@ -646,7 +640,7 @@ listeners, err := activation.Listeners()  // github.com/coreos/go-systemd/activa
 
 #### 셸/Python
 
-환경 변수를 직접 읽고 fd 3부터 처리하면 됩니다.
+환경 변수를 직접 읽고 fd 3부터 처리.
 
 #### FileDescriptorName
 
@@ -658,7 +652,7 @@ FileDescriptorName=http
 FileDescriptorName=https
 ```
 
-여러 소켓을 이름으로 구분할 때 사용합니다.
+여러 소켓을 이름으로 구분할 때 사용.
 
 ---
 
@@ -683,7 +677,7 @@ WantedBy=sockets.target
 
 #### 2. nginx 권한 분리
 
-systemd가 80/443 소켓을 열고 nginx에 넘기면, nginx는 root 권한 없이 실행됩니다.
+systemd가 80/443 소켓을 열고 nginx에 넘기면, nginx는 root 권한 없이 실행됨.
 
 ```ini
 # nginx.socket
@@ -758,7 +752,7 @@ StandardOutput=socket
 
 ### Path란?
 
-`.path` unit은 **파일이나 디렉터리의 변경을 감시**하다가 특정 조건이 만족되면 다른 unit(보통 service)을 활성화합니다. 내부적으로 `inotify` 를 사용합니다.
+`.path` unit은 파일이나 디렉터리의 변경을 감시하다가 특정 조건이 만족되면 다른 unit(보통 service)을 활성화 → 내부적으로 `inotify` 사용.
 
 용도:
 - 디렉터리에 새 파일이 들어오면 처리 (incoming 큐)
@@ -788,7 +782,7 @@ WantedBy=multi-user.target
 PathExists=/var/lib/myapp/trigger
 ```
 
-경로가 존재하면 연관 unit을 활성화. 파일이 사라지면 unit도 비활성화.
+경로가 존재하면 연관 unit 활성화 → 파일이 사라지면 unit도 비활성화.
 
 #### PathExistsGlob
 
@@ -796,7 +790,7 @@ PathExists=/var/lib/myapp/trigger
 PathExistsGlob=/var/spool/jobs/*.job
 ```
 
-glob 패턴을 사용합니다. 패턴에 매칭하는 파일이 하나라도 있으면 활성화됩니다.
+glob 패턴 사용 → 패턴에 매칭하는 파일이 하나라도 있으면 활성화됨.
 
 #### PathChanged
 
@@ -804,7 +798,7 @@ glob 패턴을 사용합니다. 패턴에 매칭하는 파일이 하나라도 �
 PathChanged=/etc/myapp.conf
 ```
 
-파일이 **닫힐 때(write 후 close)** 트리거됩니다. 가장 자주 사용하는 옵션이며, 디렉터리를 지정하면 그 안의 파일 변경을 감지합니다.
+파일이 닫힐 때(write 후 close) 트리거됨 → 가장 자주 사용하는 옵션이며, 디렉터리를 지정하면 그 안의 파일 변경을 감지.
 
 #### PathModified
 
@@ -812,7 +806,7 @@ PathChanged=/etc/myapp.conf
 PathModified=/var/log/access.log
 ```
 
-`PathChanged`와 비슷하지만 close 없이 **write 시점에도** 트리거됩니다. 더 민감하지만 같은 변경에 여러 번 발화할 수 있습니다.
+`PathChanged`와 비슷하지만 close 없이 write 시점에도 트리거됨 → 더 민감하지만 같은 변경에 여러 번 발화 가능.
 
 #### DirectoryNotEmpty
 
@@ -820,15 +814,15 @@ PathModified=/var/log/access.log
 DirectoryNotEmpty=/var/incoming
 ```
 
-디렉터리에 파일이 하나라도 있으면 트리거됩니다. 처리 큐 패턴에 적합합니다.
+디렉터리에 파일이 하나라도 있으면 트리거됨 → 처리 큐 패턴에 적합.
 
-> 모든 옵션은 절대 경로여야 하며, 여러 번 지정해 여러 경로를 감시할 수 있습니다.
+모든 옵션은 절대 경로여야 하며, 여러 번 지정해 여러 경로 감시 가능.
 
 ---
 
 ### Path와 Service의 짝
 
-기본적으로 `foo.path` 는 `foo.service` 를 활성화합니다. 다른 이름을 쓰려면 `Unit=` 으로 지정.
+기본적으로 `foo.path` 는 `foo.service` 를 활성화 → 다른 이름을 쓰려면 `Unit=` 으로 지정.
 
 ```ini
 [Path]
@@ -844,9 +838,9 @@ Unit=myapp-reload.service
 2. 변경 이벤트가 오면 연관 unit을 활성화
 3. 연관 unit이 종료되면 다시 감시 모드로 복귀
 
-`PathExists` / `DirectoryNotEmpty` 같은 "상태" 기반 옵션은 unit 시작 시 즉시 평가됩니다 — 이미 조건이 맞으면 바로 활성화.
+`PathExists` / `DirectoryNotEmpty` 같은 "상태" 기반 옵션은 unit 시작 시 즉시 평가됨 → 이미 조건이 맞으면 바로 활성화.
 
-`PathChanged` / `PathModified` 는 "이벤트" 기반이라 unit 시작 후 발생한 변경만 감지합니다.
+`PathChanged` / `PathModified` 는 "이벤트" 기반이라 unit 시작 후 발생한 변경만 감지.
 
 #### MakeDirectory
 
@@ -857,7 +851,7 @@ MakeDirectory=yes
 DirectoryMode=0755
 ```
 
-감시 대상 디렉터리가 없으면 자동으로 생성합니다.
+감시 대상 디렉터리가 없으면 자동으로 생성.
 
 ---
 
@@ -925,11 +919,11 @@ PathExists=!/var/lock/maintenance.lock
 Unit=maintenance.service
 ```
 
-> 참고: `!` 부정 연산자는 systemd 252+ 에서 일부 옵션에 사용 가능. 옛 버전에서는 두 개의 path unit으로 표현해야 합니다.
+참고: `!` 부정 연산자는 systemd 252+ 에서 일부 옵션에 사용 가능 → 옛 버전에서는 두 개의 path unit으로 표현 필요.
 
 #### 4. 인스턴스 템플릿과 결합
 
-`PathChanged=/var/incoming` 에 새 파일이 들어올 때마다 그 파일 이름으로 인스턴스 service를 시작:
+`PathChanged=/var/incoming` 에 새 파일이 들어올 때마다 그 파일 이름으로 인스턴스 service를 시작하는 방법:
 
 ```ini
 # process@.service
@@ -938,7 +932,7 @@ Type=oneshot
 ExecStart=/usr/local/bin/process %i
 ```
 
-`.path` unit 자체로는 파일 이름을 service에 전달할 수 없지만, 트리거된 service에서 `inotifywait` 등으로 파일을 직접 가져갈 수 있습니다.
+`.path` unit 자체로는 파일 이름을 service에 전달할 수 없지만, 트리거된 service에서 `inotifywait` 등으로 파일을 직접 가져가는 방식으로 우회 가능.
 
 ---
 
@@ -946,7 +940,7 @@ ExecStart=/usr/local/bin/process %i
 
 #### inotify 큐 한도
 
-파일 변경이 빠르게 대량으로 발생하면 inotify 이벤트가 누락될 수 있습니다.
+파일 변경이 빠르게 대량으로 발생하면 inotify 이벤트가 누락될 수 있음.
 
 ```bash
 sysctl fs.inotify.max_user_watches
@@ -955,15 +949,15 @@ sysctl fs.inotify.max_queued_events
 
 #### 단발성 이벤트
 
-`PathChanged`는 close 이벤트마다 unit을 한 번씩 트리거합니다. 짧은 시간에 변경이 여러 번 발생하면 service가 여러 번 호출될 수 있으므로, service 자체는 idempotent하게 작성해야 합니다.
+`PathChanged`는 close 이벤트마다 unit을 한 번씩 트리거 → 짧은 시간에 변경이 여러 번 발생하면 service가 여러 번 호출될 수 있으므로, service 자체는 idempotent하게 작성 필요.
 
 #### 디렉터리 vs 파일
 
-디렉터리를 `PathChanged`로 감시하면 그 안의 파일 close 이벤트가 트리거됩니다. 단, **하위 디렉터리는 재귀적으로 감시되지 않습니다**. 깊은 디렉터리 트리를 감시하려면 별도의 inotify 도구가 필요합니다.
+디렉터리를 `PathChanged`로 감시하면 그 안의 파일 close 이벤트가 트리거됨. 단, 하위 디렉터리는 재귀적으로 감시되지 않음 → 깊은 디렉터리 트리를 감시하려면 별도의 inotify 도구 필요.
 
 #### NFS와 가상 파일시스템
 
-inotify는 로컬 파일시스템의 변경만 감지합니다. NFS를 사용하는 경우 다른 클라이언트의 변경은 감지되지 않습니다.
+inotify는 로컬 파일시스템의 변경만 감지 → NFS를 사용하는 경우 다른 클라이언트의 변경은 감지되지 않음.
 
 ---
 

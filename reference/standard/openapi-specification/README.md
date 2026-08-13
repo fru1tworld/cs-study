@@ -18,27 +18,30 @@
 
 ### OpenAPI Specification이란
 
-OpenAPI Specification(OAS)은 RESTful API를 기술하기 위한 표준 인터페이스 정의 언어이다. 프로그래밍 언어에 종속되지 않으며, 사람과 기계 모두가 이해할 수 있는 형식으로 HTTP API의 기능을 정의한다. JSON 또는 YAML 형식으로 작성되며, API의 엔드포인트, 요청/응답 형식, 인증 방식, 파라미터 등 API의 모든 측면을 선언적으로 기술할 수 있다.
+OpenAPI Specification(OAS): RESTful API를 기술하는 표준 인터페이스 정의 언어.
+
+- 프로그래밍 언어 비종속
+- 사람과 기계 모두가 이해 가능한 형식으로 HTTP API 기능 정의
+- JSON 또는 YAML 형식
+- API의 엔드포인트, 요청/응답 형식, 인증 방식, 파라미터 등 모든 측면을 선언적으로 기술 가능
 
 ### 왜 만들어졌는가
 
-API 생태계가 급격히 성장하면서 다음과 같은 문제들이 대두되었다.
+API 생태계 급성장 → 다음 문제 대두.
 
-- 문서화의 일관성 부재: 각 조직마다 API를 기술하는 방식이 달라, API 소비자가 매번 새로운 형식에 적응해야 했다.
-- 클라이언트-서버 간 계약(Contract)의 모호함: 구두나 비정형 문서로 API 명세를 공유하면 해석 차이로 인한 통합 오류가 빈번했다.
-- 자동화의 어려움: 표준화된 명세가 없으면 코드 생성, 테스트 자동화, 모킹(mocking) 등을 체계적으로 수행하기 어려웠다.
-- API 수명주기 관리의 비효율: 설계, 개발, 테스트, 배포, 운영 전 과정에서 통일된 기준이 필요했다.
+- 문서화의 일관성 부재: 조직마다 API 기술 방식이 달라 → API 소비자가 매번 새 형식에 적응해야 함
+- 클라이언트-서버 간 계약(Contract)의 모호함: 구두·비정형 문서로 명세 공유 → 해석 차이로 통합 오류 빈발
+- 자동화의 어려움: 표준화된 명세 부재 → 코드 생성·테스트 자동화·모킹(mocking)을 체계적으로 수행하기 어려움
+- API 수명주기 관리의 비효율: 설계·개발·테스트·배포·운영 전 과정에 통일된 기준 필요
 
-OAS는 이러한 문제를 해결하기 위해 API의 단일 진실 공급원(Single Source of Truth) 역할을 수행하도록 설계되었다. 하나의 명세 파일로부터 문서 생성, 코드 스캐폴딩, 테스트, 검증 등 다양한 작업을 자동화할 수 있다.
+OAS는 이런 문제 해결 위해 API의 단일 진실 공급원(Single Source of Truth) 역할 수행하도록 설계됨 → 하나의 명세 파일로부터 문서 생성, 코드 스캐폴딩, 테스트, 검증 등 다양한 작업 자동화 가능.
 
 ### 핵심 철학
 
-| 원칙 | 설명 |
-|------|------|
-| 언어 중립성 | 특정 프로그래밍 언어나 프레임워크에 종속되지 않는다 |
-| 사람과 기계 모두를 위한 설계 | 개발자가 읽을 수 있으면서도 도구가 파싱할 수 있는 형식이다 |
-| 선언적 기술 | API가 "무엇을" 하는지를 기술하며, "어떻게" 구현하는지는 다루지 않는다 |
-| API-First 설계 지원 | 코드 작성 전에 API 명세를 먼저 정의하는 워크플로를 지원한다 |
+- 언어 중립성: 특정 프로그래밍 언어나 프레임워크에 비종속
+- 사람과 기계 모두를 위한 설계: 개발자가 읽을 수 있고 도구가 파싱할 수 있는 형식
+- 선언적 기술: API가 "무엇을" 하는지 기술 · "어떻게" 구현하는지는 다루지 않음
+- API-First 설계 지원: 코드 작성 전 API 명세를 먼저 정의하는 워크플로 지원
 
 ---
 
@@ -46,22 +49,22 @@ OAS는 이러한 문제를 해결하기 위해 API의 단일 진실 공급원(Si
 
 ### Swagger의 탄생 (2010-2014)
 
-- 2010년: Wordnik의 엔지니어 Tony Tam이 자사 API를 문서화하기 위해 Swagger라는 프로젝트를 시작했다. 초기에는 단순한 API 문서화 도구였으나, API 명세 형식 자체가 핵심 가치로 부각되었다.
-- 2011년: Swagger 1.0이 공개되었다. JSON 기반으로 API를 기술하는 최초의 체계적인 시도였다.
-- 2012년: Swagger 1.1, 1.2가 순차적으로 릴리스되며 커뮤니티가 성장하기 시작했다.
-- 2014년 9월: Swagger 2.0이 발표되었다. 명세 구조가 대폭 개선되어 단일 파일로 API 전체를 기술할 수 있게 되었으며, 업계에서 사실상의 표준(de facto standard)으로 자리 잡았다.
+- 2010년: Wordnik의 엔지니어 Tony Tam이 자사 API 문서화 위해 Swagger 프로젝트 시작. 초기에는 단순 API 문서화 도구였으나 API 명세 형식 자체가 핵심 가치로 부각됨
+- 2011년: Swagger 1.0 공개 → JSON 기반으로 API를 기술하는 최초의 체계적 시도
+- 2012년: Swagger 1.1, 1.2가 순차 릴리스 → 커뮤니티 성장 시작
+- 2014년 9월: Swagger 2.0 발표. 명세 구조 대폭 개선 → 단일 파일로 API 전체 기술 가능해짐, 업계 사실상의 표준(de facto standard)으로 자리 잡음
 
 ### SmartBear 인수와 OpenAPI Initiative (2015-2016)
 
-- 2015년 3월: API 개발 도구 회사인 SmartBear Software가 오픈 소스 Swagger 프로젝트를 인수했다.
-- 2015년 11월: SmartBear는 Linux Foundation 산하에 OpenAPI Initiative (OAI) 를 설립하고, Swagger Specification을 기부했다. 구글, IBM, Microsoft, PayPal, Apigee 등이 창립 멤버로 참여했다.
-- 2016년 1월: Swagger Specification은 공식적으로 OpenAPI Specification으로 이름이 변경되었다. 이때부터 "Swagger"는 SmartBear가 제공하는 도구 브랜드명으로만 사용되고, 명세 자체는 "OpenAPI"로 불리게 되었다.
+- 2015년 3월: API 개발 도구 회사 SmartBear Software가 오픈 소스 Swagger 프로젝트 인수
+- 2015년 11월: SmartBear가 Linux Foundation 산하에 OpenAPI Initiative(OAI) 설립, Swagger Specification 기부. 구글·IBM·Microsoft·PayPal·Apigee 등이 창립 멤버로 참여
+- 2016년 1월: Swagger Specification이 공식적으로 OpenAPI Specification으로 명칭 변경. 이때부터 "Swagger"는 SmartBear가 제공하는 도구 브랜드명으로만 사용, 명세 자체는 "OpenAPI"로 지칭
 
 ### OpenAPI 3.0 및 이후 (2017-현재)
 
-- 2017년 7월: OpenAPI 3.0.0이 발표되었다. 2.0 대비 구조가 대폭 개편되어 `components` 객체 도입, `requestBody` 분리, 다중 서버 지원, 콜백(callback) 등 현대적 API 패턴을 지원하게 되었다.
-- 2021년 2월: OpenAPI 3.1.0이 발표되었다. JSON Schema Draft 2020-12와 완전히 호환되도록 변경되어, 기존의 커스텀 스키마 방언(dialect) 문제를 해결했다. Webhooks 지원도 추가되었다.
-- 2024년 이후: OpenAPI 3.1.1 패치와 함께, 차기 메이저 버전에 대한 논의가 진행 중이다.
+- 2017년 7월: OpenAPI 3.0.0 발표. 2.0 대비 구조 대폭 개편 → `components` 객체 도입, `requestBody` 분리, 다중 서버 지원, 콜백(callback) 등 현대적 API 패턴 지원
+- 2021년 2월: OpenAPI 3.1.0 발표. JSON Schema Draft 2020-12와 완전 호환 → 기존 커스텀 스키마 방언(dialect) 문제 해결. Webhooks 지원 추가
+- 2024년 이후: OpenAPI 3.1.1 패치와 함께 차기 메이저 버전 논의 진행 중
 
 ### 타임라인 요약
 
@@ -79,7 +82,7 @@ OAS는 이러한 문제를 해결하기 위해 API의 단일 진실 공급원(Si
 
 ## 3. 핵심 개념 및 구조
 
-OpenAPI 문서는 계층적 구조를 가진다. 최상위에는 메타 정보가 위치하고, 그 아래로 API의 구체적인 정의가 펼쳐진다. 아래에서는 OpenAPI 3.1 기준으로 각 구성 요소를 설명한다.
+OpenAPI 문서는 계층적 구조 → 최상위에 메타 정보 위치, 그 아래로 API의 구체적 정의 전개. 아래는 OpenAPI 3.1 기준 각 구성 요소 설명.
 
 ### 3.1 최상위 구조
 
@@ -97,7 +100,7 @@ externalDocs: { ... }      # 외부 문서 링크
 
 ### 3.2 Info Object
 
-API에 대한 기본 메타데이터를 정의한다.
+API의 기본 메타데이터 정의.
 
 ```yaml
 info:
@@ -117,7 +120,7 @@ info:
 
 ### 3.3 Servers
 
-API가 호스팅되는 서버 정보를 배열로 정의한다. 2.0에서는 `host`, `basePath`, `schemes`로 나뉘어 있던 것이 3.0부터 `servers`로 통합되었다.
+API가 호스팅되는 서버 정보를 배열로 정의. 2.0에서는 `host`, `basePath`, `schemes`로 분리되어 있었으나 3.0부터 `servers`로 통합됨.
 
 ```yaml
 servers:
@@ -129,7 +132,7 @@ servers:
     description: "로컬 개발 서버"
 ```
 
-서버 URL에 변수를 사용할 수도 있다.
+서버 URL에 변수 사용 가능.
 
 ```yaml
 servers:
@@ -145,7 +148,7 @@ servers:
 
 ### 3.4 Paths
 
-API의 개별 엔드포인트(경로)와 해당 경로에서 지원하는 HTTP 메서드를 정의한다. OAS의 가장 핵심적인 부분이다.
+API의 개별 엔드포인트(경로)와 해당 경로에서 지원하는 HTTP 메서드 정의. OAS의 가장 핵심적인 부분.
 
 ```yaml
 paths:
@@ -221,22 +224,20 @@ paths:
           $ref: '#/components/responses/NotFound'
 ```
 
-Path Item Object에서 사용 가능한 HTTP 메서드는 다음과 같다.
+Path Item Object에서 사용 가능한 HTTP 메서드.
 
-| 메서드 | 설명 |
-|--------|------|
-| `get` | 리소스 조회 |
-| `post` | 리소스 생성 |
-| `put` | 리소스 전체 교체 |
-| `patch` | 리소스 부분 수정 |
-| `delete` | 리소스 삭제 |
-| `options` | 통신 옵션 확인 |
-| `head` | GET과 동일하되 본문 없이 헤더만 반환 |
-| `trace` | 루프백 테스트 |
+- `get`: 리소스 조회
+- `post`: 리소스 생성
+- `put`: 리소스 전체 교체
+- `patch`: 리소스 부분 수정
+- `delete`: 리소스 삭제
+- `options`: 통신 옵션 확인
+- `head`: GET과 동일하되 본문 없이 헤더만 반환
+- `trace`: 루프백 테스트
 
 ### 3.5 Components
 
-재사용 가능한 객체들을 정의하는 컨테이너이다. `$ref`를 통해 문서 내 어디서든 참조할 수 있다. 코드의 함수나 클래스처럼, 반복되는 정의를 한 곳에 모아 관리함으로써 명세의 일관성과 유지보수성을 높인다.
+재사용 가능한 객체들을 정의하는 컨테이너. `$ref`로 문서 내 어디서든 참조 가능 → 코드의 함수·클래스처럼 반복되는 정의를 한 곳에 모아 관리 → 명세의 일관성과 유지보수성 향상.
 
 ```yaml
 components:
@@ -254,7 +255,7 @@ components:
 
 ### 3.6 Schemas
 
-데이터 모델을 JSON Schema 형식으로 정의한다. 요청/응답의 본문 구조, 파라미터 타입 등을 기술하는 데 사용된다.
+데이터 모델을 JSON Schema 형식으로 정의. 요청/응답의 본문 구조, 파라미터 타입 등을 기술하는 데 사용.
 
 ```yaml
 components:
@@ -324,7 +325,7 @@ components:
           type: string
 ```
 
-스키마 조합(Schema Composition) 키워드를 사용하면 복잡한 데이터 모델을 표현할 수 있다.
+스키마 조합(Schema Composition) 키워드로 복잡한 데이터 모델 표현 가능.
 
 ```yaml
 # allOf: 모든 스키마를 동시에 만족해야 함 (상속/확장에 활용)
@@ -355,14 +356,12 @@ SearchResult:
 
 ### 3.7 Parameters
 
-API 요청에 포함될 수 있는 파라미터를 정의한다. 위치(`in`)에 따라 네 가지로 분류된다.
+API 요청에 포함될 수 있는 파라미터 정의. 위치(`in`)에 따라 네 가지로 분류.
 
-| 위치 | 설명 | 예시 |
-|------|------|------|
-| `path` | URL 경로의 일부 | `/users/{userId}` |
-| `query` | URL 쿼리 문자열 | `?page=1&limit=20` |
-| `header` | HTTP 요청 헤더 | `X-Request-ID: abc123` |
-| `cookie` | HTTP 쿠키 | `session_id=xyz` |
+- `path`: URL 경로의 일부. 예: `/users/{userId}`
+- `query`: URL 쿼리 문자열. 예: `?page=1&limit=20`
+- `header`: HTTP 요청 헤더. 예: `X-Request-ID: abc123`
+- `cookie`: HTTP 쿠키. 예: `session_id=xyz`
 
 ```yaml
 components:
@@ -398,7 +397,7 @@ components:
 
 ### 3.8 Responses
 
-API 응답을 정의한다. HTTP 상태 코드별로 구분하며, 응답 본문, 헤더, 링크 등을 포함할 수 있다.
+API 응답 정의. HTTP 상태 코드별로 구분하며 응답 본문·헤더·링크 등 포함 가능.
 
 ```yaml
 components:
@@ -437,7 +436,7 @@ components:
 
 ### 3.9 Request Body
 
-3.0부터 파라미터에서 분리되어 독립적인 객체가 되었다. `content` 필드를 통해 다양한 미디어 타입별로 스키마를 정의할 수 있다.
+3.0부터 파라미터에서 분리되어 독립적인 객체가 됨. `content` 필드로 다양한 미디어 타입별 스키마 정의 가능.
 
 ```yaml
 requestBody:
@@ -464,17 +463,15 @@ requestBody:
 
 ### 3.10 Security
 
-API의 인증/인가 방식을 정의한다. `securitySchemes`에서 스킴을 정의하고, `security`에서 적용한다.
+API의 인증/인가 방식 정의. `securitySchemes`에서 스킴을 정의하고 `security`에서 적용.
 
-지원하는 보안 스킴 유형:
+지원하는 보안 스킴 유형.
 
-| 유형 | 설명 |
-|------|------|
-| `apiKey` | API 키 (헤더, 쿼리, 쿠키) |
-| `http` | HTTP 인증 (Basic, Bearer 등) |
-| `oauth2` | OAuth 2.0 플로우 |
-| `openIdConnect` | OpenID Connect Discovery |
-| `mutualTLS` | 상호 TLS 인증 (3.1+) |
+- `apiKey`: API 키 (헤더, 쿼리, 쿠키)
+- `http`: HTTP 인증 (Basic, Bearer 등)
+- `oauth2`: OAuth 2.0 플로우
+- `openIdConnect`: OpenID Connect Discovery
+- `mutualTLS`: 상호 TLS 인증 (3.1+)
 
 ```yaml
 components:
@@ -507,7 +504,7 @@ security:
   - ApiKeyAuth: []
 ```
 
-특정 엔드포인트에서 전역 보안을 오버라이드할 수 있다.
+특정 엔드포인트에서 전역 보안 오버라이드 가능.
 
 ```yaml
 paths:
@@ -527,7 +524,7 @@ paths:
 
 ### 3.11 Tags
 
-엔드포인트를 논리적으로 그룹화한다. 문서 생성 시 섹션 구분에 사용된다.
+엔드포인트를 논리적으로 그룹화. 문서 생성 시 섹션 구분에 사용.
 
 ```yaml
 tags:
@@ -544,7 +541,7 @@ tags:
 
 ### 3.12 Links (3.0+)
 
-응답 값을 사용하여 후속 API 호출 관계를 표현한다. HATEOAS 개념과 유사하다.
+응답 값을 사용해 후속 API 호출 관계 표현. HATEOAS 개념과 유사.
 
 ```yaml
 paths:
@@ -568,7 +565,7 @@ paths:
 
 ### 3.13 Callbacks (3.0+)
 
-API 서버가 클라이언트에게 비동기적으로 요청을 보내는 Webhook 패턴을 표현한다.
+API 서버가 클라이언트에게 비동기적으로 요청을 보내는 Webhook 패턴 표현.
 
 ```yaml
 paths:
@@ -601,7 +598,7 @@ paths:
 
 ### 3.14 Discriminator
 
-다형성(Polymorphism)을 표현할 때 사용한다. `oneOf`/`anyOf`와 함께 사용되어 어떤 스키마가 적용되는지를 특정 프로퍼티 값으로 결정한다.
+다형성(Polymorphism) 표현에 사용. `oneOf`/`anyOf`와 함께 사용되어 특정 프로퍼티 값으로 어떤 스키마가 적용되는지 결정.
 
 ```yaml
 components:
@@ -643,27 +640,70 @@ components:
 
 ### 4.1 Swagger 2.0 vs OpenAPI 3.0 vs OpenAPI 3.1
 
-| 항목 | Swagger 2.0 | OpenAPI 3.0 | OpenAPI 3.1 |
-|------|-------------|-------------|-------------|
-| 최상위 키 | `swagger: "2.0"` | `openapi: "3.0.x"` | `openapi: "3.1.x"` |
-| 서버 정의 | `host` + `basePath` + `schemes` | `servers` 배열 | `servers` 배열 |
-| 요청 본문 | `parameters`의 `in: body` | 독립 `requestBody` 객체 | 독립 `requestBody` 객체 |
-| 파일 업로드 | `type: file` | `format: binary` in `content` | `format: binary` in `content` / `contentMediaType` |
-| 재사용 컴포넌트 | `definitions`, `parameters`, `responses` 분산 | `components` 하위 통합 | `components` 하위 통합 |
-| JSON Schema 호환 | 자체 확장 서브셋 | 확장된 서브셋 (OpenAPI Schema Object) | JSON Schema Draft 2020-12 완전 호환 |
-| Nullable | `x-nullable` (비공식) | `nullable: true` 별도 키워드 | `type: ["string", "null"]` (JSON Schema 방식) |
-| Webhooks | 미지원 | 미지원 (Callbacks만 가능) | `webhooks` 최상위 키 지원 |
-| 콜백 | 미지원 | `callbacks` 지원 | `callbacks` 지원 |
-| 링크 | 미지원 | `links` 지원 | `links` 지원 |
-| 예시 | `example` (단수) | `example` + `examples` (복수) | `example` + `examples` + JSON Schema `examples` |
-| Content Negotiation | `produces`, `consumes` 전역 | `content` 미디어 타입 맵 (경로별) | `content` 미디어 타입 맵 (경로별) |
-| 상호 TLS | 미지원 | 미지원 | `mutualTLS` 보안 스킴 |
-| 식별자 | 미지원 | 미지원 | `$id`, `$anchor`, `$dynamicRef` 지원 |
-| PathItems 재사용 | 미지원 | 미지원 | `components/pathItems` 지원 |
+- 최상위 키
+  - Swagger 2.0: `swagger: "2.0"`
+  - OpenAPI 3.0: `openapi: "3.0.x"`
+  - OpenAPI 3.1: `openapi: "3.1.x"`
+- 서버 정의
+  - Swagger 2.0: `host` + `basePath` + `schemes`
+  - OpenAPI 3.0: `servers` 배열
+  - OpenAPI 3.1: `servers` 배열
+- 요청 본문
+  - Swagger 2.0: `parameters`의 `in: body`
+  - OpenAPI 3.0: 독립 `requestBody` 객체
+  - OpenAPI 3.1: 독립 `requestBody` 객체
+- 파일 업로드
+  - Swagger 2.0: `type: file`
+  - OpenAPI 3.0: `format: binary` in `content`
+  - OpenAPI 3.1: `format: binary` in `content` / `contentMediaType`
+- 재사용 컴포넌트
+  - Swagger 2.0: `definitions`, `parameters`, `responses` 분산
+  - OpenAPI 3.0: `components` 하위 통합
+  - OpenAPI 3.1: `components` 하위 통합
+- JSON Schema 호환
+  - Swagger 2.0: 자체 확장 서브셋
+  - OpenAPI 3.0: 확장된 서브셋 (OpenAPI Schema Object)
+  - OpenAPI 3.1: JSON Schema Draft 2020-12 완전 호환
+- Nullable
+  - Swagger 2.0: `x-nullable` (비공식)
+  - OpenAPI 3.0: `nullable: true` 별도 키워드
+  - OpenAPI 3.1: `type: ["string", "null"]` (JSON Schema 방식)
+- Webhooks
+  - Swagger 2.0: 미지원
+  - OpenAPI 3.0: 미지원 (Callbacks만 가능)
+  - OpenAPI 3.1: `webhooks` 최상위 키 지원
+- 콜백
+  - Swagger 2.0: 미지원
+  - OpenAPI 3.0: `callbacks` 지원
+  - OpenAPI 3.1: `callbacks` 지원
+- 링크
+  - Swagger 2.0: 미지원
+  - OpenAPI 3.0: `links` 지원
+  - OpenAPI 3.1: `links` 지원
+- 예시
+  - Swagger 2.0: `example` (단수)
+  - OpenAPI 3.0: `example` + `examples` (복수)
+  - OpenAPI 3.1: `example` + `examples` + JSON Schema `examples`
+- Content Negotiation
+  - Swagger 2.0: `produces`, `consumes` 전역
+  - OpenAPI 3.0: `content` 미디어 타입 맵 (경로별)
+  - OpenAPI 3.1: `content` 미디어 타입 맵 (경로별)
+- 상호 TLS
+  - Swagger 2.0: 미지원
+  - OpenAPI 3.0: 미지원
+  - OpenAPI 3.1: `mutualTLS` 보안 스킴
+- 식별자
+  - Swagger 2.0: 미지원
+  - OpenAPI 3.0: 미지원
+  - OpenAPI 3.1: `$id`, `$anchor`, `$dynamicRef` 지원
+- PathItems 재사용
+  - Swagger 2.0: 미지원
+  - OpenAPI 3.0: 미지원
+  - OpenAPI 3.1: `components/pathItems` 지원
 
 ### 4.2 Swagger 2.0에서 3.0으로의 주요 변경점
 
-구조 변경:
+구조 변경.
 - `definitions` -> `components/schemas`
 - `parameters` (전역) -> `components/parameters`
 - `responses` (전역) -> `components/responses`
@@ -671,27 +711,27 @@ components:
 - `host` + `basePath` + `schemes` -> `servers`
 - `produces` / `consumes` -> `content` 미디어 타입 맵
 
-새로운 기능:
-- `requestBody`: 요청 본문이 파라미터에서 분리되어 미디어 타입별 스키마를 정의할 수 있게 되었다
-- `callbacks`: 비동기 Webhook 패턴을 지원한다
-- `links`: 응답 간 관계를 정의할 수 있다
-- `servers` 변수: URL 템플릿 변수를 사용할 수 있다
-- `oneOf`, `anyOf`: 스키마 조합 키워드가 공식 지원되었다
-- Cookie 파라미터: `in: cookie`가 추가되었다
+새로운 기능.
+- `requestBody`: 요청 본문이 파라미터에서 분리 → 미디어 타입별 스키마 정의 가능해짐
+- `callbacks`: 비동기 Webhook 패턴 지원
+- `links`: 응답 간 관계 정의 가능
+- `servers` 변수: URL 템플릿 변수 사용 가능
+- `oneOf`, `anyOf`: 스키마 조합 키워드 공식 지원
+- Cookie 파라미터: `in: cookie` 추가
 
 ### 4.3 OpenAPI 3.0에서 3.1로의 주요 변경점
 
-JSON Schema 완전 호환:
-- 3.0에서는 JSON Schema의 확장 서브셋(superset/subset 혼합)을 사용했으나, 3.1은 JSON Schema Draft 2020-12와 100% 호환된다
-- `nullable: true` 키워드가 제거되고, JSON Schema의 타입 배열 방식 `type: ["string", "null"]`을 사용한다
-- `exclusiveMinimum`/`exclusiveMaximum`이 boolean에서 숫자 값으로 변경되었다
+JSON Schema 완전 호환.
+- 3.0은 JSON Schema의 확장 서브셋(superset/subset 혼합) 사용 → 3.1은 JSON Schema Draft 2020-12와 100% 호환
+- `nullable: true` 키워드 제거 → JSON Schema의 타입 배열 방식 `type: ["string", "null"]` 사용
+- `exclusiveMinimum`/`exclusiveMaximum`이 boolean에서 숫자 값으로 변경
 
-새로운 기능:
-- `webhooks`: 최상위에서 Webhook을 정의할 수 있다
-- `pathItems` in components: Path Item 자체를 재사용 컴포넌트로 정의할 수 있다
-- `$id`, `$anchor`: JSON Schema 식별자를 사용할 수 있다
-- `contentMediaType`, `contentEncoding`: 문자열 콘텐츠의 미디어 타입과 인코딩을 명시할 수 있다
-- Info Object에 `summary` 필드가 추가되었다
+새로운 기능.
+- `webhooks`: 최상위에서 Webhook 정의 가능
+- `pathItems` in components: Path Item 자체를 재사용 컴포넌트로 정의 가능
+- `$id`, `$anchor`: JSON Schema 식별자 사용 가능
+- `contentMediaType`, `contentEncoding`: 문자열 콘텐츠의 미디어 타입과 인코딩 명시 가능
+- Info Object에 `summary` 필드 추가
 
 ---
 
@@ -699,112 +739,92 @@ JSON Schema 완전 호환:
 
 ### 5.1 기본 데이터 타입
 
-OpenAPI에서 지원하는 기본 타입과 형식(format) 조합은 다음과 같다.
+OpenAPI에서 지원하는 기본 타입과 형식(format) 조합.
 
-| type | format | 설명 |
-|------|--------|------|
-| `integer` | `int32` | 32비트 정수 |
-| `integer` | `int64` | 64비트 정수 (long) |
-| `number` | `float` | 단정밀도 부동소수점 |
-| `number` | `double` | 배정밀도 부동소수점 |
-| `string` | - | 일반 문자열 |
-| `string` | `byte` | Base64 인코딩된 문자열 |
-| `string` | `binary` | 바이너리 데이터 (파일 등) |
-| `string` | `date` | RFC 3339 날짜 (`2024-01-15`) |
-| `string` | `date-time` | RFC 3339 날짜시간 (`2024-01-15T09:30:00Z`) |
-| `string` | `password` | UI에서 마스킹 표시 힌트 |
-| `string` | `email` | 이메일 형식 (3.1 JSON Schema) |
-| `string` | `uri` | URI 형식 (3.1 JSON Schema) |
-| `string` | `uuid` | UUID 형식 (3.1 JSON Schema) |
-| `boolean` | - | 참/거짓 |
-| `array` | - | 배열 (`items` 필수) |
-| `object` | - | 객체 (`properties` 정의) |
-| `null` | - | null 값 (3.1에서 타입으로 사용 가능) |
+- `integer` / `int32`: 32비트 정수
+- `integer` / `int64`: 64비트 정수 (long)
+- `number` / `float`: 단정밀도 부동소수점
+- `number` / `double`: 배정밀도 부동소수점
+- `string` / (없음): 일반 문자열
+- `string` / `byte`: Base64 인코딩된 문자열
+- `string` / `binary`: 바이너리 데이터 (파일 등)
+- `string` / `date`: RFC 3339 날짜 (`2024-01-15`)
+- `string` / `date-time`: RFC 3339 날짜시간 (`2024-01-15T09:30:00Z`)
+- `string` / `password`: UI에서 마스킹 표시 힌트
+- `string` / `email`: 이메일 형식 (3.1 JSON Schema)
+- `string` / `uri`: URI 형식 (3.1 JSON Schema)
+- `string` / `uuid`: UUID 형식 (3.1 JSON Schema)
+- `boolean` / (없음): 참/거짓
+- `array` / (없음): 배열 (`items` 필수)
+- `object` / (없음): 객체 (`properties` 정의)
+- `null` / (없음): null 값 (3.1에서 타입으로 사용 가능)
 
 ### 5.2 스키마 검증 키워드
 
-문자열 검증:
+문자열 검증.
+- `minLength`: 최소 문자열 길이
+- `maxLength`: 최대 문자열 길이
+- `pattern`: 정규표현식 패턴
+- `enum`: 허용 값 목록
+- `const`: 고정 값 (3.1+)
 
-| 키워드 | 설명 |
-|--------|------|
-| `minLength` | 최소 문자열 길이 |
-| `maxLength` | 최대 문자열 길이 |
-| `pattern` | 정규표현식 패턴 |
-| `enum` | 허용 값 목록 |
-| `const` | 고정 값 (3.1+) |
+숫자 검증.
+- `minimum`: 최솟값 (이상)
+- `maximum`: 최댓값 (이하)
+- `exclusiveMinimum`: 최솟값 미포함 (3.0: boolean, 3.1: number)
+- `exclusiveMaximum`: 최댓값 미포함 (3.0: boolean, 3.1: number)
+- `multipleOf`: 배수 조건
 
-숫자 검증:
+배열 검증.
+- `items`: 배열 요소의 스키마
+- `minItems`: 최소 요소 수
+- `maxItems`: 최대 요소 수
+- `uniqueItems`: 요소 중복 불허
+- `prefixItems`: 튜플 검증 (3.1+, JSON Schema)
 
-| 키워드 | 설명 |
-|--------|------|
-| `minimum` | 최솟값 (이상) |
-| `maximum` | 최댓값 (이하) |
-| `exclusiveMinimum` | 최솟값 미포함 (3.0: boolean, 3.1: number) |
-| `exclusiveMaximum` | 최댓값 미포함 (3.0: boolean, 3.1: number) |
-| `multipleOf` | 배수 조건 |
-
-배열 검증:
-
-| 키워드 | 설명 |
-|--------|------|
-| `items` | 배열 요소의 스키마 |
-| `minItems` | 최소 요소 수 |
-| `maxItems` | 최대 요소 수 |
-| `uniqueItems` | 요소 중복 불허 |
-| `prefixItems` | 튜플 검증 (3.1+, JSON Schema) |
-
-객체 검증:
-
-| 키워드 | 설명 |
-|--------|------|
-| `properties` | 프로퍼티 정의 |
-| `required` | 필수 프로퍼티 목록 |
-| `additionalProperties` | 정의되지 않은 프로퍼티 허용 여부/스키마 |
-| `minProperties` | 최소 프로퍼티 수 |
-| `maxProperties` | 최대 프로퍼티 수 |
-| `patternProperties` | 정규식 패턴으로 프로퍼티명 매칭 (3.1+) |
+객체 검증.
+- `properties`: 프로퍼티 정의
+- `required`: 필수 프로퍼티 목록
+- `additionalProperties`: 정의되지 않은 프로퍼티 허용 여부/스키마
+- `minProperties`: 최소 프로퍼티 수
+- `maxProperties`: 최대 프로퍼티 수
+- `patternProperties`: 정규식 패턴으로 프로퍼티명 매칭 (3.1+)
 
 ### 5.3 참조 및 조합
 
-| 키워드 | 설명 |
-|--------|------|
-| `$ref` | 다른 스키마/컴포넌트 참조. 예: `$ref: '#/components/schemas/User'` |
-| `allOf` | 모든 스키마를 동시에 만족 (교집합, 상속에 활용) |
-| `oneOf` | 정확히 하나의 스키마만 만족 (배타적 합집합) |
-| `anyOf` | 하나 이상의 스키마를 만족 (합집합) |
-| `not` | 지정된 스키마를 만족하지 않아야 함 (부정) |
-| `discriminator` | 다형성 구분자 |
-| `if`/`then`/`else` | 조건부 스키마 (3.1+) |
+- `$ref`: 다른 스키마/컴포넌트 참조. 예: `$ref: '#/components/schemas/User'`
+- `allOf`: 모든 스키마를 동시에 만족 (교집합, 상속에 활용)
+- `oneOf`: 정확히 하나의 스키마만 만족 (배타적 합집합)
+- `anyOf`: 하나 이상의 스키마를 만족 (합집합)
+- `not`: 지정된 스키마를 만족하지 않아야 함 (부정)
+- `discriminator`: 다형성 구분자
+- `if`/`then`/`else`: 조건부 스키마 (3.1+)
 
 ### 5.4 OpenAPI 전용 키워드
 
-JSON Schema에는 없고 OpenAPI에서 추가한 키워드들이다.
+JSON Schema에는 없고 OpenAPI에서 추가한 키워드.
 
-| 키워드 | 설명 |
-|--------|------|
-| `readOnly` | 응답에서만 포함 (요청 시 무시) |
-| `writeOnly` | 요청에서만 포함 (응답 시 무시). 예: 비밀번호 |
-| `deprecated` | 해당 요소가 더 이상 사용되지 않음을 표시 |
-| `xml` | XML 표현 방식 커스터마이징 |
-| `externalDocs` | 외부 문서 링크 |
-| `example` | 단일 예시 값 |
-| `examples` | 복수 예시 값 (Operation/Media Type 레벨) |
+- `readOnly`: 응답에서만 포함 (요청 시 무시)
+- `writeOnly`: 요청에서만 포함 (응답 시 무시). 예: 비밀번호
+- `deprecated`: 해당 요소가 더 이상 사용되지 않음을 표시
+- `xml`: XML 표현 방식 커스터마이징
+- `externalDocs`: 외부 문서 링크
+- `example`: 단일 예시 값
+- `examples`: 복수 예시 값 (Operation/Media Type 레벨)
 
 ### 5.5 Operation Object 주요 필드
 
-| 필드 | 타입 | 설명 |
-|------|------|------|
-| `tags` | [string] | 해당 오퍼레이션의 태그 목록 |
-| `summary` | string | 짧은 설명 (한 줄) |
-| `description` | string | 상세 설명 (Markdown 지원) |
-| `operationId` | string | 오퍼레이션 고유 식별자 (코드 생성 시 함수명으로 사용) |
-| `parameters` | [Parameter] | 파라미터 목록 |
-| `requestBody` | RequestBody | 요청 본문 정의 |
-| `responses` | Responses | 응답 정의 (필수) |
-| `callbacks` | Map[Callback] | 콜백 정의 |
-| `deprecated` | boolean | 사용 중지 여부 |
-| `security` | [SecurityRequirement] | 보안 요구사항 (전역 오버라이드) |
-| `servers` | [Server] | 서버 목록 (전역 오버라이드) |
+- `tags` ([string]): 해당 오퍼레이션의 태그 목록
+- `summary` (string): 짧은 설명 (한 줄)
+- `description` (string): 상세 설명 (Markdown 지원)
+- `operationId` (string): 오퍼레이션 고유 식별자 (코드 생성 시 함수명으로 사용)
+- `parameters` ([Parameter]): 파라미터 목록
+- `requestBody` (RequestBody): 요청 본문 정의
+- `responses` (Responses): 응답 정의 (필수)
+- `callbacks` (Map[Callback]): 콜백 정의
+- `deprecated` (boolean): 사용 중지 여부
+- `security` ([SecurityRequirement]): 보안 요구사항 (전역 오버라이드)
+- `servers` ([Server]): 서버 목록 (전역 오버라이드)
 
 ---
 
@@ -814,7 +834,7 @@ JSON Schema에는 없고 OpenAPI에서 추가한 키워드들이다.
 
 API-First 설계 (Design-First)
 
-코드 작성 전에 OpenAPI 명세를 먼저 작성하는 접근 방식이다. 프론트엔드와 백엔드 팀이 API 계약에 합의한 후 병렬로 개발할 수 있어, 대규모 프로젝트에서 특히 유리하다.
+코드 작성 전에 OpenAPI 명세를 먼저 작성하는 접근 방식. 프론트엔드와 백엔드 팀이 API 계약에 합의한 후 병렬로 개발 가능 → 대규모 프로젝트에서 특히 유리.
 
 ```
 명세 작성 -> 리뷰/합의 -> 코드 생성 -> 구현 -> 검증
@@ -822,7 +842,7 @@ API-First 설계 (Design-First)
 
 Code-First 설계
 
-기존 코드에서 어노테이션이나 데코레이터를 사용하여 OpenAPI 명세를 자동 생성하는 접근 방식이다. 기존 프로젝트에 OAS를 도입할 때 유리하다.
+기존 코드에서 어노테이션이나 데코레이터를 사용해 OpenAPI 명세를 자동 생성하는 접근 방식. 기존 프로젝트에 OAS 도입 시 유리.
 
 ```
 코드 작성 -> 어노테이션 추가 -> 명세 자동 생성 -> 문서/SDK 생성
@@ -830,74 +850,62 @@ Code-First 설계
 
 API 게이트웨이 구성
 
-OpenAPI 명세를 기반으로 API 게이트웨이의 라우팅, 요청 검증, 속도 제한 등을 자동으로 구성할 수 있다.
+OpenAPI 명세 기반으로 API 게이트웨이의 라우팅, 요청 검증, 속도 제한 등 자동 구성 가능.
 
 계약 테스트 (Contract Testing)
 
-명세를 기준으로 실제 API의 요청/응답이 계약을 준수하는지 자동으로 검증한다.
+명세를 기준으로 실제 API의 요청/응답이 계약을 준수하는지 자동 검증.
 
 모킹 (Mock Server)
 
-명세만으로 가상의 API 서버를 구동하여, 백엔드 개발 완료 전에 프론트엔드 개발이나 통합 테스트를 진행할 수 있다.
+명세만으로 가상의 API 서버를 구동 → 백엔드 개발 완료 전 프론트엔드 개발이나 통합 테스트 진행 가능.
 
 ### 6.2 SmartBear Swagger 도구 생태계
 
-| 도구 | 설명 |
-|------|------|
-| Swagger Editor | 브라우저 기반 OpenAPI 명세 편집기. 실시간 문법 검증과 미리보기를 제공한다 |
-| Swagger UI | OpenAPI 명세를 인터랙티브한 API 문서로 렌더링한다. API를 직접 호출해볼 수 있다 |
-| Swagger Codegen | 명세에서 서버 스텁과 클라이언트 SDK를 40개 이상의 언어로 생성한다 |
-| SwaggerHub | 팀 협업을 위한 SaaS 플랫폼. 명세 호스팅, 버전 관리, 협업 기능을 제공한다 |
+- Swagger Editor: 브라우저 기반 OpenAPI 명세 편집기. 실시간 문법 검증과 미리보기 제공
+- Swagger UI: OpenAPI 명세를 인터랙티브한 API 문서로 렌더링. API를 직접 호출 가능
+- Swagger Codegen: 명세에서 서버 스텁과 클라이언트 SDK를 40개 이상의 언어로 생성
+- SwaggerHub: 팀 협업을 위한 SaaS 플랫폼. 명세 호스팅, 버전 관리, 협업 기능 제공
 
 ### 6.3 코드 생성 도구
 
-| 도구 | 설명 |
-|------|------|
-| OpenAPI Generator | Swagger Codegen의 커뮤니티 포크. 더 활발하게 유지보수되며 50개 이상의 언어를 지원한다 |
-| openapi-typescript | TypeScript 타입 정의를 생성한다 |
-| oapi-codegen | Go 언어용 코드 생성기 |
-| NSwag | .NET/C# 클라이언트 및 컨트롤러를 생성한다 |
-| Kiota (Microsoft) | 다국어 API 클라이언트를 생성한다 |
+- OpenAPI Generator: Swagger Codegen의 커뮤니티 포크. 더 활발하게 유지보수되며 50개 이상의 언어 지원
+- openapi-typescript: TypeScript 타입 정의 생성
+- oapi-codegen: Go 언어용 코드 생성기
+- NSwag: .NET/C# 클라이언트 및 컨트롤러 생성
+- Kiota (Microsoft): 다국어 API 클라이언트 생성
 
 ### 6.4 문서화 도구
 
-| 도구 | 설명 |
-|------|------|
-| Redoc | Swagger UI의 대안으로 깔끔한 3열 레이아웃의 API 문서를 생성한다 |
-| Stoplight Elements | 웹 컴포넌트 기반의 API 문서 UI를 제공한다 |
-| RapiDoc | 커스터마이징이 용이한 웹 컴포넌트 기반 문서 뷰어이다 |
-| Scalar | 모던한 디자인의 API 문서 생성 도구이다 |
+- Redoc: Swagger UI의 대안으로 깔끔한 3열 레이아웃의 API 문서 생성
+- Stoplight Elements: 웹 컴포넌트 기반의 API 문서 UI 제공
+- RapiDoc: 커스터마이징이 용이한 웹 컴포넌트 기반 문서 뷰어
+- Scalar: 모던한 디자인의 API 문서 생성 도구
 
 ### 6.5 검증 및 린팅 도구
 
-| 도구 | 설명 |
-|------|------|
-| Spectral (Stoplight) | OpenAPI 명세의 린팅 도구. 커스텀 규칙 정의가 가능하다 |
-| openapi-spec-validator | Python 기반 명세 검증 도구이다 |
-| vacuum | 고성능 OpenAPI 린터이다 |
-| Redocly CLI | 명세 검증, 번들링, 미리보기 기능을 제공한다 |
+- Spectral (Stoplight): OpenAPI 명세의 린팅 도구. 커스텀 규칙 정의 가능
+- openapi-spec-validator: Python 기반 명세 검증 도구
+- vacuum: 고성능 OpenAPI 린터
+- Redocly CLI: 명세 검증, 번들링, 미리보기 기능 제공
 
 ### 6.6 모킹 및 테스트 도구
 
-| 도구 | 설명 |
-|------|------|
-| Prism (Stoplight) | OpenAPI 명세 기반 Mock 서버 및 검증 프록시이다 |
-| Microcks | API 모킹 및 계약 테스트 플랫폼이다 |
-| Schemathesis | 명세 기반 자동 API 퍼징(Fuzzing) 테스트 도구이다 |
-| Dredd | API 명세와 실제 구현의 일치 여부를 검증한다 |
-| Postman | OpenAPI 명세를 가져와 컬렉션으로 변환하여 테스트할 수 있다 |
+- Prism (Stoplight): OpenAPI 명세 기반 Mock 서버 및 검증 프록시
+- Microcks: API 모킹 및 계약 테스트 플랫폼
+- Schemathesis: 명세 기반 자동 API 퍼징(Fuzzing) 테스트 도구
+- Dredd: API 명세와 실제 구현의 일치 여부 검증
+- Postman: OpenAPI 명세를 가져와 컬렉션으로 변환하여 테스트 가능
 
 ### 6.7 프레임워크 통합
 
-| 프레임워크/언어 | 도구 | 방식 |
-|----------------|------|------|
-| Spring Boot (Java) | springdoc-openapi | Code-First (어노테이션에서 명세 생성) |
-| FastAPI (Python) | 내장 지원 | Code-First (타입 힌트에서 자동 생성) |
-| NestJS (TypeScript) | @nestjs/swagger | Code-First (데코레이터에서 명세 생성) |
-| Express (Node.js) | swagger-jsdoc | Code-First (JSDoc 주석에서 생성) |
-| ASP.NET Core (.NET) | Swashbuckle / NSwag | Code-First |
-| Go | swag (swaggo) | Code-First (주석에서 생성) |
-| Ruby on Rails | rswag | Code-First (RSpec에서 생성) |
+- Spring Boot (Java): springdoc-openapi — Code-First (어노테이션에서 명세 생성)
+- FastAPI (Python): 내장 지원 — Code-First (타입 힌트에서 자동 생성)
+- NestJS (TypeScript): @nestjs/swagger — Code-First (데코레이터에서 명세 생성)
+- Express (Node.js): swagger-jsdoc — Code-First (JSDoc 주석에서 생성)
+- ASP.NET Core (.NET): Swashbuckle / NSwag — Code-First
+- Go: swag (swaggo) — Code-First (주석에서 생성)
+- Ruby on Rails: rswag — Code-First (RSpec에서 생성)
 
 ---
 
@@ -906,68 +914,68 @@ OpenAPI 명세를 기반으로 API 게이트웨이의 라우팅, 요청 검증, 
 ### 7.1 장점
 
 표준화된 계약
-- 프론트엔드, 백엔드, QA, 기획 등 모든 이해관계자가 동일한 명세를 기준으로 소통할 수 있다
-- API의 단일 진실 공급원(Single Source of Truth)으로 기능한다
+- 프론트엔드, 백엔드, QA, 기획 등 모든 이해관계자가 동일한 명세를 기준으로 소통 가능
+- API의 단일 진실 공급원(Single Source of Truth)으로 기능
 
 자동화 생태계
-- 하나의 명세 파일로부터 문서, 클라이언트 SDK, 서버 스텁, 테스트, Mock 서버 등을 자동 생성할 수 있다
-- 수동 작업으로 인한 불일치 문제를 줄인다
+- 하나의 명세 파일로부터 문서, 클라이언트 SDK, 서버 스텁, 테스트, Mock 서버 등을 자동 생성 가능
+- 수동 작업으로 인한 불일치 문제 감소
 
 풍부한 도구 지원
-- 수백 개의 오픈 소스 및 상용 도구가 OAS를 지원한다
-- 대부분의 프로그래밍 언어와 프레임워크에 대한 통합이 존재한다
+- 수백 개의 오픈 소스 및 상용 도구가 OAS 지원
+- 대부분의 프로그래밍 언어와 프레임워크에 대한 통합 존재
 
 API 거버넌스
-- 린팅 도구를 통해 조직 차원의 API 설계 표준을 강제할 수 있다
-- 버전 관리와 변경 이력 추적이 용이하다
+- 린팅 도구로 조직 차원의 API 설계 표준 강제 가능
+- 버전 관리와 변경 이력 추적 용이
 
 테스트 용이성
-- 명세 기반 계약 테스트로 API의 하위 호환성을 검증할 수 있다
-- Mock 서버를 통해 의존성 없이 테스트할 수 있다
+- 명세 기반 계약 테스트로 API의 하위 호환성 검증 가능
+- Mock 서버로 의존성 없이 테스트 가능
 
 탐색 및 이해 용이성
-- 인터랙티브 문서를 통해 API를 쉽게 탐색하고 직접 호출해볼 수 있다
-- 신규 개발자의 온보딩 시간을 단축한다
+- 인터랙티브 문서로 API를 쉽게 탐색하고 직접 호출 가능
+- 신규 개발자의 온보딩 시간 단축
 
 언어 및 플랫폼 독립성
-- JSON/YAML이라는 범용 형식을 사용하여 어떤 기술 스택에서든 활용할 수 있다
+- JSON/YAML이라는 범용 형식 사용 → 어떤 기술 스택에서든 활용 가능
 
 ### 7.2 단점
 
 학습 곡선
-- 명세 작성 문법이 처음에는 복잡하게 느껴질 수 있다
-- 특히 고급 기능(discriminator, callbacks, links 등)은 이해하기 어렵다
+- 명세 작성 문법이 처음에는 복잡하게 느껴질 수 있음
+- 특히 고급 기능(discriminator, callbacks, links 등)은 이해하기 어려움
 
 명세 유지보수 비용
-- API가 변경될 때마다 명세도 함께 업데이트해야 한다
-- Code-First가 아닌 경우, 명세와 실제 구현이 불일치할 위험이 있다
+- API가 변경될 때마다 명세도 함께 업데이트 필요
+- Code-First가 아닌 경우 명세와 실제 구현이 불일치할 위험
 
 REST API에 한정
-- RESTful HTTP API만을 대상으로 한다
-- GraphQL, gRPC, WebSocket, 이벤트 기반 API 등은 별도의 명세(GraphQL SDL, Protocol Buffers, AsyncAPI 등)가 필요하다
+- RESTful HTTP API만을 대상
+- GraphQL, gRPC, WebSocket, 이벤트 기반 API 등은 별도의 명세(GraphQL SDL, Protocol Buffers, AsyncAPI 등) 필요
 
 표현의 한계
-- 복잡한 비즈니스 로직이나 워크플로를 표현하기 어렵다
-- 요청 간의 의존 관계나 순서를 명시적으로 기술하기 어렵다
-- 동적으로 구조가 변하는 응답을 기술하기 까다롭다
+- 복잡한 비즈니스 로직이나 워크플로 표현이 어려움
+- 요청 간의 의존 관계나 순서를 명시적으로 기술하기 어려움
+- 동적으로 구조가 변하는 응답을 기술하기 까다로움
 
 대규모 명세의 관리 어려움
-- 수백 개의 엔드포인트를 가진 API는 단일 파일로 관리하기 어려워진다
-- 파일 분할 시 `$ref`가 복잡해지며, 번들링 도구가 필요하다
+- 수백 개의 엔드포인트를 가진 API는 단일 파일로 관리하기 어려워짐
+- 파일 분할 시 `$ref`가 복잡해지며 번들링 도구 필요
 
 버전 간 마이그레이션 비용
-- 2.0에서 3.0, 3.0에서 3.1로의 마이그레이션에 상당한 노력이 필요하다
-- 일부 도구가 최신 버전을 완전히 지원하지 않을 수 있다
+- 2.0에서 3.0, 3.0에서 3.1로의 마이그레이션에 상당한 노력 필요
+- 일부 도구가 최신 버전을 완전히 지원하지 않을 수 있음
 
 코드 생성의 품질
-- 자동 생성된 코드가 항상 프로덕션 품질은 아니다
-- 생성기마다 결과물의 스타일과 품질 차이가 크다
+- 자동 생성된 코드가 항상 프로덕션 품질은 아님
+- 생성기마다 결과물의 스타일과 품질 차이가 큼
 
 ---
 
 ## 8. 실제 예시
 
-아래는 "도서 관리 API"를 정의하는 완전한 OpenAPI 3.1 명세 예시이다.
+아래는 "도서 관리 API"를 정의하는 완전한 OpenAPI 3.1 명세 예시.
 
 ```yaml
 openapi: "3.1.0"
@@ -1457,51 +1465,47 @@ components:
 
 ### 9.1 관련 명세 및 표준
 
-| 명세 | 관계 | 설명 |
-|------|------|------|
-| JSON Schema | 기반 표준 | OAS 3.1은 JSON Schema Draft 2020-12를 완전히 채택한다. 데이터 모델 정의의 근간이다 |
-| AsyncAPI | 자매 명세 | 이벤트 기반/비동기 API(Kafka, WebSocket, MQTT 등)를 위한 명세. OAS의 구조와 유사하게 설계되었다 |
-| JSON:API | 보완 표준 | REST API의 요청/응답 형식에 대한 규약. OAS와 함께 사용할 수 있다 |
-| RAML | 경쟁 명세 | MuleSoft가 만든 API 명세 형식. OAS에 비해 채택률이 낮다 |
-| API Blueprint | 경쟁 명세 | Markdown 기반의 API 명세 형식. Apiary에서 개발했다 |
-| gRPC / Protocol Buffers | 대안 기술 | RPC 기반 API를 위한 명세. REST가 아닌 gRPC 프로토콜에 사용된다 |
-| GraphQL SDL | 대안 기술 | GraphQL API의 스키마 정의 언어이다 |
+- JSON Schema (기반 표준): OAS 3.1은 JSON Schema Draft 2020-12를 완전히 채택 → 데이터 모델 정의의 근간
+- AsyncAPI (자매 명세): 이벤트 기반/비동기 API(Kafka, WebSocket, MQTT 등)를 위한 명세. OAS의 구조와 유사하게 설계
+- JSON:API (보완 표준): REST API의 요청/응답 형식에 대한 규약. OAS와 함께 사용 가능
+- RAML (경쟁 명세): MuleSoft가 만든 API 명세 형식. OAS에 비해 채택률 낮음
+- API Blueprint (경쟁 명세): Markdown 기반의 API 명세 형식. Apiary에서 개발
+- gRPC / Protocol Buffers (대안 기술): RPC 기반 API를 위한 명세. REST가 아닌 gRPC 프로토콜에 사용
+- GraphQL SDL (대안 기술): GraphQL API의 스키마 정의 언어
 
 ### 9.2 OpenAPI Initiative (OAI)
 
-역할:
-- Linux Foundation 산하의 오픈 거버넌스 조직으로, OpenAPI Specification의 개발과 발전을 주도한다
-- 명세의 로드맵, 릴리스 주기, 거버넌스 정책을 결정한다
+역할.
+- Linux Foundation 산하의 오픈 거버넌스 조직 → OpenAPI Specification의 개발과 발전 주도
+- 명세의 로드맵, 릴리스 주기, 거버넌스 정책 결정
 
-주요 멤버사:
-Google, Microsoft, IBM, SAP, SmartBear, Postman, Amazon 등 주요 기술 기업들이 참여하고 있다.
+주요 멤버사.
+- Google, Microsoft, IBM, SAP, SmartBear, Postman, Amazon 등 주요 기술 기업 참여
 
-기술 운영 위원회(Technical Steering Committee, TSC):
-- 명세의 기술적 방향을 결정하는 핵심 그룹이다
-- GitHub에서 RFC(Request for Comments) 프로세스를 통해 변경 사항을 논의한다
+기술 운영 위원회(Technical Steering Committee, TSC).
+- 명세의 기술적 방향을 결정하는 핵심 그룹
+- GitHub에서 RFC(Request for Comments) 프로세스로 변경 사항 논의
 
 ### 9.3 커뮤니티 채널
 
-| 채널 | URL / 설명 |
-|------|------------|
-| GitHub | [github.com/OAI/OpenAPI-Specification](https://github.com/OAI/OpenAPI-Specification) - 명세 원본 및 이슈 트래킹 |
-| 공식 웹사이트 | [openapis.org](https://www.openapis.org/) - OAI 공식 사이트 |
-| Slack | OAI 커뮤니티 Slack 워크스페이스 |
-| Stack Overflow | `openapi`, `swagger` 태그 |
-| 공식 블로그 | [openapis.org/blog](https://www.openapis.org/blog) |
+- GitHub: [github.com/OAI/OpenAPI-Specification](https://github.com/OAI/OpenAPI-Specification) — 명세 원본 및 이슈 트래킹
+- 공식 웹사이트: [openapis.org](https://www.openapis.org/) — OAI 공식 사이트
+- Slack: OAI 커뮤니티 Slack 워크스페이스
+- Stack Overflow: `openapi`, `swagger` 태그
+- 공식 블로그: [openapis.org/blog](https://www.openapis.org/blog)
 
 ### 9.4 연례 행사 및 컨퍼런스
 
-- ASC (API Specifications Conference): OAI가 주최하는 연례 컨퍼런스로, API 명세 생태계 전반의 발전을 논의한다
-- API World: API 관련 대규모 컨퍼런스로, OAS 관련 세션이 다수 포함된다
-- APIDays: 유럽 중심의 API 컨퍼런스 시리즈이다
+- ASC (API Specifications Conference): OAI가 주최하는 연례 컨퍼런스. API 명세 생태계 전반의 발전 논의
+- API World: API 관련 대규모 컨퍼런스. OAS 관련 세션이 다수 포함
+- APIDays: 유럽 중심의 API 컨퍼런스 시리즈
 
 ### 9.5 OpenAPI의 미래
 
-- Overlays: 기존 명세에 추가 정보를 덧씌우는 별도의 문서 형식이 표준화 진행 중이다. 환경별 설정, 문서 번역 등에 활용할 수 있다
-- Workflows: API 간의 호출 순서와 의존 관계를 정의하는 명세가 논의 중이다. 복잡한 비즈니스 프로세스를 표현하는 것이 목표이다
-- Moonwalk (다음 메이저 버전): 현재 구조의 근본적인 개선을 목표로 하는 차기 버전에 대한 논의가 진행 중이다
-- AI/LLM과의 통합: API 명세를 기반으로 AI 에이전트가 자동으로 API를 탐색하고 호출하는 패턴이 부상하고 있다. OpenAPI 명세는 LLM의 함수 호출(function calling) 인터페이스 정의에도 활용된다
+- Overlays: 기존 명세에 추가 정보를 덧씌우는 별도의 문서 형식이 표준화 진행 중. 환경별 설정, 문서 번역 등에 활용 가능
+- Workflows: API 간의 호출 순서와 의존 관계를 정의하는 명세 논의 중. 복잡한 비즈니스 프로세스 표현이 목표
+- Moonwalk (다음 메이저 버전): 현재 구조의 근본적인 개선을 목표로 하는 차기 버전 논의 진행 중
+- AI/LLM과의 통합: API 명세를 기반으로 AI 에이전트가 자동으로 API를 탐색하고 호출하는 패턴 부상 → OpenAPI 명세는 LLM의 함수 호출(function calling) 인터페이스 정의에도 활용
 
 ---
 

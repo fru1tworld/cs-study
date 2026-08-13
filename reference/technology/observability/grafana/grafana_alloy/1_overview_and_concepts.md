@@ -20,19 +20,19 @@
 
 ### Alloy란 무엇인가
 
-**Grafana Alloy** 는 OpenTelemetry Collector를 기반으로 하는 **오픈소스 텔레메트리 수집기(open-source telemetry collector)** 입니다.
+Grafana Alloy는 OpenTelemetry Collector를 기반으로 하는 오픈소스 텔레메트리 수집기(open-source telemetry collector).
 
 #### 핵심 특징
 
-- **OpenTelemetry Collector 배포판**: OTel Collector를 기반으로 Grafana 생태계 통합
-- **다중 신호 지원**: 메트릭, 로그, 트레이스, 프로파일을 단일 도구로 수집
-- **벤더 중립(Vendor-neutral)**: Grafana Cloud뿐만 아니라 다양한 백엔드로 전송 가능
-- **풍부한 통합**: Prometheus, Loki, Tempo, Pyroscope, OpenTelemetry 등 지원
-- **컴포넌트 기반**: 모듈식 컴포넌트로 유연한 파이프라인 구성
+- OpenTelemetry Collector 배포판: OTel Collector를 기반으로 Grafana 생태계 통합
+- 다중 신호 지원: 메트릭·로그·트레이스·프로파일을 단일 도구로 수집
+- 벤더 중립(Vendor-neutral): Grafana Cloud뿐만 아니라 다양한 백엔드로 전송 가능
+- 풍부한 통합: Prometheus, Loki, Tempo, Pyroscope, OpenTelemetry 등 지원
+- 컴포넌트 기반: 모듈식 컴포넌트로 유연한 파이프라인 구성
 
 #### Alloy가 등장한 배경
 
-기존에는 Grafana Agent (Static, Flow), Promtail, OpenTelemetry Collector 등 **여러 수집기를 별도로 운영** 해야 했습니다. Alloy는 이를 **단일 도구로 통합** 해 운영 복잡성을 줄이는 것이 목표입니다.
+기존에는 Grafana Agent (Static, Flow), Promtail, OpenTelemetry Collector 등 여러 수집기를 별도로 운영해야 했음. Alloy는 이를 단일 도구로 통합해 운영 복잡성을 줄이는 것이 목표.
 
 ---
 
@@ -40,25 +40,23 @@
 
 #### 1. 다중 신호 (Multi-signal) 지원
 
-각 신호 유형별로 별도 수집기를 실행할 필요 없이, 하나의 도구로 모든 텔레메트리 데이터를 수집합니다.
+각 신호 유형별로 별도 수집기를 실행할 필요 없이, 하나의 도구로 모든 텔레메트리 데이터를 수집.
 
-| 신호 | 지원 |
-|------|------|
-| Metrics | Prometheus, OpenTelemetry, StatsD 등 |
-| Logs | Loki, Syslog, Journal, File, Kubernetes 등 |
-| Traces | OTLP, Jaeger, Zipkin 등 |
-| Profiles | Pyroscope (Continuous Profiling) |
+- Metrics: Prometheus·OpenTelemetry·StatsD 등 지원
+- Logs: Loki·Syslog·Journal·File·Kubernetes 등 지원
+- Traces: OTLP·Jaeger·Zipkin 등 지원
+- Profiles: Pyroscope (Continuous Profiling) 지원
 
 #### 2. 유연한 백엔드 연결
 
-- **Grafana Cloud** (네이티브 통합)
-- **자체 관리형 Grafana Stack** (Loki, Mimir, Tempo, Pyroscope)
-- **OpenTelemetry 호환 백엔드**
-- **Prometheus 호환 백엔드**
+- Grafana Cloud (네이티브 통합)
+- 자체 관리형 Grafana Stack (Loki, Mimir, Tempo, Pyroscope)
+- OpenTelemetry 호환 백엔드
+- Prometheus 호환 백엔드
 
 #### 3. 컴포넌트 기반 구성
 
-Alloy 구성은 **컴포넌트(component)** 단위로 작성됩니다. 각 컴포넌트는 독립적으로 동작하며, 컴포넌트 간 출력/입력으로 파이프라인을 구성합니다.
+Alloy 구성은 컴포넌트(component) 단위로 작성. 각 컴포넌트는 독립적으로 동작 → 컴포넌트 간 출력/입력으로 파이프라인 구성.
 
 ```alloy
 // 예시: 시스템 메트릭을 Prometheus 형식으로 수집하여 Mimir에 전송
@@ -78,7 +76,7 @@ prometheus.remote_write "mimir" {
 
 #### 4. OpenTelemetry 네이티브
 
-OpenTelemetry Collector의 모든 기능을 사용할 수 있습니다.
+OpenTelemetry Collector의 모든 기능 사용 가능.
 
 - OTLP Receiver (gRPC, HTTP)
 - 다양한 Processor (Batch, Memory Limiter, Resource 등)
@@ -86,7 +84,7 @@ OpenTelemetry Collector의 모든 기능을 사용할 수 있습니다.
 
 #### 5. 클러스터링
 
-여러 Alloy 인스턴스를 클러스터로 구성하여 워크로드를 자동으로 분배할 수 있습니다.
+여러 Alloy 인스턴스를 클러스터로 구성해 워크로드를 자동으로 분배 가능.
 
 - 자동 타겟 분배
 - 고가용성
@@ -161,7 +159,7 @@ OpenTelemetry Collector의 모든 기능을 사용할 수 있습니다.
 
 #### 컴포넌트 그래프
 
-Alloy는 컴포넌트들이 서로 연결된 **방향성 그래프(directed graph)** 로 동작합니다.
+Alloy는 컴포넌트들이 서로 연결된 방향성 그래프(directed graph)로 동작.
 
 ```
    ┌──────────────────┐
@@ -188,14 +186,14 @@ Alloy는 컴포넌트들이 서로 연결된 **방향성 그래프(directed grap
    └──────────────────┘
 ```
 
-각 컴포넌트는:
-- **Arguments (입력)**: 설정 파라미터
-- **Exports (출력)**: 다른 컴포넌트에서 참조 가능한 값
-- **State (상태)**: 내부 상태 (메트릭, 헬스 등)
+각 컴포넌트 구성 요소:
+- Arguments (입력): 설정 파라미터
+- Exports (출력): 다른 컴포넌트에서 참조 가능한 값
+- State (상태): 내부 상태 (메트릭, 헬스 등)
 
 #### 단일 바이너리
 
-Alloy는 단일 정적 Go 바이너리로 배포됩니다. 모든 컴포넌트가 동일한 바이너리에 포함되어 있습니다.
+Alloy는 단일 정적 Go 바이너리로 배포 → 모든 컴포넌트가 동일한 바이너리에 포함.
 
 ---
 
@@ -203,14 +201,14 @@ Alloy는 단일 정적 Go 바이너리로 배포됩니다. 모든 컴포넌트�
 
 #### 컴포넌트 (Component)
 
-가장 기본적인 빌딩 블록입니다. 각 컴포넌트는 특정 작업(스크래핑, 처리, 전송 등)을 수행합니다.
+가장 기본적인 빌딩 블록. 각 컴포넌트는 특정 작업(스크래핑, 처리, 전송 등)을 수행.
 
 명명 규칙: `<namespace>.<type> "<label>"`
 - 예: `prometheus.scrape "kubernetes_pods"`
 
 #### 표현식 (Expressions)
 
-컴포넌트의 값을 참조하거나 변환할 때 사용합니다.
+컴포넌트의 값을 참조하거나 변환할 때 사용.
 
 ```alloy
 // 컴포넌트 출력 참조
@@ -225,11 +223,11 @@ endpoint = "http://" + sys.env("HOST") + ":9009"
 
 #### 모듈 (Module)
 
-재사용 가능한 구성 단위입니다. 다른 Alloy 구성에서 임포트하여 사용할 수 있습니다.
+재사용 가능한 구성 단위 → 다른 Alloy 구성에서 임포트하여 사용 가능.
 
 #### 클러스터링 (Clustering)
 
-여러 Alloy 인스턴스를 클러스터로 묶어 작업을 분산합니다.
+여러 Alloy 인스턴스를 클러스터로 묶어 작업을 분산.
 
 ```alloy
 prometheus.scrape "kubernetes" {
@@ -242,33 +240,31 @@ prometheus.scrape "kubernetes" {
 }
 ```
 
-이 설정으로 클러스터 내 Alloy 인스턴스들이 자동으로 타겟을 나눠 가져갑니다.
+이 설정으로 클러스터 내 Alloy 인스턴스들이 자동으로 타겟을 나눠 가져감.
 
 #### 구성 파일 형식
 
-Alloy는 자체 구성 언어(Alloy syntax, 이전엔 River라고 불림)를 사용합니다. HCL과 유사한 문법입니다.
+Alloy는 자체 구성 언어(Alloy syntax, 이전엔 River라고 불림)를 사용 → HCL과 유사한 문법.
 
 ---
 
 ### Alloy와 다른 수집기 비교
 
-| 도구 | 메트릭 | 로그 | 트레이스 | 프로파일 | 비고 |
-|------|--------|------|---------|---------|------|
-| **Alloy** | O | O | O | O | 통합 솔루션 |
-| Prometheus | O | X | X | X | 메트릭 전용 |
-| Promtail | X | O | X | X | 로그 전용 (Loki) |
-| OpenTelemetry Collector | O | O | O | X | OTel 전용 |
-| Grafana Agent (Static) | O | O | O | O | Deprecated |
-| Grafana Agent (Flow) | O | O | O | O | Deprecated, Alloy로 통합 |
-| Vector | O | O | X | X | Datadog/Datadog Logs |
-| Fluent Bit | X | O | X | X | 로그 전용 |
-| Telegraf | O | O | △ | X | InfluxDB 생태계 |
+- Alloy: 메트릭 지원 · 로그 지원 · 트레이스 지원 · 프로파일 지원 → 통합 솔루션
+- Prometheus: 메트릭 지원 · 로그 미지원 · 트레이스 미지원 · 프로파일 미지원 → 메트릭 전용
+- Promtail: 메트릭 미지원 · 로그 지원 · 트레이스 미지원 · 프로파일 미지원 → 로그 전용 (Loki)
+- OpenTelemetry Collector: 메트릭 지원 · 로그 지원 · 트레이스 지원 · 프로파일 미지원 → OTel 전용
+- Grafana Agent (Static): 메트릭 지원 · 로그 지원 · 트레이스 지원 · 프로파일 지원 → Deprecated
+- Grafana Agent (Flow): 메트릭 지원 · 로그 지원 · 트레이스 지원 · 프로파일 지원 → Deprecated, Alloy로 통합
+- Vector: 메트릭 지원 · 로그 지원 · 트레이스 미지원 · 프로파일 미지원 → Datadog/Datadog Logs
+- Fluent Bit: 메트릭 미지원 · 로그 지원 · 트레이스 미지원 · 프로파일 미지원 → 로그 전용
+- Telegraf: 메트릭 지원 · 로그 지원 · 트레이스 부분 지원(제한적) · 프로파일 미지원 → InfluxDB 생태계
 
 ---
 
 ### 마이그레이션 경로
 
-Grafana는 다음 도구들에서 Alloy로 마이그레이션을 권장합니다.
+Grafana는 다음 도구들에서 Alloy로 마이그레이션을 권장.
 
 #### 1. Grafana Agent Operator → Alloy
 - Operator를 통한 자동 배포에서 Alloy로 전환
@@ -330,13 +326,13 @@ Grafana는 다음 도구들에서 Alloy로 마이그레이션을 권장합니다
 
 #### 컴포넌트란?
 
-Alloy의 가장 기본적인 빌딩 블록으로, 각 컴포넌트는 다음과 같은 특정 작업을 담당합니다:
+Alloy의 가장 기본적인 빌딩 블록으로, 각 컴포넌트는 다음과 같은 특정 작업을 담당:
 
 - 메트릭 스크래핑
 - 로그 파일 읽기
 - 데이터 변환
 - 백엔드로 전송
-- ...
+- 그 외 다양한 작업
 
 #### 명명 규칙
 
@@ -352,22 +348,20 @@ Alloy의 가장 기본적인 빌딩 블록으로, 각 컴포넌트는 다음과 
 
 #### 네임스페이스
 
-| 네임스페이스 | 용도 |
-|------------|------|
-| `prometheus.*` | Prometheus 호환 (메트릭) |
-| `loki.*` | Loki 호환 (로그) |
-| `pyroscope.*` | Pyroscope 호환 (프로파일) |
-| `otelcol.*` | OpenTelemetry Collector |
-| `discovery.*` | 서비스 디스커버리 |
-| `local.*` | 로컬 리소스 (파일 등) |
-| `remote.*` | 원격 리소스 (HTTP, S3) |
-| `mimir.*` | Mimir 전용 |
-| `faro.*` | Frontend 관측성 |
-| `beyla.*` | eBPF 자동 계측 |
+- `prometheus.*`: Prometheus 호환 (메트릭) 용도
+- `loki.*`: Loki 호환 (로그) 용도
+- `pyroscope.*`: Pyroscope 호환 (프로파일) 용도
+- `otelcol.*`: OpenTelemetry Collector 용도
+- `discovery.*`: 서비스 디스커버리 용도
+- `local.*`: 로컬 리소스 (파일 등) 용도
+- `remote.*`: 원격 리소스 (HTTP, S3) 용도
+- `mimir.*`: Mimir 전용
+- `faro.*`: Frontend 관측성 용도
+- `beyla.*`: eBPF 자동 계측 용도
 
 #### 컴포넌트의 구성 요소
 
-각 컴포넌트는 다음을 가집니다:
+각 컴포넌트는 다음을 포함.
 
 ##### 1. Arguments (입력)
 
@@ -395,7 +389,7 @@ prometheus.scrape "node" {
 
 ##### 3. State (상태)
 
-내부 상태와 디버그 정보. UI에서 확인 가능.
+내부 상태와 디버그 정보 → UI에서 확인 가능.
 
 ##### 4. Health (건강 상태)
 
@@ -410,7 +404,7 @@ prometheus.scrape "node" {
 
 #### 역할
 
-Alloy의 핵심 엔진으로 다음을 수행합니다:
+Alloy의 핵심 엔진으로 다음을 수행:
 
 - 구성 파일 파싱
 - 컴포넌트 그래프 생성 (DAG)
@@ -428,7 +422,7 @@ Alloy의 핵심 엔진으로 다음을 수행합니다:
 
 #### 핫 리로드
 
-구성 파일 변경 시 다음 방법으로 리로드:
+구성 파일 변경 시 다음 방법으로 리로드.
 
 ```bash
 # SIGHUP
@@ -438,7 +432,7 @@ kill -HUP $(pgrep alloy)
 curl -X POST http://localhost:12345/-/reload
 ```
 
-평가 컨트롤러는 다음 순서로 처리합니다:
+평가 컨트롤러는 다음 순서로 처리:
 1. 새 구성 파싱
 2. 새 그래프 빌드
 3. 변경된 컴포넌트만 재시작
@@ -448,17 +442,15 @@ curl -X POST http://localhost:12345/-/reload
 
 ### Stability Levels
 
-각 컴포넌트는 안정성 레벨이 표시되어 있습니다.
+각 컴포넌트는 안정성 레벨이 표시.
 
-| 레벨 | 의미 | 호환성 |
-|------|------|--------|
-| `experimental` | 실험적, 변경 가능 | 보장 없음 |
-| `public-preview` | 공개 미리보기, 안정화 중 | 일부 변경 가능 |
-| `generally-available` | 정식 안정 (기본) | 메이저 버전 내 호환 |
+- `experimental`: 실험적, 변경 가능 → 호환성 보장 없음
+- `public-preview`: 공개 미리보기, 안정화 중 → 일부 변경 가능
+- `generally-available`: 정식 안정 (기본) → 메이저 버전 내 호환
 
 #### 활성화
 
-기본값은 `generally-available`만 활성화됩니다. 더 낮은 레벨을 활성화하려면:
+기본값은 `generally-available`만 활성화. 더 낮은 레벨을 활성화하려면 다음 명령 사용.
 
 ```bash
 alloy run --stability.level=experimental config.alloy
@@ -474,11 +466,11 @@ alloy run --stability.level=experimental config.alloy
 
 #### 개념
 
-여러 Alloy 인스턴스를 클러스터로 묶어 다음을 제공합니다:
+여러 Alloy 인스턴스를 클러스터로 묶어 다음을 제공.
 
-- **워크로드 분산**: 스크래핑 타겟을 인스턴스 간 자동 분배
-- **고가용성**: 인스턴스 다운 시 다른 인스턴스가 작업 인계
-- **확장**: 부하 증가 시 인스턴스 추가
+- 워크로드 분산: 스크래핑 타겟을 인스턴스 간 자동 분배
+- 고가용성: 인스턴스 다운 시 다른 인스턴스가 작업 인계
+- 확장: 부하 증가 시 인스턴스 추가
 
 #### 클러스터 활성화
 
@@ -526,7 +518,7 @@ prometheus.scrape "kubernetes" {
 
 #### 모니터링
 
-UI의 **Cluster** 페이지에서 노드 목록 확인.
+UI의 Cluster 페이지에서 노드 목록 확인.
 
 메트릭:
 - `cluster_node_peers`: 알고 있는 피어 수
@@ -538,7 +530,7 @@ UI의 **Cluster** 페이지에서 노드 목록 확인.
 
 #### 개념
 
-재사용 가능한 구성 단위로, 라이브러리처럼 활용할 수 있습니다.
+재사용 가능한 구성 단위로, 라이브러리처럼 활용 가능.
 
 #### 정의
 
@@ -638,7 +630,7 @@ loki.source.file "app" {
 
 #### 정적 평가
 
-Alloy는 평가 시점에 모든 표현식을 즉시 계산하며, 지연 동적 평가는 지원하지 않습니다.
+Alloy는 평가 시점에 모든 표현식을 즉시 계산 → 지연 동적 평가는 미지원.
 
 #### 의존성 그래프 (DAG)
 
@@ -646,7 +638,7 @@ Alloy는 평가 시점에 모든 표현식을 즉시 계산하며, 지연 동적
 discovery.kubernetes.pods → discovery.relabel → prometheus.scrape → prometheus.remote_write
 ```
 
-순환 참조는 에러.
+순환 참조 발생 시 에러.
 
 #### 변경 전파
 
@@ -655,7 +647,7 @@ A → B → C 그래프에서 A의 출력이 변하면:
 2. B 재평가
 3. C 재평가
 
-영향받지 않는 컴포넌트는 그대로.
+영향받지 않는 컴포넌트는 그대로 유지.
 
 #### 평가 트리거
 
@@ -669,9 +661,9 @@ A → B → C 그래프에서 A의 출력이 변하면:
 
 #### Discovery 컴포넌트의 출력
 
-`discovery.*` 컴포넌트는 **타겟 리스트**를 출력합니다.
+`discovery.*` 컴포넌트는 타겟 리스트를 출력.
 
-각 타겟은:
+각 타겟 구조:
 ```
 {
   __address__ = "host:port",
@@ -680,30 +672,28 @@ A → B → C 그래프에서 A의 출력이 변하면:
 }
 ```
 
-`__meta_*` 라벨은 출처별 메타데이터. relabel을 통해 원하는 라벨로 변환.
+`__meta_*` 라벨은 출처별 메타데이터 → relabel을 통해 원하는 라벨로 변환.
 
 #### 디스커버리 종류
 
-| 컴포넌트 | 대상 |
-|---------|------|
-| `discovery.kubernetes` | Kubernetes (pods, services, nodes 등) |
-| `discovery.consul` | Consul 서비스 |
-| `discovery.docker` | Docker 컨테이너 |
-| `discovery.dns` | DNS |
-| `discovery.ec2` | AWS EC2 |
-| `discovery.gce` | GCP Compute Engine |
-| `discovery.azure` | Azure VM |
-| `discovery.file` | 파일 기반 |
-| `discovery.http` | HTTP 엔드포인트 |
-| `discovery.kuma` | Kuma 메시 |
-| `discovery.lightsail` | AWS Lightsail |
-| `discovery.linode` | Linode |
-| `discovery.marathon` | Marathon |
-| `discovery.nomad` | HashiCorp Nomad |
-| `discovery.openstack` | OpenStack |
-| `discovery.serverset` | Zookeeper Serverset |
-| `discovery.triton` | Triton |
-| `discovery.uyuni` | Uyuni/SUSE Manager |
+- `discovery.kubernetes`: Kubernetes (pods, services, nodes 등) 대상
+- `discovery.consul`: Consul 서비스 대상
+- `discovery.docker`: Docker 컨테이너 대상
+- `discovery.dns`: DNS 대상
+- `discovery.ec2`: AWS EC2 대상
+- `discovery.gce`: GCP Compute Engine 대상
+- `discovery.azure`: Azure VM 대상
+- `discovery.file`: 파일 기반 대상
+- `discovery.http`: HTTP 엔드포인트 대상
+- `discovery.kuma`: Kuma 메시 대상
+- `discovery.lightsail`: AWS Lightsail 대상
+- `discovery.linode`: Linode 대상
+- `discovery.marathon`: Marathon 대상
+- `discovery.nomad`: HashiCorp Nomad 대상
+- `discovery.openstack`: OpenStack 대상
+- `discovery.serverset`: Zookeeper Serverset 대상
+- `discovery.triton`: Triton 대상
+- `discovery.uyuni`: Uyuni/SUSE Manager 대상
 
 #### Relabel
 
@@ -775,8 +765,8 @@ otelcol.exporter.otlp "tempo" {
 
 #### 차이점
 
-- **Loki/Prometheus**: 컴포넌트가 `receiver`를 export, 다른 컴포넌트가 `forward_to`로 참조
-- **OpenTelemetry**: 컴포넌트가 `input`을 export, 다른 컴포넌트가 `output` 블록 안에서 참조
+- Loki/Prometheus: 컴포넌트가 `receiver`를 export → 다른 컴포넌트가 `forward_to`로 참조
+- OpenTelemetry: 컴포넌트가 `input`을 export → 다른 컴포넌트가 `output` 블록 안에서 참조
 
 #### 다중 수신자
 

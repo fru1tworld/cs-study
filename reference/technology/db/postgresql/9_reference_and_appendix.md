@@ -18,7 +18,7 @@
 
 ### 1. 개요
 
-PostgreSQL은 핵심 데이터베이스 기능 외에도 다양한 추가 모듈을 제공합니다. 이 모듈들은 `contrib` 디렉토리에 위치하며, 필요에 따라 선택적으로 설치할 수 있습니다.
+PostgreSQL은 핵심 데이터베이스 기능 외에도 다양한 추가 모듈을 제공함. 이 모듈들은 `contrib` 디렉토리에 위치하며, 필요에 따라 선택적으로 설치 가능함.
 
 #### 1.1 특징
 
@@ -28,22 +28,20 @@ PostgreSQL은 핵심 데이터베이스 기능 외에도 다양한 추가 모듈
 
 #### 1.2 신뢰된 확장 목록
 
-다음 확장들은 데이터베이스에 대한 `CREATE` 권한이 있는 모든 사용자가 설치할 수 있습니다:
+다음 확장들은 데이터베이스에 대한 `CREATE` 권한이 있는 모든 사용자가 설치 가능함:
 
-| 확장명 | 설명 |
-|--------|------|
-| `btree_gin` | B-tree 동작을 하는 GIN 연산자 클래스 |
-| `btree_gist` | B-tree 동작을 하는 GiST 연산자 클래스 |
-| `citext` | 대소문자 구분 없는 문자열 타입 |
-| `cube` | 다차원 큐브 데이터 타입 |
-| `fuzzystrmatch` | 문자열 유사도 및 거리 측정 |
-| `hstore` | 키/값 데이터 타입 |
-| `intarray` | 정수 배열 조작 |
-| `ltree` | 계층적 트리형 데이터 타입 |
-| `pg_trgm` | 삼중문자(Trigram) 기반 유사도 검색 |
-| `pgcrypto` | 암호화 함수 |
-| `tablefunc` | crosstab 등 테이블 반환 함수 |
-| `uuid-ossp` | UUID 생성기 |
+- `btree_gin`: B-tree 동작을 하는 GIN 연산자 클래스
+- `btree_gist`: B-tree 동작을 하는 GiST 연산자 클래스
+- `citext`: 대소문자 구분 없는 문자열 타입
+- `cube`: 다차원 큐브 데이터 타입
+- `fuzzystrmatch`: 문자열 유사도 및 거리 측정
+- `hstore`: 키/값 데이터 타입
+- `intarray`: 정수 배열 조작
+- `ltree`: 계층적 트리형 데이터 타입
+- `pg_trgm`: 삼중문자(Trigram) 기반 유사도 검색
+- `pgcrypto`: 암호화 함수
+- `tablefunc`: crosstab 등 테이블 반환 함수
+- `uuid-ossp`: UUID 생성기
 
 ---
 
@@ -69,7 +67,7 @@ make installcheck   # 설치 후
 
 #### 2.2 패키지 관리자를 통한 설치
 
-대부분의 Linux 배포판에서는 `postgresql-contrib` 패키지로 제공됩니다:
+대부분의 Linux 배포판에서는 `postgresql-contrib` 패키지로 제공됨:
 
 ```bash
 # Debian/Ubuntu
@@ -84,7 +82,7 @@ brew install postgresql  # contrib 모듈 포함
 
 #### 2.3 확장 등록
 
-설치 후 각 데이터베이스에서 확장을 등록해야 합니다:
+설치 후 각 데이터베이스에서 확장을 등록 필요함:
 
 ```sql
 -- 기본 설치
@@ -112,59 +110,49 @@ SELECT * FROM pg_extension;
 
 #### 3.1 성능 모니터링
 
-| 모듈 | 설명 |
-|------|------|
-| `pg_stat_statements` | SQL 문의 계획 및 실행 통계 추적 |
-| `pg_buffercache` | 공유 버퍼 캐시 상태 검사 |
-| `pg_freespacemap` | Free Space Map 검사 |
-| `pgrowlocks` | 테이블의 행 잠금 정보 표시 |
-| `pgstattuple` | 튜플 수준 통계 획득 |
-| `auto_explain` | 느린 쿼리의 실행 계획 자동 로깅 |
+- `pg_stat_statements`: SQL 문의 계획 및 실행 통계 추적
+- `pg_buffercache`: 공유 버퍼 캐시 상태 검사
+- `pg_freespacemap`: Free Space Map 검사
+- `pgrowlocks`: 테이블의 행 잠금 정보 표시
+- `pgstattuple`: 튜플 수준 통계 획득
+- `auto_explain`: 느린 쿼리의 실행 계획 자동 로깅
 
 #### 3.2 데이터 타입
 
-| 모듈 | 설명 |
-|------|------|
-| `hstore` | 키/값 쌍 데이터 타입 |
-| `ltree` | 계층적 트리 구조 데이터 타입 |
-| `citext` | 대소문자 구분 없는 문자열 타입 |
-| `cube` | 다차원 큐브 데이터 타입 |
-| `seg` | 선분 또는 부동소수점 구간 타입 |
-| `isn` | ISBN, EAN, UPC 등 국제 표준 번호 |
-| `uuid-ossp` | UUID 생성기 |
+- `hstore`: 키/값 쌍 데이터 타입
+- `ltree`: 계층적 트리 구조 데이터 타입
+- `citext`: 대소문자 구분 없는 문자열 타입
+- `cube`: 다차원 큐브 데이터 타입
+- `seg`: 선분 또는 부동소수점 구간 타입
+- `isn`: ISBN, EAN, UPC 등 국제 표준 번호
+- `uuid-ossp`: UUID 생성기
 
 #### 3.3 인덱스 및 검색
 
-| 모듈 | 설명 |
-|------|------|
-| `pg_trgm` | 삼중문자 기반 유사도 검색 |
-| `bloom` | 블룸 필터 인덱스 |
-| `btree_gin` | GIN용 B-tree 연산자 클래스 |
-| `btree_gist` | GiST용 B-tree 연산자 클래스 |
-| `fuzzystrmatch` | 문자열 유사도 함수 |
-| `unaccent` | 발음 기호 제거 |
+- `pg_trgm`: 삼중문자 기반 유사도 검색
+- `bloom`: 블룸 필터 인덱스
+- `btree_gin`: GIN용 B-tree 연산자 클래스
+- `btree_gist`: GiST용 B-tree 연산자 클래스
+- `fuzzystrmatch`: 문자열 유사도 함수
+- `unaccent`: 발음 기호 제거
 
 #### 3.4 외부 데이터 연결
 
-| 모듈 | 설명 |
-|------|------|
-| `postgres_fdw` | 외부 PostgreSQL 서버 연결 |
-| `file_fdw` | 서버 파일 시스템 데이터 접근 |
-| `dblink` | 원격 PostgreSQL 데이터베이스 연결 |
+- `postgres_fdw`: 외부 PostgreSQL 서버 연결
+- `file_fdw`: 서버 파일 시스템 데이터 접근
+- `dblink`: 원격 PostgreSQL 데이터베이스 연결
 
 #### 3.5 보안
 
-| 모듈 | 설명 |
-|------|------|
-| `pgcrypto` | 암호화 함수 |
-| `passwordcheck` | 패스워드 강도 검증 |
-| `sslinfo` | 클라이언트 SSL 정보 획득 |
+- `pgcrypto`: 암호화 함수
+- `passwordcheck`: 패스워드 강도 검증
+- `sslinfo`: 클라이언트 SSL 정보 획득
 
 ---
 
 ### 4. pg_stat_statements
 
-`pg_stat_statements`는 PostgreSQL에서 실행되는 모든 SQL 문의 계획(Planning) 및 실행(Execution) 통계를 추적하는 모듈로, 성능 분석과 쿼리 최적화에 필수적입니다.
+`pg_stat_statements`는 PostgreSQL에서 실행되는 모든 SQL 문의 계획(Planning) 및 실행(Execution) 통계를 추적하는 모듈로, 성능 분석과 쿼리 최적화에 필수적임.
 
 #### 4.1 설치 및 활성화
 
@@ -207,38 +195,54 @@ CREATE EXTENSION pg_stat_statements;
 
 ##### 주요 컬럼
 
-| 컬럼 | 타입 | 설명 |
-|------|------|------|
-| `userid` | oid | 문장을 실행한 사용자의 OID |
-| `dbid` | oid | 문장이 실행된 데이터베이스의 OID |
-| `queryid` | bigint | 정규화된 쿼리의 해시 코드 |
-| `query` | text | 대표 문장 텍스트 |
-| `calls` | bigint | 실행 횟수 |
-| `total_exec_time` | double precision | 총 실행 시간 (밀리초) |
-| `min_exec_time` | double precision | 최소 실행 시간 |
-| `max_exec_time` | double precision | 최대 실행 시간 |
-| `mean_exec_time` | double precision | 평균 실행 시간 |
-| `stddev_exec_time` | double precision | 실행 시간 표준 편차 |
-| `rows` | bigint | 검색/영향받은 총 행 수 |
+- `userid`
+  - 타입: oid
+  - 설명: 문장을 실행한 사용자의 OID
+- `dbid`
+  - 타입: oid
+  - 설명: 문장이 실행된 데이터베이스의 OID
+- `queryid`
+  - 타입: bigint
+  - 설명: 정규화된 쿼리의 해시 코드
+- `query`
+  - 타입: text
+  - 설명: 대표 문장 텍스트
+- `calls`
+  - 타입: bigint
+  - 설명: 실행 횟수
+- `total_exec_time`
+  - 타입: double precision
+  - 설명: 총 실행 시간 (밀리초)
+- `min_exec_time`
+  - 타입: double precision
+  - 설명: 최소 실행 시간
+- `max_exec_time`
+  - 타입: double precision
+  - 설명: 최대 실행 시간
+- `mean_exec_time`
+  - 타입: double precision
+  - 설명: 평균 실행 시간
+- `stddev_exec_time`
+  - 타입: double precision
+  - 설명: 실행 시간 표준 편차
+- `rows`
+  - 타입: bigint
+  - 설명: 검색/영향받은 총 행 수
 
 ##### 블록 I/O 통계
 
-| 컬럼 | 설명 |
-|------|------|
-| `shared_blks_hit` | 공유 블록 캐시 히트 수 |
-| `shared_blks_read` | 디스크에서 읽은 공유 블록 수 |
-| `shared_blks_dirtied` | 더티된 공유 블록 수 |
-| `shared_blks_written` | 기록된 공유 블록 수 |
-| `temp_blks_read` | 읽은 임시 블록 수 |
-| `temp_blks_written` | 기록된 임시 블록 수 |
+- `shared_blks_hit`: 공유 블록 캐시 히트 수
+- `shared_blks_read`: 디스크에서 읽은 공유 블록 수
+- `shared_blks_dirtied`: 더티된 공유 블록 수
+- `shared_blks_written`: 기록된 공유 블록 수
+- `temp_blks_read`: 읽은 임시 블록 수
+- `temp_blks_written`: 기록된 임시 블록 수
 
 ##### WAL 통계
 
-| 컬럼 | 설명 |
-|------|------|
-| `wal_records` | 생성된 WAL 레코드 수 |
-| `wal_fpi` | WAL Full Page Image 수 |
-| `wal_bytes` | 생성된 WAL 바이트 수 |
+- `wal_records`: 생성된 WAL 레코드 수
+- `wal_fpi`: WAL Full Page Image 수
+- `wal_bytes`: 생성된 WAL 바이트 수
 
 #### 4.3 실용 예제
 
@@ -340,7 +344,7 @@ SELECT pg_stat_statements_reset(0, 0, 0, true);
 
 ### 5. postgres_fdw
 
-`postgres_fdw`는 외부 PostgreSQL 서버에 저장된 데이터에 투명하게 접근할 수 있는 Foreign Data Wrapper(FDW) 모듈입니다. `dblink`에 비해 표준 SQL 인터페이스를 따르며 성능도 우수합니다.
+`postgres_fdw`는 외부 PostgreSQL 서버에 저장된 데이터에 투명하게 접근할 수 있는 Foreign Data Wrapper(FDW) 모듈임. `dblink`에 비해 표준 SQL 인터페이스를 따르며 성능도 우수함.
 
 #### 5.1 기본 설정
 
@@ -415,12 +419,10 @@ IMPORT FOREIGN SCHEMA public
 
 ##### 서버 옵션
 
-| 옵션 | 설명 |
-|------|------|
-| `host` | 원격 서버 호스트명 또는 IP |
-| `port` | 원격 서버 포트 (기본값: 5432) |
-| `dbname` | 원격 데이터베이스명 |
-| `connect_timeout` | 연결 타임아웃 (초) |
+- `host`: 원격 서버 호스트명 또는 IP
+- `port`: 원격 서버 포트 (기본값: 5432)
+- `dbname`: 원격 데이터베이스명
+- `connect_timeout`: 연결 타임아웃 (초)
 
 ##### 비용 추정 옵션
 
@@ -475,7 +477,7 @@ TRUNCATE remote_customers;
 
 #### 5.4 조인 푸시다운 (Join Pushdown)
 
-동일한 원격 서버의 테이블 간 조인은 원격 서버에서 실행됩니다:
+동일한 원격 서버의 테이블 간 조인은 원격 서버에서 실행됨:
 
 ```sql
 -- 이 쿼리는 원격 서버에서 조인이 실행됨
@@ -564,11 +566,11 @@ ORDER BY total_spent DESC;
 
 ### 6. pg_trgm
 
-`pg_trgm` 모듈은 삼중문자(Trigram) 매칭을 기반으로 텍스트 유사도를 측정하는 함수와 연산자를 제공합니다. 유사 문자열 검색과 LIKE/정규식 검색의 인덱스 지원이 핵심 기능입니다.
+`pg_trgm` 모듈은 삼중문자(Trigram) 매칭을 기반으로 텍스트 유사도를 측정하는 함수와 연산자를 제공함. 유사 문자열 검색과 LIKE/정규식 검색의 인덱스 지원이 핵심 기능임.
 
 #### 6.1 삼중문자(Trigram) 개념
 
-삼중문자는 문자열에서 연속된 3개 문자의 그룹입니다. 두 문자열의 유사도는 공유하는 삼중문자 수로 측정됩니다.
+삼중문자는 문자열에서 연속된 3개 문자의 그룹임. 두 문자열의 유사도는 공유하는 삼중문자 수로 측정됨.
 
 ```sql
 -- 삼중문자 확인
@@ -592,12 +594,18 @@ CREATE EXTENSION pg_trgm;
 
 #### 6.3 함수
 
-| 함수 | 반환 타입 | 설명 |
-|------|-----------|------|
-| `similarity(text, text)` | real | 두 문자열의 유사도 (0~1) |
-| `show_trgm(text)` | text[] | 문자열의 삼중문자 배열 |
-| `word_similarity(text, text)` | real | 첫 번째 문자열과 두 번째 문자열의 연속 범위 간 최대 유사도 |
-| `strict_word_similarity(text, text)` | real | 단어 경계에 맞춘 유사도 |
+- `similarity(text, text)`
+  - 반환 타입: real
+  - 설명: 두 문자열의 유사도 (0~1)
+- `show_trgm(text)`
+  - 반환 타입: text[]
+  - 설명: 문자열의 삼중문자 배열
+- `word_similarity(text, text)`
+  - 반환 타입: real
+  - 설명: 첫 번째 문자열과 두 번째 문자열의 연속 범위 간 최대 유사도
+- `strict_word_similarity(text, text)`
+  - 반환 타입: real
+  - 설명: 단어 경계에 맞춘 유사도
 
 ##### 사용 예제
 
@@ -619,12 +627,18 @@ SELECT word_similarity('pg', 'PostgreSQL is great');
 
 #### 6.4 연산자
 
-| 연산자 | 반환 타입 | 설명 |
-|--------|-----------|------|
-| `text % text` | boolean | 유사도가 임계값 이상인지 확인 |
-| `text <-> text` | real | 거리 (1 - 유사도) |
-| `text <% text` | boolean | 단어 유사도가 임계값 이상인지 확인 |
-| `text <<-> text` | real | 단어 유사도 기반 거리 |
+- `text % text`
+  - 반환 타입: boolean
+  - 설명: 유사도가 임계값 이상인지 확인
+- `text <-> text`
+  - 반환 타입: real
+  - 설명: 거리 (1 - 유사도)
+- `text <% text`
+  - 반환 타입: boolean
+  - 설명: 단어 유사도가 임계값 이상인지 확인
+- `text <<-> text`
+  - 반환 타입: real
+  - 설명: 단어 유사도 기반 거리
 
 ##### 사용 예제
 
@@ -654,7 +668,7 @@ SET pg_trgm.strict_word_similarity_threshold = 0.4;
 
 #### 6.6 인덱스 지원
 
-`pg_trgm`은 GiST와 GIN 인덱스를 지원하여 유사도 검색, LIKE 검색, 정규식 검색을 가속화합니다.
+`pg_trgm`은 GiST와 GIN 인덱스를 지원하여 유사도 검색, LIKE 검색, 정규식 검색을 가속화함.
 
 ##### GIN 인덱스 (권장)
 
@@ -753,13 +767,21 @@ SELECT * FROM fuzzy_search('iphone');
 
 #### 6.8 GIN vs GiST 비교
 
-| 특성 | GIN | GiST |
-|------|-----|------|
-| 인덱스 크기 | 더 큼 | 더 작음 |
-| 빌드 시간 | 더 느림 | 더 빠름 |
-| 검색 성능 | 더 빠름 | 보통 |
-| 거리 기반 정렬 | 비효율적 | 효율적 |
-| 업데이트 성능 | 느림 | 빠름 |
+- 인덱스 크기
+  - GIN: 더 큼
+  - GiST: 더 작음
+- 빌드 시간
+  - GIN: 더 느림
+  - GiST: 더 빠름
+- 검색 성능
+  - GIN: 더 빠름
+  - GiST: 보통
+- 거리 기반 정렬
+  - GIN: 비효율적
+  - GiST: 효율적
+- 업데이트 성능
+  - GIN: 느림
+  - GiST: 빠름
 
 권장 사항:
 - 읽기 위주: GIN
@@ -770,7 +792,7 @@ SELECT * FROM fuzzy_search('iphone');
 
 ### 7. hstore
 
-`hstore` 모듈은 단일 PostgreSQL 값에 키/값 쌍 집합을 저장하는 데이터 타입입니다. 반정형(Semi-structured) 데이터나 속성이 많은 행을 저장할 때 유용합니다.
+`hstore` 모듈은 단일 PostgreSQL 값에 키/값 쌍 집합을 저장하는 데이터 타입임. 반정형(Semi-structured) 데이터나 속성이 많은 행을 저장할 때 유용함.
 
 #### 7.1 설치
 
@@ -793,18 +815,36 @@ SELECT 'name=>John, address=>NULL'::hstore;
 
 #### 7.3 연산자
 
-| 연산자 | 설명 | 예제 |
-|--------|------|------|
-| `->` | 키로 값 추출 | `'a=>x, b=>y'::hstore -> 'a'` → `x` |
-| `->` | 여러 키로 값 추출 | `'a=>x, b=>y'::hstore -> ARRAY['a','b']` → `{x,y}` |
-| `?` | 키 존재 여부 | `'a=>1'::hstore ? 'a'` → `t` |
-| `?&` | 모든 키 존재 여부 | `'a=>1,b=>2'::hstore ?& ARRAY['a','b']` → `t` |
-| `?|` | 하나 이상의 키 존재 여부 | `'a=>1'::hstore ?| ARRAY['a','c']` → `t` |
-| `@>` | 포함 여부 (왼쪽이 오른쪽 포함) | `'a=>1,b=>2'::hstore @> 'a=>1'` → `t` |
-| `<@` | 포함 여부 (왼쪽이 오른쪽에 포함) | `'a=>1'::hstore <@ 'a=>1,b=>2'` → `t` |
-| `||` | 두 hstore 병합 | `'a=>1'::hstore || 'b=>2'` → `"a"=>"1","b"=>"2"` |
-| `-` | 키 삭제 | `'a=>1,b=>2'::hstore - 'a'` → `"b"=>"2"` |
-| `-` | 여러 키 삭제 | `'a=>1,b=>2,c=>3'::hstore - ARRAY['a','b']` → `"c"=>"3"` |
+- `->`
+  - 설명: 키로 값 추출
+  - 예제: `'a=>x, b=>y'::hstore -> 'a'` → `x`
+- `->`
+  - 설명: 여러 키로 값 추출
+  - 예제: `'a=>x, b=>y'::hstore -> ARRAY['a','b']` → `{x,y}`
+- `?`
+  - 설명: 키 존재 여부
+  - 예제: `'a=>1'::hstore ? 'a'` → `t`
+- `?&`
+  - 설명: 모든 키 존재 여부
+  - 예제: `'a=>1,b=>2'::hstore ?& ARRAY['a','b']` → `t`
+- `?|`
+  - 설명: 하나 이상의 키 존재 여부
+  - 예제: `'a=>1'::hstore ?| ARRAY['a','c']` → `t`
+- `@>`
+  - 설명: 포함 여부 (왼쪽이 오른쪽 포함)
+  - 예제: `'a=>1,b=>2'::hstore @> 'a=>1'` → `t`
+- `<@`
+  - 설명: 포함 여부 (왼쪽이 오른쪽에 포함)
+  - 예제: `'a=>1'::hstore <@ 'a=>1,b=>2'` → `t`
+- `||`
+  - 설명: 두 hstore 병합
+  - 예제: `'a=>1'::hstore || 'b=>2'` → `"a"=>"1","b"=>"2"`
+- `-`
+  - 설명: 키 삭제
+  - 예제: `'a=>1,b=>2'::hstore - 'a'` → `"b"=>"2"`
+- `-`
+  - 설명: 여러 키 삭제
+  - 예제: `'a=>1,b=>2,c=>3'::hstore - ARRAY['a','b']` → `"c"=>"3"`
 
 #### 7.4 함수
 
@@ -998,7 +1038,7 @@ ORDER BY count DESC;
 
 ### 8. ltree
 
-`ltree` 모듈은 계층적 트리 구조 데이터를 표현하는 데이터 타입을 구현합니다. 조직도, 카테고리 트리, 파일 시스템 경로 등을 효율적으로 저장하고 검색할 수 있습니다.
+`ltree` 모듈은 계층적 트리 구조 데이터를 표현하는 데이터 타입을 구현함. 조직도, 카테고리 트리, 파일 시스템 경로 등을 효율적으로 저장하고 검색 가능함.
 
 #### 8.1 설치
 
@@ -1024,7 +1064,7 @@ CREATE EXTENSION ltree;
 
 ##### ltree
 
-레이블 경로를 저장합니다:
+레이블 경로를 저장함:
 
 ```sql
 SELECT 'Top.Science.Astronomy'::ltree;
@@ -1071,15 +1111,27 @@ SELECT 'Top.Science.Astronomy'::ltree;
 
 #### 8.4 연산자
 
-| 연산자 | 설명 | 예제 |
-|--------|------|------|
-| `@>` | 조상인가? | `'Top.Science'::ltree @> 'Top.Science.Astronomy'::ltree` → `t` |
-| `<@` | 자손인가? | `'Top.Science.Astronomy' <@ 'Top.Science'` → `t` |
-| `~` | lquery 패턴 매칭 | `'Top.Science'::ltree ~ '*.Science'::lquery` → `t` |
-| `?` | lquery 배열 중 하나와 매칭 | `'Top'::ltree ? ARRAY['Top', 'Bottom']::lquery[]` |
-| `@` | ltxtquery 매칭 | `'Top.Science'::ltree @ 'Science'::ltxtquery` → `t` |
-| `||` | 경로 연결 | `'Top'::ltree || 'Science'::ltree` → `Top.Science` |
-| `||` | 텍스트 연결 | `'Top'::ltree || 'Science'::text` → `Top.Science` |
+- `@>`
+  - 설명: 조상인가?
+  - 예제: `'Top.Science'::ltree @> 'Top.Science.Astronomy'::ltree` → `t`
+- `<@`
+  - 설명: 자손인가?
+  - 예제: `'Top.Science.Astronomy' <@ 'Top.Science'` → `t`
+- `~`
+  - 설명: lquery 패턴 매칭
+  - 예제: `'Top.Science'::ltree ~ '*.Science'::lquery` → `t`
+- `?`
+  - 설명: lquery 배열 중 하나와 매칭
+  - 예제: `'Top'::ltree ? ARRAY['Top', 'Bottom']::lquery[]`
+- `@`
+  - 설명: ltxtquery 매칭
+  - 예제: `'Top.Science'::ltree @ 'Science'::ltxtquery` → `t`
+- `||`
+  - 설명: 경로 연결
+  - 예제: `'Top'::ltree || 'Science'::ltree` → `Top.Science`
+- `||`
+  - 설명: 텍스트 연결
+  - 예제: `'Top'::ltree || 'Science'::text` → `Top.Science`
 
 #### 8.5 함수
 
@@ -1282,7 +1334,7 @@ WHERE path <@ 'Company.Engineering.Backend';
 
 #### 9.1 pgcrypto (암호화)
 
-데이터 암호화 및 해싱 함수를 제공합니다.
+데이터 암호화 및 해싱 함수를 제공함.
 
 ```sql
 CREATE EXTENSION pgcrypto;
@@ -1312,7 +1364,7 @@ SELECT gen_random_uuid();
 
 #### 9.2 uuid-ossp (UUID 생성)
 
-다양한 UUID 생성 알고리즘을 제공합니다.
+다양한 UUID 생성 알고리즘을 제공함.
 
 ```sql
 CREATE EXTENSION "uuid-ossp";
@@ -1335,7 +1387,7 @@ SELECT uuid_ns_x500();  -- X.500 네임스페이스
 
 #### 9.3 citext (대소문자 구분 없는 텍스트)
 
-대소문자를 구분하지 않는 문자열 비교를 지원합니다.
+대소문자를 구분하지 않는 문자열 비교를 지원함.
 
 ```sql
 CREATE EXTENSION citext;
@@ -1358,7 +1410,7 @@ SELECT * FROM users WHERE email = 'John@Example.COM';
 
 #### 9.4 fuzzystrmatch (문자열 유사도)
 
-다양한 문자열 유사도 및 거리 함수를 제공합니다.
+다양한 문자열 유사도 및 거리 함수를 제공함.
 
 ```sql
 CREATE EXTENSION fuzzystrmatch;
@@ -1379,7 +1431,7 @@ SELECT dmetaphone('PostgreSQL');
 
 #### 9.5 tablefunc (크로스탭)
 
-행을 열로 변환하는 피벗 테이블 기능을 제공합니다.
+행을 열로 변환하는 피벗 테이블 기능을 제공함.
 
 ```sql
 CREATE EXTENSION tablefunc;
@@ -1404,7 +1456,7 @@ SELECT * FROM crosstab(
 
 #### 9.6 dblink (원격 데이터베이스 연결)
 
-다른 PostgreSQL 데이터베이스에 직접 쿼리를 실행합니다.
+다른 PostgreSQL 데이터베이스에 직접 쿼리를 실행함.
 
 ```sql
 CREATE EXTENSION dblink;
@@ -1428,7 +1480,7 @@ SELECT * FROM dblink(
 
 #### 9.7 pg_buffercache (버퍼 캐시 모니터링)
 
-공유 버퍼 캐시의 상태를 모니터링합니다.
+공유 버퍼 캐시의 상태를 모니터링함.
 
 ```sql
 CREATE EXTENSION pg_buffercache;
@@ -1454,7 +1506,7 @@ SELECT * FROM pg_buffercache_usage_counts();
 
 #### 9.8 auto_explain (자동 실행 계획 로깅)
 
-실행 시간이 임계값을 초과하는 쿼리의 실행 계획을 자동으로 로그에 기록합니다.
+실행 시간이 임계값을 초과하는 쿼리의 실행 계획을 자동으로 로그에 기록함.
 
 ```ini
 # postgresql.conf
@@ -1514,11 +1566,11 @@ SET auto_explain.log_analyze = on;
 
 ### 1. 데이터 조작 명령어 (DML)
 
-데이터 조작 언어(Data Manipulation Language)는 테이블의 데이터를 조회, 삽입, 수정, 삭제하는 명령어입니다.
+데이터 조작 언어(Data Manipulation Language)는 테이블의 데이터를 조회, 삽입, 수정, 삭제하는 명령어임.
 
 #### 1.1 SELECT - 데이터 조회
 
-`SELECT`는 테이블이나 뷰에서 행(row)을 조회하는 명령어입니다.
+`SELECT`는 테이블이나 뷰에서 행(row)을 조회하는 명령어임.
 
 ##### 기본 구문 (Syntax)
 
@@ -1541,7 +1593,7 @@ SELECT [ ALL | DISTINCT [ ON ( expression [, ...] ) ] ]
 
 ##### 처리 순서
 
-SELECT 문의 일반적인 처리 순서는 다음과 같습니다:
+SELECT 문의 일반적인 처리 순서는 다음과 같음:
 
 1. WITH 절: FROM에서 참조할 수 있는 임시 테이블 계산
 2. FROM 절: 모든 소스 테이블을 계산하고 여러 개일 경우 크로스 조인
@@ -1556,16 +1608,14 @@ SELECT 문의 일반적인 처리 순서는 다음과 같습니다:
 
 ##### 주요 절 설명
 
-| 절 (Clause) | 설명 |
-|-------------|------|
-| `SELECT` | 조회할 열(column) 지정 |
-| `FROM` | 데이터를 가져올 테이블 지정 |
-| `WHERE` | 행 필터링 조건 |
-| `GROUP BY` | 집계를 위한 그룹화 |
-| `HAVING` | 그룹 필터링 조건 |
-| `ORDER BY` | 결과 정렬 |
-| `LIMIT/OFFSET` | 결과 행 수 제한 |
-| `DISTINCT` | 중복 제거 |
+- `SELECT`: 조회할 열(column) 지정
+- `FROM`: 데이터를 가져올 테이블 지정
+- `WHERE`: 행 필터링 조건
+- `GROUP BY`: 집계를 위한 그룹화
+- `HAVING`: 그룹 필터링 조건
+- `ORDER BY`: 결과 정렬
+- `LIMIT/OFFSET`: 결과 행 수 제한
+- `DISTINCT`: 중복 제거
 
 ##### 예제
 
@@ -1643,7 +1693,7 @@ FROM manufacturers m, LATERAL get_product_names(m.id) pname;
 
 #### 1.2 INSERT - 데이터 삽입
 
-`INSERT`는 테이블에 새로운 행을 삽입하는 명령어입니다.
+`INSERT`는 테이블에 새로운 행을 삽입하는 명령어임.
 
 ##### 기본 구문
 
@@ -1717,7 +1767,7 @@ INSERT INTO distributors (did, dname) VALUES (DEFAULT, 'XYZ Widgets')
 
 #### 1.3 UPDATE - 데이터 수정
 
-`UPDATE`는 조건을 만족하는 행의 열 값을 변경하는 명령어입니다.
+`UPDATE`는 조건을 만족하는 행의 열 값을 변경하는 명령어임.
 
 ##### 기본 구문
 
@@ -1790,7 +1840,7 @@ UPDATE work_item SET status = 'failed'
 
 #### 1.4 DELETE - 데이터 삭제
 
-`DELETE`는 테이블에서 조건을 만족하는 행을 삭제하는 명령어입니다.
+`DELETE`는 테이블에서 조건을 만족하는 행을 삭제하는 명령어임.
 
 ##### 기본 구문
 
@@ -1856,7 +1906,7 @@ DELETE FROM user_logs AS dl
 
 #### 1.5 TRUNCATE - 테이블 비우기
 
-`TRUNCATE`는 테이블의 모든 행을 빠르게 삭제하는 명령어입니다.
+`TRUNCATE`는 테이블의 모든 행을 빠르게 삭제하는 명령어임.
 
 ##### 기본 구문
 
@@ -1867,13 +1917,21 @@ TRUNCATE [ TABLE ] [ ONLY ] name [ * ] [, ... ]
 
 ##### DELETE와의 차이점
 
-| 특성 | TRUNCATE | DELETE |
-|------|----------|--------|
-| 속도 | 매우 빠름 (행 개수와 무관) | 행 수에 비례 |
-| 트랜잭션 안전성 | 지원 | 지원 |
-| MVCC 가시성 | 테이블 수준 잠금 | 행 수준 잠금 |
-| 트리거 실행 | TRUNCATE 트리거만 | DELETE 트리거 |
-| 조건 지정 | 불가능 | WHERE 절 사용 가능 |
+- 속도
+  - TRUNCATE: 매우 빠름 (행 개수와 무관)
+  - DELETE: 행 수에 비례
+- 트랜잭션 안전성
+  - TRUNCATE: 지원
+  - DELETE: 지원
+- MVCC 가시성
+  - TRUNCATE: 테이블 수준 잠금
+  - DELETE: 행 수준 잠금
+- 트리거 실행
+  - TRUNCATE: TRUNCATE 트리거만
+  - DELETE: DELETE 트리거
+- 조건 지정
+  - TRUNCATE: 불가능
+  - DELETE: WHERE 절 사용 가능
 
 ##### 예제
 
@@ -1892,7 +1950,7 @@ TRUNCATE bigtable, othertable CASCADE;
 
 #### 1.6 MERGE - 조건부 삽입/수정/삭제
 
-`MERGE`는 조건에 따라 INSERT, UPDATE, DELETE를 수행하는 명령어입니다 (PostgreSQL 15+).
+`MERGE`는 조건에 따라 INSERT, UPDATE, DELETE를 수행하는 명령어임 (PostgreSQL 15+).
 
 ##### 기본 구문
 
@@ -1920,11 +1978,11 @@ WHEN NOT MATCHED THEN
 
 ### 2. 데이터 정의 명령어 (DDL)
 
-데이터 정의 언어(Data Definition Language)는 데이터베이스 객체를 생성, 수정, 삭제하는 명령어입니다.
+데이터 정의 언어(Data Definition Language)는 데이터베이스 객체를 생성, 수정, 삭제하는 명령어임.
 
 #### 2.1 CREATE TABLE - 테이블 생성
 
-`CREATE TABLE`은 새로운 테이블을 생성하는 명령어입니다.
+`CREATE TABLE`은 새로운 테이블을 생성하는 명령어임.
 
 ##### 기본 구문
 
@@ -1946,26 +2004,22 @@ CREATE [ [ GLOBAL | LOCAL ] { TEMPORARY | TEMP } | UNLOGGED ] TABLE [ IF NOT EXI
 
 ##### 주요 제약조건 (Constraints)
 
-| 제약조건 | 설명 |
-|----------|------|
-| `NOT NULL` | 열에 NULL 값 불허 |
-| `UNIQUE` | 열의 모든 값이 고유해야 함 |
-| `PRIMARY KEY` | 행의 고유 식별자 (NOT NULL + UNIQUE) |
-| `CHECK` | 열 값이 불리언 표현식을 만족해야 함 |
-| `DEFAULT` | 열의 기본값 지정 |
-| `FOREIGN KEY` | 다른 테이블의 열을 참조 |
-| `EXCLUDE` | 지정된 조건이 참이 되는 것을 방지 |
+- `NOT NULL`: 열에 NULL 값 불허
+- `UNIQUE`: 열의 모든 값이 고유해야 함
+- `PRIMARY KEY`: 행의 고유 식별자 (NOT NULL + UNIQUE)
+- `CHECK`: 열 값이 불리언 표현식을 만족해야 함
+- `DEFAULT`: 열의 기본값 지정
+- `FOREIGN KEY`: 다른 테이블의 열을 참조
+- `EXCLUDE`: 지정된 조건이 참이 되는 것을 방지
 
 ##### 주요 옵션
 
-| 옵션 | 설명 |
-|------|------|
-| `TEMPORARY/TEMP` | 세션 또는 트랜잭션 종료 시 자동 삭제 |
-| `UNLOGGED` | WAL에 기록하지 않음 (빠르지만 장애 시 데이터 손실 가능) |
-| `IF NOT EXISTS` | 테이블이 이미 존재할 경우 오류 방지 |
-| `PARTITION BY` | 테이블을 파티션으로 분할 (RANGE, LIST, HASH) |
-| `INHERITS` | 부모 테이블에서 열 상속 |
-| `TABLESPACE` | 테이블 저장 위치 지정 |
+- `TEMPORARY/TEMP`: 세션 또는 트랜잭션 종료 시 자동 삭제
+- `UNLOGGED`: WAL에 기록하지 않음 (빠르지만 장애 시 데이터 손실 가능)
+- `IF NOT EXISTS`: 테이블이 이미 존재할 경우 오류 방지
+- `PARTITION BY`: 테이블을 파티션으로 분할 (RANGE, LIST, HASH)
+- `INHERITS`: 부모 테이블에서 열 상속
+- `TABLESPACE`: 테이블 저장 위치 지정
 
 ##### 예제
 
@@ -2068,7 +2122,7 @@ CREATE TABLE circles (
 
 #### 2.2 ALTER TABLE - 테이블 수정
 
-`ALTER TABLE`은 기존 테이블의 정의를 변경하는 명령어입니다.
+`ALTER TABLE`은 기존 테이블의 정의를 변경하는 명령어임.
 
 ##### 기본 구문
 
@@ -2097,18 +2151,16 @@ ALTER TABLE [ IF EXISTS ] name
 
 ##### 주요 액션
 
-| 액션 | 설명 |
-|------|------|
-| `ADD COLUMN` | 새 열 추가 |
-| `DROP COLUMN` | 열 삭제 |
-| `ALTER COLUMN ... SET DATA TYPE` | 열의 데이터 타입 변경 |
-| `ALTER COLUMN ... SET/DROP DEFAULT` | 기본값 설정 또는 제거 |
-| `ALTER COLUMN ... SET/DROP NOT NULL` | NULL 제약조건 수정 |
-| `ADD/DROP CONSTRAINT` | 제약조건 추가 또는 제거 |
-| `RENAME` | 테이블, 열, 제약조건 이름 변경 |
-| `SET SCHEMA` | 테이블을 다른 스키마로 이동 |
-| `SET TABLESPACE` | 테이블의 테이블스페이스 변경 |
-| `SET OWNER TO` | 테이블 소유자 변경 |
+- `ADD COLUMN`: 새 열 추가
+- `DROP COLUMN`: 열 삭제
+- `ALTER COLUMN ... SET DATA TYPE`: 열의 데이터 타입 변경
+- `ALTER COLUMN ... SET/DROP DEFAULT`: 기본값 설정 또는 제거
+- `ALTER COLUMN ... SET/DROP NOT NULL`: NULL 제약조건 수정
+- `ADD/DROP CONSTRAINT`: 제약조건 추가 또는 제거
+- `RENAME`: 테이블, 열, 제약조건 이름 변경
+- `SET SCHEMA`: 테이블을 다른 스키마로 이동
+- `SET TABLESPACE`: 테이블의 테이블스페이스 변경
+- `SET OWNER TO`: 테이블 소유자 변경
 
 ##### 예제
 
@@ -2191,7 +2243,7 @@ ALTER TABLE myschema.distributors SET SCHEMA yourschema;
 
 #### 2.3 DROP TABLE - 테이블 삭제
 
-`DROP TABLE`은 테이블을 삭제하는 명령어입니다.
+`DROP TABLE`은 테이블을 삭제하는 명령어임.
 
 ##### 기본 구문
 
@@ -2201,11 +2253,9 @@ DROP TABLE [ IF EXISTS ] name [, ...] [ CASCADE | RESTRICT ]
 
 ##### 옵션
 
-| 옵션 | 설명 |
-|------|------|
-| `IF EXISTS` | 테이블이 존재하지 않아도 오류 발생하지 않음 |
-| `CASCADE` | 의존하는 객체(뷰, 외래 키 등)도 함께 삭제 |
-| `RESTRICT` | 의존하는 객체가 있으면 삭제 거부 (기본값) |
+- `IF EXISTS`: 테이블이 존재하지 않아도 오류 발생하지 않음
+- `CASCADE`: 의존하는 객체(뷰, 외래 키 등)도 함께 삭제
+- `RESTRICT`: 의존하는 객체가 있으면 삭제 거부 (기본값)
 
 ##### 예제
 
@@ -2242,23 +2292,31 @@ CREATE [ UNIQUE ] INDEX [ CONCURRENTLY ] [ [ IF NOT EXISTS ] name ]
 
 ##### 인덱스 메서드
 
-| 메서드 | 설명 | 용도 |
-|--------|------|------|
-| `B-tree` | 기본값; 균형 트리 | 비교 연산 (<, <=, =, >=, >) |
-| `Hash` | 해시 인덱스 | 동등 비교 (=) |
-| `GiST` | 일반화된 검색 트리 | 기하학적 데이터, 전문 검색 |
-| `SP-GiST` | 공간 분할 GiST | 불균형 데이터 구조 |
-| `GIN` | 역인덱스 | 배열, 전문 검색, JSONB |
-| `BRIN` | 블록 범위 인덱스 | 대용량 테이블의 순차적 데이터 |
+- `B-tree`
+  - 설명: 기본값; 균형 트리
+  - 용도: 비교 연산 (<, <=, =, >=, >)
+- `Hash`
+  - 설명: 해시 인덱스
+  - 용도: 동등 비교 (=)
+- `GiST`
+  - 설명: 일반화된 검색 트리
+  - 용도: 기하학적 데이터, 전문 검색
+- `SP-GiST`
+  - 설명: 공간 분할 GiST
+  - 용도: 불균형 데이터 구조
+- `GIN`
+  - 설명: 역인덱스
+  - 용도: 배열, 전문 검색, JSONB
+- `BRIN`
+  - 설명: 블록 범위 인덱스
+  - 용도: 대용량 테이블의 순차적 데이터
 
 ##### 주요 옵션
 
-| 옵션 | 설명 |
-|------|------|
-| `UNIQUE` | 고유 값 강제; 중복 항목 방지 |
-| `CONCURRENTLY` | 쓰기 잠금 없이 인덱스 생성 (시간은 더 걸림) |
-| `INCLUDE` | 인덱스 전용 스캔을 위한 비키 열 추가 |
-| `WHERE` | 행의 부분집합에 대한 부분 인덱스 생성 |
+- `UNIQUE`: 고유 값 강제; 중복 항목 방지
+- `CONCURRENTLY`: 쓰기 잠금 없이 인덱스 생성 (시간은 더 걸림)
+- `INCLUDE`: 인덱스 전용 스캔을 위한 비키 열 추가
+- `WHERE`: 행의 부분집합에 대한 부분 인덱스 생성
 
 ##### 예제
 
@@ -2311,7 +2369,7 @@ CREATE INDEX code_idx ON films (code) TABLESPACE indexspace;
 
 #### 2.5 CREATE VIEW - 뷰 생성
 
-`CREATE VIEW`는 쿼리에 대한 뷰를 정의합니다. 뷰는 물리적으로 구체화되지 않으며, 뷰가 참조될 때마다 쿼리가 실행됩니다.
+`CREATE VIEW`는 쿼리에 대한 뷰를 정의함. 뷰는 물리적으로 구체화되지 않으며, 뷰가 참조될 때마다 쿼리가 실행됨.
 
 ##### 기본 구문
 
@@ -2324,19 +2382,17 @@ CREATE [ OR REPLACE ] [ TEMP | TEMPORARY ] [ RECURSIVE ] VIEW name [ ( column_na
 
 ##### 주요 옵션
 
-| 옵션 | 설명 |
-|------|------|
-| `OR REPLACE` | 기존 뷰가 있으면 대체 (열 구조가 동일해야 함) |
-| `TEMPORARY/TEMP` | 세션 종료 시 자동 삭제되는 임시 뷰 |
-| `RECURSIVE` | WITH RECURSIVE 구문을 사용하는 재귀 뷰 |
-| `check_option` | 업데이트 가능한 뷰에 대해 `local` 또는 `cascaded` |
-| `security_barrier` | 뷰에 대한 행 수준 보안 활성화 |
-| `security_invoker` | 뷰 소유자가 아닌 사용자의 권한으로 기본 관계 확인 |
-| `CHECK OPTION` | 삽입/수정된 행이 뷰 정의 조건을 만족하는지 확인 |
+- `OR REPLACE`: 기존 뷰가 있으면 대체 (열 구조가 동일해야 함)
+- `TEMPORARY/TEMP`: 세션 종료 시 자동 삭제되는 임시 뷰
+- `RECURSIVE`: WITH RECURSIVE 구문을 사용하는 재귀 뷰
+- `check_option`: 업데이트 가능한 뷰에 대해 `local` 또는 `cascaded`
+- `security_barrier`: 뷰에 대한 행 수준 보안 활성화
+- `security_invoker`: 뷰 소유자가 아닌 사용자의 권한으로 기본 관계 확인
+- `CHECK OPTION`: 삽입/수정된 행이 뷰 정의 조건을 만족하는지 확인
 
 ##### 업데이트 가능한 뷰의 조건
 
-뷰가 자동으로 업데이트 가능하려면 다음 모든 조건을 만족해야 합니다:
+뷰가 자동으로 업데이트 가능하려면 다음 모든 조건을 만족 필요함:
 
 - FROM 목록에 정확히 하나의 항목 (테이블 또는 업데이트 가능한 뷰)
 - 최상위 수준에서 WITH, DISTINCT, GROUP BY, HAVING, LIMIT, OFFSET 없음
@@ -2383,7 +2439,7 @@ UNION ALL
 
 #### 2.6 CREATE FUNCTION - 함수 생성
 
-`CREATE FUNCTION`은 새로운 함수를 정의합니다.
+`CREATE FUNCTION`은 새로운 함수를 정의함.
 
 ##### 기본 구문
 
@@ -2412,14 +2468,12 @@ CREATE [ OR REPLACE ] FUNCTION
 
 ##### 주요 함수 속성
 
-| 속성 | 설명 |
-|------|------|
-| `IMMUTABLE` | 데이터베이스 수정 불가; 동일 인수에 항상 동일 결과 |
-| `STABLE` | 데이터베이스 수정 불가; 단일 스캔 내에서 일관성 유지 |
-| `VOLATILE` | 단일 스캔 내에서도 값이 변경될 수 있음 (기본값) |
-| `STRICT` / `RETURNS NULL ON NULL INPUT` | 인수가 NULL이면 NULL 반환 |
-| `SECURITY DEFINER` | 소유자의 권한으로 실행 (vs `SECURITY INVOKER` - 기본값) |
-| `PARALLEL SAFE` | 병렬 모드에서 실행해도 안전 |
+- `IMMUTABLE`: 데이터베이스 수정 불가; 동일 인수에 항상 동일 결과
+- `STABLE`: 데이터베이스 수정 불가; 단일 스캔 내에서 일관성 유지
+- `VOLATILE`: 단일 스캔 내에서도 값이 변경될 수 있음 (기본값)
+- `STRICT` / `RETURNS NULL ON NULL INPUT`: 인수가 NULL이면 NULL 반환
+- `SECURITY DEFINER`: 소유자의 권한으로 실행 (vs `SECURITY INVOKER` - 기본값)
+- `PARALLEL SAFE`: 병렬 모드에서 실행해도 안전
 
 ##### 예제
 
@@ -2468,7 +2522,7 @@ CREATE FUNCTION dup(int) RETURNS TABLE(f1 int, f2 text)
 
 #### 2.7 CREATE TRIGGER - 트리거 생성
 
-`CREATE TRIGGER`는 특정 테이블과 연결되어 특정 작업 수행 시 지정된 함수를 실행하는 트리거를 정의합니다.
+`CREATE TRIGGER`는 특정 테이블과 연결되어 특정 작업 수행 시 지정된 함수를 실행하는 트리거를 정의함.
 
 ##### 기본 구문
 
@@ -2491,18 +2545,14 @@ CREATE [ OR REPLACE ] [ CONSTRAINT ] TRIGGER name { BEFORE | AFTER | INSTEAD OF 
 
 ##### 트리거 타이밍
 
-| 타이밍 | 설명 |
-|--------|------|
-| `BEFORE` | 작업 전에 트리거 실행 |
-| `AFTER` | 작업 후에 트리거 실행 |
-| `INSTEAD OF` | 작업 대신 트리거 실행 (뷰에서만 사용) |
+- `BEFORE`: 작업 전에 트리거 실행
+- `AFTER`: 작업 후에 트리거 실행
+- `INSTEAD OF`: 작업 대신 트리거 실행 (뷰에서만 사용)
 
 ##### 트리거 레벨
 
-| 레벨 | 설명 |
-|------|------|
-| `FOR EACH ROW` | 영향 받는 각 행마다 한 번 실행 |
-| `FOR EACH STATEMENT` | SQL 문마다 한 번 실행 (기본값) |
+- `FOR EACH ROW`: 영향 받는 각 행마다 한 번 실행
+- `FOR EACH STATEMENT`: SQL 문마다 한 번 실행 (기본값)
 
 ##### 예제
 
@@ -2608,11 +2658,11 @@ SELECT nextval('serial');
 
 ### 3. 권한 관리 명령어 (DCL)
 
-데이터 제어 언어(Data Control Language)는 데이터베이스 객체에 대한 접근 권한을 관리합니다.
+데이터 제어 언어(Data Control Language)는 데이터베이스 객체에 대한 접근 권한을 관리함.
 
 #### 3.1 GRANT - 권한 부여
 
-`GRANT` 명령어는 데이터베이스 객체에 대한 접근 권한을 정의하거나 역할의 멤버십을 부여합니다.
+`GRANT` 명령어는 데이터베이스 객체에 대한 접근 권한을 정의하거나 역할의 멤버십을 부여함.
 
 ##### 기본 구문
 
@@ -2633,22 +2683,18 @@ GRANT role_name TO role_specification
 
 ##### 주요 권한 유형
 
-| 객체 유형 | 사용 가능한 권한 |
-|-----------|------------------|
-| 테이블/뷰 | SELECT, INSERT, UPDATE, DELETE, TRUNCATE, REFERENCES, TRIGGER, MAINTAIN |
-| 시퀀스 | USAGE, SELECT, UPDATE |
-| 데이터베이스 | CREATE, CONNECT, TEMPORARY |
-| 함수/프로시저 | EXECUTE |
-| 스키마 | CREATE, USAGE |
+- 테이블/뷰: SELECT, INSERT, UPDATE, DELETE, TRUNCATE, REFERENCES, TRIGGER, MAINTAIN
+- 시퀀스: USAGE, SELECT, UPDATE
+- 데이터베이스: CREATE, CONNECT, TEMPORARY
+- 함수/프로시저: EXECUTE
+- 스키마: CREATE, USAGE
 
 ##### 주요 개념
 
-| 개념 | 설명 |
-|------|------|
-| `PUBLIC` | 모든 역할(현재 및 미래)에 권한 부여 |
-| `WITH GRANT OPTION` | 수신자가 다른 사람에게 권한을 부여할 수 있음 |
-| `GRANTED BY` | 누가 권한을 부여했는지 기록; 현재 사용자여야 함 |
-| 소유자 권한 | 객체 소유자는 기본적으로 모든 권한 보유; 취소 불가 |
+- `PUBLIC`: 모든 역할(현재 및 미래)에 권한 부여
+- `WITH GRANT OPTION`: 수신자가 다른 사람에게 권한을 부여할 수 있음
+- `GRANTED BY`: 누가 권한을 부여했는지 기록; 현재 사용자여야 함
+- 소유자 권한: 객체 소유자는 기본적으로 모든 권한 보유; 취소 불가
 
 ##### 예제
 
@@ -2690,17 +2736,15 @@ GRANT EXECUTE ON FUNCTION my_function(integer) TO joe;
 
 ##### 역할 멤버십 옵션
 
-| 옵션 | 설명 |
-|------|------|
-| `ADMIN` | 멤버가 멤버십을 부여/취소 가능 (기본값 FALSE) |
-| `INHERIT` | 멤버가 역할의 권한을 상속 (기본값은 상속 속성에 따름) |
-| `SET` | 멤버가 SET ROLE로 부여된 역할로 변경 가능 (기본값 TRUE) |
+- `ADMIN`: 멤버가 멤버십을 부여/취소 가능 (기본값 FALSE)
+- `INHERIT`: 멤버가 역할의 권한을 상속 (기본값은 상속 속성에 따름)
+- `SET`: 멤버가 SET ROLE로 부여된 역할로 변경 가능 (기본값 TRUE)
 
 ---
 
 #### 3.2 REVOKE - 권한 취소
 
-`REVOKE` 명령어는 하나 이상의 역할에서 접근 권한을 제거합니다.
+`REVOKE` 명령어는 하나 이상의 역할에서 접근 권한을 제거함.
 
 ##### 기본 구문
 
@@ -2726,11 +2770,9 @@ REVOKE [ { ADMIN | INHERIT | SET } OPTION FOR ]
 
 ##### 주요 옵션
 
-| 옵션 | 설명 |
-|------|------|
-| `GRANT OPTION FOR` | 권한 자체가 아닌 부여 옵션만 취소 |
-| `CASCADE` | 의존하는 권한도 함께 취소 |
-| `RESTRICT` | 의존하는 권한이 있으면 취소 거부 (기본값) |
+- `GRANT OPTION FOR`: 권한 자체가 아닌 부여 옵션만 취소
+- `CASCADE`: 의존하는 권한도 함께 취소
+- `RESTRICT`: 의존하는 권한이 있으면 취소 거부 (기본값)
 
 ##### 예제
 
@@ -2758,7 +2800,7 @@ REVOKE SELECT ON ALL TABLES IN SCHEMA myschema FROM joe;
 
 #### 3.3 CREATE ROLE - 역할 생성
 
-`CREATE ROLE`은 새로운 데이터베이스 역할을 정의합니다.
+`CREATE ROLE`은 새로운 데이터베이스 역할을 정의함.
 
 ##### 기본 구문
 
@@ -2786,15 +2828,13 @@ CREATE ROLE name [ [ WITH ] option [ ... ] ]
 
 ##### 주요 역할 속성
 
-| 속성 | 설명 |
-|------|------|
-| `SUPERUSER` | 슈퍼유저 권한 (모든 접근 검사 우회) |
-| `CREATEDB` | 데이터베이스 생성 가능 |
-| `CREATEROLE` | 새 역할 생성 가능 |
-| `LOGIN` | 로그인 가능 (vs NOLOGIN: 그룹 역할용) |
-| `INHERIT` | 멤버인 역할의 권한 상속 |
-| `REPLICATION` | 복제 연결 가능 |
-| `BYPASSRLS` | 행 수준 보안 우회 |
+- `SUPERUSER`: 슈퍼유저 권한 (모든 접근 검사 우회)
+- `CREATEDB`: 데이터베이스 생성 가능
+- `CREATEROLE`: 새 역할 생성 가능
+- `LOGIN`: 로그인 가능 (vs NOLOGIN: 그룹 역할용)
+- `INHERIT`: 멤버인 역할의 권한 상속
+- `REPLICATION`: 복제 연결 가능
+- `BYPASSRLS`: 행 수준 보안 우회
 
 ##### 예제
 
@@ -2817,7 +2857,7 @@ CREATE ROLE miriam WITH CREATEDB LOGIN PASSWORD 'jw8s0F4';
 
 #### 3.4 ALTER DEFAULT PRIVILEGES - 기본 권한 변경
 
-`ALTER DEFAULT PRIVILEGES`는 향후 생성될 객체에 적용될 기본 접근 권한을 정의합니다.
+`ALTER DEFAULT PRIVILEGES`는 향후 생성될 객체에 적용될 기본 접근 권한을 정의함.
 
 ##### 기본 구문
 
@@ -2846,11 +2886,11 @@ ALTER DEFAULT PRIVILEGES FOR ROLE admin
 
 ### 4. 트랜잭션 제어 명령어 (TCL)
 
-트랜잭션 제어 언어(Transaction Control Language)는 트랜잭션의 시작, 커밋, 롤백을 관리합니다.
+트랜잭션 제어 언어(Transaction Control Language)는 트랜잭션의 시작, 커밋, 롤백을 관리함.
 
 #### 4.1 BEGIN - 트랜잭션 시작
 
-`BEGIN`은 트랜잭션 블록을 시작합니다.
+`BEGIN`은 트랜잭션 블록을 시작함.
 
 ```sql
 BEGIN [ WORK | TRANSACTION ] [ transaction_mode [, ...] ]
@@ -2874,7 +2914,7 @@ BEGIN TRANSACTION ISOLATION LEVEL REPEATABLE READ;
 
 #### 4.2 COMMIT - 트랜잭션 커밋
 
-`COMMIT`은 현재 트랜잭션을 커밋합니다.
+`COMMIT`은 현재 트랜잭션을 커밋함.
 
 ```sql
 COMMIT [ WORK | TRANSACTION ] [ AND [ NO ] CHAIN ]
@@ -2891,7 +2931,7 @@ COMMIT;
 
 #### 4.3 ROLLBACK - 트랜잭션 롤백
 
-`ROLLBACK`은 현재 트랜잭션을 중단하고 모든 변경 사항을 취소합니다.
+`ROLLBACK`은 현재 트랜잭션을 중단하고 모든 변경 사항을 취소함.
 
 ```sql
 ROLLBACK [ WORK | TRANSACTION ] [ AND [ NO ] CHAIN ]
@@ -2908,7 +2948,7 @@ ROLLBACK;  -- 변경 사항 취소
 
 #### 4.4 SAVEPOINT - 저장점 정의
 
-`SAVEPOINT`는 현재 트랜잭션 내에서 새로운 저장점을 정의합니다.
+`SAVEPOINT`는 현재 트랜잭션 내에서 새로운 저장점을 정의함.
 
 ```sql
 SAVEPOINT savepoint_name
@@ -2948,12 +2988,10 @@ SET SESSION CHARACTERISTICS AS TRANSACTION transaction_mode [, ...]
 
 ##### 격리 수준 (Isolation Levels)
 
-| 격리 수준 | 설명 |
-|-----------|------|
-| `READ UNCOMMITTED` | 커밋되지 않은 데이터 읽기 가능 (PostgreSQL에서는 READ COMMITTED로 동작) |
-| `READ COMMITTED` | 커밋된 데이터만 읽기 (기본값) |
-| `REPEATABLE READ` | 트랜잭션 시작 시점의 스냅샷 사용 |
-| `SERIALIZABLE` | 가장 엄격한 격리; 직렬화 가능한 트랜잭션 |
+- `READ UNCOMMITTED`: 커밋되지 않은 데이터 읽기 가능 (PostgreSQL에서는 READ COMMITTED로 동작)
+- `READ COMMITTED`: 커밋된 데이터만 읽기 (기본값)
+- `REPEATABLE READ`: 트랜잭션 시작 시점의 스냅샷 사용
+- `SERIALIZABLE`: 가장 엄격한 격리; 직렬화 가능한 트랜잭션
 
 ##### 예제
 
@@ -2970,7 +3008,7 @@ COMMIT;
 
 #### 5.1 EXPLAIN - 실행 계획 표시
 
-`EXPLAIN`은 쿼리의 실행 계획을 표시합니다.
+`EXPLAIN`은 쿼리의 실행 계획을 표시함.
 
 ```sql
 EXPLAIN [ ( option [, ...] ) ] statement
@@ -3007,7 +3045,7 @@ EXPLAIN (FORMAT JSON) SELECT * FROM films WHERE kind = 'Comedy';
 
 #### 5.2 ANALYZE - 통계 수집
 
-`ANALYZE`는 데이터베이스에 대한 통계를 수집합니다.
+`ANALYZE`는 데이터베이스에 대한 통계를 수집함.
 
 ```sql
 ANALYZE [ ( option [, ...] ) ] [ table_and_columns [, ...] ]
@@ -3032,7 +3070,7 @@ ANALYZE VERBOSE films;
 
 #### 5.3 VACUUM - 가비지 컬렉션
 
-`VACUUM`은 데드 튜플을 정리하고 선택적으로 데이터베이스를 분석합니다.
+`VACUUM`은 데드 튜플을 정리하고 선택적으로 데이터베이스를 분석함.
 
 ```sql
 VACUUM [ ( option [, ...] ) ] [ table_and_columns [, ...] ]
@@ -3041,12 +3079,10 @@ VACUUM [ FULL ] [ FREEZE ] [ VERBOSE ] [ ANALYZE ] [ table_and_columns [, ...] ]
 
 ##### 옵션
 
-| 옵션 | 설명 |
-|------|------|
-| `FULL` | 테이블 전체를 다시 작성하여 공간 회수 (배타적 잠금 필요) |
-| `FREEZE` | 트랜잭션 ID 래핑 방지를 위해 행 동결 |
-| `VERBOSE` | 상세 진행 상황 출력 |
-| `ANALYZE` | VACUUM 후 통계 업데이트 |
+- `FULL`: 테이블 전체를 다시 작성하여 공간 회수 (배타적 잠금 필요)
+- `FREEZE`: 트랜잭션 ID 래핑 방지를 위해 행 동결
+- `VERBOSE`: 상세 진행 상황 출력
+- `ANALYZE`: VACUUM 후 통계 업데이트
 
 ##### 예제
 
@@ -3063,7 +3099,7 @@ VACUUM FULL films;
 
 #### 5.4 COPY - 데이터 복사
 
-`COPY`는 파일과 테이블 간에 데이터를 복사합니다.
+`COPY`는 파일과 테이블 간에 데이터를 복사함.
 
 ```sql
 -- 테이블에서 파일로
@@ -3079,13 +3115,11 @@ COPY table_name [ ( column_name [, ...] ) ]
 
 ##### 주요 옵션
 
-| 옵션 | 설명 |
-|------|------|
-| `FORMAT` | csv, text, binary |
-| `DELIMITER` | 열 구분자 |
-| `HEADER` | 첫 행을 헤더로 처리 |
-| `NULL` | NULL 값의 문자열 표현 |
-| `ENCODING` | 파일 인코딩 |
+- `FORMAT`: csv, text, binary
+- `DELIMITER`: 열 구분자
+- `HEADER`: 첫 행을 헤더로 처리
+- `NULL`: NULL 값의 문자열 표현
+- `ENCODING`: 파일 인코딩
 
 ##### 예제
 
@@ -3105,7 +3139,7 @@ COPY (SELECT * FROM films WHERE kind = 'Comedy') TO '/tmp/comedies.csv' WITH (FO
 
 #### 5.5 COMMENT - 객체에 주석 추가
 
-`COMMENT`는 데이터베이스 객체에 주석을 정의합니다.
+`COMMENT`는 데이터베이스 객체에 주석을 정의함.
 
 ```sql
 COMMENT ON
@@ -3227,124 +3261,106 @@ UNLISTEN *;
 
 ##### 데이터 조작 (DML)
 
-| 명령어 | 설명 |
-|--------|------|
-| `CALL` | 프로시저 호출 |
-| `COPY` | 파일과 테이블 간 데이터 복사 |
-| `DELETE` | 테이블에서 행 삭제 |
-| `INSERT` | 테이블에 새 행 삽입 |
-| `MERGE` | 조건부 삽입, 수정, 삭제 |
-| `SELECT` | 테이블 또는 뷰에서 행 조회 |
-| `SELECT INTO` | 쿼리 결과로 새 테이블 정의 |
-| `TRUNCATE` | 테이블 비우기 |
-| `UPDATE` | 테이블의 행 수정 |
-| `VALUES` | 행 집합 계산 |
+- `CALL`: 프로시저 호출
+- `COPY`: 파일과 테이블 간 데이터 복사
+- `DELETE`: 테이블에서 행 삭제
+- `INSERT`: 테이블에 새 행 삽입
+- `MERGE`: 조건부 삽입, 수정, 삭제
+- `SELECT`: 테이블 또는 뷰에서 행 조회
+- `SELECT INTO`: 쿼리 결과로 새 테이블 정의
+- `TRUNCATE`: 테이블 비우기
+- `UPDATE`: 테이블의 행 수정
+- `VALUES`: 행 집합 계산
 
 ##### 테이블 작업
 
-| 명령어 | 설명 |
-|--------|------|
-| `CREATE TABLE` | 새 테이블 정의 |
-| `CREATE TABLE AS` | 쿼리 결과로 새 테이블 정의 |
-| `ALTER TABLE` | 테이블 정의 변경 |
-| `DROP TABLE` | 테이블 삭제 |
-| `CLUSTER` | 인덱스에 따라 테이블 클러스터링 |
-| `LOCK` | 테이블 잠금 |
+- `CREATE TABLE`: 새 테이블 정의
+- `CREATE TABLE AS`: 쿼리 결과로 새 테이블 정의
+- `ALTER TABLE`: 테이블 정의 변경
+- `DROP TABLE`: 테이블 삭제
+- `CLUSTER`: 인덱스에 따라 테이블 클러스터링
+- `LOCK`: 테이블 잠금
 
 ##### 인덱스 작업
 
-| 명령어 | 설명 |
-|--------|------|
-| `CREATE INDEX` | 새 인덱스 정의 |
-| `ALTER INDEX` | 인덱스 정의 변경 |
-| `DROP INDEX` | 인덱스 삭제 |
-| `REINDEX` | 인덱스 재구성 |
+- `CREATE INDEX`: 새 인덱스 정의
+- `ALTER INDEX`: 인덱스 정의 변경
+- `DROP INDEX`: 인덱스 삭제
+- `REINDEX`: 인덱스 재구성
 
 ##### 뷰 작업
 
-| 명령어 | 설명 |
-|--------|------|
-| `CREATE VIEW` | 새 뷰 정의 |
-| `CREATE MATERIALIZED VIEW` | 새 구체화된 뷰 정의 |
-| `ALTER VIEW` | 뷰 정의 변경 |
-| `ALTER MATERIALIZED VIEW` | 구체화된 뷰 정의 변경 |
-| `DROP VIEW` | 뷰 삭제 |
-| `DROP MATERIALIZED VIEW` | 구체화된 뷰 삭제 |
-| `REFRESH MATERIALIZED VIEW` | 구체화된 뷰 내용 갱신 |
+- `CREATE VIEW`: 새 뷰 정의
+- `CREATE MATERIALIZED VIEW`: 새 구체화된 뷰 정의
+- `ALTER VIEW`: 뷰 정의 변경
+- `ALTER MATERIALIZED VIEW`: 구체화된 뷰 정의 변경
+- `DROP VIEW`: 뷰 삭제
+- `DROP MATERIALIZED VIEW`: 구체화된 뷰 삭제
+- `REFRESH MATERIALIZED VIEW`: 구체화된 뷰 내용 갱신
 
 ##### 역할 및 권한 작업
 
-| 명령어 | 설명 |
-|--------|------|
-| `CREATE ROLE` | 새 데이터베이스 역할 정의 |
-| `CREATE USER` | 새 데이터베이스 역할 정의 |
-| `ALTER ROLE` | 데이터베이스 역할 변경 |
-| `ALTER USER` | 데이터베이스 역할 변경 |
-| `DROP ROLE` | 데이터베이스 역할 삭제 |
-| `DROP USER` | 데이터베이스 역할 삭제 |
-| `GRANT` | 접근 권한 정의 |
-| `REVOKE` | 접근 권한 제거 |
-| `SET ROLE` | 현재 세션의 사용자 식별자 설정 |
-| `ALTER DEFAULT PRIVILEGES` | 기본 접근 권한 정의 |
+- `CREATE ROLE`: 새 데이터베이스 역할 정의
+- `CREATE USER`: 새 데이터베이스 역할 정의
+- `ALTER ROLE`: 데이터베이스 역할 변경
+- `ALTER USER`: 데이터베이스 역할 변경
+- `DROP ROLE`: 데이터베이스 역할 삭제
+- `DROP USER`: 데이터베이스 역할 삭제
+- `GRANT`: 접근 권한 정의
+- `REVOKE`: 접근 권한 제거
+- `SET ROLE`: 현재 세션의 사용자 식별자 설정
+- `ALTER DEFAULT PRIVILEGES`: 기본 접근 권한 정의
 
 ##### 트랜잭션 제어
 
-| 명령어 | 설명 |
-|--------|------|
-| `BEGIN` | 트랜잭션 블록 시작 |
-| `START TRANSACTION` | 트랜잭션 블록 시작 |
-| `COMMIT` | 현재 트랜잭션 커밋 |
-| `END` | 현재 트랜잭션 커밋 |
-| `ROLLBACK` | 현재 트랜잭션 중단 |
-| `ABORT` | 현재 트랜잭션 중단 |
-| `SAVEPOINT` | 새 저장점 정의 |
-| `RELEASE SAVEPOINT` | 이전에 정의된 저장점 해제 |
-| `ROLLBACK TO SAVEPOINT` | 저장점으로 롤백 |
-| `SET TRANSACTION` | 현재 트랜잭션의 특성 설정 |
-| `SET CONSTRAINTS` | 현재 트랜잭션의 제약조건 검사 타이밍 설정 |
+- `BEGIN`: 트랜잭션 블록 시작
+- `START TRANSACTION`: 트랜잭션 블록 시작
+- `COMMIT`: 현재 트랜잭션 커밋
+- `END`: 현재 트랜잭션 커밋
+- `ROLLBACK`: 현재 트랜잭션 중단
+- `ABORT`: 현재 트랜잭션 중단
+- `SAVEPOINT`: 새 저장점 정의
+- `RELEASE SAVEPOINT`: 이전에 정의된 저장점 해제
+- `ROLLBACK TO SAVEPOINT`: 저장점으로 롤백
+- `SET TRANSACTION`: 현재 트랜잭션의 특성 설정
+- `SET CONSTRAINTS`: 현재 트랜잭션의 제약조건 검사 타이밍 설정
 
 ##### 함수 및 프로시저
 
-| 명령어 | 설명 |
-|--------|------|
-| `CREATE FUNCTION` | 새 함수 정의 |
-| `CREATE PROCEDURE` | 새 프로시저 정의 |
-| `CREATE AGGREGATE` | 새 집계 함수 정의 |
-| `ALTER FUNCTION` | 함수 정의 변경 |
-| `ALTER PROCEDURE` | 프로시저 정의 변경 |
-| `ALTER AGGREGATE` | 집계 함수 정의 변경 |
-| `DROP FUNCTION` | 함수 삭제 |
-| `DROP PROCEDURE` | 프로시저 삭제 |
-| `DROP AGGREGATE` | 집계 함수 삭제 |
+- `CREATE FUNCTION`: 새 함수 정의
+- `CREATE PROCEDURE`: 새 프로시저 정의
+- `CREATE AGGREGATE`: 새 집계 함수 정의
+- `ALTER FUNCTION`: 함수 정의 변경
+- `ALTER PROCEDURE`: 프로시저 정의 변경
+- `ALTER AGGREGATE`: 집계 함수 정의 변경
+- `DROP FUNCTION`: 함수 삭제
+- `DROP PROCEDURE`: 프로시저 삭제
+- `DROP AGGREGATE`: 집계 함수 삭제
 
 ##### 트리거 및 규칙
 
-| 명령어 | 설명 |
-|--------|------|
-| `CREATE TRIGGER` | 새 트리거 정의 |
-| `CREATE EVENT TRIGGER` | 새 이벤트 트리거 정의 |
-| `CREATE RULE` | 새 재작성 규칙 정의 |
-| `ALTER TRIGGER` | 트리거 정의 변경 |
-| `ALTER EVENT TRIGGER` | 이벤트 트리거 정의 변경 |
-| `ALTER RULE` | 규칙 정의 변경 |
-| `DROP TRIGGER` | 트리거 삭제 |
-| `DROP EVENT TRIGGER` | 이벤트 트리거 삭제 |
-| `DROP RULE` | 재작성 규칙 삭제 |
+- `CREATE TRIGGER`: 새 트리거 정의
+- `CREATE EVENT TRIGGER`: 새 이벤트 트리거 정의
+- `CREATE RULE`: 새 재작성 규칙 정의
+- `ALTER TRIGGER`: 트리거 정의 변경
+- `ALTER EVENT TRIGGER`: 이벤트 트리거 정의 변경
+- `ALTER RULE`: 규칙 정의 변경
+- `DROP TRIGGER`: 트리거 삭제
+- `DROP EVENT TRIGGER`: 이벤트 트리거 삭제
+- `DROP RULE`: 재작성 규칙 삭제
 
 ##### 유틸리티 명령어
 
-| 명령어 | 설명 |
-|--------|------|
-| `ANALYZE` | 데이터베이스 통계 수집 |
-| `VACUUM` | 가비지 컬렉션 및 선택적 분석 |
-| `EXPLAIN` | 문의 실행 계획 표시 |
-| `COMMENT` | 객체의 주석 정의 또는 변경 |
-| `SET` | 런타임 매개변수 변경 |
-| `SHOW` | 런타임 매개변수 값 표시 |
-| `RESET` | 런타임 매개변수를 기본값으로 복원 |
-| `LISTEN` | 알림 대기 |
-| `NOTIFY` | 알림 생성 |
-| `UNLISTEN` | 알림 대기 중지 |
+- `ANALYZE`: 데이터베이스 통계 수집
+- `VACUUM`: 가비지 컬렉션 및 선택적 분석
+- `EXPLAIN`: 문의 실행 계획 표시
+- `COMMENT`: 객체의 주석 정의 또는 변경
+- `SET`: 런타임 매개변수 변경
+- `SHOW`: 런타임 매개변수 값 표시
+- `RESET`: 런타임 매개변수를 기본값으로 복원
+- `LISTEN`: 알림 대기
+- `NOTIFY`: 알림 생성
+- `UNLISTEN`: 알림 대기 중지
 
 ---
 
@@ -3359,7 +3375,7 @@ UNLISTEN *;
 
 ## PostgreSQL 클라이언트 애플리케이션 (Client Applications)
 
-클라이언트 애플리케이션은 데이터베이스 서버가 설치된 위치와 관계없이 모든 호스트에서 실행할 수 있습니다.
+클라이언트 애플리케이션은 데이터베이스 서버가 설치된 위치와 관계없이 모든 호스트에서 실행 가능함.
 
 ---
 
@@ -3384,49 +3400,45 @@ UNLISTEN *;
 
 ### 1. 클라이언트 애플리케이션 개요
 
-PostgreSQL은 다양한 클라이언트 애플리케이션을 제공하며, 이들은 데이터베이스 관리, 백업/복원, 성능 테스트 등 다양한 작업을 수행할 수 있습니다.
+PostgreSQL은 다양한 클라이언트 애플리케이션을 제공하며, 이들은 데이터베이스 관리, 백업/복원, 성능 테스트 등 다양한 작업을 수행 가능함.
 
 #### 1.1 클라이언트 애플리케이션 목록
 
-| 애플리케이션 | 설명 |
-|-------------|------|
-| psql | PostgreSQL 대화형 터미널 |
-| pg_dump | 데이터베이스를 SQL 스크립트 또는 아카이브 형식으로 내보내기 |
-| pg_dumpall | 클러스터 전체를 스크립트 파일로 추출 |
-| pg_restore | pg_dump로 생성된 아카이브에서 데이터베이스 복원 |
-| pg_basebackup | PostgreSQL 클러스터의 기본 백업 수행 |
-| createdb | 새 PostgreSQL 데이터베이스 생성 |
-| dropdb | PostgreSQL 데이터베이스 삭제 |
-| createuser | 새 PostgreSQL 사용자 계정 생성 |
-| dropuser | PostgreSQL 사용자 계정 삭제 |
-| vacuumdb | 가비지 컬렉션 및 분석 수행 |
-| reindexdb | 데이터베이스 인덱스 재구축 |
-| clusterdb | PostgreSQL 데이터베이스 클러스터링 |
-| pg_isready | PostgreSQL 서버 연결 상태 확인 |
-| pgbench | PostgreSQL 벤치마크 테스트 실행 |
-| pg_config | 설치된 PostgreSQL 버전 정보 조회 |
-| pg_receivewal | PostgreSQL 서버에서 WAL 스트리밍 |
-| pg_recvlogical | PostgreSQL 논리적 디코딩 스트림 제어 |
-| pg_verifybackup | 기본 백업의 무결성 검증 |
-| pg_amcheck | 데이터베이스 손상 검사 |
-| ecpg | 임베디드 SQL C 전처리기 |
+- psql: PostgreSQL 대화형 터미널
+- pg_dump: 데이터베이스를 SQL 스크립트 또는 아카이브 형식으로 내보내기
+- pg_dumpall: 클러스터 전체를 스크립트 파일로 추출
+- pg_restore: pg_dump로 생성된 아카이브에서 데이터베이스 복원
+- pg_basebackup: PostgreSQL 클러스터의 기본 백업 수행
+- createdb: 새 PostgreSQL 데이터베이스 생성
+- dropdb: PostgreSQL 데이터베이스 삭제
+- createuser: 새 PostgreSQL 사용자 계정 생성
+- dropuser: PostgreSQL 사용자 계정 삭제
+- vacuumdb: 가비지 컬렉션 및 분석 수행
+- reindexdb: 데이터베이스 인덱스 재구축
+- clusterdb: PostgreSQL 데이터베이스 클러스터링
+- pg_isready: PostgreSQL 서버 연결 상태 확인
+- pgbench: PostgreSQL 벤치마크 테스트 실행
+- pg_config: 설치된 PostgreSQL 버전 정보 조회
+- pg_receivewal: PostgreSQL 서버에서 WAL 스트리밍
+- pg_recvlogical: PostgreSQL 논리적 디코딩 스트림 제어
+- pg_verifybackup: 기본 백업의 무결성 검증
+- pg_amcheck: 데이터베이스 손상 검사
+- ecpg: 임베디드 SQL C 전처리기
 
 #### 1.2 공통 연결 옵션
 
-대부분의 클라이언트 애플리케이션은 다음과 같은 공통 연결 옵션을 지원합니다:
+대부분의 클라이언트 애플리케이션은 다음과 같은 공통 연결 옵션을 지원함:
 
-| 옵션 | 설명 |
-|------|------|
-| `-h, --host=HOST` | 데이터베이스 서버 호스트명 |
-| `-p, --port=PORT` | 데이터베이스 서버 포트 (기본값: 5432) |
-| `-U, --username=USER` | 연결할 사용자명 |
-| `-d, --dbname=DBNAME` | 데이터베이스 이름 |
-| `-W, --password` | 비밀번호 프롬프트 강제 |
-| `-w, --no-password` | 비밀번호 프롬프트 표시 안 함 |
+- `-h, --host=HOST`: 데이터베이스 서버 호스트명
+- `-p, --port=PORT`: 데이터베이스 서버 포트 (기본값: 5432)
+- `-U, --username=USER`: 연결할 사용자명
+- `-d, --dbname=DBNAME`: 데이터베이스 이름
+- `-W, --password`: 비밀번호 프롬프트 강제
+- `-w, --no-password`: 비밀번호 프롬프트 표시 안 함
 
 #### 1.3 환경 변수 (Environment Variables)
 
-다음 환경 변수를 사용하여 기본 연결 매개변수를 설정할 수 있습니다:
+다음 환경 변수를 사용하여 기본 연결 매개변수를 설정 가능함:
 
 ```bash
 # 기본 연결 매개변수
@@ -3444,7 +3456,7 @@ export PGPASSFILE=~/.pgpass
 
 ### 2. psql - 대화형 터미널
 
-psql은 PostgreSQL의 터미널 기반 프론트엔드로, SQL 쿼리를 대화형으로 입력하고 실행 결과를 확인할 수 있습니다.
+psql은 PostgreSQL의 터미널 기반 프론트엔드로, SQL 쿼리를 대화형으로 입력하고 실행 결과를 확인 가능함.
 
 #### 2.1 기본 구문 (Syntax)
 
@@ -3454,22 +3466,20 @@ psql [option]... [dbname [username]]
 
 #### 2.2 주요 옵션
 
-| 옵션 | 설명 |
-|------|------|
-| `-d dbname` | 연결할 데이터베이스 이름 |
-| `-h hostname` | 서버 호스트명 |
-| `-p port` | 서버 포트 (기본값: 5432) |
-| `-U username` | 데이터베이스 사용자 |
-| `-c command` | 명령 문자열 실행 |
-| `-f filename` | 파일에서 명령 실행 |
-| `-l, --list` | 모든 데이터베이스 목록 표시 후 종료 |
-| `-a, --echo-all` | 모든 입력 라인을 stdout으로 출력 |
-| `-e, --echo-queries` | 서버로 전송된 SQL 명령 에코 |
-| `-q, --quiet` | 정보 메시지 억제 |
-| `-t, --tuples-only` | 테이블 데이터만 출력 (헤더 제외) |
-| `-A, --no-align` | 정렬되지 않은 출력 모드 |
-| `-H, --html` | HTML 출력 형식 |
-| `-x, --expanded` | 확장된 테이블 포맷 |
+- `-d dbname`: 연결할 데이터베이스 이름
+- `-h hostname`: 서버 호스트명
+- `-p port`: 서버 포트 (기본값: 5432)
+- `-U username`: 데이터베이스 사용자
+- `-c command`: 명령 문자열 실행
+- `-f filename`: 파일에서 명령 실행
+- `-l, --list`: 모든 데이터베이스 목록 표시 후 종료
+- `-a, --echo-all`: 모든 입력 라인을 stdout으로 출력
+- `-e, --echo-queries`: 서버로 전송된 SQL 명령 에코
+- `-q, --quiet`: 정보 메시지 억제
+- `-t, --tuples-only`: 테이블 데이터만 출력 (헤더 제외)
+- `-A, --no-align`: 정렬되지 않은 출력 모드
+- `-H, --html`: HTML 출력 형식
+- `-x, --expanded`: 확장된 테이블 포맷
 
 #### 2.3 연결 예제
 
@@ -3511,51 +3521,45 @@ psql -l
 
 #### 2.5 메타 명령 (Meta-Commands)
 
-psql에서 백슬래시(`\`)로 시작하는 메타 명령을 사용하여 다양한 작업을 수행할 수 있습니다:
+psql에서 백슬래시(`\`)로 시작하는 메타 명령을 사용하여 다양한 작업을 수행 가능함:
 
 ##### 2.5.1 정보 조회 명령
 
-| 명령 | 설명 |
-|------|------|
-| `\l` | 데이터베이스 목록 |
-| `\dt` | 테이블 목록 |
-| `\dt+` | 테이블 목록 (상세) |
-| `\d tablename` | 테이블 구조 설명 |
-| `\d+ tablename` | 테이블 구조 설명 (상세) |
-| `\di` | 인덱스 목록 |
-| `\dv` | 뷰 목록 |
-| `\df` | 함수 목록 |
-| `\dn` | 스키마 목록 |
-| `\du` | 역할/사용자 목록 |
-| `\dp` | 테이블 권한 목록 |
-| `\dx` | 설치된 확장 목록 |
+- `\l`: 데이터베이스 목록
+- `\dt`: 테이블 목록
+- `\dt+`: 테이블 목록 (상세)
+- `\d tablename`: 테이블 구조 설명
+- `\d+ tablename`: 테이블 구조 설명 (상세)
+- `\di`: 인덱스 목록
+- `\dv`: 뷰 목록
+- `\df`: 함수 목록
+- `\dn`: 스키마 목록
+- `\du`: 역할/사용자 목록
+- `\dp`: 테이블 권한 목록
+- `\dx`: 설치된 확장 목록
 
 ##### 2.5.2 연결 및 실행 명령
 
-| 명령 | 설명 |
-|------|------|
-| `\c dbname` | 다른 데이터베이스에 연결 |
-| `\conninfo` | 현재 연결 정보 표시 |
-| `\e` | 외부 편집기에서 쿼리 편집 |
-| `\i filename` | 파일에서 명령 실행 |
-| `\ir filename` | 상대 경로로 파일에서 명령 실행 |
-| `\o filename` | 출력을 파일로 리다이렉션 |
-| `\copy` | 클라이언트 측 COPY 명령 |
-| `\! command` | 쉘 명령 실행 |
-| `\q` | psql 종료 |
+- `\c dbname`: 다른 데이터베이스에 연결
+- `\conninfo`: 현재 연결 정보 표시
+- `\e`: 외부 편집기에서 쿼리 편집
+- `\i filename`: 파일에서 명령 실행
+- `\ir filename`: 상대 경로로 파일에서 명령 실행
+- `\o filename`: 출력을 파일로 리다이렉션
+- `\copy`: 클라이언트 측 COPY 명령
+- `\! command`: 쉘 명령 실행
+- `\q`: psql 종료
 
 ##### 2.5.3 출력 형식 명령
 
-| 명령 | 설명 |
-|------|------|
-| `\x` | 확장 모드 토글 |
-| `\x on` | 확장 모드 켜기 |
-| `\x off` | 확장 모드 끄기 |
-| `\x auto` | 확장 모드 자동 |
-| `\pset format FORMAT` | 출력 형식 설정 |
-| `\pset border N` | 테두리 스타일 설정 |
-| `\pset null 'NULL'` | NULL 값 표시 문자열 설정 |
-| `\timing` | 쿼리 실행 시간 표시 토글 |
+- `\x`: 확장 모드 토글
+- `\x on`: 확장 모드 켜기
+- `\x off`: 확장 모드 끄기
+- `\x auto`: 확장 모드 자동
+- `\pset format FORMAT`: 출력 형식 설정
+- `\pset border N`: 테두리 스타일 설정
+- `\pset null 'NULL'`: NULL 값 표시 문자열 설정
+- `\timing`: 쿼리 실행 시간 표시 토글
 
 #### 2.6 출력 형식 설정
 
@@ -3624,24 +3628,20 @@ SELECT * FROM :'foo';
 
 #### 2.9 종료 코드 (Exit Codes)
 
-| 코드 | 설명 |
-|------|------|
-| `0` | 성공적 완료 |
-| `1` | 치명적 오류 |
-| `2` | 연결 실패 (비대화형 모드) |
-| `3` | `ON_ERROR_STOP` 설정 시 스크립트 오류 |
+- `0`: 성공적 완료
+- `1`: 치명적 오류
+- `2`: 연결 실패 (비대화형 모드)
+- `3`: `ON_ERROR_STOP` 설정 시 스크립트 오류
 
 #### 2.10 환경 변수
 
-| 변수 | 설명 |
-|------|------|
-| `PGDATABASE` | 기본 데이터베이스 이름 |
-| `PGHOST` | 기본 호스트명 |
-| `PGPORT` | 기본 포트 |
-| `PGUSER` | 기본 사용자명 |
-| `PSQL_EDITOR` | `\e` 명령에 사용할 편집기 |
-| `PAGER` | 출력을 위한 페이저 프로그램 |
-| `PSQLRC` | 사용자 .psqlrc 파일 위치 |
+- `PGDATABASE`: 기본 데이터베이스 이름
+- `PGHOST`: 기본 호스트명
+- `PGPORT`: 기본 포트
+- `PGUSER`: 기본 사용자명
+- `PSQL_EDITOR`: `\e` 명령에 사용할 편집기
+- `PAGER`: 출력을 위한 페이저 프로그램
+- `PSQLRC`: 사용자 .psqlrc 파일 위치
 
 #### 2.11 실용적인 예제
 
@@ -3666,7 +3666,7 @@ psql -d mydb -o result.txt -c "SELECT * FROM large_table"
 
 ### 3. pg_dump - 데이터베이스 백업
 
-pg_dump는 PostgreSQL 데이터베이스를 SQL 스크립트 또는 아카이브 파일로 내보내는 유틸리티입니다. 데이터베이스가 활발히 사용되는 중에도 일관된 백업을 생성하며, 다른 사용자의 접근을 차단하지 않습니다.
+pg_dump는 PostgreSQL 데이터베이스를 SQL 스크립트 또는 아카이브 파일로 내보내는 유틸리티임. 데이터베이스가 활발히 사용되는 중에도 일관된 백업을 생성하며, 다른 사용자의 접근을 차단하지 않음.
 
 #### 3.1 기본 구문 (Syntax)
 
@@ -3683,34 +3683,38 @@ pg_dump [connection-option...] [option...] [dbname]
 
 #### 3.3 출력 형식 옵션
 
-| 형식 | 옵션 | 설명 |
-|------|------|------|
-| Plain | `-Fp` | SQL 텍스트 파일, 이식성이 좋지만 복원이 느림 |
-| Custom | `-Fc` | 압축됨, 선택적 복원, 재정렬 가능 |
-| Directory | `-Fd` | 병렬 덤프 및 복원 지원 |
-| Tar | `-Ft` | 디렉토리 형식과 호환, 압축 없음 |
+- Plain
+  - 옵션: `-Fp`
+  - 설명: SQL 텍스트 파일, 이식성이 좋지만 복원이 느림
+- Custom
+  - 옵션: `-Fc`
+  - 설명: 압축됨, 선택적 복원, 재정렬 가능
+- Directory
+  - 옵션: `-Fd`
+  - 설명: 병렬 덤프 및 복원 지원
+- Tar
+  - 옵션: `-Ft`
+  - 설명: 디렉토리 형식과 호환, 압축 없음
 
 #### 3.4 주요 옵션
 
-| 옵션 | 설명 |
-|------|------|
-| `-a, --data-only` | 데이터만 덤프, 스키마 제외 |
-| `-s, --schema-only` | 스키마만 덤프, 데이터 제외 |
-| `-c, --clean` | CREATE 문 전에 DROP 명령 추가 |
-| `-C, --create` | CREATE DATABASE 명령 포함 |
-| `-F format` | 출력 형식: p (plain), c (custom), d (directory), t (tar) |
-| `-j njobs` | 병렬 덤프 (디렉토리 형식만) |
-| `-t pattern` | 특정 테이블 덤프 |
-| `-T pattern` | 특정 테이블 제외 |
-| `-n pattern` | 특정 스키마 덤프 |
-| `-N pattern` | 특정 스키마 제외 |
-| `-v, --verbose` | 상세 출력 |
-| `-Z level` | 압축 수준 (0-9) |
-| `--inserts` | COPY 대신 INSERT 명령 사용 |
-| `--column-inserts` | 컬럼 이름이 포함된 INSERT 명령 사용 |
-| `--if-exists` | DROP 명령에 IF EXISTS 추가 |
-| `--no-owner` | 소유권 복원 명령 생략 |
-| `--no-privileges` | 권한 복원 명령 생략 |
+- `-a, --data-only`: 데이터만 덤프, 스키마 제외
+- `-s, --schema-only`: 스키마만 덤프, 데이터 제외
+- `-c, --clean`: CREATE 문 전에 DROP 명령 추가
+- `-C, --create`: CREATE DATABASE 명령 포함
+- `-F format`: 출력 형식: p (plain), c (custom), d (directory), t (tar)
+- `-j njobs`: 병렬 덤프 (디렉토리 형식만)
+- `-t pattern`: 특정 테이블 덤프
+- `-T pattern`: 특정 테이블 제외
+- `-n pattern`: 특정 스키마 덤프
+- `-N pattern`: 특정 스키마 제외
+- `-v, --verbose`: 상세 출력
+- `-Z level`: 압축 수준 (0-9)
+- `--inserts`: COPY 대신 INSERT 명령 사용
+- `--column-inserts`: 컬럼 이름이 포함된 INSERT 명령 사용
+- `--if-exists`: DROP 명령에 IF EXISTS 추가
+- `--no-owner`: 소유권 복원 명령 생략
+- `--no-privileges`: 권한 복원 명령 생략
 
 #### 3.5 기본 사용 예제
 
@@ -3809,15 +3813,15 @@ pg_restore -d newdb mydb_backup.tar
 
 #### 3.10 중요 참고사항
 
-- 보안: 일반 텍스트 덤프는 임의의 슈퍼유저 코드를 실행할 수 있습니다. 신뢰할 수 없는 소스의 덤프는 복원 전에 검사하세요.
-- 프로덕션 백업: 정기 프로덕션 백업에는 pg_basebackup 또는 WAL 아카이빙을 권장합니다.
-- 전역 객체: 역할, 테이블스페이스 등 클러스터 전체 객체는 pg_dumpall을 사용하세요.
+- 보안: 일반 텍스트 덤프는 임의의 슈퍼유저 코드를 실행 가능함. 신뢰할 수 없는 소스의 덤프는 복원 전에 검사할 것.
+- 프로덕션 백업: 정기 프로덕션 백업에는 pg_basebackup 또는 WAL 아카이빙을 권장함.
+- 전역 객체: 역할, 테이블스페이스 등 클러스터 전체 객체는 pg_dumpall을 사용할 것.
 
 ---
 
 ### 4. pg_restore - 데이터베이스 복원
 
-pg_restore는 pg_dump로 생성된 아카이브 파일(커스텀, 디렉토리, tar 형식)에서 PostgreSQL 데이터베이스를 복원하는 유틸리티입니다.
+pg_restore는 pg_dump로 생성된 아카이브 파일(커스텀, 디렉토리, tar 형식)에서 PostgreSQL 데이터베이스를 복원하는 유틸리티임.
 
 #### 4.1 기본 구문 (Syntax)
 
@@ -3835,31 +3839,27 @@ pg_restore [connection-option...] [option...] [filename]
 
 #### 4.3 핵심 옵션
 
-| 옵션 | 설명 |
-|------|------|
-| `-d, --dbname=dbname` | 복원할 대상 데이터베이스 |
-| `-a, --data-only` | 데이터만 복원, 스키마 제외 |
-| `-s, --schema-only` | 스키마만 복원, 데이터 제외 |
-| `-c, --clean` | 재생성 전에 객체 삭제 |
-| `-C, --create` | 복원 전 데이터베이스 생성 |
-| `-1, --single-transaction` | 모든 명령을 BEGIN/COMMIT으로 감싸기 |
-| `-j, --jobs=N` | N개의 동시 작업 실행 |
-| `-f, --file=filename` | 스크립트를 위한 출력 파일 |
-| `-l, --list` | 아카이브 내용 목록 표시 |
-| `-L, --use-list=file` | 목록 파일에서 항목 복원 |
-| `-v, --verbose` | 상세 출력 |
+- `-d, --dbname=dbname`: 복원할 대상 데이터베이스
+- `-a, --data-only`: 데이터만 복원, 스키마 제외
+- `-s, --schema-only`: 스키마만 복원, 데이터 제외
+- `-c, --clean`: 재생성 전에 객체 삭제
+- `-C, --create`: 복원 전 데이터베이스 생성
+- `-1, --single-transaction`: 모든 명령을 BEGIN/COMMIT으로 감싸기
+- `-j, --jobs=N`: N개의 동시 작업 실행
+- `-f, --file=filename`: 스크립트를 위한 출력 파일
+- `-l, --list`: 아카이브 내용 목록 표시
+- `-L, --use-list=file`: 목록 파일에서 항목 복원
+- `-v, --verbose`: 상세 출력
 
 #### 4.4 필터링 옵션
 
-| 옵션 | 설명 |
-|------|------|
-| `-n, --schema=schema` | 특정 스키마 복원 |
-| `-N, --exclude-schema=schema` | 특정 스키마 제외 |
-| `-t, --table=table` | 특정 테이블 복원 |
-| `-I, --index=index` | 특정 인덱스 복원 |
-| `-P, --function=func(args)` | 특정 함수 복원 |
-| `-T, --trigger=trigger` | 특정 트리거 복원 |
-| `--filter=filename` | 파일에서 필터 패턴 읽기 |
+- `-n, --schema=schema`: 특정 스키마 복원
+- `-N, --exclude-schema=schema`: 특정 스키마 제외
+- `-t, --table=table`: 특정 테이블 복원
+- `-I, --index=index`: 특정 인덱스 복원
+- `-P, --function=func(args)`: 특정 함수 복원
+- `-T, --trigger=trigger`: 특정 트리거 복원
+- `--filter=filename`: 파일에서 필터 패턴 읽기
 
 #### 4.5 기본 복원 예제
 
@@ -3958,13 +3958,13 @@ pg_restore --transaction-size=1000 -d mydb mydb_backup.dump
 
 #### 4.14 보안 경고
 
-복원은 임의의 코드를 실행합니다. 신뢰할 수 없는 소스의 슈퍼유저가 작성한 덤프라면 `pg_restore --file`을 사용하여 SQL 문을 먼저 검사하세요.
+복원은 임의의 코드를 실행함. 신뢰할 수 없는 소스의 슈퍼유저가 작성한 덤프라면 `pg_restore --file`을 사용하여 SQL 문을 먼저 검사할 것.
 
 ---
 
 ### 5. pg_dumpall - 클러스터 전체 백업
 
-pg_dumpall은 PostgreSQL 데이터베이스 클러스터 전체를 SQL 스크립트 파일로 추출합니다. 모든 데이터베이스, 역할, 테이블스페이스 등 클러스터 수준의 객체를 포함합니다.
+pg_dumpall은 PostgreSQL 데이터베이스 클러스터 전체를 SQL 스크립트 파일로 추출함. 모든 데이터베이스, 역할, 테이블스페이스 등 클러스터 수준의 객체를 포함함.
 
 #### 5.1 기본 구문 (Syntax)
 
@@ -3974,17 +3974,15 @@ pg_dumpall [connection-option...] [option...]
 
 #### 5.2 주요 옵션
 
-| 옵션 | 설명 |
-|------|------|
-| `-g, --globals-only` | 전역 객체만 덤프 (역할, 테이블스페이스) |
-| `-r, --roles-only` | 역할만 덤프 |
-| `-t, --tablespaces-only` | 테이블스페이스만 덤프 |
-| `-c, --clean` | 재생성 전 데이터베이스 객체 삭제 |
-| `--if-exists` | DROP 명령에 IF EXISTS 추가 |
-| `-s, --schema-only` | 스키마만 덤프, 데이터 제외 |
-| `-a, --data-only` | 데이터만 덤프, 스키마 제외 |
-| `--no-role-passwords` | 역할 비밀번호 제외 |
-| `-v, --verbose` | 상세 출력 |
+- `-g, --globals-only`: 전역 객체만 덤프 (역할, 테이블스페이스)
+- `-r, --roles-only`: 역할만 덤프
+- `-t, --tablespaces-only`: 테이블스페이스만 덤프
+- `-c, --clean`: 재생성 전 데이터베이스 객체 삭제
+- `--if-exists`: DROP 명령에 IF EXISTS 추가
+- `-s, --schema-only`: 스키마만 덤프, 데이터 제외
+- `-a, --data-only`: 데이터만 덤프, 스키마 제외
+- `--no-role-passwords`: 역할 비밀번호 제외
+- `-v, --verbose`: 상세 출력
 
 #### 5.3 사용 예제
 
@@ -4017,20 +4015,30 @@ psql postgres < full_backup.sql
 
 #### 5.5 pg_dump와의 차이점
 
-| 항목 | pg_dump | pg_dumpall |
-|------|---------|------------|
-| 범위 | 단일 데이터베이스 | 전체 클러스터 |
-| 역할 백업 | 불가 | 가능 |
-| 테이블스페이스 | 불가 | 가능 |
-| 출력 형식 | 다양 (plain, custom, directory, tar) | plain만 가능 |
-| 병렬 덤프 | 가능 (directory 형식) | 불가 |
-| 선택적 복원 | 가능 | 제한적 |
+- 범위
+  - pg_dump: 단일 데이터베이스
+  - pg_dumpall: 전체 클러스터
+- 역할 백업
+  - pg_dump: 불가
+  - pg_dumpall: 가능
+- 테이블스페이스
+  - pg_dump: 불가
+  - pg_dumpall: 가능
+- 출력 형식
+  - pg_dump: 다양 (plain, custom, directory, tar)
+  - pg_dumpall: plain만 가능
+- 병렬 덤프
+  - pg_dump: 가능 (directory 형식)
+  - pg_dumpall: 불가
+- 선택적 복원
+  - pg_dump: 가능
+  - pg_dumpall: 제한적
 
 ---
 
 ### 6. pg_basebackup - 기본 백업
 
-pg_basebackup은 실행 중인 PostgreSQL 데이터베이스 클러스터의 기본 백업을 수행하는 유틸리티입니다. PITR(Point-In-Time Recovery) 및 스탠바이 서버 설정에 필수적입니다.
+pg_basebackup은 실행 중인 PostgreSQL 데이터베이스 클러스터의 기본 백업을 수행하는 유틸리티임. PITR(Point-In-Time Recovery) 및 스탠바이 서버 설정에 필수적임.
 
 #### 6.1 기본 구문 (Syntax)
 
@@ -4055,35 +4063,27 @@ pg_basebackup [option...]
 
 ##### 6.4.1 출력 옵션
 
-| 옵션 | 설명 |
-|------|------|
-| `-D directory` | 대상 디렉토리 (필수) |
-| `-F format` | 출력 형식: 'p' (plain) 또는 't' (tar) |
-| `-T olddir=newdir` | 테이블스페이스 재배치 |
+- `-D directory`: 대상 디렉토리 (필수)
+- `-F format`: 출력 형식: 'p' (plain) 또는 't' (tar)
+- `-T olddir=newdir`: 테이블스페이스 재배치
 
 ##### 6.4.2 WAL 처리 옵션
 
-| 옵션 | 설명 |
-|------|------|
-| `-X method` | WAL 수집: 'none', 'fetch', 또는 'stream' (기본값) |
-| `-S slotname` | 특정 복제 슬롯 사용 |
-| `--waldir=path` | WAL 디렉토리 위치 지정 |
+- `-X method`: WAL 수집: 'none', 'fetch', 또는 'stream' (기본값)
+- `-S slotname`: 특정 복제 슬롯 사용
+- `--waldir=path`: WAL 디렉토리 위치 지정
 
 ##### 6.4.3 압축 옵션
 
-| 옵션 | 설명 |
-|------|------|
-| `-z, --gzip` | gzip 압축 활성화 |
-| `-Z method` | 압축 방식 지정: gzip, lz4, zstd, none |
+- `-z, --gzip`: gzip 압축 활성화
+- `-Z method`: 압축 방식 지정: gzip, lz4, zstd, none
 
 ##### 6.4.4 성능 및 보고 옵션
 
-| 옵션 | 설명 |
-|------|------|
-| `-c {fast\|spread}` | 체크포인트 모드 (기본값: spread) |
-| `-P, --progress` | 진행 상황 보고 활성화 |
-| `-r rate` | 최대 전송 속도 (KB/s) |
-| `-N, --no-sync` | 파일 동기화 건너뛰기 (빠르지만 위험) |
+- `-c {fast\|spread}`: 체크포인트 모드 (기본값: spread)
+- `-P, --progress`: 진행 상황 보고 활성화
+- `-r rate`: 최대 전송 속도 (KB/s)
+- `-N, --no-sync`: 파일 동기화 건너뛰기 (빠르지만 위험)
 
 #### 6.5 사용 예제
 
@@ -4134,7 +4134,7 @@ pg_basebackup -D /var/lib/postgresql/standby \
 
 ### 7. createdb - 데이터베이스 생성
 
-createdb는 새 PostgreSQL 데이터베이스를 생성하는 유틸리티입니다. SQL `CREATE DATABASE` 명령의 래퍼입니다.
+createdb는 새 PostgreSQL 데이터베이스를 생성하는 유틸리티임. SQL `CREATE DATABASE` 명령의 래퍼임.
 
 #### 7.1 기본 구문 (Syntax)
 
@@ -4146,32 +4146,26 @@ createdb [connection-option...] [option...] [dbname [description]]
 
 ##### 7.2.1 데이터베이스 구성 옵션
 
-| 옵션 | 설명 |
-|------|------|
-| `-D, --tablespace=tablespace` | 데이터베이스의 기본 테이블스페이스 설정 |
-| `-E, --encoding=encoding` | 문자 인코딩 지정 |
-| `-l, --locale=locale` | 로케일 설정 (collate, ctype, icu-locale) |
-| `-O, --owner=owner` | 데이터베이스 소유자 지정 |
-| `-T, --template=template` | 템플릿 데이터베이스 지정 |
-| `-S, --strategy=strategy` | 데이터베이스 생성 전략 설정 |
+- `-D, --tablespace=tablespace`: 데이터베이스의 기본 테이블스페이스 설정
+- `-E, --encoding=encoding`: 문자 인코딩 지정
+- `-l, --locale=locale`: 로케일 설정 (collate, ctype, icu-locale)
+- `-O, --owner=owner`: 데이터베이스 소유자 지정
+- `-T, --template=template`: 템플릿 데이터베이스 지정
+- `-S, --strategy=strategy`: 데이터베이스 생성 전략 설정
 
 ##### 7.2.2 로케일 옵션
 
-| 옵션 | 설명 |
-|------|------|
-| `--lc-collate=locale` | LC_COLLATE 설정 |
-| `--lc-ctype=locale` | LC_CTYPE 설정 |
-| `--builtin-locale=locale` | 내장 프로바이더 로케일 |
-| `--icu-locale=locale` | ICU 로케일 ID |
-| `--locale-provider={builtin\|libc\|icu}` | 로케일 프로바이더 |
+- `--lc-collate=locale`: LC_COLLATE 설정
+- `--lc-ctype=locale`: LC_CTYPE 설정
+- `--builtin-locale=locale`: 내장 프로바이더 로케일
+- `--icu-locale=locale`: ICU 로케일 ID
+- `--locale-provider={builtin\|libc\|icu}`: 로케일 프로바이더
 
 ##### 7.2.3 기타 옵션
 
-| 옵션 | 설명 |
-|------|------|
-| `-e, --echo` | 생성된 SQL 명령 에코 |
-| `-V, --version` | 버전 출력 후 종료 |
-| `-?, --help` | 도움말 표시 |
+- `-e, --echo`: 생성된 SQL 명령 에코
+- `-V, --version`: 버전 출력 후 종료
+- `-?, --help`: 도움말 표시
 
 #### 7.3 사용 예제
 
@@ -4224,7 +4218,7 @@ CREATE DATABASE mydb
 
 ### 8. dropdb - 데이터베이스 삭제
 
-dropdb는 기존 PostgreSQL 데이터베이스를 삭제하는 유틸리티입니다. SQL `DROP DATABASE` 명령의 래퍼입니다.
+dropdb는 기존 PostgreSQL 데이터베이스를 삭제하는 유틸리티임. SQL `DROP DATABASE` 명령의 래퍼임.
 
 #### 8.1 기본 구문 (Syntax)
 
@@ -4234,19 +4228,17 @@ dropdb [connection-option...] [option...] dbname
 
 #### 8.2 요구사항
 
-실행 사용자는 데이터베이스 슈퍼유저이거나 데이터베이스 소유자여야 합니다.
+실행 사용자는 데이터베이스 슈퍼유저이거나 데이터베이스 소유자여야 함.
 
 #### 8.3 주요 옵션
 
-| 옵션 | 설명 |
-|------|------|
-| `-e, --echo` | 서버로 전송되는 명령 에코 |
-| `-f, --force` | 삭제 전 모든 기존 연결 종료 |
-| `-i, --interactive` | 삭제 전 확인 프롬프트 |
-| `--if-exists` | 데이터베이스가 없어도 오류 발생하지 않음 |
-| `-V, --version` | 버전 정보 표시 |
-| `-?, --help` | 도움말 표시 |
-| `--maintenance-db=dbname` | 삭제 시 연결할 데이터베이스 (기본값: postgres 또는 template1) |
+- `-e, --echo`: 서버로 전송되는 명령 에코
+- `-f, --force`: 삭제 전 모든 기존 연결 종료
+- `-i, --interactive`: 삭제 전 확인 프롬프트
+- `--if-exists`: 데이터베이스가 없어도 오류 발생하지 않음
+- `-V, --version`: 버전 정보 표시
+- `-?, --help`: 도움말 표시
+- `--maintenance-db=dbname`: 삭제 시 연결할 데이터베이스 (기본값: postgres 또는 template1)
 
 #### 8.4 사용 예제
 
@@ -4282,15 +4274,15 @@ DROP DATABASE IF EXISTS mydb;
 
 #### 8.6 주의사항
 
-- 삭제된 데이터베이스는 복구할 수 없습니다. 삭제 전 백업을 확인하세요.
-- 현재 연결된 데이터베이스는 삭제할 수 없습니다.
-- `-f` 옵션은 활성 연결을 강제로 종료합니다.
+- 삭제된 데이터베이스는 복구 불가함. 삭제 전 백업을 확인할 것.
+- 현재 연결된 데이터베이스는 삭제 불가함.
+- `-f` 옵션은 활성 연결을 강제로 종료함.
 
 ---
 
 ### 9. createuser - 사용자 생성
 
-createuser는 새 PostgreSQL 사용자 계정(역할)을 생성하는 유틸리티입니다. SQL `CREATE ROLE` 명령의 래퍼입니다.
+createuser는 새 PostgreSQL 사용자 계정(역할)을 생성하는 유틸리티임. SQL `CREATE ROLE` 명령의 래퍼임.
 
 #### 9.1 기본 구문 (Syntax)
 
@@ -4300,27 +4292,25 @@ createuser [connection-option...] [option...] [username]
 
 #### 9.2 요구사항
 
-- 슈퍼유저 또는 `CREATEROLE` 권한이 있는 사용자만 새 사용자를 생성할 수 있습니다.
-- `SUPERUSER`, `REPLICATION`, `BYPASSRLS` 권한을 가진 사용자를 생성하려면 슈퍼유저로 연결해야 합니다.
+- 슈퍼유저 또는 `CREATEROLE` 권한이 있는 사용자만 새 사용자를 생성 가능함.
+- `SUPERUSER`, `REPLICATION`, `BYPASSRLS` 권한을 가진 사용자를 생성하려면 슈퍼유저로 연결 필요함.
 
 #### 9.3 주요 옵션
 
-| 옵션 | 설명 |
-|------|------|
-| `-d, --createdb` | 사용자가 데이터베이스를 생성할 수 있도록 허용 |
-| `-D, --no-createdb` | 데이터베이스 생성 금지 (기본값) |
-| `-s, --superuser` | 슈퍼유저 생성 |
-| `-S, --no-superuser` | 일반 사용자 생성 (기본값) |
-| `-r, --createrole` | 역할 생성 허용 |
-| `-R, --no-createrole` | 역할 생성 금지 (기본값) |
-| `-l, --login` | 로그인 허용 (기본값) |
-| `-L, --no-login` | 로그인 금지 |
-| `-P, --pwprompt` | 비밀번호 프롬프트 |
-| `-c, --connection-limit=N` | 최대 연결 수 설정 |
-| `-v, --valid-until=TIMESTAMP` | 비밀번호 만료 날짜 설정 |
-| `-e, --echo` | 생성된 SQL 명령 에코 |
-| `--replication` | 복제 권한 부여 |
-| `--no-replication` | 복제 권한 제외 (기본값) |
+- `-d, --createdb`: 사용자가 데이터베이스를 생성할 수 있도록 허용
+- `-D, --no-createdb`: 데이터베이스 생성 금지 (기본값)
+- `-s, --superuser`: 슈퍼유저 생성
+- `-S, --no-superuser`: 일반 사용자 생성 (기본값)
+- `-r, --createrole`: 역할 생성 허용
+- `-R, --no-createrole`: 역할 생성 금지 (기본값)
+- `-l, --login`: 로그인 허용 (기본값)
+- `-L, --no-login`: 로그인 금지
+- `-P, --pwprompt`: 비밀번호 프롬프트
+- `-c, --connection-limit=N`: 최대 연결 수 설정
+- `-v, --valid-until=TIMESTAMP`: 비밀번호 만료 날짜 설정
+- `-e, --echo`: 생성된 SQL 명령 에코
+- `--replication`: 복제 권한 부여
+- `--no-replication`: 복제 권한 제외 (기본값)
 
 #### 9.4 사용 예제
 
@@ -4373,7 +4363,7 @@ CREATE ROLE replicator REPLICATION LOGIN;
 
 ### 10. dropuser - 사용자 삭제
 
-dropuser는 기존 PostgreSQL 사용자 계정을 삭제하는 유틸리티입니다. SQL `DROP ROLE` 명령의 래퍼입니다.
+dropuser는 기존 PostgreSQL 사용자 계정을 삭제하는 유틸리티임. SQL `DROP ROLE` 명령의 래퍼임.
 
 #### 10.1 기본 구문 (Syntax)
 
@@ -4383,18 +4373,16 @@ dropuser [connection-option...] [option...] [username]
 
 #### 10.2 권한 요구사항
 
-- 슈퍼유저는 모든 역할을 삭제할 수 있습니다.
-- 슈퍼유저가 아닌 역할은 `CREATEROLE` 권한 또는 대상 역할에 대한 `ADMIN OPTION`을 가진 사용자만 삭제할 수 있습니다.
+- 슈퍼유저는 모든 역할을 삭제 가능함.
+- 슈퍼유저가 아닌 역할은 `CREATEROLE` 권한 또는 대상 역할에 대한 `ADMIN OPTION`을 가진 사용자만 삭제 가능함.
 
 #### 10.3 주요 옵션
 
-| 옵션 | 설명 |
-|------|------|
-| `-e, --echo` | 서버로 전송되는 명령 에코 |
-| `-i, --interactive` | 삭제 전 확인 프롬프트 |
-| `--if-exists` | 사용자가 없어도 오류 발생하지 않음 |
-| `-V, --version` | 버전 정보 표시 |
-| `-?, --help` | 도움말 표시 |
+- `-e, --echo`: 서버로 전송되는 명령 에코
+- `-i, --interactive`: 삭제 전 확인 프롬프트
+- `--if-exists`: 사용자가 없어도 오류 발생하지 않음
+- `-V, --version`: 버전 정보 표시
+- `-?, --help`: 도움말 표시
 
 #### 10.4 사용 예제
 
@@ -4424,8 +4412,8 @@ DROP ROLE IF EXISTS joe;
 
 #### 10.6 주의사항
 
-- 객체를 소유한 사용자는 먼저 객체의 소유권을 변경하거나 객체를 삭제해야 삭제할 수 있습니다.
-- 권한이 부여된 사용자는 먼저 권한을 취소해야 합니다.
+- 객체를 소유한 사용자는 먼저 객체의 소유권을 변경하거나 객체를 삭제해야 삭제 가능함.
+- 권한이 부여된 사용자는 먼저 권한을 취소 필요함.
 
 ```sql
 -- 소유권 변경
@@ -4442,7 +4430,7 @@ DROP ROLE joe;
 
 ### 11. vacuumdb - 가비지 컬렉션 및 분석
 
-vacuumdb는 PostgreSQL 데이터베이스에서 가비지 컬렉션을 수행하고 쿼리 최적화를 위한 내부 통계를 생성하는 유틸리티입니다. SQL `VACUUM` 명령의 래퍼입니다.
+vacuumdb는 PostgreSQL 데이터베이스에서 가비지 컬렉션을 수행하고 쿼리 최적화를 위한 내부 통계를 생성하는 유틸리티임. SQL `VACUUM` 명령의 래퍼임.
 
 #### 11.1 기본 구문 (Syntax)
 
@@ -4454,22 +4442,20 @@ vacuumdb [connection-option...] [option...] [-N | --exclude-schema schema] ... [
 
 #### 11.2 주요 옵션
 
-| 옵션 | 설명 |
-|------|------|
-| `-a, --all` | 모든 데이터베이스 처리 |
-| `-d, --dbname=dbname` | 데이터베이스 이름 |
-| `-z, --analyze` | 옵티마이저 통계 계산 |
-| `-Z, --analyze-only` | 분석만 수행 (VACUUM 없음) |
-| `-f, --full` | 전체 VACUUM 수행 |
-| `-F, --freeze` | 튜플을 적극적으로 프리징 |
-| `-t, --table=table` | 특정 테이블 처리 |
-| `-n, --schema=schema` | 특정 스키마 처리 |
-| `-N, --exclude-schema=schema` | 특정 스키마 제외 |
-| `-j, --jobs=njobs` | 병렬로 VACUUM/ANALYZE 실행 |
-| `-P, --parallel=workers` | VACUUM용 병렬 워커 수 |
-| `-v, --verbose` | 상세 정보 출력 |
-| `-q, --quiet` | 진행 메시지 억제 |
-| `-e, --echo` | 명령 에코 |
+- `-a, --all`: 모든 데이터베이스 처리
+- `-d, --dbname=dbname`: 데이터베이스 이름
+- `-z, --analyze`: 옵티마이저 통계 계산
+- `-Z, --analyze-only`: 분석만 수행 (VACUUM 없음)
+- `-f, --full`: 전체 VACUUM 수행
+- `-F, --freeze`: 튜플을 적극적으로 프리징
+- `-t, --table=table`: 특정 테이블 처리
+- `-n, --schema=schema`: 특정 스키마 처리
+- `-N, --exclude-schema=schema`: 특정 스키마 제외
+- `-j, --jobs=njobs`: 병렬로 VACUUM/ANALYZE 실행
+- `-P, --parallel=workers`: VACUUM용 병렬 워커 수
+- `-v, --verbose`: 상세 정보 출력
+- `-q, --quiet`: 진행 메시지 억제
+- `-e, --echo`: 명령 에코
 
 #### 11.3 사용 예제
 
@@ -4538,7 +4524,7 @@ ANALYZE users;
 
 ### 12. reindexdb - 인덱스 재구축
 
-reindexdb는 PostgreSQL 데이터베이스의 인덱스를 재구축하는 유틸리티입니다. SQL `REINDEX` 명령의 래퍼입니다.
+reindexdb는 PostgreSQL 데이터베이스의 인덱스를 재구축하는 유틸리티임. SQL `REINDEX` 명령의 래퍼임.
 
 #### 12.1 기본 구문 (Syntax)
 
@@ -4548,20 +4534,18 @@ reindexdb [connection-option...] [option...] [dbname | -a | --all]
 
 #### 12.2 주요 옵션
 
-| 옵션 | 설명 |
-|------|------|
-| `-a, --all` | 모든 데이터베이스 재인덱스 |
-| `-d, --dbname=dbname` | 재인덱스할 데이터베이스 |
-| `-S, --schema=schema` | 특정 스키마 재인덱스 |
-| `-t, --table=table` | 특정 테이블 재인덱스 |
-| `-i, --index=index` | 특정 인덱스 재인덱스 |
-| `-s, --system` | 시스템 카탈로그만 재인덱스 |
-| `--concurrently` | 동시 읽기를 허용하며 재인덱스 |
-| `-j, --jobs=njobs` | 병렬로 재인덱스 명령 실행 |
-| `--tablespace=tablespace` | 특정 테이블스페이스에 인덱스 재구축 |
-| `-e, --echo` | 생성된 SQL 명령 에코 |
-| `-v, --verbose` | 상세 처리 정보 출력 |
-| `-q, --quiet` | 진행 메시지 억제 |
+- `-a, --all`: 모든 데이터베이스 재인덱스
+- `-d, --dbname=dbname`: 재인덱스할 데이터베이스
+- `-S, --schema=schema`: 특정 스키마 재인덱스
+- `-t, --table=table`: 특정 테이블 재인덱스
+- `-i, --index=index`: 특정 인덱스 재인덱스
+- `-s, --system`: 시스템 카탈로그만 재인덱스
+- `--concurrently`: 동시 읽기를 허용하며 재인덱스
+- `-j, --jobs=njobs`: 병렬로 재인덱스 명령 실행
+- `--tablespace=tablespace`: 특정 테이블스페이스에 인덱스 재구축
+- `-e, --echo`: 생성된 SQL 명령 에코
+- `-v, --verbose`: 상세 처리 정보 출력
+- `-q, --quiet`: 진행 메시지 억제
 
 #### 12.3 사용 예제
 
@@ -4612,15 +4596,15 @@ REINDEX SYSTEM mydb;
 
 #### 12.5 중요 참고사항
 
-- `-j/--jobs` 옵션은 `--system`과 호환되지 않습니다.
-- 병렬 작업에는 충분한 `max_connections` 설정이 필요합니다.
-- `--concurrently` 옵션은 잠금 없이 재인덱스하지만 더 많은 리소스를 사용합니다.
+- `-j/--jobs` 옵션은 `--system`과 호환되지 않음.
+- 병렬 작업에는 충분한 `max_connections` 설정이 필요함.
+- `--concurrently` 옵션은 잠금 없이 재인덱스하지만 더 많은 리소스를 사용함.
 
 ---
 
 ### 13. clusterdb - 테이블 클러스터링
 
-clusterdb는 PostgreSQL 데이터베이스의 테이블을 재클러스터링하는 유틸리티입니다. 이전에 클러스터링된 테이블을 찾아 마지막으로 사용된 인덱스로 다시 클러스터링합니다. SQL `CLUSTER` 명령의 래퍼입니다.
+clusterdb는 PostgreSQL 데이터베이스의 테이블을 재클러스터링하는 유틸리티임. 이전에 클러스터링된 테이블을 찾아 마지막으로 사용된 인덱스로 다시 클러스터링함. SQL `CLUSTER` 명령의 래퍼임.
 
 #### 13.1 기본 구문 (Syntax)
 
@@ -4630,17 +4614,15 @@ clusterdb [connection-option...] [option...] [--table | -t table] ... [dbname | 
 
 #### 13.2 주요 옵션
 
-| 옵션 | 설명 |
-|------|------|
-| `-a, --all` | 모든 데이터베이스 클러스터링 |
-| `-d dbname, --dbname=dbname` | 클러스터링할 데이터베이스 |
-| `-t table, --table=table` | 특정 테이블만 클러스터링 |
-| `-e, --echo` | 생성된 SQL 명령 에코 |
-| `-q, --quiet` | 진행 메시지 억제 |
-| `-v, --verbose` | 상세 정보 출력 |
-| `-V, --version` | 버전 표시 후 종료 |
-| `-?, --help` | 도움말 표시 |
-| `--maintenance-db=dbname` | 모든 데이터베이스 클러스터링 시 사용할 데이터베이스 |
+- `-a, --all`: 모든 데이터베이스 클러스터링
+- `-d dbname, --dbname=dbname`: 클러스터링할 데이터베이스
+- `-t table, --table=table`: 특정 테이블만 클러스터링
+- `-e, --echo`: 생성된 SQL 명령 에코
+- `-q, --quiet`: 진행 메시지 억제
+- `-v, --verbose`: 상세 정보 출력
+- `-V, --version`: 버전 표시 후 종료
+- `-?, --help`: 도움말 표시
+- `--maintenance-db=dbname`: 모든 데이터베이스 클러스터링 시 사용할 데이터베이스
 
 #### 13.3 사용 예제
 
@@ -4673,10 +4655,10 @@ CLUSTER users USING users_pkey;
 
 #### 13.5 참고사항
 
-- 클러스터링은 테이블을 인덱스 순서대로 물리적으로 재정렬합니다.
-- 범위 쿼리 성능을 크게 향상시킬 수 있습니다.
-- 클러스터링 중에는 테이블에 배타적 잠금이 설정됩니다.
-- 클러스터링되지 않은 테이블은 영향을 받지 않습니다.
+- 클러스터링은 테이블을 인덱스 순서대로 물리적으로 재정렬함.
+- 범위 쿼리 성능을 크게 향상시킬 수 있음.
+- 클러스터링 중에는 테이블에 배타적 잠금이 설정됨.
+- 클러스터링되지 않은 테이블은 영향을 받지 않음.
 
 ---
 
@@ -4684,7 +4666,7 @@ CLUSTER users USING users_pkey;
 
 #### 14.1 pg_isready - 서버 연결 상태 확인
 
-서버의 연결 상태를 확인하는 유틸리티입니다.
+서버의 연결 상태를 확인하는 유틸리티임.
 
 ```bash
 # 기본 연결 확인
@@ -4705,7 +4687,7 @@ pg_isready -h localhost -p 5432 -d mydb -U postgres
 
 #### 14.2 pgbench - 벤치마크 테스트
 
-PostgreSQL에서 벤치마크 테스트를 실행하는 유틸리티입니다.
+PostgreSQL에서 벤치마크 테스트를 실행하는 유틸리티임.
 
 ```bash
 # 벤치마크 데이터베이스 초기화
@@ -4732,7 +4714,7 @@ pgbench -f custom_script.sql mydb
 
 #### 14.3 pg_config - 설치 정보 조회
 
-설치된 PostgreSQL 버전 정보를 조회합니다.
+설치된 PostgreSQL 버전 정보를 조회함.
 
 ```bash
 # 모든 정보 표시
@@ -4747,7 +4729,7 @@ pg_config --version
 
 #### 14.4 pg_receivewal - WAL 스트리밍
 
-서버에서 WAL을 스트리밍하여 저장합니다.
+서버에서 WAL을 스트리밍하여 저장함.
 
 ```bash
 # WAL 수신 및 저장
@@ -4759,7 +4741,7 @@ pg_receivewal -D /path/to/wal_archive -S myslot -h primary_host
 
 #### 14.5 pg_verifybackup - 백업 무결성 검증
 
-pg_basebackup으로 생성된 백업의 무결성을 검증합니다.
+pg_basebackup으로 생성된 백업의 무결성을 검증함.
 
 ```bash
 # 백업 검증
@@ -4771,7 +4753,7 @@ pg_verifybackup -e /path/to/backup
 
 #### 14.6 pg_amcheck - 데이터베이스 손상 검사
 
-데이터베이스의 손상을 검사합니다.
+데이터베이스의 손상을 검사함.
 
 ```bash
 # 전체 데이터베이스 검사
@@ -4788,24 +4770,22 @@ pg_amcheck -v mydb
 
 ### 요약
 
-PostgreSQL 클라이언트 애플리케이션은 데이터베이스 관리, 백업/복원, 성능 테스트 등 다양한 작업을 수행할 수 있는 강력한 도구들입니다.
+PostgreSQL 클라이언트 애플리케이션은 데이터베이스 관리, 백업/복원, 성능 테스트 등 다양한 작업을 수행할 수 있는 강력한 도구들임.
 
 #### 자주 사용되는 명령 요약
 
-| 작업 | 명령 |
-|------|------|
-| 대화형 SQL 실행 | `psql -d dbname` |
-| 데이터베이스 백업 | `pg_dump -Fc dbname > backup.dump` |
-| 데이터베이스 복원 | `pg_restore -d dbname backup.dump` |
-| 전체 클러스터 백업 | `pg_dumpall > full_backup.sql` |
-| 기본 백업 | `pg_basebackup -D /backup -P` |
-| 데이터베이스 생성 | `createdb dbname` |
-| 데이터베이스 삭제 | `dropdb dbname` |
-| 사용자 생성 | `createuser username` |
-| 사용자 삭제 | `dropuser username` |
-| 가비지 컬렉션 | `vacuumdb --analyze dbname` |
-| 인덱스 재구축 | `reindexdb dbname` |
-| 테이블 클러스터링 | `clusterdb dbname` |
+- 대화형 SQL 실행: `psql -d dbname`
+- 데이터베이스 백업: `pg_dump -Fc dbname > backup.dump`
+- 데이터베이스 복원: `pg_restore -d dbname backup.dump`
+- 전체 클러스터 백업: `pg_dumpall > full_backup.sql`
+- 기본 백업: `pg_basebackup -D /backup -P`
+- 데이터베이스 생성: `createdb dbname`
+- 데이터베이스 삭제: `dropdb dbname`
+- 사용자 생성: `createuser username`
+- 사용자 삭제: `dropuser username`
+- 가비지 컬렉션: `vacuumdb --analyze dbname`
+- 인덱스 재구축: `reindexdb dbname`
+- 테이블 클러스터링: `clusterdb dbname`
 
 #### 모범 사례
 
@@ -4829,7 +4809,7 @@ PostgreSQL 클라이언트 애플리케이션은 데이터베이스 관리, 백�
 
 ## PostgreSQL 서버 애플리케이션 (Server Applications)
 
-PostgreSQL 서버 애플리케이션은 데이터베이스 클러스터의 초기화, 시작, 중지, 업그레이드 및 복구 등을 수행하는 명령줄 도구들입니다.
+PostgreSQL 서버 애플리케이션은 데이터베이스 클러스터의 초기화, 시작, 중지, 업그레이드 및 복구 등을 수행하는 명령줄 도구들임.
 
 ---
 
@@ -4848,7 +4828,7 @@ PostgreSQL 서버 애플리케이션은 데이터베이스 클러스터의 초�
 
 #### 개요
 
-`initdb`는 새로운 PostgreSQL 데이터베이스 클러스터(Database Cluster)를 생성하는 도구입니다. 데이터베이스 클러스터는 단일 서버 인스턴스에서 관리하는 데이터베이스들의 모음입니다.
+`initdb`는 새로운 PostgreSQL 데이터베이스 클러스터(Database Cluster)를 생성하는 도구임. 데이터베이스 클러스터는 단일 서버 인스턴스에서 관리하는 데이터베이스들의 모음임.
 
 #### 기본 문법
 
@@ -4858,7 +4838,7 @@ initdb [option...] [--pgdata | -D] directory
 
 #### 주요 기능
 
-`initdb`는 다음 작업을 수행합니다:
+`initdb`는 다음 작업을 수행함:
 
 - 클러스터 데이터가 저장될 디렉토리 생성
 - 공유 카탈로그 테이블(Shared Catalog Tables) 생성
@@ -4877,70 +4857,54 @@ initdb [option...] [--pgdata | -D] directory
 
 ##### 필수 옵션
 
-| 옵션 | 설명 |
-|------|------|
-| `-D directory`, `--pgdata=directory` | 데이터베이스 클러스터가 저장될 디렉토리 (`PGDATA` 환경변수로도 설정 가능) |
+- `-D directory`, `--pgdata=directory`: 데이터베이스 클러스터가 저장될 디렉토리 (`PGDATA` 환경변수로도 설정 가능)
 
 ##### 인증 관련 (Authentication)
 
-| 옵션 | 설명 |
-|------|------|
-| `-A authmethod`, `--auth=authmethod` | 로컬 사용자의 기본 인증 방법 (`pg_hba.conf`에 사용) |
-| `--auth-host=authmethod` | TCP/IP 연결의 인증 방법 |
-| `--auth-local=authmethod` | Unix 도메인 소켓 연결의 인증 방법 |
+- `-A authmethod`, `--auth=authmethod`: 로컬 사용자의 기본 인증 방법 (`pg_hba.conf`에 사용)
+- `--auth-host=authmethod`: TCP/IP 연결의 인증 방법
+- `--auth-local=authmethod`: Unix 도메인 소켓 연결의 인증 방법
 
 ##### 인코딩 및 로케일 (Encoding & Locale)
 
-| 옵션 | 설명 |
-|------|------|
-| `-E encoding`, `--encoding=encoding` | 템플릿 데이터베이스의 인코딩 지정 |
-| `--locale=locale` | 클러스터의 기본 로케일 설정 |
-| `--lc-collate=locale` | 정렬 순서 로케일 |
-| `--lc-ctype=locale` | 문자 분류 로케일 |
-| `--lc-messages=locale` | 메시지 로케일 |
-| `--locale-provider={builtin|libc|icu}` | 로케일 제공자 설정 (기본값: libc) |
-| `--icu-locale=locale` | ICU 제공자 사용 시 ICU 로케일 지정 |
-| `--no-locale` | `--locale=C`와 동일 |
+- `-E encoding`, `--encoding=encoding`: 템플릿 데이터베이스의 인코딩 지정
+- `--locale=locale`: 클러스터의 기본 로케일 설정
+- `--lc-collate=locale`: 정렬 순서 로케일
+- `--lc-ctype=locale`: 문자 분류 로케일
+- `--lc-messages=locale`: 메시지 로케일
+- `--locale-provider={builtin|libc|icu}`: 로케일 제공자 설정 (기본값: libc)
+- `--icu-locale=locale`: ICU 제공자 사용 시 ICU 로케일 지정
+- `--no-locale`: `--locale=C`와 동일
 
 ##### 슈퍼유저 설정 (Superuser)
 
-| 옵션 | 설명 |
-|------|------|
-| `-U username`, `--username=username` | 부트스트랩 슈퍼유저 이름 (기본값: OS 사용자명) |
-| `-W`, `--pwprompt` | 슈퍼유저 비밀번호 프롬프트 |
-| `--pwfile=filename` | 파일에서 슈퍼유저 비밀번호 읽기 |
+- `-U username`, `--username=username`: 부트스트랩 슈퍼유저 이름 (기본값: OS 사용자명)
+- `-W`, `--pwprompt`: 슈퍼유저 비밀번호 프롬프트
+- `--pwfile=filename`: 파일에서 슈퍼유저 비밀번호 읽기
 
 ##### 데이터 보호 (Data Protection)
 
-| 옵션 | 설명 |
-|------|------|
-| `-k`, `--data-checksums` | I/O 시스템 손상 감지를 위한 체크섬 활성화 (기본값: 활성화) |
-| `--no-data-checksums` | 체크섬 비활성화 |
+- `-k`, `--data-checksums`: I/O 시스템 손상 감지를 위한 체크섬 활성화 (기본값: 활성화)
+- `--no-data-checksums`: 체크섬 비활성화
 
 ##### WAL 관련 (Write-Ahead Log)
 
-| 옵션 | 설명 |
-|------|------|
-| `-X directory`, `--waldir=directory` | WAL 저장 디렉토리 지정 |
-| `--wal-segsize=size` | WAL 세그먼트 크기 설정 (1~1024 MB, 2의 거듭제곱, 기본값: 16 MB) |
+- `-X directory`, `--waldir=directory`: WAL 저장 디렉토리 지정
+- `--wal-segsize=size`: WAL 세그먼트 크기 설정 (1~1024 MB, 2의 거듭제곱, 기본값: 16 MB)
 
 ##### 기타 옵션
 
-| 옵션 | 설명 |
-|------|------|
-| `-g`, `--allow-group-access` | 클러스터 소유자와 같은 그룹의 사용자가 파일 읽기 가능 |
-| `-T config`, `--text-search-config=config` | 기본 텍스트 검색 구성 설정 |
-| `-c name=value`, `--set name=value` | 서버 파라미터 강제 설정 |
-| `-N`, `--no-sync` | 파일 동기화 대기 생략 (테스트용) |
-| `-s`, `--show` | 내부 설정 표시 후 종료 |
+- `-g`, `--allow-group-access`: 클러스터 소유자와 같은 그룹의 사용자가 파일 읽기 가능
+- `-T config`, `--text-search-config=config`: 기본 텍스트 검색 구성 설정
+- `-c name=value`, `--set name=value`: 서버 파라미터 강제 설정
+- `-N`, `--no-sync`: 파일 동기화 대기 생략 (테스트용)
+- `-s`, `--show`: 내부 설정 표시 후 종료
 
 #### 환경 변수 (Environment Variables)
 
-| 변수 | 설명 |
-|------|------|
-| `PGDATA` | 데이터베이스 클러스터 저장 디렉토리 (`-D`로 오버라이드 가능) |
-| `PG_COLOR` | 진단 메시지 색상 사용 여부 (`always`, `auto`, `never`) |
-| `TZ` | 생성된 클러스터의 기본 시간대 |
+- `PGDATA`: 데이터베이스 클러스터 저장 디렉토리 (`-D`로 오버라이드 가능)
+- `PG_COLOR`: 진단 메시지 색상 사용 여부 (`always`, `auto`, `never`)
+- `TZ`: 생성된 클러스터의 기본 시간대
 
 #### 사용 예제
 
@@ -4986,7 +4950,7 @@ initdb -D /var/lib/postgresql/data -c max_connections=200 -c shared_buffers=1GB
 
 #### 개요
 
-`pg_ctl`은 PostgreSQL 데이터베이스 서버를 초기화, 시작, 중지, 제어 및 상태 확인하는 유틸리티입니다.
+`pg_ctl`은 PostgreSQL 데이터베이스 서버를 초기화, 시작, 중지, 제어 및 상태 확인하는 유틸리티임.
 
 #### 명령 형식
 
@@ -5004,59 +4968,47 @@ pg_ctl kill signal_name process_id
 
 #### 모드 설명
 
-| 모드 | 설명 |
-|------|------|
-| init/initdb | 새 PostgreSQL 데이터베이스 클러스터 생성 |
-| start | 백그라운드에서 서버 시작 |
-| stop | 서버 종료 (`smart`/`fast`/`immediate` 모드 선택 가능) |
-| restart | 서버 재시작 (stop + start) |
-| reload | 설정 파일 다시 읽기 (`SIGHUP` 신호 전송) |
-| status | 실행 중인 서버 상태 확인 |
-| promote | 대기 서버(Standby)를 읽기-쓰기 모드로 전환 |
-| logrotate | 서버 로그 파일 회전(Rotation) |
-| kill | 프로세스에 신호 전송 (주로 Windows용) |
+- init/initdb: 새 PostgreSQL 데이터베이스 클러스터 생성
+- start: 백그라운드에서 서버 시작
+- stop: 서버 종료 (`smart`/`fast`/`immediate` 모드 선택 가능)
+- restart: 서버 재시작 (stop + start)
+- reload: 설정 파일 다시 읽기 (`SIGHUP` 신호 전송)
+- status: 실행 중인 서버 상태 확인
+- promote: 대기 서버(Standby)를 읽기-쓰기 모드로 전환
+- logrotate: 서버 로그 파일 회전(Rotation)
+- kill: 프로세스에 신호 전송 (주로 Windows용)
 
 #### 종료 모드 (Shutdown Modes)
 
-| 모드 | 설명 |
-|------|------|
-| Smart | 새 연결 거부, 모든 기존 클라이언트 연결 대기 후 종료 |
-| Fast (기본값) | 클라이언트 대기 없음, 활성 트랜잭션 롤백, 강제 연결 해제 후 종료 |
-| Immediate | 모든 서버 프로세스 즉시 중단 (다음 시작 시 복구 필요) |
+- Smart: 새 연결 거부, 모든 기존 클라이언트 연결 대기 후 종료
+- Fast (기본값): 클라이언트 대기 없음, 활성 트랜잭션 롤백, 강제 연결 해제 후 종료
+- Immediate: 모든 서버 프로세스 즉시 중단 (다음 시작 시 복구 필요)
 
 #### 주요 옵션
 
 ##### 공통 옵션
 
-| 옵션 | 설명 |
-|------|------|
-| `-D datadir`, `--pgdata=datadir` | 데이터베이스 설정 파일 위치 |
-| `-s`, `--silent` | 에러만 출력, 정보 메시지 없음 |
-| `-t seconds`, `--timeout=seconds` | 작업 완료 대기 최대 시간 (기본값: 60초) |
-| `-w`, `--wait` | 작업 완료를 기다림 (기본값) |
-| `-W`, `--no-wait` | 작업 완료를 기다리지 않음 |
+- `-D datadir`, `--pgdata=datadir`: 데이터베이스 설정 파일 위치
+- `-s`, `--silent`: 에러만 출력, 정보 메시지 없음
+- `-t seconds`, `--timeout=seconds`: 작업 완료 대기 최대 시간 (기본값: 60초)
+- `-w`, `--wait`: 작업 완료를 기다림 (기본값)
+- `-W`, `--no-wait`: 작업 완료를 기다리지 않음
 
 ##### start 관련 옵션
 
-| 옵션 | 설명 |
-|------|------|
-| `-l filename`, `--log=filename` | 서버 로그 출력을 파일에 기록 |
-| `-o options`, `--options=options` | `postgres` 명령에 직접 전달할 옵션 |
-| `-p path` | `postgres` 실행파일 위치 지정 |
-| `-c`, `--core-files` | 서버 크래시 시 코어 파일 생성 허용 |
+- `-l filename`, `--log=filename`: 서버 로그 출력을 파일에 기록
+- `-o options`, `--options=options`: `postgres` 명령에 직접 전달할 옵션
+- `-p path`: `postgres` 실행파일 위치 지정
+- `-c`, `--core-files`: 서버 크래시 시 코어 파일 생성 허용
 
 ##### stop 관련 옵션
 
-| 옵션 | 설명 |
-|------|------|
-| `-m mode`, `--mode=mode` | 종료 모드: `smart`, `fast` (기본값), `immediate` |
+- `-m mode`, `--mode=mode`: 종료 모드: `smart`, `fast` (기본값), `immediate`
 
 #### 환경 변수
 
-| 변수 | 설명 |
-|------|------|
-| `PGCTLTIMEOUT` | 시작/종료 완료 대기 기본 시간 (초, 기본값: 60) |
-| `PGDATA` | 기본 데이터 디렉토리 위치 |
+- `PGCTLTIMEOUT`: 시작/종료 완료 대기 기본 시간 (초, 기본값: 60)
+- `PGDATA`: 기본 데이터 디렉토리 위치
 
 #### 사용 예제
 
@@ -5135,12 +5087,10 @@ pg_ctl init -D /usr/local/pgsql/data
 
 #### 종료 상태 코드 (Exit Status)
 
-| 상태 | 의미 |
-|------|------|
-| 0 | 정상 완료 |
-| 3 | status 모드에서 서버 미실행 |
-| 4 | status 모드에서 접근 가능한 데이터 디렉토리 없음 |
-| 그 외 | 작업 실패 또는 타임아웃 |
+- 0: 정상 완료
+- 3: status 모드에서 서버 미실행
+- 4: status 모드에서 접근 가능한 데이터 디렉토리 없음
+- 그 외: 작업 실패 또는 타임아웃
 
 ---
 
@@ -5148,7 +5098,7 @@ pg_ctl init -D /usr/local/pgsql/data
 
 #### 개요
 
-`postgres`는 PostgreSQL 데이터베이스 서버 프로세스입니다. 클라이언트 애플리케이션이 데이터베이스에 접근하려면 실행 중인 `postgres` 인스턴스에 연결해야 합니다.
+`postgres`는 PostgreSQL 데이터베이스 서버 프로세스임. 클라이언트 애플리케이션이 데이터베이스에 접근하려면 실행 중인 `postgres` 인스턴스에 연결 필요함.
 
 #### 기본 특징
 
@@ -5161,37 +5111,33 @@ pg_ctl init -D /usr/local/pgsql/data
 
 ##### 일반 목적 옵션 (General Purpose Options)
 
-| 옵션 | 설명 |
-|------|------|
-| `-B nbuffers` | 공유 버퍼(Shared Buffers) 수 설정 |
-| `-c name=value` | 런타임 파라미터 설정 (여러 번 사용 가능) |
-| `-C name` | 파라미터 값 출력 후 종료 |
-| `-d debug-level` | 디버그 레벨 설정 (1~5) |
-| `-D datadir` | 데이터베이스 디렉토리 경로 지정 |
-| `-e` | 유럽식 날짜 형식 설정 (DMY) |
-| `-F` | fsync 비활성화 (성능 향상, 데이터 손상 위험) |
-| `-h hostname` | TCP/IP 바인드 주소 지정 |
-| `-k directory` | Unix 소켓 디렉토리 지정 |
-| `-l` | SSL 보안 연결 활성화 |
-| `-N max-connections` | 최대 클라이언트 연결 수 |
-| `-p port` | TCP/IP 포트 또는 소켓 지정 |
-| `-s` | 명령어 실행 시간/통계 출력 |
-| `-S work-mem` | 정렬/해시 테이블 메모리 설정 |
+- `-B nbuffers`: 공유 버퍼(Shared Buffers) 수 설정
+- `-c name=value`: 런타임 파라미터 설정 (여러 번 사용 가능)
+- `-C name`: 파라미터 값 출력 후 종료
+- `-d debug-level`: 디버그 레벨 설정 (1~5)
+- `-D datadir`: 데이터베이스 디렉토리 경로 지정
+- `-e`: 유럽식 날짜 형식 설정 (DMY)
+- `-F`: fsync 비활성화 (성능 향상, 데이터 손상 위험)
+- `-h hostname`: TCP/IP 바인드 주소 지정
+- `-k directory`: Unix 소켓 디렉토리 지정
+- `-l`: SSL 보안 연결 활성화
+- `-N max-connections`: 최대 클라이언트 연결 수
+- `-p port`: TCP/IP 포트 또는 소켓 지정
+- `-s`: 명령어 실행 시간/통계 출력
+- `-S work-mem`: 정렬/해시 테이블 메모리 설정
 
 ##### 디버깅 옵션 (Semi-internal Options)
 
-| 옵션 | 설명 |
-|------|------|
-| `-f {s\|i\|o\|b\|t\|n\|m\|h}` | 스캔/조인 방법 비활성화 |
-| `-O` | 시스템 테이블 구조 수정 허용 |
-| `-P` | 손상된 시스템 인덱스 복구 |
-| `-t pa[rser]\|pl[anner]\|e[xecutor]` | 타이밍 통계 출력 |
-| `-T` | 코어 덤프 파일 생성 (`SIGABRT` 사용) |
-| `-W seconds` | 새 서버 프로세스 시작 시 지연 |
+- `-f {s\|i\|o\|b\|t\|n\|m\|h}`: 스캔/조인 방법 비활성화
+- `-O`: 시스템 테이블 구조 수정 허용
+- `-P`: 손상된 시스템 인덱스 복구
+- `-t pa[rser]\|pl[anner]\|e[xecutor]`: 타이밍 통계 출력
+- `-T`: 코어 덤프 파일 생성 (`SIGABRT` 사용)
+- `-W seconds`: 새 서버 프로세스 시작 시 지연
 
 #### 단일 사용자 모드 (Single-User Mode)
 
-단일 사용자 모드는 부팅, 디버깅, 재해 복구 시 사용합니다.
+단일 사용자 모드는 부팅, 디버깅, 재해 복구 시 사용함.
 
 ##### 시작 명령어
 
@@ -5201,13 +5147,11 @@ postgres --single -D /usr/local/pgsql/data [other-options] my_database
 
 ##### 단일 사용자 모드 옵션
 
-| 옵션 | 설명 |
-|------|------|
-| `--single` | 단일 사용자 모드 선택 (첫 번째 인자) |
-| `database` | 접근할 데이터베이스 이름 (마지막 인자) |
-| `-E` | 실행 전 모든 명령어 표준 출력 |
-| `-j` | 명령어 종료자: 세미콜론 + 2개 개행 |
-| `-r filename` | 서버 로그를 파일로 리다이렉트 |
+- `--single`: 단일 사용자 모드 선택 (첫 번째 인자)
+- `database`: 접근할 데이터베이스 이름 (마지막 인자)
+- `-E`: 실행 전 모든 명령어 표준 출력
+- `-j`: 명령어 종료자: 세미콜론 + 2개 개행
+- `-r filename`: 서버 로그를 파일로 리다이렉트
 
 ##### 특징
 
@@ -5219,22 +5163,18 @@ postgres --single -D /usr/local/pgsql/data [other-options] my_database
 
 #### 신호 처리 (Signal Handling)
 
-| 신호 | 동작 |
-|------|------|
-| `SIGTERM` | 정상 종료 (모든 클라이언트 대기) - Smart Shutdown |
-| `SIGINT` | 강제 종료 (클라이언트 즉시 연결 끊음) - Fast Shutdown |
-| `SIGQUIT` | 즉시 종료 (복구 절차 필요) - Immediate Shutdown |
-| `SIGHUP` | 설정 파일 재로드 |
-| `SIGKILL` | 사용 금지 (리소스 해제 불가) |
+- `SIGTERM`: 정상 종료 (모든 클라이언트 대기) - Smart Shutdown
+- `SIGINT`: 강제 종료 (클라이언트 즉시 연결 끊음) - Fast Shutdown
+- `SIGQUIT`: 즉시 종료 (복구 절차 필요) - Immediate Shutdown
+- `SIGHUP`: 설정 파일 재로드
+- `SIGKILL`: 사용 금지 (리소스 해제 불가)
 
 #### 환경 변수
 
-| 변수 | 설명 |
-|------|------|
-| `PGCLIENTENCODING` | 기본 문자 인코딩 |
-| `PGDATA` | 기본 데이터 디렉토리 위치 |
-| `PGDATESTYLE` | DateStyle 파라미터 기본값 (deprecated) |
-| `PGPORT` | 기본 포트 번호 |
+- `PGCLIENTENCODING`: 기본 문자 인코딩
+- `PGDATA`: 기본 데이터 디렉토리 위치
+- `PGDATESTYLE`: DateStyle 파라미터 기본값 (deprecated)
+- `PGPORT`: 기본 포트 번호
 
 #### 사용 예제
 
@@ -5269,7 +5209,7 @@ postgres --single -D /usr/local/pgsql/data postgres
 
 #### 개요
 
-`pg_upgrade`는 PostgreSQL 데이터를 메이저 버전(Major Version) 간에 업그레이드하는 도구입니다. 기존의 dump/restore 과정 없이 빠르게 업그레이드할 수 있습니다.
+`pg_upgrade`는 PostgreSQL 데이터를 메이저 버전(Major Version) 간에 업그레이드하는 도구임. 기존의 dump/restore 과정 없이 빠르게 업그레이드 가능함.
 
 #### 지원 범위
 
@@ -5287,39 +5227,41 @@ pg_upgrade -b oldbindir [-B newbindir] -d oldconfigdir -D newconfigdir [option].
 
 ##### 필수 옵션
 
-| 옵션 | 환경변수 | 설명 |
-|------|---------|------|
-| `-b`, `--old-bindir` | `PGBINOLD` | 이전 PostgreSQL 실행 파일 디렉토리 |
-| `-d`, `--old-datadir` | `PGDATAOLD` | 이전 데이터베이스 클러스터 설정 디렉토리 |
-| `-D`, `--new-datadir` | `PGDATANEW` | 새 데이터베이스 클러스터 설정 디렉토리 |
-| `-B`, `--new-bindir` | `PGBINNEW` | 새 PostgreSQL 실행 파일 디렉토리 (기본값: pg_upgrade 위치) |
+- `-b`, `--old-bindir`
+  - 환경변수: `PGBINOLD`
+  - 설명: 이전 PostgreSQL 실행 파일 디렉토리
+- `-d`, `--old-datadir`
+  - 환경변수: `PGDATAOLD`
+  - 설명: 이전 데이터베이스 클러스터 설정 디렉토리
+- `-D`, `--new-datadir`
+  - 환경변수: `PGDATANEW`
+  - 설명: 새 데이터베이스 클러스터 설정 디렉토리
+- `-B`, `--new-bindir`
+  - 환경변수: `PGBINNEW`
+  - 설명: 새 PostgreSQL 실행 파일 디렉토리 (기본값: pg_upgrade 위치)
 
 ##### 주요 옵션
 
-| 옵션 | 설명 |
-|------|------|
-| `-c`, `--check` | 변경 없이 호환성만 확인 |
-| `-j`, `--jobs=njobs` | 병렬 처리 작업 수 |
-| `-k`, `--link` | 파일 복사 대신 하드링크 사용 |
-| `-N`, `--no-sync` | 동기화 대기 안 함 (테스트용) |
-| `-o`, `--old-options options` | 이전 postgres 커맨드 옵션 |
-| `-O`, `--new-options options` | 새 postgres 커맨드 옵션 |
-| `-p`, `--old-port=port` | 이전 클러스터 포트 |
-| `-P`, `--new-port=port` | 새 클러스터 포트 |
-| `-r`, `--retain` | 성공 후에도 SQL/로그 파일 유지 |
-| `-s`, `--socketdir=dir` | postmaster 소켓 디렉토리 |
-| `-U`, `--username=username` | 클러스터 설치 사용자명 |
-| `-v`, `--verbose` | 상세 로깅 활성화 |
+- `-c`, `--check`: 변경 없이 호환성만 확인
+- `-j`, `--jobs=njobs`: 병렬 처리 작업 수
+- `-k`, `--link`: 파일 복사 대신 하드링크 사용
+- `-N`, `--no-sync`: 동기화 대기 안 함 (테스트용)
+- `-o`, `--old-options options`: 이전 postgres 커맨드 옵션
+- `-O`, `--new-options options`: 새 postgres 커맨드 옵션
+- `-p`, `--old-port=port`: 이전 클러스터 포트
+- `-P`, `--new-port=port`: 새 클러스터 포트
+- `-r`, `--retain`: 성공 후에도 SQL/로그 파일 유지
+- `-s`, `--socketdir=dir`: postmaster 소켓 디렉토리
+- `-U`, `--username=username`: 클러스터 설치 사용자명
+- `-v`, `--verbose`: 상세 로깅 활성화
 
 ##### 파일 전송 모드 옵션 (File Transfer Mode)
 
-| 옵션 | 설명 |
-|------|------|
-| `--copy` | 파일 복사 (기본값) |
-| `--link` | 하드링크 사용 (빠르지만 이전 클러스터 사용 불가) |
-| `--clone` | 효율적인 파일 클로닝 (Linux Btrfs/XFS, macOS APFS) |
-| `--copy-file-range` | `copy_file_range` 시스템 호출 사용 |
-| `--swap` | 데이터 디렉토리 이동 (가장 빠름) |
+- `--copy`: 파일 복사 (기본값)
+- `--link`: 하드링크 사용 (빠르지만 이전 클러스터 사용 불가)
+- `--clone`: 효율적인 파일 클로닝 (Linux Btrfs/XFS, macOS APFS)
+- `--copy-file-range`: `copy_file_range` 시스템 호출 사용
+- `--swap`: 데이터 디렉토리 이동 (가장 빠름)
 
 #### 업그레이드 단계
 
@@ -5468,7 +5410,7 @@ pg_upgrade.exe ^
 
 #### 개요
 
-`pg_resetwal`은 PostgreSQL 데이터베이스 클러스터의 Write-Ahead Log(WAL)와 제어 정보(`pg_control`)를 초기화하는 도구입니다. 파일 손상으로 서버가 기동되지 않을 때 사용하는 최후의 수단입니다.
+`pg_resetwal`은 PostgreSQL 데이터베이스 클러스터의 Write-Ahead Log(WAL)와 제어 정보(`pg_control`)를 초기화하는 도구임. 파일 손상으로 서버가 기동되지 않을 때 사용하는 최후의 수단임.
 
 #### 기본 문법
 
@@ -5478,7 +5420,7 @@ pg_resetwal [ -f | --force ] [ -n | --dry-run ] [ option... ] [ -D | --pgdata ] 
 
 #### 중요 주의사항
 
-이 도구는 매우 위험합니다:
+이 도구는 매우 위험함:
 
 - 서버가 비정상 종료되었거나 제어 파일이 손상된 경우 `-f` 옵션이 필수
 - 복구 후 즉시 데이터 덤프 및 복원 필요
@@ -5493,42 +5435,32 @@ pg_resetwal [ -f | --force ] [ -n | --dry-run ] [ option... ] [ -D | --pgdata ] 
 
 ##### 제어 옵션
 
-| 옵션 | 설명 |
-|------|------|
-| `-D datadir`, `--pgdata=datadir` | 데이터 디렉토리 위치 (필수) |
-| `-f`, `--force` | 위험한 상황에서도 강제 실행 |
-| `-n`, `--dry-run` | 실제 수정 없이 복구 값 출력 |
-| `-V`, `--version` | 버전 정보 표시 |
-| `-?`, `--help` | 도움말 표시 |
+- `-D datadir`, `--pgdata=datadir`: 데이터 디렉토리 위치 (필수)
+- `-f`, `--force`: 위험한 상황에서도 강제 실행
+- `-n`, `--dry-run`: 실제 수정 없이 복구 값 출력
+- `-V`, `--version`: 버전 정보 표시
+- `-?`, `--help`: 도움말 표시
 
 ##### 트랜잭션 ID 관련 (Transaction ID)
 
-| 옵션 | 설명 |
-|------|------|
-| `-x xid`, `--next-transaction-id=xid` | 다음 트랜잭션 ID 설정 |
-| `-u xid`, `--oldest-transaction-id=xid` | 가장 오래된 미동결 트랜잭션 ID 설정 |
-| `-e xid_epoch`, `--epoch=xid_epoch` | 트랜잭션 ID의 에포크 설정 |
+- `-x xid`, `--next-transaction-id=xid`: 다음 트랜잭션 ID 설정
+- `-u xid`, `--oldest-transaction-id=xid`: 가장 오래된 미동결 트랜잭션 ID 설정
+- `-e xid_epoch`, `--epoch=xid_epoch`: 트랜잭션 ID의 에포크 설정
 
 ##### 멀티트랜잭션 관련 (Multitransaction)
 
-| 옵션 | 설명 |
-|------|------|
-| `-m mxid,mxid`, `--multixact-ids=mxid,mxid` | 다음 멀티트랜잭션 ID와 가장 오래된 ID 설정 |
-| `-O mxoff`, `--multixact-offset=mxoff` | 멀티트랜잭션 오프셋 설정 |
+- `-m mxid,mxid`, `--multixact-ids=mxid,mxid`: 다음 멀티트랜잭션 ID와 가장 오래된 ID 설정
+- `-O mxoff`, `--multixact-offset=mxoff`: 멀티트랜잭션 오프셋 설정
 
 ##### WAL 관련 (Write-Ahead Log)
 
-| 옵션 | 설명 |
-|------|------|
-| `-l walfile`, `--next-wal-file=walfile` | WAL 시작 위치 설정 |
-| `--wal-segsize=wal_segment_size` | WAL 세그먼트 크기 설정 (1~1024 MB) |
+- `-l walfile`, `--next-wal-file=walfile`: WAL 시작 위치 설정
+- `--wal-segsize=wal_segment_size`: WAL 세그먼트 크기 설정 (1~1024 MB)
 
 ##### 기타 옵션
 
-| 옵션 | 설명 |
-|------|------|
-| `-o oid`, `--next-oid=oid` | 다음 OID 설정 |
-| `-c xid,xid`, `--commit-timestamp-ids=xid,xid` | 커밋 시간 조회 가능한 트랜잭션 ID 범위 설정 |
+- `-o oid`, `--next-oid=oid`: 다음 OID 설정
+- `-c xid,xid`, `--commit-timestamp-ids=xid,xid`: 커밋 시간 조회 가능한 트랜잭션 ID 범위 설정
 
 #### 안전값 결정 방법
 
@@ -5558,11 +5490,9 @@ ls -la $PGDATA/pg_wal/
 
 #### 실행 조건
 
-| 조건 | 요구사항 |
-|------|---------|
-| 서버 상태 | 반드시 서버가 종료되어야 함 |
-| 사용자 | 서버를 설치한 사용자만 실행 가능 |
-| 버전 | 동일 메이저 버전 서버에서만 작동 |
+- 서버 상태: 반드시 서버가 종료되어야 함
+- 사용자: 서버를 설치한 사용자만 실행 가능
+- 버전: 동일 메이저 버전 서버에서만 작동
 
 #### 사용 예제
 
@@ -5633,7 +5563,7 @@ psql < backup.sql
 
 #### 개요
 
-`pg_rewind`는 PostgreSQL 클러스터의 타임라인(Timeline)이 분기된 후, 한 클러스터를 다른 클러스터 사본과 동기화하는 도구입니다.
+`pg_rewind`는 PostgreSQL 클러스터의 타임라인(Timeline)이 분기된 후, 한 클러스터를 다른 클러스터 사본과 동기화하는 도구임.
 
 #### 전형적인 사용 사례
 
@@ -5658,19 +5588,17 @@ pg_rewind [option...] {-D | --target-pgdata} directory {--source-pgdata=director
 
 #### 주요 옵션
 
-| 옵션 | 설명 |
-|------|------|
-| `-D directory`, `--target-pgdata=directory` | 필수 동기화할 대상 데이터 디렉토리 (서버 종료 필수) |
-| `--source-pgdata=directory` | 소스 서버 데이터 디렉토리 경로 (서버 깔끔한 종료 필수) |
-| `--source-server=connstr` | libpq 연결 문자열로 소스 서버 지정 (서버 실행 중) |
-| `-R`, `--write-recovery-conf` | `standby.signal` 생성 및 `postgresql.auto.conf`에 연결 설정 추가 |
-| `-n`, `--dry-run` | 실제 수정 없이 모든 작업 실행 (테스트용) |
-| `-N`, `--no-sync` | 디스크 동기화 대기 생략 (테스트용) |
-| `-P`, `--progress` | 진행 상황 보고 활성화 |
-| `-c`, `--restore-target-wal` | WAL 아카이브에서 누락된 WAL 파일 검색 |
-| `--config-file=filename` | 대상 클러스터 구성 파일 지정 |
-| `--debug` | 상세 디버깅 출력 |
-| `--no-ensure-shutdown` | 깔끔한 종료 확인 건너뛰기 |
+- `-D directory`, `--target-pgdata=directory`: 필수 동기화할 대상 데이터 디렉토리 (서버 종료 필수)
+- `--source-pgdata=directory`: 소스 서버 데이터 디렉토리 경로 (서버 깔끔한 종료 필수)
+- `--source-server=connstr`: libpq 연결 문자열로 소스 서버 지정 (서버 실행 중)
+- `-R`, `--write-recovery-conf`: `standby.signal` 생성 및 `postgresql.auto.conf`에 연결 설정 추가
+- `-n`, `--dry-run`: 실제 수정 없이 모든 작업 실행 (테스트용)
+- `-N`, `--no-sync`: 디스크 동기화 대기 생략 (테스트용)
+- `-P`, `--progress`: 진행 상황 보고 활성화
+- `-c`, `--restore-target-wal`: WAL 아카이브에서 누락된 WAL 파일 검색
+- `--config-file=filename`: 대상 클러스터 구성 파일 지정
+- `--debug`: 상세 디버깅 출력
+- `--no-ensure-shutdown`: 깔끔한 종료 확인 건너뛰기
 
 #### 동작 방식
 
@@ -5707,7 +5635,7 @@ pg_rewind [option...] {-D | --target-pgdata} directory {--source-pgdata=director
 
 #### 사용자 권한 설정
 
-슈퍼유저 대신 필요한 권한만 가진 역할을 생성해 사용할 수 있습니다:
+슈퍼유저 대신 필요한 권한만 가진 역할을 생성해 사용 가능함:
 
 ```sql
 CREATE USER rewind_user LOGIN;
@@ -5780,14 +5708,12 @@ pg_ctl -D /var/lib/postgresql/old_primary start
 
 ### 요약
 
-| 도구 | 주요 용도 |
-|------|----------|
-| initdb | 새 데이터베이스 클러스터 초기화 |
-| pg_ctl | 서버 시작, 중지, 재시작, 상태 확인 |
-| postgres | 데이터베이스 서버 프로세스 (직접 또는 pg_ctl 통해 실행) |
-| pg_upgrade | 메이저 버전 업그레이드 |
-| pg_resetwal | WAL 및 제어 정보 재설정 (긴급 복구용) |
-| pg_rewind | 분기된 클러스터 동기화 (페일오버 복구용) |
+- initdb: 새 데이터베이스 클러스터 초기화
+- pg_ctl: 서버 시작, 중지, 재시작, 상태 확인
+- postgres: 데이터베이스 서버 프로세스 (직접 또는 pg_ctl 통해 실행)
+- pg_upgrade: 메이저 버전 업그레이드
+- pg_resetwal: WAL 및 제어 정보 재설정 (긴급 복구용)
+- pg_rewind: 분기된 클러스터 동기화 (페일오버 복구용)
 
 ---
 
@@ -5807,13 +5733,13 @@ pg_ctl -D /var/lib/postgresql/old_primary start
 
 ### 개요
 
-PostgreSQL은 데이터베이스 서버의 관리, 모니터링, 백업, 복제 등을 위한 다양한 시스템 함수를 제공합니다. 이러한 함수들은 DBA(Database Administrator)와 시스템 운영자가 PostgreSQL 클러스터를 효과적으로 관리하는 데 필수적입니다.
+PostgreSQL은 데이터베이스 서버의 관리, 모니터링, 백업, 복제 등을 위한 다양한 시스템 함수를 제공함. 이러한 함수들은 DBA(Database Administrator)와 시스템 운영자가 PostgreSQL 클러스터를 효과적으로 관리하는 데 필수적임.
 
 ---
 
 ## 1. 서버 신호 함수 (Server Signaling Functions)
 
-서버 신호 함수는 다른 서버 프로세스의 동작을 제어하는 데 사용됩니다. 모든 함수는 `boolean`을 반환하며, 신호 전송 성공 시 `true`, 실패 시 `false`를 반환합니다.
+서버 신호 함수는 다른 서버 프로세스의 동작을 제어하는 데 사용됨. 모든 함수는 `boolean`을 반환하며, 신호 전송 성공 시 `true`, 실패 시 `false`를 반환함.
 
 ### pg_cancel_backend()
 
@@ -5821,9 +5747,9 @@ PostgreSQL은 데이터베이스 서버의 관리, 모니터링, 백업, 복제 
 pg_cancel_backend(pid integer) → boolean
 ```
 
-설명: 지정된 백엔드 프로세스의 현재 쿼리를 취소합니다.
+설명: 지정된 백엔드 프로세스의 현재 쿼리를 취소함.
 
-권한: 해당 역할의 멤버이거나 `pg_signal_backend` 권한이 있어야 합니다. 슈퍼유저 백엔드는 슈퍼유저만 취소할 수 있습니다.
+권한: 해당 역할의 멤버이거나 `pg_signal_backend` 권한이 있어야 함. 슈퍼유저 백엔드는 슈퍼유저만 취소 가능함.
 
 예제:
 ```sql
@@ -5842,7 +5768,7 @@ WHERE usename = 'slow_user' AND state = 'active';
 pg_terminate_backend(pid integer, timeout bigint DEFAULT 0) → boolean
 ```
 
-설명: 지정된 백엔드 프로세스의 세션을 종료합니다.
+설명: 지정된 백엔드 프로세스의 세션을 종료함.
 
 매개변수:
 - `pid`: 종료할 프로세스 ID
@@ -5871,7 +5797,7 @@ WHERE state = 'active'
 pg_log_backend_memory_contexts(pid integer) → boolean
 ```
 
-설명: 지정된 백엔드의 메모리 컨텍스트 정보를 서버 로그에 기록하도록 요청합니다.
+설명: 지정된 백엔드의 메모리 컨텍스트 정보를 서버 로그에 기록하도록 요청함.
 
 권한: 슈퍼유저 전용
 
@@ -5887,9 +5813,9 @@ SELECT pg_log_backend_memory_contexts(pg_backend_pid());
 pg_reload_conf() → boolean
 ```
 
-설명: 모든 PostgreSQL 프로세스가 설정 파일을 다시 로드하도록 신호를 보냅니다. postmaster에 SIGHUP을 전달하면 postmaster가 자식 프로세스에 다시 전파합니다.
+설명: 모든 PostgreSQL 프로세스가 설정 파일을 다시 로드하도록 신호를 보냅니다. postmaster에 SIGHUP을 전달하면 postmaster가 자식 프로세스에 다시 전파함.
 
-참고: 리로드 전에 `pg_file_settings`, `pg_hba_file_rules`, `pg_ident_file_mappings` 뷰로 설정 파일을 확인하는 것이 좋습니다.
+참고: 리로드 전에 `pg_file_settings`, `pg_hba_file_rules`, `pg_ident_file_mappings` 뷰로 설정 파일을 확인하는 것이 좋음.
 
 예제:
 ```sql
@@ -5908,7 +5834,7 @@ pg_rotate_logfile() → boolean
 
 설명: 로그 파일 관리자에게 새 출력 파일로 즉시 전환하도록 신호를 보냅니다.
 
-참고: 내장 로그 수집기(built-in log collector)가 실행 중일 때만 작동합니다.
+참고: 내장 로그 수집기(built-in log collector)가 실행 중일 때만 작동함.
 
 예제:
 ```sql
@@ -5920,7 +5846,7 @@ SELECT pg_rotate_logfile();
 
 ## 2. 백업 제어 함수 (Backup Control Functions)
 
-백업 제어 함수는 온라인 백업 수행에 필요합니다. 복구(recovery) 중에는 실행할 수 없습니다(일부 제외).
+백업 제어 함수는 온라인 백업 수행에 필요함. 복구(recovery) 중에는 실행 불가함(일부 제외).
 
 ### pg_backup_start()
 
@@ -5954,7 +5880,7 @@ pg_backup_stop([wait_for_archive boolean]) → record
   (lsn pg_lsn, labelfile text, spcmapfile text)
 ```
 
-설명: 온라인 백업을 완료합니다.
+설명: 온라인 백업을 완료함.
 
 매개변수:
 - `wait_for_archive`: `true`(기본값)이면 WAL 아카이빙 완료까지 대기. `false`이면 즉시 반환 (권장하지 않음)
@@ -5964,7 +5890,7 @@ pg_backup_stop([wait_for_archive boolean]) → record
 - `labelfile`: 백업 레이블 파일 내용
 - `spcmapfile`: 테이블스페이스 맵 파일 내용
 
-중요: 반환된 파일 내용은 반드시 백업 영역에 기록해야 합니다. 라이브 데이터 디렉터리에는 기록하지 마십시오.
+중요: 반환된 파일 내용은 반드시 백업 영역에 기록 필요함. 라이브 데이터 디렉터리에는 기록하지 말 것.
 
 권한: 슈퍼유저 (권한 부여 가능)
 
@@ -5983,12 +5909,12 @@ SELECT labelfile FROM pg_backup_stop();
 pg_create_restore_point(name text) → pg_lsn
 ```
 
-설명: WAL에 복구 대상으로 사용할 수 있는 명명된 마커를 생성합니다.
+설명: WAL에 복구 대상으로 사용할 수 있는 명명된 마커를 생성함.
 
 매개변수:
 - `name`: 복구 지점 이름 (`recovery_target_name` 매개변수와 함께 사용)
 
-주의: 중복 이름 사용은 피하는 것이 좋습니다. 복구는 이름이 일치하는 첫 번째 지점에서 중단됩니다.
+주의: 중복 이름 사용은 피하는 것이 좋음. 복구는 이름이 일치하는 첫 번째 지점에서 중단됨.
 
 권한: 슈퍼유저 (권한 부여 가능)
 
@@ -6007,7 +5933,7 @@ SELECT pg_create_restore_point('after_data_migration');
 pg_current_wal_lsn() → pg_lsn
 ```
 
-설명: 현재 WAL 쓰기 위치를 반환합니다. 아카이빙에 가장 적합합니다.
+설명: 현재 WAL 쓰기 위치를 반환함. 아카이빙에 가장 적합함.
 
 예제:
 ```sql
@@ -6021,7 +5947,7 @@ SELECT pg_current_wal_lsn();
 pg_current_wal_insert_lsn() → pg_lsn
 ```
 
-설명: 현재 WAL 삽입 위치(논리적 끝)를 반환합니다. 주로 디버깅용입니다.
+설명: 현재 WAL 삽입 위치(논리적 끝)를 반환함. 주로 디버깅용임.
 
 #### pg_current_wal_flush_lsn()
 
@@ -6029,7 +5955,7 @@ pg_current_wal_insert_lsn() → pg_lsn
 pg_current_wal_flush_lsn() → pg_lsn
 ```
 
-설명: 영구 저장소에 기록된 것으로 알려진 마지막 WAL 위치를 반환합니다.
+설명: 영구 저장소에 기록된 것으로 알려진 마지막 WAL 위치를 반환함.
 
 #### pg_switch_wal()
 
@@ -6037,9 +5963,9 @@ pg_current_wal_flush_lsn() → pg_lsn
 pg_switch_wal() → pg_lsn
 ```
 
-설명: 아카이빙을 위해 새 WAL 파일로 강제 전환합니다.
+설명: 아카이빙을 위해 새 WAL 파일로 강제 전환함.
 
-반환값: 완료된 파일의 끝 위치 + 1. 마지막 전환 이후 WAL 활동이 없으면 현재 WAL 위치의 시작 부분을 반환합니다.
+반환값: 완료된 파일의 끝 위치 + 1. 마지막 전환 이후 WAL 활동이 없으면 현재 WAL 위치의 시작 부분을 반환함.
 
 권한: 슈퍼유저 (권한 부여 가능)
 
@@ -6055,7 +5981,7 @@ SELECT pg_switch_wal();
 pg_walfile_name(lsn pg_lsn) → text
 ```
 
-설명: WAL 위치를 WAL 파일명으로 변환합니다.
+설명: WAL 위치를 WAL 파일명으로 변환함.
 
 예제:
 ```sql
@@ -6070,7 +5996,7 @@ pg_walfile_name_offset(lsn pg_lsn) → record
   (file_name text, file_offset integer)
 ```
 
-설명: LSN을 파일명과 파일 내 바이트 오프셋으로 변환합니다.
+설명: LSN을 파일명과 파일 내 바이트 오프셋으로 변환함.
 
 예제:
 ```sql
@@ -6087,7 +6013,7 @@ pg_split_walfile_name(file_name text) → record
   (segment_number numeric, timeline_id bigint)
 ```
 
-설명: WAL 파일명에서 시퀀스 번호와 타임라인 ID를 추출합니다.
+설명: WAL 파일명에서 시퀀스 번호와 타임라인 ID를 추출함.
 
 #### pg_wal_lsn_diff()
 
@@ -6095,9 +6021,9 @@ pg_split_walfile_name(file_name text) → record
 pg_wal_lsn_diff(lsn1 pg_lsn, lsn2 pg_lsn) → numeric
 ```
 
-설명: 두 WAL 위치 간의 바이트 차이를 계산합니다 (`lsn1 - lsn2`).
+설명: 두 WAL 위치 간의 바이트 차이를 계산함 (`lsn1 - lsn2`).
 
-용도: 복제 지연(replication lag) 계산에 유용합니다.
+용도: 복제 지연(replication lag) 계산에 유용함.
 
 예제:
 ```sql
@@ -6113,11 +6039,11 @@ FROM pg_stat_replication;
 
 ## 3. 복구 제어 함수 (Recovery Control Functions)
 
-복구 제어 함수는 복구(recovery) 상태를 확인하고 제어하는 데 사용됩니다.
+복구 제어 함수는 복구(recovery) 상태를 확인하고 제어하는 데 사용됨.
 
 ### 복구 정보 함수 (Recovery Information Functions)
 
-복구 중이나 정상 실행 중 모두 사용 가능합니다.
+복구 중이나 정상 실행 중 모두 사용 가능함.
 
 #### pg_is_in_recovery()
 
@@ -6125,7 +6051,7 @@ FROM pg_stat_replication;
 pg_is_in_recovery() → boolean
 ```
 
-설명: 복구가 진행 중인지 여부를 반환합니다.
+설명: 복구가 진행 중인지 여부를 반환함.
 
 예제:
 ```sql
@@ -6140,7 +6066,7 @@ SELECT pg_is_in_recovery();
 pg_last_wal_receive_lsn() → pg_lsn
 ```
 
-설명: 스트리밍 복제로 수신 및 동기화된 마지막 WAL 위치를 반환합니다.
+설명: 스트리밍 복제로 수신 및 동기화된 마지막 WAL 위치를 반환함.
 
 반환값: 스트리밍 비활성화 또는 미시작 시 `NULL`
 
@@ -6150,7 +6076,7 @@ pg_last_wal_receive_lsn() → pg_lsn
 pg_last_wal_replay_lsn() → pg_lsn
 ```
 
-설명: 복구 중 재생된 마지막 WAL 위치를 반환합니다.
+설명: 복구 중 재생된 마지막 WAL 위치를 반환함.
 
 반환값: 복구 없이 정상 시작된 경우 `NULL`
 
@@ -6160,9 +6086,9 @@ pg_last_wal_replay_lsn() → pg_lsn
 pg_last_xact_replay_timestamp() → timestamp with time zone
 ```
 
-설명: 복구 중 재생된 마지막 트랜잭션의 타임스탬프를 반환합니다.
+설명: 복구 중 재생된 마지막 트랜잭션의 타임스탬프를 반환함.
 
-참고: 프라이머리에서 커밋/중단 WAL 레코드가 생성된 시간입니다.
+참고: 프라이머리에서 커밋/중단 WAL 레코드가 생성된 시간임.
 
 예제:
 ```sql
@@ -6177,7 +6103,7 @@ pg_get_wal_resource_managers() → setof record
   (rm_id integer, rm_name text, rm_builtin boolean)
 ```
 
-설명: 현재 로드된 WAL 리소스 관리자 목록을 반환합니다.
+설명: 현재 로드된 WAL 리소스 관리자 목록을 반환함.
 
 반환 필드:
 - `rm_id`: 리소스 관리자 ID
@@ -6186,7 +6112,7 @@ pg_get_wal_resource_managers() → setof record
 
 ### 복구 제어 함수 (Recovery Control Functions)
 
-복구 중에만 실행 가능합니다.
+복구 중에만 실행 가능함.
 
 #### pg_is_wal_replay_paused()
 
@@ -6194,7 +6120,7 @@ pg_get_wal_resource_managers() → setof record
 pg_is_wal_replay_paused() → boolean
 ```
 
-설명: 복구 일시정지가 요청된 상태인지 여부를 반환합니다.
+설명: 복구 일시정지가 요청된 상태인지 여부를 반환함.
 
 #### pg_get_wal_replay_pause_state()
 
@@ -6202,7 +6128,7 @@ pg_is_wal_replay_paused() → boolean
 pg_get_wal_replay_pause_state() → text
 ```
 
-설명: 현재 복구 일시정지 상태를 반환합니다.
+설명: 현재 복구 일시정지 상태를 반환함.
 
 반환값:
 - `not paused`: 일시정지 요청 없음
@@ -6215,9 +6141,9 @@ pg_get_wal_replay_pause_state() → text
 pg_wal_replay_pause() → void
 ```
 
-설명: 복구 일시정지를 요청합니다.
+설명: 복구 일시정지를 요청함.
 
-참고: 일시정지 중에는 데이터베이스 변경이 적용되지 않으며, 쿼리는 일관된 스냅샷을 기준으로 실행됩니다.
+참고: 일시정지 중에는 데이터베이스 변경이 적용되지 않으며, 쿼리는 일관된 스냅샷을 기준으로 실행됨.
 
 권한: 슈퍼유저 (권한 부여 가능)
 
@@ -6236,7 +6162,7 @@ SELECT pg_get_wal_replay_pause_state();
 pg_wal_replay_resume() → void
 ```
 
-설명: 일시정지된 복구를 재개합니다.
+설명: 일시정지된 복구를 재개함.
 
 권한: 슈퍼유저 (권한 부여 가능)
 
@@ -6246,7 +6172,7 @@ pg_wal_replay_resume() → void
 pg_promote([wait boolean DEFAULT true, wait_seconds integer DEFAULT 60]) → boolean
 ```
 
-설명: 스탠바이를 프라이머리로 승격합니다.
+설명: 스탠바이를 프라이머리로 승격함.
 
 매개변수:
 - `wait`: `true`이면 승격 완료 또는 타임아웃까지 대기 (기본값). `false`이면 SIGUSR1 신호 전송 후 즉시 반환
@@ -6277,7 +6203,7 @@ SELECT pg_promote(true, 120);
 
 ## 4. 스냅샷 동기화 함수 (Snapshot Synchronization Functions)
 
-스냅샷 동기화 함수는 여러 세션 간에 동일한 데이터베이스 뷰를 공유하는 데 사용됩니다.
+스냅샷 동기화 함수는 여러 세션 간에 동일한 데이터베이스 뷰를 공유하는 데 사용됨.
 
 ### pg_export_snapshot()
 
@@ -6285,9 +6211,9 @@ SELECT pg_promote(true, 120);
 pg_export_snapshot() → text
 ```
 
-설명: 트랜잭션의 현재 스냅샷을 저장하고 식별 문자열을 반환합니다.
+설명: 트랜잭션의 현재 스냅샷을 저장하고 식별 문자열을 반환함.
 
-용도: 반환된 문자열을 다른 클라이언트에 전달하면 해당 클라이언트도 동일한 스냅샷을 사용할 수 있습니다.
+용도: 반환된 문자열을 다른 클라이언트에 전달하면 해당 클라이언트도 동일한 스냅샷을 사용 가능함.
 
 주의사항:
 - 내보낸 트랜잭션이 종료될 때까지만 유효
@@ -6314,15 +6240,15 @@ SET TRANSACTION SNAPSHOT '00000003-0000001B-1';
 pg_log_standby_snapshot() → pg_lsn
 ```
 
-설명: 실행 중인 트랜잭션의 스냅샷을 WAL에 기록합니다.
+설명: 실행 중인 트랜잭션의 스냅샷을 WAL에 기록함.
 
-용도: 스탠바이에서의 논리적 디코딩(logical decoding)에 유용합니다. bgwriter나 checkpointer가 스냅샷을 기록할 때까지 기다릴 필요가 없습니다.
+용도: 스탠바이에서의 논리적 디코딩(logical decoding)에 유용함. bgwriter나 checkpointer가 스냅샷을 기록할 때까지 기다릴 필요가 없음.
 
 ---
 
 ## 5. 복제 관리 함수 (Replication Management Functions)
 
-복제 관리 함수는 복제 슬롯, 논리적 디코딩, 복제 원점(replication origin)을 관리합니다.
+복제 관리 함수는 복제 슬롯, 논리적 디코딩, 복제 원점(replication origin)을 관리함.
 
 ### 5.1 물리적 복제 슬롯 (Physical Replication Slots)
 
@@ -6335,7 +6261,7 @@ pg_create_physical_replication_slot(
 ) → record (slot_name name, lsn pg_lsn)
 ```
 
-설명: 새 물리적 복제 슬롯을 생성합니다.
+설명: 새 물리적 복제 슬롯을 생성함.
 
 매개변수:
 - `slot_name`: 슬롯 이름
@@ -6361,9 +6287,9 @@ pg_copy_physical_replication_slot(
 ) → record (slot_name name, lsn pg_lsn)
 ```
 
-설명: 기존 물리적 슬롯을 복사합니다.
+설명: 기존 물리적 슬롯을 복사함.
 
-참고: 복사된 슬롯은 소스 슬롯의 LSN부터 WAL을 예약합니다. 무효화된 슬롯은 복사할 수 없습니다.
+참고: 복사된 슬롯은 소스 슬롯의 LSN부터 WAL을 예약함. 무효화된 슬롯은 복사 불가함.
 
 #### pg_drop_replication_slot()
 
@@ -6371,7 +6297,7 @@ pg_copy_physical_replication_slot(
 pg_drop_replication_slot(slot_name name) → void
 ```
 
-설명: 물리적 또는 논리적 복제 슬롯을 삭제합니다.
+설명: 물리적 또는 논리적 복제 슬롯을 삭제함.
 
 예제:
 ```sql
@@ -6391,7 +6317,7 @@ pg_create_logical_replication_slot(
 ) → record (slot_name name, lsn pg_lsn)
 ```
 
-설명: 새 논리적(디코딩) 복제 슬롯을 생성합니다.
+설명: 새 논리적(디코딩) 복제 슬롯을 생성함.
 
 매개변수:
 - `slot_name`: 슬롯 이름
@@ -6424,9 +6350,9 @@ pg_copy_logical_replication_slot(
 ) → record (slot_name name, lsn pg_lsn)
 ```
 
-설명: 기존 논리적 복제 슬롯을 복사합니다.
+설명: 기존 논리적 복제 슬롯을 복사함.
 
-참고: 출력 플러그인과 지속성을 변경할 수 있습니다. `failover`는 복사되지 않습니다(기본값 false).
+참고: 출력 플러그인과 지속성을 변경 가능함. `failover`는 복사되지 않음(기본값 false).
 
 ### 5.3 논리적 디코딩 (Logical Decoding)
 
@@ -6441,7 +6367,7 @@ pg_logical_slot_get_changes(
 ) → setof record (lsn pg_lsn, xid xid, data text)
 ```
 
-설명: 마지막 소비 이후의 변경 사항을 반환하고 소비합니다.
+설명: 마지막 소비 이후의 변경 사항을 반환하고 소비함.
 
 매개변수:
 - `slot_name`: 슬롯 이름
@@ -6478,7 +6404,7 @@ pg_logical_slot_peek_changes(
 ) → setof record (lsn pg_lsn, xid xid, data text)
 ```
 
-설명: `pg_logical_slot_get_changes()`와 동일하지만 변경 사항을 소비하지 않습니다. 다음 호출 시 다시 반환됩니다.
+설명: `pg_logical_slot_get_changes()`와 동일하지만 변경 사항을 소비하지 않음. 다음 호출 시 다시 반환됨.
 
 #### pg_logical_slot_get_binary_changes()
 
@@ -6491,7 +6417,7 @@ pg_logical_slot_get_binary_changes(
 ) → setof record (lsn pg_lsn, xid xid, data bytea)
 ```
 
-설명: `pg_logical_slot_get_changes()`와 같지만 `bytea`로 반환합니다.
+설명: `pg_logical_slot_get_changes()`와 같지만 `bytea`로 반환함.
 
 #### pg_logical_slot_peek_binary_changes()
 
@@ -6504,7 +6430,7 @@ pg_logical_slot_peek_binary_changes(
 ) → setof record (lsn pg_lsn, xid xid, data bytea)
 ```
 
-설명: `pg_logical_slot_peek_changes()`와 같지만 `bytea`로 반환합니다.
+설명: `pg_logical_slot_peek_changes()`와 같지만 `bytea`로 반환함.
 
 #### pg_replication_slot_advance()
 
@@ -6515,9 +6441,9 @@ pg_replication_slot_advance(
 ) → record (slot_name name, end_lsn pg_lsn)
 ```
 
-설명: 복제 슬롯의 확인된 위치를 앞으로 이동합니다.
+설명: 복제 슬롯의 확인된 위치를 앞으로 이동함.
 
-주의: 슬롯 위치를 뒤로 이동하거나 삽입 위치를 초과하여 이동할 수 없습니다. 변경된 위치는 다음 체크포인트에서 기록됩니다.
+주의: 슬롯 위치를 뒤로 이동하거나 삽입 위치를 초과하여 이동 불가함. 변경된 위치는 다음 체크포인트에서 기록됨.
 
 예제:
 ```sql
@@ -6527,7 +6453,7 @@ SELECT * FROM pg_replication_slot_advance('my_slot', '0/1A2B3C4D');
 
 ### 5.4 복제 원점 (Replication Origins)
 
-복제 원점은 복제된 데이터의 출처를 추적하는 데 사용됩니다.
+복제 원점은 복제된 데이터의 출처를 추적하는 데 사용됨.
 
 #### pg_replication_origin_create()
 
@@ -6535,7 +6461,7 @@ SELECT * FROM pg_replication_slot_advance('my_slot', '0/1A2B3C4D');
 pg_replication_origin_create(node_name text) → oid
 ```
 
-설명: 외부 이름으로 복제 원점을 생성합니다.
+설명: 외부 이름으로 복제 원점을 생성함.
 
 반환값: 내부 ID
 
@@ -6553,7 +6479,7 @@ SELECT pg_replication_origin_create('remote_cluster_1');
 pg_replication_origin_drop(node_name text) → void
 ```
 
-설명: 복제 원점과 연관된 재생 진행 상황을 삭제합니다.
+설명: 복제 원점과 연관된 재생 진행 상황을 삭제함.
 
 #### pg_replication_origin_oid()
 
@@ -6561,7 +6487,7 @@ pg_replication_origin_drop(node_name text) → void
 pg_replication_origin_oid(node_name text) → oid
 ```
 
-설명: 이름으로 복제 원점을 찾아 내부 ID를 반환합니다. 없으면 `NULL` 반환.
+설명: 이름으로 복제 원점을 찾아 내부 ID를 반환함. 없으면 `NULL` 반환.
 
 #### pg_replication_origin_session_setup()
 
@@ -6569,9 +6495,9 @@ pg_replication_origin_oid(node_name text) → oid
 pg_replication_origin_session_setup(node_name text) → void
 ```
 
-설명: 현재 세션을 지정된 원점에서 재생하는 것으로 표시합니다.
+설명: 현재 세션을 지정된 원점에서 재생하는 것으로 표시함.
 
-주의: 이미 선택된 원점이 없는 경우에만 호출 가능합니다. `pg_replication_origin_session_reset()`으로 해제할 수 있습니다.
+주의: 이미 선택된 원점이 없는 경우에만 호출 가능함. `pg_replication_origin_session_reset()`으로 해제 가능함.
 
 #### pg_replication_origin_session_reset()
 
@@ -6579,7 +6505,7 @@ pg_replication_origin_session_setup(node_name text) → void
 pg_replication_origin_session_reset() → void
 ```
 
-설명: `pg_replication_origin_session_setup()` 효과를 취소합니다.
+설명: `pg_replication_origin_session_setup()` 효과를 취소함.
 
 #### pg_replication_origin_session_is_setup()
 
@@ -6587,7 +6513,7 @@ pg_replication_origin_session_reset() → void
 pg_replication_origin_session_is_setup() → boolean
 ```
 
-설명: 현재 세션에서 복제 원점이 선택되었는지 여부를 반환합니다.
+설명: 현재 세션에서 복제 원점이 선택되었는지 여부를 반환함.
 
 #### pg_replication_origin_session_progress()
 
@@ -6595,7 +6521,7 @@ pg_replication_origin_session_is_setup() → boolean
 pg_replication_origin_session_progress(flush boolean) → pg_lsn
 ```
 
-설명: 선택된 원점의 재생 위치를 반환합니다.
+설명: 선택된 원점의 재생 위치를 반환함.
 
 매개변수:
 - `flush`: 로컬 트랜잭션이 디스크에 플러시되었음을 보장할지 여부
@@ -6609,9 +6535,9 @@ pg_replication_origin_xact_setup(
 ) → void
 ```
 
-설명: 현재 트랜잭션을 원점에서 재생하는 트랜잭션으로 표시합니다.
+설명: 현재 트랜잭션을 원점에서 재생하는 트랜잭션으로 표시함.
 
-주의: `pg_replication_origin_session_setup()`으로 원점이 선택된 경우에만 호출 가능합니다.
+주의: `pg_replication_origin_session_setup()`으로 원점이 선택된 경우에만 호출 가능함.
 
 #### pg_replication_origin_xact_reset()
 
@@ -6619,7 +6545,7 @@ pg_replication_origin_xact_setup(
 pg_replication_origin_xact_reset() → void
 ```
 
-설명: `pg_replication_origin_xact_setup()` 효과를 취소합니다.
+설명: `pg_replication_origin_xact_setup()` 효과를 취소함.
 
 #### pg_replication_origin_advance()
 
@@ -6627,11 +6553,11 @@ pg_replication_origin_xact_reset() → void
 pg_replication_origin_advance(node_name text, lsn pg_lsn) → void
 ```
 
-설명: 원점 노드의 복제 진행 상황을 설정합니다.
+설명: 원점 노드의 복제 진행 상황을 설정함.
 
-용도: 초기 설정이나 구성 변경 후에 사용합니다.
+용도: 초기 설정이나 구성 변경 후에 사용함.
 
-경고: 부주의하게 사용하면 복제 일관성이 깨질 수 있습니다.
+경고: 부주의하게 사용하면 복제 일관성이 깨질 수 있음.
 
 #### pg_replication_origin_progress()
 
@@ -6639,7 +6565,7 @@ pg_replication_origin_advance(node_name text, lsn pg_lsn) → void
 pg_replication_origin_progress(node_name text, flush boolean) → pg_lsn
 ```
 
-설명: 지정된 원점의 재생 위치를 반환합니다.
+설명: 지정된 원점의 재생 위치를 반환함.
 
 매개변수:
 - `flush`: 트랜잭션이 디스크에 플러시되었음을 보장할지 여부
@@ -6657,7 +6583,7 @@ pg_logical_emit_message(
 ) → pg_lsn
 ```
 
-설명: 플러그인용 논리적 디코딩 메시지를 발행합니다.
+설명: 플러그인용 논리적 디코딩 메시지를 발행함.
 
 매개변수:
 - `transactional`: `true`이면 현재 트랜잭션의 일부, `false`이면 즉시 기록
@@ -6682,7 +6608,7 @@ SELECT pg_logical_emit_message(false, 'myapp', 'checkpoint marker', true);
 pg_sync_replication_slots() → void
 ```
 
-설명: 프라이머리에서 스탠바이로 논리적 페일오버 복제 슬롯을 동기화합니다.
+설명: 프라이머리에서 스탠바이로 논리적 페일오버 복제 슬롯을 동기화함.
 
 주의사항:
 - 스탠바이에서만 실행
@@ -6696,7 +6622,7 @@ pg_sync_replication_slots() → void
 
 ### 6.1 데이터베이스 객체 크기 함수
 
-모든 크기 결과는 바이트 단위입니다. 존재하지 않는 OID에 대해서는 `NULL`을 반환합니다.
+모든 크기 결과는 바이트 단위임. 존재하지 않는 OID에 대해서는 `NULL`을 반환함.
 
 #### pg_column_size()
 
@@ -6704,7 +6630,7 @@ pg_sync_replication_slots() → void
 pg_column_size("any") → integer
 ```
 
-설명: 개별 데이터 값을 저장하는 데 사용된 바이트 수를 반환합니다. 압축이 적용된 경우 이를 반영합니다.
+설명: 개별 데이터 값을 저장하는 데 사용된 바이트 수를 반환함. 압축이 적용된 경우 이를 반영함.
 
 예제:
 ```sql
@@ -6721,7 +6647,7 @@ SELECT pg_column_size(repeat('x', 10000));
 pg_column_compression("any") → text
 ```
 
-설명: 가변 길이 값에 사용된 압축 알고리즘을 반환합니다. 압축되지 않은 경우 `NULL` 반환.
+설명: 가변 길이 값에 사용된 압축 알고리즘을 반환함. 압축되지 않은 경우 `NULL` 반환.
 
 #### pg_database_size()
 
@@ -6729,7 +6655,7 @@ pg_column_compression("any") → text
 pg_database_size(name | oid) → bigint
 ```
 
-설명: 데이터베이스가 사용하는 총 디스크 공간을 반환합니다.
+설명: 데이터베이스가 사용하는 총 디스크 공간을 반환함.
 
 권한: `CONNECT` 권한 또는 `pg_read_all_stats` 역할 필요
 
@@ -6751,7 +6677,7 @@ ORDER BY pg_database_size(datname) DESC;
 pg_table_size(regclass) → bigint
 ```
 
-설명: 테이블이 사용하는 디스크 공간을 반환합니다(인덱스 제외). TOAST 테이블, 자유 공간 맵(FSM), 가시성 맵(VM)을 포함합니다.
+설명: 테이블이 사용하는 디스크 공간을 반환함(인덱스 제외). TOAST 테이블, 자유 공간 맵(FSM), 가시성 맵(VM)을 포함함.
 
 #### pg_indexes_size()
 
@@ -6759,7 +6685,7 @@ pg_table_size(regclass) → bigint
 pg_indexes_size(regclass) → bigint
 ```
 
-설명: 테이블 인덱스가 사용하는 총 디스크 공간을 반환합니다.
+설명: 테이블 인덱스가 사용하는 총 디스크 공간을 반환함.
 
 #### pg_relation_size()
 
@@ -6767,7 +6693,7 @@ pg_indexes_size(regclass) → bigint
 pg_relation_size(relation regclass [, fork text]) → bigint
 ```
 
-설명: 릴레이션 "포크"가 사용하는 디스크 공간을 반환합니다.
+설명: 릴레이션 "포크"가 사용하는 디스크 공간을 반환함.
 
 fork 옵션:
 - `main`: 메인 데이터 포크 (기본값)
@@ -6804,7 +6730,7 @@ SELECT pg_size_pretty(pg_total_relation_size('mytable'));
 pg_tablespace_size(name | oid) → bigint
 ```
 
-설명: 테이블스페이스의 총 디스크 공간을 반환합니다.
+설명: 테이블스페이스의 총 디스크 공간을 반환함.
 
 권한: `CREATE` 권한 또는 `pg_read_all_stats` 역할 필요 (기본 테이블스페이스 제외)
 
@@ -6814,7 +6740,7 @@ pg_tablespace_size(name | oid) → bigint
 pg_size_pretty(bigint | numeric) → text
 ```
 
-설명: 바이트를 사람이 읽기 쉬운 형식으로 변환합니다.
+설명: 바이트를 사람이 읽기 쉬운 형식으로 변환함.
 
 단위: bytes, kB, MB, GB, TB, PB (2의 거듭제곱)
 - 1kB = 1024 bytes
@@ -6834,7 +6760,7 @@ SELECT pg_size_pretty(pg_database_size(current_database()));
 pg_size_bytes(text) → bigint
 ```
 
-설명: 사람이 읽기 쉬운 형식을 바이트로 변환합니다.
+설명: 사람이 읽기 쉬운 형식을 바이트로 변환함.
 
 유효한 단위: bytes, B, kB, MB, GB, TB, PB
 
@@ -6852,9 +6778,9 @@ SELECT pg_size_bytes('1 GB');
 pg_relation_filenode(relation regclass) → oid
 ```
 
-설명: 릴레이션의 파일노드 번호를 반환합니다. 파일 이름의 기본 구성 요소입니다.
+설명: 릴레이션의 파일노드 번호를 반환함. 파일 이름의 기본 구성 요소임.
 
-참고: 보통 `pg_class.relfilenode`와 동일합니다. 저장소가 없는 릴레이션(뷰)은 `NULL` 반환.
+참고: 보통 `pg_class.relfilenode`와 동일함. 저장소가 없는 릴레이션(뷰)은 `NULL` 반환.
 
 #### pg_relation_filepath()
 
@@ -6862,7 +6788,7 @@ pg_relation_filenode(relation regclass) → oid
 pg_relation_filepath(relation regclass) → text
 ```
 
-설명: PGDATA를 기준으로 한 릴레이션의 전체 파일 경로를 반환합니다.
+설명: PGDATA를 기준으로 한 릴레이션의 전체 파일 경로를 반환함.
 
 예제:
 ```sql
@@ -6876,7 +6802,7 @@ SELECT pg_relation_filepath('mytable');
 pg_filenode_relation(tablespace oid, filenode oid) → regclass
 ```
 
-설명: `pg_relation_filepath()`의 역함수입니다.
+설명: `pg_relation_filepath()`의 역함수임.
 
 매개변수:
 - `tablespace`: 테이블스페이스 OID. 기본 테이블스페이스는 `0`
@@ -6886,9 +6812,9 @@ pg_filenode_relation(tablespace oid, filenode oid) → regclass
 
 ### 6.3 통계 조작 함수 (Statistics Manipulation Functions)
 
-경고: 변경 사항은 autovacuum 또는 VACUUM/ANALYZE에 의해 덮어씌워질 수 있습니다. 임시 목적으로만 사용하십시오.
+경고: 변경 사항은 autovacuum 또는 VACUUM/ANALYZE에 의해 덮어씌워질 수 있음. 임시 목적으로만 사용할 것.
 
-복구 중에는 실행할 수 없습니다.
+복구 중에는 실행 불가함.
 
 #### pg_restore_relation_stats()
 
@@ -6896,7 +6822,7 @@ pg_filenode_relation(tablespace oid, filenode oid) → regclass
 pg_restore_relation_stats(VARIADIC kwargs "any") → boolean
 ```
 
-설명: 테이블 수준 통계를 업데이트합니다.
+설명: 테이블 수준 통계를 업데이트함.
 
 필수 인자:
 - `schemaname` (text): 스키마 이름
@@ -6937,7 +6863,7 @@ pg_clear_relation_stats(schemaname text, relname text) → void
 pg_restore_attribute_stats(VARIADIC kwargs "any") → boolean
 ```
 
-설명: 컬럼 수준 통계를 생성/업데이트합니다.
+설명: 컬럼 수준 통계를 생성/업데이트함.
 
 필수 인자:
 - `schemaname` (text): 스키마 이름
@@ -6988,7 +6914,7 @@ pg_partition_tree(regclass) → setof record
   (relid regclass, parentrelid regclass, isleaf boolean, level integer)
 ```
 
-설명: 파티션 트리의 테이블/인덱스 목록을 반환합니다.
+설명: 파티션 트리의 테이블/인덱스 목록을 반환함.
 
 반환 필드:
 - `relid`: 파티션 OID
@@ -7012,7 +6938,7 @@ SELECT * FROM pg_partition_tree('orders');
 pg_partition_ancestors(regclass) → setof regclass
 ```
 
-설명: 자기 자신을 포함한 조상 릴레이션 목록을 반환합니다.
+설명: 자기 자신을 포함한 조상 릴레이션 목록을 반환함.
 
 #### pg_partition_root()
 
@@ -7020,7 +6946,7 @@ pg_partition_ancestors(regclass) → setof regclass
 pg_partition_root(regclass) → regclass
 ```
 
-설명: 파티션 트리의 최상위 부모를 반환합니다.
+설명: 파티션 트리의 최상위 부모를 반환함.
 
 반환값: 파티션/파티션 테이블이 아니면 `NULL`
 
@@ -7028,7 +6954,7 @@ pg_partition_root(regclass) → regclass
 
 ## 7. 인덱스 유지보수 함수 (Index Maintenance Functions)
 
-복구 중에는 실행할 수 없습니다. 슈퍼유저와 인덱스 소유자로 제한됩니다.
+복구 중에는 실행 불가함. 슈퍼유저와 인덱스 소유자로 제한됨.
 
 ### BRIN 인덱스 함수
 
@@ -7038,7 +6964,7 @@ pg_partition_root(regclass) → regclass
 brin_summarize_new_values(index regclass) → integer
 ```
 
-설명: BRIN 인덱스에서 요약되지 않은 페이지 범위를 스캔하고 테이블 페이지를 스캔하여 요약을 생성합니다.
+설명: BRIN 인덱스에서 요약되지 않은 페이지 범위를 스캔하고 테이블 페이지를 스캔하여 요약을 생성함.
 
 반환값: 삽입된 새 요약 수
 
@@ -7054,7 +6980,7 @@ SELECT brin_summarize_new_values('mytable_brin_idx');
 brin_summarize_range(index regclass, blockNumber bigint) → integer
 ```
 
-설명: 지정된 블록을 포함하는 페이지 범위를 요약합니다. 해당 특정 범위만 처리합니다.
+설명: 지정된 블록을 포함하는 페이지 범위를 요약함. 해당 특정 범위만 처리함.
 
 #### brin_desummarize_range()
 
@@ -7062,7 +6988,7 @@ brin_summarize_range(index regclass, blockNumber bigint) → integer
 brin_desummarize_range(index regclass, blockNumber bigint) → void
 ```
 
-설명: 페이지 범위를 요약하는 BRIN 인덱스 튜플을 제거합니다.
+설명: 페이지 범위를 요약하는 BRIN 인덱스 튜플을 제거함.
 
 ### GIN 인덱스 함수
 
@@ -7072,7 +6998,7 @@ brin_desummarize_range(index regclass, blockNumber bigint) → void
 gin_clean_pending_list(index regclass) → bigint
 ```
 
-설명: GIN 인덱스의 "대기 중(pending)" 목록을 정리합니다. 항목을 메인 GIN 구조로 이동합니다.
+설명: GIN 인덱스의 "대기 중(pending)" 목록을 정리함. 항목을 메인 GIN 구조로 이동함.
 
 반환값: 대기 목록에서 제거된 페이지 수. `fastupdate = false`이면 0 반환 (대기 목록 없음)
 
@@ -7086,9 +7012,9 @@ SELECT gin_clean_pending_list('mytable_gin_idx');
 
 ## 8. 일반 파일 접근 함수 (Generic File Access Functions)
 
-클러스터 디렉터리와 `log_directory`로 접근이 제한됩니다. 슈퍼유저 또는 `pg_read_server_files` 역할을 가진 사용자만 사용 가능합니다.
+클러스터 디렉터리와 `log_directory`로 접근이 제한됨. 슈퍼유저 또는 `pg_read_server_files` 역할을 가진 사용자만 사용 가능함.
 
-중요: 이러한 함수는 데이터베이스 내부 권한 검사를 우회합니다. 권한 부여 시 주의하십시오.
+중요: 이러한 함수는 데이터베이스 내부 권한 검사를 우회함. 권한 부여 시 주의할 것.
 
 ### 디렉터리 목록 함수
 
@@ -7101,7 +7027,7 @@ pg_ls_dir(
 ) → setof text
 ```
 
-설명: 디렉터리의 파일, 디렉터리, 특수 파일 목록을 반환합니다.
+설명: 디렉터리의 파일, 디렉터리, 특수 파일 목록을 반환함.
 
 매개변수:
 - `missing_ok`: `true`이면 없을 때 `NULL` 반환 (기본값: 에러)
@@ -7125,9 +7051,9 @@ pg_ls_logdir() → setof record
   (name text, size bigint, modification timestamp with time zone)
 ```
 
-설명: 서버 로그 디렉터리의 파일 목록을 반환합니다.
+설명: 서버 로그 디렉터리의 파일 목록을 반환함.
 
-참고: 점으로 시작하는 파일, 디렉터리, 특수 파일은 제외됩니다.
+참고: 점으로 시작하는 파일, 디렉터리, 특수 파일은 제외됨.
 
 권한: 슈퍼유저 및 `pg_monitor` 역할 (권한 부여 가능)
 
@@ -7138,7 +7064,7 @@ pg_ls_waldir() → setof record
   (name text, size bigint, modification timestamp with time zone)
 ```
 
-설명: WAL 디렉터리의 파일 목록을 반환합니다.
+설명: WAL 디렉터리의 파일 목록을 반환함.
 
 권한: 슈퍼유저 및 `pg_monitor` 역할 (권한 부여 가능)
 
@@ -7155,7 +7081,7 @@ pg_ls_logicalmapdir() → setof record
   (name text, size bigint, modification timestamp with time zone)
 ```
 
-설명: `pg_logical/mappings` 디렉터리의 파일 목록을 반환합니다.
+설명: `pg_logical/mappings` 디렉터리의 파일 목록을 반환함.
 
 #### pg_ls_logicalsnapdir()
 
@@ -7164,7 +7090,7 @@ pg_ls_logicalsnapdir() → setof record
   (name text, size bigint, modification timestamp with time zone)
 ```
 
-설명: `pg_logical/snapshots` 디렉터리의 파일 목록을 반환합니다.
+설명: `pg_logical/snapshots` 디렉터리의 파일 목록을 반환함.
 
 #### pg_ls_replslotdir()
 
@@ -7173,7 +7099,7 @@ pg_ls_replslotdir(slot_name text) → setof record
   (name text, size bigint, modification timestamp with time zone)
 ```
 
-설명: 복제 슬롯 디렉터리의 파일 목록을 반환합니다.
+설명: 복제 슬롯 디렉터리의 파일 목록을 반환함.
 
 #### pg_ls_tmpdir()
 
@@ -7182,7 +7108,7 @@ pg_ls_tmpdir([tablespace oid]) → setof record
   (name text, size bigint, modification timestamp with time zone)
 ```
 
-설명: 테이블스페이스의 임시 디렉터리 파일 목록을 반환합니다.
+설명: 테이블스페이스의 임시 디렉터리 파일 목록을 반환함.
 
 매개변수:
 - `tablespace`: 지정하지 않으면 기본값 `pg_default`
@@ -7199,13 +7125,13 @@ pg_read_file(
 ) → text
 ```
 
-설명: 파일 내용 또는 파일의 일부를 반환합니다.
+설명: 파일 내용 또는 파일의 일부를 반환함.
 
 매개변수:
 - `offset`: 음수이면 파일 끝에서부터의 상대 위치
 - `missing_ok`: `true`이면 없을 때 `NULL` 반환
 
-참고: 파일 내용을 데이터베이스 인코딩 문자열로 해석합니다. 유효하지 않은 인코딩이면 오류가 발생합니다.
+참고: 파일 내용을 데이터베이스 인코딩 문자열로 해석함. 유효하지 않은 인코딩이면 오류가 발생함.
 
 권한: 슈퍼유저 (권한 부여 가능)
 
@@ -7228,7 +7154,7 @@ pg_read_binary_file(
 ) → bytea
 ```
 
-설명: `pg_read_file()`과 같지만 `bytea`로 반환합니다. 인코딩 검사 없음.
+설명: `pg_read_file()`과 같지만 `bytea`로 반환함. 인코딩 검사 없음.
 
 권한: 슈퍼유저 (권한 부여 가능)
 
@@ -7247,7 +7173,7 @@ pg_stat_file(filename text [, missing_ok boolean]) → record
    creation timestamp with time zone, isdir boolean)
 ```
 
-설명: 파일 메타데이터를 반환합니다.
+설명: 파일 메타데이터를 반환함.
 
 반환 필드:
 - `size`: 파일 크기
@@ -7268,7 +7194,7 @@ SELECT * FROM pg_stat_file('postgresql.conf');
 
 ## 9. 권고 잠금 함수 (Advisory Lock Functions)
 
-권고 잠금(Advisory Lock)은 애플리케이션 정의 리소스 잠금을 관리합니다. 64비트 키 또는 두 개의 32비트 키(겹치지 않는 공간)로 식별됩니다.
+권고 잠금(Advisory Lock)은 애플리케이션 정의 리소스 잠금을 관리함. 64비트 키 또는 두 개의 32비트 키(겹치지 않는 공간)로 식별됨.
 
 ### 잠금 유형
 
@@ -7288,7 +7214,7 @@ SELECT * FROM pg_stat_file('postgresql.conf');
 pg_advisory_lock(key bigint | key1 integer, key2 integer) → void
 ```
 
-설명: 배타적 세션 수준 잠금을 획득합니다. 필요시 대기합니다.
+설명: 배타적 세션 수준 잠금을 획득함. 필요시 대기함.
 
 예제:
 ```sql
@@ -7305,7 +7231,7 @@ SELECT pg_advisory_lock(1, 2);
 pg_try_advisory_lock(key bigint | key1 integer, key2 integer) → boolean
 ```
 
-설명: 가능하면 배타적 세션 수준 잠금을 획득합니다.
+설명: 가능하면 배타적 세션 수준 잠금을 획득함.
 
 반환값: 획득 시 즉시 `true`, 불가능 시 대기 없이 `false`
 
@@ -7325,7 +7251,7 @@ END IF;
 pg_advisory_lock_shared(key bigint | key1 integer, key2 integer) → void
 ```
 
-설명: 공유 세션 수준 잠금을 획득합니다. 필요시 대기합니다.
+설명: 공유 세션 수준 잠금을 획득함. 필요시 대기함.
 
 #### pg_try_advisory_lock_shared()
 
@@ -7333,7 +7259,7 @@ pg_advisory_lock_shared(key bigint | key1 integer, key2 integer) → void
 pg_try_advisory_lock_shared(key bigint | key1 integer, key2 integer) → boolean
 ```
 
-설명: 가능하면 공유 세션 수준 잠금을 획득합니다.
+설명: 가능하면 공유 세션 수준 잠금을 획득함.
 
 반환값: 획득 시 즉시 `true`, 불가능 시 대기 없이 `false`
 
@@ -7345,7 +7271,7 @@ pg_try_advisory_lock_shared(key bigint | key1 integer, key2 integer) → boolean
 pg_advisory_unlock(key bigint | key1 integer, key2 integer) → boolean
 ```
 
-설명: 배타적 세션 수준 잠금을 해제합니다.
+설명: 배타적 세션 수준 잠금을 해제함.
 
 반환값: 성공적으로 해제되면 `true`, 잠금이 없으면 `false` (SQL 경고 보고)
 
@@ -7355,7 +7281,7 @@ pg_advisory_unlock(key bigint | key1 integer, key2 integer) → boolean
 pg_advisory_unlock_shared(key bigint | key1 integer, key2 integer) → boolean
 ```
 
-설명: 공유 세션 수준 잠금을 해제합니다.
+설명: 공유 세션 수준 잠금을 해제함.
 
 반환값: 성공적으로 해제되면 `true`, 잠금이 없으면 `false` (SQL 경고 보고)
 
@@ -7365,9 +7291,9 @@ pg_advisory_unlock_shared(key bigint | key1 integer, key2 integer) → boolean
 pg_advisory_unlock_all() → void
 ```
 
-설명: 현재 세션이 보유한 모든 세션 수준 잠금을 해제합니다.
+설명: 현재 세션이 보유한 모든 세션 수준 잠금을 해제함.
 
-참고: 세션 종료 시 자동으로 호출됩니다 (비정상 종료 포함).
+참고: 세션 종료 시 자동으로 호출됨 (비정상 종료 포함).
 
 ### 트랜잭션 수준 잠금
 
@@ -7377,7 +7303,7 @@ pg_advisory_unlock_all() → void
 pg_advisory_xact_lock(key bigint | key1 integer, key2 integer) → void
 ```
 
-설명: 배타적 트랜잭션 수준 잠금을 획득합니다. 필요시 대기합니다. 트랜잭션 종료 시 해제됩니다.
+설명: 배타적 트랜잭션 수준 잠금을 획득함. 필요시 대기함. 트랜잭션 종료 시 해제됨.
 
 예제:
 ```sql
@@ -7393,7 +7319,7 @@ COMMIT; -- 자동으로 잠금 해제
 pg_try_advisory_xact_lock(key bigint | key1 integer, key2 integer) → boolean
 ```
 
-설명: 가능하면 배타적 트랜잭션 수준 잠금을 획득합니다.
+설명: 가능하면 배타적 트랜잭션 수준 잠금을 획득함.
 
 반환값: 획득 시 즉시 `true`, 불가능 시 대기 없이 `false`
 
@@ -7403,7 +7329,7 @@ pg_try_advisory_xact_lock(key bigint | key1 integer, key2 integer) → boolean
 pg_advisory_xact_lock_shared(key bigint | key1 integer, key2 integer) → void
 ```
 
-설명: 공유 트랜잭션 수준 잠금을 획득합니다. 필요시 대기합니다. 트랜잭션 종료 시 해제됩니다.
+설명: 공유 트랜잭션 수준 잠금을 획득함. 필요시 대기함. 트랜잭션 종료 시 해제됨.
 
 #### pg_try_advisory_xact_lock_shared()
 
@@ -7411,7 +7337,7 @@ pg_advisory_xact_lock_shared(key bigint | key1 integer, key2 integer) → void
 pg_try_advisory_xact_lock_shared(key bigint | key1 integer, key2 integer) → boolean
 ```
 
-설명: 가능하면 공유 트랜잭션 수준 잠금을 획득합니다.
+설명: 가능하면 공유 트랜잭션 수준 잠금을 획득함.
 
 반환값: 획득 시 즉시 `true`, 불가능 시 대기 없이 `false`
 
@@ -7454,7 +7380,7 @@ COMMIT; -- 잠금 자동 해제
 
 ## 10. 세션 정보 함수 (Session Information Functions)
 
-세션 및 시스템 정보를 조회하는 함수들입니다.
+세션 및 시스템 정보를 조회하는 함수들임.
 
 ### 기본 세션 정보
 
@@ -7465,7 +7391,7 @@ current_database() → name
 current_catalog → name
 ```
 
-설명: 현재 데이터베이스 이름을 반환합니다.
+설명: 현재 데이터베이스 이름을 반환함.
 
 #### current_user / session_user / user
 
@@ -7479,7 +7405,7 @@ user → name
 - `current_user` / `user`: 현재 실행 컨텍스트의 사용자 이름
 - `session_user`: 세션 사용자 이름
 
-참고: `current_role`은 `current_user`의 동의어입니다.
+참고: `current_role`은 `current_user`의 동의어임.
 
 #### current_schema / current_schemas()
 
@@ -7512,7 +7438,7 @@ inet_client_addr() → inet
 inet_client_port() → integer
 ```
 
-설명: 현재 클라이언트의 IP 주소와 포트를 반환합니다.
+설명: 현재 클라이언트의 IP 주소와 포트를 반환함.
 
 #### inet_server_addr() / inet_server_port()
 
@@ -7521,7 +7447,7 @@ inet_server_addr() → inet
 inet_server_port() → integer
 ```
 
-설명: 현재 연결에서 서버의 IP 주소와 포트를 반환합니다.
+설명: 현재 연결에서 서버의 IP 주소와 포트를 반환함.
 
 예제:
 ```sql
@@ -7540,7 +7466,7 @@ SELECT inet_server_addr(), inet_server_port();
 pg_backend_pid() → integer
 ```
 
-설명: 세션에 연결된 서버 프로세스의 PID를 반환합니다.
+설명: 세션에 연결된 서버 프로세스의 PID를 반환함.
 
 #### pg_blocking_pids()
 
@@ -7548,7 +7474,7 @@ pg_backend_pid() → integer
 pg_blocking_pids(pid integer) → integer[]
 ```
 
-설명: 지정된 프로세스를 차단하는 프로세스 ID 배열을 반환합니다.
+설명: 지정된 프로세스를 차단하는 프로세스 ID 배열을 반환함.
 
 예제:
 ```sql
@@ -7564,7 +7490,7 @@ WHERE cardinality(pg_blocking_pids(pid)) > 0;
 pg_conf_load_time() → timestamp with time zone
 ```
 
-설명: 설정 파일이 마지막으로 로드된 시간을 반환합니다.
+설명: 설정 파일이 마지막으로 로드된 시간을 반환함.
 
 #### pg_postmaster_start_time()
 
@@ -7572,7 +7498,7 @@ pg_conf_load_time() → timestamp with time zone
 pg_postmaster_start_time() → timestamp with time zone
 ```
 
-설명: 서버 시작 시간을 반환합니다.
+설명: 서버 시작 시간을 반환함.
 
 예제:
 ```sql
@@ -7586,7 +7512,7 @@ SELECT now() - pg_postmaster_start_time() AS uptime;
 pg_current_logfile([text]) → text
 ```
 
-설명: 현재 로그 파일의 경로를 반환합니다.
+설명: 현재 로그 파일의 경로를 반환함.
 
 #### pg_listening_channels()
 
@@ -7594,7 +7520,7 @@ pg_current_logfile([text]) → text
 pg_listening_channels() → setof text
 ```
 
-설명: 세션이 수신 대기 중인 알림 채널 집합을 반환합니다.
+설명: 세션이 수신 대기 중인 알림 채널 집합을 반환함.
 
 #### pg_notification_queue_usage()
 
@@ -7602,7 +7528,7 @@ pg_listening_channels() → setof text
 pg_notification_queue_usage() → double precision
 ```
 
-설명: 알림 큐가 차지하는 비율(0-1)을 반환합니다.
+설명: 알림 큐가 차지하는 비율(0-1)을 반환함.
 
 ---
 
@@ -7616,7 +7542,7 @@ pg_notification_queue_usage() → double precision
 pg_current_xact_id() → xid8
 ```
 
-설명: 현재 트랜잭션 ID를 반환합니다.
+설명: 현재 트랜잭션 ID를 반환함.
 
 #### pg_current_xact_id_if_assigned()
 
@@ -7624,7 +7550,7 @@ pg_current_xact_id() → xid8
 pg_current_xact_id_if_assigned() → xid8
 ```
 
-설명: 트랜잭션 ID가 할당된 경우 해당 ID를 반환하고, 없으면 `NULL`을 반환합니다.
+설명: 트랜잭션 ID가 할당된 경우 해당 ID를 반환하고, 없으면 `NULL`을 반환함.
 
 #### pg_xact_status()
 
@@ -7632,7 +7558,7 @@ pg_current_xact_id_if_assigned() → xid8
 pg_xact_status(xid8) → text
 ```
 
-설명: 커밋 상태를 반환합니다.
+설명: 커밋 상태를 반환함.
 
 반환값: `'in progress'`, `'committed'`, `'aborted'`, 또는 `NULL`
 
@@ -7648,7 +7574,7 @@ SELECT pg_xact_status(pg_current_xact_id());
 age(xid) → integer
 ```
 
-설명: 주어진 XID 이후의 트랜잭션 수를 반환합니다.
+설명: 주어진 XID 이후의 트랜잭션 수를 반환함.
 
 예제:
 ```sql
@@ -7668,7 +7594,7 @@ LIMIT 10;
 pg_current_snapshot() → pg_snapshot
 ```
 
-설명: 현재 스냅샷을 반환합니다 (`xmin:xmax:xip_list` 형식).
+설명: 현재 스냅샷을 반환함 (`xmin:xmax:xip_list` 형식).
 
 스냅샷 구성 요소:
 - `xmin`: 가장 낮은 활성 트랜잭션 ID
@@ -7681,7 +7607,7 @@ pg_current_snapshot() → pg_snapshot
 pg_snapshot_xip(pg_snapshot) → setof xid8
 ```
 
-설명: 스냅샷에서 진행 중인 XID들을 반환합니다.
+설명: 스냅샷에서 진행 중인 XID들을 반환함.
 
 #### pg_snapshot_xmax()
 
@@ -7689,7 +7615,7 @@ pg_snapshot_xip(pg_snapshot) → setof xid8
 pg_snapshot_xmax(pg_snapshot) → xid8
 ```
 
-설명: 스냅샷에서 xmax를 반환합니다.
+설명: 스냅샷에서 xmax를 반환함.
 
 #### pg_snapshot_xmin()
 
@@ -7697,7 +7623,7 @@ pg_snapshot_xmax(pg_snapshot) → xid8
 pg_snapshot_xmin(pg_snapshot) → xid8
 ```
 
-설명: 스냅샷에서 xmin을 반환합니다.
+설명: 스냅샷에서 xmin을 반환함.
 
 #### pg_visible_in_snapshot()
 
@@ -7705,13 +7631,13 @@ pg_snapshot_xmin(pg_snapshot) → xid8
 pg_visible_in_snapshot(xid8, pg_snapshot) → boolean
 ```
 
-설명: 트랜잭션이 스냅샷에서 보이는지 여부를 반환합니다.
+설명: 트랜잭션이 스냅샷에서 보이는지 여부를 반환함.
 
 ---
 
 ## 12. 제어 데이터 함수 (Control Data Functions)
 
-클러스터 전체 정보를 반환합니다(`pg_controldata` 유틸리티와 유사한 정보).
+클러스터 전체 정보를 반환함(`pg_controldata` 유틸리티와 유사한 정보).
 
 ### pg_control_checkpoint()
 
@@ -7719,7 +7645,7 @@ pg_visible_in_snapshot(xid8, pg_snapshot) → boolean
 pg_control_checkpoint() → record
 ```
 
-설명: 체크포인트 상태를 반환합니다.
+설명: 체크포인트 상태를 반환함.
 
 반환 필드:
 - `checkpoint_lsn`, `redo_lsn` (pg_lsn)
@@ -7743,7 +7669,7 @@ SELECT * FROM pg_control_checkpoint();
 pg_control_system() → record
 ```
 
-설명: 제어 파일 상태를 반환합니다.
+설명: 제어 파일 상태를 반환함.
 
 반환 필드:
 - `pg_control_version`, `catalog_version_no` (integer)
@@ -7756,7 +7682,7 @@ pg_control_system() → record
 pg_control_init() → record
 ```
 
-설명: 클러스터 초기화 상태를 반환합니다.
+설명: 클러스터 초기화 상태를 반환함.
 
 반환 필드:
 - `max_data_alignment`, `database_block_size`, `blocks_per_segment` (integer)
@@ -7772,7 +7698,7 @@ pg_control_init() → record
 pg_control_recovery() → record
 ```
 
-설명: 복구 상태를 반환합니다.
+설명: 복구 상태를 반환함.
 
 반환 필드:
 - `min_recovery_end_lsn`, `backup_start_lsn`, `backup_end_lsn` (pg_lsn)
@@ -7789,7 +7715,7 @@ pg_control_recovery() → record
 version() → text
 ```
 
-설명: PostgreSQL 서버 버전 문자열을 반환합니다.
+설명: PostgreSQL 서버 버전 문자열을 반환함.
 
 예제:
 ```sql
@@ -7803,7 +7729,7 @@ SELECT version();
 unicode_version() → text
 ```
 
-설명: PostgreSQL에서 사용하는 Unicode 버전을 반환합니다.
+설명: PostgreSQL에서 사용하는 Unicode 버전을 반환함.
 
 ### icu_unicode_version()
 
@@ -7811,28 +7737,53 @@ unicode_version() → text
 icu_unicode_version() → text
 ```
 
-설명: ICU Unicode 버전을 반환합니다. ICU 지원이 없으면 `NULL` 반환.
+설명: ICU Unicode 버전을 반환함. ICU 지원이 없으면 `NULL` 반환.
 
 ---
 
 ## 요약 (Summary)
 
-| 카테고리 | 주요 함수 | 개수 |
-|----------|----------|------|
-| 서버 신호 (Server Signaling) | `pg_cancel_backend`, `pg_terminate_backend`, `pg_log_backend_memory_contexts`, `pg_reload_conf`, `pg_rotate_logfile` | 5 |
-| 백업 제어 (Backup Control) | `pg_backup_start`, `pg_backup_stop`, `pg_create_restore_point`, WAL 위치 함수 | 12 |
-| 복구 제어 (Recovery Control) | 복구 정보 (5) + 제어 (5) | 10 |
-| 스냅샷 (Snapshots) | `pg_export_snapshot`, `pg_log_standby_snapshot` | 2 |
-| 복제 (Replication) | 물리적 슬롯 (3) + 논리적 슬롯 (4) + 디코딩 (4) + 원점 (9) + 메시지 (1) + 동기화 (1) | 22 |
-| DB 객체 (DB Objects) | 크기 (9) + 위치 (3) + 통계 (4) + 파티셔닝 (3) | 19 |
-| 인덱스 유지보수 (Index Maintenance) | BRIN (3) + GIN (1) | 4 |
-| 파일 접근 (File Access) | 디렉터리 (9) + 읽기 (3) | 12 |
-| 권고 잠금 (Advisory Locks) | 세션 배타 (2) + 세션 공유 (2) + 해제 (3) + 트랜잭션 배타 (2) + 트랜잭션 공유 (2) | 11 |
-| 세션 정보 (Session Info) | 기본 (10) + 네트워크 (4) + 프로세스 (6) | 20 |
-| 트랜잭션/스냅샷 (Txn/Snapshot) | 트랜잭션 ID (4) + 스냅샷 (6) | 10 |
-| 제어 데이터 (Control Data) | `pg_control_*` 함수들 | 4 |
-| 버전 정보 (Version) | `version`, `unicode_version`, `icu_unicode_version` | 3 |
-| 총계 | | 134 |
+- 서버 신호 (Server Signaling)
+  - 주요 함수: `pg_cancel_backend`, `pg_terminate_backend`, `pg_log_backend_memory_contexts`, `pg_reload_conf`, `pg_rotate_logfile`
+  - 개수: 5
+- 백업 제어 (Backup Control)
+  - 주요 함수: `pg_backup_start`, `pg_backup_stop`, `pg_create_restore_point`, WAL 위치 함수
+  - 개수: 12
+- 복구 제어 (Recovery Control)
+  - 주요 함수: 복구 정보 (5) + 제어 (5)
+  - 개수: 10
+- 스냅샷 (Snapshots)
+  - 주요 함수: `pg_export_snapshot`, `pg_log_standby_snapshot`
+  - 개수: 2
+- 복제 (Replication)
+  - 주요 함수: 물리적 슬롯 (3) + 논리적 슬롯 (4) + 디코딩 (4) + 원점 (9) + 메시지 (1) + 동기화 (1)
+  - 개수: 22
+- DB 객체 (DB Objects)
+  - 주요 함수: 크기 (9) + 위치 (3) + 통계 (4) + 파티셔닝 (3)
+  - 개수: 19
+- 인덱스 유지보수 (Index Maintenance)
+  - 주요 함수: BRIN (3) + GIN (1)
+  - 개수: 4
+- 파일 접근 (File Access)
+  - 주요 함수: 디렉터리 (9) + 읽기 (3)
+  - 개수: 12
+- 권고 잠금 (Advisory Locks)
+  - 주요 함수: 세션 배타 (2) + 세션 공유 (2) + 해제 (3) + 트랜잭션 배타 (2) + 트랜잭션 공유 (2)
+  - 개수: 11
+- 세션 정보 (Session Info)
+  - 주요 함수: 기본 (10) + 네트워크 (4) + 프로세스 (6)
+  - 개수: 20
+- 트랜잭션/스냅샷 (Txn/Snapshot)
+  - 주요 함수: 트랜잭션 ID (4) + 스냅샷 (6)
+  - 개수: 10
+- 제어 데이터 (Control Data)
+  - 주요 함수: `pg_control_*` 함수들
+  - 개수: 4
+- 버전 정보 (Version)
+  - 주요 함수: `version`, `unicode_version`, `icu_unicode_version`
+  - 개수: 3
+- 총계
+  - 개수: 134
 
 ---
 
@@ -7849,7 +7800,7 @@ icu_unicode_version() → text
 
 ### 개요
 
-PostgreSQL 서버가 내보내는 모든 메시지에는 5자리 오류 코드가 부여되며, 이는 SQL 표준의 "SQLSTATE" 코드 규약을 따릅니다. 특정 오류 조건을 감지해야 하는 애플리케이션은 텍스트 오류 메시지 대신 오류 코드를 기준으로 판단해야 합니다. 오류 코드는 PostgreSQL 릴리스 간에 변경될 가능성이 낮고, 서버 오류 메시지의 지역화(localization)에 영향을 받지 않습니다.
+PostgreSQL 서버가 내보내는 모든 메시지에는 5자리 오류 코드가 부여되며, 이는 SQL 표준의 "SQLSTATE" 코드 규약을 따릅니다. 특정 오류 조건을 감지해야 하는 애플리케이션은 텍스트 오류 메시지 대신 오류 코드를 기준으로 판단 필요함. 오류 코드는 PostgreSQL 릴리스 간에 변경될 가능성이 낮고, 서버 오류 메시지의 지역화(localization)에 영향을 받지 않음.
 
 ---
 
@@ -7857,7 +7808,7 @@ PostgreSQL 서버가 내보내는 모든 메시지에는 5자리 오류 코드�
 
 #### 코드 구조
 
-SQLSTATE 코드는 5자리 문자열로 구성됩니다:
+SQLSTATE 코드는 5자리 문자열로 구성됨:
 
 - 처음 2자리: 오류 클래스(Error Class)를 나타냅니다
 - 나머지 3자리: 해당 클래스 내의 특정 조건(Specific Condition)을 나타냅니다
@@ -7868,10 +7819,8 @@ SQLSTATE 코드는 5자리 문자열로 구성됩니다:
 
 #### 코드 분류
 
-| 코드 패턴 | 의미 |
-|-----------|------|
-| `XX000` | 클래스 내 정의되지 않은 오류 |
-| `XXPXX` | PostgreSQL 전용 오류 코드 (P 포함) |
+- `XX000`: 클래스 내 정의되지 않은 오류
+- `XXPXX`: PostgreSQL 전용 오류 코드 (P 포함)
 
 ```sql
 -- 오류 코드 확인 예제
@@ -7893,55 +7842,83 @@ $$;
 
 #### Class 00 - 성공적 완료 (Successful Completion)
 
-| SQLSTATE | 조건명 (Condition Name) | 설명 |
-|----------|------------------------|------|
-| `00000` | `successful_completion` | 작업이 성공적으로 완료됨 |
+- `00000`
+  - 조건명 (Condition Name): `successful_completion`
+  - 설명: 작업이 성공적으로 완료됨
 
 ---
 
 #### Class 01 - 경고 (Warning)
 
-| SQLSTATE | 조건명 (Condition Name) | 설명 |
-|----------|------------------------|------|
-| `01000` | `warning` | 일반 경고 |
-| `0100C` | `dynamic_result_sets_returned` | 동적 결과 집합이 반환됨 |
-| `01008` | `implicit_zero_bit_padding` | 암시적 제로 비트 패딩 |
-| `01003` | `null_value_eliminated_in_set_function` | 집합 함수에서 NULL 값이 제거됨 |
-| `01007` | `privilege_not_granted` | 권한이 부여되지 않음 |
-| `01006` | `privilege_not_revoked` | 권한이 취소되지 않음 |
-| `01004` | `string_data_right_truncation` | 문자열 데이터 오른쪽 잘림 |
-| `01P01` | `deprecated_feature` | 더 이상 사용되지 않는 기능 |
+- `01000`
+  - 조건명 (Condition Name): `warning`
+  - 설명: 일반 경고
+- `0100C`
+  - 조건명 (Condition Name): `dynamic_result_sets_returned`
+  - 설명: 동적 결과 집합이 반환됨
+- `01008`
+  - 조건명 (Condition Name): `implicit_zero_bit_padding`
+  - 설명: 암시적 제로 비트 패딩
+- `01003`
+  - 조건명 (Condition Name): `null_value_eliminated_in_set_function`
+  - 설명: 집합 함수에서 NULL 값이 제거됨
+- `01007`
+  - 조건명 (Condition Name): `privilege_not_granted`
+  - 설명: 권한이 부여되지 않음
+- `01006`
+  - 조건명 (Condition Name): `privilege_not_revoked`
+  - 설명: 권한이 취소되지 않음
+- `01004`
+  - 조건명 (Condition Name): `string_data_right_truncation`
+  - 설명: 문자열 데이터 오른쪽 잘림
+- `01P01`
+  - 조건명 (Condition Name): `deprecated_feature`
+  - 설명: 더 이상 사용되지 않는 기능
 
 ---
 
 #### Class 02 - 데이터 없음 (No Data)
 
-| SQLSTATE | 조건명 (Condition Name) | 설명 |
-|----------|------------------------|------|
-| `02000` | `no_data` | 데이터 없음 |
-| `02001` | `no_additional_dynamic_result_sets_returned` | 추가 동적 결과 집합이 반환되지 않음 |
+- `02000`
+  - 조건명 (Condition Name): `no_data`
+  - 설명: 데이터 없음
+- `02001`
+  - 조건명 (Condition Name): `no_additional_dynamic_result_sets_returned`
+  - 설명: 추가 동적 결과 집합이 반환되지 않음
 
 ---
 
 #### Class 03 - SQL 문 미완료 (SQL Statement Not Yet Complete)
 
-| SQLSTATE | 조건명 (Condition Name) | 설명 |
-|----------|------------------------|------|
-| `03000` | `sql_statement_not_yet_complete` | SQL 문이 아직 완료되지 않음 |
+- `03000`
+  - 조건명 (Condition Name): `sql_statement_not_yet_complete`
+  - 설명: SQL 문이 아직 완료되지 않음
 
 ---
 
 #### Class 08 - 연결 예외 (Connection Exception)
 
-| SQLSTATE | 조건명 (Condition Name) | 설명 |
-|----------|------------------------|------|
-| `08000` | `connection_exception` | 연결 예외 |
-| `08003` | `connection_does_not_exist` | 연결이 존재하지 않음 |
-| `08006` | `connection_failure` | 연결 실패 |
-| `08001` | `sqlclient_unable_to_establish_sqlconnection` | SQL 클라이언트가 SQL 연결을 설정할 수 없음 |
-| `08004` | `sqlserver_rejected_establishment_of_sqlconnection` | SQL 서버가 SQL 연결 설정을 거부함 |
-| `08007` | `transaction_resolution_unknown` | 트랜잭션 해결 상태 알 수 없음 |
-| `08P01` | `protocol_violation` | 프로토콜 위반 |
+- `08000`
+  - 조건명 (Condition Name): `connection_exception`
+  - 설명: 연결 예외
+- `08003`
+  - 조건명 (Condition Name): `connection_does_not_exist`
+  - 설명: 연결이 존재하지 않음
+- `08006`
+  - 조건명 (Condition Name): `connection_failure`
+  - 설명: 연결 실패
+- `08001`
+  - 조건명 (Condition Name): `sqlclient_unable_to_establish_sqlconnection`
+  - 설명: SQL 클라이언트가 SQL 연결을 설정할 수 없음
+- `08004`
+  - 조건명 (Condition Name): `sqlserver_rejected_establishment_of_sqlconnection`
+  - 설명: SQL 서버가 SQL 연결 설정을 거부함
+- `08007`
+  - 조건명 (Condition Name): `transaction_resolution_unknown`
+  - 설명: 트랜잭션 해결 상태 알 수 없음
+- `08P01`
+  - 조건명 (Condition Name): `protocol_violation`
+  - 설명: 프로토콜 위반
 
 ```sql
 -- 연결 오류 처리 예제 (PL/pgSQL)
@@ -7961,17 +7938,17 @@ $$;
 
 #### Class 09 - 트리거 동작 예외 (Triggered Action Exception)
 
-| SQLSTATE | 조건명 (Condition Name) | 설명 |
-|----------|------------------------|------|
-| `09000` | `triggered_action_exception` | 트리거 동작 예외 |
+- `09000`
+  - 조건명 (Condition Name): `triggered_action_exception`
+  - 설명: 트리거 동작 예외
 
 ---
 
 #### Class 0A - 지원되지 않는 기능 (Feature Not Supported)
 
-| SQLSTATE | 조건명 (Condition Name) | 설명 |
-|----------|------------------------|------|
-| `0A000` | `feature_not_supported` | 기능이 지원되지 않음 |
+- `0A000`
+  - 조건명 (Condition Name): `feature_not_supported`
+  - 설명: 기능이 지원되지 않음
 
 ```sql
 -- 지원되지 않는 기능 예제
@@ -7990,60 +7967,66 @@ $$;
 
 #### Class 0B - 잘못된 트랜잭션 시작 (Invalid Transaction Initiation)
 
-| SQLSTATE | 조건명 (Condition Name) | 설명 |
-|----------|------------------------|------|
-| `0B000` | `invalid_transaction_initiation` | 잘못된 트랜잭션 시작 |
+- `0B000`
+  - 조건명 (Condition Name): `invalid_transaction_initiation`
+  - 설명: 잘못된 트랜잭션 시작
 
 ---
 
 #### Class 0F - 로케이터 예외 (Locator Exception)
 
-| SQLSTATE | 조건명 (Condition Name) | 설명 |
-|----------|------------------------|------|
-| `0F000` | `locator_exception` | 로케이터 예외 |
-| `0F001` | `invalid_locator_specification` | 잘못된 로케이터 지정 |
+- `0F000`
+  - 조건명 (Condition Name): `locator_exception`
+  - 설명: 로케이터 예외
+- `0F001`
+  - 조건명 (Condition Name): `invalid_locator_specification`
+  - 설명: 잘못된 로케이터 지정
 
 ---
 
 #### Class 0L - 잘못된 권한 부여자 (Invalid Grantor)
 
-| SQLSTATE | 조건명 (Condition Name) | 설명 |
-|----------|------------------------|------|
-| `0L000` | `invalid_grantor` | 잘못된 권한 부여자 |
-| `0LP01` | `invalid_grant_operation` | 잘못된 권한 부여 작업 |
+- `0L000`
+  - 조건명 (Condition Name): `invalid_grantor`
+  - 설명: 잘못된 권한 부여자
+- `0LP01`
+  - 조건명 (Condition Name): `invalid_grant_operation`
+  - 설명: 잘못된 권한 부여 작업
 
 ---
 
 #### Class 0P - 잘못된 역할 지정 (Invalid Role Specification)
 
-| SQLSTATE | 조건명 (Condition Name) | 설명 |
-|----------|------------------------|------|
-| `0P000` | `invalid_role_specification` | 잘못된 역할 지정 |
+- `0P000`
+  - 조건명 (Condition Name): `invalid_role_specification`
+  - 설명: 잘못된 역할 지정
 
 ---
 
 #### Class 0Z - 진단 예외 (Diagnostics Exception)
 
-| SQLSTATE | 조건명 (Condition Name) | 설명 |
-|----------|------------------------|------|
-| `0Z000` | `diagnostics_exception` | 진단 예외 |
-| `0Z002` | `stacked_diagnostics_accessed_without_active_handler` | 활성 핸들러 없이 스택 진단에 접근함 |
+- `0Z000`
+  - 조건명 (Condition Name): `diagnostics_exception`
+  - 설명: 진단 예외
+- `0Z002`
+  - 조건명 (Condition Name): `stacked_diagnostics_accessed_without_active_handler`
+  - 설명: 활성 핸들러 없이 스택 진단에 접근함
 
 ---
 
 #### Class 10 - XQuery 오류 (XQuery Error)
 
-| SQLSTATE | 조건명 (Condition Name) | 설명 |
-|----------|------------------------|------|
-| `10608` | `invalid_argument_for_xquery` | XQuery에 대한 잘못된 인수 |
+- `10608`
+  - 조건명 (Condition Name): `invalid_argument_for_xquery`
+  - 설명: XQuery에 대한 잘못된 인수
 
 ---
 
 #### Class 20 - Case를 찾을 수 없음 (Case Not Found)
 
-| SQLSTATE | 조건명 (Condition Name) | 설명 |
-|----------|------------------------|------|
-| `20000` | `case_not_found` | CASE 문에서 일치하는 조건을 찾을 수 없음 |
+- `20000`
+  - 조건명 (Condition Name): `case_not_found`
+  - 설명: CASE 문에서 일치하는 조건을 찾을 수 없음
 
 ```sql
 -- CASE NOT FOUND 예제
@@ -8067,9 +8050,9 @@ $$ LANGUAGE plpgsql;
 
 #### Class 21 - 카디널리티 위반 (Cardinality Violation)
 
-| SQLSTATE | 조건명 (Condition Name) | 설명 |
-|----------|------------------------|------|
-| `21000` | `cardinality_violation` | 카디널리티 위반 (서브쿼리가 여러 행 반환) |
+- `21000`
+  - 조건명 (Condition Name): `cardinality_violation`
+  - 설명: 카디널리티 위반 (서브쿼리가 여러 행 반환)
 
 ```sql
 -- 카디널리티 위반 예제
@@ -8092,83 +8075,215 @@ $$;
 
 #### Class 22 - 데이터 예외 (Data Exception)
 
-데이터 처리 과정에서 발생하는 다양한 오류를 포함합니다.
+데이터 처리 과정에서 발생하는 다양한 오류를 포함함.
 
-| SQLSTATE | 조건명 (Condition Name) | 설명 |
-|----------|------------------------|------|
-| `22000` | `data_exception` | 데이터 예외 |
-| `2202E` | `array_subscript_error` | 배열 첨자 오류 |
-| `22021` | `character_not_in_repertoire` | 문자가 레퍼토리에 없음 |
-| `22008` | `datetime_field_overflow` | 날짜/시간 필드 오버플로우 |
-| `22012` | `division_by_zero` | 0으로 나누기 |
-| `22005` | `error_in_assignment` | 할당 오류 |
-| `2200B` | `escape_character_conflict` | 이스케이프 문자 충돌 |
-| `22022` | `indicator_overflow` | 지시자 오버플로우 |
-| `22015` | `interval_field_overflow` | 간격 필드 오버플로우 |
-| `2201E` | `invalid_argument_for_logarithm` | 로그 함수에 대한 잘못된 인수 |
-| `22014` | `invalid_argument_for_ntile_function` | NTILE 함수에 대한 잘못된 인수 |
-| `22016` | `invalid_argument_for_nth_value_function` | NTH_VALUE 함수에 대한 잘못된 인수 |
-| `2201F` | `invalid_argument_for_power_function` | 거듭제곱 함수에 대한 잘못된 인수 |
-| `2201G` | `invalid_argument_for_width_bucket_function` | WIDTH_BUCKET 함수에 대한 잘못된 인수 |
-| `22018` | `invalid_character_value_for_cast` | 캐스트에 대한 잘못된 문자 값 |
-| `22007` | `invalid_datetime_format` | 잘못된 날짜/시간 형식 |
-| `22019` | `invalid_escape_character` | 잘못된 이스케이프 문자 |
-| `2200D` | `invalid_escape_octet` | 잘못된 이스케이프 옥텟 |
-| `22025` | `invalid_escape_sequence` | 잘못된 이스케이프 시퀀스 |
-| `22P06` | `nonstandard_use_of_escape_character` | 비표준 이스케이프 문자 사용 |
-| `22010` | `invalid_indicator_parameter_value` | 잘못된 지시자 매개변수 값 |
-| `22023` | `invalid_parameter_value` | 잘못된 매개변수 값 |
-| `22013` | `invalid_preceding_or_following_size` | 잘못된 PRECEDING 또는 FOLLOWING 크기 |
-| `2201B` | `invalid_regular_expression` | 잘못된 정규 표현식 |
-| `2201W` | `invalid_row_count_in_limit_clause` | LIMIT 절의 잘못된 행 수 |
-| `2201X` | `invalid_row_count_in_result_offset_clause` | 결과 오프셋 절의 잘못된 행 수 |
-| `2202H` | `invalid_tablesample_argument` | 잘못된 TABLESAMPLE 인수 |
-| `2202G` | `invalid_tablesample_repeat` | 잘못된 TABLESAMPLE REPEAT |
-| `22009` | `invalid_time_zone_displacement_value` | 잘못된 시간대 변위 값 |
-| `2200C` | `invalid_use_of_escape_character` | 잘못된 이스케이프 문자 사용 |
-| `2200G` | `most_specific_type_mismatch` | 가장 구체적인 타입 불일치 |
-| `22004` | `null_value_not_allowed` | NULL 값이 허용되지 않음 |
-| `22002` | `null_value_no_indicator_parameter` | NULL 값에 지시자 매개변수 없음 |
-| `22003` | `numeric_value_out_of_range` | 숫자 값이 범위를 벗어남 |
-| `2200H` | `sequence_generator_limit_exceeded` | 시퀀스 생성기 한계 초과 |
-| `22026` | `string_data_length_mismatch` | 문자열 데이터 길이 불일치 |
-| `22001` | `string_data_right_truncation` | 문자열 데이터 오른쪽 잘림 |
-| `22011` | `substring_error` | SUBSTRING 오류 |
-| `22027` | `trim_error` | TRIM 오류 |
-| `22024` | `unterminated_c_string` | 종료되지 않은 C 문자열 |
-| `2200F` | `zero_length_character_string` | 길이가 0인 문자열 |
-| `22P01` | `floating_point_exception` | 부동 소수점 예외 |
-| `22P02` | `invalid_text_representation` | 잘못된 텍스트 표현 |
-| `22P03` | `invalid_binary_representation` | 잘못된 바이너리 표현 |
-| `22P04` | `bad_copy_file_format` | 잘못된 COPY 파일 형식 |
-| `22P05` | `untranslatable_character` | 변환할 수 없는 문자 |
-| `2200L` | `not_an_xml_document` | XML 문서가 아님 |
-| `2200M` | `invalid_xml_document` | 잘못된 XML 문서 |
-| `2200N` | `invalid_xml_content` | 잘못된 XML 내용 |
-| `2200S` | `invalid_xml_comment` | 잘못된 XML 주석 |
-| `2200T` | `invalid_xml_processing_instruction` | 잘못된 XML 처리 명령 |
+- `22000`
+  - 조건명 (Condition Name): `data_exception`
+  - 설명: 데이터 예외
+- `2202E`
+  - 조건명 (Condition Name): `array_subscript_error`
+  - 설명: 배열 첨자 오류
+- `22021`
+  - 조건명 (Condition Name): `character_not_in_repertoire`
+  - 설명: 문자가 레퍼토리에 없음
+- `22008`
+  - 조건명 (Condition Name): `datetime_field_overflow`
+  - 설명: 날짜/시간 필드 오버플로우
+- `22012`
+  - 조건명 (Condition Name): `division_by_zero`
+  - 설명: 0으로 나누기
+- `22005`
+  - 조건명 (Condition Name): `error_in_assignment`
+  - 설명: 할당 오류
+- `2200B`
+  - 조건명 (Condition Name): `escape_character_conflict`
+  - 설명: 이스케이프 문자 충돌
+- `22022`
+  - 조건명 (Condition Name): `indicator_overflow`
+  - 설명: 지시자 오버플로우
+- `22015`
+  - 조건명 (Condition Name): `interval_field_overflow`
+  - 설명: 간격 필드 오버플로우
+- `2201E`
+  - 조건명 (Condition Name): `invalid_argument_for_logarithm`
+  - 설명: 로그 함수에 대한 잘못된 인수
+- `22014`
+  - 조건명 (Condition Name): `invalid_argument_for_ntile_function`
+  - 설명: NTILE 함수에 대한 잘못된 인수
+- `22016`
+  - 조건명 (Condition Name): `invalid_argument_for_nth_value_function`
+  - 설명: NTH_VALUE 함수에 대한 잘못된 인수
+- `2201F`
+  - 조건명 (Condition Name): `invalid_argument_for_power_function`
+  - 설명: 거듭제곱 함수에 대한 잘못된 인수
+- `2201G`
+  - 조건명 (Condition Name): `invalid_argument_for_width_bucket_function`
+  - 설명: WIDTH_BUCKET 함수에 대한 잘못된 인수
+- `22018`
+  - 조건명 (Condition Name): `invalid_character_value_for_cast`
+  - 설명: 캐스트에 대한 잘못된 문자 값
+- `22007`
+  - 조건명 (Condition Name): `invalid_datetime_format`
+  - 설명: 잘못된 날짜/시간 형식
+- `22019`
+  - 조건명 (Condition Name): `invalid_escape_character`
+  - 설명: 잘못된 이스케이프 문자
+- `2200D`
+  - 조건명 (Condition Name): `invalid_escape_octet`
+  - 설명: 잘못된 이스케이프 옥텟
+- `22025`
+  - 조건명 (Condition Name): `invalid_escape_sequence`
+  - 설명: 잘못된 이스케이프 시퀀스
+- `22P06`
+  - 조건명 (Condition Name): `nonstandard_use_of_escape_character`
+  - 설명: 비표준 이스케이프 문자 사용
+- `22010`
+  - 조건명 (Condition Name): `invalid_indicator_parameter_value`
+  - 설명: 잘못된 지시자 매개변수 값
+- `22023`
+  - 조건명 (Condition Name): `invalid_parameter_value`
+  - 설명: 잘못된 매개변수 값
+- `22013`
+  - 조건명 (Condition Name): `invalid_preceding_or_following_size`
+  - 설명: 잘못된 PRECEDING 또는 FOLLOWING 크기
+- `2201B`
+  - 조건명 (Condition Name): `invalid_regular_expression`
+  - 설명: 잘못된 정규 표현식
+- `2201W`
+  - 조건명 (Condition Name): `invalid_row_count_in_limit_clause`
+  - 설명: LIMIT 절의 잘못된 행 수
+- `2201X`
+  - 조건명 (Condition Name): `invalid_row_count_in_result_offset_clause`
+  - 설명: 결과 오프셋 절의 잘못된 행 수
+- `2202H`
+  - 조건명 (Condition Name): `invalid_tablesample_argument`
+  - 설명: 잘못된 TABLESAMPLE 인수
+- `2202G`
+  - 조건명 (Condition Name): `invalid_tablesample_repeat`
+  - 설명: 잘못된 TABLESAMPLE REPEAT
+- `22009`
+  - 조건명 (Condition Name): `invalid_time_zone_displacement_value`
+  - 설명: 잘못된 시간대 변위 값
+- `2200C`
+  - 조건명 (Condition Name): `invalid_use_of_escape_character`
+  - 설명: 잘못된 이스케이프 문자 사용
+- `2200G`
+  - 조건명 (Condition Name): `most_specific_type_mismatch`
+  - 설명: 가장 구체적인 타입 불일치
+- `22004`
+  - 조건명 (Condition Name): `null_value_not_allowed`
+  - 설명: NULL 값이 허용되지 않음
+- `22002`
+  - 조건명 (Condition Name): `null_value_no_indicator_parameter`
+  - 설명: NULL 값에 지시자 매개변수 없음
+- `22003`
+  - 조건명 (Condition Name): `numeric_value_out_of_range`
+  - 설명: 숫자 값이 범위를 벗어남
+- `2200H`
+  - 조건명 (Condition Name): `sequence_generator_limit_exceeded`
+  - 설명: 시퀀스 생성기 한계 초과
+- `22026`
+  - 조건명 (Condition Name): `string_data_length_mismatch`
+  - 설명: 문자열 데이터 길이 불일치
+- `22001`
+  - 조건명 (Condition Name): `string_data_right_truncation`
+  - 설명: 문자열 데이터 오른쪽 잘림
+- `22011`
+  - 조건명 (Condition Name): `substring_error`
+  - 설명: SUBSTRING 오류
+- `22027`
+  - 조건명 (Condition Name): `trim_error`
+  - 설명: TRIM 오류
+- `22024`
+  - 조건명 (Condition Name): `unterminated_c_string`
+  - 설명: 종료되지 않은 C 문자열
+- `2200F`
+  - 조건명 (Condition Name): `zero_length_character_string`
+  - 설명: 길이가 0인 문자열
+- `22P01`
+  - 조건명 (Condition Name): `floating_point_exception`
+  - 설명: 부동 소수점 예외
+- `22P02`
+  - 조건명 (Condition Name): `invalid_text_representation`
+  - 설명: 잘못된 텍스트 표현
+- `22P03`
+  - 조건명 (Condition Name): `invalid_binary_representation`
+  - 설명: 잘못된 바이너리 표현
+- `22P04`
+  - 조건명 (Condition Name): `bad_copy_file_format`
+  - 설명: 잘못된 COPY 파일 형식
+- `22P05`
+  - 조건명 (Condition Name): `untranslatable_character`
+  - 설명: 변환할 수 없는 문자
+- `2200L`
+  - 조건명 (Condition Name): `not_an_xml_document`
+  - 설명: XML 문서가 아님
+- `2200M`
+  - 조건명 (Condition Name): `invalid_xml_document`
+  - 설명: 잘못된 XML 문서
+- `2200N`
+  - 조건명 (Condition Name): `invalid_xml_content`
+  - 설명: 잘못된 XML 내용
+- `2200S`
+  - 조건명 (Condition Name): `invalid_xml_comment`
+  - 설명: 잘못된 XML 주석
+- `2200T`
+  - 조건명 (Condition Name): `invalid_xml_processing_instruction`
+  - 설명: 잘못된 XML 처리 명령
 
 ##### JSON 관련 오류
 
-| SQLSTATE | 조건명 (Condition Name) | 설명 |
-|----------|------------------------|------|
-| `22030` | `duplicate_json_object_key_value` | 중복된 JSON 객체 키 값 |
-| `22031` | `invalid_argument_for_sql_json_datetime_function` | SQL/JSON 날짜/시간 함수에 대한 잘못된 인수 |
-| `22032` | `invalid_json_text` | 잘못된 JSON 텍스트 |
-| `22033` | `invalid_sql_json_subscript` | 잘못된 SQL/JSON 첨자 |
-| `22034` | `more_than_one_sql_json_item` | SQL/JSON 항목이 하나 이상 |
-| `22035` | `no_sql_json_item` | SQL/JSON 항목 없음 |
-| `22036` | `non_numeric_sql_json_item` | 숫자가 아닌 SQL/JSON 항목 |
-| `22037` | `non_unique_keys_in_a_json_object` | JSON 객체에 고유하지 않은 키 |
-| `22038` | `singleton_sql_json_item_required` | 단일 SQL/JSON 항목 필요 |
-| `22039` | `sql_json_array_not_found` | SQL/JSON 배열을 찾을 수 없음 |
-| `2203A` | `sql_json_member_not_found` | SQL/JSON 멤버를 찾을 수 없음 |
-| `2203B` | `sql_json_number_not_found` | SQL/JSON 숫자를 찾을 수 없음 |
-| `2203C` | `sql_json_object_not_found` | SQL/JSON 객체를 찾을 수 없음 |
-| `2203D` | `too_many_json_array_elements` | JSON 배열 요소가 너무 많음 |
-| `2203E` | `too_many_json_object_members` | JSON 객체 멤버가 너무 많음 |
-| `2203F` | `sql_json_scalar_required` | SQL/JSON 스칼라 필요 |
-| `2203G` | `sql_json_item_cannot_be_cast_to_target_type` | SQL/JSON 항목을 대상 타입으로 캐스트할 수 없음 |
+- `22030`
+  - 조건명 (Condition Name): `duplicate_json_object_key_value`
+  - 설명: 중복된 JSON 객체 키 값
+- `22031`
+  - 조건명 (Condition Name): `invalid_argument_for_sql_json_datetime_function`
+  - 설명: SQL/JSON 날짜/시간 함수에 대한 잘못된 인수
+- `22032`
+  - 조건명 (Condition Name): `invalid_json_text`
+  - 설명: 잘못된 JSON 텍스트
+- `22033`
+  - 조건명 (Condition Name): `invalid_sql_json_subscript`
+  - 설명: 잘못된 SQL/JSON 첨자
+- `22034`
+  - 조건명 (Condition Name): `more_than_one_sql_json_item`
+  - 설명: SQL/JSON 항목이 하나 이상
+- `22035`
+  - 조건명 (Condition Name): `no_sql_json_item`
+  - 설명: SQL/JSON 항목 없음
+- `22036`
+  - 조건명 (Condition Name): `non_numeric_sql_json_item`
+  - 설명: 숫자가 아닌 SQL/JSON 항목
+- `22037`
+  - 조건명 (Condition Name): `non_unique_keys_in_a_json_object`
+  - 설명: JSON 객체에 고유하지 않은 키
+- `22038`
+  - 조건명 (Condition Name): `singleton_sql_json_item_required`
+  - 설명: 단일 SQL/JSON 항목 필요
+- `22039`
+  - 조건명 (Condition Name): `sql_json_array_not_found`
+  - 설명: SQL/JSON 배열을 찾을 수 없음
+- `2203A`
+  - 조건명 (Condition Name): `sql_json_member_not_found`
+  - 설명: SQL/JSON 멤버를 찾을 수 없음
+- `2203B`
+  - 조건명 (Condition Name): `sql_json_number_not_found`
+  - 설명: SQL/JSON 숫자를 찾을 수 없음
+- `2203C`
+  - 조건명 (Condition Name): `sql_json_object_not_found`
+  - 설명: SQL/JSON 객체를 찾을 수 없음
+- `2203D`
+  - 조건명 (Condition Name): `too_many_json_array_elements`
+  - 설명: JSON 배열 요소가 너무 많음
+- `2203E`
+  - 조건명 (Condition Name): `too_many_json_object_members`
+  - 설명: JSON 객체 멤버가 너무 많음
+- `2203F`
+  - 조건명 (Condition Name): `sql_json_scalar_required`
+  - 설명: SQL/JSON 스칼라 필요
+- `2203G`
+  - 조건명 (Condition Name): `sql_json_item_cannot_be_cast_to_target_type`
+  - 설명: SQL/JSON 항목을 대상 타입으로 캐스트할 수 없음
 
 ```sql
 -- 데이터 예외 처리 예제
@@ -8201,17 +8316,29 @@ $$;
 
 #### Class 23 - 무결성 제약 위반 (Integrity Constraint Violation)
 
-데이터 무결성과 관련된 오류 클래스입니다.
+데이터 무결성과 관련된 오류 클래스임.
 
-| SQLSTATE | 조건명 (Condition Name) | 설명 |
-|----------|------------------------|------|
-| `23000` | `integrity_constraint_violation` | 무결성 제약 위반 |
-| `23001` | `restrict_violation` | RESTRICT 위반 |
-| `23502` | `not_null_violation` | NOT NULL 위반 |
-| `23503` | `foreign_key_violation` | 외래 키 위반 |
-| `23505` | `unique_violation` | 고유 제약 위반 |
-| `23514` | `check_violation` | CHECK 제약 위반 |
-| `23P01` | `exclusion_violation` | 배제 제약 위반 |
+- `23000`
+  - 조건명 (Condition Name): `integrity_constraint_violation`
+  - 설명: 무결성 제약 위반
+- `23001`
+  - 조건명 (Condition Name): `restrict_violation`
+  - 설명: RESTRICT 위반
+- `23502`
+  - 조건명 (Condition Name): `not_null_violation`
+  - 설명: NOT NULL 위반
+- `23503`
+  - 조건명 (Condition Name): `foreign_key_violation`
+  - 설명: 외래 키 위반
+- `23505`
+  - 조건명 (Condition Name): `unique_violation`
+  - 설명: 고유 제약 위반
+- `23514`
+  - 조건명 (Condition Name): `check_violation`
+  - 설명: CHECK 제약 위반
+- `23P01`
+  - 조건명 (Condition Name): `exclusion_violation`
+  - 설명: 배제 제약 위반
 
 ```sql
 -- 무결성 제약 위반 처리 예제
@@ -8257,29 +8384,53 @@ SELECT safe_insert_product('마우스', 50000, 999); -- foreign_key_violation
 
 #### Class 24 - 잘못된 커서 상태 (Invalid Cursor State)
 
-| SQLSTATE | 조건명 (Condition Name) | 설명 |
-|----------|------------------------|------|
-| `24000` | `invalid_cursor_state` | 잘못된 커서 상태 |
+- `24000`
+  - 조건명 (Condition Name): `invalid_cursor_state`
+  - 설명: 잘못된 커서 상태
 
 ---
 
 #### Class 25 - 잘못된 트랜잭션 상태 (Invalid Transaction State)
 
-| SQLSTATE | 조건명 (Condition Name) | 설명 |
-|----------|------------------------|------|
-| `25000` | `invalid_transaction_state` | 잘못된 트랜잭션 상태 |
-| `25001` | `active_sql_transaction` | 활성 SQL 트랜잭션 |
-| `25002` | `branch_transaction_already_active` | 분기 트랜잭션이 이미 활성화됨 |
-| `25008` | `held_cursor_requires_same_isolation_level` | 보유 커서가 동일한 격리 수준 필요 |
-| `25003` | `inappropriate_access_mode_for_branch_transaction` | 분기 트랜잭션에 부적절한 접근 모드 |
-| `25004` | `inappropriate_isolation_level_for_branch_transaction` | 분기 트랜잭션에 부적절한 격리 수준 |
-| `25005` | `no_active_sql_transaction_for_branch_transaction` | 분기 트랜잭션을 위한 활성 SQL 트랜잭션 없음 |
-| `25006` | `read_only_sql_transaction` | 읽기 전용 SQL 트랜잭션 |
-| `25007` | `schema_and_data_statement_mixing_not_supported` | 스키마와 데이터 문 혼합이 지원되지 않음 |
-| `25P01` | `no_active_sql_transaction` | 활성 SQL 트랜잭션 없음 |
-| `25P02` | `in_failed_sql_transaction` | 실패한 SQL 트랜잭션 내에 있음 |
-| `25P03` | `idle_in_transaction_session_timeout` | 유휴 트랜잭션 세션 타임아웃 |
-| `25P04` | `transaction_timeout` | 트랜잭션 타임아웃 |
+- `25000`
+  - 조건명 (Condition Name): `invalid_transaction_state`
+  - 설명: 잘못된 트랜잭션 상태
+- `25001`
+  - 조건명 (Condition Name): `active_sql_transaction`
+  - 설명: 활성 SQL 트랜잭션
+- `25002`
+  - 조건명 (Condition Name): `branch_transaction_already_active`
+  - 설명: 분기 트랜잭션이 이미 활성화됨
+- `25008`
+  - 조건명 (Condition Name): `held_cursor_requires_same_isolation_level`
+  - 설명: 보유 커서가 동일한 격리 수준 필요
+- `25003`
+  - 조건명 (Condition Name): `inappropriate_access_mode_for_branch_transaction`
+  - 설명: 분기 트랜잭션에 부적절한 접근 모드
+- `25004`
+  - 조건명 (Condition Name): `inappropriate_isolation_level_for_branch_transaction`
+  - 설명: 분기 트랜잭션에 부적절한 격리 수준
+- `25005`
+  - 조건명 (Condition Name): `no_active_sql_transaction_for_branch_transaction`
+  - 설명: 분기 트랜잭션을 위한 활성 SQL 트랜잭션 없음
+- `25006`
+  - 조건명 (Condition Name): `read_only_sql_transaction`
+  - 설명: 읽기 전용 SQL 트랜잭션
+- `25007`
+  - 조건명 (Condition Name): `schema_and_data_statement_mixing_not_supported`
+  - 설명: 스키마와 데이터 문 혼합이 지원되지 않음
+- `25P01`
+  - 조건명 (Condition Name): `no_active_sql_transaction`
+  - 설명: 활성 SQL 트랜잭션 없음
+- `25P02`
+  - 조건명 (Condition Name): `in_failed_sql_transaction`
+  - 설명: 실패한 SQL 트랜잭션 내에 있음
+- `25P03`
+  - 조건명 (Condition Name): `idle_in_transaction_session_timeout`
+  - 설명: 유휴 트랜잭션 세션 타임아웃
+- `25P04`
+  - 조건명 (Condition Name): `transaction_timeout`
+  - 설명: 트랜잭션 타임아웃
 
 ```sql
 -- 트랜잭션 상태 오류 처리 예제
@@ -8301,35 +8452,39 @@ $$;
 
 #### Class 26 - 잘못된 SQL 문 이름 (Invalid SQL Statement Name)
 
-| SQLSTATE | 조건명 (Condition Name) | 설명 |
-|----------|------------------------|------|
-| `26000` | `invalid_sql_statement_name` | 잘못된 SQL 문 이름 |
+- `26000`
+  - 조건명 (Condition Name): `invalid_sql_statement_name`
+  - 설명: 잘못된 SQL 문 이름
 
 ---
 
 #### Class 27 - 트리거된 데이터 변경 위반 (Triggered Data Change Violation)
 
-| SQLSTATE | 조건명 (Condition Name) | 설명 |
-|----------|------------------------|------|
-| `27000` | `triggered_data_change_violation` | 트리거된 데이터 변경 위반 |
+- `27000`
+  - 조건명 (Condition Name): `triggered_data_change_violation`
+  - 설명: 트리거된 데이터 변경 위반
 
 ---
 
 #### Class 28 - 잘못된 인증 지정 (Invalid Authorization Specification)
 
-| SQLSTATE | 조건명 (Condition Name) | 설명 |
-|----------|------------------------|------|
-| `28000` | `invalid_authorization_specification` | 잘못된 인증 지정 |
-| `28P01` | `invalid_password` | 잘못된 비밀번호 |
+- `28000`
+  - 조건명 (Condition Name): `invalid_authorization_specification`
+  - 설명: 잘못된 인증 지정
+- `28P01`
+  - 조건명 (Condition Name): `invalid_password`
+  - 설명: 잘못된 비밀번호
 
 ---
 
 #### Class 2B - 종속 권한 기술자 존재 (Dependent Privilege Descriptors Still Exist)
 
-| SQLSTATE | 조건명 (Condition Name) | 설명 |
-|----------|------------------------|------|
-| `2B000` | `dependent_privilege_descriptors_still_exist` | 종속 권한 기술자가 여전히 존재함 |
-| `2BP01` | `dependent_objects_still_exist` | 종속 객체가 여전히 존재함 |
+- `2B000`
+  - 조건명 (Condition Name): `dependent_privilege_descriptors_still_exist`
+  - 설명: 종속 권한 기술자가 여전히 존재함
+- `2BP01`
+  - 조건명 (Condition Name): `dependent_objects_still_exist`
+  - 설명: 종속 객체가 여전히 존재함
 
 ```sql
 -- 종속 객체 존재 오류 처리
@@ -8347,91 +8502,127 @@ $$;
 
 #### Class 2D - 잘못된 트랜잭션 종료 (Invalid Transaction Termination)
 
-| SQLSTATE | 조건명 (Condition Name) | 설명 |
-|----------|------------------------|------|
-| `2D000` | `invalid_transaction_termination` | 잘못된 트랜잭션 종료 |
+- `2D000`
+  - 조건명 (Condition Name): `invalid_transaction_termination`
+  - 설명: 잘못된 트랜잭션 종료
 
 ---
 
 #### Class 2F - SQL 루틴 예외 (SQL Routine Exception)
 
-| SQLSTATE | 조건명 (Condition Name) | 설명 |
-|----------|------------------------|------|
-| `2F000` | `sql_routine_exception` | SQL 루틴 예외 |
-| `2F005` | `function_executed_no_return_statement` | 함수가 RETURN 문 없이 실행됨 |
-| `2F002` | `modifying_sql_data_not_permitted` | SQL 데이터 수정이 허용되지 않음 |
-| `2F003` | `prohibited_sql_statement_attempted` | 금지된 SQL 문 시도 |
-| `2F004` | `reading_sql_data_not_permitted` | SQL 데이터 읽기가 허용되지 않음 |
+- `2F000`
+  - 조건명 (Condition Name): `sql_routine_exception`
+  - 설명: SQL 루틴 예외
+- `2F005`
+  - 조건명 (Condition Name): `function_executed_no_return_statement`
+  - 설명: 함수가 RETURN 문 없이 실행됨
+- `2F002`
+  - 조건명 (Condition Name): `modifying_sql_data_not_permitted`
+  - 설명: SQL 데이터 수정이 허용되지 않음
+- `2F003`
+  - 조건명 (Condition Name): `prohibited_sql_statement_attempted`
+  - 설명: 금지된 SQL 문 시도
+- `2F004`
+  - 조건명 (Condition Name): `reading_sql_data_not_permitted`
+  - 설명: SQL 데이터 읽기가 허용되지 않음
 
 ---
 
 #### Class 34 - 잘못된 커서 이름 (Invalid Cursor Name)
 
-| SQLSTATE | 조건명 (Condition Name) | 설명 |
-|----------|------------------------|------|
-| `34000` | `invalid_cursor_name` | 잘못된 커서 이름 |
+- `34000`
+  - 조건명 (Condition Name): `invalid_cursor_name`
+  - 설명: 잘못된 커서 이름
 
 ---
 
 #### Class 38 - 외부 루틴 예외 (External Routine Exception)
 
-| SQLSTATE | 조건명 (Condition Name) | 설명 |
-|----------|------------------------|------|
-| `38000` | `external_routine_exception` | 외부 루틴 예외 |
-| `38001` | `containing_sql_not_permitted` | 포함된 SQL이 허용되지 않음 |
-| `38002` | `modifying_sql_data_not_permitted` | SQL 데이터 수정이 허용되지 않음 |
-| `38003` | `prohibited_sql_statement_attempted` | 금지된 SQL 문 시도 |
-| `38004` | `reading_sql_data_not_permitted` | SQL 데이터 읽기가 허용되지 않음 |
+- `38000`
+  - 조건명 (Condition Name): `external_routine_exception`
+  - 설명: 외부 루틴 예외
+- `38001`
+  - 조건명 (Condition Name): `containing_sql_not_permitted`
+  - 설명: 포함된 SQL이 허용되지 않음
+- `38002`
+  - 조건명 (Condition Name): `modifying_sql_data_not_permitted`
+  - 설명: SQL 데이터 수정이 허용되지 않음
+- `38003`
+  - 조건명 (Condition Name): `prohibited_sql_statement_attempted`
+  - 설명: 금지된 SQL 문 시도
+- `38004`
+  - 조건명 (Condition Name): `reading_sql_data_not_permitted`
+  - 설명: SQL 데이터 읽기가 허용되지 않음
 
 ---
 
 #### Class 39 - 외부 루틴 호출 예외 (External Routine Invocation Exception)
 
-| SQLSTATE | 조건명 (Condition Name) | 설명 |
-|----------|------------------------|------|
-| `39000` | `external_routine_invocation_exception` | 외부 루틴 호출 예외 |
-| `39001` | `invalid_sqlstate_returned` | 잘못된 SQLSTATE 반환됨 |
-| `39004` | `null_value_not_allowed` | NULL 값이 허용되지 않음 |
-| `39P01` | `trigger_protocol_violated` | 트리거 프로토콜 위반 |
-| `39P02` | `srf_protocol_violated` | SRF(Set-Returning Function) 프로토콜 위반 |
-| `39P03` | `event_trigger_protocol_violated` | 이벤트 트리거 프로토콜 위반 |
+- `39000`
+  - 조건명 (Condition Name): `external_routine_invocation_exception`
+  - 설명: 외부 루틴 호출 예외
+- `39001`
+  - 조건명 (Condition Name): `invalid_sqlstate_returned`
+  - 설명: 잘못된 SQLSTATE 반환됨
+- `39004`
+  - 조건명 (Condition Name): `null_value_not_allowed`
+  - 설명: NULL 값이 허용되지 않음
+- `39P01`
+  - 조건명 (Condition Name): `trigger_protocol_violated`
+  - 설명: 트리거 프로토콜 위반
+- `39P02`
+  - 조건명 (Condition Name): `srf_protocol_violated`
+  - 설명: SRF(Set-Returning Function) 프로토콜 위반
+- `39P03`
+  - 조건명 (Condition Name): `event_trigger_protocol_violated`
+  - 설명: 이벤트 트리거 프로토콜 위반
 
 ---
 
 #### Class 3B - 세이브포인트 예외 (Savepoint Exception)
 
-| SQLSTATE | 조건명 (Condition Name) | 설명 |
-|----------|------------------------|------|
-| `3B000` | `savepoint_exception` | 세이브포인트 예외 |
-| `3B001` | `invalid_savepoint_specification` | 잘못된 세이브포인트 지정 |
+- `3B000`
+  - 조건명 (Condition Name): `savepoint_exception`
+  - 설명: 세이브포인트 예외
+- `3B001`
+  - 조건명 (Condition Name): `invalid_savepoint_specification`
+  - 설명: 잘못된 세이브포인트 지정
 
 ---
 
 #### Class 3D - 잘못된 카탈로그 이름 (Invalid Catalog Name)
 
-| SQLSTATE | 조건명 (Condition Name) | 설명 |
-|----------|------------------------|------|
-| `3D000` | `invalid_catalog_name` | 잘못된 카탈로그 이름 |
+- `3D000`
+  - 조건명 (Condition Name): `invalid_catalog_name`
+  - 설명: 잘못된 카탈로그 이름
 
 ---
 
 #### Class 3F - 잘못된 스키마 이름 (Invalid Schema Name)
 
-| SQLSTATE | 조건명 (Condition Name) | 설명 |
-|----------|------------------------|------|
-| `3F000` | `invalid_schema_name` | 잘못된 스키마 이름 |
+- `3F000`
+  - 조건명 (Condition Name): `invalid_schema_name`
+  - 설명: 잘못된 스키마 이름
 
 ---
 
 #### Class 40 - 트랜잭션 롤백 (Transaction Rollback)
 
-| SQLSTATE | 조건명 (Condition Name) | 설명 |
-|----------|------------------------|------|
-| `40000` | `transaction_rollback` | 트랜잭션 롤백 |
-| `40002` | `transaction_integrity_constraint_violation` | 트랜잭션 무결성 제약 위반 |
-| `40001` | `serialization_failure` | 직렬화 실패 |
-| `40003` | `statement_completion_unknown` | 문 완료 상태 알 수 없음 |
-| `40P01` | `deadlock_detected` | 교착 상태 감지 |
+- `40000`
+  - 조건명 (Condition Name): `transaction_rollback`
+  - 설명: 트랜잭션 롤백
+- `40002`
+  - 조건명 (Condition Name): `transaction_integrity_constraint_violation`
+  - 설명: 트랜잭션 무결성 제약 위반
+- `40001`
+  - 조건명 (Condition Name): `serialization_failure`
+  - 설명: 직렬화 실패
+- `40003`
+  - 조건명 (Condition Name): `statement_completion_unknown`
+  - 설명: 문 완료 상태 알 수 없음
+- `40P01`
+  - 조건명 (Condition Name): `deadlock_detected`
+  - 설명: 교착 상태 감지
 
 ```sql
 -- 트랜잭션 롤백 및 교착 상태 처리 예제
@@ -8483,54 +8674,140 @@ $$ LANGUAGE plpgsql;
 
 #### Class 42 - 구문 오류 또는 접근 규칙 위반 (Syntax Error or Access Rule Violation)
 
-가장 자주 발생하는 오류 클래스 중 하나입니다.
+가장 자주 발생하는 오류 클래스 중 하나임.
 
-| SQLSTATE | 조건명 (Condition Name) | 설명 |
-|----------|------------------------|------|
-| `42000` | `syntax_error_or_access_rule_violation` | 구문 오류 또는 접근 규칙 위반 |
-| `42601` | `syntax_error` | 구문 오류 |
-| `42501` | `insufficient_privilege` | 권한 부족 |
-| `42846` | `cannot_coerce` | 변환할 수 없음 |
-| `42803` | `grouping_error` | 그룹화 오류 |
-| `42P20` | `windowing_error` | 윈도우 함수 오류 |
-| `42P19` | `invalid_recursion` | 잘못된 재귀 |
-| `42830` | `invalid_foreign_key` | 잘못된 외래 키 |
-| `42602` | `invalid_name` | 잘못된 이름 |
-| `42622` | `name_too_long` | 이름이 너무 김 |
-| `42939` | `reserved_name` | 예약된 이름 |
-| `42804` | `datatype_mismatch` | 데이터 타입 불일치 |
-| `42P18` | `indeterminate_datatype` | 불확정 데이터 타입 |
-| `42P21` | `collation_mismatch` | 정렬 규칙 불일치 |
-| `42P22` | `indeterminate_collation` | 불확정 정렬 규칙 |
-| `42809` | `wrong_object_type` | 잘못된 객체 타입 |
-| `428C9` | `generated_always` | GENERATED ALWAYS 제약 |
-| `42703` | `undefined_column` | 정의되지 않은 열 |
-| `42883` | `undefined_function` | 정의되지 않은 함수 |
-| `42P01` | `undefined_table` | 정의되지 않은 테이블 |
-| `42P02` | `undefined_parameter` | 정의되지 않은 매개변수 |
-| `42704` | `undefined_object` | 정의되지 않은 객체 |
-| `42701` | `duplicate_column` | 중복된 열 |
-| `42P03` | `duplicate_cursor` | 중복된 커서 |
-| `42P04` | `duplicate_database` | 중복된 데이터베이스 |
-| `42723` | `duplicate_function` | 중복된 함수 |
-| `42P05` | `duplicate_prepared_statement` | 중복된 준비된 문 |
-| `42P06` | `duplicate_schema` | 중복된 스키마 |
-| `42P07` | `duplicate_table` | 중복된 테이블 |
-| `42712` | `duplicate_alias` | 중복된 별칭 |
-| `42710` | `duplicate_object` | 중복된 객체 |
-| `42702` | `ambiguous_column` | 모호한 열 |
-| `42725` | `ambiguous_function` | 모호한 함수 |
-| `42P08` | `ambiguous_parameter` | 모호한 매개변수 |
-| `42P09` | `ambiguous_alias` | 모호한 별칭 |
-| `42P10` | `invalid_column_reference` | 잘못된 열 참조 |
-| `42611` | `invalid_column_definition` | 잘못된 열 정의 |
-| `42P11` | `invalid_cursor_definition` | 잘못된 커서 정의 |
-| `42P12` | `invalid_database_definition` | 잘못된 데이터베이스 정의 |
-| `42P13` | `invalid_function_definition` | 잘못된 함수 정의 |
-| `42P14` | `invalid_prepared_statement_definition` | 잘못된 준비된 문 정의 |
-| `42P15` | `invalid_schema_definition` | 잘못된 스키마 정의 |
-| `42P16` | `invalid_table_definition` | 잘못된 테이블 정의 |
-| `42P17` | `invalid_object_definition` | 잘못된 객체 정의 |
+- `42000`
+  - 조건명 (Condition Name): `syntax_error_or_access_rule_violation`
+  - 설명: 구문 오류 또는 접근 규칙 위반
+- `42601`
+  - 조건명 (Condition Name): `syntax_error`
+  - 설명: 구문 오류
+- `42501`
+  - 조건명 (Condition Name): `insufficient_privilege`
+  - 설명: 권한 부족
+- `42846`
+  - 조건명 (Condition Name): `cannot_coerce`
+  - 설명: 변환할 수 없음
+- `42803`
+  - 조건명 (Condition Name): `grouping_error`
+  - 설명: 그룹화 오류
+- `42P20`
+  - 조건명 (Condition Name): `windowing_error`
+  - 설명: 윈도우 함수 오류
+- `42P19`
+  - 조건명 (Condition Name): `invalid_recursion`
+  - 설명: 잘못된 재귀
+- `42830`
+  - 조건명 (Condition Name): `invalid_foreign_key`
+  - 설명: 잘못된 외래 키
+- `42602`
+  - 조건명 (Condition Name): `invalid_name`
+  - 설명: 잘못된 이름
+- `42622`
+  - 조건명 (Condition Name): `name_too_long`
+  - 설명: 이름이 너무 김
+- `42939`
+  - 조건명 (Condition Name): `reserved_name`
+  - 설명: 예약된 이름
+- `42804`
+  - 조건명 (Condition Name): `datatype_mismatch`
+  - 설명: 데이터 타입 불일치
+- `42P18`
+  - 조건명 (Condition Name): `indeterminate_datatype`
+  - 설명: 불확정 데이터 타입
+- `42P21`
+  - 조건명 (Condition Name): `collation_mismatch`
+  - 설명: 정렬 규칙 불일치
+- `42P22`
+  - 조건명 (Condition Name): `indeterminate_collation`
+  - 설명: 불확정 정렬 규칙
+- `42809`
+  - 조건명 (Condition Name): `wrong_object_type`
+  - 설명: 잘못된 객체 타입
+- `428C9`
+  - 조건명 (Condition Name): `generated_always`
+  - 설명: GENERATED ALWAYS 제약
+- `42703`
+  - 조건명 (Condition Name): `undefined_column`
+  - 설명: 정의되지 않은 열
+- `42883`
+  - 조건명 (Condition Name): `undefined_function`
+  - 설명: 정의되지 않은 함수
+- `42P01`
+  - 조건명 (Condition Name): `undefined_table`
+  - 설명: 정의되지 않은 테이블
+- `42P02`
+  - 조건명 (Condition Name): `undefined_parameter`
+  - 설명: 정의되지 않은 매개변수
+- `42704`
+  - 조건명 (Condition Name): `undefined_object`
+  - 설명: 정의되지 않은 객체
+- `42701`
+  - 조건명 (Condition Name): `duplicate_column`
+  - 설명: 중복된 열
+- `42P03`
+  - 조건명 (Condition Name): `duplicate_cursor`
+  - 설명: 중복된 커서
+- `42P04`
+  - 조건명 (Condition Name): `duplicate_database`
+  - 설명: 중복된 데이터베이스
+- `42723`
+  - 조건명 (Condition Name): `duplicate_function`
+  - 설명: 중복된 함수
+- `42P05`
+  - 조건명 (Condition Name): `duplicate_prepared_statement`
+  - 설명: 중복된 준비된 문
+- `42P06`
+  - 조건명 (Condition Name): `duplicate_schema`
+  - 설명: 중복된 스키마
+- `42P07`
+  - 조건명 (Condition Name): `duplicate_table`
+  - 설명: 중복된 테이블
+- `42712`
+  - 조건명 (Condition Name): `duplicate_alias`
+  - 설명: 중복된 별칭
+- `42710`
+  - 조건명 (Condition Name): `duplicate_object`
+  - 설명: 중복된 객체
+- `42702`
+  - 조건명 (Condition Name): `ambiguous_column`
+  - 설명: 모호한 열
+- `42725`
+  - 조건명 (Condition Name): `ambiguous_function`
+  - 설명: 모호한 함수
+- `42P08`
+  - 조건명 (Condition Name): `ambiguous_parameter`
+  - 설명: 모호한 매개변수
+- `42P09`
+  - 조건명 (Condition Name): `ambiguous_alias`
+  - 설명: 모호한 별칭
+- `42P10`
+  - 조건명 (Condition Name): `invalid_column_reference`
+  - 설명: 잘못된 열 참조
+- `42611`
+  - 조건명 (Condition Name): `invalid_column_definition`
+  - 설명: 잘못된 열 정의
+- `42P11`
+  - 조건명 (Condition Name): `invalid_cursor_definition`
+  - 설명: 잘못된 커서 정의
+- `42P12`
+  - 조건명 (Condition Name): `invalid_database_definition`
+  - 설명: 잘못된 데이터베이스 정의
+- `42P13`
+  - 조건명 (Condition Name): `invalid_function_definition`
+  - 설명: 잘못된 함수 정의
+- `42P14`
+  - 조건명 (Condition Name): `invalid_prepared_statement_definition`
+  - 설명: 잘못된 준비된 문 정의
+- `42P15`
+  - 조건명 (Condition Name): `invalid_schema_definition`
+  - 설명: 잘못된 스키마 정의
+- `42P16`
+  - 조건명 (Condition Name): `invalid_table_definition`
+  - 설명: 잘못된 테이블 정의
+- `42P17`
+  - 조건명 (Condition Name): `invalid_object_definition`
+  - 설명: 잘못된 객체 정의
 
 ```sql
 -- 구문 및 접근 오류 처리 예제
@@ -8567,9 +8844,9 @@ $$;
 
 #### Class 44 - WITH CHECK OPTION 위반 (WITH CHECK OPTION Violation)
 
-| SQLSTATE | 조건명 (Condition Name) | 설명 |
-|----------|------------------------|------|
-| `44000` | `with_check_option_violation` | WITH CHECK OPTION 위반 |
+- `44000`
+  - 조건명 (Condition Name): `with_check_option_violation`
+  - 설명: WITH CHECK OPTION 위반
 
 ```sql
 -- WITH CHECK OPTION 위반 예제
@@ -8592,13 +8869,21 @@ $$;
 
 #### Class 53 - 리소스 부족 (Insufficient Resources)
 
-| SQLSTATE | 조건명 (Condition Name) | 설명 |
-|----------|------------------------|------|
-| `53000` | `insufficient_resources` | 리소스 부족 |
-| `53100` | `disk_full` | 디스크 가득 참 |
-| `53200` | `out_of_memory` | 메모리 부족 |
-| `53300` | `too_many_connections` | 연결이 너무 많음 |
-| `53400` | `configuration_limit_exceeded` | 구성 한계 초과 |
+- `53000`
+  - 조건명 (Condition Name): `insufficient_resources`
+  - 설명: 리소스 부족
+- `53100`
+  - 조건명 (Condition Name): `disk_full`
+  - 설명: 디스크 가득 참
+- `53200`
+  - 조건명 (Condition Name): `out_of_memory`
+  - 설명: 메모리 부족
+- `53300`
+  - 조건명 (Condition Name): `too_many_connections`
+  - 설명: 연결이 너무 많음
+- `53400`
+  - 조건명 (Condition Name): `configuration_limit_exceeded`
+  - 설명: 구성 한계 초과
 
 ```sql
 -- 리소스 부족 오류 처리 (애플리케이션 레벨)
@@ -8621,24 +8906,38 @@ $$;
 
 #### Class 54 - 프로그램 한계 초과 (Program Limit Exceeded)
 
-| SQLSTATE | 조건명 (Condition Name) | 설명 |
-|----------|------------------------|------|
-| `54000` | `program_limit_exceeded` | 프로그램 한계 초과 |
-| `54001` | `statement_too_complex` | 문이 너무 복잡함 |
-| `54011` | `too_many_columns` | 열이 너무 많음 |
-| `54023` | `too_many_arguments` | 인수가 너무 많음 |
+- `54000`
+  - 조건명 (Condition Name): `program_limit_exceeded`
+  - 설명: 프로그램 한계 초과
+- `54001`
+  - 조건명 (Condition Name): `statement_too_complex`
+  - 설명: 문이 너무 복잡함
+- `54011`
+  - 조건명 (Condition Name): `too_many_columns`
+  - 설명: 열이 너무 많음
+- `54023`
+  - 조건명 (Condition Name): `too_many_arguments`
+  - 설명: 인수가 너무 많음
 
 ---
 
 #### Class 55 - 객체가 필수 상태가 아님 (Object Not In Prerequisite State)
 
-| SQLSTATE | 조건명 (Condition Name) | 설명 |
-|----------|------------------------|------|
-| `55000` | `object_not_in_prerequisite_state` | 객체가 필수 상태가 아님 |
-| `55006` | `object_in_use` | 객체가 사용 중 |
-| `55P02` | `cant_change_runtime_param` | 런타임 매개변수를 변경할 수 없음 |
-| `55P03` | `lock_not_available` | 잠금을 사용할 수 없음 |
-| `55P04` | `unsafe_new_enum_value_usage` | 안전하지 않은 새 열거형 값 사용 |
+- `55000`
+  - 조건명 (Condition Name): `object_not_in_prerequisite_state`
+  - 설명: 객체가 필수 상태가 아님
+- `55006`
+  - 조건명 (Condition Name): `object_in_use`
+  - 설명: 객체가 사용 중
+- `55P02`
+  - 조건명 (Condition Name): `cant_change_runtime_param`
+  - 설명: 런타임 매개변수를 변경할 수 없음
+- `55P03`
+  - 조건명 (Condition Name): `lock_not_available`
+  - 설명: 잠금을 사용할 수 없음
+- `55P04`
+  - 조건명 (Condition Name): `unsafe_new_enum_value_usage`
+  - 설명: 안전하지 않은 새 열거형 값 사용
 
 ```sql
 -- 잠금 관련 오류 처리
@@ -8660,15 +8959,27 @@ $$;
 
 #### Class 57 - 운영자 개입 (Operator Intervention)
 
-| SQLSTATE | 조건명 (Condition Name) | 설명 |
-|----------|------------------------|------|
-| `57000` | `operator_intervention` | 운영자 개입 |
-| `57014` | `query_canceled` | 쿼리가 취소됨 |
-| `57P01` | `admin_shutdown` | 관리자 종료 |
-| `57P02` | `crash_shutdown` | 충돌 종료 |
-| `57P03` | `cannot_connect_now` | 현재 연결할 수 없음 |
-| `57P04` | `database_dropped` | 데이터베이스가 삭제됨 |
-| `57P05` | `idle_session_timeout` | 유휴 세션 타임아웃 |
+- `57000`
+  - 조건명 (Condition Name): `operator_intervention`
+  - 설명: 운영자 개입
+- `57014`
+  - 조건명 (Condition Name): `query_canceled`
+  - 설명: 쿼리가 취소됨
+- `57P01`
+  - 조건명 (Condition Name): `admin_shutdown`
+  - 설명: 관리자 종료
+- `57P02`
+  - 조건명 (Condition Name): `crash_shutdown`
+  - 설명: 충돌 종료
+- `57P03`
+  - 조건명 (Condition Name): `cannot_connect_now`
+  - 설명: 현재 연결할 수 없음
+- `57P04`
+  - 조건명 (Condition Name): `database_dropped`
+  - 설명: 데이터베이스가 삭제됨
+- `57P05`
+  - 조건명 (Condition Name): `idle_session_timeout`
+  - 설명: 유휴 세션 타임아웃
 
 ```sql
 -- 쿼리 취소 처리 예제
@@ -8689,68 +9000,138 @@ $$;
 
 #### Class 58 - 시스템 오류 (System Error)
 
-| SQLSTATE | 조건명 (Condition Name) | 설명 |
-|----------|------------------------|------|
-| `58000` | `system_error` | 시스템 오류 |
-| `58030` | `io_error` | I/O 오류 |
-| `58P01` | `undefined_file` | 정의되지 않은 파일 |
-| `58P02` | `duplicate_file` | 중복된 파일 |
-| `58P03` | `file_name_too_long` | 파일 이름이 너무 김 |
+- `58000`
+  - 조건명 (Condition Name): `system_error`
+  - 설명: 시스템 오류
+- `58030`
+  - 조건명 (Condition Name): `io_error`
+  - 설명: I/O 오류
+- `58P01`
+  - 조건명 (Condition Name): `undefined_file`
+  - 설명: 정의되지 않은 파일
+- `58P02`
+  - 조건명 (Condition Name): `duplicate_file`
+  - 설명: 중복된 파일
+- `58P03`
+  - 조건명 (Condition Name): `file_name_too_long`
+  - 설명: 파일 이름이 너무 김
 
 ---
 
 #### Class F0 - 구성 파일 오류 (Configuration File Error)
 
-| SQLSTATE | 조건명 (Condition Name) | 설명 |
-|----------|------------------------|------|
-| `F0000` | `config_file_error` | 구성 파일 오류 |
-| `F0001` | `lock_file_exists` | 잠금 파일이 존재함 |
+- `F0000`
+  - 조건명 (Condition Name): `config_file_error`
+  - 설명: 구성 파일 오류
+- `F0001`
+  - 조건명 (Condition Name): `lock_file_exists`
+  - 설명: 잠금 파일이 존재함
 
 ---
 
 #### Class HV - 외부 데이터 래퍼 오류 (Foreign Data Wrapper Error - SQL/MED)
 
-| SQLSTATE | 조건명 (Condition Name) | 설명 |
-|----------|------------------------|------|
-| `HV000` | `fdw_error` | FDW 오류 |
-| `HV005` | `fdw_column_name_not_found` | FDW 열 이름을 찾을 수 없음 |
-| `HV002` | `fdw_dynamic_parameter_value_needed` | FDW 동적 매개변수 값 필요 |
-| `HV010` | `fdw_function_sequence_error` | FDW 함수 순서 오류 |
-| `HV021` | `fdw_inconsistent_descriptor_information` | FDW 일관성 없는 기술자 정보 |
-| `HV024` | `fdw_invalid_attribute_value` | FDW 잘못된 속성 값 |
-| `HV007` | `fdw_invalid_column_name` | FDW 잘못된 열 이름 |
-| `HV008` | `fdw_invalid_column_number` | FDW 잘못된 열 번호 |
-| `HV004` | `fdw_invalid_data_type` | FDW 잘못된 데이터 타입 |
-| `HV006` | `fdw_invalid_data_type_descriptors` | FDW 잘못된 데이터 타입 기술자 |
-| `HV091` | `fdw_invalid_descriptor_field_identifier` | FDW 잘못된 기술자 필드 식별자 |
-| `HV00B` | `fdw_invalid_handle` | FDW 잘못된 핸들 |
-| `HV00C` | `fdw_invalid_option_index` | FDW 잘못된 옵션 인덱스 |
-| `HV00D` | `fdw_invalid_option_name` | FDW 잘못된 옵션 이름 |
-| `HV090` | `fdw_invalid_string_length_or_buffer_length` | FDW 잘못된 문자열 또는 버퍼 길이 |
-| `HV00A` | `fdw_invalid_string_format` | FDW 잘못된 문자열 형식 |
-| `HV009` | `fdw_invalid_use_of_null_pointer` | FDW NULL 포인터의 잘못된 사용 |
-| `HV014` | `fdw_too_many_handles` | FDW 핸들이 너무 많음 |
-| `HV001` | `fdw_out_of_memory` | FDW 메모리 부족 |
-| `HV00P` | `fdw_no_schemas` | FDW 스키마 없음 |
-| `HV00J` | `fdw_option_name_not_found` | FDW 옵션 이름을 찾을 수 없음 |
-| `HV00K` | `fdw_reply_handle` | FDW 응답 핸들 |
-| `HV00Q` | `fdw_schema_not_found` | FDW 스키마를 찾을 수 없음 |
-| `HV00R` | `fdw_table_not_found` | FDW 테이블을 찾을 수 없음 |
-| `HV00L` | `fdw_unable_to_create_execution` | FDW 실행을 생성할 수 없음 |
-| `HV00M` | `fdw_unable_to_create_reply` | FDW 응답을 생성할 수 없음 |
-| `HV00N` | `fdw_unable_to_establish_connection` | FDW 연결을 설정할 수 없음 |
+- `HV000`
+  - 조건명 (Condition Name): `fdw_error`
+  - 설명: FDW 오류
+- `HV005`
+  - 조건명 (Condition Name): `fdw_column_name_not_found`
+  - 설명: FDW 열 이름을 찾을 수 없음
+- `HV002`
+  - 조건명 (Condition Name): `fdw_dynamic_parameter_value_needed`
+  - 설명: FDW 동적 매개변수 값 필요
+- `HV010`
+  - 조건명 (Condition Name): `fdw_function_sequence_error`
+  - 설명: FDW 함수 순서 오류
+- `HV021`
+  - 조건명 (Condition Name): `fdw_inconsistent_descriptor_information`
+  - 설명: FDW 일관성 없는 기술자 정보
+- `HV024`
+  - 조건명 (Condition Name): `fdw_invalid_attribute_value`
+  - 설명: FDW 잘못된 속성 값
+- `HV007`
+  - 조건명 (Condition Name): `fdw_invalid_column_name`
+  - 설명: FDW 잘못된 열 이름
+- `HV008`
+  - 조건명 (Condition Name): `fdw_invalid_column_number`
+  - 설명: FDW 잘못된 열 번호
+- `HV004`
+  - 조건명 (Condition Name): `fdw_invalid_data_type`
+  - 설명: FDW 잘못된 데이터 타입
+- `HV006`
+  - 조건명 (Condition Name): `fdw_invalid_data_type_descriptors`
+  - 설명: FDW 잘못된 데이터 타입 기술자
+- `HV091`
+  - 조건명 (Condition Name): `fdw_invalid_descriptor_field_identifier`
+  - 설명: FDW 잘못된 기술자 필드 식별자
+- `HV00B`
+  - 조건명 (Condition Name): `fdw_invalid_handle`
+  - 설명: FDW 잘못된 핸들
+- `HV00C`
+  - 조건명 (Condition Name): `fdw_invalid_option_index`
+  - 설명: FDW 잘못된 옵션 인덱스
+- `HV00D`
+  - 조건명 (Condition Name): `fdw_invalid_option_name`
+  - 설명: FDW 잘못된 옵션 이름
+- `HV090`
+  - 조건명 (Condition Name): `fdw_invalid_string_length_or_buffer_length`
+  - 설명: FDW 잘못된 문자열 또는 버퍼 길이
+- `HV00A`
+  - 조건명 (Condition Name): `fdw_invalid_string_format`
+  - 설명: FDW 잘못된 문자열 형식
+- `HV009`
+  - 조건명 (Condition Name): `fdw_invalid_use_of_null_pointer`
+  - 설명: FDW NULL 포인터의 잘못된 사용
+- `HV014`
+  - 조건명 (Condition Name): `fdw_too_many_handles`
+  - 설명: FDW 핸들이 너무 많음
+- `HV001`
+  - 조건명 (Condition Name): `fdw_out_of_memory`
+  - 설명: FDW 메모리 부족
+- `HV00P`
+  - 조건명 (Condition Name): `fdw_no_schemas`
+  - 설명: FDW 스키마 없음
+- `HV00J`
+  - 조건명 (Condition Name): `fdw_option_name_not_found`
+  - 설명: FDW 옵션 이름을 찾을 수 없음
+- `HV00K`
+  - 조건명 (Condition Name): `fdw_reply_handle`
+  - 설명: FDW 응답 핸들
+- `HV00Q`
+  - 조건명 (Condition Name): `fdw_schema_not_found`
+  - 설명: FDW 스키마를 찾을 수 없음
+- `HV00R`
+  - 조건명 (Condition Name): `fdw_table_not_found`
+  - 설명: FDW 테이블을 찾을 수 없음
+- `HV00L`
+  - 조건명 (Condition Name): `fdw_unable_to_create_execution`
+  - 설명: FDW 실행을 생성할 수 없음
+- `HV00M`
+  - 조건명 (Condition Name): `fdw_unable_to_create_reply`
+  - 설명: FDW 응답을 생성할 수 없음
+- `HV00N`
+  - 조건명 (Condition Name): `fdw_unable_to_establish_connection`
+  - 설명: FDW 연결을 설정할 수 없음
 
 ---
 
 #### Class P0 - PL/pgSQL 오류 (PL/pgSQL Error)
 
-| SQLSTATE | 조건명 (Condition Name) | 설명 |
-|----------|------------------------|------|
-| `P0000` | `plpgsql_error` | PL/pgSQL 오류 |
-| `P0001` | `raise_exception` | RAISE EXCEPTION |
-| `P0002` | `no_data_found` | 데이터를 찾을 수 없음 |
-| `P0003` | `too_many_rows` | 행이 너무 많음 |
-| `P0004` | `assert_failure` | ASSERT 실패 |
+- `P0000`
+  - 조건명 (Condition Name): `plpgsql_error`
+  - 설명: PL/pgSQL 오류
+- `P0001`
+  - 조건명 (Condition Name): `raise_exception`
+  - 설명: RAISE EXCEPTION
+- `P0002`
+  - 조건명 (Condition Name): `no_data_found`
+  - 설명: 데이터를 찾을 수 없음
+- `P0003`
+  - 조건명 (Condition Name): `too_many_rows`
+  - 설명: 행이 너무 많음
+- `P0004`
+  - 조건명 (Condition Name): `assert_failure`
+  - 설명: ASSERT 실패
 
 ```sql
 -- PL/pgSQL 오류 처리 예제
@@ -8791,11 +9172,15 @@ $$ LANGUAGE plpgsql;
 
 #### Class XX - 내부 오류 (Internal Error)
 
-| SQLSTATE | 조건명 (Condition Name) | 설명 |
-|----------|------------------------|------|
-| `XX000` | `internal_error` | 내부 오류 |
-| `XX001` | `data_corrupted` | 데이터 손상 |
-| `XX002` | `index_corrupted` | 인덱스 손상 |
+- `XX000`
+  - 조건명 (Condition Name): `internal_error`
+  - 설명: 내부 오류
+- `XX001`
+  - 조건명 (Condition Name): `data_corrupted`
+  - 설명: 데이터 손상
+- `XX002`
+  - 조건명 (Condition Name): `index_corrupted`
+  - 설명: 인덱스 손상
 
 ---
 
@@ -8803,7 +9188,7 @@ $$ LANGUAGE plpgsql;
 
 #### 1. PL/pgSQL에서 예외 처리
 
-조건명으로 예외를 처리할 수 있습니다(대소문자 구분 없음):
+조건명으로 예외를 처리 가능함(대소문자 구분 없음):
 
 ```sql
 CREATE OR REPLACE FUNCTION safe_divide(a NUMERIC, b NUMERIC)
@@ -8821,7 +9206,7 @@ $$ LANGUAGE plpgsql;
 
 #### 2. SQLSTATE 코드 직접 사용
 
-조건명 대신 SQLSTATE 코드를 직접 지정할 수도 있습니다:
+조건명 대신 SQLSTATE 코드를 직접 지정할 수도 있음:
 
 ```sql
 DO $$
@@ -8838,7 +9223,7 @@ $$;
 
 #### 3. 사용자 정의 SQLSTATE 코드
 
-사용자 정의 오류에 자체 SQLSTATE 코드를 부여할 수 있습니다:
+사용자 정의 오류에 자체 SQLSTATE 코드를 부여 가능함:
 
 ```sql
 CREATE OR REPLACE FUNCTION custom_validation()
@@ -8853,7 +9238,7 @@ $$ LANGUAGE plpgsql;
 
 #### 4. 애플리케이션에서 오류 코드 처리
 
-애플리케이션은 오류 메시지 텍스트가 아닌 오류 코드를 기준으로 처리해야 합니다:
+애플리케이션은 오류 메시지 텍스트가 아닌 오류 코드를 기준으로 처리 필요함:
 
 ```python
 # Python (psycopg2) 예제
@@ -8895,7 +9280,7 @@ try {
 
 #### GET DIAGNOSTICS 사용
 
-PL/pgSQL에서 예외가 발생했을 때 상세 정보를 조회할 수 있습니다:
+PL/pgSQL에서 예외가 발생했을 때 상세 정보를 조회 가능함:
 
 ```sql
 CREATE OR REPLACE FUNCTION detailed_error_handling()
@@ -8934,15 +9319,15 @@ $$ LANGUAGE plpgsql;
 
 ### 주요 참고사항
 
-1. 이식성: 오류 코드는 텍스트 오류 메시지보다 PostgreSQL 버전 간 안정성이 높습니다.
+1. 이식성: 오류 코드는 텍스트 오류 메시지보다 PostgreSQL 버전 간 안정성이 높음.
 
-2. 지역화 독립성: 오류 코드는 서버의 언어 설정에 관계없이 동일한 값을 유지합니다.
+2. 지역화 독립성: 오류 코드는 서버의 언어 설정에 관계없이 동일한 값을 유지함.
 
-3. SQL 표준 준수: 많은 코드가 SQL 표준에 정의되어 있으며, 일부는 PostgreSQL 전용입니다.
+3. SQL 표준 준수: 많은 코드가 SQL 표준에 정의되어 있으며, 일부는 PostgreSQL 전용임.
 
-4. PostgreSQL 전용 코드: `P`가 포함된 코드(예: `23P01`, `08P01`)는 PostgreSQL 전용입니다.
+4. PostgreSQL 전용 코드: `P`가 포함된 코드(예: `23P01`, `08P01`)는 PostgreSQL 전용임.
 
-5. 오류 클래스 단위 처리: 특정 조건 대신 오류 클래스 전체를 포괄적으로 처리할 수 있습니다:
+5. 오류 클래스 단위 처리: 특정 조건 대신 오류 클래스 전체를 포괄적으로 처리 가능함:
    ```sql
    EXCEPTION
        WHEN integrity_constraint_violation THEN  -- Class 23 전체
@@ -8961,33 +9346,55 @@ $$ LANGUAGE plpgsql;
 
 ## PostgreSQL 문서 색인 (Document Index)
 
-PostgreSQL 18 공식 문서 번역 색인입니다.
+PostgreSQL 18 공식 문서 번역 색인임.
 
 ---
 
 ### 문서 구성 개요
 
-| 분류 | 문서 번호 | 내용 |
-|------|----------|------|
-| 기초 | 01-05 | SQL 기본, 데이터 정의/조작, 쿼리 |
-| 데이터 타입 및 함수 | 06-08 | 데이터 타입, 함수/연산자, 타입 변환 |
-| 인덱스 및 검색 | 09-10 | 인덱스, 전문 검색 |
-| 동시성 및 성능 | 11-13 | 동시성 제어, 성능 튜닝, 병렬 쿼리 |
-| 서버 관리 | 14-17 | 서버 설정, 인증, 역할, DB 관리 |
-| 백업 및 복제 | 18-19, 24 | 백업/복원, 고가용성, 논리적 복제 |
-| 유지보수 | 20-23 | 지역화, 유지보수, 모니터링, WAL |
-| 클라이언트 인터페이스 | 25-28 | libpq, 대용량 객체, ECPG, 정보 스키마 |
-| 확장성 | 29-40 | SQL 확장, 트리거, 절차적 언어 등 |
-| 인덱스 내부 | 47-52 | 인덱스 접근 메서드, GiST, SP-GiST, GIN, BRIN, Hash |
-| 내부 구조 | 53-62 | 저장소, 시스템 카탈로그, 프로토콜, 소스 코드 |
-| 참조 | 63-66 | B-Tree, contrib 모듈, SQL 명령어, 클라이언트 앱 |
+- 기초
+  - 문서 번호: 01-05
+  - 내용: SQL 기본, 데이터 정의/조작, 쿼리
+- 데이터 타입 및 함수
+  - 문서 번호: 06-08
+  - 내용: 데이터 타입, 함수/연산자, 타입 변환
+- 인덱스 및 검색
+  - 문서 번호: 09-10
+  - 내용: 인덱스, 전문 검색
+- 동시성 및 성능
+  - 문서 번호: 11-13
+  - 내용: 동시성 제어, 성능 튜닝, 병렬 쿼리
+- 서버 관리
+  - 문서 번호: 14-17
+  - 내용: 서버 설정, 인증, 역할, DB 관리
+- 백업 및 복제
+  - 문서 번호: 18-19, 24
+  - 내용: 백업/복원, 고가용성, 논리적 복제
+- 유지보수
+  - 문서 번호: 20-23
+  - 내용: 지역화, 유지보수, 모니터링, WAL
+- 클라이언트 인터페이스
+  - 문서 번호: 25-28
+  - 내용: libpq, 대용량 객체, ECPG, 정보 스키마
+- 확장성
+  - 문서 번호: 29-40
+  - 내용: SQL 확장, 트리거, 절차적 언어 등
+- 인덱스 내부
+  - 문서 번호: 47-52
+  - 내용: 인덱스 접근 메서드, GiST, SP-GiST, GIN, BRIN, Hash
+- 내부 구조
+  - 문서 번호: 53-62
+  - 내용: 저장소, 시스템 카탈로그, 프로토콜, 소스 코드
+- 참조
+  - 문서 번호: 63-66
+  - 내용: B-Tree, contrib 모듈, SQL 명령어, 클라이언트 앱
 
 ---
 
 ### I. 기초 (Tutorial & SQL Basics)
 
 #### [01. 튜토리얼 (Tutorial)](./01_tutorial.md)
-PostgreSQL 입문을 위한 기본 가이드입니다.
+PostgreSQL 입문을 위한 기본 가이드임.
 - PostgreSQL 소개 및 아키텍처 개념
 - SQL 언어 기초
 - 고급 기능 개요
@@ -8999,21 +9406,21 @@ SQL 구문의 기본 규칙을 다룹니다.
 - 함수 호출 방법
 
 #### [03. 데이터 정의 (Data Definition)](./03_data_definition.md)
-데이터베이스 객체를 정의하는 방법입니다.
+데이터베이스 객체를 정의하는 방법임.
 - 테이블 생성 및 수정
 - 제약 조건 (PRIMARY KEY, FOREIGN KEY, UNIQUE, CHECK)
 - 스키마 및 상속
 - 테이블 파티셔닝
 
 #### [04. 데이터 조작 (Data Manipulation)](./04_data_manipulation.md)
-데이터를 삽입, 수정, 삭제하는 방법입니다.
+데이터를 삽입, 수정, 삭제하는 방법임.
 - INSERT 문
 - UPDATE 문
 - DELETE 문
 - RETURNING 절
 
 #### [05. 쿼리 (Queries)](./05_queries.md)
-SELECT 문을 활용한 데이터 조회입니다.
+SELECT 문을 활용한 데이터 조회임.
 - SELECT 기본 구문
 - 테이블 표현식 (FROM 절, JOIN)
 - 집합 연산 (UNION, INTERSECT, EXCEPT)
@@ -9025,7 +9432,7 @@ SELECT 문을 활용한 데이터 조회입니다.
 ### II. 데이터 타입 및 함수 (Data Types & Functions)
 
 #### [06. 데이터 타입 (Data Types)](./06_data_types.md)
-PostgreSQL에서 지원하는 데이터 타입입니다.
+PostgreSQL에서 지원하는 데이터 타입임.
 - 숫자 타입 (integer, numeric, float 등)
 - 문자 타입 (char, varchar, text)
 - 날짜/시간 타입
@@ -9035,7 +9442,7 @@ PostgreSQL에서 지원하는 데이터 타입입니다.
 - 범위 타입, 복합 타입
 
 #### [07. 함수와 연산자 (Functions and Operators)](./07_functions_operators.md)
-내장 함수 및 연산자 레퍼런스입니다.
+내장 함수 및 연산자 레퍼런스임.
 - 논리, 비교, 수학 연산자
 - 문자열 함수
 - 패턴 매칭 (LIKE, 정규식)
@@ -9045,7 +9452,7 @@ PostgreSQL에서 지원하는 데이터 타입입니다.
 - 서브쿼리 표현식
 
 #### [08. 타입 변환 (Type Conversion)](./08_type_conversion.md)
-데이터 타입 간 변환 규칙입니다.
+데이터 타입 간 변환 규칙임.
 - 암시적/명시적 타입 변환
 - 연산자 타입 해석
 - 함수 타입 해석
@@ -9057,7 +9464,7 @@ PostgreSQL에서 지원하는 데이터 타입입니다.
 ### III. 인덱스 및 검색 (Indexes & Search)
 
 #### [09. 인덱스 (Indexes)](./09_indexes.md)
-데이터베이스 성능 최적화를 위한 인덱스입니다.
+데이터베이스 성능 최적화를 위한 인덱스임.
 - B-Tree, Hash, GiST, SP-GiST, GIN, BRIN 인덱스
 - 다중 컬럼 인덱스
 - 표현식 인덱스
@@ -9066,7 +9473,7 @@ PostgreSQL에서 지원하는 데이터 타입입니다.
 - 인덱스 전용 스캔
 
 #### [10. 전문 검색 (Full Text Search)](./10_full_text_search.md)
-텍스트 검색 기능입니다.
+텍스트 검색 기능임.
 - 문서와 쿼리 (tsvector, tsquery)
 - 텍스트 검색 연산자
 - 검색 결과 순위 지정
@@ -9078,7 +9485,7 @@ PostgreSQL에서 지원하는 데이터 타입입니다.
 ### IV. 동시성 및 성능 (Concurrency & Performance)
 
 #### [11. 동시성 제어 (Concurrency Control)](./11_concurrency.md)
-다중 사용자 환경에서의 동시성 관리입니다.
+다중 사용자 환경에서의 동시성 관리임.
 - MVCC (다중 버전 동시성 제어)
 - 트랜잭션 격리 수준
   - Read Committed (기본값)
@@ -9089,7 +9496,7 @@ PostgreSQL에서 지원하는 데이터 타입입니다.
 - 교착 상태 (Deadlock)
 
 #### [12. 성능 팁 (Performance Tips)](./12_performance.md)
-쿼리 성능 최적화 방법입니다.
+쿼리 성능 최적화 방법임.
 - EXPLAIN 사용법
   - EXPLAIN 기초
   - EXPLAIN ANALYZE
@@ -9099,7 +9506,7 @@ PostgreSQL에서 지원하는 데이터 타입입니다.
 - 비영속적 설정
 
 #### [13. 병렬 쿼리 (Parallel Query)](./13_parallel_query.md)
-다중 CPU를 활용한 병렬 처리입니다.
+다중 CPU를 활용한 병렬 처리임.
 - 병렬 쿼리 작동 방식
 - Gather/Gather Merge 노드
 - 병렬 스캔, 병렬 조인, 병렬 집계
@@ -9111,7 +9518,7 @@ PostgreSQL에서 지원하는 데이터 타입입니다.
 ### V. 서버 관리 (Server Administration)
 
 #### [14. 서버 설정 (Server Configuration)](./14_server_config.md)
-PostgreSQL 서버 설정 파라미터입니다.
+PostgreSQL 서버 설정 파라미터임.
 - postgresql.conf 파일
 - 파라미터 타입 (Boolean, String, Numeric 등)
 - 연결 및 인증 설정
@@ -9122,7 +9529,7 @@ PostgreSQL 서버 설정 파라미터입니다.
 - 오류 보고 및 로깅
 
 #### [15. 클라이언트 인증 (Client Authentication)](./15_client_auth.md)
-클라이언트 연결 인증 방법입니다.
+클라이언트 연결 인증 방법임.
 - pg_hba.conf 파일
 - 인증 방법
   - Trust, Password (md5, scram-sha-256)
@@ -9134,7 +9541,7 @@ PostgreSQL 서버 설정 파라미터입니다.
 - 사용자 이름 맵
 
 #### [16. 데이터베이스 역할 (Database Roles)](./16_database_roles.md)
-사용자 및 권한 관리입니다.
+사용자 및 권한 관리임.
 - 역할 생성/삭제
 - 역할 속성 (LOGIN, SUPERUSER, CREATEDB 등)
 - 역할 멤버십
@@ -9142,7 +9549,7 @@ PostgreSQL 서버 설정 파라미터입니다.
 - 함수 보안 (SECURITY DEFINER)
 
 #### [17. 데이터베이스 관리 (Managing Databases)](./17_managing_databases.md)
-데이터베이스 생성 및 관리입니다.
+데이터베이스 생성 및 관리임.
 - 데이터베이스 생성/삭제
 - 템플릿 데이터베이스 (template0, template1)
 - 데이터베이스 구성
@@ -9153,14 +9560,14 @@ PostgreSQL 서버 설정 파라미터입니다.
 ### VI. 백업 및 복제 (Backup & Replication)
 
 #### [18. 백업 및 복원 (Backup and Restore)](./18_backup_restore.md)
-데이터 백업 및 복구 방법입니다.
+데이터 백업 및 복구 방법임.
 - SQL 덤프 (pg_dump, pg_dumpall)
 - 파일 시스템 레벨 백업
 - 연속 아카이빙 (WAL 아카이빙)
 - Point-in-Time Recovery (PITR)
 
 #### [19. 고가용성, 로드 밸런싱, 복제 (High Availability)](./19_high_availability.md)
-서버 가용성 및 복제 구성입니다.
+서버 가용성 및 복제 구성임.
 - 솔루션 비교 (공유 디스크, 파일 시스템 복제, WAL 배송)
 - 로그 배송 스탠바이 서버
 - 스트리밍 복제
@@ -9168,7 +9575,7 @@ PostgreSQL 서버 설정 파라미터입니다.
 - 동기/비동기 복제
 
 #### [24. 논리적 복제 (Logical Replication)](./24_logical_replication.md)
-테이블 단위 논리적 복제입니다.
+테이블 단위 논리적 복제임.
 - 발행 (Publication)
 - 구독 (Subscription)
 - 행 필터, 컬럼 목록
@@ -9181,14 +9588,14 @@ PostgreSQL 서버 설정 파라미터입니다.
 ### VII. 유지보수 (Maintenance)
 
 #### [20. 지역화 (Localization)](./20_localization.md)
-다국어 및 문자셋 지원입니다.
+다국어 및 문자셋 지원임.
 - 로케일 지원 (LC_COLLATE, LC_CTYPE 등)
 - 콜레이션 (Collation)
 - 문자 집합 (Character Set) 지원
 - 인코딩 변환
 
 #### [21. 정기적 유지보수 (Routine Maintenance)](./21_maintenance.md)
-데이터베이스 유지보수 작업입니다.
+데이터베이스 유지보수 작업임.
 - VACUUM
   - 디스크 공간 회수
   - 플래너 통계 업데이트
@@ -9199,7 +9606,7 @@ PostgreSQL 서버 설정 파라미터입니다.
 - 로그 파일 유지보수
 
 #### [22. 모니터링 (Monitoring)](./22_monitoring.md)
-데이터베이스 활동 모니터링입니다.
+데이터베이스 활동 모니터링임.
 - 표준 유닉스 도구
 - 누적 통계 시스템
   - pg_stat_activity
@@ -9211,7 +9618,7 @@ PostgreSQL 서버 설정 파라미터입니다.
 - 동적 추적
 
 #### [23. WAL (Write-Ahead Log)](./23_wal.md)
-WAL의 안정성 및 구성입니다.
+WAL의 안정성 및 구성임.
 - 안정성 원칙
 - 데이터 체크섬
 - WAL 구성
@@ -9223,7 +9630,7 @@ WAL의 안정성 및 구성입니다.
 ### VIII. 클라이언트 인터페이스 (Client Interfaces)
 
 #### [25. libpq - C 라이브러리](./25_libpq.md)
-PostgreSQL C API입니다.
+PostgreSQL C API임.
 - 연결 제어 함수
 - 명령 실행 함수
 - 비동기 명령 처리
@@ -9231,13 +9638,13 @@ PostgreSQL C API입니다.
 - 대용량 객체 함수
 
 #### [26. 대용량 객체 (Large Objects)](./26_large_objects.md)
-대용량 바이너리 데이터 처리입니다.
+대용량 바이너리 데이터 처리임.
 - 대용량 객체 소개
 - 클라이언트 인터페이스
 - 서버측 함수 (lo_create, lo_import, lo_export 등)
 
 #### [27. ECPG - 내장 SQL](./27_ecpg.md)
-C 언어 내장 SQL 프로그래밍입니다.
+C 언어 내장 SQL 프로그래밍임.
 - ECPG 개념
 - 데이터베이스 연결 관리
 - SQL 명령 실행
@@ -9246,7 +9653,7 @@ C 언어 내장 SQL 프로그래밍입니다.
 - 오류 처리
 
 #### [28. 정보 스키마 (Information Schema)](./28_information_schema.md)
-SQL 표준 메타데이터 뷰입니다.
+SQL 표준 메타데이터 뷰임.
 - 정보 스키마 개요
 - 주요 뷰
   - tables, columns
@@ -9259,7 +9666,7 @@ SQL 표준 메타데이터 뷰입니다.
 ### IX. 확장성 (Extensibility)
 
 #### [29. SQL 확장하기 (Extending SQL)](./29_extending_sql.md)
-PostgreSQL 확장 방법입니다.
+PostgreSQL 확장 방법임.
 - 확장성 작동 원리
 - PostgreSQL 타입 시스템
 - 사용자 정의 함수
@@ -9268,34 +9675,34 @@ PostgreSQL 확장 방법입니다.
 - 확장 (Extensions)
 
 #### [30. 트리거 (Triggers)](./30_triggers.md)
-자동 실행 함수입니다.
+자동 실행 함수임.
 - 트리거 개요 및 용도
 - 트리거 동작 (BEFORE/AFTER, ROW/STATEMENT)
 - 트리거 함수 작성
 - 데이터 변경의 가시성
 
 #### [31. 이벤트 트리거 (Event Triggers)](./31_event_triggers.md)
-DDL 이벤트 트리거입니다.
+DDL 이벤트 트리거임.
 - 이벤트 종류 (ddl_command_start, ddl_command_end 등)
 - 이벤트 트리거 함수
 - DDL 명령 캡처
 
 #### [32. 규칙 시스템 (Rule System)](./32_rule_system.md)
-쿼리 재작성 규칙입니다.
+쿼리 재작성 규칙임.
 - 쿼리 트리 구조
 - 뷰와 규칙 시스템
 - INSERT/UPDATE/DELETE 규칙
 - 규칙 vs 트리거
 
 #### [33. 절차적 언어 (Procedural Languages)](./33_procedural_languages.md)
-절차적 언어 개요입니다.
+절차적 언어 개요임.
 - 절차적 언어란?
 - 핸들러 작동 방식
 - 신뢰/비신뢰 언어
 - 언어 설치
 
 #### [34. PL/pgSQL](./34_plpgsql.md)
-PostgreSQL 기본 절차적 언어입니다.
+PostgreSQL 기본 절차적 언어임.
 - 변수 및 상수 선언
 - 제어 구조 (IF, CASE, LOOP)
 - 커서 사용
@@ -9304,21 +9711,21 @@ PostgreSQL 기본 절차적 언어입니다.
 - 트랜잭션 제어
 
 #### [35. PL/Tcl](./35_pltcl.md)
-Tcl 절차적 언어입니다.
+Tcl 절차적 언어임.
 - PL/Tcl 함수와 인수
 - 데이터베이스 접근
 - 트리거 함수
 - 오류 처리
 
 #### [36. PL/Perl](./36_plperl.md)
-Perl 절차적 언어입니다.
+Perl 절차적 언어임.
 - PL/Perl 함수
 - 내장 함수
 - 신뢰/비신뢰 PL/Perl
 - 트리거
 
 #### [37. PL/Python](./37_plpython.md)
-Python 절차적 언어입니다.
+Python 절차적 언어임.
 - PL/Python 함수
 - 데이터 타입 매핑
 - 데이터베이스 접근
@@ -9326,7 +9733,7 @@ Python 절차적 언어입니다.
 - 트랜잭션 제어
 
 #### [38. SPI (Server Programming Interface)](./38_spi.md)
-서버 프로그래밍 인터페이스입니다.
+서버 프로그래밍 인터페이스임.
 - 연결 관리
 - 쿼리 실행
 - 준비된 구문
@@ -9334,13 +9741,13 @@ Python 절차적 언어입니다.
 - 메모리 관리
 
 #### [39. 백그라운드 워커 (Background Workers)](./39_background_workers.md)
-백그라운드 프로세스 확장입니다.
+백그라운드 프로세스 확장임.
 - 백그라운드 워커 등록
 - 시그널 처리
 - 공유 메모리 접근
 
 #### [40. 논리적 디코딩 (Logical Decoding)](./40_logical_decoding.md)
-변경 데이터 캡처입니다.
+변경 데이터 캡처임.
 - 논리적 디코딩 개념
 - 복제 슬롯
 - 출력 플러그인
@@ -9350,57 +9757,57 @@ Python 절차적 언어입니다.
 ### X. 고급 확장 기능 (Advanced Extension Features)
 
 #### [41. 복제 진행 추적 (Replication Progress)](./41_replication_progress.md)
-복제 원본 및 진행 상태 추적입니다.
+복제 원본 및 진행 상태 추적임.
 
 #### [42. 아카이브 모듈 (Archive Modules)](./42_archive_modules.md)
-커스텀 WAL 아카이브 모듈입니다.
+커스텀 WAL 아카이브 모듈임.
 
 #### [43. 외래 데이터 래퍼 (FDW)](./43_fdw.md)
-외래 테이블 접근 래퍼 작성입니다.
+외래 테이블 접근 래퍼 작성임.
 
 #### [44. 테이블 샘플링 메서드 (Table Sampling)](./44_tablesample.md)
-커스텀 샘플링 메서드입니다.
+커스텀 샘플링 메서드임.
 
 #### [45. 커스텀 스캔 프로바이더 (Custom Scan)](./45_custom_scan.md)
-커스텀 스캔 방법 구현입니다.
+커스텀 스캔 방법 구현임.
 
 #### [46. 일반 WAL 레코드 (Generic WAL)](./46_generic_wal.md)
-확장을 위한 일반 WAL 레코드입니다.
+확장을 위한 일반 WAL 레코드임.
 
 ---
 
 ### XI. 인덱스 내부 구조 (Index Internals)
 
 #### [47. 인덱스 접근 메서드 (Index Access Method)](./47_index_am.md)
-새로운 인덱스 유형 개발을 위한 인터페이스입니다.
+새로운 인덱스 유형 개발을 위한 인터페이스임.
 - 기본 API 구조
 - 인덱스 스캔
 - 인덱스 잠금 고려사항
 
 #### [48. GiST 인덱스](./48_gist.md)
-일반화 검색 트리입니다.
+일반화 검색 트리임.
 - GiST 소개 및 확장성
 - 내장 연산자 클래스
 - 구현 세부사항
 
 #### [49. SP-GiST 인덱스](./49_spgist.md)
-공간 분할 일반화 검색 트리입니다.
+공간 분할 일반화 검색 트리임.
 - 쿼드 트리, k-d 트리, 기수 트리
 - 확장성
 
 #### [50. GIN 인덱스](./50_gin.md)
-일반화 역 인덱스입니다.
+일반화 역 인덱스임.
 - 복합 값 인덱싱
 - 전문 검색, 배열 검색
 - 성능 팁
 
 #### [51. BRIN 인덱스](./51_brin.md)
-블록 범위 인덱스입니다.
+블록 범위 인덱스임.
 - 블록 범위 개념
 - 연산자 클래스 (Minmax, Inclusion, Bloom)
 
 #### [52. 해시 인덱스](./52_hash.md)
-해시 인덱스 내부입니다.
+해시 인덱스 내부임.
 - 해시 코드 저장
 - 동등 비교 전용
 
@@ -9409,7 +9816,7 @@ Python 절차적 언어입니다.
 ### XII. 내부 구조 (Internals)
 
 #### [53. 데이터베이스 물리적 저장소 (Storage)](./53_storage.md)
-물리적 저장소 구조입니다.
+물리적 저장소 구조임.
 - 파일 레이아웃
 - TOAST
 - 프리 스페이스 맵
@@ -9418,21 +9825,21 @@ Python 절차적 언어입니다.
 - HOT (Heap-Only Tuples)
 
 #### [54. 시스템 카탈로그 (System Catalogs)](./54_system_catalogs.md)
-시스템 메타데이터 테이블입니다.
+시스템 메타데이터 테이블임.
 - pg_class, pg_attribute
 - pg_type, pg_proc
 - pg_namespace, pg_index
 - pg_constraint, pg_database
 
 #### [55. 시스템 뷰 (System Views)](./55_system_views.md)
-시스템 상태 뷰입니다.
+시스템 상태 뷰임.
 - pg_stat_activity
 - pg_locks
 - pg_settings
 - pg_tables, pg_indexes
 
 #### [56. Frontend/Backend 프로토콜](./56_protocol.md)
-클라이언트-서버 통신 프로토콜입니다.
+클라이언트-서버 통신 프로토콜임.
 - 메시지 흐름
 - 메시지 형식
 - 확장 쿼리 프로토콜
@@ -9440,31 +9847,31 @@ Python 절차적 언어입니다.
 - 복제 프로토콜
 
 #### [57. PostgreSQL 소스 코드](./57_source_code.md)
-소스 코드 구조입니다.
+소스 코드 구조임.
 - 디렉토리 구조
 - backend, bin, common 등
 - 빌드 시스템
 
 #### [58. 네이티브 언어 지원 (NLS)](./58_nls.md)
-메시지 번역 시스템입니다.
+메시지 번역 시스템임.
 - GNU gettext 기반
 - 번역자/프로그래머 가이드
 
 #### [59. 플래너 통계 활용 (Planner Statistics)](./59_planner_stats.md)
-쿼리 플래너의 통계 활용입니다.
+쿼리 플래너의 통계 활용임.
 - 단일/확장 통계
 - 행 추정 예제
 
 #### [60. 유전 쿼리 최적화기 (GEQO)](./60_geqo.md)
-복잡한 조인 최적화입니다.
+복잡한 조인 최적화임.
 - 유전 알고리즘 기반
 - 설정 파라미터
 
 #### [61. 테이블 접근 메서드 (Table AM)](./61_table_am.md)
-테이블 저장 방법 인터페이스입니다.
+테이블 저장 방법 인터페이스임.
 
 #### [62. WAL 내부 구현 (WAL Internals)](./62_wal_internals.md)
-WAL 시스템 내부입니다.
+WAL 시스템 내부임.
 - WAL 기본 원리
 - 레코드 구조
 
@@ -9473,26 +9880,26 @@ WAL 시스템 내부입니다.
 ### XIII. 참조 (Reference)
 
 #### [63. B-Tree 인덱스](./63_btree.md)
-B-Tree 인덱스 상세입니다.
+B-Tree 인덱스 상세임.
 - 연산자 클래스 동작
 - 지원 함수
 - 구현 세부사항
 
 #### [64. 추가 제공 모듈 (Contrib)](./64_contrib.md)
-contrib 확장 모듈입니다.
+contrib 확장 모듈임.
 - pg_stat_statements
 - postgres_fdw
 - pg_trgm, hstore, ltree
 
 #### [65. SQL 명령어 참조 (SQL Commands)](./65_sql_commands.md)
-SQL 명령어 레퍼런스입니다.
+SQL 명령어 레퍼런스임.
 - DML (SELECT, INSERT, UPDATE, DELETE)
 - DDL (CREATE, ALTER, DROP)
 - DCL (GRANT, REVOKE)
 - TCL (BEGIN, COMMIT, ROLLBACK)
 
 #### [66. 클라이언트 애플리케이션 (Client Apps)](./66_client_apps.md)
-클라이언트 도구입니다.
+클라이언트 도구임.
 - psql (대화형 터미널)
 - pg_dump, pg_restore
 - pg_dumpall

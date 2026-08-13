@@ -22,7 +22,7 @@
 
 ### BPF Map이란?
 
-BPF 프로그램과 사용자 공간이 데이터를 교환하는 **공유 자료구조**. 직접 메모리 공유가 불가능한 BPF 환경에서 핵심 통신 채널 역할을 한다.
+BPF 프로그램과 사용자 공간이 데이터를 교환하는 **공유 자료구조**. 직접 메모리 공유가 불가능한 BPF 환경에서 핵심 통신 채널 역할 수행.
 
 특징:
 - 커널 내부에 존재
@@ -172,7 +172,7 @@ task/inode/socket/cgroup 객체에 직접 연결된 storage. 객체 수명에 �
 
 ### PERCPU 맵
 
-`HASH`, `ARRAY` 등에 PERCPU 변형이 있다. CPU 코어마다 별도 인스턴스를 유지하므로 동기화 없이 빠르게 접근할 수 있다.
+`HASH`, `ARRAY` 등에 PERCPU 변형 존재. CPU 코어마다 별도 인스턴스를 유지 → 동기화 없이 빠르게 접근 가능.
 
 ```c
 struct {
@@ -263,7 +263,7 @@ while (1) {
 
 ### BPF 객체 핀닝
 
-맵과 프로그램은 참조하는 사용자 프로세스가 종료되면 사라진다. 영구 보존이 필요하면 BPF FS에 핀한다.
+맵과 프로그램은 참조하는 사용자 프로세스가 종료되면 사라짐. 영구 보존이 필요하면 BPF FS에 핀.
 
 ```bash
 sudo mount -t bpf bpf /sys/fs/bpf      # 보통 자동 마운트됨
@@ -276,7 +276,7 @@ sudo bpftool prog pin id <prog-id> /sys/fs/bpf/my_prog
 int fd = bpf_obj_get("/sys/fs/bpf/my_map");
 ```
 
-핀된 객체는 마지막 참조가 사라질 때까지 유지된다. `rm /sys/fs/bpf/my_map`으로 unpin할 수 있다.
+핀된 객체는 마지막 참조가 사라질 때까지 유지됨. `rm /sys/fs/bpf/my_map`으로 unpin 가능.
 
 ---
 
@@ -300,7 +300,7 @@ struct {
 } outer SEC(".maps");
 ```
 
-`PROG_ARRAY`와 함께 동적 BPF 라우팅 구현에 자주 쓰인다.
+`PROG_ARRAY`와 함께 동적 BPF 라우팅 구현에 자주 쓰임.
 
 ---
 
@@ -379,9 +379,9 @@ __atomic_fetch_add(val_ptr, 1, __ATOMIC_RELAXED);
 
 ### Helper란?
 
-BPF 프로그램은 일반 함수를 호출할 수 없습니다 (자체 BPF 함수 + tail call 제외). 대신 커널이 제공하는 **helper 함수** 만 호출 가능합니다.
+BPF 프로그램은 일반 함수 호출 불가 (자체 BPF 함수 + tail call 제외). 대신 커널이 제공하는 **helper 함수**만 호출 가능.
 
-각 program type마다 사용 가능한 helper 셋이 다르며, 호출 시 verifier가 인자 타입과 권한을 검증합니다.
+각 program type마다 사용 가능한 helper 셋이 다름 → 호출 시 verifier가 인자 타입과 권한을 검증.
 
 호출 형태:
 ```c
@@ -482,7 +482,7 @@ long bpf_perf_event_output(ctx, map, flags, data, size);
 
 ### 메모리 접근
 
-BPF는 임의의 메모리를 직접 역참조할 수 없습니다. helper로 안전하게 읽기:
+BPF는 임의의 메모리를 직접 역참조 불가. helper로 안전하게 읽기:
 
 #### bpf_probe_read
 
@@ -682,7 +682,7 @@ helper와 별개로 5.x 후반에 도입된 메커니즘. **커널 함수를 직
 extern int bpf_dynptr_from_skb(struct sk_buff *skb, ...) __ksym;
 ```
 
-helper는 커널 ABI가 안정적이지만 새로 추가하기가 까다롭고, kfunc는 더 유연하지만 ABI 보장이 약하다.
+helper는 커널 ABI가 안정적이지만 새로 추가하기 까다로움 → kfunc는 더 유연하지만 ABI 보장이 약함.
 
 지원 kfunc 목록:
 ```bash

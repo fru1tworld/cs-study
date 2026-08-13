@@ -4,26 +4,26 @@
 
 ## 코루틴
 
-> **원문:** https://kotlinlang.org/docs/coroutines-overview.html
+> 원문: https://kotlinlang.org/docs/coroutines-overview.html
 
-애플리케이션은 종종 사용자 입력에 응답하거나, 데이터를 로드하거나, 화면을 업데이트하는 등 여러 작업을 동시에 수행해야 합니다. 이를 지원하기 위해 애플리케이션은 **동시성**(concurrency)에 의존하며, 이를 통해 작업들이 서로를 차단하지 않고 독립적으로 실행될 수 있습니다.
+애플리케이션은 사용자 입력 응답·데이터 로드·화면 업데이트 등 여러 작업을 동시에 수행해야 함 → 동시성(concurrency)에 의존 → 작업들이 서로 차단하지 않고 독립적으로 실행 가능.
 
 ### 전통적인 스레딩 접근 방식
 
-가장 일반적인 방법은 스레드를 사용하는 것입니다. 스레드는 OS가 관리하는 독립적인 실행 경로입니다. 그러나 스레드는 상대적으로 무겁고, 많이 생성하면 성능 문제가 발생할 수 있습니다.
+- 가장 일반적인 방법: 스레드 사용
+- 스레드: OS가 관리하는 독립적인 실행 경로
+- 스레드는 상대적으로 무거움 → 많이 생성하면 성능 문제 발생 가능
 
 ### Kotlin의 해결책: 코루틴
 
-Kotlin은 코루틴을 중심으로 구축된 비동기 프로그래밍을 제공합니다:
+Kotlin은 코루틴 중심의 비동기 프로그래밍 제공:
 
-- 일시 중단 함수(suspending functions)를 사용하여 자연스럽고 순차적인 스타일로 비동기 코드 작성
+- 일시 중단 함수(suspending functions)로 자연스럽고 순차적인 스타일의 비동기 코드 작성
 - 스레드의 가벼운 대안
 - 시스템 리소스를 차단하지 않고 일시 중단 가능
-- 리소스 친화적이며 세밀한 동시성에 더 적합
-
-**주요 라이브러리:** `kotlinx.coroutines` - 코루틴 시작, 동시성 처리, 비동기 스트림 작업 등을 위한 도구를 제공합니다.
-
-**시작하기:** 일시 중단 함수, 코루틴 빌더, 구조적 동시성을 포함한 핵심 개념은 [코루틴 기초](coroutines-basics.md) 가이드에서 시작하세요.
+- 리소스 친화적, 세밀한 동시성에 더 적합
+- 주요 라이브러리: `kotlinx.coroutines` — 코루틴 시작·동시성 처리·비동기 스트림 작업 등을 위한 도구 제공
+- 시작하기: 일시 중단 함수·코루틴 빌더·구조적 동시성 등 핵심 개념은 [코루틴 기초](coroutines-basics.md) 가이드 참조
 
 ---
 
@@ -31,86 +31,80 @@ Kotlin은 코루틴을 중심으로 구축된 비동기 프로그래밍을 제�
 
 #### 1. 일시 중단 함수와 코루틴 빌더
 
-**일시 중단 함수:**
+일시 중단 함수:
 - `suspend` 키워드를 기반으로 구축됨
-- 스레드를 차단하지 않고 코드를 일시 중지하고 재개할 수 있음
-- 장기 실행 작업을 비동기적으로 실행할 수 있음
+- 스레드를 차단하지 않고 코드를 일시 중지·재개 가능
+- 장기 실행 작업을 비동기적으로 실행 가능
 
-**코루틴 빌더:**
-- **`.launch()`** - 새로운 코루틴을 시작
-- **`.async()`** - 새로운 코루틴을 시작하고 결과를 반환
+코루틴 빌더:
+- `.launch()` — 새로운 코루틴을 시작
+- `.async()` — 새로운 코루틴을 시작하고 결과를 반환
 - 둘 다 `CoroutineScope`의 확장 함수
 - `CoroutineScope`는 코루틴의 생명주기를 정의하고 코루틴 컨텍스트를 제공
 
-**리소스:** [코루틴 기초](coroutines-basics.md)와 [일시 중단 함수 합성](composing-suspending-functions.md)에서 자세히 알아보세요.
+리소스: [코루틴 기초](coroutines-basics.md)와 [일시 중단 함수 합성](composing-suspending-functions.md) 참조.
 
 #### 2. 코루틴 컨텍스트와 동작
 
-`CoroutineScope`에서 코루틴을 시작하면 실행을 제어하는 컨텍스트가 생성됩니다. 빌더 함수는 코루틴 동작을 정의하는 요소들을 자동으로 생성합니다:
+`CoroutineScope`에서 코루틴을 시작하면 실행을 제어하는 컨텍스트 생성 → 빌더 함수가 코루틴 동작을 정의하는 요소들을 자동으로 생성.
 
-**주요 컨텍스트 요소:**
+주요 컨텍스트 요소:
+- `Job` — 코루틴의 생명주기를 추적, 구조적 동시성을 가능하게 함
+- `CoroutineDispatcher` — 코루틴이 실행되는 위치를 제어(백그라운드 스레드·메인 스레드 등)
+- `CoroutineExceptionHandler` — 처리되지 않은 예외를 처리
 
-| 요소 | 목적 |
-|------|------|
-| **`Job`** | 코루틴의 생명주기를 추적; 구조적 동시성을 가능하게 함 |
-| **`CoroutineDispatcher`** | 코루틴이 실행되는 위치를 제어 (백그라운드 스레드, 메인 스레드 등) |
-| **`CoroutineExceptionHandler`** | 처리되지 않은 예외를 처리 |
-
-**컨텍스트 계층:**
+컨텍스트 계층:
 - 컨텍스트는 기본적으로 코루틴의 부모로부터 상속됨
 - 구조적 동시성을 가능하게 하는 계층 구조를 형성
-- 관련 코루틴들을 함께 취소하거나 예외를 그룹으로 처리할 수 있음
+- 관련 코루틴들을 함께 취소하거나 예외를 그룹으로 처리 가능
 - 참고: [코루틴 컨텍스트와 디스패처](coroutine-context-and-dispatchers.md), [취소와 타임아웃](cancellation-and-timeouts.md), [예외 처리](exception-handling.md)
 
 #### 3. 비동기 Flow와 공유 가변 상태
 
-**코루틴 간 통신 옵션:**
+코루틴 간 통신 옵션:
+- `Flow` — 코루틴이 적극적으로 수집할 때만 값을 생성
+- `Channel` — 여러 코루틴이 값을 송수신 가능, 각 값은 정확히 하나의 코루틴에 전달
+- `SharedFlow` — 모든 활성 수집 코루틴에 모든 값을 지속적으로 공유
 
-| 옵션 | 목적 |
-|------|------|
-| **`Flow`** | 코루틴이 적극적으로 수집할 때만 값을 생성 |
-| **`Channel`** | 여러 코루틴이 값을 송수신할 수 있음; 각 값은 정확히 하나의 코루틴에 전달 |
-| **`SharedFlow`** | 모든 활성 수집 코루틴에 모든 값을 지속적으로 공유 |
-
-**공유 가변 상태 관리:**
-- **문제:** 여러 코루틴이 동일한 데이터에 접근/업데이트하면 경쟁 조건이 발생할 수 있음
-- **해결책:** `StateFlow`를 사용하여 공유 데이터를 래핑
+공유 가변 상태 관리:
+- 문제: 여러 코루틴이 동일한 데이터에 접근·업데이트 → 경쟁 조건 발생 가능
+- 해결책: `StateFlow`로 공유 데이터를 래핑
 - 하나의 코루틴에서 업데이트하고 다른 코루틴에서 최신 값을 수집
 
-**리소스:** [비동기 Flow](flow.md), [채널](channels.md), [코루틴과 채널 튜토리얼](coroutines-and-channels.md)
+리소스: [비동기 Flow](flow.md), [채널](channels.md), [코루틴과 채널 튜토리얼](coroutines-and-channels.md)
 
 ---
 
 ### 다음 단계 - 학습 경로
 
-1. **기초** - [코루틴 기초 가이드](coroutines-basics.md)
-2. **고급 합성** - [일시 중단 함수 합성](composing-suspending-functions.md)
-3. **디버깅** - IntelliJ IDEA로 코루틴 디버그
-4. **Flow 디버깅** - IntelliJ IDEA로 Kotlin Flow 디버그
-5. **UI 개발** - 코루틴을 사용한 UI 프로그래밍 가이드
-6. **Android 모범 사례** - 코루틴 모범 사례
-7. **API 참조** - `kotlinx.coroutines` API
+1. 기초 — [코루틴 기초 가이드](coroutines-basics.md)
+2. 고급 합성 — [일시 중단 함수 합성](composing-suspending-functions.md)
+3. 디버깅 — IntelliJ IDEA로 코루틴 디버그
+4. Flow 디버깅 — IntelliJ IDEA로 Kotlin Flow 디버그
+5. UI 개발 — 코루틴을 사용한 UI 프로그래밍 가이드
+6. Android 모범 사례 — 코루틴 모범 사례
+7. API 참조 — `kotlinx.coroutines` API
 
 ---
 
 ### 관련 주제
 
-- **이전:** [비동기 프로그래밍 기법](async-programming.md)
-- **다음:** [리플렉션](reflection.md)
+- 이전: [비동기 프로그래밍 기법](async-programming.md)
+- 다음: [리플렉션](reflection.md)
 
 ---
 
 ## 코루틴 기초
 
-> **원문:** https://kotlinlang.org/docs/coroutines-basics.html
+> 원문: https://kotlinlang.org/docs/coroutines-basics.html
 
-코루틴은 명확하고 순차적인 스타일로 동시성 코드를 작성하기 위한 Kotlin 기능입니다. 스레드를 차단하는 대신 실행을 일시 중단할 수 있어 효율적인 리소스 활용이 가능합니다.
+코루틴: 명확하고 순차적인 스타일로 동시성 코드를 작성하기 위한 Kotlin 기능 → 스레드를 차단하는 대신 실행을 일시 중단 가능 → 효율적인 리소스 활용.
 
 ### 주요 섹션
 
 #### 1. 일시 중단 함수
 
-코루틴의 기본 구성 요소로 `suspend` 키워드로 선언됩니다:
+코루틴의 기본 구성 요소, `suspend` 키워드로 선언:
 
 ```kotlin
 suspend fun greet() {
@@ -122,11 +116,11 @@ suspend fun main() {
 }
 ```
 
-일시 중단 함수는 다른 일시 중단 함수만 호출할 수 있거나, 다른 일시 중단 함수에서만 호출될 수 있습니다.
+일시 중단 함수는 다른 일시 중단 함수만 호출 가능하거나, 다른 일시 중단 함수에서만 호출 가능.
 
 #### 2. kotlinx.coroutines 라이브러리 추가
 
-**Gradle (Kotlin DSL):**
+Gradle (Kotlin DSL):
 ```kotlin
 repositories { mavenCentral() }
 dependencies {
@@ -134,7 +128,7 @@ dependencies {
 }
 ```
 
-**Gradle (Groovy):**
+Gradle (Groovy):
 ```gradle
 repositories { mavenCentral() }
 dependencies {
@@ -142,7 +136,7 @@ dependencies {
 }
 ```
 
-**Maven:**
+Maven:
 ```xml
 <dependency>
     <groupId>org.jetbrains.kotlinx</groupId>
@@ -156,10 +150,10 @@ dependencies {
 필요 요소:
 - 일시 중단 함수
 - 코루틴 스코프
-- 코루틴 빌더 (예: `launch()`)
+- 코루틴 빌더(예: `launch()`)
 - 스레드를 제어하는 디스패처
 
-**완전한 예제:**
+완전한 예제:
 ```kotlin
 import kotlinx.coroutines.*
 import kotlin.time.Duration.Companion.seconds
@@ -185,9 +179,9 @@ suspend fun main() {
 
 #### 4. 코루틴 스코프와 구조적 동시성
 
-코루틴은 부모-자식 관계를 가진 트리 계층 구조를 형성합니다. 부모 코루틴은 자식이 완료될 때까지 기다린 후 종료됩니다.
+코루틴은 부모-자식 관계를 가진 트리 계층 구조를 형성 → 부모 코루틴은 자식이 완료될 때까지 기다린 후 종료.
 
-**코루틴 스코프 생성:**
+코루틴 스코프 생성:
 ```kotlin
 suspend fun main() {
     coroutineScope {
@@ -207,7 +201,7 @@ suspend fun main() {
 }
 ```
 
-**코루틴 빌더 추출:**
+코루틴 빌더 추출:
 ```kotlin
 suspend fun main() {
     coroutineScope {
@@ -224,7 +218,7 @@ fun CoroutineScope.launchAll() {
 #### 5. 코루틴 빌더 함수
 
 ##### `CoroutineScope.launch()`
-스코프를 차단하지 않고 코루틴을 시작합니다:
+스코프를 차단하지 않고 코루틴 시작:
 
 ```kotlin
 suspend fun performBackgroundWork() = coroutineScope {
@@ -237,7 +231,7 @@ suspend fun performBackgroundWork() = coroutineScope {
 ```
 
 ##### `CoroutineScope.async()`
-기다릴 수 있는 `Deferred` 결과를 반환합니다:
+기다릴 수 있는 `Deferred` 결과 반환:
 
 ```kotlin
 suspend fun main() = withContext(Dispatchers.Default) {
@@ -255,7 +249,7 @@ suspend fun main() = withContext(Dispatchers.Default) {
 ```
 
 ##### `runBlocking()`
-코루틴이 완료될 때까지 현재 스레드를 차단합니다 (신중하게 사용):
+코루틴이 완료될 때까지 현재 스레드를 차단(신중하게 사용):
 
 ```kotlin
 object MyRepository : Repository {
@@ -274,7 +268,7 @@ suspend fun myReadItem(): Int {
 
 #### 6. 코루틴 디스패처
 
-어떤 스레드에서 코루틴을 실행할지 제어합니다:
+어떤 스레드에서 코루틴을 실행할지 제어:
 
 ```kotlin
 suspend fun runWithDispatcher() = coroutineScope {
@@ -298,17 +292,17 @@ suspend fun main() = withContext(Dispatchers.Default) {
 ```
 
 일반적인 디스패처:
-- `Dispatchers.Default` - CPU 집약적 작업
-- `Dispatchers.IO` - I/O 작업
-- `Dispatchers.Main` - UI 작업
+- `Dispatchers.Default` — CPU 집약적 작업
+- `Dispatchers.IO` — I/O 작업
+- `Dispatchers.Main` — UI 작업
 
 #### 7. 코루틴 vs JVM 스레드
 
-**주요 차이점:**
-- **스레드:** OS가 관리, 리소스 집약적 (각각 ~메가바이트), 최대 수천 개
-- **코루틴:** 경량 (각각 ~바이트), 다른 스레드에서 일시 중단하고 재개 가능, 수백만 개 가능
+주요 차이점:
+- 스레드: OS가 관리, 리소스 집약적(각각 ~메가바이트), 최대 수천 개
+- 코루틴: 경량(각각 ~바이트), 다른 스레드에서 일시 중단·재개 가능, 수백만 개 가능
 
-**예제: 50,000개의 코루틴**
+예제: 50,000개의 코루틴
 ```kotlin
 suspend fun printPeriods() = coroutineScope {
     repeat(50_000) {
@@ -320,7 +314,7 @@ suspend fun printPeriods() = coroutineScope {
 }
 ```
 
-동등한 스레드 구현의 ~100GB와 비교하여 ~500MB만 사용합니다.
+동등한 스레드 구현의 ~100GB와 비교해 ~500MB만 사용.
 
 ### 관련 주제
 - 일시 중단 함수 합성
@@ -332,22 +326,22 @@ suspend fun printPeriods() = coroutineScope {
 
 ## 코루틴 컨텍스트와 디스패처
 
-> **원문:** https://kotlinlang.org/docs/coroutine-context-and-dispatchers.html
+> 원문: https://kotlinlang.org/docs/coroutine-context-and-dispatchers.html
 
 ### 개요
 
-코루틴은 항상 Kotlin 표준 라이브러리에 정의된 `CoroutineContext` 타입으로 표현되는 컨텍스트에서 실행됩니다. 코루틴 컨텍스트는 다양한 요소들의 집합이며, 주요 요소는 코루틴의 `Job`과 디스패처입니다.
+코루틴은 항상 Kotlin 표준 라이브러리에 정의된 `CoroutineContext` 타입으로 표현되는 컨텍스트에서 실행됨. 코루틴 컨텍스트는 다양한 요소들의 집합 → 주요 요소는 코루틴의 `Job`과 디스패처.
 
 ---
 
 ### 디스패처와 스레드
 
-코루틴 컨텍스트에는 해당 코루틴이 실행에 사용하는 스레드 또는 스레드들을 결정하는 코루틴 디스패처(`CoroutineDispatcher`)가 포함됩니다. 디스패처는 다음을 수행할 수 있습니다:
+코루틴 컨텍스트에는 해당 코루틴이 실행에 사용하는 스레드(또는 스레드들)를 결정하는 코루틴 디스패처(`CoroutineDispatcher`) 포함. 디스패처가 수행 가능한 것:
 - 코루틴 실행을 특정 스레드로 제한
 - 스레드 풀로 디스패치
-- 제한 없이 실행하도록 허용
+- 제한 없이 실행 허용
 
-모든 코루틴 빌더(`launch`, `async`)는 디스패처를 명시적으로 지정하기 위한 선택적 `CoroutineContext` 매개변수를 받습니다.
+모든 코루틴 빌더(`launch`, `async`)는 디스패처를 명시적으로 지정하기 위한 선택적 `CoroutineContext` 매개변수를 받음.
 
 #### 예제: 다양한 디스패처
 
@@ -370,7 +364,7 @@ fun main() = runBlocking<Unit> {
 }
 ```
 
-**출력:**
+출력:
 ```
 Unconfined : I'm working in thread main
 Default : I'm working in thread DefaultDispatcher-worker-1
@@ -380,15 +374,15 @@ main runBlocking : I'm working in thread main
 
 #### 디스패처 유형
 
-- **`Dispatchers.Unconfined`**: 호출자 스레드에서 시작하여 첫 번째 일시 중단까지만, 그 후 일시 중단 함수의 스레드에서 재개
-- **`Dispatchers.Default`**: 공유 백그라운드 스레드 풀 사용 (지정하지 않을 때 기본값)
-- **`newSingleThreadContext(name)`**: 전용 스레드 생성 (비용이 큰 리소스 - `close()`로 해제해야 함)
+- `Dispatchers.Unconfined`: 호출자 스레드에서 시작 → 첫 번째 일시 중단까지만 → 그 후 일시 중단 함수의 스레드에서 재개
+- `Dispatchers.Default`: 공유 백그라운드 스레드 풀 사용(지정하지 않을 때 기본값)
+- `newSingleThreadContext(name)`: 전용 스레드 생성(비용이 큰 리소스, `close()`로 해제해야 함)
 
 ---
 
 ### Unconfined vs Confined 디스패처
 
-`Dispatchers.Unconfined` 디스패처는 호출자 스레드에서 코루틴을 시작하지만 첫 번째 일시 중단 지점까지만입니다. 일시 중단 후에는 일시 중단 함수가 결정한 스레드에서 재개됩니다.
+`Dispatchers.Unconfined` 디스패처는 호출자 스레드에서 코루틴을 시작하지만 첫 번째 일시 중단 지점까지만 → 일시 중단 후에는 일시 중단 함수가 결정한 스레드에서 재개.
 
 ```kotlin
 import kotlinx.coroutines.*
@@ -407,7 +401,7 @@ fun main() = runBlocking<Unit> {
 }
 ```
 
-**출력:**
+출력:
 ```
 Unconfined : I'm working in thread main
 main runBlocking: I'm working in thread main
@@ -421,13 +415,13 @@ main runBlocking: After delay in thread main
 
 #### IDEA로 디버깅
 
-IntelliJ IDEA의 코루틴 디버거 (Kotlin 플러그인)는 디버깅을 단순화합니다. 기능:
+IntelliJ IDEA의 코루틴 디버거(Kotlin 플러그인)는 디버깅을 단순화. 기능:
 - 각 코루틴의 상태 확인
 - 로컬 및 캡처된 변수 보기
 - 전체 코루틴 생성 스택과 호출 스택 보기
 - Coroutines 탭에서 우클릭으로 전체 코루틴 덤프 가져오기
 
-`kotlinx-coroutines-core` 버전 1.3.8 이상이 필요합니다.
+`kotlinx-coroutines-core` 버전 1.3.8 이상 필요.
 
 #### 로깅을 사용한 디버깅
 
@@ -445,7 +439,7 @@ fun main() = runBlocking<Unit> {
 }
 ```
 
-**출력:**
+출력:
 ```
 [main @coroutine#2] I'm computing a piece of the answer
 [main @coroutine#3] I'm computing another piece of the answer
@@ -456,7 +450,7 @@ fun main() = runBlocking<Unit> {
 
 ### 스레드 간 전환
 
-디스패처 간 전환에는 `withContext()`를 사용합니다:
+디스패처 간 전환에는 `withContext()` 사용:
 
 ```kotlin
 import kotlinx.coroutines.*
@@ -478,7 +472,7 @@ fun main() {
 }
 ```
 
-**출력:**
+출력:
 ```
 [Ctx1 @coroutine#1] Started in ctx1
 [Ctx2 @coroutine#1] Working in ctx2
@@ -489,7 +483,7 @@ fun main() {
 
 ### 컨텍스트의 Job
 
-`coroutineContext[Job]`을 통해 코루틴의 `Job`에 접근합니다:
+`coroutineContext[Job]`을 통해 코루틴의 `Job`에 접근:
 
 ```kotlin
 import kotlinx.coroutines.*
@@ -499,12 +493,12 @@ fun main() = runBlocking<Unit> {
 }
 ```
 
-**출력 (디버그 모드):**
+출력(디버그 모드):
 ```
 My job is "coroutine#1":BlockingCoroutine{Active}@6d311334
 ```
 
-`isActive`는 `coroutineContext[Job]?.isActive == true`의 단축형입니다.
+`isActive`는 `coroutineContext[Job]?.isActive == true`의 단축형.
 
 ---
 
@@ -541,7 +535,7 @@ fun main() = runBlocking<Unit> {
 }
 ```
 
-**출력:**
+출력:
 ```
 job1: I run in my own Job and execute independently!
 job2: I am a child of the request coroutine
@@ -553,7 +547,7 @@ job1: I am not affected by cancellation of the request
 
 ### 부모의 책임
 
-부모 코루틴은 항상 모든 자식들의 완료를 기다립니다:
+부모 코루틴은 항상 모든 자식들의 완료를 기다림:
 
 ```kotlin
 import kotlinx.coroutines.*
@@ -573,7 +567,7 @@ fun main() = runBlocking<Unit> {
 }
 ```
 
-**출력:**
+출력:
 ```
 request: I'm done and I don't explicitly join my children that are still active
 Coroutine 0 is done
@@ -586,7 +580,7 @@ Now processing of the request is complete
 
 ### 디버깅을 위한 코루틴 이름 지정
 
-더 나은 디버깅을 위해 `CoroutineName` 컨텍스트 요소를 사용합니다:
+더 나은 디버깅을 위해 `CoroutineName` 컨텍스트 요소 사용:
 
 ```kotlin
 import kotlinx.coroutines.*
@@ -609,7 +603,7 @@ fun main() = runBlocking(CoroutineName("main")) {
 }
 ```
 
-**출력 (`-Dkotlinx.coroutines.debug` 사용):**
+출력(`-Dkotlinx.coroutines.debug` 사용):
 ```
 [main @main#1] Started main coroutine
 [main @v1coroutine#2] Computing v1
@@ -621,7 +615,7 @@ fun main() = runBlocking(CoroutineName("main")) {
 
 ### 컨텍스트 요소 결합
 
-컨텍스트 요소를 결합하려면 `+` 연산자를 사용합니다:
+컨텍스트 요소를 결합하려면 `+` 연산자 사용:
 
 ```kotlin
 import kotlinx.coroutines.*
@@ -633,7 +627,7 @@ fun main() = runBlocking<Unit> {
 }
 ```
 
-**출력 (`-Dkotlinx.coroutines.debug` 사용):**
+출력(`-Dkotlinx.coroutines.debug` 사용):
 ```
 I'm working in thread DefaultDispatcher-worker-1 @test#2
 ```
@@ -642,7 +636,7 @@ I'm working in thread DefaultDispatcher-worker-1 @test#2
 
 ### 코루틴 스코프
 
-`CoroutineScope`는 코루틴 생명주기를 관리하며, 생명주기가 있는 객체 (예: Android 액티비티)에 유용합니다:
+`CoroutineScope`는 코루틴 생명주기를 관리 → 생명주기가 있는 객체(예: Android 액티비티)에 유용:
 
 ```kotlin
 import kotlinx.coroutines.*
@@ -675,7 +669,7 @@ fun main() = runBlocking<Unit> {
 }
 ```
 
-**출력:**
+출력:
 ```
 Launched coroutines
 Coroutine 0 is done
@@ -685,7 +679,7 @@ Destroying activity!
 
 #### 스레드 로컬 데이터
 
-코루틴에서 `ThreadLocal`을 사용하려면 `asContextElement()`를 사용합니다:
+코루틴에서 `ThreadLocal`을 사용하려면 `asContextElement()` 사용:
 
 ```kotlin
 import kotlinx.coroutines.*
@@ -706,7 +700,7 @@ fun main() = runBlocking<Unit> {
 }
 ```
 
-**출력 (디버그 사용):**
+출력(디버그 사용):
 ```
 Pre-main, current thread: Thread[main @coroutine#1,5,main], thread local value: 'main'
 Launch start, current thread: Thread[DefaultDispatcher-worker-1 @coroutine#2,5,main], thread local value: 'launch'
@@ -714,7 +708,7 @@ After yield, current thread: Thread[DefaultDispatcher-worker-2 @coroutine#2,5,ma
 Post-main, current thread: Thread[main @coroutine#1,5,main], thread local value: 'main'
 ```
 
-**주요 제한사항:**
+주요 제한사항:
 - 스레드 로컬 변경 사항은 코루틴 호출자에게 전파되지 않음
 - 업데이트된 값은 다음 일시 중단 시 손실됨
 - 값을 업데이트하려면 `withContext()` 사용
@@ -724,21 +718,21 @@ Post-main, current thread: Thread[main @coroutine#1,5,main], thread local value:
 
 ## 취소와 타임아웃
 
-> **원문:** https://kotlinlang.org/docs/cancellation-and-timeouts.html
+> 원문: https://kotlinlang.org/docs/cancellation-and-timeouts.html
 
 ### 개요
 
-취소를 사용하면 코루틴이 완료되기 전에 중지할 수 있습니다. UI에서 사용자가 창을 닫거나 코루틴이 실행 중인 동안 다른 곳으로 이동하는 등 더 이상 필요하지 않은 작업을 중지합니다. 또한 리소스를 조기에 해제하고 코루틴이 폐기된 객체에 접근하는 것을 방지할 수 있습니다.
+취소를 사용하면 코루틴이 완료되기 전에 중지 가능. UI에서 사용자가 창을 닫거나 코루틴 실행 중 다른 곳으로 이동하는 등 더 이상 필요하지 않은 작업을 중지 → 리소스를 조기에 해제하고 코루틴이 폐기된 객체에 접근하는 것을 방지.
 
-취소는 코루틴의 생명주기와 부모-자식 관계를 나타내는 [`Job`](https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-job/) 핸들을 통해 작동합니다.
+취소는 코루틴의 생명주기와 부모-자식 관계를 나타내는 [`Job`](https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-job/) 핸들을 통해 작동.
 
 ---
 
 ### 코루틴 취소
 
-`Job` 핸들에서 [`cancel()`](https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-job/cancel.html) 함수가 호출되면 코루틴이 취소됩니다.
+`Job` 핸들에서 [`cancel()`](https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-job/cancel.html) 함수가 호출되면 코루틴이 취소됨.
 
-코루틴이 취소되면 다음에 취소를 확인할 때 [`CancellationException`](https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-cancellation-exception/)을 던집니다.
+코루틴이 취소되면 다음에 취소를 확인할 때 [`CancellationException`](https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-cancellation-exception/) 던짐.
 
 #### 예제: 수동 취소
 
@@ -781,7 +775,7 @@ suspend fun main() {
 
 #### 취소 전파
 
-구조적 동시성은 코루틴을 취소하면 모든 자식도 취소되도록 보장합니다.
+구조적 동시성은 코루틴을 취소하면 모든 자식도 취소되도록 보장.
 
 ```kotlin
 suspend fun main() {
@@ -817,11 +811,11 @@ suspend fun main() {
 
 ### 코루틴이 취소에 반응하게 만들기
 
-Kotlin에서 코루틴 취소는 **협조적**입니다. 코루틴은 일시 중단하거나 명시적으로 취소를 확인할 때만 취소에 반응합니다.
+Kotlin에서 코루틴 취소는 협조적 → 코루틴은 일시 중단하거나 명시적으로 취소를 확인할 때만 취소에 반응.
 
 #### 일시 중단 지점과 취소
 
-코루틴이 취소되면 일시 중단 지점에 도달할 때까지 계속 실행됩니다. 코루틴이 거기서 일시 중단하면 함수는 취소되었는지 확인하고 `CancellationException`을 던집니다.
+코루틴이 취소되면 일시 중단 지점에 도달할 때까지 계속 실행 → 코루틴이 거기서 일시 중단하면 함수는 취소되었는지 확인하고 `CancellationException` 던짐.
 
 ```kotlin
 suspend fun main() {
@@ -852,10 +846,10 @@ suspend fun main() {
 
 #### 명시적으로 취소 확인
 
-코루틴이 오랫동안 일시 중단하지 않으면 다음을 사용합니다:
+코루틴이 오랫동안 일시 중단하지 않으면 다음 사용:
 
-##### **isActive**
-[`isActive`](https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/is-active.html) 프로퍼티는 코루틴이 취소되면 `false`입니다.
+##### isActive
+[`isActive`](https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/is-active.html) 프로퍼티는 코루틴이 취소되면 `false`.
 
 ```kotlin
 suspend fun main() {
@@ -878,8 +872,8 @@ suspend fun main() {
 }
 ```
 
-##### **ensureActive()**
-[`ensureActive()`](https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/ensure-active.html) 함수는 코루틴이 취소되면 즉시 `CancellationException`을 던집니다.
+##### ensureActive()
+[`ensureActive()`](https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/ensure-active.html) 함수는 코루틴이 취소되면 즉시 `CancellationException` 던짐.
 
 ```kotlin
 suspend fun main() {
@@ -906,8 +900,8 @@ suspend fun main() {
 }
 ```
 
-##### **yield()**
-[`yield()`](https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/yield.html) 함수는 코루틴을 일시 중단하고 재개하기 전에 취소를 확인합니다.
+##### yield()
+[`yield()`](https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/yield.html) 함수는 코루틴을 일시 중단하고 재개하기 전에 취소를 확인.
 
 ```kotlin
 fun main() {
@@ -929,7 +923,7 @@ fun main() {
 
 #### 블로킹 코드 인터럽트
 
-JVM에서 코루틴을 취소할 때 블로킹 함수를 인터럽트하려면 [`runInterruptible()`](https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/run-interruptible.html)을 사용합니다:
+JVM에서 코루틴을 취소할 때 블로킹 함수를 인터럽트하려면 [`runInterruptible()`](https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/run-interruptible.html) 사용:
 
 ```kotlin
 suspend fun main() {
@@ -961,7 +955,7 @@ suspend fun main() {
 
 ### 코루틴 취소 시 값 안전하게 처리
 
-일시 중단된 코루틴이 취소되면 값이 사용 가능하더라도 값을 반환하는 대신 `CancellationException`으로 재개됩니다. 이를 **즉시 취소**(prompt cancellation)라고 합니다.
+일시 중단된 코루틴이 취소되면 값이 사용 가능하더라도 값을 반환하는 대신 `CancellationException`으로 재개됨 → 즉시 취소(prompt cancellation)라고 함.
 
 #### 예제: 적절한 리소스 처리
 
@@ -1004,7 +998,7 @@ class ScreenWithFileContents(private val scope: CoroutineScope) {
 
 #### 취소 불가능한 블록 실행
 
-코루틴이 취소되어도 특정 작업이 완료되도록 하려면 `withContext()`와 함께 [`NonCancellable`](https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-non-cancellable/)을 사용합니다:
+코루틴이 취소되어도 특정 작업이 완료되도록 하려면 `withContext()`와 함께 [`NonCancellable`](https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-non-cancellable/) 사용:
 
 ```kotlin
 val serviceStarted = CompletableDeferred<Unit>()
@@ -1043,7 +1037,7 @@ suspend fun main() {
 
 ### 타임아웃
 
-타임아웃은 지정된 기간 후에 코루틴을 자동으로 취소합니다. [`withTimeoutOrNull()`](https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/with-timeout-or-null.html)을 사용합니다:
+타임아웃은 지정된 기간 후에 코루틴을 자동으로 취소. [`withTimeoutOrNull()`](https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/with-timeout-or-null.html) 사용:
 
 ```kotlin
 import kotlinx.coroutines.*
@@ -1084,22 +1078,22 @@ suspend fun main() {
 }
 ```
 
-타임아웃이 지정된 `Duration`을 초과하면 `withTimeoutOrNull()`은 `null`을 반환합니다.
+타임아웃이 지정된 `Duration`을 초과하면 `withTimeoutOrNull()`은 `null` 반환.
 
 ---
 
 ## 일시 중단 함수 합성
 
-> **원문:** https://kotlinlang.org/docs/composing-suspending-functions.html
+> 원문: https://kotlinlang.org/docs/composing-suspending-functions.html
 
-이 섹션에서는 Kotlin 코루틴에서 일시 중단 함수를 합성하는 다양한 접근 방식을 다룹니다.
+이 섹션에서는 Kotlin 코루틴에서 일시 중단 함수를 합성하는 다양한 접근 방식을 다룸.
 
 ---
 
 ### 1. 기본적으로 순차적
 
 #### 개념
-기본적으로 코루틴의 코드는 일반 코드처럼 순차적으로 실행됩니다. 함수들은 차례대로 호출됩니다.
+기본적으로 코루틴의 코드는 일반 코드처럼 순차적으로 실행됨 → 함수들은 차례대로 호출됨.
 
 #### 예제 함수
 ```kotlin
@@ -1129,25 +1123,25 @@ fun main() = runBlocking<Unit> {
 }
 ```
 
-**출력:**
+출력:
 ```
 The answer is 42
 Completed in 2017 ms
 ```
 
-**참고:** 함수들이 순차적으로 실행되기 때문에 (1초 + 1초) ~2초가 걸립니다.
+참고: 함수들이 순차적으로 실행 → (1초 + 1초) ~2초 소요.
 
 ---
 
 ### 2. async를 사용한 동시 실행
 
 #### 개념
-함수들 간에 의존성이 없을 때, 더 빠른 실행을 위해 `async`를 사용하여 동시에 실행합니다.
+함수들 간에 의존성이 없을 때, 더 빠른 실행을 위해 `async`로 동시에 실행.
 
 #### 주요 차이점: async vs launch
-- **`launch`**: `Job`을 반환, 결과 값 없음
-- **`async`**: `Deferred<T>`를 반환, 가벼운 논블로킹 퓨처
-- 지연된 값의 결과를 얻으려면 `.await()`를 사용
+- `launch`: `Job`을 반환, 결과 값 없음
+- `async`: `Deferred<T>`를 반환, 가벼운 논블로킹 퓨처
+- 지연된 값의 결과를 얻으려면 `.await()` 사용
 
 #### 동시 실행 예제
 ```kotlin
@@ -1164,20 +1158,20 @@ fun main() = runBlocking<Unit> {
 }
 ```
 
-**출력:**
+출력:
 ```
 The answer is 42
 Completed in 1017 ms
 ```
 
-**참고:** 두 코루틴이 동시에 실행되므로 ~1초가 걸립니다.
+참고: 두 코루틴이 동시에 실행 → ~1초 소요.
 
 ---
 
 ### 3. 지연 시작 async
 
 #### 개념
-필요할 때만 코루틴을 시작하려면 `CoroutineStart.LAZY`를 사용합니다.
+필요할 때만 코루틴을 시작하려면 `CoroutineStart.LAZY` 사용.
 
 #### 예제
 ```kotlin
@@ -1197,7 +1191,7 @@ fun main() = runBlocking<Unit> {
 }
 ```
 
-**출력:**
+출력:
 ```
 The answer is 42
 Completed in 1017 ms
@@ -1213,9 +1207,9 @@ Completed in 1017 ms
 ### 4. Async 스타일 함수
 
 #### 개념
-비동기 호출을 위해 `GlobalScope`를 사용하여 async 스타일 함수를 정의합니다.
+비동기 호출을 위해 `GlobalScope`를 사용해 async 스타일 함수 정의.
 
-**경고:** 이 스타일은 강력히 권장되지 않습니다; 설명 목적으로만 표시됩니다.
+주의: 이 스타일은 강력히 권장하지 않음 — 설명 목적으로만 표시.
 
 #### 예제
 ```kotlin
@@ -1252,7 +1246,7 @@ fun main() {
 ### 5. async를 사용한 구조적 동시성
 
 #### 개념
-async 작업과 함께 구조적 동시성을 유지하려면 `coroutineScope`를 사용합니다.
+async 작업과 함께 구조적 동시성을 유지하려면 `coroutineScope` 사용.
 
 #### 예제
 ```kotlin
@@ -1273,7 +1267,7 @@ fun main() = runBlocking<Unit> {
 }
 ```
 
-**출력:**
+출력:
 ```
 The answer is 42
 Completed in 1017 ms
@@ -1311,7 +1305,7 @@ fun main() = runBlocking<Unit> {
 }
 ```
 
-**출력:**
+출력:
 ```
 Second child throws an exception
 First child was cancelled
@@ -1322,30 +1316,43 @@ Computation failed with ArithmeticException
 
 ### 요약
 
-| 접근 방식 | 사용 사례 | 실행 시간 | 장점 |
-|----------|----------|----------|------|
-| **순차적** | 의존적인 작업 | 가장 길음 | 단순하고 직관적 |
-| **동시적 (async)** | 독립적인 작업 | 가장 빠름 | 병렬 실행 |
-| **지연 async** | 지연된 실행 | 상황에 따라 다름 | 타이밍 제어 |
-| **Async 스타일** | 레거시 코드 | 다양함 | 권장하지 않음 |
-| **구조적 async** | 프로덕션 코드 | 빠름 | 적절한 오류 처리 |
+- 순차적
+  - 사용 사례: 의존적인 작업
+  - 실행 시간: 가장 길음
+  - 장점: 단순하고 직관적
+- 동시적(async)
+  - 사용 사례: 독립적인 작업
+  - 실행 시간: 가장 빠름
+  - 장점: 병렬 실행
+- 지연 async
+  - 사용 사례: 지연된 실행
+  - 실행 시간: 상황에 따라 다름
+  - 장점: 타이밍 제어
+- Async 스타일
+  - 사용 사례: 레거시 코드
+  - 실행 시간: 다양함
+  - 장점: 권장하지 않음
+- 구조적 async
+  - 사용 사례: 프로덕션 코드
+  - 실행 시간: 빠름
+  - 장점: 적절한 오류 처리
 
 ---
 
 ## 비동기 프로그래밍 기법
 
-> **원문:** https://kotlinlang.org/docs/async-programming.html
+> 원문: https://kotlinlang.org/docs/async-programming.html
 
 ### 개요
 
-이 문서는 데스크톱, 모바일 및 서버 측 애플리케이션을 포함하여 애플리케이션의 차단을 방지하기 위한 다양한 접근 방식을 다룹니다.
+이 문서는 데스크톱·모바일·서버 측 애플리케이션을 포함해 애플리케이션의 차단을 방지하기 위한 다양한 접근 방식을 다룸.
 
 ### 비동기 프로그래밍의 주요 접근 방식
 
 #### 1. 스레딩
-**정의:** 메인 스레드 차단을 피하기 위해 별도의 스레드를 사용합니다.
+정의: 메인 스레드 차단을 피하기 위해 별도의 스레드 사용.
 
-**예제:**
+예제:
 ```kotlin
 fun postItem(item: Item) {
     val token = preparePost()
@@ -1359,16 +1366,16 @@ fun preparePost(): Token {
 }
 ```
 
-**단점:**
-- 스레드는 비용이 큼 (컨텍스트 전환 비용이 높음)
-- 스레드 수가 제한됨 (OS 의존적 병목)
-- 모든 플랫폼에서 사용 불가 (예: JavaScript)
+단점:
+- 스레드는 비용이 큼(컨텍스트 전환 비용이 높음)
+- 스레드 수가 제한됨(OS 의존적 병목)
+- 모든 플랫폼에서 사용 불가(예: JavaScript)
 - 디버깅이 어렵고 경쟁 조건에 취약함
 
 #### 2. 콜백
-**정의:** 완료 후 호출될 함수를 매개변수로 전달합니다.
+정의: 완료 후 호출될 함수를 매개변수로 전달.
 
-**예제:**
+예제:
 ```kotlin
 fun postItem(item: Item) {
     preparePostAsync { token ->
@@ -1384,14 +1391,14 @@ fun preparePostAsync(callback: (Token) -> Unit) {
 }
 ```
 
-**단점:**
-- 콜백 지옥 / 피라미드 오브 둠 (깊게 중첩된 콜백)
+단점:
+- 콜백 지옥 / 피라미드 오브 둠(깊게 중첩된 콜백)
 - 복잡한 오류 처리
 
 #### 3. Futures, Promises 등
-**정의:** 호출은 어느 시점에 해결될 `Promise` 객체를 반환합니다.
+정의: 호출은 어느 시점에 해결될 `Promise` 객체를 반환.
 
-**예제:**
+예제:
 ```kotlin
 fun postItem(item: Item) {
     preparePostAsync()
@@ -1409,27 +1416,27 @@ fun preparePostAsync(): Promise<Token> {
 }
 ```
 
-**단점:**
-- 다른 프로그래밍 모델 (합성적 vs 명령형)
-- 새로운 API를 배워야 함 (`thenCompose`, `thenAccept`)
+단점:
+- 다른 프로그래밍 모델(합성적 vs 명령형)
+- 새로운 API를 배워야 함(`thenCompose`, `thenAccept`)
 - 반환 타입이 실제 데이터에서 `Promise`로 변경됨
 - 오류 처리가 복잡할 수 있음
 
 #### 4. Reactive Extensions (Rx)
-**정의:** Erik Meijer가 C#용으로 도입하고 Netflix의 RxJava로 인기를 얻음. 관찰 가능한 스트림을 사용하여 데이터를 처리합니다.
+정의: Erik Meijer가 C#용으로 도입하고 Netflix의 RxJava로 인기를 얻음 → 관찰 가능한 스트림을 사용해 데이터를 처리.
 
-**핵심 개념:** "모든 것이 스트림이고, 관찰 가능하다"
+핵심 개념: "모든 것이 스트림이고, 관찰 가능하다"
 
-**특징:**
+특징:
 - 개별 요소가 아닌 스트림을 반환
-- 플랫폼 전반에 걸쳐 일관된 API (C#, Java, JavaScript 등)
+- 플랫폼 전반에 걸쳐 일관된 API(C#, Java, JavaScript 등)
 - Futures보다 나은 오류 처리
 - 프로그래밍 모델의 상당한 변화 필요
 
 #### 5. 코루틴 (Kotlin의 접근 방식)
-**정의:** 함수가 실행을 일시 중단하고 나중에 재개할 수 있는 일시 중단 가능한 계산.
+정의: 함수가 실행을 일시 중단하고 나중에 재개할 수 있는 일시 중단 가능한 계산.
 
-**예제:**
+예제:
 ```kotlin
 fun postItem(item: Item) {
     launch {
@@ -1445,19 +1452,19 @@ suspend fun preparePost(): Token {
 }
 ```
 
-**장점:**
-- 논블로킹임에도 불구하고 코드가 동기적으로 보임 (위에서 아래로)
-- 함수 시그니처가 동일하게 유지됨 (`suspend` 키워드만 추가)
-- 표준 프로그래밍 구문 사용 (루프, 예외 처리)
-- 플랫폼 독립적 (JVM, JavaScript 등)
-- 대부분의 기능이 라이브러리에 위임됨 (언어에는 `suspend` 키워드만)
-- 구현을 플랫폼 전반에 걸쳐 컴파일러가 처리함
+장점:
+- 논블로킹임에도 코드가 동기적으로 보임(위에서 아래로)
+- 함수 시그니처가 동일하게 유지됨(`suspend` 키워드만 추가)
+- 표준 프로그래밍 구문 사용(루프, 예외 처리)
+- 플랫폼 독립적(JVM, JavaScript 등)
+- 대부분의 기능이 라이브러리에 위임됨(언어에는 `suspend` 키워드만)
+- 구현을 플랫폼 전반에 걸쳐 컴파일러가 처리
 
-**핵심 이점:** 논블로킹 코드를 작성하는 것이 본질적으로 블로킹 코드를 작성하는 것과 같습니다.
+핵심 이점: 논블로킹 코드를 작성하는 것이 본질적으로 블로킹 코드를 작성하는 것과 같음.
 
 ### 역사적 맥락
 
-코루틴은 새로운 것이 아니며 수십 년 동안 존재해왔고 Go와 같은 언어에서 인기가 있습니다. Kotlin의 구현은 C#과 달리 `async`와 `await` 같은 언어 키워드를 피하고 라이브러리 함수를 선호합니다.
+코루틴은 새로운 것이 아니며 수십 년 동안 존재해왔고 Go와 같은 언어에서 인기 있음. Kotlin의 구현은 C#과 달리 `async`와 `await` 같은 언어 키워드를 피하고 라이브러리 함수를 선호.
 
 ### 관련 문서
 - [코루틴 참조](coroutines-overview.md)
@@ -1467,11 +1474,11 @@ suspend fun preparePost(): Token {
 
 ## 비동기 Flow
 
-> **원문:** https://kotlinlang.org/docs/flow.html
+> 원문: https://kotlinlang.org/docs/flow.html
 
 ### 개요
 
-일시 중단 함수는 단일 값을 비동기적으로 반환하지만, Kotlin Flow는 여러 개의 비동기적으로 계산된 값을 처리합니다. 이 포괄적인 가이드는 Flow 기본 사항, 연산자 및 패턴을 다룹니다.
+일시 중단 함수는 단일 값을 비동기적으로 반환하지만, Kotlin Flow는 여러 개의 비동기적으로 계산된 값을 처리. 이 포괄적인 가이드는 Flow 기본 사항, 연산자 및 패턴을 다룸.
 
 ### 여러 값 표현하기
 
@@ -1528,11 +1535,11 @@ fun main() = runBlocking<Unit> {
 
 ### 주요 Flow 특성
 
-- **콜드 스트림**: `flow { ... }` 내부의 코드는 수집될 때까지 실행되지 않음
-- **논블로킹**: 메인 스레드를 차단하지 않음
-- **일시 중단 가능**: 빌더 내에서 코드가 일시 중단될 수 있음
-- **방출**: `emit()`을 사용하여 값을 전송
-- **수집**: `collect()`를 사용하여 값을 수신
+- 콜드 스트림: `flow { ... }` 내부의 코드는 수집될 때까지 실행되지 않음
+- 논블로킹: 메인 스레드를 차단하지 않음
+- 일시 중단 가능: 빌더 내에서 코드가 일시 중단될 수 있음
+- 방출: `emit()`을 사용해 값을 전송
+- 수집: `collect()`를 사용해 값을 수신
 
 ### Flow는 콜드하다
 
@@ -1554,7 +1561,8 @@ fun main() = runBlocking<Unit> {
     flow.collect { value -> println(value) }
 }
 ```
-출력은 `collect()`가 호출될 때마다 "Flow started"가 나타남을 보여줍니다 - flow는 각 수집 시 다시 시작됩니다.
+
+출력은 `collect()`가 호출될 때마다 "Flow started"가 나타남을 보여줌 → flow는 각 수집 시 다시 시작됨.
 
 ### Flow 취소 기본
 
@@ -1657,11 +1665,11 @@ println(sum) // 55
     .map { println("Map $it"); "string $it" }
     .collect { println("Collect $it") }
 ```
-각 값은 다음 값이 들어오기 전에 모든 연산자를 순차적으로 통과합니다.
+각 값은 다음 값이 들어오기 전에 모든 연산자를 순차적으로 통과.
 
 ### Flow 컨텍스트
 
-Flow는 호출 코루틴의 컨텍스트를 보존합니다:
+Flow는 호출 코루틴의 컨텍스트를 보존:
 
 ```kotlin
 fun log(msg: String) = println("[${Thread.currentThread().name}] $msg")
@@ -1680,7 +1688,7 @@ fun main() = runBlocking<Unit> {
 
 #### withContext의 일반적인 실수
 
-**잘못된 방법** - 컨텍스트 보존 위반:
+잘못된 방법 — 컨텍스트 보존 위반:
 ```kotlin
 fun simple(): Flow<Int> = flow {
     withContext(Dispatchers.Default) {
@@ -1693,7 +1701,7 @@ fun simple(): Flow<Int> = flow {
 // 예외 발생: Flow invariant is violated
 ```
 
-**올바른 방법** - `flowOn` 연산자 사용:
+올바른 방법 — `flowOn` 연산자 사용:
 ```kotlin
 fun simple(): Flow<Int> = flow {
     for (i in 1..3) {
@@ -1729,7 +1737,7 @@ fun main() = runBlocking<Unit> {
 
 ### 합류 (Conflation)
 
-수집자가 느릴 때 중간 값을 건너뜁니다:
+수집자가 느릴 때 중간 값을 건너뜀:
 
 ```kotlin
 simple()
@@ -1756,7 +1764,7 @@ simple()
 ### 여러 Flow 합성
 
 #### Zip
-두 flow의 해당 값을 결합합니다:
+두 flow의 해당 값을 결합:
 ```kotlin
 val nums = (1..3).asFlow()
 val strs = flowOf("one", "two", "three")
@@ -1766,7 +1774,7 @@ nums.zip(strs) { a, b -> "$a -> $b" }
 ```
 
 #### Combine
-어떤 upstream flow가 방출하든 방출합니다:
+어떤 upstream flow가 방출하든 방출:
 ```kotlin
 val nums = (1..3).asFlow().onEach { delay(300) }
 val strs = flowOf("one", "two", "three").onEach { delay(400) }
@@ -1778,7 +1786,7 @@ nums.combine(strs) { a, b -> "$a -> $b" }
 ### Flow 평탄화
 
 #### flatMapConcat
-순차적 처리 - 내부 flow 완료를 기다림:
+순차적 처리 — 내부 flow 완료를 기다림:
 ```kotlin
 fun requestFlow(i: Int): Flow<String> = flow {
     emit("$i: First")
@@ -1792,7 +1800,7 @@ fun requestFlow(i: Int): Flow<String> = flow {
 ```
 
 #### flatMapMerge
-동시 처리 - 모든 flow 병합:
+동시 처리 — 모든 flow 병합:
 ```kotlin
 (1..3).asFlow()
     .flatMapMerge { requestFlow(it) }
@@ -1822,11 +1830,11 @@ try {
 ```
 
 #### 모든 것이 잡힌다
-방출자와 모든 연산자의 예외는 수집자가 잡습니다.
+방출자와 모든 연산자의 예외는 수집자가 잡음.
 
 #### 예외 투명성
 
-Flow는 예외에 대해 투명해야 합니다. `catch` 연산자를 사용하세요:
+Flow는 예외에 대해 투명해야 함. `catch` 연산자 사용:
 
 ```kotlin
 simple()
@@ -1839,7 +1847,7 @@ simple()
 ```
 
 #### 투명한 Catch
-`catch`는 upstream 예외만 잡고 downstream은 잡지 않습니다:
+`catch`는 upstream 예외만 잡고 downstream은 잡지 않음:
 ```kotlin
 simple()
     .catch { e -> println("Caught $e") }
@@ -1943,7 +1951,7 @@ fun main() = runBlocking<Unit> {
 
 ### Flow와 Reactive Streams
 
-Flow 설계는 Reactive Streams에서 영감을 받았지만 Kotlin에 최적화되었습니다:
+Flow 설계는 Reactive Streams에서 영감을 받았지만 Kotlin에 최적화됨:
 - 더 단순한 설계
 - 일시 중단 친화적 API
 - 구조적 동시성 지원
@@ -1955,7 +1963,7 @@ Flow 설계는 Reactive Streams에서 영감을 받았지만 Kotlin에 최적화
 
 ---
 
-**관련 주제:**
+관련 주제:
 - [코루틴 컨텍스트와 디스패처](coroutine-context-and-dispatchers.md)
 - [채널](channels.md)
 
@@ -1963,19 +1971,19 @@ Flow 설계는 Reactive Streams에서 영감을 받았지만 Kotlin에 최적화
 
 ## Kotlin 채널
 
-> **원문:** https://kotlinlang.org/docs/channels.html
+> 원문: https://kotlinlang.org/docs/channels.html
 
 ### 개요
 
-채널은 코루틴 간에 값의 스트림을 전송하는 방법을 제공하며, 단일 값을 전송하는 Deferred 값을 보완합니다.
+채널은 코루틴 간에 값의 스트림을 전송하는 방법을 제공 → 단일 값을 전송하는 Deferred 값을 보완.
 
 ---
 
 ### 채널 기본
 
-**채널**은 개념적으로 `BlockingQueue`와 유사하지만, 블로킹 작업 대신 일시 중단 함수를 사용합니다:
-- `send()` - 블로킹 `put`의 일시 중단 대안
-- `receive()` - 블로킹 `take`의 일시 중단 대안
+채널: 개념적으로 `BlockingQueue`와 유사하지만, 블로킹 작업 대신 일시 중단 함수를 사용:
+- `send()` — 블로킹 `put`의 일시 중단 대안
+- `receive()` — 블로킹 `take`의 일시 중단 대안
 
 #### 예제:
 ```kotlin
@@ -1992,7 +2000,7 @@ fun main() = runBlocking {
 }
 ```
 
-**출력:**
+출력:
 ```
 1
 4
@@ -2006,7 +2014,7 @@ Done!
 
 ### 채널 닫기와 반복
 
-채널은 더 이상 요소가 오지 않음을 나타내기 위해 닫을 수 있습니다. 일반 `for` 루프를 사용하여 요소를 수신합니다:
+채널은 더 이상 요소가 오지 않음을 나타내기 위해 닫을 수 있음. 일반 `for` 루프로 요소를 수신:
 
 ```kotlin
 val channel = Channel<Int>()
@@ -2022,7 +2030,7 @@ println("Done!")
 
 ### 채널 프로듀서 구축
 
-프로듀서를 깔끔하게 생성하려면 `produce` 코루틴 빌더를 사용합니다:
+프로듀서를 깔끔하게 생성하려면 `produce` 코루틴 빌더 사용:
 
 ```kotlin
 fun CoroutineScope.produceSquares(): ReceiveChannel<Int> = produce {
@@ -2040,7 +2048,7 @@ fun main() = runBlocking {
 
 ### 파이프라인
 
-파이프라인은 한 코루틴이 값을 생산하고 다른 코루틴이 처리하는 체인을 형성합니다:
+파이프라인은 한 코루틴이 값을 생산하고 다른 코루틴이 처리하는 체인을 형성:
 
 ```kotlin
 fun CoroutineScope.produceNumbers() = produce<Int> {
@@ -2088,18 +2096,18 @@ fun main() = runBlocking {
 }
 ```
 
-**출력:**
+출력:
 ```
 2 3 5 7 11 13 17 19 23 29
 ```
 
-**참고:** stdlib의 `iterator`를 사용할 수도 있지만, 채널은 `Dispatchers.Default`로 여러 CPU 코어를 지원합니다.
+참고: stdlib의 `iterator`를 사용할 수도 있지만, 채널은 `Dispatchers.Default`로 여러 CPU 코어를 지원.
 
 ---
 
 ### 팬아웃 (Fan-Out)
 
-여러 코루틴이 동일한 채널에서 수신하여 작업을 분배합니다:
+여러 코루틴이 동일한 채널에서 수신해 작업을 분배:
 
 ```kotlin
 fun CoroutineScope.produceNumbers() = produce<Int> {
@@ -2124,7 +2132,7 @@ fun main() = runBlocking<Unit> {
 }
 ```
 
-**출력 (샘플):**
+출력(샘플):
 ```
 Processor #2 received 1
 Processor #4 received 2
@@ -2136,7 +2144,7 @@ Processor #0 received 3
 
 ### 팬인 (Fan-In)
 
-여러 코루틴이 동일한 채널로 전송합니다:
+여러 코루틴이 동일한 채널로 전송:
 
 ```kotlin
 suspend fun sendString(channel: SendChannel<String>, s: String, time: Long) {
@@ -2155,7 +2163,7 @@ fun main() = runBlocking {
 }
 ```
 
-**출력:**
+출력:
 ```
 foo
 foo
@@ -2169,7 +2177,7 @@ BAR!
 
 ### 버퍼가 있는 채널
 
-채널은 일시 중단 전에 여러 전송을 허용하는 버퍼를 가질 수 있습니다:
+채널은 일시 중단 전에 여러 전송을 허용하는 버퍼를 가질 수 있음:
 
 ```kotlin
 val channel = Channel<Int>(4) // 용량 4
@@ -2183,7 +2191,7 @@ delay(1000)
 sender.cancel()
 ```
 
-**출력:**
+출력:
 ```
 Sending 0
 Sending 1
@@ -2192,13 +2200,13 @@ Sending 3
 Sending 4
 ```
 
-버퍼가 가득 차면 (4개 요소 후) 송신자가 일시 중단됩니다.
+버퍼가 가득 차면(4개 요소 후) 송신자가 일시 중단됨.
 
 ---
 
 ### 채널은 공정하다
 
-작업은 여러 코루틴에 걸쳐 FIFO 순서로 제공됩니다:
+작업은 여러 코루틴에 걸쳐 FIFO 순서로 제공됨:
 
 ```kotlin
 data class Ball(var hits: Int)
@@ -2222,7 +2230,7 @@ suspend fun player(name: String, table: Channel<Ball>) {
 }
 ```
 
-**출력:**
+출력:
 ```
 ping Ball(hits=1)
 pong Ball(hits=2)
@@ -2234,7 +2242,7 @@ pong Ball(hits=4)
 
 ### 티커 채널
 
-시간 기반 파이프라인을 위해 고정된 간격으로 `Unit`을 생산합니다:
+시간 기반 파이프라인을 위해 고정된 간격으로 `Unit`을 생산:
 
 ```kotlin
 fun main() = runBlocking<Unit> {
@@ -2257,7 +2265,7 @@ fun main() = runBlocking<Unit> {
 }
 ```
 
-**출력:**
+출력:
 ```
 Initial element is available immediately: kotlin.Unit
 Next element is not ready in 100 ms: null
@@ -2265,24 +2273,24 @@ Next element is ready in 200 ms: kotlin.Unit
 Next element is available immediately after large consumer delay: kotlin.Unit
 ```
 
-**참고:** 티커는 기본적으로 소비자 일시 정지에 맞춰 지연을 조정합니다. 고정된 요소 간 지연을 위해 `TickerMode.FIXED_DELAY`를 사용하세요.
+참고: 티커는 기본적으로 소비자 일시 정지에 맞춰 지연을 조정 → 고정된 요소 간 지연을 위해 `TickerMode.FIXED_DELAY` 사용.
 
 ---
 
 ## 코루틴과 채널 튜토리얼
 
-> **원문:** https://kotlinlang.org/docs/coroutines-and-channels.html
+> 원문: https://kotlinlang.org/docs/coroutines-and-channels.html
 
 ### 개요
 
-이것은 스레드를 차단하거나 콜백을 사용하지 않고 네트워크 요청을 수행하기 위해 코루틴과 채널을 사용하는 포괄적인 Kotlin 튜토리얼입니다.
+스레드를 차단하거나 콜백을 사용하지 않고 네트워크 요청을 수행하기 위해 코루틴과 채널을 사용하는 포괄적인 Kotlin 튜토리얼.
 
-**전제 조건:** 기본 Kotlin 구문 지식
+전제 조건: 기본 Kotlin 구문 지식
 
-**학습 목표:**
+학습 목표:
 - 네트워크 요청에 일시 중단 함수 사용
-- 코루틴을 사용하여 요청을 동시에 전송
-- 채널을 사용하여 코루틴 간 정보 공유
+- 코루틴을 사용해 요청을 동시에 전송
+- 채널을 사용해 코루틴 간 정보 공유
 
 ---
 
@@ -2350,11 +2358,11 @@ fun loadContributorsBlocking(
 }
 ```
 
-**핵심 포인트:**
+핵심 포인트:
 - `execute()`는 동기적이며 스레드를 차단
 - 모든 요청이 메인 UI 스레드에서 순차적으로 실행
 - 로딩이 완료되는 동안 UI가 멈춤
-- 로그 출력은 모든 연산이 동일 스레드에서 수행됨을 보여줌 (AWT-EventQueue-0)
+- 로그 출력은 모든 연산이 동일 스레드에서 수행됨을 보여줌(AWT-EventQueue-0)
 
 #### 확장 함수
 ```kotlin
@@ -2364,9 +2372,9 @@ fun <T> Response<List<T>>.bodyList(): List<T> {
 ```
 
 #### 태스크 1: 집계 구현
-**목표:** 중복 사용자를 결합하고 기여도 집계
+목표: 중복 사용자를 결합하고 기여도 집계
 
-**해결책:**
+해결책:
 ```kotlin
 fun List<User>.aggregate(): List<User> =
     groupBy { it.login }
@@ -2414,7 +2422,7 @@ loadContributorsBackground(service, req) { users ->
 }
 ```
 
-**이점:** 메인 UI 스레드가 응답성을 유지
+이점: 메인 UI 스레드가 응답성을 유지.
 
 #### 해결책 2: Retrofit 콜백 API
 
@@ -2442,11 +2450,11 @@ fun loadContributorsCallbacks(
 }
 ```
 
-**문제:** 비동기 응답이 도착하기 전에 `updateResults()`가 호출됨
+문제: 비동기 응답이 도착하기 전에 `updateResults()`가 호출됨.
 
 #### 동시 콜백 해결책
 
-**CountDownLatch 사용 (최선):**
+CountDownLatch 사용(최선):
 ```kotlin
 val countDownLatch = CountDownLatch(repos.size)
 
@@ -2482,15 +2490,15 @@ interface GitHubService {
 }
 ```
 
-**주요 차이점:**
+주요 차이점:
 - `suspend` 키워드로 표시됨
-- 결과를 직접 반환 (Call로 래핑되지 않음)
+- 결과를 직접 반환(Call로 래핑되지 않음)
 - 일시 중단 중에 스레드가 차단되지 않음
 - 오류 시 예외가 던져짐
 
 #### 일시 중단 함수 구현
 
-**해결책:**
+해결책:
 ```kotlin
 suspend fun loadContributorsSuspend(
     service: GitHubService,
@@ -2510,21 +2518,21 @@ suspend fun loadContributorsSuspend(
 }
 ```
 
-**참고:** 순차적 실행; 모든 요청이 이전 요청 완료를 기다림
+참고: 순차적 실행 → 모든 요청이 이전 요청 완료를 기다림.
 
 ---
 
 ### 섹션 5: 코루틴
 
 #### 개념
-- **코루틴:** 일시 중지하고 재개할 수 있는 일시 중단 가능한 계산
-- **일시 중단:** 계산을 일시 중지하고 스레드를 다른 작업에 해제
+- 코루틴: 일시 중지하고 재개할 수 있는 일시 중단 가능한 계산
+- 일시 중단: 계산을 일시 중지하고 스레드를 다른 작업에 해제
 - 스레드에 비해 경량
 - `launch`, `async`, 또는 `runBlocking`으로 시작 가능
 
 #### 코루틴 시작
 
-**launch:** 결과를 반환하지 않고 계산 시작
+launch: 결과를 반환하지 않고 계산 시작
 ```kotlin
 launch {
     val users = loadContributorsSuspend(req)
@@ -2532,7 +2540,7 @@ launch {
 }
 ```
 
-**async:** 계산을 시작하고 Deferred<T> 반환
+async: 계산을 시작하고 Deferred<T> 반환
 ```kotlin
 val deferred: Deferred<Int> = async {
     loadData()
@@ -2540,7 +2548,7 @@ val deferred: Deferred<Int> = async {
 println(deferred.await())
 ```
 
-**runBlocking:** 일반 함수와 일시 중단 함수 사이의 브릿지
+runBlocking: 일반 함수와 일시 중단 함수 사이의 브릿지
 ```kotlin
 fun main() = runBlocking {
     val deferred = async { loadData() }
@@ -2574,9 +2582,9 @@ fun main() = runBlocking {
 
 #### 동시 로딩
 
-**목표:** 모든 레포지토리를 동시에 로드
+목표: 모든 레포지토리를 동시에 로드
 
-**해결책:**
+해결책:
 ```kotlin
 suspend fun loadContributorsConcurrent(
     service: GitHubService,
@@ -2601,7 +2609,7 @@ suspend fun loadContributorsConcurrent(
 
 #### 다른 디스패처 사용
 
-**Dispatchers.Default:** 병렬 실행을 위한 스레드 풀
+Dispatchers.Default: 병렬 실행을 위한 스레드 풀
 ```kotlin
 async(Dispatchers.Default) {
     service.getRepoContributors(req.org, repo.name)
@@ -2610,7 +2618,7 @@ async(Dispatchers.Default) {
 }
 ```
 
-**Dispatchers.Main:** 메인 UI 스레드
+Dispatchers.Main: 메인 UI 스레드
 ```kotlin
 launch(Dispatchers.Main) {
     updateResults()
@@ -2627,9 +2635,9 @@ launch(Dispatchers.Default) {
 }
 ```
 
-**동시 로딩의 이점:**
+동시 로딩의 이점:
 - 순차적: ~4초
-- 동시적: ~2초 (서버에 따라 다름)
+- 동시적: ~2초(서버에 따라 다름)
 - 더 효율적인 스레드 사용
 
 ---
@@ -2637,10 +2645,10 @@ launch(Dispatchers.Default) {
 ### 섹션 7: 구조적 동시성
 
 #### 개념
-- **스코프:** 부모-자식 관계 관리
-- **컨텍스트:** 기술 정보 (디스패처, 이름 등)
-- **취소:** 부모에서 자식으로 자동 전파
-- **대기:** 부모는 완료 전에 모든 자식을 기다림
+- 스코프: 부모-자식 관계 관리
+- 컨텍스트: 기술 정보(디스패처, 이름 등)
+- 취소: 부모에서 자식으로 자동 전파
+- 대기: 부모는 완료 전에 모든 자식을 기다림
 
 #### 코루틴 빌더
 ```kotlin
@@ -2665,7 +2673,7 @@ runBlocking {  // 외부 코루틴
 
 #### 로딩 취소
 
-**취소 가능한 버전 (coroutineScope 사용):**
+취소 가능한 버전(coroutineScope 사용):
 ```kotlin
 suspend fun loadContributorsConcurrent(
     service: GitHubService,
@@ -2682,7 +2690,7 @@ suspend fun loadContributorsConcurrent(
 }
 ```
 
-**취소 불가능 (GlobalScope 사용):**
+취소 불가능(GlobalScope 사용):
 ```kotlin
 suspend fun loadContributorsNotCancellable(
     service: GitHubService,
@@ -2748,7 +2756,7 @@ suspend fun loadContributorsProgress(
 }
 ```
 
-**사용법:**
+사용법:
 ```kotlin
 launch(Dispatchers.Default) {
     loadContributorsProgress(service, req) { users, completed ->
@@ -2790,7 +2798,7 @@ interface Channel<E> : SendChannel<E>, ReceiveChannel<E>
 
 #### 채널 유형
 
-**무제한 채널**
+무제한 채널
 - 크기 제한 없음
 - `send()`가 절대 일시 중단되지 않음
 - `receive()`가 비어있으면 일시 중단
@@ -2800,7 +2808,7 @@ interface Channel<E> : SendChannel<E>, ReceiveChannel<E>
 val channel = Channel<String>(UNLIMITED)
 ```
 
-**버퍼가 있는 채널**
+버퍼가 있는 채널
 - 고정된 크기 제한
 - `send()`가 가득 차면 일시 중단
 - `receive()`가 비어있으면 일시 중단
@@ -2809,8 +2817,8 @@ val channel = Channel<String>(UNLIMITED)
 val channel = Channel<String>(10)
 ```
 
-**랑데뷰 채널**
-- 버퍼 없음 (크기 = 0)
+랑데뷰 채널
+- 버퍼 없음(크기 = 0)
 - `send()`와 `receive()`가 "만나야" 함
 - 하나가 항상 다른 하나가 호출할 때까지 일시 중단
 
@@ -2818,7 +2826,7 @@ val channel = Channel<String>(10)
 val channel = Channel<String>()  // 기본값
 ```
 
-**합류된 채널**
+합류된 채널
 - 최신 요소만 저장
 - `send()`가 절대 일시 중단되지 않음
 - 새 요소가 이전 요소를 덮어씀
@@ -2829,7 +2837,7 @@ val channel = Channel<String>(CONFLATED)
 
 #### 채널을 사용한 동시 실행과 진행 상황
 
-**해결책:**
+해결책:
 ```kotlin
 suspend fun loadContributorsChannels(
     service: GitHubService,
@@ -2862,9 +2870,9 @@ suspend fun loadContributorsChannels(
 }
 ```
 
-**이점:**
-- 동시 요청 (모두 즉시 시작)
-- 순차적 소비 (동기화 필요 없음)
+이점:
+- 동시 요청(모두 즉시 시작)
+- 순차적 소비(동기화 필요 없음)
 - 요청 사이에 진행 상황 업데이트
 - 콜백 동기화보다 단순함
 
@@ -2879,7 +2887,7 @@ suspend fun loadContributorsChannels(
 
 #### 가상 시간 해결책
 
-**runTest 사용:**
+runTest 사용:
 ```kotlin
 @Test
 fun testDelayInSuspend() = runTest {
@@ -2921,27 +2929,25 @@ fun testConcurrent() = runTest {
 
 ### 성능 비교
 
-| 접근 방식 | 시간 | 참고 |
-|----------|------|------|
-| 블로킹 순차적 | ~4000ms | 1000 + 1000 + 1200 + 800 |
-| 백그라운드 스레드 | ~4000ms | 더 나은 UX, 같은 시간 |
-| 콜백 | ~2000ms | 동시적이지만 복잡함 |
-| 일시 중단 | ~4000ms | 깔끔하지만 여전히 순차적 |
-| 동시적 (코루틴) | ~2200ms | 1000 + max(1000, 1200, 800) |
-| 진행 상황 | ~4000ms | 중간 결과 표시 |
-| 채널 | ~2200ms | 동시적 + 진행 상황 |
+- 블로킹 순차적: ~4000ms — 1000 + 1000 + 1200 + 800
+- 백그라운드 스레드: ~4000ms — 더 나은 UX, 같은 시간
+- 콜백: ~2000ms — 동시적이지만 복잡함
+- 일시 중단: ~4000ms — 깔끔하지만 여전히 순차적
+- 동시적(코루틴): ~2200ms — 1000 + max(1000, 1200, 800)
+- 진행 상황: ~4000ms — 중간 결과 표시
+- 채널: ~2200ms — 동시적 + 진행 상황
 
 ---
 
 ### 핵심 요약
 
-1. **블로킹** - 단순하지만 UI를 멈춤
-2. **콜백** - 논블로킹이지만 여러 비동기 연산에서 오류 발생 쉬움
-3. **일시 중단 함수** - 깔끔한 코드, 순차적 실행
-4. **async를 사용한 코루틴** - 동시 실행, 경량
-5. **채널** - 코루틴 간 안전한 통신
-6. **구조적 동시성** - 자동 취소와 정리
-7. **테스트** - 빠르고 결정적인 테스트를 위해 가상 시간 사용
+1. 블로킹 — 단순하지만 UI를 멈춤
+2. 콜백 — 논블로킹이지만 여러 비동기 연산에서 오류 발생 쉬움
+3. 일시 중단 함수 — 깔끔한 코드, 순차적 실행
+4. async를 사용한 코루틴 — 동시 실행, 경량
+5. 채널 — 코루틴 간 안전한 통신
+6. 구조적 동시성 — 자동 취소와 정리
+7. 테스트 — 빠르고 결정적인 테스트를 위해 가상 시간 사용
 
 ---
 
@@ -2953,17 +2959,17 @@ fun testConcurrent() = runTest {
 
 ## 공유 가변 상태와 동시성
 
-> **원문:** https://kotlinlang.org/docs/shared-mutable-state-and-concurrency.html
+> 원문: https://kotlinlang.org/docs/shared-mutable-state-and-concurrency.html
 
 ### 개요
 
-코루틴은 `Dispatchers.Default`와 같은 멀티스레드 디스패처를 사용하여 병렬로 실행될 수 있으며, 이는 표준 병렬 처리 문제를 야기합니다. 주요 과제는 공유 가변 상태에 대한 접근 동기화입니다.
+코루틴은 `Dispatchers.Default`와 같은 멀티스레드 디스패처를 사용해 병렬로 실행 가능 → 표준 병렬 처리 문제 발생. 주요 과제: 공유 가변 상태에 대한 접근 동기화.
 
 ---
 
 ### 문제
 
-여러 코루틴이 동기화 없이 공유 가변 상태에 동시에 접근하고 수정하면 경쟁 조건이 발생합니다. 예제:
+여러 코루틴이 동기화 없이 공유 가변 상태에 동시에 접근하고 수정하면 경쟁 조건 발생. 예제:
 
 ```kotlin
 import kotlinx.coroutines.*
@@ -2994,13 +3000,13 @@ fun main() = runBlocking {
 }
 ```
 
-**결과**: 동기화되지 않은 동시 접근으로 인해 "Counter = 100000"이 출력될 가능성이 낮습니다.
+결과: 동기화되지 않은 동시 접근으로 인해 "Counter = 100000"이 출력될 가능성이 낮음.
 
 ---
 
 ### Volatile은 도움이 되지 않는다
 
-`@Volatile` 어노테이션은 원자적 읽기/쓰기를 보장하지만 증가와 같은 **복합 연산의 원자성은 보장하지 않습니다**:
+`@Volatile` 어노테이션은 원자적 읽기/쓰기를 보장하지만 증가와 같은 복합 연산의 원자성은 보장하지 않음:
 
 ```kotlin
 @Volatile
@@ -3014,13 +3020,13 @@ fun main() = runBlocking {
 }
 ```
 
-**문제**: `counter++`가 세 가지 연산 (읽기, 증가, 쓰기)이기 때문에 여전히 잘못된 결과를 생성합니다.
+문제: `counter++`가 세 가지 연산(읽기, 증가, 쓰기)이기 때문에 여전히 잘못된 결과 생성.
 
 ---
 
 ### 스레드 안전 데이터 구조
 
-간단한 연산에는 `AtomicInteger`와 같은 원자 클래스를 사용합니다:
+간단한 연산에는 `AtomicInteger`와 같은 원자 클래스 사용:
 
 ```kotlin
 import java.util.concurrent.atomic.*
@@ -3035,14 +3041,14 @@ fun main() = runBlocking {
 }
 ```
 
-**장점**: 간단한 카운터, 컬렉션, 표준 연산에 대해 가장 빠른 솔루션.
-**제한사항**: 준비된 스레드 안전 구현 없이는 복잡한 상태로 확장이 어렵습니다.
+장점: 간단한 카운터, 컬렉션, 표준 연산에 대해 가장 빠른 솔루션.
+제한사항: 준비된 스레드 안전 구현 없이는 복잡한 상태로 확장이 어려움.
 
 ---
 
 ### 세밀한 스레드 제한
 
-단일 스레드 컨텍스트를 사용하여 공유 상태 접근을 단일 스레드로 제한합니다:
+단일 스레드 컨텍스트를 사용해 공유 상태 접근을 단일 스레드로 제한:
 
 ```kotlin
 val counterContext = newSingleThreadContext("CounterContext")
@@ -3060,13 +3066,13 @@ fun main() = runBlocking {
 }
 ```
 
-**문제**: 모든 연산에 대한 컨텍스트 전환으로 인해 매우 느립니다.
+문제: 모든 연산에 대한 컨텍스트 전환으로 인해 매우 느림.
 
 ---
 
 ### 거친 스레드 제한
 
-더 큰 논리 블록을 단일 스레드로 제한합니다:
+더 큰 논리 블록을 단일 스레드로 제한:
 
 ```kotlin
 val counterContext = newSingleThreadContext("CounterContext")
@@ -3080,13 +3086,13 @@ fun main() = runBlocking {
 }
 ```
 
-**장점**: 합리적인 성능으로 훨씬 빠르고 올바른 결과를 생성합니다.
+장점: 합리적인 성능으로 훨씬 빠르고 올바른 결과 생성.
 
 ---
 
 ### 상호 배제
 
-임계 섹션을 보호하기 위해 `Mutex`를 사용합니다 (`synchronized`의 코루틴 친화적 대안):
+임계 섹션을 보호하기 위해 `Mutex` 사용(`synchronized`의 코루틴 친화적 대안):
 
 ```kotlin
 import kotlinx.coroutines.sync.*
@@ -3106,18 +3112,32 @@ fun main() = runBlocking {
 }
 ```
 
-**주요 차이점**: `Mutex.lock()`은 **일시 중단 함수**입니다 (스레드를 차단하지 않음).
+주요 차이점: `Mutex.lock()`은 일시 중단 함수(스레드를 차단하지 않음).
 
-**사용 사례**: 공유 상태를 주기적으로 수정해야 하지만 자연스러운 제한 스레드가 없을 때 가장 좋습니다.
+사용 사례: 공유 상태를 주기적으로 수정해야 하지만 자연스러운 제한 스레드가 없을 때 가장 좋음.
 
 ---
 
-### 요약 표
+### 요약
 
-| 접근 방식 | 성능 | 정확성 | 적합한 용도 |
-|----------|------|--------|------------|
-| Volatile | 느림 | 부정확 | 해당 없음 |
-| AtomicInteger | 가장 빠름 | 정확 | 간단한 카운터/연산 |
-| 세밀한 제한 | 매우 느림 | 정확 | 해당 없음 |
-| 거친 제한 | 좋음 | 정확 | UI 애플리케이션 |
-| Mutex | 보통 | 정확 | 복잡한 주기적 업데이트 |
+- Volatile
+  - 성능: 느림
+  - 정확성: 부정확
+  - 적합한 용도: 해당 없음
+- AtomicInteger
+  - 성능: 가장 빠름
+  - 정확성: 정확
+  - 적합한 용도: 간단한 카운터/연산
+- 세밀한 제한
+  - 성능: 매우 느림
+  - 정확성: 정확
+  - 적합한 용도: 해당 없음
+- 거친 제한
+  - 성능: 좋음
+  - 정확성: 정확
+  - 적합한 용도: UI 애플리케이션
+- Mutex
+  - 성능: 보통
+  - 정확성: 정확
+  - 적합한 용도: 복잡한 주기적 업데이트
+</content>

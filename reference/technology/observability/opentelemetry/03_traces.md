@@ -20,9 +20,9 @@
 
 ### Trace
 
-**한 요청의 전체 흐름**. 여러 서비스를 거치는 동안 발생하는 모든 작업의 집합.
+한 요청의 전체 흐름. 여러 서비스를 거치는 동안 발생하는 모든 작업의 집합.
 
-식별자: **TraceID** — 16바이트 (128bit) 16진수 문자열.
+식별자: TraceID — 16바이트 (128bit) 16진수 문자열.
 
 ```
 trace_id = 5b8aa5a2d2c873e8a6a9f5c7d2e0f1a3
@@ -30,15 +30,15 @@ trace_id = 5b8aa5a2d2c873e8a6a9f5c7d2e0f1a3
 
 ### Span
 
-**Trace를 구성하는 단위 작업**. 한 함수 호출, 한 HTTP 요청, 한 DB 쿼리 등.
+Trace를 구성하는 단위 작업. 한 함수 호출, 한 HTTP 요청, 한 DB 쿼리 등.
 
-식별자: **SpanID** — 8바이트 (64bit).
+식별자: SpanID — 8바이트 (64bit).
 
 ```
 span_id = 00f067aa0ba902b7
 ```
 
-Span은 서로 부모-자식 관계를 가져 트리(또는 DAG)를 구성합니다:
+Span은 서로 부모-자식 관계를 가져 트리(또는 DAG)를 구성:
 
 ```
 Trace 5b8aa5a2...
@@ -51,7 +51,7 @@ Trace 5b8aa5a2...
         └── Span G (INSERT INTO orders)        [service: orders]
 ```
 
-부모 식별: 각 Span은 `parent_span_id` 를 가집니다 (root는 없음).
+부모 식별: 각 Span은 `parent_span_id`를 가짐 (root는 없음).
 
 ---
 
@@ -82,7 +82,7 @@ message Span {
 
 ### Span name
 
-**카디널리티가 낮은 패턴** 으로 작성:
+카디널리티가 낮은 패턴으로 작성:
 
 ```
 좋음: "GET /users/:id"
@@ -92,29 +92,37 @@ message Span {
 나쁨: "SELECT * FROM users WHERE id=12345"  ← 매번 새 이름
 ```
 
-라이브러리 자동 계측은 보통 라우트 패턴(`/users/:id`)을 추출해 사용합니다.
+라이브러리 자동 계측은 보통 라우트 패턴(`/users/:id`)을 추출해 사용.
 
 ### Start/End time
 
-- 정밀도: **나노초**
+- 정밀도: 나노초
 - 시작은 Span 생성 시, 종료는 `span.end()` 호출 시
-- **반드시 end를 호출** 해야 export됨 → 비동기 코드에서 누락 주의
+- 반드시 end를 호출해야 export됨 → 비동기 코드에서 누락 주의
 
 ---
 
 ## Span Kind
 
-Span이 **요청-응답 관계의 어느 쪽** 인지 표시. 백엔드가 service map을 그릴 때 사용.
+Span이 요청-응답 관계의 어느 쪽인지 표시. 백엔드가 service map을 그릴 때 사용.
 
-| Kind | 의미 | 예 |
-|------|------|-----|
-| `INTERNAL` | 같은 서비스 내부 작업 (기본값) | 함수 호출, 비즈니스 로직 |
-| `SERVER` | 들어오는 요청을 처리 | HTTP 핸들러, gRPC 서버 메서드 |
-| `CLIENT` | 다른 서비스로 나가는 요청 | HTTP 클라이언트 호출, DB 쿼리 |
-| `PRODUCER` | 메시지를 큐에 넣음 | Kafka producer.send() |
-| `CONSUMER` | 큐에서 메시지를 꺼냄 | Kafka consumer.poll() |
+- `INTERNAL`
+  - 의미: 같은 서비스 내부 작업 (기본값)
+  - 예: 함수 호출, 비즈니스 로직
+- `SERVER`
+  - 의미: 들어오는 요청을 처리
+  - 예: HTTP 핸들러, gRPC 서버 메서드
+- `CLIENT`
+  - 의미: 다른 서비스로 나가는 요청
+  - 예: HTTP 클라이언트 호출, DB 쿼리
+- `PRODUCER`
+  - 의미: 메시지를 큐에 넣음
+  - 예: Kafka producer.send()
+- `CONSUMER`
+  - 의미: 큐에서 메시지를 꺼냄
+  - 예: Kafka consumer.poll()
 
-서비스 경계는 보통 `CLIENT → SERVER` 짝으로 표현됩니다.
+서비스 경계는 보통 `CLIENT → SERVER` 짝으로 표현.
 
 ```
 [Service A] CLIENT span "POST /api/orders"
@@ -136,7 +144,7 @@ Span의 결과 상태. 세 가지 값:
 - `OK` — 명시적으로 성공
 - `ERROR` — 실패
 
-**HTTP 상태 코드 4xx/5xx 가 자동으로 ERROR가 되지는 않습니다.** Semantic Convention이 정합니다:
+HTTP 상태 코드 4xx/5xx가 자동으로 ERROR가 되지는 않음. Semantic Convention이 규정:
 
 - HTTP 5xx (server) → ERROR
 - HTTP 4xx (server) → 보통 UNSET (클라이언트 잘못이지 서버 에러는 아님)
@@ -159,7 +167,7 @@ except Exception as e:
 
 ### Event
 
-**Span 내부에서 시간이 찍힌 점(point-in-time) 이벤트**. "이 Span 처리 중에 무슨 일이 있었나"를 기록.
+Span 내부에서 시간이 찍힌 점(point-in-time) 이벤트. "이 Span 처리 중에 무슨 일이 있었나"를 기록.
 
 ```python
 span.add_event("cache.miss", attributes={"key": "user:12345"})
@@ -167,15 +175,15 @@ span.add_event("retry", attributes={"attempt": 2})
 ```
 
 대표적 사용:
-- **Exception 기록** — `record_exception()` 이 내부적으로 event를 추가 (`exception.type`, `exception.message`, `exception.stacktrace`)
-- **상태 전이** — "queue.acquired", "lock.released"
-- **마일스톤** — "headers.received", "body.parsed"
+- Exception 기록 — `record_exception()`이 내부적으로 event를 추가 (`exception.type`, `exception.message`, `exception.stacktrace`)
+- 상태 전이 — "queue.acquired", "lock.released"
+- 마일스톤 — "headers.received", "body.parsed"
 
-Event는 Span을 쪼개지 않고 한 Span 안에서 작은 사건을 표현하는 가벼운 방법입니다.
+Event는 Span을 쪼개지 않고 한 Span 안에서 작은 사건을 표현하는 가벼운 방법.
 
 ### Link
 
-**다른 Trace/Span을 참조**. 부모-자식 관계가 아닌 "관련된" 관계.
+다른 Trace/Span을 참조. 부모-자식 관계가 아닌 "관련된" 관계.
 
 대표 사용 사례:
 
@@ -192,7 +200,7 @@ Event는 Span을 쪼개지 않고 한 Span 안에서 작은 사건을 표현하�
            ├── link → message_2 (trace B)
 ```
 
-부모-자식으로 연결했다면 부모가 둘이 되어 트리가 깨집니다. Link는 트리 구조를 유지하면서 다중 참조를 표현합니다.
+부모-자식으로 연결했다면 부모가 둘이 되어 트리가 깨짐. Link는 트리 구조를 유지하면서 다중 참조를 표현.
 
 #### 2. Async 작업
 
@@ -227,13 +235,13 @@ Event는 Span을 쪼개지 않고 한 Span 안에서 작은 사건을 표현하�
 
 OpenTelemetry는 여러 propagator 포맷을 지원:
 
-- **W3C Trace Context** (기본값, 권장) — `traceparent`, `tracestate` 헤더
-- **W3C Baggage** — `baggage` 헤더
-- **B3** — Zipkin 호환 (`b3`, `x-b3-traceid`, ...)
-- **Jaeger** — `uber-trace-id`
-- **AWS X-Ray** — `X-Amzn-Trace-Id`
+- W3C Trace Context (기본값, 권장) — `traceparent`, `tracestate` 헤더
+- W3C Baggage — `baggage` 헤더
+- B3 — Zipkin 호환 (`b3`, `x-b3-traceid`, ...)
+- Jaeger — `uber-trace-id`
+- AWS X-Ray — `X-Amzn-Trace-Id`
 
-여러 포맷을 동시에 inject/extract 가능하도록 **Composite Propagator** 를 구성.
+여러 포맷을 동시에 inject/extract 가능하도록 Composite Propagator를 구성.
 
 ```python
 # 기본 SDK 설정 — 보통 자동
@@ -247,18 +255,18 @@ set_global_textmap(
 
 ### 자동 계측
 
-대부분 라이브러리 자동 계측이 inject/extract를 처리합니다:
+대부분 라이브러리 자동 계측이 inject/extract를 처리:
 - HTTP 클라이언트(requests, axios, OkHttp) → 요청 전 inject
 - HTTP 서버(Express, Spring, FastAPI) → 핸들러 진입 시 extract
 - gRPC, Kafka, RabbitMQ도 동일 패턴
 
-수동 호출이 필요한 경우는 비표준 전송을 사용하거나 직접 구현한 RPC 정도입니다.
+수동 호출이 필요한 경우는 비표준 전송을 사용하거나 직접 구현한 RPC 정도.
 
 ---
 
 ## W3C Trace Context
 
-가장 중요한 표준 — 두 헤더로 구성됩니다.
+가장 중요한 표준 — 두 헤더로 구성.
 
 ### traceparent
 
@@ -270,7 +278,7 @@ traceparent: 00-5b8aa5a2d2c873e8a6a9f5c7d2e0f1a3-00f067aa0ba902b7-01
              └── version (현재 "00")
 ```
 
-`trace-flags` 의 비트:
+`trace-flags`의 비트:
 - `0x01` (sampled) — 이 trace는 export될 예정
 - 나머지는 reserved
 
@@ -282,17 +290,17 @@ traceparent: 00-5b8aa5a2d2c873e8a6a9f5c7d2e0f1a3-00f067aa0ba902b7-01
 tracestate: vendorA=opaque-string,vendorB=other-data
 ```
 
-OpenTelemetry SDK 자체는 tracestate를 거의 채우지 않지만, **샘플링 결정** 이나 **벤더 호환** 에 사용됩니다.
+OpenTelemetry SDK 자체는 tracestate를 거의 채우지 않지만, 샘플링 결정이나 벤더 호환에 사용.
 
 ---
 
 ## Sampling
 
-모든 요청을 저장하면 비용이 급증합니다 → **일부만 선택해서 저장**. 두 가지 큰 전략:
+모든 요청을 저장하면 비용이 급증 → 일부만 선택해서 저장. 두 가지 큰 전략:
 
 ### Head Sampling
 
-**Span을 만들 때 즉시 결정**. SDK 안에서 동작.
+Span을 만들 때 즉시 결정. SDK 안에서 동작.
 
 장점: 단순, 저비용. 만들지 않은 Span은 비용이 0.
 
@@ -306,13 +314,13 @@ TraceIdRatioBased(0.1)            # trace_id 기반 10%
 ParentBased(...)                  # 부모 결정 따라감
 ```
 
-`ParentBased(TraceIdRatioBased(0.1))` 가 흔한 조합:
+`ParentBased(TraceIdRatioBased(0.1))`가 흔한 조합:
 - 부모 Span이 sampled면 자식도 sampled (trace 일관성)
 - root Span(부모 없음)이면 10% 확률로 sampled
 
 ### Tail Sampling
 
-**Trace가 끝난 뒤 전체를 보고 결정**. Collector가 수행.
+Trace가 끝난 뒤 전체를 보고 결정. Collector가 수행.
 
 장점: 에러 trace, 느린 trace를 우선 보존 가능.
 
@@ -339,9 +347,9 @@ processors:
 
 ### Sampling이 trace_flags에 미치는 영향
 
-Head sampling 결정은 `traceparent`의 `trace-flags`에 sampled 비트로 전파되어 → 다운스트림이 일관되게 sampled/dropped됩니다.
+Head sampling 결정은 `traceparent`의 `trace-flags`에 sampled 비트로 전파 → 다운스트림이 일관되게 sampled/dropped.
 
-Tail sampling은 Collector 내부에서 처리되므로 와이어 포맷에는 영향을 주지 않습니다.
+Tail sampling은 Collector 내부에서 처리 → 와이어 포맷에는 영향 없음.
 
 ---
 
@@ -349,7 +357,7 @@ Tail sampling은 Collector 내부에서 처리되므로 와이어 포맷에는 �
 
 ### 1. 라이브러리 자동 계측을 먼저 활성화
 
-대부분의 가치는 자동 계측에서 나옵니다. 수동 계측은 **비즈니스 의미가 있는 작업**에만 추가합니다.
+대부분의 가치는 자동 계측에서 나옴. 수동 계측은 비즈니스 의미가 있는 작업에만 추가.
 
 ```python
 # 좋은 수동 Span 후보
@@ -366,11 +374,11 @@ span.set_attribute("cart.item_count", len(items))
 span.set_attribute("payment.provider", provider)
 ```
 
-→ 백엔드에서 attribute 기반 필터링·집계를 효과적으로 활용할 수 있습니다.
+→ 백엔드에서 attribute 기반 필터링·집계를 효과적으로 활용 가능.
 
 ### 3. 카디널리티 폭발 주의
 
-trace에 user_id 자체는 OK (저장 비용은 trace당). 다만 **trace 검색 인덱스에 user_id 가 인덱싱되는지** 백엔드별 확인 필요.
+trace에 user_id 자체는 문제없음 (저장 비용은 trace당). 다만 trace 검색 인덱스에 user_id가 인덱싱되는지 백엔드별 확인 필요.
 
 ### 4. span.end() 누락 방지
 

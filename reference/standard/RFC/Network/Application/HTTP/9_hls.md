@@ -8,8 +8,8 @@
 
 ### 1. 개요
 
-HTTP Live Streaming(HLS)은 HTTP를 통해 무한한 멀티미디어 데이터 스트림을 전송하기 위한 프로토콜입니다.
- Apple이 2009년에 처음 제안했으며, 이 RFC는 프로토콜 버전 7을 명세합니다.
+- HTTP Live Streaming(HLS): HTTP를 통해 무한한 멀티미디어 데이터 스트림을 전송하기 위한 프로토콜
+- Apple이 2009년 최초 제안 → 이 RFC는 프로토콜 버전 7 명세
 
 #### 핵심 아이디어
 
@@ -29,18 +29,18 @@ HTTP Live Streaming(HLS)은 HTTP를 통해 무한한 멀티미디어 데이터 �
 
 #### 동작 방식
 
-1. 서버가 미디어를 작은 세그먼트로 분할
-2. 세그먼트 목록을 플레이리스트(M3U8) 파일로 제공
-3. 클라이언트가 플레이리스트를 다운로드하고 세그먼트를 순서대로 재생
-4. 라이브 스트리밍의 경우 클라이언트가 주기적으로 플레이리스트를 갱신
+- 서버가 미디어를 작은 세그먼트로 분할
+- 세그먼트 목록을 플레이리스트(M3U8) 파일로 제공
+- 클라이언트가 플레이리스트를 다운로드하고 세그먼트를 순서대로 재생
+- 라이브 스트리밍인 경우 → 클라이언트가 주기적으로 플레이리스트 갱신
 
 ### 2. 플레이리스트 유형
 
-HLS는 두 가지 유형의 플레이리스트를 사용합니다.
+- HLS는 두 가지 유형의 플레이리스트 사용
 
 #### 2.1 미디어 플레이리스트 (Media Playlist)
 
-미디어 세그먼트의 목록을 재생 순서대로 나열합니다.
+- 미디어 세그먼트 목록을 재생 순서대로 나열
 
 ```
 #EXTM3U
@@ -58,7 +58,7 @@ segment2.ts
 
 #### 2.2 마스터 플레이리스트 (Master Playlist)
 
-다양한 비트레이트/해상도의 변형 스트림(Variant Stream) 을 정의합니다.
+- 다양한 비트레이트·해상도의 변형 스트림(Variant Stream) 정의
 
 ```
 #EXTM3U
@@ -95,12 +95,10 @@ high/playlist.m3u8
 
 #### 3.1 지원 형식
 
-| 형식 | 확장자 | 설명 |
-|------|--------|------|
-| MPEG-2 Transport Stream | .ts | 가장 널리 사용되는 HLS 세그먼트 형식 |
-| Fragmented MPEG-4 | .mp4, .m4s | fMP4 기반, CMAF 호환 |
-| Packed Audio | .aac, .mp3, .ac3 | 오디오 전용 스트림 |
-| WebVTT | .vtt | 자막 세그먼트 |
+- MPEG-2 Transport Stream(`.ts`): 가장 널리 사용되는 HLS 세그먼트 형식
+- Fragmented MPEG-4(`.mp4`·`.m4s`): fMP4 기반, CMAF 호환
+- Packed Audio(`.aac`·`.mp3`·`.ac3`): 오디오 전용 스트림
+- WebVTT(`.vtt`): 자막 세그먼트
 
 #### 3.2 MPEG-2 Transport Stream
 
@@ -114,7 +112,7 @@ high/playlist.m3u8
 ```
 
 - 단일 프로그램(MPEG-2 Program)만 포함
-- 각 세그먼트의 시작에 PAT(Program Association Table) 와 PMT(Program Map Table) 필수
+- 각 세그먼트 시작에 PAT(Program Association Table)·PMT(Program Map Table) 필수
 - 또는 `EXT-X-MAP` 태그로 초기화 섹션 참조
 
 #### 3.3 Fragmented MPEG-4
@@ -136,20 +134,16 @@ high/playlist.m3u8
 └────────────────────────────────────────────────┘
 ```
 
-- Media Initialization Section 필수 (`ftyp` + `moov` + `mvex`)
+- Media Initialization Section 필수(`ftyp` + `moov` + `mvex`)
 - 각 Track Fragment Box에 `tfdt`(Track Fragment Decode Time) 포함 필수
 
 #### 3.4 Packed Audio
 
-오디오 전용 스트림을 위한 형식:
-
-| 코덱 | 프레이밍 |
-|------|---------|
-| AAC | ADTS 프레이밍 |
-| MP3 | MPEG Audio 프레이밍 |
-| AC-3 | AC-3 동기 프레임 |
-| Enhanced AC-3 | Enhanced AC-3 동기 프레임 |
-
+- 오디오 전용 스트림 형식
+  - AAC: ADTS 프레이밍
+  - MP3: MPEG Audio 프레이밍
+  - AC-3: AC-3 동기 프레임
+  - Enhanced AC-3: Enhanced AC-3 동기 프레임
 - 초기화 섹션 불필요
 - ID3 PRIV 태그에 33비트 MPEG-2 타임스탬프 포함 필수
   - Owner: `com.apple.streaming.transportStreamTimestamp`
@@ -168,20 +162,18 @@ X-TIMESTAMP-MAP=MPEGTS:900000,LOCAL:00:00:00.000
 ```
 
 - `X-TIMESTAMP-MAP` 헤더로 WebVTT 큐와 MPEG-2 타임스탬프 동기화
-- 각 세그먼트의 표시 시간이 세그먼트 지속시간과 일치해야 함
+- 각 세그먼트의 표시 시간은 세그먼트 지속시간과 일치 필수
 
 ### 4. 플레이리스트 태그
 
 #### 4.1 기본 태그
 
-| 태그 | 설명 |
-|------|------|
-| `#EXTM3U` | 플레이리스트의 첫 번째 줄 (필수) |
-| `#EXT-X-VERSION:<n>` | 호환성 버전 지정 (1~7) |
+- `#EXTM3U`: 플레이리스트의 첫 번째 줄(필수)
+- `#EXT-X-VERSION:<n>`: 호환성 버전 지정(1~7)
 
 #### 4.2 미디어 세그먼트 태그
 
-각 세그먼트에 적용되는 태그들:
+- 각 세그먼트에 적용되는 태그
 
 ##### EXTINF
 
@@ -189,7 +181,7 @@ X-TIMESTAMP-MAP=MPEGTS:900000,LOCAL:00:00:00.000
 #EXTINF:<duration>,[<title>]
 ```
 
-- 다음 세그먼트의 지속시간(초) 지정 (필수)
+- 다음 세그먼트의 지속시간(초) 지정(필수)
 - 버전 3+에서 부동소수점 허용, 이전 버전은 정수만
 
 ##### EXT-X-BYTERANGE (버전 4+)
@@ -199,7 +191,7 @@ X-TIMESTAMP-MAP=MPEGTS:900000,LOCAL:00:00:00.000
 ```
 
 - 세그먼트가 리소스의 일부 바이트 범위만 사용
-- `n`: 바이트 길이, `o`: 바이트 오프셋 (생략 시 이전 범위 이후부터)
+- `n`: 바이트 길이, `o`: 바이트 오프셋(생략 시 이전 범위 이후부터)
 
 ##### EXT-X-DISCONTINUITY
 
@@ -207,12 +199,11 @@ X-TIMESTAMP-MAP=MPEGTS:900000,LOCAL:00:00:00.000
 #EXT-X-DISCONTINUITY
 ```
 
-인접 세그먼트 간 불연속성 표시.
- 다음이 변경될 때 필수:
-
-- 파일 형식
-- 트랙의 수, 유형, 식별자
-- 타임스탬프 시퀀스
+- 인접 세그먼트 간 불연속성 표시
+- 다음이 변경될 때 필수
+  - 파일 형식
+  - 트랙의 수·유형·식별자
+  - 타임스탬프 시퀀스
 
 ##### EXT-X-KEY
 
@@ -220,13 +211,12 @@ X-TIMESTAMP-MAP=MPEGTS:900000,LOCAL:00:00:00.000
 #EXT-X-KEY:METHOD=AES-128,URI="https://example.com/key",IV=0x00000000000000000000000000000001
 ```
 
-| 속성 | 설명 | 필수 |
-|------|------|------|
-| METHOD | NONE, AES-128, SAMPLE-AES | O |
-| URI | 키 파일 위치 | METHOD≠NONE일 때 |
-| IV | 128비트 초기화 벡터 (16진수) | X (버전 2+) |
-| KEYFORMAT | 키 표현 형식 (기본: "identity") | X (버전 5+) |
-| KEYFORMATVERSIONS | 지원 형식 버전 | X (버전 5+) |
+- 속성
+  - METHOD: NONE·AES-128·SAMPLE-AES (필수)
+  - URI: 키 파일 위치 (METHOD≠NONE일 때 필수)
+  - IV: 128비트 초기화 벡터(16진수) (선택, 버전 2+)
+  - KEYFORMAT: 키 표현 형식(기본: "identity") (선택, 버전 5+)
+  - KEYFORMATVERSIONS: 지원 형식 버전 (선택, 버전 5+)
 
 ##### EXT-X-MAP (버전 5+)
 
@@ -253,27 +243,24 @@ X-TIMESTAMP-MAP=MPEGTS:900000,LOCAL:00:00:00.000
   DURATION=30.0,X-AD-ID="12345"
 ```
 
-| 속성 | 설명 |
-|------|------|
-| ID | 고유 식별자 (필수) |
-| CLASS | 클라이언트 정의 클래스 |
-| START-DATE | 범위 시작 (필수, ISO 8601) |
-| END-DATE | 범위 종료 |
-| DURATION | 지속시간 (초) |
-| PLANNED-DURATION | 예상 지속시간 |
-| X-\<name\> | 사용자 정의 속성 |
-| END-ON-NEXT | YES면 다음 범위의 START-DATE가 종료 시점 |
+- 속성
+  - ID: 고유 식별자(필수)
+  - CLASS: 클라이언트 정의 클래스
+  - START-DATE: 범위 시작(필수, ISO 8601)
+  - END-DATE: 범위 종료
+  - DURATION: 지속시간(초)
+  - PLANNED-DURATION: 예상 지속시간
+  - X-\<name\>: 사용자 정의 속성
+  - END-ON-NEXT: YES면 다음 범위의 START-DATE가 종료 시점
 
 #### 4.3 미디어 플레이리스트 태그
 
-| 태그 | 설명 | 기본값 |
-|------|------|--------|
-| `EXT-X-TARGETDURATION:<s>` | 최대 세그먼트 지속시간 (필수) | - |
-| `EXT-X-MEDIA-SEQUENCE:<n>` | 첫 세그먼트의 시퀀스 번호 | 0 |
-| `EXT-X-DISCONTINUITY-SEQUENCE:<n>` | 첫 세그먼트의 불연속 시퀀스 번호 | 0 |
-| `EXT-X-ENDLIST` | 더 이상 세그먼트 추가 없음 | - |
-| `EXT-X-PLAYLIST-TYPE:<type>` | VOD 또는 EVENT | - |
-| `EXT-X-I-FRAMES-ONLY` | I-프레임 전용 플레이리스트 (버전 4+) | - |
+- `EXT-X-TARGETDURATION:<s>`: 최대 세그먼트 지속시간(필수, 기본값 없음)
+- `EXT-X-MEDIA-SEQUENCE:<n>`: 첫 세그먼트의 시퀀스 번호(기본값 0)
+- `EXT-X-DISCONTINUITY-SEQUENCE:<n>`: 첫 세그먼트의 불연속 시퀀스 번호(기본값 0)
+- `EXT-X-ENDLIST`: 더 이상 세그먼트 추가 없음(기본값 없음)
+- `EXT-X-PLAYLIST-TYPE:<type>`: VOD 또는 EVENT(기본값 없음)
+- `EXT-X-I-FRAMES-ONLY`: I-프레임 전용 플레이리스트(버전 4+, 기본값 없음)
 
 ##### 플레이리스트 유형
 
@@ -301,7 +288,7 @@ VOD 플레이리스트:
 
 ##### EXT-X-MEDIA
 
-대체 렌디션(언어, 카메라 앵글 등)을 정의합니다.
+- 대체 렌디션(언어, 카메라 앵글 등) 정의
 
 ```
 #EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID="audio",NAME="English",
@@ -310,19 +297,18 @@ VOD 플레이리스트:
   LANGUAGE="ko",URI="kor-audio.m3u8"
 ```
 
-| 속성 | 설명 | 필수 |
-|------|------|------|
-| TYPE | AUDIO, VIDEO, SUBTITLES, CLOSED-CAPTIONS | O |
-| GROUP-ID | 렌디션 그룹 식별자 | O |
-| NAME | 사람이 읽을 수 있는 이름 | O |
-| URI | 미디어 플레이리스트 위치 | 조건부 |
-| LANGUAGE | RFC 5646 언어 태그 | X |
-| DEFAULT | YES/NO (자동 선택 여부) | X (기본: NO) |
-| AUTOSELECT | YES/NO (환경 기반 자동 선택) | X (기본: NO) |
-| FORCED | YES/NO (필수 자막 여부, SUBTITLES만) | X |
-| INSTREAM-ID | 스트림 식별자 (CLOSED-CAPTIONS 필수) | 조건부 |
-| CHARACTERISTICS | UTI 특성 (접근성 등) | X |
-| CHANNELS | 오디오 채널 수 | X |
+- 속성
+  - TYPE: AUDIO·VIDEO·SUBTITLES·CLOSED-CAPTIONS (필수)
+  - GROUP-ID: 렌디션 그룹 식별자 (필수)
+  - NAME: 사람이 읽을 수 있는 이름 (필수)
+  - URI: 미디어 플레이리스트 위치 (조건부)
+  - LANGUAGE: RFC 5646 언어 태그 (선택)
+  - DEFAULT: YES/NO, 자동 선택 여부 (선택, 기본값 NO)
+  - AUTOSELECT: YES/NO, 환경 기반 자동 선택 (선택, 기본값 NO)
+  - FORCED: YES/NO, 필수 자막 여부(SUBTITLES만) (선택)
+  - INSTREAM-ID: 스트림 식별자(CLOSED-CAPTIONS 필수) (조건부)
+  - CHARACTERISTICS: UTI 특성(접근성 등) (선택)
+  - CHANNELS: 오디오 채널 수 (선택)
 
 ##### EXT-X-STREAM-INF
 
@@ -333,18 +319,17 @@ VOD 플레이리스트:
 mid/playlist.m3u8
 ```
 
-| 속성 | 설명 | 필수 |
-|------|------|------|
-| BANDWIDTH | 최대 비트레이트 (bps) | O |
-| AVERAGE-BANDWIDTH | 평균 비트레이트 | X |
-| CODECS | 코덱 식별자 (RFC 6381) | 권장 |
-| RESOLUTION | 최적 디스플레이 해상도 (WxH) | X |
-| FRAME-RATE | 최대 프레임레이트 | X |
-| HDCP-LEVEL | TYPE-0 또는 NONE | X |
-| AUDIO | 오디오 렌디션 그룹 참조 | X |
-| VIDEO | 비디오 렌디션 그룹 참조 | X |
-| SUBTITLES | 자막 렌디션 그룹 참조 | X |
-| CLOSED-CAPTIONS | 자막 그룹 또는 NONE | X |
+- 속성
+  - BANDWIDTH: 최대 비트레이트(bps) (필수)
+  - AVERAGE-BANDWIDTH: 평균 비트레이트 (선택)
+  - CODECS: 코덱 식별자(RFC 6381) (권장)
+  - RESOLUTION: 최적 디스플레이 해상도(WxH) (선택)
+  - FRAME-RATE: 최대 프레임레이트 (선택)
+  - HDCP-LEVEL: TYPE-0 또는 NONE (선택)
+  - AUDIO: 오디오 렌디션 그룹 참조 (선택)
+  - VIDEO: 비디오 렌디션 그룹 참조 (선택)
+  - SUBTITLES: 자막 렌디션 그룹 참조 (선택)
+  - CLOSED-CAPTIONS: 자막 그룹 또는 NONE (선택)
 
 ##### EXT-X-I-FRAME-STREAM-INF
 
@@ -354,7 +339,7 @@ mid/playlist.m3u8
 ```
 
 - I-프레임 전용 미디어 플레이리스트 식별
-- 트릭 재생 (빨리감기, 되감기, 스크러빙) 지원
+- 트릭 재생(빨리감기·되감기·스크러빙) 지원
 
 ##### EXT-X-SESSION-DATA
 
@@ -364,7 +349,7 @@ mid/playlist.m3u8
 ```
 
 - 임의의 세션 데이터 전달
-- VALUE 또는 URI 중 하나만 사용 가능 (동시 불가)
+- VALUE 또는 URI 중 하나만 사용 가능(동시 사용 불가)
 
 ##### EXT-X-SESSION-KEY
 
@@ -393,18 +378,16 @@ mid/playlist.m3u8
 ```
 
 - 선호하는 재생 시작 지점 지정
-- TIME-OFFSET: 양수(시작부터), 음수(끝부터) 오프셋(초)
+- TIME-OFFSET: 양수(시작부터)·음수(끝부터) 오프셋(초)
 - PRECISE: YES면 해당 시점의 샘플부터 정확히 시작
 
 ### 5. 암호화
 
 #### 5.1 암호화 방식
 
-| 방식 | 설명 |
-|------|------|
-| NONE | 암호화 없음 |
-| AES-128 | 전체 세그먼트를 AES-128-CBC로 암호화 |
-| SAMPLE-AES | 개별 미디어 샘플만 암호화 |
+- NONE: 암호화 없음
+- AES-128: 전체 세그먼트를 AES-128-CBC로 암호화
+- SAMPLE-AES: 개별 미디어 샘플만 암호화
 
 #### 5.2 AES-128 상세
 
@@ -464,13 +447,11 @@ IV = 0x00000000000000000000000000000005
 
 ##### 플레이리스트 업데이트 규칙
 
-| 규칙 | 설명 |
-|------|------|
-| 원자적 변경 | 클라이언트 관점에서 변경이 원자적이어야 함 |
-| 허용되는 변경 | 줄 추가, 앞 세그먼트 제거, 시퀀스 번호 증가, ENDLIST 추가 |
-| TARGET DURATION | 값 변경 불가 |
-| VOD | 변경 불가 (불변) |
-| EVENT | 끝에만 세그먼트 추가 가능 |
+- 원자적 변경: 클라이언트 관점에서 변경이 원자적이어야 함
+- 허용되는 변경: 줄 추가·앞 세그먼트 제거·시퀀스 번호 증가·ENDLIST 추가
+- TARGET DURATION: 값 변경 불가
+- VOD: 변경 불가(불변)
+- EVENT: 끝에만 세그먼트 추가 가능
 
 ##### 라이브 플레이리스트 관리
 
@@ -525,26 +506,22 @@ seg103.ts
 
 ##### 주요 클라이언트 동작
 
-| 동작 | 설명 |
-|------|------|
-| 파싱 | 잘못된 구문이나 충돌하는 태그 발견 시 실패 처리 |
-| 재생 | 세그먼트를 순서대로 재생, EXTINF 지속시간 준수 |
-| 복호화 | EXT-X-KEY에 따라 세그먼트 복호화 |
-| 불연속 처리 | EXT-X-DISCONTINUITY에서 디코더 리셋 |
-| 비트레이트 적응 | 네트워크 상태에 따라 변형 스트림 전환 |
-| 렌디션 선택 | 사용자 선호 또는 DEFAULT/AUTOSELECT 기반 선택 |
+- 파싱: 잘못된 구문이나 충돌하는 태그 발견 시 실패 처리
+- 재생: 세그먼트를 순서대로 재생, EXTINF 지속시간 준수
+- 복호화: EXT-X-KEY에 따라 세그먼트 복호화
+- 불연속 처리: EXT-X-DISCONTINUITY에서 디코더 리셋
+- 비트레이트 적응: 네트워크 상태에 따라 변형 스트림 전환
+- 렌디션 선택: 사용자 선호 또는 DEFAULT/AUTOSELECT 기반 선택
 
 ### 7. 프로토콜 버전 호환성
 
-| 버전 | 도입 기능 |
-|------|-----------|
-| 1 | 기본 HLS 기능 |
-| 2 | EXT-X-KEY의 IV 속성 |
-| 3 | EXTINF 부동소수점 지속시간 |
-| 4 | EXT-X-BYTERANGE, EXT-X-I-FRAMES-ONLY |
-| 5 | KEYFORMAT, KEYFORMATVERSIONS, I-프레임용 EXT-X-MAP |
-| 6 | EXT-X-I-FRAMES-ONLY가 없는 미디어 플레이리스트에서 EXT-X-MAP 사용 |
-| 7 | EXT-X-MEDIA의 INSTREAM-ID="SERVICE..." 값 지원, EXT-X-ALLOW-CACHE 태그 제거 |
+- 버전 1: 기본 HLS 기능
+- 버전 2: EXT-X-KEY의 IV 속성
+- 버전 3: EXTINF 부동소수점 지속시간
+- 버전 4: EXT-X-BYTERANGE, EXT-X-I-FRAMES-ONLY
+- 버전 5: KEYFORMAT, KEYFORMATVERSIONS, I-프레임용 EXT-X-MAP
+- 버전 6: EXT-X-I-FRAMES-ONLY가 없는 미디어 플레이리스트에서 EXT-X-MAP 사용
+- 버전 7: EXT-X-MEDIA의 INSTREAM-ID="SERVICE..." 값 지원, EXT-X-ALLOW-CACHE 태그 제거
 
 ### 8. 플레이리스트 예시
 
@@ -580,7 +557,7 @@ https://example.com/segment2681.ts
 https://example.com/segment2682.ts
 ```
 
-(EXT-X-ENDLIST 없음 → 라이브 스트리밍, 주기적 갱신 필요)
+- EXT-X-ENDLIST 없음 → 라이브 스트리밍, 주기적 갱신 필요
 
 #### 8.3 암호화된 미디어 플레이리스트
 
@@ -645,23 +622,19 @@ high/video-only.m3u8
 
 ### 9. 보안 고려사항
 
-| 위협 | 대응 |
-|------|------|
-| 세그먼트/플레이리스트 변조 | HTTPS 사용 권장 |
-| 키 탈취 | HTTPS를 통한 키 전달 |
-| 재생 공격 | IV에 Media Sequence Number 사용 |
-| DRM 우회 | SAMPLE-AES + DRM 시스템 결합 |
+- 세그먼트/플레이리스트 변조 → HTTPS 사용 권장
+- 키 탈취 → HTTPS를 통한 키 전달
+- 재생 공격 → IV에 Media Sequence Number 사용
+- DRM 우회 → SAMPLE-AES + DRM 시스템 결합
 
 ### 요약
 
-RFC 8216 HTTP Live Streaming(HLS)은 다음을 제공합니다:
-
-- HTTP 기반 전달: 기존 HTTP 인프라(CDN 등)를 그대로 활용
-- 적응적 비트레이트: 네트워크 상태에 따른 자동 품질 전환
-- 다양한 미디어 형식: MPEG-2 TS, fMP4, Packed Audio, WebVTT 지원
-- 암호화 지원: AES-128, SAMPLE-AES를 통한 콘텐츠 보호
-- 라이브/VOD 통합: 라이브 스트리밍과 VOD를 동일한 프로토콜로 처리
-- 다국어/다중 렌디션: 여러 언어, 자막, 카메라 앵글 지원
-- 트릭 재생: I-프레임 플레이리스트를 통한 빨리감기/되감기
-
-HLS는 Apple이 개발한 프로토콜로, iOS/macOS의 기본 스트리밍 방식이며 사실상의 업계 표준으로 자리잡았습니다.
+- RFC 8216 HTTP Live Streaming(HLS) 제공 사항
+  - HTTP 기반 전달: 기존 HTTP 인프라(CDN 등)를 그대로 활용
+  - 적응적 비트레이트: 네트워크 상태에 따른 자동 품질 전환
+  - 다양한 미디어 형식: MPEG-2 TS·fMP4·Packed Audio·WebVTT 지원
+  - 암호화 지원: AES-128, SAMPLE-AES를 통한 콘텐츠 보호
+  - 라이브/VOD 통합: 라이브 스트리밍과 VOD를 동일한 프로토콜로 처리
+  - 다국어/다중 렌디션: 여러 언어·자막·카메라 앵글 지원
+  - 트릭 재생: I-프레임 플레이리스트를 통한 빨리감기/되감기
+- HLS는 Apple이 개발한 프로토콜 → iOS/macOS의 기본 스트리밍 방식이며 사실상의 업계 표준

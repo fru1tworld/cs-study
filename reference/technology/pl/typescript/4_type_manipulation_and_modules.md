@@ -11,13 +11,11 @@ permalink: /docs/handbook/2/types-from-types.html
 oneline: "기존 타입에서 새로운 타입을 만드는 다양한 방법 개요"
 ---
 
-TypeScript의 타입 시스템은 _다른 타입을 기반으로_ 타입을 표현할 수 있기 때문에 매우 강력합니다.
-
-이 아이디어의 가장 단순한 형태는 제네릭입니다. 그 외에도 다양한 _타입 연산자_를 사용할 수 있습니다.
-또한 이미 있는 _값_을 기반으로 타입을 표현하는 것도 가능합니다.
-
-다양한 타입 연산자를 결합하여 복잡한 연산과 값을 간결하고 유지보수가 용이한 방식으로 표현할 수 있습니다.
-이 섹션에서는 기존 타입이나 값을 기반으로 새로운 타입을 표현하는 방법을 다룹니다.
+- TypeScript의 타입 시스템은 _다른 타입을 기반으로_ 타입을 표현 가능 → 매우 강력
+- 가장 단순한 형태 = 제네릭
+- 그 외에도 다양한 _타입 연산자_ 사용 가능 · 이미 있는 _값_을 기반으로 타입 표현도 가능
+- 다양한 타입 연산자를 결합 → 복잡한 연산과 값을 간결하고 유지보수 용이한 방식으로 표현 가능
+- 이 섹션은 기존 타입이나 값을 기반으로 새로운 타입을 표현하는 방법을 다룸
 
 - [제네릭](/docs/handbook/2/generics.html) - 매개변수를 받는 타입
 - [Keyof 타입 연산자](/docs/handbook/2/keyof-types.html) - `keyof` 연산자를 사용하여 새로운 타입 만들기
@@ -38,19 +36,15 @@ permalink: /docs/handbook/2/generics.html
 oneline: 매개변수를 받는 타입
 ---
 
-소프트웨어 엔지니어링의 주요 부분은 잘 정의되고 일관된 API를 가질 뿐만 아니라 재사용 가능한 컴포넌트를 만드는 것입니다.
-오늘의 데이터뿐만 아니라 내일의 데이터에서도 작동할 수 있는 컴포넌트는 대규모 소프트웨어 시스템을 구축하는 데 가장 유연한 기능을 제공합니다.
-
-C#이나 Java와 같은 언어에서 재사용 가능한 컴포넌트를 만들기 위한 도구 상자의 주요 도구 중 하나는 _제네릭_입니다. 즉, 단일 타입이 아닌 다양한 타입에서 작동할 수 있는 컴포넌트를 만들 수 있습니다.
-이를 통해 사용자는 이러한 컴포넌트를 사용하고 자신만의 타입을 사용할 수 있습니다.
+- 소프트웨어 엔지니어링의 주요 부분 = 잘 정의되고 일관된 API를 가지면서도 재사용 가능한 컴포넌트를 만드는 것
+- 오늘의 데이터뿐 아니라 내일의 데이터에서도 작동 가능한 컴포넌트 → 대규모 소프트웨어 시스템 구축에 가장 유연
+- C#·Java 같은 언어에서 재사용 가능한 컴포넌트를 만드는 주요 도구 중 하나 = _제네릭_ → 단일 타입이 아닌 다양한 타입에서 작동 가능한 컴포넌트를 만들 수 있음
+- 이를 통해 사용자는 이러한 컴포넌트를 사용하고 자신만의 타입 사용 가능
 
 ### 제네릭의 Hello World
 
-시작하기 위해 제네릭의 "hello world"인 항등 함수를 만들어 봅시다.
-항등 함수는 전달된 것을 그대로 반환하는 함수입니다.
-`echo` 명령어와 유사한 방식으로 생각할 수 있습니다.
-
-제네릭 없이는 항등 함수에 특정 타입을 지정해야 합니다:
+- 제네릭의 "hello world" = 항등 함수(전달된 것을 그대로 반환하는 함수). `echo` 명령어와 유사
+- 제네릭 없이는 항등 함수에 특정 타입 지정 필요
 
 ```ts twoslash
 function identity(arg: number): number {
@@ -58,7 +52,7 @@ function identity(arg: number): number {
 }
 ```
 
-또는 `any` 타입을 사용하여 항등 함수를 설명할 수 있습니다:
+- 또는 `any` 타입을 사용해도 항등 함수를 설명 가능
 
 ```ts twoslash
 function identity(arg: any): any {
@@ -66,11 +60,10 @@ function identity(arg: any): any {
 }
 ```
 
-`any`를 사용하면 함수가 `arg`의 타입으로 모든 타입을 받아들이게 되어 확실히 제네릭하지만, 함수가 반환될 때 해당 타입이 무엇이었는지에 대한 정보를 잃게 됩니다.
-만약 숫자를 전달하면, 어떤 타입이든 반환될 수 있다는 정보만 남게 됩니다.
-
-대신, 반환되는 것을 나타내는 데도 사용할 수 있는 방식으로 인자의 타입을 캡처하는 방법이 필요합니다.
-여기서 값이 아닌 타입에 작동하는 특별한 종류의 변수인 _타입 변수_를 사용합니다.
+- `any` 사용 시 `arg`가 모든 타입을 받아들여 확실히 제네릭 → 대신 반환 시 원래 타입 정보 소실
+  - 숫자를 전달해도 "어떤 타입이든 반환될 수 있다"는 정보만 남음
+- 필요한 것: 반환값을 나타내는 데도 쓸 수 있는 방식으로 인자의 타입을 캡처하는 방법
+  - → 값이 아닌 타입에 작동하는 특별한 변수인 _타입 변수_ 사용
 
 ```ts twoslash
 function identity<Type>(arg: Type): Type {
@@ -78,16 +71,13 @@ function identity<Type>(arg: Type): Type {
 }
 ```
 
-이제 항등 함수에 타입 변수 `Type`을 추가했습니다.
-이 `Type`은 사용자가 제공하는 타입(예: `number`)을 캡처하여 나중에 해당 정보를 사용할 수 있게 합니다.
-여기서 `Type`을 반환 타입으로도 다시 사용합니다. 검사해보면, 인자와 반환 타입에 동일한 타입이 사용되는 것을 볼 수 있습니다.
-이를 통해 함수의 한쪽에서 다른 쪽으로 타입 정보를 전달할 수 있습니다.
-
-이 버전의 `identity` 함수는 다양한 타입에서 작동하므로 제네릭하다고 말합니다.
-`any`를 사용하는 것과 달리, 인자와 반환 타입에 숫자를 사용한 첫 번째 `identity` 함수만큼 정확합니다(즉, 정보를 잃지 않습니다).
-
-제네릭 항등 함수를 작성한 후에는 두 가지 방법 중 하나로 호출할 수 있습니다.
-첫 번째 방법은 타입 인자를 포함한 모든 인자를 함수에 전달하는 것입니다:
+- 항등 함수에 타입 변수 `Type` 추가
+  - `Type`은 사용자가 제공하는 타입(예: `number`)을 캡처 → 나중에 해당 정보 재사용 가능
+  - `Type`을 반환 타입으로도 재사용 → 인자와 반환 타입에 동일한 타입 사용 → 함수 한쪽에서 다른 쪽으로 타입 정보 전달 가능
+- 이 버전의 `identity`는 다양한 타입에서 작동 → 제네릭하다고 표현
+  - `any`와 달리 정보 손실 없음: 숫자를 쓴 첫 번째 `identity` 함수만큼 정확
+- 제네릭 항등 함수 호출 방식 두 가지
+  - 방법 1: 타입 인자를 포함한 모든 인자를 함수에 전달
 
 ```ts twoslash
 function identity<Type>(arg: Type): Type {
@@ -98,9 +88,8 @@ let output = identity<string>("myString");
 //       ^?
 ```
 
-여기서 `()`가 아닌 `<>` 안에서 인자로 `Type`을 명시적으로 `string`으로 설정했습니다.
-
-두 번째 방법은 아마도 가장 일반적인 방법입니다. 여기서 _타입 인자 추론_을 사용합니다 -- 즉, 전달하는 인자의 타입에 따라 컴파일러가 자동으로 `Type`의 값을 설정하도록 합니다:
+- `()`가 아닌 `<>` 안에서 인자로 `Type`을 명시적으로 `string`으로 설정
+- 방법 2(가장 일반적): _타입 인자 추론_ 사용 → 전달하는 인자의 타입에 따라 컴파일러가 자동으로 `Type` 값 설정
 
 ```ts twoslash
 function identity<Type>(arg: Type): Type {
@@ -111,15 +100,14 @@ let output = identity("myString");
 //       ^?
 ```
 
-꺾쇠 괄호(`<>`) 안에 타입을 명시적으로 전달할 필요가 없었습니다; 컴파일러가 `"myString"` 값을 보고 `Type`을 해당 타입으로 설정했습니다.
-타입 인자 추론은 코드를 더 짧고 읽기 쉽게 유지하는 데 유용한 도구가 될 수 있지만, 더 복잡한 예에서 발생할 수 있는 것처럼 컴파일러가 타입을 추론하지 못할 때는 이전 예제에서처럼 타입 인자를 명시적으로 전달해야 할 수도 있습니다.
+- 꺾쇠 괄호(`<>`) 안에 타입을 명시적으로 전달할 필요 없음 → 컴파일러가 `"myString"` 값을 보고 `Type`을 해당 타입으로 설정
+- 타입 인자 추론은 코드를 짧고 읽기 쉽게 유지하는 데 유용 → 다만 컴파일러가 타입을 추론하지 못하는 복잡한 예에서는 타입 인자를 명시적으로 전달해야 할 수 있음
 
 ### 제네릭 타입 변수 작업
 
-제네릭을 사용하기 시작하면, `identity`와 같은 제네릭 함수를 만들 때 컴파일러가 함수 본문에서 제네릭으로 타입이 지정된 매개변수를 올바르게 사용하도록 강제하는 것을 알게 됩니다.
-즉, 이러한 매개변수를 모든 타입이 될 수 있는 것처럼 실제로 취급해야 합니다.
-
-앞서의 `identity` 함수를 살펴봅시다:
+- 제네릭 함수(`identity` 등)를 만들면, 컴파일러가 함수 본문에서 제네릭으로 타입이 지정된 매개변수를 올바르게 사용하도록 강제함
+  - 즉 해당 매개변수를 모든 타입이 될 수 있는 것처럼 실제로 취급해야 함
+- 앞서의 `identity` 함수
 
 ```ts twoslash
 function identity<Type>(arg: Type): Type {
@@ -127,8 +115,7 @@ function identity<Type>(arg: Type): Type {
 }
 ```
 
-각 호출마다 인자 `arg`의 길이를 콘솔에 기록하고 싶다면 어떻게 해야 할까요?
-다음과 같이 작성하고 싶을 수 있습니다:
+- 각 호출마다 인자 `arg`의 길이를 콘솔에 기록하고 싶다면 다음과 같이 작성하고 싶을 수 있음
 
 ```ts twoslash
 // @errors: 2339
@@ -138,11 +125,9 @@ function loggingIdentity<Type>(arg: Type): Type {
 }
 ```
 
-그렇게 하면 컴파일러가 `arg`의 `.length` 멤버를 사용하고 있지만, `arg`가 이 멤버가 있다고 어디에서도 말하지 않았다는 오류를 표시합니다.
-앞서 이러한 타입 변수는 모든 타입을 대신한다고 말했으므로, 이 함수를 사용하는 사람이 `.length` 멤버가 없는 `number`를 대신 전달했을 수 있습니다.
-
-이 함수가 `Type` 자체가 아니라 `Type`의 배열에서 작동하도록 의도했다고 가정해 봅시다. 배열로 작업하고 있으므로 `.length` 멤버를 사용할 수 있어야 합니다.
-다른 타입의 배열을 만드는 것처럼 이것을 설명할 수 있습니다:
+- 컴파일러는 `arg`의 `.length` 멤버를 사용하지만 `arg`에 이 멤버가 있다고 어디서도 명시하지 않았다는 오류 표시
+  - 이유: 타입 변수는 모든 타입을 대신함 → 사용자가 `.length` 멤버가 없는 `number`를 전달했을 수도 있음
+- 이 함수가 `Type` 자체가 아니라 `Type`의 배열에서 작동하도록 의도했다면 → 배열이므로 `.length` 사용 가능 → 다른 타입의 배열처럼 설명 가능
 
 ```ts twoslash {1}
 function loggingIdentity<Type>(arg: Type[]): Type[] {
@@ -151,11 +136,10 @@ function loggingIdentity<Type>(arg: Type[]): Type[] {
 }
 ```
 
-`loggingIdentity`의 타입을 "제네릭 함수 `loggingIdentity`는 타입 매개변수 `Type`과 `Type` 배열인 인자 `arg`를 받아 `Type` 배열을 반환합니다"로 읽을 수 있습니다.
-숫자 배열을 전달하면, `Type`이 `number`에 바인딩되므로 숫자 배열을 반환받습니다.
-이를 통해 전체 타입이 아닌 작업 중인 타입의 일부로 제네릭 타입 변수 `Type`을 사용할 수 있어 더 큰 유연성을 제공합니다.
-
-동일한 예제를 다음과 같이 작성할 수도 있습니다:
+- `loggingIdentity`의 타입 독해: "제네릭 함수 `loggingIdentity`는 타입 매개변수 `Type`과 `Type` 배열인 인자 `arg`를 받아 `Type` 배열을 반환"
+  - 숫자 배열 전달 시 `Type`이 `number`에 바인딩 → 숫자 배열 반환
+  - 전체 타입이 아닌 타입의 일부로 `Type` 사용 가능 → 유연성 확대
+- 동일한 예제를 다음과 같이 작성 가능
 
 ```ts twoslash {1}
 function loggingIdentity<Type>(arg: Array<Type>): Array<Type> {
@@ -164,15 +148,14 @@ function loggingIdentity<Type>(arg: Array<Type>): Array<Type> {
 }
 ```
 
-다른 언어에서 이러한 스타일의 타입에 이미 익숙할 수 있습니다.
-다음 섹션에서는 `Array<Type>`과 같은 자신만의 제네릭 타입을 만드는 방법을 다룹니다.
+- 다른 언어에서 이러한 스타일의 타입을 이미 접했을 수 있음
+- 다음 섹션은 `Array<Type>`과 같은 자신만의 제네릭 타입을 만드는 방법을 다룸
 
 ### 제네릭 타입
 
-이전 섹션에서는 다양한 타입에서 작동하는 제네릭 항등 함수를 만들었습니다.
-이 섹션에서는 함수 자체의 타입과 제네릭 인터페이스를 만드는 방법을 살펴봅니다.
-
-제네릭 함수의 타입은 비제네릭 함수와 마찬가지로, 함수 선언과 유사하게 타입 매개변수가 먼저 나열됩니다:
+- 이전 섹션 = 다양한 타입에서 작동하는 제네릭 항등 함수
+- 이 섹션 = 함수 자체의 타입과 제네릭 인터페이스를 만드는 방법
+- 제네릭 함수의 타입은 비제네릭 함수와 마찬가지로 함수 선언과 유사하게 타입 매개변수가 먼저 나열됨
 
 ```ts twoslash
 function identity<Type>(arg: Type): Type {
@@ -182,7 +165,7 @@ function identity<Type>(arg: Type): Type {
 let myIdentity: <Type>(arg: Type) => Type = identity;
 ```
 
-타입 변수의 수와 타입 변수가 사용되는 방식이 일치하는 한, 타입에서 제네릭 타입 매개변수에 다른 이름을 사용할 수도 있습니다.
+- 타입 변수의 수와 사용 방식이 일치하는 한, 타입에서 제네릭 타입 매개변수에 다른 이름 사용 가능
 
 ```ts twoslash
 function identity<Type>(arg: Type): Type {
@@ -192,7 +175,7 @@ function identity<Type>(arg: Type): Type {
 let myIdentity: <Input>(arg: Input) => Input = identity;
 ```
 
-객체 리터럴 타입의 호출 시그니처로 제네릭 타입을 작성할 수도 있습니다:
+- 객체 리터럴 타입의 호출 시그니처로 제네릭 타입 작성도 가능
 
 ```ts twoslash
 function identity<Type>(arg: Type): Type {
@@ -202,8 +185,7 @@ function identity<Type>(arg: Type): Type {
 let myIdentity: { <Type>(arg: Type): Type } = identity;
 ```
 
-이것은 첫 번째 제네릭 인터페이스를 작성하는 것으로 이어집니다.
-이전 예제의 객체 리터럴을 가져와 인터페이스로 이동해 봅시다:
+- 첫 번째 제네릭 인터페이스: 이전 예제의 객체 리터럴을 인터페이스로 이동
 
 ```ts twoslash
 interface GenericIdentityFn {
@@ -217,9 +199,9 @@ function identity<Type>(arg: Type): Type {
 let myIdentity: GenericIdentityFn = identity;
 ```
 
-유사한 예제에서, 제네릭 매개변수를 전체 인터페이스의 매개변수로 이동하고 싶을 수 있습니다.
-이를 통해 어떤 타입에 대해 제네릭인지 확인할 수 있습니다(예: `Dictionary` 대신 `Dictionary<string>`).
-이렇게 하면 인터페이스의 다른 모든 멤버에게 타입 매개변수가 표시됩니다.
+- 제네릭 매개변수를 전체 인터페이스의 매개변수로 이동하는 경우도 있음
+  - 어떤 타입에 대해 제네릭인지 확인 가능(예: `Dictionary` 대신 `Dictionary<string>`)
+  - 인터페이스의 다른 모든 멤버에 타입 매개변수가 노출됨
 
 ```ts twoslash
 interface GenericIdentityFn<Type> {
@@ -233,18 +215,15 @@ function identity<Type>(arg: Type): Type {
 let myIdentity: GenericIdentityFn<number> = identity;
 ```
 
-예제가 약간 다른 것으로 변경되었습니다.
-제네릭 함수를 설명하는 대신, 이제 제네릭 타입의 일부인 비제네릭 함수 시그니처가 있습니다.
-`GenericIdentityFn`을 사용할 때, 이제 해당 타입 인자(여기서는 `number`)도 지정해야 하며, 기본 호출 시그니처가 사용할 것을 효과적으로 고정합니다.
-타입 매개변수를 호출 시그니처에 직접 넣을 때와 인터페이스 자체에 넣을 때를 이해하면 타입의 어떤 측면이 제네릭인지 설명하는 데 도움이 됩니다.
-
-제네릭 인터페이스 외에도 제네릭 클래스를 만들 수 있습니다.
-제네릭 열거형과 네임스페이스는 만들 수 없습니다.
+- 예제가 약간 달라짐: 제네릭 함수가 아니라 제네릭 타입의 일부인 비제네릭 함수 시그니처
+- `GenericIdentityFn` 사용 시 타입 인자(여기서는 `number`)도 지정해야 하며, 기본 호출 시그니처가 사용할 타입이 고정됨
+- 타입 매개변수를 호출 시그니처에 직접 넣을 때와 인터페이스 자체에 넣을 때의 차이 이해 → 타입의 어떤 측면이 제네릭인지 설명하는 데 도움
+- 제네릭 인터페이스 외에 제네릭 클래스도 가능. 제네릭 열거형·네임스페이스는 불가
 
 ### 제네릭 클래스
 
-제네릭 클래스는 제네릭 인터페이스와 유사한 형태를 가집니다.
-제네릭 클래스는 클래스 이름 뒤에 꺾쇠 괄호(`<>`) 안에 제네릭 타입 매개변수 목록을 가집니다.
+- 제네릭 클래스는 제네릭 인터페이스와 유사한 형태
+- 클래스 이름 뒤 꺾쇠 괄호(`<>`) 안에 제네릭 타입 매개변수 목록을 가짐
 
 ```ts twoslash
 // @strict: false
@@ -260,8 +239,8 @@ myGenericNumber.add = function (x, y) {
 };
 ```
 
-이것은 `GenericNumber` 클래스의 매우 직접적인 사용이지만, `number` 타입만 사용하도록 제한하는 것이 없다는 것을 알아차렸을 수 있습니다.
-대신 `string`이나 더 복잡한 객체를 사용할 수도 있습니다.
+- 위는 `GenericNumber` 클래스의 직접적인 사용 예 → `number` 타입만 쓰도록 강제하는 요소는 없음
+  - 대신 `string`이나 더 복잡한 객체 사용도 가능
 
 ```ts twoslash
 // @strict: false
@@ -279,15 +258,14 @@ stringNumeric.add = function (x, y) {
 console.log(stringNumeric.add(stringNumeric.zeroValue, "test"));
 ```
 
-인터페이스와 마찬가지로, 클래스 자체에 타입 매개변수를 넣으면 클래스의 모든 속성이 동일한 타입으로 작동하도록 보장할 수 있습니다.
-
-[클래스에 대한 섹션](/docs/handbook/2/classes.html)에서 다루듯이, 클래스는 타입에 두 가지 측면이 있습니다: 정적 측면과 인스턴스 측면.
-제네릭 클래스는 정적 측면이 아닌 인스턴스 측면에서만 제네릭이므로, 클래스로 작업할 때 정적 멤버는 클래스의 타입 매개변수를 사용할 수 없습니다.
+- 인터페이스와 마찬가지로, 클래스 자체에 타입 매개변수를 넣으면 클래스의 모든 속성이 동일한 타입으로 작동하도록 보장 가능
+- [클래스 섹션](/docs/handbook/2/classes.html)에서 다루듯 클래스 타입에는 정적 측면·인스턴스 측면 두 가지가 있음
+  - 제네릭 클래스는 인스턴스 측면에서만 제네릭 → 정적 멤버는 클래스의 타입 매개변수 사용 불가
 
 ### 제네릭 제약 조건
 
-이전 예제에서 기억하시겠지만, 때때로 해당 타입 집합이 어떤 기능을 가질지 _어느 정도_ 알고 있는 타입 집합에서 작동하는 제네릭 함수를 작성하고 싶을 수 있습니다.
-`loggingIdentity` 예제에서 `arg`의 `.length` 속성에 접근하고 싶었지만, 컴파일러가 모든 타입이 `.length` 속성이 있다는 것을 증명할 수 없었으므로, 이러한 가정을 할 수 없다고 경고합니다.
+- 때때로 어떤 기능을 가질지 _어느 정도_ 알고 있는 타입 집합에서 작동하는 제네릭 함수를 작성하고 싶을 수 있음
+- `loggingIdentity` 예제: `arg`의 `.length`에 접근하려 했으나, 컴파일러는 모든 타입이 `.length`를 가진다고 증명할 수 없어 경고
 
 ```ts twoslash
 // @errors: 2339
@@ -297,12 +275,9 @@ function loggingIdentity<Type>(arg: Type): Type {
 }
 ```
 
-모든 타입에서 작동하는 대신, `.length` 속성이 *있는* 모든 타입에서 작동하도록 이 함수를 제한하고 싶습니다.
-타입이 이 멤버가 있는 한 허용하지만, 최소한 이 멤버가 있어야 합니다.
-그렇게 하려면 `Type`이 될 수 있는 것에 대한 제약으로 요구 사항을 나열해야 합니다.
-
-그렇게 하기 위해 제약을 설명하는 인터페이스를 만들 것입니다.
-여기서 단일 `.length` 속성을 가진 인터페이스를 만들고 이 인터페이스와 `extends` 키워드를 사용하여 제약을 나타냅니다:
+- 모든 타입 대신 `.length` 속성이 *있는* 모든 타입으로 이 함수를 제한하고 싶음
+  - 이 멤버가 있는 한 허용하되 최소한 있어야 함 → `Type`이 될 수 있는 것에 대한 제약으로 요구 사항 명시 필요
+- 제약을 설명하는 인터페이스 생성: 단일 `.length` 속성을 가진 인터페이스 + `extends` 키워드로 제약 표현
 
 ```ts twoslash
 interface Lengthwise {
@@ -315,7 +290,7 @@ function loggingIdentity<Type extends Lengthwise>(arg: Type): Type {
 }
 ```
 
-제네릭 함수가 이제 제약되었으므로, 더 이상 모든 타입에서 작동하지 않습니다:
+- 이제 제약된 제네릭 함수는 더 이상 모든 타입에서 작동하지 않음
 
 ```ts twoslash
 // @errors: 2345
@@ -331,7 +306,7 @@ function loggingIdentity<Type extends Lengthwise>(arg: Type): Type {
 loggingIdentity(3);
 ```
 
-대신, 필요한 모든 속성을 가진 타입의 값을 전달해야 합니다:
+- 대신 필요한 모든 속성을 가진 타입의 값을 전달해야 함
 
 ```ts twoslash
 interface Lengthwise {
@@ -348,9 +323,8 @@ loggingIdentity({ length: 10, value: 3 });
 
 ### 제네릭 제약 조건에서 타입 매개변수 사용
 
-다른 타입 매개변수에 의해 제약되는 타입 매개변수를 선언할 수 있습니다.
-예를 들어, 여기서 객체의 이름이 주어지면 해당 속성을 가져오고 싶습니다.
-`obj`에 존재하지 않는 속성을 실수로 가져오지 않도록 두 타입 사이에 제약을 둡니다:
+- 다른 타입 매개변수에 의해 제약되는 타입 매개변수 선언 가능
+- 예: 객체의 이름이 주어지면 해당 속성을 가져오는 경우 → `obj`에 없는 속성을 실수로 가져오지 않도록 두 타입 사이에 제약을 둠
 
 ```ts twoslash
 // @errors: 2345
@@ -366,7 +340,7 @@ getProperty(x, "m");
 
 ### 제네릭에서 클래스 타입 사용
 
-제네릭을 사용하여 TypeScript에서 팩토리를 만들 때, 생성자 함수로 클래스 타입을 참조해야 합니다. 예를 들어,
+- TypeScript에서 제네릭으로 팩토리를 만들 때는 생성자 함수로 클래스 타입을 참조해야 함
 
 ```ts twoslash
 function create<Type>(c: { new (): Type }): Type {
@@ -374,7 +348,7 @@ function create<Type>(c: { new (): Type }): Type {
 }
 ```
 
-더 고급 예제는 prototype 속성을 사용하여 생성자 함수와 클래스 타입의 인스턴스 측면 사이의 관계를 추론하고 제약합니다.
+- 더 고급 예제: prototype 속성으로 생성자 함수와 클래스 타입의 인스턴스 측면 사이의 관계를 추론·제약
 
 ```ts twoslash
 // @strict: false
@@ -407,11 +381,16 @@ createInstance(Lion).keeper.nametag;
 createInstance(Bee).keeper.hasMask;
 ```
 
-이 패턴은 [믹스인](/docs/handbook/mixins.html) 디자인 패턴에 사용됩니다.
+- 이 패턴은 [믹스인](/docs/handbook/mixins.html) 디자인 패턴에 사용됨
 
 ### 제네릭 매개변수 기본값
 
-제네릭 타입 매개변수에 기본값을 선언하면 해당 타입 인자를 지정하는 것이 선택 사항이 됩니다. 예를 들어, 새로운 `HTMLElement`를 만드는 함수입니다. 인자 없이 함수를 호출하면 `HTMLDivElement`가 생성되고; 첫 번째 인자로 요소를 전달하면 해당 인자 타입의 요소가 생성됩니다. 선택적으로 자식 목록도 전달할 수 있습니다. 이전에는 함수를 다음과 같이 정의해야 했습니다:
+- 제네릭 타입 매개변수에 기본값을 선언하면 해당 타입 인자 지정이 선택 사항이 됨
+- 예: 새 `HTMLElement`를 만드는 함수
+  - 인자 없이 호출 → `HTMLDivElement` 생성
+  - 첫 번째 인자로 요소 전달 → 해당 인자 타입의 요소 생성
+  - 선택적으로 자식 목록도 전달 가능
+  - 이전에는 다음과 같이 정의해야 했음
 
 ```ts twoslash
 type Container<T, U> = {
@@ -428,7 +407,7 @@ declare function create<T extends HTMLElement, U extends HTMLElement>(
 ): Container<T, U[]>;
 ```
 
-제네릭 매개변수 기본값을 사용하면 다음과 같이 줄일 수 있습니다:
+- 제네릭 매개변수 기본값을 쓰면 다음과 같이 줄일 수 있음
 
 ```ts twoslash
 type Container<T, U> = {
@@ -449,44 +428,40 @@ const p = create(new HTMLParagraphElement());
 //    ^?
 ```
 
-제네릭 매개변수 기본값은 다음 규칙을 따릅니다:
+제네릭 매개변수 기본값 규칙:
 
-- 타입 매개변수는 기본값이 있으면 선택적으로 간주됩니다.
-- 필수 타입 매개변수는 선택적 타입 매개변수 뒤에 올 수 없습니다.
-- 타입 매개변수의 기본 타입은 해당 타입 매개변수의 제약이 있는 경우 이를 충족해야 합니다.
-- 타입 인자를 지정할 때 필수 타입 매개변수에 대한 타입 인자만 지정하면 됩니다. 지정되지 않은 타입 매개변수는 기본 타입으로 해결됩니다.
-- 기본 타입이 지정되고 추론이 후보를 선택할 수 없는 경우, 기본 타입이 추론됩니다.
-- 기존 클래스 또는 인터페이스 선언과 병합되는 클래스 또는 인터페이스 선언은 기존 타입 매개변수에 대한 기본값을 도입할 수 있습니다.
-- 기존 클래스 또는 인터페이스 선언과 병합되는 클래스 또는 인터페이스 선언은 기본값을 지정하는 한 새로운 타입 매개변수를 도입할 수 있습니다.
+- 타입 매개변수는 기본값이 있으면 선택적으로 간주됨
+- 필수 타입 매개변수는 선택적 타입 매개변수 뒤에 올 수 없음
+- 타입 매개변수의 기본 타입은 해당 타입 매개변수의 제약이 있으면 이를 충족해야 함
+- 타입 인자 지정 시 필수 타입 매개변수에 대한 타입 인자만 지정하면 됨 → 미지정 타입 매개변수는 기본 타입으로 해결
+- 기본 타입이 지정되고 추론이 후보를 선택할 수 없으면 기본 타입이 추론됨
+- 기존 클래스·인터페이스 선언과 병합되는 클래스·인터페이스 선언은 기존 타입 매개변수에 대한 기본값 도입 가능
+- 기존 클래스·인터페이스 선언과 병합되는 클래스·인터페이스 선언은 기본값을 지정하는 한 새 타입 매개변수 도입 가능
 
 ### 변성 어노테이션
 
 > 이것은 매우 특정한 문제를 해결하기 위한 고급 기능이며, 사용해야 할 이유를 식별한 상황에서만 사용해야 합니다
 
-[공변성과 반공변성](https://en.wikipedia.org/wiki/Covariance_and_contravariance_%28computer_science%29)은 두 제네릭 타입 간의 관계를 설명하는 타입 이론 용어입니다.
-다음은 이 개념에 대한 간략한 입문서입니다.
-
-예를 들어, 특정 타입을 `make`할 수 있는 객체를 나타내는 인터페이스가 있다면:
+- [공변성과 반공변성](https://en.wikipedia.org/wiki/Covariance_and_contravariance_%28computer_science%29) = 두 제네릭 타입 간의 관계를 설명하는 타입 이론 용어
+- 예: 특정 타입을 `make`할 수 있는 객체를 나타내는 인터페이스
 ```ts
 interface Producer<T> {
   make(): T;
 }
 ```
-`Cat`은 `Animal`이므로 `Producer<Animal>`이 예상되는 곳에서 `Producer<Cat>`을 사용할 수 있습니다.
-이 관계를 *공변성*이라고 합니다: `Producer<T>`에서 `Producer<U>`로의 관계는 `T`에서 `U`로의 관계와 동일합니다.
-
-반대로, 특정 타입을 `consume`할 수 있는 인터페이스가 있다면:
+- `Cat`은 `Animal`이므로 `Producer<Animal>`이 예상되는 곳에서 `Producer<Cat>` 사용 가능
+  - 이 관계 = *공변성*: `Producer<T>`에서 `Producer<U>`로의 관계는 `T`에서 `U`로의 관계와 동일
+- 반대로 특정 타입을 `consume`할 수 있는 인터페이스
 ```ts
 interface Consumer<T> {
   consume: (arg: T) => void;
 }
 ```
-`Animal`을 받아들일 수 있는 모든 함수는 `Cat`도 받아들일 수 있어야 하므로 `Consumer<Cat>`이 예상되는 곳에서 `Consumer<Animal>`을 사용할 수 있습니다.
-이 관계를 *반공변성*이라고 합니다: `Consumer<T>`에서 `Consumer<U>`로의 관계는 `U`에서 `T`로의 관계와 동일합니다.
-공변성과 비교하여 방향이 반대인 것에 주목하세요! 이것이 반공변성이 "스스로 상쇄"되지만 공변성은 그렇지 않은 이유입니다.
-
-TypeScript와 같은 구조적 타입 시스템에서 공변성과 반공변성은 타입 정의에서 따르는 자연스럽게 나타나는 동작입니다.
-제네릭이 없더라도 공변(및 반공변) 관계를 볼 수 있습니다:
+- `Animal`을 받는 모든 함수는 `Cat`도 받아야 하므로 `Consumer<Cat>`이 예상되는 곳에서 `Consumer<Animal>` 사용 가능
+  - 이 관계 = *반공변성*: `Consumer<T>`에서 `Consumer<U>`로의 관계는 `U`에서 `T`로의 관계와 동일
+  - 공변성과 방향이 반대 → 반공변성은 "스스로 상쇄"되지만 공변성은 그렇지 않은 이유
+- TypeScript 같은 구조적 타입 시스템에서 공변성·반공변성은 타입 정의에서 자연스럽게 나타나는 동작
+  - 제네릭이 없어도 공변(및 반공변) 관계를 볼 수 있음
 ```ts
 interface AnimalProducer {
   make(): Animal;
@@ -499,15 +474,12 @@ interface CatProducer {
 }
 ```
 
-TypeScript는 구조적 타입 시스템을 가지므로, 두 타입을 비교할 때, 예를 들어 `Producer<Cat>`이 `Producer<Animal>`이 예상되는 곳에서 사용될 수 있는지 확인할 때, 일반적인 알고리즘은 두 정의를 구조적으로 확장하고 해당 구조를 비교합니다.
-그러나 변성은 매우 유용한 최적화를 허용합니다: `Producer<T>`가 `T`에 대해 공변이면, `Producer<Cat>`과 `Producer<Animal>`이 동일한 관계를 가지므로 단순히 `Cat`과 `Animal`만 확인할 수 있습니다.
-
-이 로직은 동일한 타입의 두 인스턴스화를 검사할 때만 사용할 수 있습니다.
-`Producer<T>`와 `FastProducer<U>`가 있다면, `T`와 `U`가 반드시 이러한 타입에서 동일한 위치를 참조한다는 보장이 없으므로, 이 검사는 항상 구조적으로 수행됩니다.
-
-변성은 구조적 타입의 자연스럽게 나타나는 속성이므로, TypeScript는 모든 제네릭 타입의 변성을 자동으로 *추론*합니다.
-**매우 드문 경우**에 특정 종류의 순환 타입과 관련하여 이 측정이 부정확할 수 있습니다.
-이런 경우, 타입 매개변수에 변성 어노테이션을 추가하여 특정 변성을 강제할 수 있습니다:
+- TypeScript는 구조적 타입 시스템이므로, 두 타입 비교 시(예: `Producer<Cat>`이 `Producer<Animal>` 예상 위치에서 사용 가능한지) 일반 알고리즘은 두 정의를 구조적으로 확장해 구조를 비교
+  - 변성은 유용한 최적화 제공: `Producer<T>`가 `T`에 대해 공변이면 `Producer<Cat>`과 `Producer<Animal>`이 동일한 관계 → 단순히 `Cat`과 `Animal`만 확인 가능
+- 이 로직은 동일한 타입의 두 인스턴스화를 검사할 때만 사용 가능
+  - `Producer<T>`와 `FastProducer<U>`처럼 다른 타입이면 `T`·`U`가 동일 위치를 참조한다는 보장이 없어 항상 구조적으로 검사
+- 변성은 구조적 타입의 자연스러운 속성 → TypeScript는 모든 제네릭 타입의 변성을 자동으로 *추론*
+  - **매우 드문 경우**에 순환 타입 관련해 이 추론이 부정확할 수 있음 → 타입 매개변수에 변성 어노테이션을 추가해 특정 변성 강제 가능
 ```ts
 // 반공변 어노테이션
 interface Consumer<in T> {
@@ -525,13 +497,12 @@ interface ProducerConsumer<in out T> {
   make(): T;
 }
 ```
-구조적으로 *발생해야 하는* 동일한 변성을 작성하는 경우에만 이렇게 하세요.
+- 구조적으로 *발생해야 하는* 동일한 변성을 작성하는 경우에만 사용
 
 > 구조적 변성과 일치하지 않는 변성 어노테이션을 절대 작성하지 마세요!
 
-변성 어노테이션은 인스턴스화 기반 비교 중에만 적용된다는 점을 강화하는 것이 중요합니다.
-구조적 비교 중에는 효과가 없습니다.
-예를 들어, 변성 어노테이션을 사용하여 타입을 실제로 불변으로 "강제"할 수 없습니다:
+- 변성 어노테이션은 인스턴스화 기반 비교 중에만 적용 → 구조적 비교 중에는 효과 없음
+  - 예: 변성 어노테이션으로 타입을 실제로 불변으로 "강제"할 수 없음
 ```ts
 // 이렇게 하지 마세요 - 변성 어노테이션이
 // 구조적 동작과 일치하지 않습니다
@@ -548,37 +519,33 @@ const p: Producer<string | number> = {
     }
 }
 ```
-여기서 객체 리터럴의 `make` 함수는 `number`를 반환하는데, `number`가 `string | number`가 아니기 때문에 오류가 발생할 것으로 예상할 수 있습니다.
-그러나 객체 리터럴이 `Producer<string | number>`가 아닌 익명 타입이기 때문에 이것은 인스턴스화 기반 비교가 아닙니다.
+- 위 예에서 객체 리터럴의 `make`는 `number`를 반환 → `number`가 `string | number`가 아니므로 오류가 예상되지만, 객체 리터럴이 `Producer<string | number>`가 아닌 익명 타입이라 인스턴스화 기반 비교가 아님
 
 > 변성 어노테이션은 구조적 동작을 변경하지 않으며 특정 상황에서만 참조됩니다
 
-왜 그렇게 하는지, 제한 사항이 무엇인지, 언제 적용되지 않는지 절대적으로 알고 있는 경우에만 변성 어노테이션을 작성하는 것이 매우 중요합니다.
-TypeScript가 인스턴스화 기반 비교를 사용하는지 구조적 비교를 사용하는지는 지정된 동작이 아니며 정확성이나 성능상의 이유로 버전마다 변경될 수 있으므로, 타입의 구조적 동작과 일치하는 경우에만 변성 어노테이션을 작성해야 합니다.
-특정 변성을 "강제"하기 위해 변성 어노테이션을 사용하지 마세요; 이는 코드에서 예측할 수 없는 동작을 유발합니다.
+- 왜 그렇게 하는지, 제한 사항, 언제 적용되지 않는지를 확실히 아는 경우에만 변성 어노테이션 작성
+  - TypeScript가 인스턴스화 기반/구조적 비교 중 무엇을 쓰는지는 지정된 동작이 아니며 버전마다 바뀔 수 있음 → 타입의 구조적 동작과 일치하는 경우에만 작성
+  - 특정 변성을 "강제"하려는 용도로 사용 금지 → 예측 불가능한 동작 유발
 
 > 타입의 구조적 동작과 일치하지 않는 변성 어노테이션을 작성하지 마세요
 
-TypeScript는 제네릭 타입에서 변성을 자동으로 추론할 수 있습니다.
-변성 어노테이션을 작성해야 하는 경우는 거의 없으며, 특정 필요성을 식별한 경우에만 그렇게 해야 합니다.
-변성 어노테이션은 타입의 구조적 동작을 변경하지 *않으며*, 상황에 따라 인스턴스화 기반 비교가 예상될 때 구조적 비교가 이루어지는 것을 볼 수 있습니다.
-변성 어노테이션은 이러한 구조적 컨텍스트에서 타입이 동작하는 방식을 수정하는 데 사용할 수 없으며, 어노테이션이 구조적 정의와 동일하지 않는 한 작성해서는 안 됩니다.
-이것을 올바르게 하기 어렵고, TypeScript가 대부분의 경우 변성을 올바르게 추론할 수 있으므로, 일반 코드에서 변성 어노테이션을 작성하는 경우는 드물어야 합니다.
+- TypeScript는 제네릭 타입의 변성을 자동으로 추론 가능 → 변성 어노테이션을 직접 작성할 필요는 거의 없음, 특정 필요성이 확인된 경우만 예외
+  - 변성 어노테이션은 타입의 구조적 동작을 변경하지 *않음* → 인스턴스화 기반 비교가 예상되는 상황에서 구조적 비교가 이뤄지는 경우도 있음
+  - 구조적 컨텍스트에서 타입 동작을 수정하는 용도로 쓸 수 없음 → 어노테이션이 구조적 정의와 동일하지 않으면 작성 금지
+  - 올바르게 맞추기 어렵고 TypeScript가 대부분 변성을 올바르게 추론하므로, 일반 코드에서 변성 어노테이션 작성은 드물어야 함
 
 > 타입 검사 동작을 변경하기 위해 변성 어노테이션을 사용하려고 하지 마세요; 이것은 그 용도가 아닙니다
 
-변성 어노테이션이 확인되기 때문에 "타입 디버깅" 상황에서 임시 변성 어노테이션이 유용할 *수* 있습니다.
-TypeScript는 어노테이션된 변성이 식별 가능하게 잘못된 경우 오류를 발생시킵니다:
+- "타입 디버깅" 상황에서는 임시 변성 어노테이션이 유용할 *수* 있음(어노테이션이 검증되므로)
+  - TypeScript는 어노테이션된 변성이 식별 가능하게 잘못되면 오류 발생
 ```ts
 // 오류, 이 인터페이스는 확실히 T에 대해 반공변입니다
 interface Foo<out T> {
   consume: (arg: T) => void;
 }
 ```
-그러나 변성 어노테이션은 더 엄격할 수 있습니다(예: 실제 변성이 공변인 경우 `in out`이 유효합니다).
-디버깅이 끝나면 변성 어노테이션을 제거하세요.
-
-마지막으로, 타입 검사 성능을 최대화하려고 하고, 프로파일러를 실행했으며, 느린 특정 타입을 식별했고, 변성 추론이 특히 느리다는 것을 식별했으며, 작성하려는 변성 어노테이션을 주의 깊게 검증한 경우, 변성 어노테이션을 추가하여 매우 복잡한 타입에서 약간의 성능 이점을 볼 *수* 있습니다.
+- 다만 변성 어노테이션은 더 엄격할 수 있음(예: 실제 변성이 공변이면 `in out`도 유효). 디버깅이 끝나면 제거
+- 마지막으로, 타입 검사 성능 최적화가 목적이고 프로파일러로 느린 특정 타입을 식별했으며 변성 추론이 특히 느리다는 것까지 확인하고 어노테이션을 주의 깊게 검증했다면, 변성 어노테이션 추가로 매우 복잡한 타입에서 약간의 성능 이점을 볼 *수* 있음
 
 > 타입 검사 동작을 변경하기 위해 변성 어노테이션을 사용하려고 하지 마세요; 이것은 그 용도가 아닙니다
 
@@ -595,8 +562,8 @@ oneline: "타입 컨텍스트에서 keyof 연산자 사용하기"
 
 ### `keyof` 타입 연산자
 
-`keyof` 연산자는 객체 타입을 받아 해당 키의 문자열 또는 숫자 리터럴 유니온을 생성합니다.
-다음 타입 `P`는 `type P = "x" | "y"`와 동일한 타입입니다:
+- `keyof` 연산자는 객체 타입을 받아 해당 키의 문자열·숫자 리터럴 유니온을 생성
+- 다음 타입 `P`는 `type P = "x" | "y"`와 동일한 타입
 
 ```ts twoslash
 type Point = { x: number; y: number };
@@ -604,7 +571,7 @@ type P = keyof Point;
 //   ^?
 ```
 
-타입에 `string` 또는 `number` 인덱스 시그니처가 있으면, `keyof`는 해당 타입을 대신 반환합니다:
+- 타입에 `string`·`number` 인덱스 시그니처가 있으면 `keyof`는 해당 타입을 대신 반환
 
 ```ts twoslash
 type Arrayish = { [n: number]: unknown };
@@ -616,9 +583,8 @@ type M = keyof Mapish;
 //   ^?
 ```
 
-이 예제에서 `M`은 `string | number`입니다 -- 이는 JavaScript 객체 키가 항상 문자열로 강제 변환되기 때문에, `obj[0]`은 항상 `obj["0"]`과 동일합니다.
-
-`keyof` 타입은 나중에 자세히 배울 매핑된 타입과 결합될 때 특히 유용해집니다.
+- 이 예제에서 `M`은 `string | number` → JavaScript 객체 키는 항상 문자열로 강제 변환되므로 `obj[0]`은 `obj["0"]`과 동일
+- `keyof` 타입은 매핑된 타입과 결합될 때 특히 유용(매핑된 타입은 나중에 자세히 다룸)
 
 ---
 
@@ -633,14 +599,14 @@ oneline: "타입 컨텍스트에서 typeof 연산자 사용하기"
 
 ### `typeof` 타입 연산자
 
-JavaScript에는 이미 _표현식_ 컨텍스트에서 사용할 수 있는 `typeof` 연산자가 있습니다:
+- JavaScript에는 이미 _표현식_ 컨텍스트에서 쓸 수 있는 `typeof` 연산자가 있음
 
 ```ts twoslash
 // "string"을 출력합니다
 console.log(typeof "Hello world");
 ```
 
-TypeScript는 _타입_ 컨텍스트에서 변수나 속성의 _타입_을 참조하는 데 사용할 수 있는 `typeof` 연산자를 추가합니다:
+- TypeScript는 _타입_ 컨텍스트에서 변수·속성의 _타입_을 참조하는 `typeof` 연산자를 추가
 
 ```ts twoslash
 let s = "hello";
@@ -648,9 +614,8 @@ let n: typeof s;
 //  ^?
 ```
 
-이것은 기본 타입에는 그다지 유용하지 않지만, 다른 타입 연산자와 결합하면 `typeof`를 사용하여 많은 패턴을 편리하게 표현할 수 있습니다.
-예를 들어, 미리 정의된 타입 `ReturnType<T>`부터 살펴봅시다.
-이것은 _함수 타입_을 받아 반환 타입을 생성합니다:
+- 기본 타입에는 그다지 유용하지 않지만, 다른 타입 연산자와 결합하면 `typeof`로 많은 패턴을 편리하게 표현 가능
+- 예: 미리 정의된 타입 `ReturnType<T>` → _함수 타입_을 받아 반환 타입을 생성
 
 ```ts twoslash
 type Predicate = (x: unknown) => boolean;
@@ -658,7 +623,7 @@ type K = ReturnType<Predicate>;
 //   ^?
 ```
 
-함수 이름에 `ReturnType`을 사용하려고 하면 유익한 오류가 표시됩니다:
+- 함수 이름에 `ReturnType`을 사용하려 하면 유익한 오류가 표시됨
 
 ```ts twoslash
 // @errors: 2749
@@ -668,8 +633,7 @@ function f() {
 type P = ReturnType<f>;
 ```
 
-_값_과 _타입_은 같은 것이 아닙니다.
-_값 `f`_가 가진 _타입_을 참조하려면 `typeof`를 사용합니다:
+- _값_과 _타입_은 같은 것이 아님 → _값 `f`_가 가진 _타입_을 참조하려면 `typeof` 사용
 
 ```ts twoslash
 function f() {
@@ -681,10 +645,8 @@ type P = ReturnType<typeof f>;
 
 #### 제한 사항
 
-TypeScript는 `typeof`에 사용할 수 있는 표현식의 종류를 의도적으로 제한합니다.
-
-구체적으로, 식별자(즉, 변수 이름)나 그 속성에서만 `typeof`를 사용하는 것이 합법적입니다.
-이것은 실행된다고 생각하지만 실행되지 않는 코드를 작성하는 혼란스러운 함정을 피하는 데 도움이 됩니다:
+- TypeScript는 `typeof`에 쓸 수 있는 표현식 종류를 의도적으로 제한
+- 구체적으로 식별자(변수 이름)나 그 속성에서만 `typeof` 사용이 합법 → 실행된다고 생각하지만 실행되지 않는 코드를 작성하는 혼란스러운 함정을 방지
 
 ```ts twoslash
 // @errors: 1005
@@ -706,7 +668,7 @@ permalink: /docs/handbook/2/indexed-access-types.html
 oneline: "Type['a'] 문법을 사용하여 타입의 일부에 접근하기"
 ---
 
-_인덱스 접근 타입_을 사용하여 다른 타입의 특정 속성을 조회할 수 있습니다:
+- _인덱스 접근 타입_으로 다른 타입의 특정 속성 조회 가능
 
 ```ts twoslash
 type Person = { age: number; name: string; alive: boolean };
@@ -714,7 +676,7 @@ type Age = Person["age"];
 //   ^?
 ```
 
-인덱싱 타입 자체가 타입이므로, 유니온, `keyof` 또는 다른 타입을 완전히 사용할 수 있습니다:
+- 인덱싱 타입 자체가 타입 → 유니온, `keyof` 등 다른 타입을 그대로 사용 가능
 
 ```ts twoslash
 type Person = { age: number; name: string; alive: boolean };
@@ -730,7 +692,7 @@ type I3 = Person[AliveOrName];
 //   ^?
 ```
 
-존재하지 않는 속성을 인덱싱하려고 하면 오류가 표시됩니다:
+- 존재하지 않는 속성을 인덱싱하려 하면 오류 표시
 
 ```ts twoslash
 // @errors: 2339
@@ -739,8 +701,8 @@ type Person = { age: number; name: string; alive: boolean };
 type I1 = Person["alve"];
 ```
 
-임의의 타입으로 인덱싱하는 또 다른 예는 `number`를 사용하여 배열 요소의 타입을 가져오는 것입니다.
-이것을 `typeof`와 결합하여 배열 리터럴의 요소 타입을 편리하게 캡처할 수 있습니다:
+- 임의의 타입으로 인덱싱하는 또 다른 예: `number`로 배열 요소의 타입 가져오기
+  - `typeof`와 결합하면 배열 리터럴의 요소 타입을 편리하게 캡처 가능
 
 ```ts twoslash
 const MyArray = [
@@ -758,7 +720,7 @@ type Age2 = Person["age"];
 //   ^?
 ```
 
-인덱싱할 때는 타입만 사용할 수 있으므로, `const`를 사용하여 변수 참조를 만들 수 없습니다:
+- 인덱싱 시 타입만 사용 가능 → `const`로 변수 참조를 만들 수는 없음
 
 ```ts twoslash
 // @errors: 2538 2749
@@ -768,7 +730,7 @@ const key = "age";
 type Age = Person[key];
 ```
 
-그러나 유사한 스타일의 리팩토링을 위해 타입 별칭을 사용할 수 있습니다:
+- 다만 유사한 스타일의 리팩토링에는 타입 별칭 사용 가능
 
 ```ts twoslash
 type Person = { age: number; name: string; alive: boolean };
@@ -788,9 +750,9 @@ permalink: /docs/handbook/2/conditional-types.html
 oneline: "타입 시스템에서 if 문처럼 동작하는 타입 만들기"
 ---
 
-대부분의 유용한 프로그램의 핵심에서 우리는 입력에 따라 결정을 내려야 합니다.
-JavaScript 프로그램도 다르지 않지만, 값을 쉽게 검사할 수 있다는 점을 감안하면 그러한 결정은 입력의 타입에도 기반합니다.
-_조건부 타입_은 입력과 출력 타입 간의 관계를 설명하는 데 도움이 됩니다.
+- 대부분의 유용한 프로그램은 핵심적으로 입력에 따라 결정을 내려야 함
+- JavaScript 프로그램도 마찬가지 → 값을 쉽게 검사할 수 있으므로 결정이 입력의 타입에도 기반
+- _조건부 타입_은 입력과 출력 타입 간의 관계를 설명하는 데 도움
 
 ```ts twoslash
 interface Animal {
@@ -807,7 +769,7 @@ type Example2 = RegExp extends Animal ? number : string;
 //   ^?
 ```
 
-조건부 타입은 JavaScript의 조건 표현식(`condition ? trueExpression : falseExpression`)과 약간 비슷한 형태를 취합니다:
+- 조건부 타입은 JavaScript의 조건 표현식(`condition ? trueExpression : falseExpression`)과 비슷한 형태
 
 ```ts twoslash
 type SomeType = any;
@@ -819,12 +781,9 @@ type Stuff =
   SomeType extends OtherType ? TrueType : FalseType;
 ```
 
-`extends` 왼쪽의 타입이 오른쪽의 타입에 할당 가능하면, 첫 번째 분기("true" 분기)의 타입을 얻게 됩니다; 그렇지 않으면 후자의 분기("false" 분기)의 타입을 얻게 됩니다.
-
-위의 예제에서 조건부 타입은 즉시 유용해 보이지 않을 수 있습니다 - `Dog extends Animal`인지 여부를 스스로 알 수 있고 `number` 또는 `string`을 선택할 수 있습니다!
-하지만 조건부 타입의 힘은 제네릭과 함께 사용할 때 나옵니다.
-
-예를 들어, 다음 `createLabel` 함수를 살펴봅시다:
+- `extends` 왼쪽 타입이 오른쪽 타입에 할당 가능 → 첫 번째 분기("true" 분기) 타입, 아니면 두 번째 분기("false" 분기) 타입
+- 위 예제만 보면 조건부 타입이 즉시 유용해 보이지 않을 수 있음(`Dog extends Animal` 여부는 직접 판단해서 `number`/`string`을 고를 수 있으므로) → 하지만 조건부 타입의 힘은 제네릭과 함께 쓸 때 나옴
+- 예: `createLabel` 함수
 
 ```ts twoslash
 interface IdLabel {
@@ -842,12 +801,10 @@ function createLabel(nameOrId: string | number): IdLabel | NameLabel {
 }
 ```
 
-createLabel에 대한 이러한 오버로드는 입력 타입에 따라 선택을 하는 단일 JavaScript 함수를 설명합니다. 몇 가지 사항에 주목하세요:
-
-1. 라이브러리가 API 전체에서 동일한 종류의 선택을 반복해서 해야 한다면, 이것은 번거로워집니다.
-2. 우리는 세 개의 오버로드를 만들어야 합니다: 타입을 _확신할_ 수 있는 각 경우에 대해 하나씩(`string`용 하나와 `number`용 하나), 그리고 가장 일반적인 경우(`string | number`를 받는 것)에 대해 하나. `createLabel`이 처리할 수 있는 모든 새로운 타입에 대해 오버로드 수가 기하급수적으로 증가합니다.
-
-대신, 조건부 타입으로 해당 로직을 인코딩할 수 있습니다:
+- `createLabel`의 오버로드들은 입력 타입에 따라 선택하는 단일 JavaScript 함수를 설명 → 주목할 점
+  - 라이브러리가 API 전체에서 동일한 종류의 선택을 반복해야 한다면 번거로워짐
+  - 세 개의 오버로드가 필요: 타입을 _확신할_ 수 있는 각 경우(`string`용, `number`용)와 가장 일반적인 경우(`string | number`) → `createLabel`이 처리할 수 있는 새 타입이 늘어날수록 오버로드 수가 기하급수적으로 증가
+- 대신 조건부 타입으로 해당 로직을 인코딩 가능
 
 ```ts twoslash
 interface IdLabel {
@@ -862,7 +819,7 @@ type NameOrId<T extends number | string> = T extends number
   : NameLabel;
 ```
 
-그런 다음 해당 조건부 타입을 사용하여 오버로드를 오버로드 없는 단일 함수로 단순화할 수 있습니다.
+- 이 조건부 타입을 이용해 오버로드를 오버로드 없는 단일 함수로 단순화 가능
 
 ```ts twoslash
 interface IdLabel {
@@ -891,18 +848,17 @@ let c = createLabel(Math.random() ? "hello" : 42);
 
 #### 조건부 타입 제약
 
-종종, 조건부 타입의 검사는 우리에게 새로운 정보를 제공합니다.
-타입 가드로 좁히는 것이 더 구체적인 타입을 제공할 수 있는 것처럼, 조건부 타입의 true 분기는 검사하는 타입에 의해 제네릭을 추가로 제약합니다.
-
-예를 들어, 다음을 살펴봅시다:
+- 조건부 타입의 검사는 종종 새로운 정보를 제공
+  - 타입 가드로 좁히면 더 구체적인 타입을 얻는 것처럼, 조건부 타입의 true 분기는 검사하는 타입으로 제네릭을 추가 제약
+- 예
 
 ```ts twoslash
 // @errors: 2536
 type MessageOf<T> = T["message"];
 ```
 
-이 예제에서 TypeScript는 `T`가 `message`라는 속성이 있다고 알려지지 않았기 때문에 오류를 발생시킵니다.
-`T`를 제약할 수 있고, TypeScript는 더 이상 불평하지 않을 것입니다:
+- 이 예제는 `T`가 `message` 속성을 갖는다고 알려지지 않았으므로 TypeScript가 오류를 발생시킴
+  - `T`를 제약하면 더 이상 오류 없음
 
 ```ts twoslash
 type MessageOf<T extends { message: unknown }> = T["message"];
@@ -915,8 +871,7 @@ type EmailMessageContents = MessageOf<Email>;
 //   ^?
 ```
 
-그러나 `MessageOf`가 모든 타입을 받고 `message` 속성을 사용할 수 없는 경우 `never`와 같은 것으로 기본 설정되도록 하려면 어떻게 해야 할까요?
-제약을 밖으로 이동하고 조건부 타입을 도입하여 이를 수행할 수 있습니다:
+- `MessageOf`가 모든 타입을 받으면서 `message`가 없을 때 `never`로 기본 설정되게 하려면? → 제약을 밖으로 빼고 조건부 타입을 도입하면 가능
 
 ```ts twoslash
 type MessageOf<T> = T extends { message: unknown } ? T["message"] : never;
@@ -936,9 +891,8 @@ type DogMessageContents = MessageOf<Dog>;
 //   ^?
 ```
 
-true 분기 내에서, TypeScript는 `T`가 `message` 속성을 _가질 것_임을 압니다.
-
-또 다른 예로, 배열 타입을 요소 타입으로 평탄화하지만 그렇지 않으면 그대로 두는 `Flatten`이라는 타입을 작성할 수 있습니다:
+- true 분기 내에서 TypeScript는 `T`가 `message` 속성을 _가질 것_임을 인지
+- 또 다른 예: 배열 타입을 요소 타입으로 평탄화하되 그 외엔 그대로 두는 `Flatten` 타입
 
 ```ts twoslash
 type Flatten<T> = T extends any[] ? T[number] : T;
@@ -952,26 +906,22 @@ type Num = Flatten<number>;
 //   ^?
 ```
 
-`Flatten`에 배열 타입이 주어지면, `number`로 인덱스 접근을 사용하여 `string[]`의 요소 타입을 가져옵니다.
-그렇지 않으면 주어진 타입을 그대로 반환합니다.
+- `Flatten`에 배열 타입이 주어지면 `number` 인덱스 접근으로 `string[]`의 요소 타입을 가져옴 → 아니면 주어진 타입을 그대로 반환
 
 #### 조건부 타입 내에서 추론
 
-우리는 방금 조건부 타입을 사용하여 제약을 적용하고 타입을 추출하는 것을 발견했습니다.
-이것은 너무나 일반적인 작업이어서 조건부 타입이 더 쉽게 만들어줍니다.
-
-조건부 타입은 `infer` 키워드를 사용하여 true 분기에서 비교하는 타입에서 추론하는 방법을 제공합니다.
-예를 들어, 인덱스 접근 타입으로 "수동으로" 가져오는 대신 `Flatten`에서 요소 타입을 추론할 수 있었습니다:
+- 방금 조건부 타입으로 제약을 적용하고 타입을 추출하는 방법을 살펴봄 → 매우 일반적인 작업이라 조건부 타입이 이를 더 쉽게 해줌
+- 조건부 타입은 `infer` 키워드로 true 분기에서 비교 대상 타입을 추론하는 방법을 제공
+- 예: 인덱스 접근 타입으로 "수동" 추출 대신 `Flatten`에서 요소 타입을 추론
 
 ```ts twoslash
 type Flatten<Type> = Type extends Array<infer Item> ? Item : Type;
 ```
 
-여기서 `infer` 키워드를 사용하여 true 분기 내에서 `Type`의 요소 타입을 검색하는 방법을 지정하는 대신 `Item`이라는 새로운 제네릭 타입 변수를 선언적으로 도입했습니다.
-이렇게 하면 관심 있는 타입의 구조를 파고들어 탐색하는 방법에 대해 생각할 필요가 없습니다.
-
-`infer` 키워드를 사용하여 유용한 헬퍼 타입 별칭을 작성할 수 있습니다.
-예를 들어, 간단한 경우에 함수 타입에서 반환 타입을 추출할 수 있습니다:
+- true 분기 내에서 `Type`의 요소 타입을 검색하는 방법을 직접 지정하는 대신, `infer`로 `Item`이라는 새 제네릭 타입 변수를 선언적으로 도입
+  - 관심 있는 타입의 구조를 파고들어 탐색하는 방법을 고민할 필요가 없어짐
+- `infer` 키워드로 유용한 헬퍼 타입 별칭 작성 가능
+- 예: 간단한 경우 함수 타입에서 반환 타입 추출
 
 ```ts twoslash
 type GetReturnType<Type> = Type extends (...args: never[]) => infer Return
@@ -988,7 +938,7 @@ type Bools = GetReturnType<(a: boolean, b: boolean) => boolean[]>;
 //   ^?
 ```
 
-여러 호출 시그니처가 있는 타입(오버로드된 함수의 타입과 같은)에서 추론할 때, 추론은 _마지막_ 시그니처(아마도 가장 허용적인 모든 경우를 포괄하는 케이스)에서 이루어집니다. 인자 타입 목록에 기반한 오버로드 해결을 수행하는 것은 불가능합니다.
+- 여러 호출 시그니처가 있는 타입(오버로드된 함수 타입 등)에서 추론할 때 추론은 _마지막_ 시그니처(대개 가장 허용적인 케이스)에서 이루어짐 → 인자 타입 목록 기반 오버로드 해결은 불가
 
 ```ts twoslash
 declare function stringOrNum(x: string): number;
@@ -1001,14 +951,13 @@ type T1 = ReturnType<typeof stringOrNum>;
 
 ### 분배적 조건부 타입
 
-조건부 타입이 제네릭 타입에 작용할 때, 유니온 타입이 주어지면 _분배적_이 됩니다.
-예를 들어, 다음을 살펴봅시다:
+- 조건부 타입이 제네릭 타입에 작용할 때 유니온 타입이 주어지면 _분배적_이 됨
 
 ```ts twoslash
 type ToArray<Type> = Type extends any ? Type[] : never;
 ```
 
-`ToArray`에 유니온 타입을 넣으면, 조건부 타입이 해당 유니온의 각 멤버에 적용됩니다.
+- `ToArray`에 유니온 타입을 넣으면 조건부 타입이 해당 유니온의 각 멤버에 적용됨
 
 ```ts twoslash
 type ToArray<Type> = Type extends any ? Type[] : never;
@@ -1017,7 +966,7 @@ type StrArrOrNumArr = ToArray<string | number>;
 //   ^?
 ```
 
-여기서 발생하는 것은 `ToArray`가 다음에 대해 분배된다는 것입니다:
+- 여기서 실제로 일어나는 일: `ToArray`가 다음에 대해 분배됨
 
 ```ts twoslash
 type StrArrOrNumArr =
@@ -1025,7 +974,7 @@ type StrArrOrNumArr =
   string | number;
 ```
 
-그리고 유니온의 각 멤버 타입에 대해 매핑하여 효과적으로 다음이 됩니다:
+- 유니온의 각 멤버 타입에 매핑되어 효과적으로 다음이 됨
 
 ```ts twoslash
 type ToArray<Type> = Type extends any ? Type[] : never;
@@ -1034,7 +983,7 @@ type StrArrOrNumArr =
   ToArray<string> | ToArray<number>;
 ```
 
-이것은 우리에게 다음을 남깁니다:
+- 결과적으로 다음이 남음
 
 ```ts twoslash
 type StrArrOrNumArr =
@@ -1042,8 +991,8 @@ type StrArrOrNumArr =
   string[] | number[];
 ```
 
-일반적으로 분배성이 원하는 동작입니다.
-그 동작을 피하려면 `extends` 키워드의 각 측면을 대괄호로 둘러쌀 수 있습니다.
+- 일반적으로 분배성이 원하는 동작
+- 이를 피하려면 `extends` 키워드의 각 측면을 대괄호로 둘러싸면 됨
 
 ```ts twoslash
 type ToArrayNonDist<Type> = [Type] extends [any] ? Type[] : never;
@@ -1064,9 +1013,8 @@ permalink: /docs/handbook/2/mapped-types.html
 oneline: "기존 타입을 재사용하여 타입 생성하기"
 ---
 
-반복하고 싶지 않을 때, 때때로 타입은 다른 타입을 기반으로 해야 합니다.
-
-매핑된 타입은 미리 선언되지 않은 속성의 타입을 선언하는 데 사용되는 인덱스 시그니처 문법을 기반으로 합니다:
+- 반복을 피하려면 때때로 타입이 다른 타입을 기반으로 해야 함
+- 매핑된 타입은 미리 선언되지 않은 속성의 타입을 선언하는 인덱스 시그니처 문법을 기반으로 함
 
 ```ts twoslash
 type Horse = {};
@@ -1081,7 +1029,7 @@ const conforms: OnlyBoolsAndHorses = {
 };
 ```
 
-매핑된 타입은 `PropertyKey`의 유니온(자주 [`keyof`를 통해](/docs/handbook/2/indexed-access-types.html) 생성됨)을 사용하여 키를 반복하여 타입을 생성하는 제네릭 타입입니다:
+- 매핑된 타입은 `PropertyKey`의 유니온(주로 [`keyof`](/docs/handbook/2/indexed-access-types.html)로 생성)을 이용해 키를 반복하며 타입을 생성하는 제네릭 타입
 
 ```ts twoslash
 type OptionsFlags<Type> = {
@@ -1089,7 +1037,7 @@ type OptionsFlags<Type> = {
 };
 ```
 
-이 예제에서 `OptionsFlags`는 `Type` 타입의 모든 속성을 가져와 값을 불리언으로 변경합니다.
+- 위 예제에서 `OptionsFlags`는 `Type`의 모든 속성을 가져와 값을 불리언으로 변경
 
 ```ts twoslash
 type OptionsFlags<Type> = {
@@ -1107,9 +1055,8 @@ type FeatureOptions = OptionsFlags<Features>;
 
 #### 매핑 수정자
 
-매핑 중에 적용할 수 있는 두 가지 추가 수정자가 있습니다: `readonly`와 `?`는 각각 가변성과 선택성에 영향을 미칩니다.
-
-`-` 또는 `+`를 접두사로 붙여 이러한 수정자를 제거하거나 추가할 수 있습니다. 접두사를 추가하지 않으면 `+`로 가정됩니다.
+- 매핑 중 적용 가능한 추가 수정자 2가지: `readonly`(가변성)·`?`(선택성)
+- `-`·`+`를 접두사로 붙여 제거·추가 가능. 접두사 없으면 `+`로 간주
 
 ```ts twoslash
 // 타입의 속성에서 'readonly' 속성을 제거합니다
@@ -1144,7 +1091,7 @@ type User = Concrete<MaybeUser>;
 
 ### `as`를 통한 키 재매핑
 
-TypeScript 4.1 이상에서는 매핑된 타입의 `as` 절을 사용하여 매핑된 타입의 키를 다시 매핑할 수 있습니다:
+- TypeScript 4.1 이상에서는 매핑된 타입의 `as` 절로 키를 다시 매핑 가능
 
 ```ts
 type MappedTypeWithNewProperties<Type> = {
@@ -1152,7 +1099,7 @@ type MappedTypeWithNewProperties<Type> = {
 }
 ```
 
-[템플릿 리터럴 타입](/docs/handbook/2/template-literal-types.html)과 같은 기능을 활용하여 이전 속성 이름에서 새 속성 이름을 만들 수 있습니다:
+- [템플릿 리터럴 타입](/docs/handbook/2/template-literal-types.html) 같은 기능을 활용해 이전 속성 이름에서 새 속성 이름을 만들 수 있음
 
 ```ts twoslash
 type Getters<Type> = {
@@ -1169,7 +1116,7 @@ type LazyPerson = Getters<Person>;
 //   ^?
 ```
 
-조건부 타입을 통해 `never`를 생성하여 키를 필터링할 수 있습니다:
+- 조건부 타입으로 `never`를 생성해 키를 필터링할 수도 있음
 
 ```ts twoslash
 // 'kind' 속성을 제거합니다
@@ -1186,7 +1133,7 @@ type KindlessCircle = RemoveKindField<Circle>;
 //   ^?
 ```
 
-`string | number | symbol`의 유니온뿐만 아니라 모든 타입의 유니온에 대해 매핑할 수 있습니다:
+- `string | number | symbol` 유니온뿐 아니라 모든 타입의 유니온에 대해 매핑 가능
 
 ```ts twoslash
 type EventConfig<Events extends { kind: string }> = {
@@ -1202,7 +1149,8 @@ type Config = EventConfig<SquareEvent | CircleEvent>
 
 #### 추가 탐구
 
-매핑된 타입은 이 타입 조작 섹션의 다른 기능과 잘 작동합니다. 예를 들어 여기에 [조건부 타입을 사용하는 매핑된 타입](/docs/handbook/2/conditional-types.html)이 있으며, 객체에 `pii` 속성이 리터럴 `true`로 설정되어 있는지 여부에 따라 `true` 또는 `false`를 반환합니다:
+- 매핑된 타입은 이 섹션의 다른 기능과 잘 어울림
+- 예: [조건부 타입을 사용하는 매핑된 타입](/docs/handbook/2/conditional-types.html) → 객체의 `pii` 속성이 리터럴 `true`인지에 따라 `true`/`false` 반환
 
 ```ts twoslash
 type ExtractPII<Type> = {
@@ -1229,10 +1177,9 @@ permalink: /docs/handbook/2/template-literal-types.html
 oneline: "템플릿 리터럴 문자열을 통해 속성을 변경하는 매핑된 타입 생성하기"
 ---
 
-템플릿 리터럴 타입은 [문자열 리터럴 타입](/docs/handbook/2/everyday-types.html#literal-types)을 기반으로 하며, 유니온을 통해 많은 문자열로 확장할 수 있는 기능이 있습니다.
-
-[JavaScript의 템플릿 리터럴 문자열](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals)과 동일한 문법을 사용하지만, 타입 위치에서 사용됩니다.
-구체적인 리터럴 타입과 함께 사용될 때, 템플릿 리터럴은 내용을 연결하여 새로운 문자열 리터럴 타입을 생성합니다.
+- 템플릿 리터럴 타입은 [문자열 리터럴 타입](/docs/handbook/2/everyday-types.html#literal-types) 기반 → 유니온을 통해 많은 문자열로 확장 가능
+- [JavaScript의 템플릿 리터럴 문자열](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals)과 동일한 문법을 타입 위치에서 사용
+  - 구체적인 리터럴 타입과 함께 쓰면 내용을 연결해 새 문자열 리터럴 타입을 생성
 
 ```ts twoslash
 type World = "world";
@@ -1241,7 +1188,7 @@ type Greeting = `hello ${World}`;
 //   ^?
 ```
 
-유니온이 보간된 위치에서 사용되면, 타입은 각 유니온 멤버가 나타낼 수 있는 모든 가능한 문자열 리터럴의 집합입니다:
+- 보간된 위치에 유니온을 쓰면, 타입은 각 유니온 멤버가 나타낼 수 있는 모든 가능한 문자열 리터럴의 집합
 
 ```ts twoslash
 type EmailLocaleIDs = "welcome_email" | "email_heading";
@@ -1251,7 +1198,7 @@ type AllLocaleIDs = `${EmailLocaleIDs | FooterLocaleIDs}_id`;
 //   ^?
 ```
 
-템플릿 리터럴의 각 보간된 위치에 대해, 유니온은 교차 곱셈됩니다:
+- 템플릿 리터럴의 각 보간 위치마다 유니온은 교차 곱셈됨
 
 ```ts twoslash
 type EmailLocaleIDs = "welcome_email" | "email_heading";
@@ -1264,14 +1211,13 @@ type LocaleMessageIDs = `${Lang}_${AllLocaleIDs}`;
 //   ^?
 ```
 
-일반적으로 큰 문자열 유니온에는 사전 생성을 사용하는 것이 좋지만, 작은 경우에는 이것이 유용합니다.
+- 일반적으로 큰 문자열 유니온에는 사전 생성을 권장하지만, 작은 경우에는 교차 곱셈 방식도 유용
 
 #### 타입에서의 문자열 유니온
 
-템플릿 리터럴의 힘은 타입 내부의 정보를 기반으로 새 문자열을 정의할 때 나타납니다.
-
-함수(`makeWatchedObject`)가 전달된 객체에 `on()`이라는 새 함수를 추가하는 경우를 고려해 봅시다. JavaScript에서 호출은 다음과 같을 수 있습니다:
-`makeWatchedObject(baseObject)`. 기본 객체는 다음과 같이 보일 수 있습니다:
+- 템플릿 리터럴의 힘은 타입 내부 정보를 기반으로 새 문자열을 정의할 때 드러남
+- 예: 함수(`makeWatchedObject`)가 전달된 객체에 `on()`이라는 새 함수를 추가하는 경우
+  - JavaScript 호출 예: `makeWatchedObject(baseObject)`. 기본 객체는 다음과 같은 형태
 
 ```ts twoslash
 // @noErrors
@@ -1282,15 +1228,12 @@ const passedObject = {
 };
 ```
 
-기본 객체에 추가될 `on` 함수는 두 개의 인자를 예상합니다: `eventName`(`string`)과 `callback`(`function`).
-
-`eventName`은 `attributeInThePassedObject + "Changed"` 형식이어야 합니다; 따라서 기본 객체의 `firstName` 속성에서 파생된 `firstNameChanged`입니다.
-
-`callback` 함수가 호출될 때:
-  * `attributeInThePassedObject` 이름과 연관된 타입의 값이 전달되어야 합니다; 따라서 `firstName`이 `string`으로 타입이 지정되었으므로, `firstNameChanged` 이벤트의 콜백은 호출 시 `string`이 전달될 것으로 예상합니다. 마찬가지로 `age`와 연관된 이벤트는 `number` 인자로 호출될 것으로 예상해야 합니다
-  * `void` 반환 타입을 가져야 합니다(시연의 단순성을 위해)
-
-`on()`의 순진한 함수 시그니처는 다음과 같을 수 있습니다: `on(eventName: string, callback: (newValue: any) => void)`. 그러나 앞의 설명에서 코드에 문서화하고 싶은 중요한 타입 제약을 식별했습니다. 템플릿 리터럴 타입을 사용하면 이러한 제약을 코드에 가져올 수 있습니다.
+- 기본 객체에 추가될 `on` 함수는 인자 2개를 예상: `eventName`(`string`)·`callback`(`function`)
+- `eventName`은 `attributeInThePassedObject + "Changed"` 형식 → 예: `firstName` 속성에서 파생된 `firstNameChanged`
+- `callback` 호출 시 조건
+  - `attributeInThePassedObject` 이름과 연관된 타입의 값이 전달돼야 함: `firstName`이 `string`이므로 `firstNameChanged` 콜백은 `string` 인자를 예상, `age` 이벤트 콜백은 `number` 인자를 예상
+  - `void` 반환 타입 (시연 단순화 목적)
+- `on()`의 순진한 시그니처: `on(eventName: string, callback: (newValue: any) => void)` → 하지만 앞서 식별한 중요한 타입 제약을 코드에 문서화하고 싶음 → 템플릿 리터럴 타입으로 이 제약을 코드에 반영 가능
 
 ```ts twoslash
 // @noErrors
@@ -1309,7 +1252,8 @@ person.on("firstNameChanged", (newValue) => {
 });
 ```
 
-`on`이 `"firstName"`이 아닌 이벤트 `"firstNameChanged"`를 수신한다는 점에 주목하세요. `on()`의 순진한 사양은 관찰된 객체의 속성 이름 유니온에 끝에 "Changed"가 추가된 것으로 적합한 이벤트 이름 집합이 제한되도록 보장했다면 더 견고해질 수 있습니다. JavaScript에서 그러한 계산을 수행하는 것이 편하지만, 예를 들어 ``Object.keys(passedObject).map(x => `${x}Changed`)``처럼, _타입 시스템 내부의_ 템플릿 리터럴은 문자열 조작에 대한 유사한 접근 방식을 제공합니다:
+- `on`은 `"firstName"`이 아닌 `"firstNameChanged"`를 수신 → `on()`의 사양이 관찰된 객체의 속성 이름 유니온 + "Changed" 접미사로 이벤트 이름 집합을 제한했다면 더 견고했을 것
+  - JavaScript에서는 이런 계산이 손쉬움(예: ``Object.keys(passedObject).map(x => `${x}Changed`)``) → _타입 시스템 내부의_ 템플릿 리터럴도 유사한 문자열 조작 접근을 제공
 
 ```ts twoslash
 type PropEventSource<Type> = {
@@ -1321,7 +1265,7 @@ type PropEventSource<Type> = {
 declare function makeWatchedObject<Type>(obj: Type): Type & PropEventSource<Type>;
 ```
 
-이를 통해, 잘못된 속성이 주어지면 오류가 발생하는 것을 만들 수 있습니다:
+- 이를 통해 잘못된 속성이 주어지면 오류가 발생하도록 만들 수 있음
 
 ```ts twoslash
 // @errors: 2345
@@ -1348,14 +1292,13 @@ person.on("frstNameChanged", () => {});
 
 #### 템플릿 리터럴을 사용한 추론
 
-원래 전달된 객체에서 제공된 모든 정보를 활용하지 않았다는 점에 주목하세요. `firstName`의 변경(즉, `firstNameChanged` 이벤트)이 주어지면, 콜백이 `string` 타입의 인자를 받을 것으로 예상해야 합니다. 마찬가지로 `age`의 변경에 대한 콜백은 `number` 인자를 받아야 합니다. 우리는 `callback`의 인자 타입으로 `any`를 순진하게 사용하고 있습니다. 다시 말해, 템플릿 리터럴 타입을 사용하면 속성의 데이터 타입이 해당 속성의 콜백의 첫 번째 인자와 동일한 타입이 되도록 보장할 수 있습니다.
-
-이것을 가능하게 하는 핵심 통찰력은 다음과 같습니다: 우리는 제네릭이 있는 함수를 사용하여:
-
-1. 첫 번째 인자에서 사용된 리터럴이 리터럴 타입으로 캡처됩니다
-2. 해당 리터럴 타입이 제네릭의 유효한 속성 유니온에 있는지 검증될 수 있습니다
-3. 검증된 속성의 타입을 인덱스 접근을 사용하여 제네릭의 구조에서 조회할 수 있습니다
-4. 이 타입 정보가 콜백 함수의 인자가 동일한 타입인지 확인하는 데 _적용될 수_ 있습니다
+- 지금까지는 원래 전달된 객체가 제공한 정보를 다 활용하지 못함: `firstName` 변경(`firstNameChanged` 이벤트)이면 콜백이 `string` 인자를 받아야 하고, `age` 변경이면 `number` 인자를 받아야 하는데도 `callback` 인자 타입으로 `any`를 순진하게 사용 중
+  - 템플릿 리터럴 타입으로 속성의 데이터 타입과 해당 콜백 첫 번째 인자의 타입을 동일하게 보장 가능
+- 핵심 통찰: 제네릭이 있는 함수로 다음을 수행
+  1. 첫 번째 인자에서 사용된 리터럴을 리터럴 타입으로 캡처
+  2. 해당 리터럴 타입이 제네릭의 유효한 속성 유니온에 속하는지 검증
+  3. 검증된 속성의 타입을 인덱스 접근으로 제네릭 구조에서 조회
+  4. 이 타입 정보를 콜백 함수 인자의 타입 확인에 _적용_
 
 ```ts twoslash
 type PropEventSource<Type> = {
@@ -1384,22 +1327,20 @@ person.on("ageChanged", newAge => {
 })
 ```
 
-여기서 `on`을 제네릭 메서드로 만들었습니다.
-
-사용자가 문자열 `"firstNameChanged"`로 호출할 때, TypeScript는 `Key`에 대한 올바른 타입을 추론하려고 합니다.
-그렇게 하기 위해, `"Changed"` 앞의 내용에 대해 `Key`를 매치하고 문자열 `"firstName"`을 추론합니다.
-TypeScript가 이를 파악하면, `on` 메서드는 원래 객체에서 `firstName`의 타입을 가져올 수 있으며, 이 경우 `string`입니다.
-마찬가지로, `"ageChanged"`로 호출되면, TypeScript는 `number`인 속성 `age`의 타입을 찾습니다.
-
-추론은 다양한 방식으로 결합될 수 있으며, 종종 문자열을 분해하고 다른 방식으로 재구성합니다.
+- 위에서 `on`을 제네릭 메서드로 만듦
+- 사용자가 `"firstNameChanged"`로 호출하면 TypeScript가 `Key`의 올바른 타입을 추론
+  - `"Changed"` 앞 내용에 `Key`를 매치 → `"firstName"` 추론 → 원래 객체에서 `firstName`의 타입(`string`)을 가져옴
+  - `"ageChanged"`로 호출하면 마찬가지로 `age`의 타입(`number`)을 찾음
+- 추론은 다양한 방식으로 결합 가능 → 종종 문자열을 분해하고 다른 방식으로 재구성
 
 ### 내장 문자열 조작 타입
 
-문자열 조작을 돕기 위해, TypeScript에는 문자열 조작에 사용할 수 있는 타입 집합이 포함되어 있습니다. 이러한 타입은 성능을 위해 컴파일러에 내장되어 있으며 TypeScript에 포함된 `.d.ts` 파일에서 찾을 수 없습니다.
+- TypeScript는 문자열 조작에 쓸 수 있는 타입 집합을 내장 제공
+- 이 타입들은 성능을 위해 컴파일러에 내장되어 있어 TypeScript의 `.d.ts` 파일에서는 찾을 수 없음
 
 #### `Uppercase<StringType>`
 
-문자열의 각 문자를 대문자 버전으로 변환합니다.
+- 문자열의 각 문자를 대문자로 변환
 
 ###### 예제
 
@@ -1415,7 +1356,7 @@ type MainID = ASCIICacheKey<"my_app">
 
 #### `Lowercase<StringType>`
 
-문자열의 각 문자를 소문자에 해당하는 것으로 변환합니다.
+- 문자열의 각 문자를 소문자로 변환
 
 ###### 예제
 
@@ -1431,7 +1372,7 @@ type MainID = ASCIICacheKey<"MY_APP">
 
 #### `Capitalize<StringType>`
 
-문자열의 첫 번째 문자를 대문자에 해당하는 것으로 변환합니다.
+- 문자열의 첫 번째 문자를 대문자로 변환
 
 ###### 예제
 
@@ -1443,7 +1384,7 @@ type Greeting = Capitalize<LowercaseGreeting>;
 
 #### `Uncapitalize<StringType>`
 
-문자열의 첫 번째 문자를 소문자에 해당하는 것으로 변환합니다.
+- 문자열의 첫 번째 문자를 소문자로 변환
 
 ###### 예제
 
@@ -1476,41 +1417,35 @@ function applyStringMapping(symbol: Symbol, str: string) {
 
 > **원문:** https://www.typescriptlang.org/docs/handbook/2/modules.html
 
-JavaScript는 코드를 모듈화하는 다양한 방법의 오랜 역사가 있습니다.
-2012년부터 존재해 온 TypeScript는 이러한 형식 중 많은 것을 지원해 왔지만, 시간이 지나면서 커뮤니티와 JavaScript 명세는 ES Modules(또는 ES6 modules)라는 형식으로 수렴했습니다. `import`/`export` 구문으로 알고 있을 수 있습니다.
-
-ES Modules는 2015년에 JavaScript 명세에 추가되었고, 2020년에는 대부분의 웹 브라우저와 JavaScript 런타임에서 광범위한 지원을 받게 되었습니다.
-
-핸드북은 ES Modules와 인기 있는 선행자인 CommonJS `module.exports =` 구문을 모두 다룰 것이며, 다른 모듈 패턴에 대한 정보는 [모듈](/docs/handbook/modules.html) 아래의 참조 섹션에서 찾을 수 있습니다.
+- JavaScript는 코드를 모듈화하는 다양한 방법의 오랜 역사를 가짐
+- 2012년부터 존재해 온 TypeScript는 이러한 형식 다수를 지원 → 시간이 지나며 커뮤니티와 JavaScript 명세는 ES Modules(ES6 modules)로 수렴. `import`/`export` 구문으로 알려짐
+- ES Modules는 2015년 JavaScript 명세에 추가 → 2020년에는 대부분의 웹 브라우저·JavaScript 런타임에서 광범위한 지원
+- 핸드북은 ES Modules와 그 선행자인 CommonJS `module.exports =` 구문을 모두 다룸. 다른 모듈 패턴은 [모듈](/docs/handbook/modules.html) 참조 섹션 참고
 
 ### JavaScript 모듈이 정의되는 방법
 
-TypeScript에서, ECMAScript 2015에서와 마찬가지로, 최상위 `import` 또는 `export`를 포함하는 모든 파일은 모듈로 간주됩니다.
-
-반대로, 최상위 import 또는 export 선언이 없는 파일은 내용이 전역 범위(따라서 모듈에서도)에서 사용 가능한 스크립트로 처리됩니다.
-
-모듈은 전역 범위가 아닌 자체 범위 내에서 실행됩니다.
-이것은 모듈에서 선언된 변수, 함수, 클래스 등이 export 형식 중 하나를 사용하여 명시적으로 내보내지 않는 한 모듈 외부에서 볼 수 없다는 것을 의미합니다.
-반대로, 다른 모듈에서 내보낸 변수, 함수, 클래스, 인터페이스 등을 사용하려면 import 형식 중 하나를 사용하여 가져와야 합니다.
+- TypeScript에서(ECMAScript 2015와 마찬가지로) 최상위 `import`·`export`를 포함하는 파일은 모듈로 간주됨
+- 반대로 최상위 import·export 선언이 없는 파일은 내용이 전역 범위(모듈에서도 마찬가지)에서 사용 가능한 스크립트로 처리
+- 모듈은 전역 범위가 아닌 자체 범위 내에서 실행
+  - 모듈에서 선언된 변수·함수·클래스는 export로 명시적으로 내보내지 않으면 모듈 외부에서 보이지 않음
+  - 다른 모듈에서 내보낸 것을 쓰려면 import로 가져와야 함
 
 ### 비모듈
 
-시작하기 전에, TypeScript가 모듈로 간주하는 것을 이해하는 것이 중요합니다.
-JavaScript 명세는 `import` 선언, `export`, 또는 최상위 `await`이 없는 모든 JavaScript 파일은 스크립트로 간주되어야 하고 모듈이 아니라고 선언합니다.
-
-스크립트 파일 내에서 변수와 타입은 공유 전역 범위에서 선언되며, 여러 입력 파일을 하나의 출력 파일로 결합하기 위해 [`outFile`](/tsconfig#outFile) 컴파일러 옵션을 사용하거나, HTML에서 여러 `<script>` 태그를 사용하여 이러한 파일을 (올바른 순서로!) 로드한다고 가정합니다.
-
-현재 `import`나 `export`가 없는 파일이 있지만 모듈로 처리되기를 원한다면, 다음 줄을 추가하세요:
+- TypeScript가 모듈로 간주하는 대상 이해가 우선 필요
+- JavaScript 명세: `import`·`export`·최상위 `await`이 없는 JavaScript 파일은 스크립트로 간주되며 모듈이 아님
+- 스크립트 파일 내 변수·타입은 공유 전역 범위에서 선언 → 여러 입력 파일을 하나의 출력으로 합칠 때 [`outFile`](/tsconfig#outFile) 컴파일러 옵션을 쓰거나, HTML에서 여러 `<script>` 태그로 (올바른 순서로!) 로드한다고 가정
+- `import`·`export`가 없는 파일을 모듈로 처리하고 싶다면 다음 줄을 추가
 
 ```ts twoslash
 export {};
 ```
 
-이것은 파일을 아무것도 내보내지 않는 모듈로 변경합니다. 이 구문은 모듈 대상에 관계없이 작동합니다.
+- 이것은 파일을 아무것도 내보내지 않는 모듈로 바꿈. 이 구문은 모듈 대상과 무관하게 작동
 
 ### TypeScript의 모듈
 
-TypeScript에서 모듈 기반 코드를 작성할 때 고려해야 할 세 가지 주요 사항이 있습니다:
+- TypeScript에서 모듈 기반 코드를 작성할 때 고려할 세 가지 주요 사항
 
 - **구문**: import와 export를 위해 어떤 구문을 사용하고 싶은가?
 - **모듈 해결**: 모듈 이름(또는 경로)과 디스크의 파일 사이의 관계는 무엇인가?
@@ -1518,7 +1453,7 @@ TypeScript에서 모듈 기반 코드를 작성할 때 고려해야 할 세 가�
 
 #### ES Module 구문
 
-파일은 `export default`를 통해 주요 내보내기를 선언할 수 있습니다:
+- 파일은 `export default`로 주요 내보내기 선언 가능
 
 ```ts twoslash
 // @filename: hello.ts
@@ -1527,7 +1462,7 @@ export default function helloWorld() {
 }
 ```
 
-이것은 다음을 통해 가져옵니다:
+- 다음처럼 가져올 수 있음
 
 ```ts twoslash
 // @filename: hello.ts
@@ -1540,7 +1475,7 @@ import helloWorld from "./hello.js";
 helloWorld();
 ```
 
-기본 내보내기 외에, `default`를 생략한 `export`를 통해 변수와 함수를 둘 이상 내보낼 수 있습니다:
+- 기본 내보내기 외에도 `default`를 생략한 `export`로 변수·함수를 둘 이상 내보낼 수 있음
 
 ```ts twoslash
 // @filename: maths.ts
@@ -1556,7 +1491,7 @@ export function absolute(num: number) {
 }
 ```
 
-이것들은 `import` 구문을 통해 다른 파일에서 사용할 수 있습니다:
+- 이것들은 `import` 구문으로 다른 파일에서 사용 가능
 
 ```ts twoslash
 // @filename: maths.ts
@@ -1579,7 +1514,7 @@ const absPhi = absolute(phi);
 
 #### 추가 Import 구문
 
-import는 `import {old as new}`와 같은 형식을 사용하여 이름을 바꿀 수 있습니다:
+- import는 `import {old as new}` 형식으로 이름을 바꿀 수 있음
 
 ```ts twoslash
 // @filename: maths.ts
@@ -1592,7 +1527,7 @@ console.log(π);
 //          ^?
 ```
 
-위의 구문을 단일 `import`로 혼합하여 사용할 수 있습니다:
+- 위 구문들은 단일 `import`로 혼합해 사용 가능
 
 ```ts twoslash
 // @filename: maths.ts
@@ -1609,7 +1544,7 @@ console.log(π);
 //          ^?
 ```
 
-`* as name`을 사용하여 내보낸 모든 객체를 가져와 단일 네임스페이스에 넣을 수 있습니다:
+- `* as name`으로 내보낸 모든 객체를 단일 네임스페이스에 담아 가져올 수 있음
 
 ```ts twoslash
 // @filename: maths.ts
@@ -1630,7 +1565,7 @@ const positivePhi = math.absolute(math.phi);
 //    ^?
 ```
 
-`import "./file"`을 통해 파일을 가져오고 현재 모듈에 어떤 변수도 포함하지 _않을_ 수 있습니다:
+- `import "./file"`로 파일을 가져오면서 현재 모듈에 변수를 _전혀_ 담지 않을 수도 있음
 
 ```ts twoslash
 // @filename: maths.ts
@@ -1642,11 +1577,11 @@ import "./maths.js";
 console.log("3.14");
 ```
 
-이 경우, `import`는 아무것도 하지 않습니다. 그러나 `maths.ts`의 모든 코드가 평가되었으며, 이는 다른 객체에 영향을 미치는 부작용을 트리거할 수 있습니다.
+- 이 경우 `import` 자체는 아무것도 하지 않지만, `maths.ts`의 모든 코드가 평가되어 다른 객체에 영향을 미치는 부작용을 트리거할 수 있음
 
 ##### TypeScript 특정 ES Module 구문
 
-타입은 JavaScript 값과 같은 구문을 사용하여 내보내고 가져올 수 있습니다:
+- 타입도 JavaScript 값과 같은 구문으로 내보내고 가져올 수 있음
 
 ```ts twoslash
 // @filename: animal.ts
@@ -1662,11 +1597,11 @@ import { Cat, Dog } from "./animal.js";
 type Animals = Cat | Dog;
 ```
 
-TypeScript는 타입의 import를 선언하기 위한 두 가지 개념으로 `import` 구문을 확장했습니다:
+- TypeScript는 타입 import를 선언하는 두 가지 개념으로 `import` 구문을 확장
 
 ###### `import type`
 
-타입_만_ 가져올 수 있는 import 문입니다:
+- 타입_만_ 가져올 수 있는 import 문
 
 ```ts twoslash
 // @filename: animal.ts
@@ -1686,7 +1621,7 @@ const name = createCatName();
 
 ###### 인라인 `type` imports
 
-TypeScript 4.5에서는 개별 imports에 `type`을 접두사로 붙여 가져온 참조가 타입임을 나타낼 수 있습니다:
+- TypeScript 4.5에서는 개별 import에 `type`을 접두사로 붙여 가져온 참조가 타입임을 표시 가능
 
 ```ts twoslash
 // @filename: animal.ts
@@ -1701,11 +1636,12 @@ export type Animals = Cat | Dog;
 const name = createCatName();
 ```
 
-이것들은 함께 Babel, swc 또는 esbuild와 같은 비TypeScript 트랜스파일러가 안전하게 제거할 수 있는 import를 알 수 있게 합니다.
+- 이 두 방식은 함께, Babel·swc·esbuild 같은 비TypeScript 트랜스파일러가 안전하게 제거할 수 있는 import를 식별할 수 있게 함
 
 ##### CommonJS 동작을 가진 ES Module 구문
 
-TypeScript는 CommonJS 및 AMD `require`에 _직접_ 대응하는 ES Module 구문이 있습니다. ES Module을 사용한 imports는 _대부분의 경우_ 해당 환경의 `require`와 같지만, 이 구문은 TypeScript 파일에서 CommonJS 출력과 1대1 일치를 보장합니다:
+- TypeScript는 CommonJS·AMD `require`에 _직접_ 대응하는 ES Module 구문을 제공
+- ES Module import는 _대부분의 경우_ 해당 환경의 `require`와 같지만, 이 구문은 TypeScript 파일에서 CommonJS 출력과 1대1 일치를 보장
 
 ```ts twoslash
 /// <reference types="node" />
@@ -1715,15 +1651,16 @@ import fs = require("fs");
 const code = fs.readFileSync("hello.ts", "utf8");
 ```
 
-이 구문에 대해 [모듈 참조 페이지](/docs/handbook/modules.html#export--and-import--require)에서 더 배울 수 있습니다.
+- 이 구문에 대한 자세한 내용은 [모듈 참조 페이지](/docs/handbook/modules.html#export--and-import--require) 참고
 
 ### CommonJS 구문
 
-CommonJS는 npm의 대부분의 모듈이 전달되는 형식입니다. 위의 ES Modules 구문을 사용하여 작성하더라도, CommonJS 구문이 어떻게 작동하는지에 대한 간단한 이해가 있으면 더 쉽게 디버깅하는 데 도움이 됩니다.
+- CommonJS는 npm 대부분의 모듈이 전달되는 형식
+- ES Modules 구문으로 작성하더라도, CommonJS 구문의 동작을 간단히 이해해두면 디버깅에 도움
 
 ##### 내보내기
 
-식별자는 전역 `module`의 `exports` 속성을 설정하여 내보냅니다.
+- 식별자는 전역 `module`의 `exports` 속성을 설정해 내보냄
 
 ```ts twoslash
 /// <reference types="node" />
@@ -1741,7 +1678,7 @@ module.exports = {
 };
 ```
 
-그런 다음 이러한 파일은 `require` 문을 통해 가져올 수 있습니다:
+- 이런 파일은 `require` 문으로 가져올 수 있음
 
 ```ts twoslash
 // @module: commonjs
@@ -1765,7 +1702,7 @@ maths.pi;
 //    ^?
 ```
 
-또는 JavaScript의 구조 분해 기능을 사용하여 약간 단순화할 수 있습니다:
+- JavaScript 구조 분해로 약간 단순화도 가능
 
 ```ts twoslash
 // @module: commonjs
@@ -1791,32 +1728,29 @@ squareTwo;
 
 #### CommonJS와 ES Modules 상호 운용
 
-기본 import와 모듈 네임스페이스 객체 import의 구분에 관해 CommonJS와 ES Modules 사이에 기능 불일치가 있습니다. TypeScript에는 [`esModuleInterop`](/tsconfig#esModuleInterop)으로 두 가지 다른 제약 조건 집합 간의 마찰을 줄이기 위한 컴파일러 플래그가 있습니다.
+- 기본 import와 모듈 네임스페이스 객체 import 구분에서 CommonJS·ES Modules 간 기능 불일치 존재
+- TypeScript는 [`esModuleInterop`](/tsconfig#esModuleInterop) 플래그로 두 제약 집합 간 마찰을 줄임
 
 ### TypeScript의 모듈 해결 옵션
 
-모듈 해결은 `import` 또는 `require` 문에서 문자열을 가져와서 해당 문자열이 참조하는 파일을 결정하는 과정입니다.
-
-TypeScript는 두 가지 해결 전략을 포함합니다: Classic과 Node. 컴파일러 옵션 [`module`](/tsconfig#module)이 `commonjs`가 아닐 때 기본값인 Classic은 이전 버전과의 호환성을 위해 포함됩니다.
-Node 전략은 Node.js가 CommonJS 모드에서 작동하는 방식을 복제하며, `.ts` 및 `.d.ts`에 대한 추가 검사를 포함합니다.
-
-TypeScript 내에서 모듈 전략에 영향을 미치는 많은 TSConfig 플래그가 있습니다: [`moduleResolution`](/tsconfig#moduleResolution), [`baseUrl`](/tsconfig#baseUrl), [`paths`](/tsconfig#paths), [`rootDirs`](/tsconfig#rootDirs).
-
-이러한 전략이 어떻게 작동하는지에 대한 전체 세부 정보는 [모듈 해결](/docs/handbook/modules/reference.html#the-moduleresolution-compiler-option) 참조 페이지를 참조하세요.
+- 모듈 해결 = `import`·`require` 문의 문자열이 참조하는 파일을 결정하는 과정
+- TypeScript는 두 가지 해결 전략: Classic·Node
+  - Classic은 [`module`](/tsconfig#module)이 `commonjs`가 아닐 때의 기본값. 이전 버전 호환성 목적
+  - Node 전략은 Node.js의 CommonJS 모드 동작을 복제하며 `.ts`·`.d.ts`에 대한 추가 검사 포함
+- 모듈 전략에 영향을 주는 TSConfig 플래그: [`moduleResolution`](/tsconfig#moduleResolution), [`baseUrl`](/tsconfig#baseUrl), [`paths`](/tsconfig#paths), [`rootDirs`](/tsconfig#rootDirs)
+- 각 전략의 상세 동작은 [모듈 해결](/docs/handbook/modules/reference.html#the-moduleresolution-compiler-option) 참조 페이지 참고
 
 ### TypeScript의 모듈 출력 옵션
 
-내보낸 JavaScript 출력에 영향을 미치는 두 가지 옵션이 있습니다:
+- 내보낸 JavaScript 출력에 영향을 미치는 옵션 2가지
 
-- [`target`](/tsconfig#target)은 어떤 JS 기능이 다운레벨되고(이전 JavaScript 런타임에서 실행되도록 변환됨) 어떤 것이 그대로 유지되는지 결정합니다
-- [`module`](/tsconfig#module)은 모듈이 서로 상호 작용하는 데 사용되는 코드를 결정합니다
+- [`target`](/tsconfig#target): 어떤 JS 기능을 다운레벨(이전 런타임용으로 변환)하고 어떤 것을 그대로 유지할지 결정
+- [`module`](/tsconfig#module): 모듈이 서로 상호 작용하는 데 쓰는 코드를 결정
 
-어떤 [`target`](/tsconfig#target)을 사용할지는 TypeScript 코드를 실행할 것으로 예상하는 JavaScript 런타임에서 사용 가능한 기능이 결정합니다. 예를 들어 지원하는 가장 오래된 웹 브라우저, 실행될 것으로 예상하는 가장 낮은 버전의 Node.js, 또는 Electron과 같은 런타임의 고유한 제약에서 옵니다.
-
-모듈 간의 모든 통신은 모듈 로더를 통해 이루어지며, 컴파일러 옵션 [`module`](/tsconfig#module)이 어떤 것을 사용할지 결정합니다.
-런타임에 모듈 로더는 실행하기 전에 모듈의 모든 종속성을 찾고 실행하는 역할을 합니다.
-
-예를 들어, 다음은 ES Modules 구문을 사용하는 TypeScript 파일로, [`module`](/tsconfig#module)에 대한 몇 가지 다른 옵션을 보여줍니다:
+- 어떤 [`target`](/tsconfig#target)을 쓸지는 코드를 실행할 JavaScript 런타임의 가용 기능이 결정 → 예: 지원하는 가장 오래된 웹 브라우저, 실행될 가장 낮은 버전의 Node.js, Electron 같은 런타임의 고유 제약
+- 모듈 간 모든 통신은 모듈 로더를 통함 → 어떤 로더를 쓸지는 [`module`](/tsconfig#module) 옵션이 결정
+  - 런타임의 모듈 로더는 실행 전 모듈의 모든 종속성을 찾고 실행하는 역할
+- 예: ES Modules 구문을 쓰는 TypeScript 파일로 [`module`](/tsconfig#module) 옵션별 차이를 보임
 
 ```ts twoslash
 // @filename: constants.ts
@@ -1863,11 +1797,14 @@ export const twoPi = valueOfPi * 2;
 
 > ES2020은 원래 `index.ts`와 효과적으로 같습니다.
 
-사용 가능한 모든 옵션과 내보낸 JavaScript 코드가 어떻게 보이는지는 [`module`에 대한 TSConfig 참조](/tsconfig#module)에서 볼 수 있습니다.
+- 사용 가능한 모든 옵션과 출력 JavaScript 코드의 모습은 [`module`에 대한 TSConfig 참조](/tsconfig#module) 참고
 
 ### TypeScript 네임스페이스
 
-TypeScript는 ES Modules 표준보다 앞선 `namespaces`라는 자체 모듈 형식이 있습니다. 이 구문은 복잡한 정의 파일을 만드는 데 유용한 많은 기능이 있으며, [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped)에서 여전히 활발하게 사용되고 있습니다. 더 이상 사용되지 않는 것은 아니지만, 네임스페이스의 대부분의 기능은 ES Modules에 존재하며, JavaScript의 방향에 맞추기 위해 네임스페이스 대신 ES Modules를 사용하는 것을 권장합니다. [네임스페이스 참조 페이지](/docs/handbook/namespaces.html)에서 네임스페이스에 대해 더 배울 수 있습니다.
+- TypeScript는 ES Modules 표준보다 앞선 `namespaces`라는 자체 모듈 형식을 가짐
+- 이 구문은 복잡한 정의 파일을 만드는 데 유용한 기능이 많아 [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped)에서 여전히 활발히 사용됨
+- 더 이상 사용되지 않는 것은 아니나, 네임스페이스 기능 대부분이 ES Modules에도 존재 → JavaScript 방향에 맞추기 위해 네임스페이스보다 ES Modules 권장
+- 네임스페이스 상세는 [네임스페이스 참조 페이지](/docs/handbook/namespaces.html) 참고
 
 ---
 
@@ -1875,15 +1812,12 @@ TypeScript는 ES Modules 표준보다 앞선 `namespaces`라는 자체 모듈 �
 
 > **원문:** https://www.typescriptlang.org/docs/handbook/modules/introduction.html
 
-이 문서는 네 개의 섹션으로 나뉩니다:
+이 문서는 네 섹션으로 구성:
 
-1. 첫 번째 섹션은 TypeScript가 모듈에 접근하는 방식 뒤의 [**이론**](/docs/handbook/modules/theory.html)을 개발합니다. 어떤 상황에서든 올바른 모듈 관련 컴파일러 옵션을 작성하고, TypeScript를 다른 도구와 통합하는 방법을 추론하거나, TypeScript가 의존성 패키지를 처리하는 방식을 이해하고 싶다면 여기서 시작하는 것이 좋습니다. 이러한 주제에 대한 가이드와 참조 페이지가 있지만, 이러한 기본 사항에 대한 이해를 쌓으면 가이드를 읽기가 더 쉬워지고, 여기서 구체적으로 다루지 않은 실제 문제를 다루기 위한 정신적 프레임워크를 제공합니다.
-
-2. [**가이드**](/docs/handbook/modules/guides/choosing-compiler-options.html)는 새 프로젝트에 적합한 컴파일 설정을 선택하는 것부터 시작하여 특정 실제 작업을 수행하는 방법을 보여줍니다. 가이드는 가능한 한 빨리 시작하고 싶은 초보자와 이론에 대한 충분한 이해가 있지만 복잡한 작업에 대한 구체적인 지침을 원하는 전문가 모두에게 시작하기 좋은 곳입니다.
-
-3. [**참조**](/docs/handbook/modules/reference.html) 섹션은 이전 섹션에서 제시된 구문과 구성에 대한 더 자세한 설명을 제공합니다.
-
-4. [**부록**](/docs/handbook/modules/appendices/esm-cjs-interop.html)은 이론이나 참조 섹션이 허용하는 것보다 더 자세한 설명이 필요한 복잡한 주제를 다룹니다.
+1. [**이론**](/docs/handbook/modules/theory.html): TypeScript가 모듈에 접근하는 방식의 배경. 상황에 맞는 모듈 관련 컴파일러 옵션 작성, TypeScript를 다른 도구와 통합하는 방법 추론, TypeScript의 의존성 패키지 처리 방식 이해가 목적이면 여기서 시작 권장 → 가이드·참조 페이지를 읽기 쉽게 하고, 여기서 다루지 않는 실제 문제를 풀 때 쓸 정신적 프레임워크를 제공
+2. [**가이드**](/docs/handbook/modules/guides/choosing-compiler-options.html): 새 프로젝트에 맞는 컴파일 설정을 고르는 것부터 시작해 실제 작업 방법을 보여줌 → 빠른 시작을 원하는 초보자와, 이론은 알지만 복잡한 작업의 구체적 지침이 필요한 전문가 모두에게 적합
+3. [**참조**](/docs/handbook/modules/reference.html): 앞 섹션에서 제시된 구문·구성에 대한 상세 설명
+4. [**부록**](/docs/handbook/modules/appendices/esm-cjs-interop.html): 이론·참조 섹션 범위를 넘어서는 상세 설명이 필요한 복잡한 주제
 
 ---
 
@@ -1893,7 +1827,7 @@ TypeScript는 ES Modules 표준보다 앞선 `namespaces`라는 자체 모듈 �
 
 ### JavaScript에서의 스크립트와 모듈
 
-JavaScript의 초기 시절, 언어가 브라우저에서만 실행되었을 때는 모듈이 없었지만, HTML의 여러 `script` 태그를 사용하여 웹 페이지의 JavaScript를 여러 파일로 분할할 수 있었습니다:
+- JavaScript 초기(언어가 브라우저에서만 실행되던 시절)에는 모듈이 없었지만, HTML의 여러 `script` 태그로 웹 페이지의 JavaScript를 여러 파일로 분할 가능
 
 ```html
 <html>
@@ -1905,9 +1839,9 @@ JavaScript의 초기 시절, 언어가 브라우저에서만 실행되었을 때
 </html>
 ```
 
-이 접근 방식에는 몇 가지 단점이 있었는데, 특히 웹 페이지가 더 크고 복잡해짐에 따라 그러했습니다. 특히 같은 페이지에 로드된 모든 스크립트가 같은 스코프를 공유합니다 - 적절하게 "전역 스코프"라고 불립니다 - 이는 스크립트가 서로의 변수와 함수를 덮어쓰지 않도록 매우 주의해야 한다는 것을 의미합니다.
-
-파일에 자체 스코프를 제공하면서도 코드 조각을 다른 파일에서 사용할 수 있게 하는 방법을 제공하여 이 문제를 해결하는 모든 시스템을 "모듈 시스템"이라고 부를 수 있습니다. (모듈 시스템의 각 파일을 "모듈"이라고 부르는 것은 당연해 보일 수 있지만, 이 용어는 종종 전역 스코프에서 모듈 시스템 외부에서 실행되는 _스크립트_ 파일과 대조하여 사용됩니다.)
+- 이 방식에는 단점이 있음(특히 웹 페이지가 커지고 복잡해질수록): 같은 페이지에 로드된 모든 스크립트가 같은 스코프("전역 스코프")를 공유 → 스크립트가 서로의 변수·함수를 덮어쓰지 않도록 매우 주의해야 함
+- 파일에 자체 스코프를 주면서도 코드 조각을 다른 파일에서 쓸 수 있게 하는 시스템을 "모듈 시스템"이라 부름
+  - (모듈 시스템의 각 파일을 "모듈"이라 부르는 게 당연해 보이지만, 이 용어는 모듈 시스템 외부에서 전역 스코프로 실행되는 _스크립트_ 파일과 대조하는 데 주로 쓰임)
 
 > [많은 모듈 시스템](https://github.com/myshov/history-of-javascript/tree/master/4_evolution_of_js_modularity)이 있으며, TypeScript는 [여러 가지를 출력하도록 지원](https://www.typescriptlang.org/tsconfig/#module)하지만, 이 문서는 오늘날 가장 중요한 두 시스템인 ECMAScript 모듈(ESM)과 CommonJS(CJS)에 초점을 맞춥니다.
 >
@@ -1937,100 +1871,111 @@ JavaScript의 초기 시절, 언어가 브라우저에서만 실행되었을 때
 > console.log(a.message); // 'Hello from a.js'
 > ```
 
-따라서 TypeScript는 파일이 CommonJS 또는 ECMAScript 모듈임을 감지하면, 해당 파일이 자체 스코프를 가질 것이라고 가정하는 것으로 시작합니다. 그 이후로 컴파일러의 작업은 조금 더 복잡해집니다.
+- TypeScript는 파일이 CommonJS·ECMAScript 모듈임을 감지하면 해당 파일이 자체 스코프를 가질 것으로 가정 → 이후 컴파일러 작업이 좀 더 복잡해짐
 
 ### 모듈에 관한 TypeScript의 역할
 
-TypeScript 컴파일러의 주요 목표는 컴파일 시간에 특정 종류의 런타임 오류를 잡아서 방지하는 것입니다. 모듈이 관련되든 안 되든, 컴파일러는 코드의 의도된 런타임 환경에 대해 알아야 합니다 - 예를 들어 어떤 전역 변수가 사용 가능한지. 모듈이 관련된 경우, 컴파일러가 작업을 수행하기 위해 답해야 할 몇 가지 추가 질문이 있습니다. 분석에 필요한 모든 정보를 생각하기 위해 예제로 몇 줄의 입력 코드를 사용해 봅시다:
+- TypeScript 컴파일러의 주요 목표 = 컴파일 시간에 특정 종류의 런타임 오류를 잡아 방지
+- 모듈 관련 여부와 무관하게, 컴파일러는 코드의 의도된 런타임 환경(예: 어떤 전역 변수가 사용 가능한지)을 알아야 함
+- 모듈이 관련되면 컴파일러가 추가로 답해야 할 질문이 생김 → 예제 입력 코드로 확인
 
 ```ts
 import sayHello from "greetings";
 sayHello("world");
 ```
 
-이 파일을 확인하려면, 컴파일러는 `sayHello`의 타입(하나의 문자열 인수를 받을 수 있는 함수인가?)을 알아야 하며, 이는 꽤 많은 추가 질문을 열어둡니다:
-
-1. 모듈 시스템이 이 TypeScript 파일을 직접 로드할 것인가, 아니면 내가 (또는 다른 컴파일러가) 이 TypeScript 파일에서 생성하는 JavaScript 파일을 로드할 것인가?
-2. 로드할 파일 이름과 디스크 위치를 고려할 때, 모듈 시스템이 어떤 _종류_의 모듈을 찾을 것으로 예상하는가?
-3. 출력 JavaScript가 생성되는 경우, 이 파일에 있는 모듈 구문이 출력 코드에서 어떻게 변환될 것인가?
-4. 모듈 시스템이 `"greetings"`로 지정된 모듈을 찾기 위해 어디를 볼 것인가? 조회가 성공할 것인가?
-5. 해당 조회로 해결된 파일은 어떤 종류의 모듈인가?
-6. 모듈 시스템이 (2)에서 감지된 종류의 모듈이 (3)에서 결정된 구문으로 (5)에서 감지된 종류의 모듈을 참조할 수 있도록 허용하는가?
-7. `"greetings"` 모듈이 분석되면, 해당 모듈의 어떤 부분이 `sayHello`에 바인딩되는가?
-
-이러한 모든 질문은 _호스트_ - 출력 JavaScript(또는 경우에 따라 원시 TypeScript)를 소비하여 모듈 로딩 동작을 지시하는 시스템, 일반적으로 Node.js와 같은 런타임이나 Webpack과 같은 번들러 - 의 특성에 따라 달라집니다.
-
-ECMAScript 사양은 ESM import와 export가 서로 어떻게 연결되는지 정의하지만, (4)에서 알려진 _모듈 해결_이 어떻게 발생하는지는 지정하지 않으며, CommonJS와 같은 다른 모듈 시스템에 대해서는 아무것도 말하지 않습니다. 따라서 런타임과 번들러, 특히 ESM과 CJS를 모두 지원하려는 것들은 자체 규칙을 설계할 자유가 많습니다. 결과적으로, TypeScript가 위의 질문에 답하는 방식은 코드가 실행되도록 의도된 곳에 따라 극적으로 달라질 수 있습니다. 단일 정답이 없으므로, 컴파일러에게 구성 옵션을 통해 규칙을 알려야 합니다.
-
-명심해야 할 다른 핵심 아이디어는 TypeScript가 이러한 질문을 거의 항상 _출력_ JavaScript 파일의 관점에서 생각한다는 것입니다, _입력_ TypeScript(또는 JavaScript!) 파일이 아니라. 오늘날 일부 런타임과 번들러는 TypeScript 파일을 직접 로드하는 것을 지원하며, 이러한 경우 별도의 입력 및 출력 파일에 대해 생각하는 것은 의미가 없습니다. 이 문서의 대부분은 TypeScript 파일이 JavaScript 파일로 컴파일되고, 이것이 런타임 모듈 시스템에 의해 로드되는 경우를 논의합니다. 이러한 경우를 검토하는 것은 컴파일러의 옵션과 동작을 이해하는 데 필수적입니다 - 거기서 시작하고 esbuild, Bun 및 기타 [TypeScript 우선 런타임과 번들러](#번들러-typescript-런타임-및-nodejs-로더를-위한-모듈-해결)에 대해 생각할 때 단순화하는 것이 더 쉽습니다. 따라서 지금은 모듈과 관련하여 TypeScript의 역할을 출력 파일의 관점에서 요약할 수 있습니다:
-
-**호스트의 규칙**을 충분히 이해하여
-
-1. 파일을 유효한 **출력 모듈 형식**으로 컴파일하고,
-2. 해당 **출력**의 import가 **성공적으로 해결**되도록 보장하며,
-3. **가져온 이름**에 어떤 **타입**을 할당할지 알아야 합니다.
+- 이 파일을 확인하려면 컴파일러가 `sayHello`의 타입(문자열 인자 하나를 받는 함수인가?)을 알아야 함 → 추가로 열리는 질문들
+  1. 모듈 시스템이 이 TypeScript 파일을 직접 로드하는가, 아니면 이 파일로부터 생성되는 JavaScript 파일을 로드하는가?
+  2. 로드할 파일 이름·디스크 위치를 고려할 때 모듈 시스템은 어떤 _종류_의 모듈을 기대하는가?
+  3. 출력 JavaScript가 생성된다면, 이 파일의 모듈 구문은 출력 코드에서 어떻게 변환되는가?
+  4. 모듈 시스템이 `"greetings"`로 지정된 모듈을 어디서 찾는가? 조회는 성공하는가?
+  5. 해당 조회로 해결된 파일은 어떤 종류의 모듈인가?
+  6. 모듈 시스템이 (2)의 모듈 종류가 (3)의 구문으로 (5)의 모듈 종류를 참조하도록 허용하는가?
+  7. `"greetings"` 모듈이 분석되면, 그 모듈의 어떤 부분이 `sayHello`에 바인딩되는가?
+- 이 질문들은 모두 _호스트_(출력 JavaScript나 원시 TypeScript를 소비해 모듈 로딩 동작을 지시하는 시스템 — 보통 Node.js 같은 런타임이나 Webpack 같은 번들러)의 특성에 따라 달라짐
+- ECMAScript 사양은 ESM import·export의 연결 방식은 정의하지만, (4)의 _모듈 해결_이 어떻게 일어나는지는 지정하지 않고 CommonJS 같은 다른 모듈 시스템에 대해서는 아무것도 말하지 않음 → 런타임·번들러(특히 ESM·CJS를 모두 지원하려는 것들)는 자체 규칙을 설계할 자유가 큼
+  - 따라서 TypeScript가 위 질문에 답하는 방식은 코드가 실행될 환경에 따라 크게 달라짐 → 단일 정답이 없으므로 구성 옵션으로 규칙을 알려줘야 함
+- 다른 핵심 아이디어: TypeScript는 이 질문들을 거의 항상 _출력_ JavaScript 파일 관점에서 생각함(_입력_ TypeScript/JavaScript 파일 관점이 아님)
+  - 오늘날 일부 런타임·번들러는 TypeScript 파일을 직접 로드 지원 → 이 경우 입력·출력 파일을 별도로 생각하는 게 무의미
+  - 이 문서 대부분은 TypeScript → JavaScript 컴파일 후 런타임 모듈 시스템이 로드하는 경우를 다룸 → 이 경우를 먼저 이해하면 컴파일러 옵션·동작 파악에 필수적이고, esbuild·Bun 등 [TypeScript 우선 런타임·번들러](#번들러-typescript-런타임-및-nodejs-로더를-위한-모듈-해결)를 다룰 때도 단순화하기 쉬움
+- 지금까지를 출력 파일 관점에서 요약: **호스트의 규칙**을 충분히 이해해
+  1. 파일을 유효한 **출력 모듈 형식**으로 컴파일
+  2. 해당 **출력**의 import가 **성공적으로 해결**되도록 보장
+  3. **가져온 이름**에 어떤 **타입**을 할당할지 판단
 
 ### 호스트는 누구인가?
 
-계속하기 전에, _호스트_라는 용어에 대해 같은 페이지에 있는지 확인하는 것이 좋습니다. 이 용어는 자주 등장할 것이기 때문입니다. 이전에 "출력 코드를 소비하여 모듈 로딩 동작을 지시하는 시스템"으로 정의했습니다. 다시 말해, TypeScript의 모듈 분석이 모델링하려는 TypeScript 외부의 시스템입니다:
-
-- 출력 코드(`tsc` 또는 타사 트랜스파일러에 의해 생성됨)가 Node.js와 같은 런타임에서 직접 실행되는 경우, 런타임이 호스트입니다.
-- 런타임이 TypeScript 파일을 직접 소비하기 때문에 "출력 코드"가 없는 경우에도, 런타임이 여전히 호스트입니다.
-- 번들러가 TypeScript 입력 또는 출력을 소비하고 번들을 생성하는 경우, 번들러가 호스트입니다. 번들러가 원래 import/require 세트를 보고, 참조하는 파일을 찾고, 원래 import와 require가 지워지거나 인식 불가능하게 변환된 새 파일 또는 파일 세트를 생성했기 때문입니다. (해당 번들 자체가 모듈로 구성될 수 있으며, 이를 실행하는 런타임이 그 번들의 호스트가 되지만, TypeScript는 번들러 이후에 일어나는 일에 대해 알지 못합니다.)
-- 다른 트랜스파일러, 옵티마이저, 또는 포매터가 TypeScript의 출력에서 실행되는 경우, import와 export를 그대로 두는 한 TypeScript가 신경 쓰는 호스트가 _아닙니다_.
-- 웹 브라우저에서 모듈을 로드할 때, TypeScript가 모델링해야 하는 동작은 실제로 웹 서버와 브라우저에서 실행되는 모듈 시스템 사이에 분할됩니다. 브라우저의 JavaScript 엔진(또는 RequireJS와 같은 스크립트 기반 모듈 로딩 프레임워크)이 어떤 모듈 형식이 허용되는지 제어하고, 웹 서버는 한 모듈이 다른 모듈을 로드하는 요청을 트리거할 때 어떤 파일을 보낼지 결정합니다.
-- TypeScript 컴파일러 자체는 호스트가 아닙니다. 다른 호스트를 모델링하려는 것 외에 모듈과 관련된 동작을 제공하지 않기 때문입니다.
+- _호스트_ = "출력 코드를 소비해 모듈 로딩 동작을 지시하는 시스템" → TypeScript 외부에서 TypeScript의 모듈 분석이 모델링하려는 대상
+  - 출력 코드(`tsc`나 타사 트랜스파일러 생성)가 Node.js 같은 런타임에서 직접 실행되면 → 그 런타임이 호스트
+  - 런타임이 TypeScript 파일을 직접 소비해 "출력 코드"가 없어도 → 그 런타임이 여전히 호스트
+  - 번들러가 TypeScript 입력·출력을 소비해 번들을 생성하면 → 번들러가 호스트(원래 import/require를 보고 참조 파일을 찾아, import/require가 지워지거나 인식 불가로 변환된 새 파일/파일 세트를 만들기 때문). 해당 번들 자체가 모듈로 구성돼 이를 실행하는 런타임이 그 번들의 호스트가 될 수 있지만, TypeScript는 번들러 이후에 일어나는 일을 알지 못함
+  - 다른 트랜스파일러·옵티마이저·포매터가 TypeScript 출력에서 실행되면 → import/export를 그대로 두는 한 TypeScript가 신경 쓰는 호스트가 _아님_
+  - 웹 브라우저에서 모듈을 로드할 때는 TypeScript가 모델링해야 하는 동작이 웹 서버와 브라우저 실행 모듈 시스템 사이에 나뉨: 브라우저의 JS 엔진(또는 RequireJS 같은 프레임워크)이 허용 모듈 형식을 제어, 웹 서버는 요청 시 어떤 파일을 보낼지 결정
+  - TypeScript 컴파일러 자체는 호스트가 아님 → 다른 호스트를 모델링하는 것 외에는 모듈 관련 동작을 직접 제공하지 않기 때문
 
 ### 모듈 출력 형식
 
-모든 프로젝트에서 모듈에 대해 답해야 할 첫 번째 질문은 호스트가 어떤 종류의 모듈을 기대하는지입니다. 그래야 TypeScript가 각 파일의 출력 형식을 일치하도록 설정할 수 있습니다. 때때로 호스트는 한 종류의 모듈만 _지원_합니다 - 예를 들어 브라우저의 ESM 또는 Node.js v11 이하의 CJS. Node.js v12 이상은 CJS와 ES 모듈을 모두 허용하지만, 파일 확장자와 `package.json` 파일을 사용하여 각 파일이 어떤 형식이어야 하는지 결정하고, 파일 내용이 예상 형식과 일치하지 않으면 오류를 발생시킵니다.
+- 모든 프로젝트가 답해야 할 첫 질문: 호스트가 어떤 종류의 모듈을 기대하는가 → 이에 맞춰 TypeScript가 각 파일의 출력 형식을 설정
+  - 호스트가 한 종류만 _지원_하는 경우도 있음(예: 브라우저의 ESM, Node.js v11 이하의 CJS)
+  - Node.js v12 이상은 CJS·ES 모듈을 모두 허용 → 파일 확장자와 `package.json`으로 각 파일의 형식을 결정, 내용이 예상과 다르면 오류
+- `module` 컴파일러 옵션이 이 정보를 컴파일러에 전달
+  - 주 목적: 컴파일 중 생성되는 JavaScript의 모듈 형식 제어
+  - 추가 역할: 각 파일의 모듈 종류 감지 방법, 서로 다른 모듈 종류 간 import 가능 여부, `import.meta`·최상위 `await` 같은 기능의 사용 가능 여부를 컴파일러에 알림
+  - 따라서 `noEmit`을 쓰는 프로젝트라도 올바른 `module` 설정 선택이 중요(컴파일러가 import 타입 체크·IntelliSense를 위해 모듈 시스템을 정확히 이해해야 하므로)
+  - 프로젝트에 맞는 `module` 설정 선택 지침은 [_컴파일러 옵션 선택_](/docs/handbook/modules/guides/choosing-compiler-options.html) 참고
 
-`module` 컴파일러 옵션은 이 정보를 컴파일러에 제공합니다. 주요 목적은 컴파일 중에 생성되는 JavaScript의 모듈 형식을 제어하는 것이지만, 각 파일의 모듈 종류를 어떻게 감지해야 하는지, 서로 다른 모듈 종류가 서로 어떻게 가져올 수 있는지, `import.meta` 및 최상위 `await`과 같은 기능이 사용 가능한지 여부를 컴파일러에 알리는 역할도 합니다. 따라서 TypeScript 프로젝트가 `noEmit`을 사용하더라도 올바른 `module` 설정을 선택하는 것이 여전히 중요합니다. 앞서 설명했듯이, 컴파일러는 import를 타입 체크(및 IntelliSense 제공)하기 위해 모듈 시스템에 대한 정확한 이해가 필요합니다. 프로젝트에 적합한 `module` 설정을 선택하는 방법에 대한 지침은 [_컴파일러 옵션 선택_](/docs/handbook/modules/guides/choosing-compiler-options.html)을 참조하세요.
+사용 가능한 `module` 설정:
 
-사용 가능한 `module` 설정은 다음과 같습니다:
+- [**`node16`**](/docs/handbook/modules/reference.html#node16-node18-node20-nodenext): 특정 상호 운용성·감지 규칙으로 ES 모듈·CJS 모듈을 나란히 지원하는 Node.js v16+ 모듈 시스템 반영
+- [**`node18`**](/docs/handbook/modules/reference.html#node16-node18-node20-nodenext): import 속성 지원을 추가한 Node.js v18+ 모듈 시스템 반영
+- [**`nodenext`**](/docs/handbook/modules/reference.html#node16-node18-node20-nodenext): Node.js 모듈 시스템 발전을 따라가는 이동 목표. TypeScript 5.8 기준 ECMAScript 모듈의 `require` 지원
+- [**`es2015`**](/docs/handbook/modules/reference.html#es2015-es2020-es2022-esnext): `import`·`export`를 처음 도입한 ES2015 언어 사양 반영
+- [**`es2020`**](/docs/handbook/modules/reference.html#es2015-es2020-es2022-esnext): `es2015` + `import.meta`·`export * as ns from "mod"` 지원 추가
+- [**`es2022`**](/docs/handbook/modules/reference.html#es2015-es2020-es2022-esnext): `es2020` + 최상위 `await` 지원 추가
+- [**`esnext`**](/docs/handbook/modules/reference.html#es2015-es2020-es2022-esnext): 현재는 `es2022`와 동일. 향후 ECMAScript 사양의 모듈 관련 Stage 3+ 제안을 반영할 이동 목표
+- **[`commonjs`](/docs/handbook/modules/reference.html#commonjs), [`system`](/docs/handbook/modules/reference.html#system), [`amd`](/docs/handbook/modules/reference.html#amd), [`umd`](/docs/handbook/modules/reference.html#umd)**: 각 모듈 시스템으로 모든 것을 출력하며 해당 시스템으로 성공적으로 가져올 수 있다고 가정. 새 프로젝트에는 더 이상 권장되지 않아 이 문서에서 자세히 다루지 않음
 
-- [**`node16`**](/docs/handbook/modules/reference.html#node16-node18-node20-nodenext): 특정 상호 운용성 및 감지 규칙으로 ES 모듈과 CJS 모듈을 나란히 지원하는 Node.js v16+의 모듈 시스템을 반영합니다.
-- [**`node18`**](/docs/handbook/modules/reference.html#node16-node18-node20-nodenext): import 속성 지원을 추가하는 Node.js v18+의 모듈 시스템을 반영합니다.
-- [**`nodenext`**](/docs/handbook/modules/reference.html#node16-node18-node20-nodenext): Node.js의 모듈 시스템이 발전함에 따라 최신 Node.js 버전을 반영하는 이동 목표입니다. TypeScript 5.8 기준으로 `nodenext`는 ECMAScript 모듈의 `require`를 지원합니다.
-- [**`es2015`**](/docs/handbook/modules/reference.html#es2015-es2020-es2022-esnext): JavaScript 모듈에 대한 ES2015 언어 사양(`import` 및 `export`를 언어에 처음 도입한 버전)을 반영합니다.
-- [**`es2020`**](/docs/handbook/modules/reference.html#es2015-es2020-es2022-esnext): `es2015`에 `import.meta` 및 `export * as ns from "mod"` 지원을 추가합니다.
-- [**`es2022`**](/docs/handbook/modules/reference.html#es2015-es2020-es2022-esnext): `es2020`에 최상위 `await` 지원을 추가합니다.
-- [**`esnext`**](/docs/handbook/modules/reference.html#es2015-es2020-es2022-esnext): 현재 `es2022`와 동일하지만, 최신 ECMAScript 사양과 향후 사양 버전에 포함될 것으로 예상되는 모듈 관련 Stage 3+ 제안을 반영하는 이동 목표가 될 것입니다.
-- **[`commonjs`](/docs/handbook/modules/reference.html#commonjs), [`system`](/docs/handbook/modules/reference.html#system), [`amd`](/docs/handbook/modules/reference.html#amd), [`umd`](/docs/handbook/modules/reference.html#umd)**: 각각 명명된 모듈 시스템에서 모든 것을 출력하고, 모든 것이 해당 모듈 시스템으로 성공적으로 가져올 수 있다고 가정합니다. 이들은 더 이상 새 프로젝트에 권장되지 않으며 이 문서에서 자세히 다루지 않습니다.
-
-> Node.js의 모듈 형식 감지 및 상호 운용성 규칙은 `tsc`가 출력하는 모든 파일이 각각 ESM 또는 CJS이더라도 Node.js에서 실행되는 프로젝트에 대해 `module`을 `esnext` 또는 `commonjs`로 지정하는 것이 부정확하게 만듭니다. Node.js에서 실행하려는 프로젝트에 대한 유일한 올바른 `module` 설정은 `node16`과 `nodenext`입니다. 전체 ESM Node.js 프로젝트에 대해 출력된 JavaScript가 `esnext`와 `nodenext`를 사용한 컴파일 사이에 동일하게 보일 수 있지만, 타입 검사는 다를 수 있습니다. 자세한 내용은 [`nodenext`에 대한 참조 섹션](/docs/handbook/modules/reference.html#node16-node18-node20-nodenext)을 참조하세요.
+> Node.js의 모듈 형식 감지·상호 운용성 규칙 때문에, Node.js에서 실행되는 프로젝트에 `module`을 `esnext`나 `commonjs`로 지정하는 것은(`tsc`가 출력하는 각 파일이 실제로 ESM이나 CJS이더라도) 부정확함. Node.js에서 실행할 프로젝트의 유일한 올바른 `module` 설정은 `node16`과 `nodenext`. 전체 ESM Node.js 프로젝트라면 출력 JavaScript가 `esnext`·`nodenext` 컴파일 사이에 같아 보일 수 있지만 타입 검사는 다를 수 있음. 자세한 내용은 [`nodenext` 참조 섹션](/docs/handbook/modules/reference.html#node16-node18-node20-nodenext) 참고
 
 #### 모듈 형식 감지
 
-Node.js는 ES 모듈과 CJS 모듈을 모두 이해하지만, 각 파일의 형식은 파일 확장자와 첫 번째 `package.json` 파일의 `type` 필드에 의해 결정됩니다. 이 파일은 파일의 디렉토리와 모든 상위 디렉토리를 검색하여 찾습니다:
+- Node.js는 ES 모듈·CJS 모듈을 모두 이해하지만, 각 파일의 형식은 파일 확장자와 (해당 디렉토리 및 상위 디렉토리에서 검색한) 가장 가까운 `package.json`의 `type` 필드로 결정됨
+  - `.mjs`·`.cjs` 파일 = 항상 각각 ES 모듈·CJS 모듈
+  - `.js` 파일: 가장 가까운 `package.json`에 `type: "module"`이면 ES 모듈, 아니면(파일 없음·필드 없음·다른 값) CJS 모듈
+- ES 모듈로 결정된 파일 → Node.js가 평가 중 CommonJS `module`·`require` 객체를 스코프에 주입하지 않아, 이를 사용하면 충돌
+- CJS 모듈로 결정된 파일 → `import`·`export` 선언이 구문 오류로 충돌
+- `module` 컴파일러 옵션이 `node16`·`node18`·`nodenext`면, TypeScript는 프로젝트의 _입력_ 파일에 동일 알고리즘을 적용해 각 _출력_ 파일의 모듈 종류를 결정
+- `--module nodenext` 예제 프로젝트의 모듈 형식 감지
 
-- `.mjs` 및 `.cjs` 파일은 항상 각각 ES 모듈과 CJS 모듈로 해석됩니다.
-- `.js` 파일은 가장 가까운 `package.json` 파일에 값이 `"module"`인 `type` 필드가 포함되어 있으면 ES 모듈로 해석됩니다. `package.json` 파일이 없거나 `type` 필드가 없거나 다른 값을 가지면, `.js` 파일은 CJS 모듈로 해석됩니다.
-
-파일이 이러한 규칙에 의해 ES 모듈로 결정되면, Node.js는 평가 중에 파일의 스코프에 CommonJS `module`과 `require` 객체를 주입하지 않으므로, 이를 사용하려는 파일은 충돌을 일으킵니다. 반대로, 파일이 CJS 모듈로 결정되면, 파일의 `import` 및 `export` 선언은 구문 오류 충돌을 일으킵니다.
-
-`module` 컴파일러 옵션이 `node16`, `node18`, 또는 `nodenext`로 설정되면, TypeScript는 프로젝트의 _입력_ 파일에 이 동일한 알고리즘을 적용하여 해당 각 _출력_ 파일의 모듈 종류를 결정합니다. `--module nodenext`를 사용하는 예제 프로젝트에서 모듈 형식이 어떻게 감지되는지 살펴보겠습니다:
-
-| 입력 파일 이름                   | 내용                     | 출력 파일 이름   | 모듈 종류 | 이유                                      |
-| -------------------------------- | ---------------------- | ---------------- | --------- | ----------------------------------------- |
-| `/package.json`                  | `{}`                   |                  |           |                                           |
-| `/main.mts`                      |                        | `/main.mjs`      | ESM       | 파일 확장자                               |
-| `/utils.cts`                     |                        | `/utils.cjs`     | CJS       | 파일 확장자                               |
-| `/example.ts`                    |                        | `/example.js`    | CJS       | `package.json`에 `"type": "module"` 없음  |
-| `/node_modules/pkg/package.json` | `{ "type": "module" }` |                  |           |                                           |
-| `/node_modules/pkg/index.d.ts`   |                        |                  | ESM       | `package.json`의 `"type": "module"`       |
-| `/node_modules/pkg/index.d.cts`  |                        |                  | CJS       | 파일 확장자                               |
+- `/package.json`: 내용 `{}`
+- `/main.mts` → 출력 `/main.mjs`
+  - 모듈 종류: ESM
+  - 이유: 파일 확장자
+- `/utils.cts` → 출력 `/utils.cjs`
+  - 모듈 종류: CJS
+  - 이유: 파일 확장자
+- `/example.ts` → 출력 `/example.js`
+  - 모듈 종류: CJS
+  - 이유: `package.json`에 `"type": "module"` 없음
+- `/node_modules/pkg/package.json`: 내용 `{ "type": "module" }`
+- `/node_modules/pkg/index.d.ts`
+  - 모듈 종류: ESM
+  - 이유: `package.json`의 `"type": "module"`
+- `/node_modules/pkg/index.d.cts`
+  - 모듈 종류: CJS
+  - 이유: 파일 확장자
 
 #### 입력 모듈 구문
 
-입력 소스 파일에서 보이는 _입력_ 모듈 구문은 JS 파일에 출력되는 출력 모듈 구문과 다소 분리되어 있다는 점에 유의하는 것이 중요합니다. 즉, ESM import가 있는 파일:
+- 입력 소스 파일의 _입력_ 모듈 구문은 출력 JS 파일의 모듈 구문과 다소 분리되어 있음에 유의
+- 즉, ESM import가 있는 파일
 
 ```ts
 import { sayHello } from "greetings";
 sayHello("world");
 ```
 
-은 `module` 컴파일러 옵션에 따라 ESM 형식 그대로 출력될 수도 있고, CommonJS로 출력될 수도 있습니다:
+- 는 `module` 컴파일러 옵션에 따라 ESM 형식 그대로 출력될 수도, CommonJS로 출력될 수도 있음
 
 ```ts
 Object.defineProperty(exports, "__esModule", { value: true });
@@ -2038,28 +1983,31 @@ const greetings_1 = require("greetings");
 (0, greetings_1.sayHello)("world");
 ```
 
-일반적으로 이것은 입력 파일의 내용을 보는 것만으로는 ES 모듈인지 CJS 모듈인지 결정하기에 충분하지 않다는 것을 의미합니다.
+- 즉 입력 파일 내용만 봐서는 ES 모듈인지 CJS 모듈인지 결정하기에 부족함
 
 #### ESM과 CJS 상호 운용성
 
-ES 모듈이 CommonJS 모듈을 `import`할 수 있나요? 그렇다면, 기본 import가 `exports`에 연결되나요 아니면 `exports.default`에 연결되나요? CommonJS 모듈이 ES 모듈을 `require`할 수 있나요? CommonJS는 ECMAScript 사양의 일부가 아니므로, 런타임, 번들러, 트랜스파일러는 ESM이 2015년에 표준화된 이후로 이러한 질문에 대한 자체 답변을 자유롭게 만들어왔고, 따라서 표준 상호 운용성 규칙 세트가 존재하지 않습니다. 오늘날 대부분의 런타임과 번들러는 크게 세 가지 범주 중 하나에 속합니다:
-
-1. **ESM 전용.** 브라우저 엔진과 같은 일부 런타임은 실제로 언어의 일부인 ECMAScript 모듈만 지원합니다.
-2. **번들러 스타일.** 주요 JavaScript 엔진이 ES 모듈을 실행할 수 있기 전에, Babel은 개발자가 CommonJS로 트랜스파일하여 ES 모듈을 작성할 수 있게 해주었습니다. ESM-으로-트랜스파일된-CJS 파일이 수작업으로-작성된-CJS 파일과 상호작용하는 방식은 번들러와 트랜스파일러의 사실상 표준이 된 허용적인 상호 운용성 규칙 세트를 암시했습니다.
-3. **Node.js.** Node.js v20.19.0까지 CommonJS 모듈은 ES 모듈을 동기적으로(`require`로) 로드할 수 없었습니다; 동적 `import()` 호출로만 비동기적으로 로드할 수 있었습니다. ES 모듈은 CJS 모듈을 기본 import할 수 있으며, 이는 항상 `exports`에 바인딩됩니다. (이것은 `__esModule`이 있는 Babel 스타일 CJS 출력의 기본 import가 Node.js와 일부 번들러 사이에서 다르게 동작한다는 것을 의미합니다.)
-
-TypeScript는 import(특히 `default`)에 올바른 타입을 제공하고 런타임에 충돌할 import에 오류를 발생시키기 위해 이러한 규칙 세트 중 어느 것을 가정해야 하는지 알아야 합니다. `module` 컴파일러 옵션이 `node16`, `node18`, 또는 `nodenext`로 설정되면, Node.js의 버전별 규칙이 적용됩니다. 다른 모든 `module` 설정은 [`esModuleInterop`](/docs/handbook/modules/reference.html#esModuleInterop) 옵션과 결합하여 TypeScript에서 번들러 스타일 상호 운용을 결과로 합니다.
+- 궁금한 지점: ES 모듈이 CommonJS 모듈을 `import`할 수 있는가? 그렇다면 기본 import가 `exports`에 연결되는가, `exports.default`에 연결되는가? CommonJS 모듈이 ES 모듈을 `require`할 수 있는가?
+- CommonJS는 ECMAScript 사양의 일부가 아님 → ESM이 2015년 표준화된 이래 런타임·번들러·트랜스파일러가 이 질문들에 자유롭게 답을 만들어옴 → 표준 상호 운용성 규칙이 존재하지 않음
+- 오늘날 대부분의 런타임·번들러는 세 범주 중 하나
+  1. **ESM 전용**: 브라우저 엔진 등 일부 런타임은 언어에 속한 ECMAScript 모듈만 지원
+  2. **번들러 스타일**: 주요 JS 엔진이 ES 모듈을 실행하기 전, Babel이 CommonJS 트랜스파일로 ES 모듈 작성을 지원 → ESM-트랜스파일-CJS와 수작업 CJS 간 상호작용 방식이 번들러·트랜스파일러의 사실상 표준 상호 운용성 규칙이 됨
+  3. **Node.js**: Node.js v20.19.0까지 CommonJS는 ES 모듈을 동기적으로(`require`) 로드 불가 → 동적 `import()`로만 비동기 로드 가능. ES 모듈은 CJS 모듈을 기본 import 가능하며 항상 `exports`에 바인딩(→ `__esModule`이 있는 Babel 스타일 CJS 출력의 기본 import는 Node.js와 일부 번들러 사이에서 동작이 다름)
+- TypeScript는 import(특히 `default`)에 올바른 타입을 주고 런타임에 충돌할 import에 오류를 내려면 이 규칙 중 무엇을 가정할지 알아야 함
+  - `module`이 `node16`·`node18`·`nodenext`면 Node.js의 버전별 규칙 적용
+  - 다른 모든 `module` 설정은 [`esModuleInterop`](/docs/handbook/modules/reference.html#esModuleInterop) 옵션과 결합해 번들러 스타일 상호 운용으로 처리
 
 #### 모듈 지정자는 기본적으로 변환되지 않음
 
-`module` 컴파일러 옵션은 입력 파일의 import와 export를 출력 파일의 다른 모듈 형식으로 변환할 수 있지만, 모듈 _지정자_(당신이 `import`하는 문자열 또는 `require`에 전달하는 문자열)는 작성된 그대로 출력됩니다. 예를 들어, 다음과 같은 입력:
+- `module` 컴파일러 옵션은 입력 파일의 import·export를 다른 출력 모듈 형식으로 변환할 수 있지만, 모듈 _지정자_(`import`하거나 `require`에 넘기는 문자열) 자체는 작성된 그대로 출력됨
+- 예: 다음 입력
 
 ```ts
 import { add } from "./math.mjs";
 add(1, 2);
 ```
 
-은 다음 중 하나로 출력될 수 있습니다:
+- 는 다음 중 하나로 출력될 수 있음
 
 ```ts
 import { add } from "./math.mjs";
@@ -2073,22 +2021,28 @@ const math_1 = require("./math.mjs");
 math_1.add(1, 2);
 ```
 
-`module` 컴파일러 옵션에 따라 다르지만, 모듈 지정자는 어느 쪽이든 `"./math.mjs"`가 됩니다. 기본적으로 모듈 지정자는 코드의 대상 런타임 또는 번들러에서 작동하는 방식으로 작성되어야 하며, TypeScript가 해당 _출력_-상대적 지정자를 이해하는 것이 TypeScript의 역할입니다. 모듈 지정자가 참조하는 파일을 찾는 프로세스를 _모듈 해결_이라고 합니다.
+- `module` 옵션에 따라 다르지만 모듈 지정자는 어느 쪽이든 `"./math.mjs"`로 유지됨
+- 기본적으로 모듈 지정자는 코드의 대상 런타임·번들러에서 작동하는 방식으로 작성해야 하며, TypeScript는 그 _출력_-상대적 지정자를 이해하는 역할을 함
+- 모듈 지정자가 참조하는 파일을 찾는 과정 = _모듈 해결_
 
 ### 모듈 해결
 
-[첫 번째 예제](#모듈에-관한-typescripts-역할)로 돌아가서 지금까지 배운 것을 검토해봅시다:
+- [첫 번째 예제](#모듈에-관한-typescripts-역할)로 돌아가 지금까지 배운 것을 검토
 
 ```ts
 import sayHello from "greetings";
 sayHello("world");
 ```
 
-지금까지 호스트의 모듈 시스템과 TypeScript의 `module` 컴파일러 옵션이 이 코드에 어떤 영향을 미칠 수 있는지 논의했습니다. 입력 구문이 ESM처럼 보이지만, 출력 형식은 `module` 컴파일러 옵션, 잠재적으로 파일 확장자, `package.json` `"type"` 필드에 따라 다르다는 것을 알고 있습니다. 또한 `sayHello`가 어디에 바인딩되는지, 심지어 import가 허용되는지 여부가 이 파일과 대상 파일의 모듈 종류에 따라 달라질 수 있다는 것도 알고 있습니다. 하지만 대상 파일을 어떻게 _찾는지_는 아직 논의하지 않았습니다.
+- 지금까지 호스트의 모듈 시스템과 TypeScript `module` 옵션이 이 코드에 미칠 수 있는 영향을 논의함
+  - 입력 구문은 ESM처럼 보이지만 출력 형식은 `module` 옵션·파일 확장자·`package.json` `"type"` 필드에 따라 달라짐
+  - `sayHello`가 어디에 바인딩되는지, 심지어 import 허용 여부까지 이 파일과 대상 파일의 모듈 종류에 따라 달라질 수 있음
+  - 다만 대상 파일을 어떻게 _찾는지_는 아직 다루지 않음
 
 #### 모듈 해결은 호스트가 정의함
 
-ECMAScript 사양은 `import` 및 `export` 문을 파싱하고 해석하는 방법을 정의하지만, 모듈 해결은 호스트에 맡깁니다. 멋진 새 JavaScript 런타임을 만들고 있다면, 다음과 같은 모듈 해결 체계를 만들 수 있습니다:
+- ECMAScript 사양은 `import`·`export` 문의 파싱·해석 방법은 정의하지만 모듈 해결은 호스트에 맡김
+- 예: 새 JavaScript 런타임을 만든다면 다음과 같은 모듈 해결 체계도 만들 수 있음
 
 ```ts
 import monkey from "🐒"; // './eats/bananas.js'를 찾음
@@ -2096,49 +2050,53 @@ import cow from "🐄";    // './eats/grass.js'를 찾음
 import lion from "🦁";   // './eats/you.js'를 찾음
 ```
 
-그리고 여전히 "표준 호환 ESM"을 구현한다고 주장할 수 있습니다. 말할 필요도 없이, TypeScript는 이 런타임의 모듈 해결 알고리즘에 대한 내장 지식 없이는 `monkey`, `cow`, `lion`에 어떤 타입을 할당해야 하는지 알 수 없습니다. `module`이 컴파일러에게 호스트의 예상 모듈 형식을 알려주는 것처럼, `moduleResolution`은 몇 가지 사용자 정의 옵션과 함께 호스트가 모듈 지정자를 파일로 해결하는 데 사용하는 알고리즘을 지정합니다. 이것은 또한 TypeScript가 emit 중에 import 지정자를 수정하지 않는 이유를 명확히 합니다: import 지정자와 디스크의 파일 사이의 관계(존재한다면)는 호스트가 정의하며, TypeScript는 호스트가 아닙니다.
+- 이렇게 하고도 "표준 호환 ESM"을 구현했다고 주장할 수 있음 → TypeScript는 이 런타임의 모듈 해결 알고리즘을 내장 지식으로 갖지 않는 한 `monkey`·`cow`·`lion`에 어떤 타입을 줘야 할지 알 수 없음
+- `module`이 호스트의 예상 모듈 형식을 컴파일러에 알리듯, `moduleResolution`은 호스트가 모듈 지정자를 파일로 해결하는 알고리즘을 (몇 가지 사용자 정의 옵션과 함께) 지정
+  - 이는 TypeScript가 emit 중 import 지정자를 수정하지 않는 이유이기도 함: import 지정자와 디스크 파일 사이 관계는 호스트가 정의하며 TypeScript는 호스트가 아님
 
-사용 가능한 `moduleResolution` 옵션은 다음과 같습니다:
+사용 가능한 `moduleResolution` 옵션:
 
-- [**`classic`**](/docs/handbook/modules/reference.html#classic): TypeScript의 가장 오래된 모듈 해결 모드로, 불행히도 `module`이 `commonjs`, `node16`, 또는 `nodenext` 이외의 것으로 설정될 때 기본값입니다. [RequireJS](https://requirejs.org/docs/api.html#packages) 구성의 넓은 범위에 대해 최선의 해결을 제공하기 위해 만들어졌을 것입니다. 새 프로젝트(또는 RequireJS나 다른 AMD 모듈 로더를 사용하지 않는 오래된 프로젝트)에 사용해서는 안 되며, TypeScript 6.0에서 더 이상 사용되지 않을 예정입니다.
-- [**`node10`**](/docs/handbook/modules/reference.html#node10-formerly-known-as-node): 이전에 `node`로 알려졌으며, `module`이 `commonjs`로 설정될 때 불행한 기본값입니다. v12보다 오래된 Node.js 버전에 대한 꽤 좋은 모델이며, 때때로 대부분의 번들러가 모듈 해결을 수행하는 방식에 대한 합리적인 근사치입니다. `node_modules`에서 패키지 조회, 디렉토리 `index.js` 파일 로드, 상대 모듈 지정자에서 `.js` 확장자 생략을 지원합니다. 그러나 Node.js v12는 ES 모듈에 대해 다른 모듈 해결 규칙을 도입했기 때문에, 최신 버전의 Node.js에 대한 매우 나쁜 모델입니다. 새 프로젝트에 사용해서는 안 됩니다.
-- [**`node16`**](/docs/handbook/modules/reference.html#node16-nodenext-1): `--module node16` 및 `--module node18`의 대응물이며 해당 `module` 설정과 함께 기본으로 설정됩니다. Node.js v12 이상은 ESM과 CJS를 모두 지원하며, 각각 자체 모듈 해결 알고리즘을 사용합니다. Node.js에서 import 문과 동적 `import()` 호출의 모듈 지정자는 파일 확장자나 `/index.js` 접미사를 생략할 수 없지만, `require` 호출의 모듈 지정자는 그렇게 할 수 있습니다. 이 모듈 해결 모드는 `--module node16`/`node18`에 의해 설정된 [모듈 형식 감지 규칙](#모듈-형식-감지)에 의해 결정되는 필요한 곳에서 이 제한을 이해하고 적용합니다.
-- [**`nodenext`**](/docs/handbook/modules/reference.html#node16-nodenext-1): 현재 `node16`과 동일하며, `--module nodenext`의 대응물이고 해당 `module` 설정과 함께 기본으로 설정됩니다. 새로운 Node.js 모듈 해결 기능이 추가됨에 따라 이를 지원하는 미래 지향적 모드가 되도록 의도되었습니다.
-- [**`bundler`**](/docs/handbook/modules/reference.html#bundler): Node.js v12는 npm 패키지를 가져오기 위한 몇 가지 새로운 모듈 해결 기능을 도입했습니다 - `package.json`의 `"exports"` 및 `"imports"` 필드 - 그리고 많은 번들러가 ESM import에 대한 더 엄격한 규칙 없이 이러한 기능을 채택했습니다. 이 모듈 해결 모드는 번들러를 대상으로 하는 코드에 대한 기본 알고리즘을 제공합니다. 기본적으로 `package.json` `"exports"` 및 `"imports"`를 지원하지만 이를 무시하도록 구성할 수 있습니다. `module`을 `esnext`로 설정해야 합니다.
+- [**`classic`**](/docs/handbook/modules/reference.html#classic): TypeScript의 가장 오래된 모듈 해결 모드. `module`이 `commonjs`·`node16`·`nodenext` 외의 값일 때 기본값(불행히도) → [RequireJS](https://requirejs.org/docs/api.html#packages) 구성 전반에 대한 최선의 해결을 위해 만들어졌던 듯함. 새 프로젝트(또는 RequireJS·AMD 모듈 로더를 안 쓰는 오래된 프로젝트)에는 사용 금지, TypeScript 6.0에서 폐지 예정
+- [**`node10`**](/docs/handbook/modules/reference.html#node10-formerly-known-as-node): 이전 이름 `node`. `module`이 `commonjs`일 때의 기본값(불행히도). v12 이전 Node.js의 꽤 좋은 모델이며 대부분 번들러의 모듈 해결에 대한 합리적 근사치이기도 함. `node_modules` 패키지 조회, 디렉토리 `index.js` 로드, 상대 지정자의 `.js` 확장자 생략을 지원 → 다만 Node.js v12가 ES 모듈에 다른 해결 규칙을 도입했으므로 최신 Node.js에는 매우 나쁜 모델. 새 프로젝트에 사용 금지
+- [**`node16`**](/docs/handbook/modules/reference.html#node16-nodenext-1): `--module node16`·`node18`의 대응이자 해당 설정의 기본값. Node.js v12+는 ESM·CJS를 모두 지원하며 각각 별도 해결 알고리즘 사용 → import 문·동적 `import()`의 모듈 지정자는 확장자·`/index.js` 접미사 생략 불가, `require` 호출의 지정자는 생략 가능 → 이 모드는 [모듈 형식 감지 규칙](#모듈-형식-감지)이 결정하는 위치에서 이 제한을 이해·적용
+- [**`nodenext`**](/docs/handbook/modules/reference.html#node16-nodenext-1): 현재 `node16`과 동일. `--module nodenext`의 대응이자 기본값. Node.js의 새 모듈 해결 기능이 추가될 때마다 이를 반영하는 미래 지향 모드
+- [**`bundler`**](/docs/handbook/modules/reference.html#bundler): Node.js v12가 도입한 새 모듈 해결 기능(`package.json`의 `"exports"`·`"imports"`)을 많은 번들러가 ESM import에 대한 더 엄격한 규칙 없이 채택 → 이 모드는 번들러 대상 코드의 기본 알고리즘 제공. 기본적으로 `"exports"`·`"imports"`를 지원하되 무시하도록 구성 가능. `module`을 `esnext`로 설정해야 함
 
 #### TypeScript는 호스트의 모듈 해결을 모방하지만, 타입과 함께
 
-모듈과 관련한 TypeScript [역할](#모듈에-관한-typescripts-역할)의 세 가지 구성 요소를 기억하세요?
+- TypeScript [역할](#모듈에-관한-typescripts-역할)의 세 요소를 복기
 
 1. 파일을 유효한 **출력 모듈 형식**으로 컴파일
 2. 해당 **출력**의 import가 **성공적으로 해결**되도록 보장
 3. **가져온 이름**에 어떤 **타입**을 할당할지 앎
 
-모듈 해결은 마지막 두 가지를 수행하는 데 필요합니다. 하지만 대부분의 시간을 입력 파일에서 작업할 때, (2)를 잊기 쉽습니다 - 모듈 해결의 핵심 구성 요소는 [입력 파일과 동일한 모듈 지정자](#모듈-지정자는-기본적으로-변환되지-않음)를 포함하는 출력 파일의 import 또는 `require` 호출이 실제로 런타임에 작동하는지 검증하는 것입니다.
+- 모듈 해결은 마지막 두 항목에 필요
+  - 입력 파일 작업 중에는 (2)를 잊기 쉬움 → 모듈 해결의 핵심은 [입력 파일과 동일한 모듈 지정자](#모듈-지정자는-기본적으로-변환되지-않음)를 포함하는 출력 파일의 import·`require` 호출이 실제로 런타임에서 작동하는지 검증하는 것
 
 #### 선언 파일의 역할
 
-이전 예제에서 입력 및 출력 파일 사이에서 작동하는 모듈 해결의 "재매핑" 부분을 보았습니다. 하지만 라이브러리 코드를 가져올 때 어떻게 될까요? 라이브러리가 TypeScript로 작성되었더라도 소스 코드를 게시하지 않았을 수 있습니다. 라이브러리의 JavaScript 파일을 TypeScript 파일로 매핑하는 것에 의존할 수 없다면, import가 런타임에 작동하는지 확인할 수 있지만, 타입을 할당하는 두 번째 목표는 어떻게 달성할까요?
+- 앞선 예제는 입력·출력 파일 사이에서 작동하는 모듈 해결의 "재매핑" 부분
+- 그런데 라이브러리 코드를 가져올 때는? 라이브러리가 TypeScript로 작성됐더라도 소스 코드를 게시하지 않았을 수 있음
+  - JavaScript 파일을 TypeScript 파일로 매핑할 수 없으면 → import 런타임 동작 확인은 가능하지만, 타입 할당이라는 두 번째 목표는 어떻게?
+- 이것이 선언 파일(`.d.ts`, `.d.mts` 등)이 필요한 이유
+  - 선언 파일 해석 방식을 이해하려면 그 출처를 알아야 함: 입력 파일에서 `tsc --declaration`을 실행하면 출력 JavaScript 파일 하나와 출력 선언 파일 하나를 얻음
+- 이 관계 때문에 컴파일러는 선언 파일을 볼 때마다, 그 타입 정보로 완벽히 설명되는 JavaScript 파일이 있다고 _가정_
+  - 성능상 모든 모듈 해결 모드에서 컴파일러는 항상 TypeScript·선언 파일을 먼저 찾고, 찾으면 JavaScript 파일을 더 찾지 않음
+  - TypeScript 입력 파일을 찾으면 컴파일 후 JavaScript 파일이 _존재할_ 것을 알고, 선언 파일을 찾으면 이미(누군가의) 컴파일이 일어나 선언 파일과 동시에 JavaScript 파일이 만들어졌음을 앎
+- 선언 파일은 JavaScript 파일의 존재뿐 아니라 그 이름·확장자도 알려줌
 
-이것이 선언 파일(`.d.ts`, `.d.mts` 등)이 필요한 곳입니다. 선언 파일이 어떻게 해석되는지 이해하는 가장 좋은 방법은 그것들이 어디서 오는지 이해하는 것입니다. 입력 파일에서 `tsc --declaration`을 실행하면, 하나의 출력 JavaScript 파일과 하나의 출력 선언 파일을 얻습니다.
+- `.d.ts`: JavaScript `.js` / TypeScript `.ts`
+- `.d.ts`: JavaScript `.js` / TypeScript `.tsx`
+- `.d.mts`: JavaScript `.mjs` / TypeScript `.mts`
+- `.d.cts`: JavaScript `.cjs` / TypeScript `.cts`
+- `.d.*.ts`: JavaScript `.*`
 
-이러한 관계 때문에, 컴파일러는 선언 파일을 볼 때마다 선언 파일의 타입 정보에 의해 완벽하게 설명되는 해당 JavaScript 파일이 있다고 _가정_합니다. 성능상의 이유로, 모든 모듈 해결 모드에서 컴파일러는 항상 TypeScript 및 선언 파일을 먼저 찾고, 하나를 찾으면 해당 JavaScript 파일을 계속 찾지 않습니다. TypeScript 입력 파일을 찾으면 컴파일 후 JavaScript 파일이 _존재할_ 것이라는 것을 알고, 선언 파일을 찾으면 컴파일(아마도 다른 사람의)이 이미 발생했고 선언 파일과 동시에 JavaScript 파일을 만들었다는 것을 압니다.
-
-선언 파일은 컴파일러에게 JavaScript 파일이 존재한다는 것뿐만 아니라 그 파일의 이름과 확장자가 무엇인지도 알려줍니다:
-
-| 선언 파일 확장자 | JavaScript 파일 확장자 | TypeScript 파일 확장자 |
-| ---------------- | ---------------------- | ---------------------- |
-| `.d.ts`          | `.js`                  | `.ts`                  |
-| `.d.ts`          | `.js`                  | `.tsx`                 |
-| `.d.mts`         | `.mjs`                 | `.mts`                 |
-| `.d.cts`         | `.cjs`                 | `.cts`                 |
-| `.d.*.ts`        | `.*`                   |                        |
-
-마지막 행은 `allowArbitraryExtensions` 컴파일러 옵션으로 비-JS 파일에 타입을 지정하여 모듈 시스템이 비-JS 파일을 JavaScript 객체로 가져오는 것을 지원하는 경우를 표현합니다. 예를 들어, `styles.css`라는 파일은 `styles.d.css.ts`라는 선언 파일로 표현될 수 있습니다.
+- 마지막 행은 `allowArbitraryExtensions` 컴파일러 옵션으로 비-JS 파일에 타입을 지정해 모듈 시스템이 비-JS 파일을 JavaScript 객체로 가져오는 경우를 표현. 예: `styles.css`는 `styles.d.css.ts` 선언 파일로 표현 가능
 
 #### 번들러, TypeScript 런타임 및 Node.js 로더를 위한 모듈 해결
 
-지금까지 _입력 파일_과 _출력 파일_ 사이의 구별을 정말 강조했습니다. 상대 모듈 지정자에 파일 확장자를 지정할 때, TypeScript는 일반적으로 [_출력_ 파일 확장자를 사용하도록](#typescript는-호스트의-모듈-해결을-모방하지만-타입과-함께) 요구한다는 것을 기억하세요:
+- 지금까지 _입력 파일_과 _출력 파일_의 구별을 강조해 왔음
+- 상대 모듈 지정자에 파일 확장자를 쓸 때 TypeScript는 보통 [_출력_ 파일 확장자 사용을 요구](#typescript는-호스트의-모듈-해결을-모방하지만-타입과-함께)
 
 ```ts
 // @Filename: src/math.ts
@@ -2152,42 +2110,45 @@ import { add } from "./math.ts";
 // 'allowImportingTsExtensions'가 활성화된 경우에만 import 경로는 '.ts' 확장자로 끝날 수 있습니다.
 ```
 
-TypeScript가 확장자를 `.js`로 [다시 작성하지 않으므로](#모듈-지정자는-기본적으로-변환되지-않음) 이 제한이 적용되며, 출력 JS 파일에 `"./math.ts"`가 나타나면 해당 import는 런타임에 다른 JS 파일로 해결되지 않습니다. TypeScript는 안전하지 않은 출력 JS 파일을 생성하는 것을 정말로 방지하고 싶어합니다. 하지만 출력 JS 파일이 _없다면_ 어떨까요? 다음 상황 중 하나에 있다면:
-
-- 이 코드를 번들링하고 있고, 번들러가 메모리에서 TypeScript 파일을 트랜스파일하도록 구성되어 있으며, 결국 작성한 모든 import를 소비하고 지워 번들을 생성합니다.
-- Deno나 Bun과 같은 TypeScript 런타임에서 이 코드를 직접 실행하고 있습니다.
-- `ts-node`, `tsx`, 또는 Node용 다른 트랜스파일링 로더를 사용하고 있습니다.
-
-이러한 경우, `noEmit`(또는 `emitDeclarationOnly`)과 `allowImportingTsExtensions`를 켜서 안전하지 않은 JavaScript 파일 출력을 비활성화하고 `.ts` 확장자 import에 대한 오류를 무음으로 만들 수 있습니다.
-
-`allowImportingTsExtensions` 유무에 관계없이, 모듈 해결 호스트에 가장 적합한 `moduleResolution` 설정을 선택하는 것은 여전히 중요합니다. 번들러와 Bun 런타임의 경우 `bundler`입니다. 이러한 모듈 해결기는 Node.js에서 영감을 받았지만, Node.js가 import에 적용하는 [확장자 검색을 비활성화](#확장자-검색-및-디렉토리-인덱스-파일)하는 엄격한 ESM 해결 알고리즘을 채택하지 않았습니다. `bundler` 모듈 해결 설정은 `node16`-`nodenext`처럼 `package.json` `"exports"` 지원을 활성화하면서도 항상 확장자 없는 import를 허용하는 이것을 반영합니다.
+- TypeScript가 확장자를 `.js`로 [다시 쓰지 않으므로](#모듈-지정자는-기본적으로-변환되지-않음) 이 제한이 적용됨 → 출력 JS 파일에 `"./math.ts"`가 남으면 그 import는 런타임에 다른 JS 파일로 해결되지 않음. TypeScript는 안전하지 않은 출력 JS를 만들지 않으려 함
+- 하지만 출력 JS 파일이 _없는_ 경우도 있음
+  - 번들러가 메모리에서 TypeScript 파일을 트랜스파일하도록 구성되어 있어 작성한 모든 import를 소비·지워 번들을 생성하는 경우
+  - Deno·Bun 같은 TypeScript 런타임에서 코드를 직접 실행하는 경우
+  - `ts-node`·`tsx` 등 Node용 트랜스파일링 로더를 쓰는 경우
+  - → 이럴 때는 `noEmit`(또는 `emitDeclarationOnly`)과 `allowImportingTsExtensions`를 켜서 안전하지 않은 JS 출력을 끄고 `.ts` 확장자 import 오류를 무음화 가능
+- `allowImportingTsExtensions` 여부와 무관하게, 모듈 해결 호스트에 맞는 `moduleResolution` 설정 선택은 여전히 중요
+  - 번들러·Bun 런타임 = `bundler`. 이 해결기들은 Node.js에서 영감을 받았지만 Node.js가 import에 적용하는 [확장자 검색 비활성화](#확장자-검색-및-디렉토리-인덱스-파일) 같은 엄격한 ESM 해결 알고리즘은 채택하지 않음
+  - `bundler` 설정은 `node16`-`nodenext`처럼 `package.json` `"exports"`를 지원하면서도 항상 확장자 없는 import를 허용
 
 #### 라이브러리를 위한 모듈 해결
 
-앱을 컴파일할 때, 모듈 해결 [호스트](#모듈-해결은-호스트가-정의함)가 누구인지에 따라 TypeScript 프로젝트에 대한 `moduleResolution` 옵션을 선택합니다. 라이브러리를 컴파일할 때는 출력 코드가 어디에서 실행될지 모르지만, 가능한 많은 곳에서 실행되기를 원합니다. `"module": "node18"`(암시적 [`"moduleResolution": "node16"`](/docs/handbook/modules/reference.html#node16-nodenext-1)과 함께)을 사용하면 출력 JavaScript의 모듈 지정자 호환성을 최대화할 수 있습니다. Node.js의 `import` 모듈 해결에 대한 더 엄격한 규칙을 따르도록 강제하기 때문입니다. 라이브러리가 `"moduleResolution": "bundler"`(또는 더 나쁜, `"node10"`)로 컴파일하면 어떻게 되는지 살펴봅시다:
+- 앱 컴파일 시에는 모듈 해결 [호스트](#모듈-해결은-호스트가-정의함)가 누구인지에 따라 `moduleResolution`을 고름
+- 라이브러리 컴파일 시에는 출력 코드가 어디서 실행될지 모르지만 가능한 많은 곳에서 실행되길 원함
+  - `"module": "node18"`(암시적으로 [`"moduleResolution": "node16"`](/docs/handbook/modules/reference.html#node16-nodenext-1))을 쓰면 출력 JavaScript의 모듈 지정자 호환성이 최대화됨(Node.js `import` 해결의 더 엄격한 규칙을 강제하기 때문)
+  - 라이브러리가 `"moduleResolution": "bundler"`(또는 더 나쁜 `"node10"`)로 컴파일되면 어떻게 되는지 확인
 
 ```ts
 export * from "./utils";
 ```
 
-`./utils.ts`(또는 `./utils/index.ts`)가 존재한다고 가정하면, 번들러는 이 코드에 문제가 없으므로 `"moduleResolution": "bundler"`는 불평하지 않습니다. `"module": "esnext"`로 컴파일하면, 이 export 문에 대한 출력 JavaScript는 입력과 정확히 같아 보일 것입니다. 해당 JavaScript가 npm에 게시되면 번들러를 사용하는 프로젝트에서 사용할 수 있지만, Node.js에서 실행하면 오류가 발생합니다:
+- `./utils.ts`(또는 `./utils/index.ts`)가 존재한다고 가정하면 번들러는 이 코드에 문제없어 `"moduleResolution": "bundler"`도 불평하지 않음. `"module": "esnext"`로 컴파일하면 출력 JavaScript는 입력과 정확히 같은 모양 → 이 JavaScript를 npm에 게시하면 번들러 사용 프로젝트에서는 쓸 수 있지만 Node.js에서 실행하면 오류 발생
 
 ```
 Error [ERR_MODULE_NOT_FOUND]: Cannot find module '.../node_modules/dependency/utils' imported from .../node_modules/dependency/index.js
 Did you mean to import ./utils.js?
 ```
 
-반면, 다음과 같이 작성했다면:
+- 반면 다음과 같이 작성했다면
 
 ```ts
 export * from "./utils.js";
 ```
 
-이것은 Node.js _와_ 번들러 모두에서 작동하는 출력을 생성합니다.
-
-요컨대, `"moduleResolution": "bundler"`는 전염성이 있어서 번들러에서만 작동하는 코드를 생성할 수 있습니다. 마찬가지로, `"moduleResolution": "nodenext"`는 출력이 Node.js에서만 작동하는지 확인하지만, 대부분의 경우 Node.js에서 작동하는 모듈 코드는 다른 런타임과 번들러에서도 작동합니다.
-
-물론, 이 지침은 라이브러리가 `tsc`의 출력을 제공하는 경우에만 적용될 수 있습니다. 라이브러리가 제공하기 _전에_ 번들링되면, `"moduleResolution": "bundler"`가 허용될 수 있습니다. 최종 빌드의 안전성과 호환성을 보장하는 것은 라이브러리의 최종 빌드를 생성하기 위해 모듈 형식이나 모듈 지정자를 변경하는 모든 빌드 도구의 책임이며, `tsc`는 런타임에 어떤 모듈 코드가 존재할지 알 수 없으므로 더 이상 해당 작업에 기여할 수 없습니다.
+- Node.js _와_ 번들러 모두에서 작동하는 출력이 만들어짐
+- 요컨대 `"moduleResolution": "bundler"`는 전염성이 있어 번들러에서만 작동하는 코드를 만들 수 있음
+  - 반면 `"moduleResolution": "nodenext"`는 출력이 Node.js에서 작동하는지 확인하는데, 대부분 Node.js에서 작동하는 모듈 코드는 다른 런타임·번들러에서도 작동함
+- 이 지침은 라이브러리가 `tsc`의 출력을 그대로 제공하는 경우에만 적용됨
+  - 제공 _전에_ 번들링된다면 `"moduleResolution": "bundler"`도 허용될 수 있음 → 이때 최종 빌드의 안전성·호환성 보장은 모듈 형식·지정자를 바꾸는 빌드 도구의 책임이며, `tsc`는 런타임에 어떤 모듈 코드가 존재할지 알 수 없어 더 기여할 수 없음
 
 ---
 
@@ -2197,13 +2158,12 @@ export * from "./utils.js";
 
 ### 모듈 구문
 
-TypeScript 컴파일러는 TypeScript와 JavaScript 파일에서 표준 [ECMAScript 모듈 구문](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules)과 JavaScript 파일에서 많은 형태의 [CommonJS 구문](https://www.typescriptlang.org/docs/handbook/type-checking-javascript-files.html#commonjs-modules-are-supported)을 인식합니다.
-
-TypeScript 파일 및/또는 JSDoc 주석에서 사용할 수 있는 몇 가지 TypeScript 전용 구문 확장도 있습니다.
+- TypeScript 컴파일러는 TypeScript·JavaScript 파일에서 표준 [ECMAScript 모듈 구문](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules)을, JavaScript 파일에서 여러 형태의 [CommonJS 구문](https://www.typescriptlang.org/docs/handbook/type-checking-javascript-files.html#commonjs-modules-are-supported)을 인식
+- TypeScript 파일·JSDoc 주석에서 쓸 수 있는 TypeScript 전용 구문 확장도 있음
 
 #### TypeScript 전용 선언의 가져오기 및 내보내기
 
-타입 별칭, 인터페이스, 열거형, 네임스페이스는 표준 JavaScript 선언처럼 `export` 수정자와 함께 모듈에서 내보낼 수 있습니다:
+- 타입 별칭·인터페이스·열거형·네임스페이스도 표준 JavaScript 선언처럼 `export` 수정자로 모듈에서 내보낼 수 있음
 
 ```ts
 // 표준 JavaScript 구문...
@@ -2213,19 +2173,19 @@ export type SomeType = /* ... */;
 export interface SomeInterface { /* ... */ }
 ```
 
-표준 JavaScript 선언에 대한 참조와 함께 명명된 내보내기에서도 참조할 수 있습니다:
+- 표준 JavaScript 선언 참조와 함께 명명된 내보내기에도 등장 가능
 
 ```ts
 export { f, SomeType, SomeInterface };
 ```
 
-내보낸 타입(및 기타 TypeScript 전용 선언)은 표준 ECMAScript import로 가져올 수 있습니다:
+- 내보낸 타입(및 기타 TypeScript 전용 선언)은 표준 ECMAScript import로 가져올 수 있음
 
 ```ts
 import { f, SomeType, SomeInterface } from "./module.js";
 ```
 
-네임스페이스 가져오기 또는 내보내기를 사용할 때, 내보낸 타입은 타입 위치에서 참조될 때 네임스페이스에서 사용할 수 있습니다:
+- 네임스페이스 import·export를 쓸 때 내보낸 타입은 타입 위치에서 참조 시 네임스페이스로 접근 가능
 
 ```ts
 import * as mod from "./module.js";
@@ -2236,7 +2196,8 @@ let x: mod.SomeType; // Ok
 
 #### 타입 전용 가져오기 및 내보내기
 
-JavaScript로 import와 export를 내보낼 때, 기본적으로 TypeScript는 타입 위치에서만 사용되는 import와 타입만 참조하는 export를 자동으로 생략(출력하지 않음)합니다. 타입 전용 가져오기와 내보내기를 사용하여 이 동작을 강제하고 생략을 명시적으로 만들 수 있습니다. `import type`으로 작성된 import 선언, `export type { ... }`으로 작성된 export 선언, `type` 키워드로 접두사가 붙은 import 또는 export 지정자는 모두 출력 JavaScript에서 생략되는 것이 보장됩니다.
+- JavaScript로 emit할 때 TypeScript는 기본적으로 타입 위치에서만 쓰이는 import와 타입만 참조하는 export를 자동으로 생략
+- 타입 전용 가져오기·내보내기로 이 동작을 강제하고 생략을 명시화할 수 있음: `import type`으로 쓴 import 선언, `export type { ... }`으로 쓴 export 선언, `type` 키워드를 접두사로 붙인 import/export 지정자는 모두 출력 JavaScript에서 생략됨이 보장됨
 
 ```ts
 // @Filename: main.ts
@@ -2261,7 +2222,7 @@ class C {
 }
 ```
 
-값도 `import type`으로 가져올 수 있지만, 출력 JavaScript에 존재하지 않으므로 비출력 위치에서만 사용할 수 있습니다:
+- 값도 `import type`으로 가져올 수 있지만 출력 JavaScript에 존재하지 않으므로 비출력 위치에서만 사용 가능
 
 ```ts
 import type { f } from "./module.js";
@@ -2269,7 +2230,7 @@ f(); // 'import type'으로 가져왔기 때문에 'f'를 값으로 사용할 �
 let otherFunction: typeof f = () => {}; // Ok
 ```
 
-타입 전용 import 선언은 기본 import와 명명된 바인딩을 모두 선언할 수 없습니다. `type`이 기본 import에 적용되는지 전체 import 선언에 적용되는지 모호해 보이기 때문입니다. 대신 import 선언을 두 개로 분할하거나 `default`를 명명된 바인딩으로 사용하세요:
+- 타입 전용 import 선언은 기본 import와 명명된 바인딩을 동시에 선언할 수 없음(`type`이 기본 import에 적용되는지 전체 선언에 적용되는지 모호해지므로) → 대신 import 선언을 둘로 분할하거나 `default`를 명명된 바인딩으로 사용
 
 ```ts
 import type fs, { BigIntOptions } from "fs";
@@ -2281,7 +2242,7 @@ import type { default as fs, BigIntOptions } from "fs"; // Ok
 
 #### `import()` 타입
 
-TypeScript는 import 선언을 작성하지 않고 모듈의 타입을 참조하기 위해 JavaScript의 동적 `import`와 유사한 타입 구문을 제공합니다:
+- TypeScript는 import 선언 없이 모듈의 타입을 참조할 수 있게, JavaScript의 동적 `import`와 유사한 타입 구문을 제공
 
 ```ts
 // 내보낸 타입에 접근:
@@ -2290,7 +2251,7 @@ type WriteFileOptions = import("fs").WriteFileOptions;
 type WriteFileFunction = typeof import("fs").writeFile;
 ```
 
-이것은 타입을 다른 방식으로 가져올 수 없는 JavaScript 파일의 JSDoc 주석에서 특히 유용합니다:
+- 타입을 다른 방식으로 가져올 수 없는 JavaScript 파일의 JSDoc 주석에서 특히 유용
 
 ```ts
 /** @type {import("webpack").Configuration} */
@@ -2301,7 +2262,7 @@ module.exports = {
 
 #### `export =`와 `import = require()`
 
-CommonJS 모듈을 내보낼 때, TypeScript 파일은 `module.exports = ...`와 `const mod = require("...")` JavaScript 구문의 직접적인 대응물을 사용할 수 있습니다:
+- CommonJS 모듈 내보내기 시 TypeScript 파일은 `module.exports = ...`와 `const mod = require("...")`에 직접 대응하는 구문을 사용 가능
 
 ```ts
 // @Filename: main.ts
@@ -2314,7 +2275,7 @@ const fs = require("fs");
 module.exports = fs.readFileSync("...");
 ```
 
-이 구문은 변수 선언과 속성 할당이 TypeScript 타입을 참조할 수 없는 반면, 특별한 TypeScript 구문은 가능하기 때문에 JavaScript 대응물 대신 사용되었습니다:
+- 이 구문이 JavaScript 대응물 대신 쓰인 이유: 변수 선언·속성 할당은 TypeScript 타입을 참조할 수 없지만, 이 특별한 TypeScript 구문은 참조 가능
 
 ```ts
 // @Filename: a.ts
@@ -2333,7 +2294,8 @@ const options: Options = { /* ... */ }; // Ok
 
 #### 앰비언트 모듈
 
-TypeScript는 런타임에 존재하지만 해당 파일이 없는 모듈을 선언하기 위한 스크립트(비모듈) 파일의 구문을 지원합니다. 이러한 _앰비언트 모듈_은 일반적으로 Node.js의 `"fs"` 또는 `"path"`와 같이 런타임에서 제공하는 모듈을 나타냅니다:
+- TypeScript는 런타임에 존재하지만 해당 파일이 없는 모듈을 선언할 스크립트(비모듈) 파일용 구문을 지원
+- 이 _앰비언트 모듈_은 보통 Node.js의 `"fs"`·`"path"`처럼 런타임이 제공하는 모듈을 나타냄
 
 ```ts
 declare module "path" {
@@ -2343,7 +2305,7 @@ declare module "path" {
 }
 ```
 
-앰비언트 모듈이 TypeScript 프로그램에 로드되면, TypeScript는 다른 파일에서 선언된 모듈의 import를 인식합니다:
+- 앰비언트 모듈이 TypeScript 프로그램에 로드되면 TypeScript는 다른 파일에서 선언된 모듈의 import를 인식
 
 ```ts
 // 👇 앰비언트 모듈이 로드되었는지 확인 -
@@ -2354,7 +2316,7 @@ declare module "path" {
 import { normalize, join } from "path";
 ```
 
-_패턴_ 앰비언트 모듈은 이름에 단일 `*` 와일드카드 문자를 포함하여 import 경로에서 0개 이상의 문자와 일치합니다. 이는 커스텀 로더가 제공하는 모듈을 선언하는 데 유용할 수 있습니다:
+- _패턴_ 앰비언트 모듈은 이름에 `*` 와일드카드 하나를 포함해 import 경로의 0개 이상 문자와 일치 → 커스텀 로더가 제공하는 모듈 선언에 유용
 
 ```ts
 declare module "*.html" {
@@ -2365,35 +2327,39 @@ declare module "*.html" {
 
 ### `module` 컴파일러 옵션
 
-이 섹션에서는 각 `module` 컴파일러 옵션 값의 세부 사항을 논의합니다. 옵션이 무엇인지와 전체 컴파일 프로세스에 어떻게 맞는지에 대한 자세한 배경은 [_모듈 출력 형식_](/docs/handbook/modules/theory.html#the-module-output-format) 이론 섹션을 참조하세요. 간략히 말해서, `module` 컴파일러 옵션은 역사적으로 출력된 JavaScript 파일의 출력 모듈 형식을 제어하는 데만 사용되었습니다. 그러나 더 최근의 `node16`, `node18`, `nodenext` 값은 어떤 모듈 형식이 지원되는지, 각 파일의 모듈 형식이 어떻게 결정되는지, 다른 모듈 형식이 어떻게 상호 운용되는지를 포함하여 Node.js의 모듈 시스템의 광범위한 특성을 설명합니다.
+- 이 섹션은 각 `module` 옵션 값의 상세를 다룸. 배경은 [_모듈 출력 형식_](/docs/handbook/modules/theory.html#the-module-output-format) 이론 섹션 참고
+- 간단히: `module` 옵션은 역사적으로 출력 JavaScript 파일의 모듈 형식만 제어했음
+  - 최근의 `node16`·`node18`·`nodenext` 값은 어떤 모듈 형식이 지원되는지, 각 파일의 형식이 어떻게 결정되는지, 다른 형식들이 어떻게 상호 운용되는지까지 포함해 Node.js 모듈 시스템 전반을 설명
 
 #### `node16`, `node18`, `node20`, `nodenext`
 
-Node.js는 CommonJS와 ECMAScript 모듈을 모두 지원하며, 각 형식이 어떤 형식이 될 수 있는지와 두 형식이 어떻게 상호 운용될 수 있는지에 대한 특정 규칙이 있습니다. `node16`, `node18`, `nodenext`는 Node.js의 이중 형식 모듈 시스템의 전체 범위를 설명하며, **CommonJS 또는 ESM 형식으로 파일을 출력**합니다. 이것은 다른 모든 `module` 옵션과 다르며, 다른 옵션들은 런타임에 구애받지 않고 모든 출력 파일을 단일 형식으로 강제하여 출력이 런타임에 유효한지 확인하는 것을 사용자에게 맡깁니다.
+- Node.js는 CommonJS·ECMAScript 모듈을 모두 지원 → 각 형식의 조건과 상호 운용 방식에 특정 규칙이 있음
+- `node16`·`node18`·`nodenext`는 Node.js의 이중 형식 모듈 시스템 전체 범위를 설명하며 **CommonJS 또는 ESM 형식으로 파일을 출력**
+  - 다른 모든 `module` 옵션과 다른 점: 그 옵션들은 런타임과 무관하게 모든 출력 파일을 단일 형식으로 강제하고, 출력이 런타임에 유효한지 확인은 사용자에게 맡김
 
-> 흔한 오해는 `node16`-`nodenext`가 ES 모듈만 출력한다는 것입니다. 실제로 이 모드들은 ES 모듈을 _지원_하는 Node.js 버전을 설명하며, ES 모듈을 _사용_하는 프로젝트만이 아닙니다. ESM과 CommonJS 출력 모두 각 파일의 [감지된 모듈 형식](#모듈-형식-감지)에 따라 지원됩니다. 이들은 Node.js의 이중 모듈 시스템의 복잡성을 반영하는 유일한 `module` 옵션이므로, ES 모듈 사용 여부에 관계없이 Node.js v12 이상에서 실행하려는 모든 앱과 라이브러리에 대한 **유일한 올바른 `module` 옵션**입니다.
+> 흔한 오해: `node16`-`nodenext`는 ES 모듈만 출력한다는 것 → 실제로는 ES 모듈을 _지원_하는 Node.js 버전을 설명할 뿐, ES 모듈을 _사용_하는 프로젝트만을 위한 것이 아님. ESM·CommonJS 출력 모두 각 파일의 [감지된 모듈 형식](#모듈-형식-감지)에 따라 지원됨. Node.js의 이중 모듈 시스템 복잡성을 반영하는 유일한 `module` 옵션이므로, ES 모듈 사용 여부와 무관하게 Node.js v12 이상에서 실행할 모든 앱·라이브러리에 대한 **유일한 올바른 `module` 옵션**
 
 ##### 모듈 형식 감지
 
-- `.mts`/`.mjs`/`.d.mts` 파일은 항상 ES 모듈입니다.
-- `.cts`/`.cjs`/`.d.cts` 파일은 항상 CommonJS 모듈입니다.
-- `.ts`/`.tsx`/`.js`/`.jsx`/`.d.ts` 파일은 가장 가까운 상위 package.json 파일에 `"type": "module"`이 포함되어 있으면 ES 모듈이고, 그렇지 않으면 CommonJS 모듈입니다.
+- `.mts`/`.mjs`/`.d.mts` 파일 = 항상 ES 모듈
+- `.cts`/`.cjs`/`.d.cts` 파일 = 항상 CommonJS 모듈
+- `.ts`/`.tsx`/`.js`/`.jsx`/`.d.ts` 파일 = 가장 가까운 상위 package.json에 `"type": "module"`이 있으면 ES 모듈, 없으면 CommonJS 모듈
 
 ##### 상호 운용성 규칙
 
 - **ES 모듈이 CommonJS 모듈을 참조할 때:**
-  - CommonJS 모듈의 `module.exports`는 ES 모듈에 대한 기본 import로 사용할 수 있습니다.
-  - CommonJS 모듈의 `module.exports`의 속성(`default` 제외)은 ES 모듈에 대한 명명된 import로 사용 가능할 수도 있고 사용 불가능할 수도 있습니다. Node.js는 [정적 분석](https://github.com/nodejs/cjs-module-lexer)을 통해 이를 사용 가능하게 하려고 시도합니다. TypeScript는 선언 파일에서 해당 정적 분석이 성공할지 알 수 없으며, 낙관적으로 성공할 것이라고 가정합니다.
+  - CommonJS 모듈의 `module.exports`는 ES 모듈의 기본 import로 사용 가능
+  - `module.exports`의 속성(`default` 제외)이 명명된 import로 쓰이는지는 상황에 따라 다름 → Node.js는 [정적 분석](https://github.com/nodejs/cjs-module-lexer)으로 이를 가능하게 하려 시도. TypeScript는 선언 파일에서 이 정적 분석의 성공 여부를 알 수 없어 낙관적으로 성공을 가정
 - **CommonJS 모듈이 ES 모듈을 참조할 때:**
-  - `node16` 및 `node18`에서 `require`는 ES 모듈을 참조할 수 없습니다.
-  - `nodenext`에서 Node.js v22.12.0 이상의 동작을 반영하여 `require`는 ES 모듈을 참조할 수 있습니다.
-  - 동적 `import()` 호출은 항상 ES 모듈을 가져오는 데 사용할 수 있습니다.
+  - `node16`·`node18`에서는 `require`가 ES 모듈을 참조 불가
+  - `nodenext`에서는 Node.js v22.12.0 이상의 동작을 반영해 `require`로 ES 모듈 참조 가능
+  - 동적 `import()` 호출은 항상 ES 모듈을 가져올 수 있음
 
 #### `preserve`
 
-`--module preserve`에서(TypeScript 5.4에서 [추가됨](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-4.html#support-for-require-calls-in---moduleresolution-bundler-and---module-preserve)) 입력 파일에 작성된 ECMAScript import와 export는 출력에서 보존되고, CommonJS 스타일 `import x = require("...")`와 `export = ...` 문은 CommonJS `require`와 `module.exports`로 출력됩니다. 다시 말해, 각 개별 import 또는 export 문의 형식은 전체 컴파일(또는 전체 파일)에 대해 단일 형식으로 강제되지 않고 보존됩니다.
-
-같은 파일에서 import와 require 호출을 혼합해야 하는 경우는 드물지만, 이 `module` 모드는 대부분의 최신 번들러와 Bun 런타임의 기능을 가장 잘 반영합니다.
+- `--module preserve`(TypeScript 5.4에서 [추가](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-4.html#support-for-require-calls-in---moduleresolution-bundler-and---module-preserve))에서는 입력 파일의 ECMAScript import·export가 출력에서 그대로 보존되고, CommonJS 스타일 `import x = require("...")`·`export = ...`는 CommonJS `require`·`module.exports`로 출력됨
+  - 즉 각 import·export 문의 형식이 전체 컴파일(또는 파일)에서 단일 형식으로 강제되지 않고 그대로 유지됨
+- 같은 파일에서 import와 require를 섞어야 하는 경우는 드물지만, 이 모드는 최신 번들러 대부분과 Bun 런타임의 기능을 가장 잘 반영
 
 ##### 예시
 
@@ -2421,42 +2387,43 @@ export default "default export";
 
 ##### 요약
 
-- 번들러, Bun, tsx를 위해 `esnext`와 `--moduleResolution bundler`를 함께 사용하세요.
-- Node.js에는 사용하지 마세요. Node.js용 ES 모듈을 출력하려면 package.json의 `"type": "module"`과 함께 `node16`, `node18`, 또는 `nodenext`를 사용하세요.
-- 비선언 파일에서는 `import mod = require("mod")`가 허용되지 않습니다.
-- `es2020`은 `import.meta` 속성 지원을 추가합니다.
-- `es2022`는 최상위 `await` 지원을 추가합니다.
-- `esnext`는 ECMAScript 모듈에 대한 Stage 3 제안 지원을 포함할 수 있는 이동 목표입니다.
-- 출력된 파일은 ES 모듈이지만, 의존성은 어떤 형식이든 될 수 있습니다.
+- 번들러·Bun·tsx용으로는 `esnext`와 `--moduleResolution bundler`를 함께 사용 권장
+- Node.js에는 사용 금지 → Node.js용 ES 모듈 출력은 package.json `"type": "module"`과 함께 `node16`·`node18`·`nodenext` 사용
+- 비선언 파일에서는 `import mod = require("mod")` 불허
+- `es2020`은 `import.meta` 속성 지원 추가
+- `es2022`는 최상위 `await` 지원 추가
+- `esnext`는 ECMAScript 모듈의 Stage 3 제안 지원을 포함할 수 있는 이동 목표
+- 출력 파일은 ES 모듈이지만 의존성은 어떤 형식이든 가능
 
 #### `commonjs`
 
 ##### 요약
 
-- 이것을 사용하지 않는 것이 좋습니다. Node.js용 CommonJS 모듈을 출력하려면 `node16`, `node18`, 또는 `nodenext`를 사용하세요.
-- 출력된 파일은 CommonJS 모듈이지만, 의존성은 어떤 형식이든 될 수 있습니다.
-- 동적 `import()`는 `require()` 호출의 Promise로 변환됩니다.
-- `esModuleInterop`은 기본 및 네임스페이스 import의 출력 코드에 영향을 미칩니다.
+- 사용 비권장 → Node.js용 CommonJS 모듈 출력은 `node16`·`node18`·`nodenext` 사용
+- 출력 파일은 CommonJS 모듈이지만 의존성은 어떤 형식이든 가능
+- 동적 `import()`는 `require()` 호출의 Promise로 변환됨
+- `esModuleInterop`은 기본·네임스페이스 import의 출력 코드에 영향
 
 ### `moduleResolution` 컴파일러 옵션
 
-이 섹션에서는 여러 `moduleResolution` 모드에서 공유되는 모듈 해결 기능과 프로세스를 설명한 다음, 각 모드의 세부 사항을 지정합니다. 옵션이 무엇인지와 전체 컴파일 프로세스에 어떻게 맞는지에 대한 자세한 배경은 [_모듈 해결_](/docs/handbook/modules/theory.html#module-resolution) 이론 섹션을 참조하세요. 간략히 말해서, `moduleResolution`은 TypeScript가 `import`/`export`/`require` 문의 _모듈 지정자_(문자열 리터럴)를 디스크의 파일로 해결하는 방법을 제어하며, 대상 런타임이나 번들러가 사용하는 모듈 해결기와 일치하도록 설정해야 합니다.
+- 이 섹션은 여러 `moduleResolution` 모드가 공유하는 기능·프로세스를 설명한 뒤 각 모드의 세부를 정리
+- 배경 정보는 [_모듈 해결_](/docs/handbook/modules/theory.html#module-resolution) 이론 섹션 참고
+- 간단히: `moduleResolution`은 TypeScript가 `import`/`export`/`require` 문의 _모듈 지정자_(문자열 리터럴)를 디스크 파일로 해결하는 방법을 제어 → 대상 런타임·번들러가 쓰는 모듈 해결기와 일치하게 설정해야 함
 
 #### 공통 기능 및 프로세스
 
 ##### 파일 확장자 대체
 
-TypeScript는 항상 타입 정보를 제공할 수 있는 파일로 내부적으로 해결하려고 하며, 런타임이나 번들러가 같은 경로를 사용하여 JavaScript 구현을 제공하는 파일로 해결할 수 있도록 합니다. 지정된 `moduleResolution` 알고리즘에 따라 런타임이나 번들러에서 JavaScript 파일 조회를 트리거하는 모든 모듈 지정자에 대해, TypeScript는 먼저 같은 이름과 유사한 파일 확장자를 가진 TypeScript 구현 파일 또는 타입 선언 파일을 찾으려고 시도합니다.
+- TypeScript는 항상 타입 정보를 제공할 파일로 내부적으로 해결하려 함 → 런타임·번들러는 같은 경로로 JavaScript 구현 파일을 해결할 수 있음
+- 지정된 `moduleResolution` 알고리즘에서 런타임·번들러의 JavaScript 파일 조회를 트리거하는 모든 모듈 지정자에 대해, TypeScript는 먼저 같은 이름과 유사 확장자의 TypeScript 구현 파일이나 타입 선언 파일을 찾으려 시도
 
-| 런타임 조회    | TypeScript 조회 #1 | TypeScript 조회 #2 | TypeScript 조회 #3 | TypeScript 조회 #4 | TypeScript 조회 #5 |
-| -------------- | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ |
-| `/mod.js`      | `/mod.ts`          | `/mod.tsx`         | `/mod.d.ts`        | `/mod.js`          | `./mod.jsx`        |
-| `/mod.mjs`     | `/mod.mts`         | `/mod.d.mts`       | `/mod.mjs`         |                    |                    |
-| `/mod.cjs`     | `/mod.cts`         | `/mod.d.cts`       | `/mod.cjs`         |                    |                    |
+- 런타임 조회 `/mod.js` → TypeScript 조회 순서: `/mod.ts` → `/mod.tsx` → `/mod.d.ts` → `/mod.js` → `./mod.jsx`
+- 런타임 조회 `/mod.mjs` → TypeScript 조회 순서: `/mod.mts` → `/mod.d.mts` → `/mod.mjs`
+- 런타임 조회 `/mod.cjs` → TypeScript 조회 순서: `/mod.cts` → `/mod.d.cts` → `/mod.cjs`
 
 ##### 상대 파일 경로 해결
 
-TypeScript의 모든 `moduleResolution` 알고리즘은 파일 확장자를 포함하는 상대 경로로 모듈을 참조하는 것을 지원합니다(위 [규칙에 따라](#파일-확장자-대체) 대체됨):
+- TypeScript의 모든 `moduleResolution` 알고리즘은 파일 확장자를 포함한 상대 경로로 모듈을 참조하는 것을 지원(위 [규칙에 따라](#파일-확장자-대체) 대체됨)
 
 ```ts
 // @Filename: a.ts
@@ -2468,7 +2435,7 @@ import {} from "./a.js"; // ✅ 모든 `moduleResolution`에서 작동
 
 ##### 확장자 없는 상대 경로
 
-일부 경우, 런타임이나 번들러는 상대 경로에서 `.js` 파일 확장자를 생략할 수 있습니다. TypeScript는 `moduleResolution` 설정과 컨텍스트가 런타임이나 번들러가 이를 지원한다고 나타내는 곳에서 이 동작을 지원합니다:
+- 경우에 따라 런타임·번들러는 상대 경로의 `.js` 확장자를 생략 가능 → TypeScript는 `moduleResolution` 설정·컨텍스트가 이를 지원한다고 나타내는 곳에서 이 동작을 지원
 
 ```ts
 // @Filename: a.ts
@@ -2480,7 +2447,7 @@ import {} from "./a";
 
 ##### 디렉토리 모듈 (인덱스 파일 해결)
 
-일부 경우, 파일 대신 디렉토리를 모듈로 참조할 수 있습니다. 가장 간단하고 일반적인 경우, 이것은 런타임이나 번들러가 디렉토리에서 `index.js` 파일을 찾는 것을 포함합니다. TypeScript는 `moduleResolution` 설정과 컨텍스트가 런타임이나 번들러가 이를 지원한다고 나타내는 곳에서 이 동작을 지원합니다:
+- 경우에 따라 파일 대신 디렉토리를 모듈로 참조 가능 → 가장 흔한 경우는 런타임·번들러가 디렉토리에서 `index.js`를 찾는 것. TypeScript도 이를 지원하는 설정·컨텍스트에서 동일하게 지원
 
 ```ts
 // @Filename: dir/index.ts
@@ -2492,61 +2459,66 @@ import {} from "./dir";
 
 ##### `paths`
 
-TypeScript는 `paths` 컴파일러 옵션으로 베어 지정자에 대한 컴파일러의 모듈 해결을 재정의하는 방법을 제공합니다. 이 기능은 원래 AMD 모듈 로더와 함께 사용하도록 설계되었지만(ESM이 존재하거나 번들러가 널리 사용되기 전에 브라우저에서 모듈을 실행하는 수단), TypeScript가 모델링하지 않는 모듈 해결 기능을 런타임이나 번들러가 지원할 때 오늘날에도 여전히 사용됩니다.
+- `paths` 컴파일러 옵션은 베어 지정자에 대한 컴파일러의 모듈 해결을 재정의하는 방법을 제공
+- 원래는 AMD 모듈 로더용(ESM·번들러가 보편화되기 전 브라우저에서 모듈을 실행하는 수단)으로 설계되었지만, TypeScript가 모델링하지 않는 해결 기능을 런타임·번들러가 지원할 때 오늘날에도 여전히 사용됨
 
 ###### `paths`는 emit에 영향을 미치지 않음
 
-`paths` 옵션은 TypeScript가 출력하는 코드에서 import 경로를 변경하지 _않습니다_. 따라서 TypeScript에서는 작동하는 것처럼 보이지만 런타임에 충돌하는 경로 별칭을 만드는 것이 매우 쉽습니다.
+- `paths` 옵션은 TypeScript가 출력하는 코드의 import 경로를 변경하지 _않음_ → TypeScript에서는 작동하는 것처럼 보이지만 런타임에 충돌하는 경로 별칭을 만들기 매우 쉬움
 
 ##### `node_modules` 패키지 조회
 
-Node.js는 상대 경로, 절대 경로, URL이 아닌 모듈 지정자를 `node_modules` 하위 디렉토리에서 찾는 패키지에 대한 참조로 취급합니다. 번들러는 사용자가 Node.js에서와 동일한 종속성 관리 시스템, 종종 같은 종속성까지도 사용할 수 있도록 이 동작을 편리하게 채택했습니다. `classic`을 제외한 TypeScript의 모든 `moduleResolution` 옵션은 `node_modules` 조회를 지원합니다.
+- Node.js는 상대·절대 경로도 URL도 아닌 모듈 지정자를 `node_modules` 하위 디렉토리 패키지 참조로 취급
+- 번들러도 Node.js와 같은(때로는 동일한) 종속성 관리 시스템을 쓸 수 있도록 이 동작을 채택
+- `classic`을 제외한 TypeScript의 모든 `moduleResolution` 옵션은 `node_modules` 조회를 지원
 
 ##### package.json `"exports"`
 
-`moduleResolution`이 `node16`, `nodenext`, 또는 `bundler`로 설정되고 `resolvePackageJsonExports`가 비활성화되지 않으면, TypeScript는 [베어 지정자 `node_modules` 패키지 조회](#node_modules-패키지-조회)에 의해 트리거된 패키지 디렉토리에서 해결할 때 Node.js의 [package.json `"exports"` 사양](https://nodejs.org/api/packages.html#packages_package_entry_points)을 따릅니다.
-
-`"exports"`를 통해 모듈 지정자를 파일 경로로 해결하기 위한 TypeScript의 구현은 Node.js를 정확히 따릅니다. 그러나 파일 경로가 해결되면 TypeScript는 타입을 찾기 위해 여전히 여러 파일 확장자를 [시도](#파일-확장자-대체)합니다.
+- `moduleResolution`이 `node16`·`nodenext`·`bundler`이고 `resolvePackageJsonExports`가 비활성화되지 않았다면, [베어 지정자 `node_modules` 패키지 조회](#node_modules-패키지-조회)로 트리거된 패키지 디렉토리 해결 시 Node.js의 [package.json `"exports"` 사양](https://nodejs.org/api/packages.html#packages_package_entry_points)을 따름
+- `"exports"`를 통한 모듈 지정자 → 파일 경로 해결 구현은 Node.js를 정확히 따름. 다만 파일 경로가 해결된 후에도 TypeScript는 타입을 찾기 위해 여러 파일 확장자를 [시도](#파일-확장자-대체)
 
 #### `node16`, `nodenext`
 
-이 모드들은 Node.js v12 이상의 모듈 해결 동작을 반영합니다. (`node16`과 `nodenext`는 현재 동일하지만, Node.js가 향후 모듈 시스템에 중요한 변경을 하면 `node16`은 고정되고 `nodenext`는 새로운 동작을 반영하도록 업데이트됩니다.) Node.js에서 ECMAScript import에 대한 해결 알고리즘은 CommonJS `require` 호출에 대한 알고리즘과 크게 다릅니다. 해결되는 각 모듈 지정자에 대해, 구문과 가져오는 파일의 [모듈 형식](#모듈-형식-감지)이 먼저 사용되어 모듈 지정자가 출력된 JavaScript에서 `import`에 있을지 `require`에 있을지 결정됩니다.
+- 이 모드들은 Node.js v12 이상의 모듈 해결 동작을 반영
+  - `node16`·`nodenext`는 현재 동일하지만, Node.js가 향후 모듈 시스템에 중요한 변경을 하면 `node16`은 고정되고 `nodenext`가 새 동작을 반영하도록 업데이트됨
+- Node.js에서 ECMAScript import의 해결 알고리즘은 CommonJS `require` 알고리즘과 크게 다름
+  - 각 모듈 지정자 해결 시, 구문과 가져오는 파일의 [모듈 형식](#모듈-형식-감지)을 먼저 써서 출력 JavaScript에서 `import`가 될지 `require`가 될지 결정
 
 ##### 지원되는 기능
 
-|      | `import` | `require` |
-| ---- | -------- | --------- |
-| [`paths`](#paths) | ✅ | ✅ |
-| [`baseUrl`](#baseurl) | ✅ | ✅ |
-| [`node_modules` 패키지 조회](#node_modules-패키지-조회) | ✅ | ✅ |
-| [package.json `"exports"`](#packagejson-exports) | ✅ `types`, `node`, `import` 일치 | ✅ `types`, `node`, `require` 일치 |
-| [package.json `"imports"` 및 자기 이름 import](#packagejson-imports-및-자기-이름-imports) | ✅ `types`, `node`, `import` 일치 | ✅ `types`, `node`, `require` 일치 |
-| [전체 상대 경로](#상대-파일-경로-해결) | ✅ | ✅ |
-| [확장자 없는 상대 경로](#확장자-없는-상대-경로) | ❌ | ✅ |
-| [디렉토리 모듈](#디렉토리-모듈-인덱스-파일-해결) | ❌ | ✅ |
+- [`paths`](#paths): import 지원 · require 지원
+- [`baseUrl`](#baseurl): import 지원 · require 지원
+- [`node_modules` 패키지 조회](#node_modules-패키지-조회): import 지원 · require 지원
+- [package.json `"exports"`](#packagejson-exports): import는 `types`·`node`·`import` 일치 지원, require는 `types`·`node`·`require` 일치 지원
+- [package.json `"imports"` 및 자기 이름 import](#packagejson-imports-및-자기-이름-imports): import는 `types`·`node`·`import` 일치 지원, require는 `types`·`node`·`require` 일치 지원
+- [전체 상대 경로](#상대-파일-경로-해결): import 지원 · require 지원
+- [확장자 없는 상대 경로](#확장자-없는-상대-경로): import 불가 · require 지원
+- [디렉토리 모듈](#디렉토리-모듈-인덱스-파일-해결): import 불가 · require 지원
 
 #### `bundler`
 
-`--moduleResolution bundler`는 대부분의 JavaScript 번들러에 공통적인 모듈 해결 동작을 모델링하려고 시도합니다. 간략히 말해서, 이것은 [`node_modules` 조회](#node_modules-패키지-조회), [디렉토리 모듈](#디렉토리-모듈-인덱스-파일-해결), [확장자 없는 경로](#확장자-없는-상대-경로)와 같이 전통적으로 Node.js의 CommonJS `require` 해결 알고리즘과 연관된 모든 동작을 지원하면서도 [package.json `"exports"`](#packagejson-exports)와 [package.json `"imports"`](#packagejson-imports-및-자기-이름-imports)와 같은 최신 Node.js 해결 기능도 지원하는 것을 의미합니다.
+- `--moduleResolution bundler`는 대부분의 JavaScript 번들러에 공통된 모듈 해결 동작을 모델링
+- 즉 Node.js CommonJS `require` 해결과 전통적으로 연관된 동작([`node_modules` 조회](#node_modules-패키지-조회), [디렉토리 모듈](#디렉토리-모듈-인덱스-파일-해결), [확장자 없는 경로](#확장자-없는-상대-경로))을 모두 지원하면서, [package.json `"exports"`](#packagejson-exports)·[`"imports"`](#packagejson-imports-및-자기-이름-imports) 같은 최신 Node.js 해결 기능도 지원
 
 ##### 지원되는 기능
 
-- [`paths`](#paths) ✅
-- [`baseUrl`](#baseurl) ✅
-- [`node_modules` 패키지 조회](#node_modules-패키지-조회) ✅
-- [package.json `"exports"`](#packagejson-exports) ✅ 구문에 따라 `types`, `import`/`require` 일치
-- [package.json `"imports"` 및 자기 이름 import](#packagejson-imports-및-자기-이름-imports) ✅ 구문에 따라 `types`, `import`/`require` 일치
-- [전체 상대 경로](#상대-파일-경로-해결) ✅
-- [확장자 없는 상대 경로](#확장자-없는-상대-경로) ✅
-- [디렉토리 모듈](#디렉토리-모듈-인덱스-파일-해결) ✅
+- [`paths`](#paths): 지원
+- [`baseUrl`](#baseurl): 지원
+- [`node_modules` 패키지 조회](#node_modules-패키지-조회): 지원
+- [package.json `"exports"`](#packagejson-exports): 지원, 구문에 따라 `types`·`import`/`require` 일치
+- [package.json `"imports"` 및 자기 이름 import](#packagejson-imports-및-자기-이름-imports): 지원, 구문에 따라 `types`·`import`/`require` 일치
+- [전체 상대 경로](#상대-파일-경로-해결): 지원
+- [확장자 없는 상대 경로](#확장자-없는-상대-경로): 지원
+- [디렉토리 모듈](#디렉토리-모듈-인덱스-파일-해결): 지원
 
 #### `node10` (이전에 `node`로 알려짐)
 
-`--moduleResolution node`는 TypeScript 5.0에서 `node10`으로 이름이 변경되었습니다(역호환성을 위해 `node`를 별칭으로 유지). 이것은 v12 이전의 Node.js 버전에 존재했던 CommonJS 모듈 해결 알고리즘을 반영합니다. 더 이상 사용해서는 안 됩니다.
+- `--moduleResolution node`는 TypeScript 5.0에서 `node10`으로 개명(역호환을 위해 `node`는 별칭으로 유지)
+- v12 이전 Node.js의 CommonJS 모듈 해결 알고리즘을 반영 → 사용 금지
 
 #### `classic`
 
-`classic`을 사용하지 마세요.
+- `classic` 사용 금지
 
 ---
 
@@ -2559,15 +2531,14 @@ Node.js는 상대 경로, 절대 경로, URL이 아닌 모듈 지정자를 `node
 > "내부 모듈"은 이제 "네임스페이스"입니다.
 > "외부 모듈"은 이제 단순히 "모듈"로, [ECMAScript 2015](https://www.ecma-international.org/ecma-262/6.0/)의 용어에 맞춰졌습니다 (즉, `module X {`는 이제 선호되는 `namespace X {`와 동등합니다).
 
-이 글에서는 TypeScript에서 네임스페이스(이전에는 "내부 모듈")를 사용하여 코드를 구성하는 다양한 방법을 설명합니다.
-용어에 대한 참고에서 언급했듯이, "내부 모듈"은 이제 "네임스페이스"라고 합니다.
-또한, 내부 모듈을 선언할 때 `module` 키워드가 사용되었던 모든 곳에서 `namespace` 키워드를 대신 사용할 수 있고 사용해야 합니다.
-이렇게 하면 유사하게 명명된 용어로 새 사용자를 과부하시켜 혼동을 주는 것을 방지합니다.
+- 이 글은 TypeScript에서 네임스페이스(이전 "내부 모듈")로 코드를 구성하는 방법을 설명
+- 위 용어 참고대로 "내부 모듈"은 이제 "네임스페이스"
+- 내부 모듈 선언 시 쓰였던 `module` 키워드는 `namespace` 키워드로 대체해서 사용해야 함 → 유사한 용어로 새 사용자를 혼동시키는 것 방지
 
 ### 첫 번째 단계
 
-이 페이지 전체에서 예제로 사용할 프로그램부터 시작하겠습니다.
-웹페이지의 폼에서 사용자의 입력을 확인하거나 외부에서 제공된 데이터 파일의 형식을 확인하기 위해 작성할 수 있는 것처럼 간단한 문자열 유효성 검사기의 작은 집합을 작성했습니다.
+- 이 페이지 전체 예제로 쓸 프로그램: 간단한 문자열 유효성 검사기 모음
+  - 웹페이지 폼 입력 확인, 외부 데이터 파일 형식 확인 같은 용도로 작성할 만한 것
 
 ### 단일 파일의 유효성 검사기
 
@@ -2610,13 +2581,12 @@ for (let s of strings) {
 
 ### 네임스페이싱
 
-더 많은 유효성 검사기를 추가하면, 타입을 추적하고 다른 객체와의 이름 충돌을 걱정하지 않도록 어떤 종류의 조직 체계가 필요합니다.
-많은 다른 이름을 전역 네임스페이스에 넣는 대신, 객체를 네임스페이스로 래핑합시다.
-
-이 예제에서는 모든 유효성 검사기 관련 엔티티를 `Validation`이라는 네임스페이스로 이동합니다.
-여기서 인터페이스와 클래스가 네임스페이스 외부에서 보이도록 하려면 `export`로 시작합니다.
-반대로, 변수 `lettersRegexp`와 `numberRegexp`는 구현 세부 사항이므로, 내보내지 않아 네임스페이스 외부의 코드에 보이지 않습니다.
-파일 하단의 테스트 코드에서, 네임스페이스 외부에서 사용될 때 타입의 이름을 한정해야 합니다. 예: `Validation.LettersOnlyValidator`.
+- 유효성 검사기가 늘어나면 타입 추적·이름 충돌 방지를 위한 조직 체계 필요
+- 여러 이름을 전역 네임스페이스에 두는 대신 객체를 네임스페이스로 래핑
+- 예제: 모든 유효성 검사기 엔티티를 `Validation` 네임스페이스로 이동
+  - 인터페이스·클래스를 네임스페이스 밖에서 보이게 하려면 `export`로 시작
+  - `lettersRegexp`·`numberRegexp`는 구현 세부 사항이므로 내보내지 않아 외부에 보이지 않음
+  - 파일 하단 테스트 코드에서는 네임스페이스 외부 사용 시 타입 이름을 한정해야 함(예: `Validation.LettersOnlyValidator`)
 
 ### 네임스페이스 유효성 검사기
 
@@ -2664,14 +2634,14 @@ for (let s of strings) {
 
 ### 여러 파일로 분할
 
-애플리케이션이 커지면, 코드를 여러 파일로 분할하여 유지보수하기 쉽게 하고 싶을 것입니다.
+- 애플리케이션이 커지면 코드를 여러 파일로 분할해 유지보수를 쉽게 하고 싶어짐
 
 ### 다중 파일 네임스페이스
 
-여기서, `Validation` 네임스페이스를 여러 파일로 분할합니다.
-파일이 분리되어 있어도, 각각 동일한 네임스페이스에 기여할 수 있으며 모두 한 곳에서 정의된 것처럼 소비할 수 있습니다.
-파일 간에 종속성이 있으므로, 파일 간의 관계를 컴파일러에 알려주기 위해 참조 태그를 추가합니다.
-테스트 코드는 그 외에는 변경되지 않습니다.
+- `Validation` 네임스페이스를 여러 파일로 분할하는 예
+- 파일이 분리되어도 각각 같은 네임스페이스에 기여 가능 → 한 곳에서 정의된 것처럼 소비 가능
+- 파일 간 종속성이 있으므로 참조 태그로 관계를 컴파일러에 알림
+- 테스트 코드는 그 외에는 변경 없음
 
 ###### Validation.ts
 
@@ -2738,23 +2708,21 @@ for (let s of strings) {
 }
 ```
 
-여러 파일이 관련되면, 모든 컴파일된 코드가 로드되도록 해야 합니다.
-이를 수행하는 두 가지 방법이 있습니다.
-
-첫째, [`outFile`](/tsconfig#outFile) 옵션을 사용하여 연결된 출력으로 모든 입력 파일을 단일 JavaScript 출력 파일로 컴파일할 수 있습니다:
+- 여러 파일이 관련되면 모든 컴파일된 코드가 로드되도록 해야 함 → 방법 두 가지
+- 방법 1: [`outFile`](/tsconfig#outFile) 옵션으로 모든 입력 파일을 연결된 단일 JavaScript 출력 파일로 컴파일
 
 ```Shell
 tsc --outFile sample.js Test.ts
 ```
 
-컴파일러는 파일에 있는 참조 태그를 기반으로 출력 파일을 자동으로 정렬합니다. 각 파일을 개별적으로 지정할 수도 있습니다:
+- 컴파일러는 파일의 참조 태그를 기반으로 출력 파일을 자동 정렬. 각 파일을 개별 지정도 가능
 
 ```Shell
 tsc --outFile sample.js Validation.ts LettersOnlyValidator.ts ZipCodeValidator.ts Test.ts
 ```
 
-또는, 파일별 컴파일(기본값)을 사용하여 각 입력 파일에 대해 하나의 JavaScript 파일을 방출할 수 있습니다.
-여러 JS 파일이 생성되면, 웹페이지에서 `<script>` 태그를 사용하여 적절한 순서로 각 방출된 파일을 로드해야 합니다. 예를 들어:
+- 방법 2: 파일별 컴파일(기본값)로 각 입력 파일당 JavaScript 파일 하나씩 방출
+  - 여러 JS 파일이 생성되면 웹페이지에서 `<script>` 태그로 적절한 순서로 각 파일을 로드해야 함. 예
 
 ###### MyTestPage.html (발췌)
 
@@ -2767,9 +2735,9 @@ tsc --outFile sample.js Validation.ts LettersOnlyValidator.ts ZipCodeValidator.t
 
 ### 별칭
 
-네임스페이스 작업을 단순화할 수 있는 또 다른 방법은 `import q = x.y.z`를 사용하여 일반적으로 사용되는 객체에 대해 더 짧은 이름을 만드는 것입니다.
-모듈을 로드하는 데 사용되는 `import x = require("name")` 구문과 혼동하지 마세요, 이 구문은 단순히 지정된 심볼에 대한 별칭을 만듭니다.
-모듈 가져오기에서 생성된 객체를 포함하여 모든 종류의 식별자에 대해 이러한 종류의 가져오기(일반적으로 별칭이라고 함)를 사용할 수 있습니다.
+- 네임스페이스 작업을 단순화하는 또 다른 방법: `import q = x.y.z`로 자주 쓰는 객체에 짧은 이름 부여
+- 모듈 로드용 `import x = require("name")` 구문과는 다름 → 이 구문은 단순히 지정된 심볼의 별칭을 만듦
+- 모듈 가져오기에서 생성된 객체를 포함해 모든 식별자에 이런 종류의 가져오기(보통 "별칭"이라 부름) 사용 가능
 
 ```ts
 namespace Shapes {
@@ -2783,26 +2751,21 @@ import polygons = Shapes.Polygons;
 let sq = new polygons.Square(); // 'new Shapes.Polygons.Square()'와 동일
 ```
 
-`require` 키워드를 사용하지 않는다는 것에 주목하세요; 대신 가져오는 심볼의 정규화된 이름에서 직접 할당합니다.
-이것은 `var`를 사용하는 것과 유사하지만, 가져온 심볼의 타입 및 네임스페이스 의미에서도 작동합니다.
-중요하게도, 값의 경우, `import`는 원본 심볼과 구별되는 참조이므로, 별칭이 지정된 `var`에 대한 변경 사항은 원본 변수에 반영되지 않습니다.
+- `require` 키워드는 쓰지 않음 → 대신 가져오는 심볼의 정규화된 이름에서 직접 할당
+  - `var`와 유사하지만 가져온 심볼의 타입·네임스페이스 의미에서도 작동
+  - 값의 경우 `import`는 원본 심볼과 구별되는 참조라서, 별칭 `var`의 변경이 원본 변수에 반영되지 않음
 
 ### 다른 JavaScript 라이브러리와 작업하기
 
-TypeScript로 작성되지 않은 라이브러리의 형태를 설명하려면, 라이브러리가 노출하는 API를 선언해야 합니다.
-대부분의 JavaScript 라이브러리는 몇 가지 최상위 객체만 노출하기 때문에, 네임스페이스는 이를 나타내는 좋은 방법입니다.
-
-구현을 정의하지 않는 선언을 "앰비언트"라고 합니다.
-일반적으로 이들은 `.d.ts` 파일에 정의됩니다.
-C/C++에 익숙하다면, 이들을 `.h` 파일로 생각할 수 있습니다.
-몇 가지 예를 살펴봅시다.
+- TypeScript로 작성되지 않은 라이브러리의 형태를 설명하려면 라이브러리가 노출하는 API를 선언해야 함
+- 대부분의 JavaScript 라이브러리는 최상위 객체 몇 개만 노출 → 네임스페이스가 이를 나타내는 좋은 방법
+- 구현을 정의하지 않는 선언 = "앰비언트" → 보통 `.d.ts` 파일에 정의(C/C++의 `.h` 파일과 유사)
 
 ### 앰비언트 네임스페이스
 
-인기 있는 라이브러리 D3는 `d3`라는 전역 객체에 기능을 정의합니다.
-이 라이브러리는 (모듈 로더 대신) `<script>` 태그를 통해 로드되기 때문에, 선언에서 네임스페이스를 사용하여 형태를 정의합니다.
-TypeScript 컴파일러가 이 형태를 보려면, 앰비언트 네임스페이스 선언을 사용합니다.
-예를 들어, 다음과 같이 작성을 시작할 수 있습니다:
+- 인기 라이브러리 D3는 `d3`라는 전역 객체에 기능을 정의
+- 이 라이브러리는 (모듈 로더 대신) `<script>` 태그로 로드되므로 선언에서 네임스페이스로 형태를 정의
+- TypeScript 컴파일러가 이 형태를 보게 하려면 앰비언트 네임스페이스 선언 사용. 예
 
 ###### D3.d.ts (단순화된 발췌)
 
@@ -2834,48 +2797,36 @@ declare var d3: D3.Base;
 
 > **원문:** https://www.typescriptlang.org/docs/handbook/namespaces-and-modules.html
 
-이 글에서는 TypeScript에서 모듈과 네임스페이스를 사용하여 코드를 구성하는 다양한 방법을 설명합니다.
-또한 네임스페이스와 모듈 사용에 대한 고급 주제를 살펴보고, TypeScript에서 사용할 때 흔히 겪는 함정을 다룹니다.
+- 이 글은 TypeScript에서 모듈·네임스페이스로 코드를 구성하는 방법과 고급 주제, 흔한 함정을 다룸
+- ES 모듈 상세는 [모듈](/docs/handbook/modules.html) 문서, TypeScript 네임스페이스 상세는 [네임스페이스](/docs/handbook/namespaces.html) 문서 참고
 
-ES 모듈에 대한 자세한 내용은 [모듈](/docs/handbook/modules.html) 문서를 참조하세요.
-TypeScript 네임스페이스에 대한 자세한 내용은 [네임스페이스](/docs/handbook/namespaces.html) 문서를 참조하세요.
-
-참고: TypeScript의 _매우_ 오래된 버전에서는 네임스페이스를 '내부 모듈'이라고 불렀으며, 이는 JavaScript 모듈 시스템보다 앞선 것입니다.
+- 참고: TypeScript의 _매우_ 오래된 버전에서는 네임스페이스를 '내부 모듈'이라 불렀음(JavaScript 모듈 시스템보다 앞선 명칭)
 
 ### 모듈 사용하기
 
-모듈은 코드와 선언을 모두 포함할 수 있습니다.
-
-모듈은 또한 모듈 로더(CommonJs/Require.js 등) 또는 ES 모듈을 지원하는 런타임에 대한 종속성이 있습니다.
-모듈은 더 나은 코드 재사용, 더 강력한 격리, 번들링을 위한 더 나은 도구 지원을 제공합니다.
-
-Node.js 애플리케이션의 경우, 모듈이 기본값이며 **현대 코드에서는 네임스페이스보다 모듈을 권장합니다**.
-
-ECMAScript 2015부터 모듈은 언어의 기본 부분이며, 모든 호환 엔진 구현에서 지원되어야 합니다.
-따라서 새 프로젝트의 경우 모듈이 권장되는 코드 구성 메커니즘입니다.
+- 모듈은 코드와 선언을 모두 포함 가능
+- 모듈 로더(CommonJs/Require.js 등)나 ES 모듈 지원 런타임에 대한 종속성을 가짐
+- 더 나은 코드 재사용, 더 강력한 격리, 더 나은 번들링 도구 지원을 제공
+- Node.js 애플리케이션에서는 모듈이 기본값이며 **현대 코드에서는 네임스페이스보다 모듈 권장**
+- ECMAScript 2015부터 모듈은 언어의 기본 부분 → 모든 호환 엔진에서 지원되어야 함 → 새 프로젝트의 권장 구성 메커니즘
 
 ### 네임스페이스 사용하기
 
-네임스페이스는 코드를 구성하는 TypeScript 전용 방법입니다.
-네임스페이스는 단순히 전역 네임스페이스의 명명된 JavaScript 객체입니다.
-이것은 네임스페이스를 사용하기 매우 간단한 구조로 만듭니다.
-모듈과 달리, 여러 파일에 걸쳐 있을 수 있으며 [`outFile`](/tsconfig#outFile)을 사용하여 연결할 수 있습니다.
-네임스페이스는 HTML 페이지에서 `<script>` 태그로 모든 종속성이 포함된 웹 애플리케이션에서 코드를 구조화하는 좋은 방법일 수 있습니다.
-
-모든 전역 네임스페이스 오염과 마찬가지로, 특히 대규모 애플리케이션에서 컴포넌트 종속성을 식별하기 어려울 수 있습니다.
+- 네임스페이스는 코드를 구성하는 TypeScript 전용 방법
+- 단순히 전역 네임스페이스의 명명된 JavaScript 객체 → 매우 간단한 구조
+- 모듈과 달리 여러 파일에 걸칠 수 있고 [`outFile`](/tsconfig#outFile)로 연결 가능
+- HTML `<script>` 태그로 모든 종속성을 포함하는 웹 애플리케이션 구조화에 좋은 방법일 수 있음
+- 다만 모든 전역 네임스페이스 오염과 마찬가지로 대규모 애플리케이션에서는 컴포넌트 종속성 식별이 어려워질 수 있음
 
 ### 네임스페이스와 모듈의 함정
 
-이 섹션에서는 네임스페이스와 모듈 사용 시 다양한 일반적인 함정과 이를 피하는 방법을 설명합니다.
+- 이 섹션은 네임스페이스·모듈 사용 시 흔한 함정과 회피 방법을 설명
 
 #### 모듈을 `/// <reference>`하기
 
-흔한 실수는 `import` 문 대신 `/// <reference ... />` 구문을 사용하여 모듈 파일을 참조하려고 하는 것입니다.
-이 구별을 이해하려면, 먼저 컴파일러가 `import`의 경로(예: `import x from "...";`, `import x = require("...");` 등의 `...`)를 기반으로 모듈의 타입 정보를 찾는 방법을 이해해야 합니다.
-
-컴파일러는 적절한 경로로 `.ts`, `.tsx`, 그런 다음 `.d.ts`를 찾으려고 합니다.
-특정 파일을 찾을 수 없으면, 컴파일러는 _앰비언트 모듈 선언_을 찾습니다.
-이들은 `.d.ts` 파일에 선언되어야 함을 기억하세요.
+- 흔한 실수: `import` 문 대신 `/// <reference ... />` 구문으로 모듈 파일을 참조
+- 이 구별의 이해를 위해서는, 컴파일러가 `import` 경로(`import x from "...";`, `import x = require("...");`의 `...`)로 모듈 타입 정보를 찾는 방식부터 알아야 함
+- 컴파일러는 해당 경로로 `.ts`, `.tsx`, 다음 `.d.ts`를 찾음 → 특정 파일을 못 찾으면 _앰비언트 모듈 선언_을 찾음(이들은 `.d.ts` 파일에 선언되어야 함)
 
 - `myModules.d.ts`
 
@@ -2893,12 +2844,12 @@ ECMAScript 2015부터 모듈은 언어의 기본 부분이며, 모든 호환 엔
   import * as m from "SomeModule";
   ```
 
-여기서 참조 태그를 통해 앰비언트 모듈에 대한 선언을 포함하는 선언 파일을 찾을 수 있습니다.
-이것은 여러 TypeScript 샘플이 사용하는 `node.d.ts` 파일이 소비되는 방식입니다.
+- 참조 태그로 앰비언트 모듈 선언을 담은 선언 파일을 찾을 수 있음
+- 여러 TypeScript 샘플이 쓰는 `node.d.ts` 파일도 이렇게 소비됨
 
 #### 불필요한 네임스페이싱
 
-네임스페이스에서 모듈로 프로그램을 변환하는 경우, 다음과 같은 파일이 되기 쉽습니다:
+- 네임스페이스에서 모듈로 프로그램을 변환할 때 다음과 같은 파일이 되기 쉬움
 
 - `shapes.ts`
 
@@ -2913,8 +2864,7 @@ ECMAScript 2015부터 모듈은 언어의 기본 부분이며, 모든 호환 엔
   }
   ```
 
-여기서 최상위 네임스페이스 `Shapes`는 아무 이유 없이 `Triangle`과 `Square`를 래핑합니다.
-이것은 모듈의 소비자에게 혼란스럽고 성가십니다:
+- 최상위 네임스페이스 `Shapes`가 아무 이유 없이 `Triangle`·`Square`를 래핑 → 모듈 소비자에게 혼란스럽고 성가심
 
 - `shapeConsumer.ts`
 
@@ -2923,13 +2873,10 @@ ECMAScript 2015부터 모듈은 언어의 기본 부분이며, 모든 호환 엔
   let t = new shapes.Shapes.Triangle(); // shapes.Shapes?
   ```
 
-TypeScript에서 모듈의 핵심 기능은 두 개의 다른 모듈이 동일한 스코프에 이름을 기여하지 않는다는 것입니다.
-모듈의 소비자가 어떤 이름을 할당할지 결정하기 때문에, 네임스페이스에 내보낸 심볼을 능동적으로 래핑할 필요가 없습니다.
-
-모듈 내용을 네임스페이스화하면 안 되는 이유를 반복하면, 네임스페이싱의 일반적인 아이디어는 구조의 논리적 그룹화를 제공하고 이름 충돌을 방지하는 것입니다.
-모듈 파일 자체가 이미 논리적 그룹화이고, 최상위 이름은 가져오는 코드에 의해 정의되므로, 내보낸 객체에 대한 추가 모듈 레이어를 사용할 필요가 없습니다.
-
-다음은 수정된 예제입니다:
+- TypeScript 모듈의 핵심 기능: 서로 다른 두 모듈은 같은 스코프에 이름을 기여하지 않음
+  - 모듈 소비자가 어떤 이름을 할당할지 결정하므로 네임스페이스로 내보낸 심볼을 능동적으로 래핑할 필요 없음
+- 모듈 내용을 네임스페이스화하지 말아야 하는 이유 요약: 네임스페이싱의 목적은 논리적 그룹화와 이름 충돌 방지인데, 모듈 파일 자체가 이미 논리적 그룹화이고 최상위 이름은 가져오는 코드가 정의하므로 추가 모듈 레이어가 불필요
+- 수정된 예제
 
 - `shapes.ts`
 
@@ -2951,6 +2898,6 @@ TypeScript에서 모듈의 핵심 기능은 두 개의 다른 모듈이 동일�
 
 #### 모듈의 트레이드오프
 
-JS 파일과 모듈 사이에 일대일 대응이 있는 것처럼, TypeScript는 모듈 소스 파일과 방출된 JS 파일 사이에 일대일 대응이 있습니다.
-이것의 한 가지 효과는 대상으로 하는 모듈 시스템에 따라 여러 모듈 소스 파일을 연결할 수 없다는 것입니다.
-예를 들어, `commonjs`나 `umd`를 대상으로 할 때 [`outFile`](/tsconfig#outFile) 옵션을 사용할 수 없지만, TypeScript 1.8 이상에서는 `amd`나 `system`을 대상으로 할 때 [`outFile`을 사용할 수 있습니다](./release-notes/typescript-1-8.html#concatenate-amd-and-system-modules-with---outfile).
+- JS 파일과 모듈 사이에 일대일 대응이 있듯, TypeScript는 모듈 소스 파일과 방출된 JS 파일 사이에 일대일 대응이 있음
+- 이 때문에 대상 모듈 시스템에 따라 여러 모듈 소스 파일을 연결할 수 없는 경우가 생김
+  - 예: `commonjs`·`umd` 대상 시 [`outFile`](/tsconfig#outFile) 옵션 사용 불가. 단 TypeScript 1.8 이상에서 `amd`·`system` 대상이면 [`outFile` 사용 가능](./release-notes/typescript-1-8.html#concatenate-amd-and-system-modules-with---outfile)

@@ -19,7 +19,7 @@
 
 ## Collector란?
 
-**OpenTelemetry Collector**는 텔레메트리 데이터를 **수신·가공·전송**하는 벤더 중립적 에이전트/프록시입니다.
+OpenTelemetry Collector는 텔레메트리 데이터를 수신·가공·전송하는 벤더 중립적 에이전트/프록시.
 
 특징:
 - Go로 작성된 단일 바이너리 (`otelcol`)
@@ -27,7 +27,7 @@
 - 모든 시그널(Trace/Metric/Log/Profile) 처리 가능
 - 다양한 포맷 입출력 지원 (OTLP, Jaeger, Zipkin, Prometheus, Fluentd, ...)
 
-별도 프로세스로 동작하며, 보통 사이드카·DaemonSet·중앙 게이트웨이 형태로 배포됩니다.
+별도 프로세스로 동작 → 보통 사이드카·DaemonSet·중앙 게이트웨이 형태로 배포됨.
 
 ---
 
@@ -40,7 +40,7 @@ SDK가 직접 백엔드로 OTLP를 보내면:
 - 백엔드 인증 정보가 모든 앱에 분산
 - 배압·재시도 로직이 SDK에 의존
 
-Collector를 거치면 앱은 **localhost로만 보내고**, Collector가 백엔드 라우팅을 담당.
+Collector를 거치면 앱은 localhost로만 전송 → Collector가 백엔드 라우팅 담당.
 
 ### 2. 데이터 가공
 
@@ -58,17 +58,17 @@ Collector를 거치면 앱은 **localhost로만 보내고**, Collector가 백엔
 
 ### 4. 배압·버퍼링·재시도
 
-네트워크 장애 시 SDK는 보통 작은 버퍼만 가짐. Collector는 큰 큐와 디스크 백업을 제공해 데이터 손실을 줄임.
+네트워크 장애 시 SDK는 보통 작은 버퍼만 가짐 → Collector는 큰 큐와 디스크 백업을 제공해 데이터 손실을 줄임.
 
 ### 5. Multi-backend 라우팅
 
-같은 데이터를 두 백엔드로 동시에 보내거나 (예: 자체 호스팅 + SaaS), 시그널별로 다른 백엔드로 분기.
+같은 데이터를 두 백엔드로 동시 전송(예: 자체 호스팅 + SaaS) 또는 시그널별로 다른 백엔드로 분기 가능.
 
 ---
 
 ## 아키텍처
 
-Collector는 **컴포넌트 기반** 구조입니다. 데이터는 다음 순서로 처리됩니다:
+Collector는 컴포넌트 기반 구조. 데이터는 다음 순서로 처리됨:
 
 ```
 ┌─────────────┐    ┌──────────────┐    ┌─────────────┐
@@ -77,23 +77,23 @@ Collector는 **컴포넌트 기반** 구조입니다. 데이터는 다음 순서
    (입력 끝단)         (가공)             (출력 끝단)
 ```
 
-각 컴포넌트는 **시그널 타입을 명시**:
+각 컴포넌트는 시그널 타입을 명시:
 - `traces` 만 처리하는 컴포넌트
 - `metrics` 만 처리하는 컴포넌트
 - 모든 시그널을 처리하는 컴포넌트
 
-이 컴포넌트들을 묶어 **Pipeline**을 구성합니다 (시그널별로 별도 파이프라인).
+이 컴포넌트들을 묶어 Pipeline 구성 (시그널별로 별도 파이프라인).
 
 ### 추가 컴포넌트
 
-- **Extension** — 파이프라인 외부에서 동작하는 부가 기능 (헬스체크, pprof, zPages, OAuth)
-- **Connector** — 한 파이프라인의 출력을 다른 파이프라인의 입력으로 (예: Span을 Metric으로 변환)
+- Extension: 파이프라인 외부에서 동작하는 부가 기능 (헬스체크, pprof, zPages, OAuth)
+- Connector: 한 파이프라인의 출력을 다른 파이프라인의 입력으로 연결 (예: Span을 Metric으로 변환)
 
 ---
 
 ## Receivers
 
-데이터를 받아들이는 입구입니다. 대표적인 것들:
+데이터를 받아들이는 입구. 대표적인 것들:
 
 ### otlp
 
@@ -190,11 +190,11 @@ receivers:
 
 ## Processors
 
-데이터를 변형·필터링·샘플링하는 단계. 순서가 중요합니다.
+데이터를 변형·필터링·샘플링하는 단계. 순서 중요.
 
 ### batch
 
-**거의 모든 파이프라인의 필수 processor**. 데이터를 묶어 export 효율을 높임.
+거의 모든 파이프라인의 필수 processor. 데이터를 묶어 export 효율을 높임.
 
 ```yaml
 processors:
@@ -206,7 +206,7 @@ processors:
 
 ### memory_limiter
 
-메모리 사용량을 모니터링하고 임계치 초과 시 receive를 거부 (배압).
+메모리 사용량을 모니터링하고 임계치 초과 시 receive 거부 (배압).
 
 ```yaml
 processors:
@@ -216,7 +216,7 @@ processors:
     spike_limit_mib: 128
 ```
 
-**모든 파이프라인의 첫 processor로 권장**.
+모든 파이프라인의 첫 processor로 권장.
 
 ### resource
 
@@ -319,7 +319,7 @@ OTTL은 SQL/grep 같은 표현식으로 데이터를 가공할 수 있는 mini-l
 
 ## Exporters
 
-데이터를 외부로 내보내는 출구입니다.
+데이터를 외부로 내보내는 출구.
 
 ### otlp / otlphttp
 
@@ -419,7 +419,7 @@ exporters:
 
 ## Connectors
 
-**Connector**는 한 파이프라인의 exporter처럼 동작하면서 동시에 다른 파이프라인의 receiver처럼 동작합니다 → 시그널 변환·라우팅에 활용됩니다.
+Connector는 한 파이프라인의 exporter처럼 동작하면서 동시에 다른 파이프라인의 receiver처럼 동작 → 시그널 변환·라우팅에 활용됨.
 
 ### spanmetrics
 
@@ -436,7 +436,7 @@ connectors:
       - name: http.status_code
 ```
 
-→ Span을 받아 `calls_total`, `duration_milliseconds_bucket` 등의 메트릭을 생성하고 metric 파이프라인으로 전달합니다.
+Span을 받아 `calls_total`, `duration_milliseconds_bucket` 등의 메트릭을 생성 → metric 파이프라인으로 전달.
 
 ### routing
 
@@ -454,13 +454,13 @@ connectors:
 
 ### exceptions
 
-Span의 exception event에서 별도 trace를 만들어내는 등 특수 변환.
+Span의 exception event에서 별도 trace를 만들어내는 등 특수 변환 수행.
 
 ---
 
 ## Pipelines 설정
 
-전체 설정의 핵심은 `service.pipelines` 섹션입니다.
+전체 설정의 핵심은 `service.pipelines` 섹션.
 
 ```yaml
 receivers:
@@ -507,7 +507,7 @@ service:
 
 ### 멀티 파이프라인
 
-같은 시그널에 대해 여러 파이프라인을 정의할 수 있습니다 — 이름 뒤에 `/`로 구분:
+같은 시그널에 대해 여러 파이프라인 정의 가능 → 이름 뒤에 `/`로 구분:
 
 ```yaml
 service:
@@ -524,13 +524,13 @@ service:
 
 ### Processor 순서
 
-파이프라인 내 processor는 **선언 순서대로** 실행됩니다. 권장 순서:
+파이프라인 내 processor는 선언 순서대로 실행됨. 권장 순서:
 
 ```
 memory_limiter → k8sattributes/resource → filter → tail_sampling → batch
 ```
 
-`batch` 는 보통 **마지막**, `memory_limiter` 는 **처음** 에 둡니다.
+`batch` 는 보통 마지막, `memory_limiter` 는 처음에 둠.
 
 ---
 
@@ -538,18 +538,18 @@ memory_limiter → k8sattributes/resource → filter → tail_sampling → batch
 
 ### 1. No Collector
 
-SDK가 직접 백엔드로 OTLP를 보냄.
+SDK가 직접 백엔드로 OTLP 전송.
 
 ```
 [App + SDK] ───OTLP───▶ [Backend]
 ```
 
-장점: 단순, 1홉. 작은 규모/PoC에 적합.
-단점: 가공 불가, 백엔드 변경 시 앱 재배포.
+- 장점: 단순, 1홉. 작은 규모/PoC에 적합
+- 단점: 가공 불가, 백엔드 변경 시 앱 재배포 필요
 
 ### 2. Agent (사이드카 / DaemonSet / 호스트당 1개)
 
-각 노드/Pod에 Collector 인스턴스. 앱은 localhost로 전송.
+각 노드/Pod에 Collector 인스턴스 배치. 앱은 localhost로 전송.
 
 ```
 [App + SDK] ──localhost──▶ [Agent Collector] ──▶ [Backend]
@@ -609,7 +609,7 @@ exporters:
 
 ## 배포판 (Distribution)
 
-Collector는 컴포넌트가 매우 많아 **모든 컴포넌트를 포함하는 단일 빌드는 비대**합니다. 따라서 빌드를 분리합니다.
+Collector는 컴포넌트가 매우 많아 모든 컴포넌트를 포함하는 단일 빌드는 비대해짐 → 따라서 빌드를 분리함.
 
 ### Core Distribution
 
@@ -623,17 +623,17 @@ Collector는 컴포넌트가 매우 많아 **모든 컴포넌트를 포함하는
 - jaeger, zipkin, prometheus 등 호환 컴포넌트
 - k8sattributes, tail_sampling 등 운영 필수 processor
 - 클라우드별 receiver/exporter
-- **운영에서 거의 항상 contrib를 사용**
+- 운영에서 거의 항상 contrib 사용
 
 ### Custom Distribution (`ocb`)
 
-OpenTelemetry Collector Builder(`ocb`)로 필요한 컴포넌트만 선택해 자체 바이너리를 생성합니다. 보안·성능을 위해 큰 조직을 중심으로 직접 빌드하는 추세입니다.
+OpenTelemetry Collector Builder(`ocb`)로 필요한 컴포넌트만 선택해 자체 바이너리 생성. 보안·성능을 위해 큰 조직을 중심으로 직접 빌드하는 추세.
 
 ### 벤더 배포판
 
-- **Grafana Alloy** — Grafana 스택용 OTel Collector 배포판 (구 `grafana-agent` flow mode를 OTel 기반으로 통합)
-- **AWS Distro for OpenTelemetry (ADOT)** — AWS 통합 컴포넌트 추가
-- **Elastic Distro**, **Datadog Distribution** 등
+- Grafana Alloy: Grafana 스택용 OTel Collector 배포판 (구 `grafana-agent` flow mode를 OTel 기반으로 통합)
+- AWS Distro for OpenTelemetry (ADOT): AWS 통합 컴포넌트 추가
+- Elastic Distro, Datadog Distribution 등
 
 ---
 

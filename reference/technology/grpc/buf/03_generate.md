@@ -18,7 +18,7 @@
 
 ## 1. buf generate 개요
 
-`buf generate`는 `buf.gen.yaml`에 정의된 플러그인을 실행해 코드 스텁(stub)을 생성합니다. 입력은 기본적으로 현재 디렉터리이며, `buf.gen.yaml`의 `inputs` 또는 명령행 인자로 지정할 수 있습니다.
+`buf generate`는 `buf.gen.yaml`에 정의된 플러그인을 실행해 코드 스텁(stub)을 생성함. 입력은 기본적으로 현재 디렉터리 → `buf.gen.yaml`의 `inputs` 또는 명령행 인자로 지정 가능.
 
 ```bash
 buf generate                       # buf.gen.yaml + 현재 디렉터리(또는 inputs)
@@ -31,58 +31,52 @@ buf generate buf.build/acme/weather  # BSR 모듈을 입력으로
 
 ## 2. buf.gen.yaml v2 전체 필드
 
-| 필드 | 필수 | 설명 |
-|------|------|------|
-| `version` | 필수 | `v2` |
-| `plugins` | 필수 | 코드 생성기 목록 |
-| `managed` | 선택 | managed mode 설정(아래 5절) |
-| `inputs` | 선택 | 코드 생성 입력 소스 목록 |
-| `clean` | 선택 | `true`면 생성 전에 `out`에 지정된 디렉터리·zip·jar 파일을 삭제 |
+- `version`: 필수, `v2`
+- `plugins`: 필수, 코드 생성기 목록
+- `managed`: 선택, managed mode 설정(아래 5절)
+- `inputs`: 선택, 코드 생성 입력 소스 목록
+- `clean`: 선택, `true`면 생성 전에 `out`에 지정된 디렉터리·zip·jar 파일을 삭제
 
 ---
 
 ## 3. 플러그인 설정 (local / remote / protoc_builtin)
 
-각 `plugins` 항목은 플러그인 타입 한 가지를 지정합니다.
+각 `plugins` 항목은 플러그인 타입 한 가지를 지정함.
 
 ### 플러그인 타입(택1)
 
-- **`remote`**: BSR 원격 플러그인. 형식 `buf.build/<owner>/<name>:<version>`. 로컬에 플러그인 바이너리 설치 불필요.
-- **`local`**: 로컬 플러그인 바이너리. 바이너리 이름(`$PATH` 탐색), 상대/절대 경로, 또는 `[바이너리, 인자...]` 배열.
-- **`protoc_builtin`**: protoc 내장 생성기(cpp, csharp, java, python, ruby 등). `protoc_path`로 protoc 경로 지정 필요.
+- `remote`: BSR 원격 플러그인. 형식 `buf.build/<owner>/<name>:<version>` → 로컬에 플러그인 바이너리 설치 불필요
+- `local`: 로컬 플러그인 바이너리. 바이너리 이름(`$PATH` 탐색), 상대/절대 경로, 또는 `[바이너리, 인자...]` 배열
+- `protoc_builtin`: protoc 내장 생성기(cpp, csharp, java, python, ruby 등) → `protoc_path`로 protoc 경로 지정 필요
 
 ### 공통 키
 
-| 키 | 설명 |
-|----|------|
-| `out` | (필수) 생성 파일 출력 디렉터리 |
-| `opt` | 플러그인 옵션(문자열 또는 목록). 예: `paths=source_relative` |
-| `strategy` | `directory`(기본, 디렉터리별 병렬) 또는 `all`(전체 한 번에) |
-| `include_imports` | import도 함께 생성(WKT 제외) |
-| `include_wkt` | Well-Known Types도 생성(`include_imports` 필요) |
-| `types` / `exclude_types` | 생성할/제외할 타입을 fully-qualified 이름으로 제한 |
+- `out`: 필수, 생성 파일 출력 디렉터리
+- `opt`: 플러그인 옵션(문자열 또는 목록). 예: `paths=source_relative`
+- `strategy`: `directory`(기본, 디렉터리별 병렬) 또는 `all`(전체 한 번에)
+- `include_imports`: import도 함께 생성(WKT 제외)
+- `include_wkt`: Well-Known Types도 생성(`include_imports` 필요)
+- `types` / `exclude_types`: 생성할/제외할 타입을 fully-qualified 이름으로 제한
 
 ---
 
 ## 4. inputs 설정
 
-`inputs` 배열은 다양한 소스 타입을 지원합니다.
+`inputs` 배열은 다양한 소스 타입을 지원함.
 
-| 타입 | 설명 / 주요 하위 키 |
-|------|---------------------|
-| `directory` | 로컬 디렉터리 경로 |
-| `module` | BSR 모듈 `buf.build/owner/name[:label]`. `types`/`paths`/`exclude_*` |
-| `git_repo` | Git 저장소. `branch`/`tag`/`ref`/`subdir`/`depth`/`recurse_submodules` |
-| `tarball` | tarball(로컬/http/https/ssh). `compression`/`strip_components`/`subdir` |
-| `zip_archive` | zip 아카이브. `strip_components`/`subdir` |
-| `proto_file` | 단일 `.proto` 파일. `include_package_files` |
-| `binary_image` / `json_image` / `txt_image` / `yaml_image` | buf 이미지 형식 |
+- `directory`: 로컬 디렉터리 경로
+- `module`: BSR 모듈 `buf.build/owner/name[:label]`. 하위 키로 `types`/`paths`/`exclude_*`
+- `git_repo`: Git 저장소. 하위 키로 `branch`/`tag`/`ref`/`subdir`/`depth`/`recurse_submodules`
+- `tarball`: tarball(로컬/http/https/ssh). 하위 키로 `compression`/`strip_components`/`subdir`
+- `zip_archive`: zip 아카이브. 하위 키로 `strip_components`/`subdir`
+- `proto_file`: 단일 `.proto` 파일. 하위 키로 `include_package_files`
+- `binary_image` / `json_image` / `txt_image` / `yaml_image`: buf 이미지 형식
 
 ---
 
 ## 5. managed mode
 
-managed mode는 `go_package`, `java_package` 같은 언어별 파일 옵션을 `.proto`에 직접 작성하지 않고, `buf.gen.yaml`에서 생성 시점에 적용하는 기능입니다. `.proto`를 언어 중립적으로 유지하면서 소비자마다 다른 네임스페이스로 코드를 생성할 수 있습니다.
+managed mode는 `go_package`, `java_package` 같은 언어별 파일 옵션을 `.proto`에 직접 작성하지 않고, `buf.gen.yaml`에서 생성 시점에 적용하는 기능. `.proto`를 언어 중립적으로 유지하면서 소비자마다 다른 네임스페이스로 코드 생성 가능.
 
 ### 활성화
 
@@ -104,7 +98,7 @@ plugins:
 
 ### override / disable
 
-`override`는 특정 module/path/file/field에 대해 값을 덮어씁니다. 규칙은 순서대로 평가되며 **나중에 매칭된 규칙이 우선**합니다. `disable`은 managed mode 적용 자체를 막으며, 외부 의존성에 주로 사용합니다. 같은 옵션에 둘 다 매칭되면 `disable`이 우선합니다.
+`override`는 특정 module/path/file/field에 대해 값을 덮어씀. 규칙은 순서대로 평가되며 나중에 매칭된 규칙이 우선함. `disable`은 managed mode 적용 자체를 막음 → 외부 의존성에 주로 사용. 같은 옵션에 둘 다 매칭되면 `disable`이 우선함.
 
 ```yaml
 managed:
@@ -127,7 +121,7 @@ managed:
 
 ## 6. 실전 예제
 
-원격 플러그인과 managed mode를 함께 사용하는 `buf.gen.yaml` 예제입니다.
+원격 플러그인과 managed mode를 함께 사용하는 `buf.gen.yaml` 예제.
 
 ```yaml
 version: v2
@@ -157,13 +151,13 @@ inputs:
   - module: buf.build/googleapis/googleapis
 ```
 
-위 설정으로 `buf generate`를 실행하면 `gen/go/`에 메시지와 gRPC 스텁이 생성됩니다.
+위 설정으로 `buf generate`를 실행하면 `gen/go/`에 메시지와 gRPC 스텁이 생성됨.
 
 ---
 
 ## 7. 기본 워크플로
 
-공식 튜토리얼 기준의 전형적인 작업 흐름입니다.
+공식 튜토리얼 기준의 전형적인 작업 흐름.
 
 ```bash
 # 1) 프로젝트 초기화
@@ -181,7 +175,7 @@ buf config init   # buf.yaml 생성
 buf generate
 ```
 
-로컬 플러그인에서 원격 플러그인으로 전환하려면 `local: protoc-gen-go`를 `remote: buf.build/protocolbuffers/go:v1.34.2`로 교체하면 됩니다. 로컬 플러그인을 사용하는 경우에는 해당 바이너리를 미리 설치해야 합니다.
+로컬 플러그인에서 원격 플러그인으로 전환하려면 `local: protoc-gen-go`를 `remote: buf.build/protocolbuffers/go:v1.34.2`로 교체함. 로컬 플러그인을 사용하는 경우에는 해당 바이너리를 미리 설치 필요.
 
 ```bash
 go install google.golang.org/protobuf/cmd/protoc-gen-go@latest

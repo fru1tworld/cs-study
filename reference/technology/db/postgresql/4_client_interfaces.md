@@ -4,13 +4,13 @@
 
 ### 개요
 
-libpq 는 PostgreSQL의 C 애플리케이션 프로그래머 인터페이스(API)입니다. libpq는 클라이언트 프로그램이 PostgreSQL 백엔드 서버로 쿼리를 전달하고, 쿼리 결과를 수신하여 처리할 수 있게 해주는 라이브러리 함수들의 집합을 제공합니다.
-
-libpq는 C++, Perl, Python, Tcl, ECPG 등 여러 다른 PostgreSQL 애플리케이션 인터페이스의 기반 엔진으로도 사용됩니다.
+- libpq는 PostgreSQL의 C 애플리케이션 프로그래머 인터페이스(API)
+- 클라이언트 프로그램이 PostgreSQL 백엔드 서버로 쿼리를 전달하고, 쿼리 결과를 수신·처리할 수 있게 해주는 라이브러리 함수들의 집합을 제공
+- C++, Perl, Python, Tcl, ECPG 등 여러 다른 PostgreSQL 애플리케이션 인터페이스의 기반 엔진으로도 사용됨
 
 #### 헤더 파일 포함
 
-libpq를 사용하는 클라이언트 프로그램은 헤더 파일 `libpq-fe.h`를 포함해야 하며, libpq 라이브러리와 링크해야 합니다.
+- libpq를 사용하는 클라이언트 프로그램은 헤더 파일 `libpq-fe.h`를 포함해야 하며, libpq 라이브러리와 링크 필요
 
 ```c
 #include <libpq-fe.h>
@@ -20,13 +20,15 @@ libpq를 사용하는 클라이언트 프로그램은 헤더 파일 `libpq-fe.h`
 
 ### 32.1 데이터베이스 연결 제어 함수 (Database Connection Control Functions)
 
-데이터베이스 연결 제어 함수는 애플리케이션이 PostgreSQL 서버와의 연결을 설정하고 관리할 수 있게 해줍니다. 각 연결은 `PGconn` 객체로 표현됩니다.
+- 데이터베이스 연결 제어 함수는 애플리케이션이 PostgreSQL 서버와의 연결을 설정·관리할 수 있게 해줌
+- 각 연결은 `PGconn` 객체로 표현됨
 
 #### 32.1.1 주요 연결 함수
 
 ##### PQconnectdbParams
 
-파라미터 배열을 사용하여 새 데이터베이스 연결을 엽니다. 새 애플리케이션에 권장하는 방법입니다.
+- 파라미터 배열을 사용하여 새 데이터베이스 연결을 염
+- 새 애플리케이션에 권장하는 방법
 
 ```c
 PGconn *PQconnectdbParams(const char * const *keywords,
@@ -55,7 +57,7 @@ if (PQstatus(conn) != CONNECTION_OK) {
 
 ##### PQconnectdb
 
-연결 문자열(connection string)을 사용하여 새 데이터베이스 연결을 엽니다.
+연결 문자열(connection string)을 사용하여 새 데이터베이스 연결을 염.
 
 ```c
 PGconn *PQconnectdb(const char *conninfo);
@@ -74,7 +76,7 @@ if (PQstatus(conn) != CONNECTION_OK) {
 
 ##### PQsetdbLogin (권장하지 않음)
 
-`PQconnectdb`의 구버전으로, 고정된 파라미터를 사용합니다.
+`PQconnectdb`의 구버전으로, 고정된 파라미터를 사용함.
 
 ```c
 PGconn *PQsetdbLogin(const char *pghost,
@@ -86,7 +88,7 @@ PGconn *PQsetdbLogin(const char *pghost,
                      const char *pwd);
 ```
 
-참고: `pgtty`는 더 이상 사용되지 않으며 무시됩니다.
+참고: `pgtty`는 더 이상 사용되지 않으며 무시됨.
 
 #### 32.1.2 연결 문자열 형식
 
@@ -107,23 +109,36 @@ postgresql://host1:5432,host2:5432/dbname
 
 #### 32.1.3 주요 연결 파라미터
 
-| 파라미터 | 설명 | 기본값 |
-|---------|------|-------|
-| `host` | 호스트명 또는 Unix 소켓 경로 | `/tmp` (Unix), `localhost` (Windows) |
-| `port` | 포트 번호 | 5432 |
-| `dbname` | 데이터베이스 이름 | 사용자 이름과 동일 |
-| `user` | PostgreSQL 사용자명 | OS 사용자명 |
-| `password` | 인증 비밀번호 | - |
-| `connect_timeout` | 연결 타임아웃(초) | 무한 |
-| `sslmode` | SSL 연결 모드 | `prefer` |
-| `application_name` | 애플리케이션 식별자 | - |
-| `options` | 서버 옵션 | - |
+- `host`
+  - 설명: 호스트명 또는 Unix 소켓 경로
+  - 기본값: `/tmp` (Unix), `localhost` (Windows)
+- `port`
+  - 설명: 포트 번호
+  - 기본값: 5432
+- `dbname`
+  - 설명: 데이터베이스 이름
+  - 기본값: 사용자 이름과 동일
+- `user`
+  - 설명: PostgreSQL 사용자명
+  - 기본값: OS 사용자명
+- `password`
+  - 설명: 인증 비밀번호
+- `connect_timeout`
+  - 설명: 연결 타임아웃(초)
+  - 기본값: 무한
+- `sslmode`
+  - 설명: SSL 연결 모드
+  - 기본값: `prefer`
+- `application_name`
+  - 설명: 애플리케이션 식별자
+- `options`
+  - 설명: 서버 옵션
 
 #### 32.1.4 비차단(Non-blocking) 연결 함수
 
 ##### PQconnectStartParams / PQconnectStart
 
-I/O를 차단하지 않고 비동기적으로 연결을 시작합니다.
+I/O를 차단하지 않고 비동기적으로 연결을 시작함.
 
 ```c
 PGconn *PQconnectStartParams(const char * const *keywords,
@@ -165,17 +180,17 @@ while ((pollStatus = PQconnectPoll(conn)) != PGRES_POLLING_OK) {
 
 ##### PQfinish
 
-연결을 닫고 메모리를 해제합니다.
+연결을 닫고 메모리를 해제함.
 
 ```c
 void PQfinish(PGconn *conn);
 ```
 
-중요: 연결에 실패한 경우에도 반드시 이 함수를 호출해야 합니다.
+중요: 연결에 실패한 경우에도 반드시 이 함수를 호출 필요.
 
 ##### PQreset
 
-서버와의 통신 채널을 재설정합니다.
+서버와의 통신 채널을 재설정함.
 
 ```c
 void PQreset(PGconn *conn);
@@ -183,7 +198,7 @@ void PQreset(PGconn *conn);
 
 ##### PQresetStart / PQresetPoll
 
-비차단 방식으로 연결을 재설정합니다.
+비차단 방식으로 연결을 재설정함.
 
 ```c
 int PQresetStart(PGconn *conn);
@@ -194,7 +209,7 @@ PostgresPollingStatusType PQresetPoll(PGconn *conn);
 
 ##### PQping / PQpingParams
 
-전체 연결 없이 서버 상태를 확인합니다.
+전체 연결 없이 서버 상태를 확인함.
 
 ```c
 PGPing PQping(const char *conninfo);
@@ -213,48 +228,48 @@ PGPing PQpingParams(const char * const *keywords,
 
 ### 32.2 연결 상태 함수 (Connection Status Functions)
 
-연결 상태 함수는 기존 데이터베이스 연결 객체의 상태를 조회하는 함수들입니다.
+연결 상태 함수는 기존 데이터베이스 연결 객체의 상태를 조회하는 함수들임.
 
 #### 32.2.1 연결 파라미터 함수
 
 ##### PQdb
-연결의 데이터베이스 이름을 반환합니다.
+연결의 데이터베이스 이름을 반환함.
 ```c
 char *PQdb(const PGconn *conn);
 ```
 
 ##### PQuser
-연결의 사용자 이름을 반환합니다.
+연결의 사용자 이름을 반환함.
 ```c
 char *PQuser(const PGconn *conn);
 ```
 
 ##### PQpass
-연결의 비밀번호를 반환합니다.
+연결의 비밀번호를 반환함.
 ```c
 char *PQpass(const PGconn *conn);
 ```
 
 ##### PQhost
-활성 연결의 서버 호스트명을 반환합니다.
+활성 연결의 서버 호스트명을 반환함.
 ```c
 char *PQhost(const PGconn *conn);
 ```
 
 ##### PQhostaddr
-활성 연결의 서버 IP 주소를 반환합니다.
+활성 연결의 서버 IP 주소를 반환함.
 ```c
 char *PQhostaddr(const PGconn *conn);
 ```
 
 ##### PQport
-활성 연결의 포트를 반환합니다.
+활성 연결의 포트를 반환함.
 ```c
 char *PQport(const PGconn *conn);
 ```
 
 ##### PQoptions
-연결 요청에서 전달된 명령줄 옵션을 반환합니다.
+연결 요청에서 전달된 명령줄 옵션을 반환함.
 ```c
 char *PQoptions(const PGconn *conn);
 ```
@@ -262,7 +277,7 @@ char *PQoptions(const PGconn *conn);
 #### 32.2.2 연결 상태 조회
 
 ##### PQstatus
-연결의 상태를 반환합니다.
+연결의 상태를 반환함.
 ```c
 ConnStatusType PQstatus(const PGconn *conn);
 ```
@@ -273,7 +288,7 @@ ConnStatusType PQstatus(const PGconn *conn);
 - 비동기 연결 절차를 위한 기타 값들
 
 ##### PQtransactionStatus
-서버의 현재 트랜잭션 상태를 반환합니다.
+서버의 현재 트랜잭션 상태를 반환함.
 ```c
 PGTransactionStatusType PQtransactionStatus(const PGconn *conn);
 ```
@@ -286,7 +301,7 @@ PGTransactionStatusType PQtransactionStatus(const PGconn *conn);
 - `PQTRANS_UNKNOWN`: 연결이 잘못됨
 
 ##### PQparameterStatus
-서버의 현재 파라미터 설정을 조회합니다.
+서버의 현재 파라미터 설정을 조회함.
 ```c
 const char *PQparameterStatus(const PGconn *conn, const char *paramName);
 ```
@@ -294,13 +309,13 @@ const char *PQparameterStatus(const PGconn *conn, const char *paramName);
 조회 가능한 파라미터: `application_name`, `client_encoding`, `DateStyle`, `server_encoding`, `server_version`, `TimeZone`, `is_superuser` 등
 
 ##### PQprotocolVersion
-프론트엔드/백엔드 프로토콜 메이저 버전을 반환합니다.
+프론트엔드/백엔드 프로토콜 메이저 버전을 반환함.
 ```c
 int PQprotocolVersion(const PGconn *conn);
 ```
 
 ##### PQserverVersion
-서버 버전을 나타내는 정수를 반환합니다.
+서버 버전을 나타내는 정수를 반환함.
 ```c
 int PQserverVersion(const PGconn *conn);
 ```
@@ -309,7 +324,7 @@ int PQserverVersion(const PGconn *conn);
 - 예: 버전 10.1 → `100001`, 버전 11.0 → `110000`
 
 ##### PQerrorMessage
-가장 최근에 생성된 오류 메시지를 반환합니다.
+가장 최근에 생성된 오류 메시지를 반환함.
 ```c
 char *PQerrorMessage(const PGconn *conn);
 ```
@@ -317,26 +332,26 @@ char *PQerrorMessage(const PGconn *conn);
 #### 32.2.3 연결 상태 함수
 
 ##### PQsocket
-연결 소켓의 파일 디스크립터 번호를 반환합니다.
+연결 소켓의 파일 디스크립터 번호를 반환함.
 ```c
 int PQsocket(const PGconn *conn);
 ```
 - 유효한 디스크립터는 0 이상, 열린 연결이 없으면 -1 반환
 
 ##### PQbackendPID
-연결을 처리하는 백엔드의 프로세스 ID를 반환합니다.
+연결을 처리하는 백엔드의 프로세스 ID를 반환함.
 ```c
 int PQbackendPID(const PGconn *conn);
 ```
 
 ##### PQconnectionNeedsPassword
-인증에 비밀번호가 필요했으나 제공되지 않았는지 확인합니다.
+인증에 비밀번호가 필요했으나 제공되지 않았는지 확인함.
 ```c
 int PQconnectionNeedsPassword(const PGconn *conn);
 ```
 
 ##### PQconnectionUsedPassword
-인증에 비밀번호가 사용되었는지 확인합니다.
+인증에 비밀번호가 사용되었는지 확인함.
 ```c
 int PQconnectionUsedPassword(const PGconn *conn);
 ```
@@ -344,14 +359,14 @@ int PQconnectionUsedPassword(const PGconn *conn);
 #### 32.2.4 SSL 관련 함수
 
 ##### PQsslInUse
-연결에 SSL이 사용 중인지 확인합니다.
+연결에 SSL이 사용 중인지 확인함.
 ```c
 int PQsslInUse(const PGconn *conn);
 ```
 - SSL 사용 시 1, 미사용 시 0 반환
 
 ##### PQsslAttribute
-연결의 SSL 관련 정보를 반환합니다.
+연결의 SSL 관련 정보를 반환함.
 ```c
 const char *PQsslAttribute(const PGconn *conn, const char *attribute_name);
 ```
@@ -371,7 +386,7 @@ const char *PQsslAttribute(const PGconn *conn, const char *attribute_name);
 
 ##### PQexec
 
-명령을 서버에 제출하고 결과를 기다립니다.
+명령을 서버에 제출하고 결과를 기다림.
 
 ```c
 PGresult *PQexec(PGconn *conn, const char *command);
@@ -418,7 +433,7 @@ PQclear(res);
 
 ##### PQexecParams
 
-별도로 지정된 파라미터로 명령을 제출하며, 바이너리 결과 형식을 지원합니다.
+별도로 지정된 파라미터로 명령을 제출하며, 바이너리 결과 형식을 지원함.
 
 ```c
 PGresult *PQexecParams(PGconn *conn,
@@ -478,7 +493,7 @@ SELECT * FROM mytable WHERE x = $1::bigint;
 
 ##### PQprepare
 
-반복 실행을 위한 준비된 문장(prepared statement)을 생성합니다.
+반복 실행을 위한 준비된 문장(prepared statement)을 생성함.
 
 ```c
 PGresult *PQprepare(PGconn *conn,
@@ -512,7 +527,7 @@ PQclear(res);
 
 ##### PQexecPrepared
 
-이전에 준비된 문장을 주어진 파라미터로 실행합니다.
+이전에 준비된 문장을 주어진 파라미터로 실행함.
 
 ```c
 PGresult *PQexecPrepared(PGconn *conn,
@@ -550,7 +565,7 @@ PQclear(res);
 
 #### 32.3.2 결과 상태 상수
 
-명령 실행 후 결과 상태를 확인합니다:
+명령 실행 후 결과 상태를 확인함:
 
 ```c
 ExecStatusType PQresultStatus(const PGresult *res);
@@ -568,55 +583,55 @@ ExecStatusType PQresultStatus(const PGresult *res);
 #### 32.3.3 쿼리 결과 정보 조회
 
 ##### PQntuples
-결과의 행(튜플) 수를 반환합니다.
+결과의 행(튜플) 수를 반환함.
 ```c
 int PQntuples(const PGresult *res);
 ```
 
 ##### PQnfields
-결과의 열(필드) 수를 반환합니다.
+결과의 열(필드) 수를 반환함.
 ```c
 int PQnfields(const PGresult *res);
 ```
 
 ##### PQfname
-주어진 열 번호와 연관된 열 이름을 반환합니다.
+주어진 열 번호와 연관된 열 이름을 반환함.
 ```c
 char *PQfname(const PGresult *res, int field_num);
 ```
 
 ##### PQfnumber
-주어진 열 이름과 연관된 열 번호를 반환합니다.
+주어진 열 이름과 연관된 열 번호를 반환함.
 ```c
 int PQfnumber(const PGresult *res, const char *field_name);
 ```
 
 ##### PQftype
-주어진 열 번호와 연관된 데이터 타입을 반환합니다.
+주어진 열 번호와 연관된 데이터 타입을 반환함.
 ```c
 Oid PQftype(const PGresult *res, int field_num);
 ```
 
 ##### PQfsize
-주어진 열 번호와 연관된 열의 내부 저장 크기를 반환합니다.
+주어진 열 번호와 연관된 열의 내부 저장 크기를 반환함.
 ```c
 int PQfsize(const PGresult *res, int field_num);
 ```
 
 ##### PQgetvalue
-단일 필드 값을 반환합니다.
+단일 필드 값을 반환함.
 ```c
 char *PQgetvalue(const PGresult *res, int tup_num, int field_num);
 ```
 
 ##### PQgetisnull
-필드가 NULL 값인지 테스트합니다.
+필드가 NULL 값인지 테스트함.
 ```c
 int PQgetisnull(const PGresult *res, int tup_num, int field_num);
 ```
 
 ##### PQgetlength
-필드 값의 실제 길이를 반환합니다.
+필드 값의 실제 길이를 반환함.
 ```c
 int PQgetlength(const PGresult *res, int tup_num, int field_num);
 ```
@@ -627,11 +642,11 @@ int PQgetlength(const PGresult *res, int tup_num, int field_num);
 void PQclear(PGresult *res);
 ```
 
-중요: 결과는 명시적으로 해제해야 합니다. 새 명령이 실행되거나 연결이 닫혀도 자동으로 해제되지 않습니다.
+중요: 결과는 명시적으로 해제 필요. 새 명령이 실행되거나 연결이 닫혀도 자동으로 해제되지 않음.
 
 #### 32.3.5 보안 모범 사례
 
-SQL 인젝션 공격을 방지하기 위해 항상 `PQexecParams()` 또는 `PQexecPrepared()`를 파라미터화된 쿼리와 함께 사용하세요:
+SQL 인젝션 공격을 방지하기 위해 항상 `PQexecParams()` 또는 `PQexecPrepared()`를 파라미터화된 쿼리와 함께 사용할 것:
 
 ```c
 // 안전하지 않음 - SQL 인젝션에 취약
@@ -647,7 +662,7 @@ PQexecParams(conn, "SELECT * FROM users WHERE name = $1;",
 
 ### 32.4 비동기 명령 처리 (Asynchronous Command Processing)
 
-PostgreSQL libpq의 비동기 명령 처리를 통해 애플리케이션은 결과를 기다리는 동안 차단되지 않고 명령을 제출할 수 있습니다. 이는 다음과 같은 경우에 유용합니다:
+PostgreSQL libpq의 비동기 명령 처리를 통해 애플리케이션은 결과를 기다리는 동안 차단되지 않고 명령을 제출 가능. 이는 다음과 같은 경우에 유용함:
 
 - 데이터베이스 작업이 진행되는 동안 응답성 유지 (예: UI 업데이트)
 - 명령을 더 쉽게 취소
@@ -659,7 +674,7 @@ PostgreSQL libpq의 비동기 명령 처리를 통해 애플리케이션은 결�
 
 ##### PQsendQuery
 
-결과를 기다리지 않고 명령을 서버에 제출합니다.
+결과를 기다리지 않고 명령을 서버에 제출함.
 
 ```c
 int PQsendQuery(PGconn *conn, const char *command);
@@ -672,7 +687,7 @@ int PQsendQuery(PGconn *conn, const char *command);
 
 ##### PQsendQueryParams
 
-결과를 기다리지 않고 별도의 파라미터와 함께 명령을 제출합니다.
+결과를 기다리지 않고 별도의 파라미터와 함께 명령을 제출함.
 
 ```c
 int PQsendQueryParams(PGconn *conn,
@@ -687,7 +702,7 @@ int PQsendQueryParams(PGconn *conn,
 
 ##### PQsendPrepare
 
-비동기적으로 준비된 문장 생성 요청을 보냅니다.
+비동기적으로 준비된 문장 생성 요청을 보냄.
 
 ```c
 int PQsendPrepare(PGconn *conn,
@@ -699,7 +714,7 @@ int PQsendPrepare(PGconn *conn,
 
 ##### PQsendQueryPrepared
 
-비동기적으로 준비된 문장을 실행합니다.
+비동기적으로 준비된 문장을 실행함.
 
 ```c
 int PQsendQueryPrepared(PGconn *conn,
@@ -713,7 +728,7 @@ int PQsendQueryPrepared(PGconn *conn,
 
 ##### PQgetResult
 
-이전 send 명령으로부터 다음 결과를 조회합니다.
+이전 send 명령으로부터 다음 결과를 조회함.
 
 ```c
 PGresult *PQgetResult(PGconn *conn);
@@ -728,7 +743,7 @@ PGresult *PQgetResult(PGconn *conn);
 
 ##### PQconsumeInput
 
-서버에서 사용 가능한 데이터를 읽습니다.
+서버에서 사용 가능한 데이터를 읽음.
 
 ```c
 int PQconsumeInput(PGconn *conn);
@@ -740,7 +755,7 @@ int PQconsumeInput(PGconn *conn);
 
 ##### PQisBusy
 
-명령이 아직 처리 중인지 확인합니다.
+명령이 아직 처리 중인지 확인함.
 
 ```c
 int PQisBusy(PGconn *conn);
@@ -751,7 +766,7 @@ int PQisBusy(PGconn *conn);
 
 ##### PQsetnonblocking
 
-연결을 비차단 모드로 설정합니다.
+연결을 비차단 모드로 설정함.
 
 ```c
 int PQsetnonblocking(PGconn *conn, int arg);
@@ -763,7 +778,7 @@ int PQsetnonblocking(PGconn *conn, int arg);
 
 ##### PQisnonblocking
 
-현재 차단 상태를 반환합니다.
+현재 차단 상태를 반환함.
 
 ```c
 int PQisnonblocking(const PGconn *conn);
@@ -771,7 +786,7 @@ int PQisnonblocking(const PGconn *conn);
 
 ##### PQflush
 
-대기 중인 출력 데이터를 서버로 플러시합니다.
+대기 중인 출력 데이터를 서버로 플러시함.
 
 ```c
 int PQflush(PGconn *conn);
@@ -813,7 +828,7 @@ PQnotifies(conn);
 
 ### 32.5 파이프라인 모드 (Pipeline Mode)
 
-파이프라인 모드를 사용하면 이전 결과를 기다리지 않고 여러 쿼리를 연속으로 전송할 수 있어, 하나의 네트워크 왕복에서 여러 쿼리와 결과를 묶어 처리함으로써 상당한 성능 향상을 얻을 수 있습니다.
+파이프라인 모드를 사용하면 이전 결과를 기다리지 않고 여러 쿼리를 연속으로 전송할 수 있어, 하나의 네트워크 왕복에서 여러 쿼리와 결과를 묶어 처리함으로써 상당한 성능 향상을 얻을 수 있음.
 
 #### 32.5.1 파이프라인 모드가 도움되는 경우
 
@@ -914,13 +929,13 @@ while ((result = PQgetResult(conn)) != NULL) {
 
 ### 32.6 결과를 청크로 조회 (Retrieving Query Results in Chunks)
 
-대용량 결과 집합의 경우 `PQsetSingleRowMode`를 사용하면 결과를 한 번에 한 행씩 조회할 수 있습니다.
+대용량 결과 집합의 경우 `PQsetSingleRowMode`를 사용하면 결과를 한 번에 한 행씩 조회 가능.
 
 ```c
 int PQsetSingleRowMode(PGconn *conn);
 ```
 
-이 함수는 `PQsendQuery` 또는 유사한 함수를 호출한 직후, `PQgetResult` 호출 전에 사용해야 합니다.
+이 함수는 `PQsendQuery` 또는 유사한 함수를 호출한 직후, `PQgetResult` 호출 전에 사용 필요.
 
 ---
 
@@ -930,7 +945,7 @@ int PQsetSingleRowMode(PGconn *conn);
 
 ##### PQcancelCreate
 
-취소 요청 전송을 위한 연결을 준비합니다.
+취소 요청 전송을 위한 연결을 준비함.
 
 ```c
 PGcancelConn *PQcancelCreate(PGconn *conn);
@@ -943,7 +958,7 @@ PGcancelConn *PQcancelCreate(PGconn *conn);
 
 ##### PQcancelBlocking
 
-동기적으로(차단) 취소 요청을 보냅니다.
+동기적으로(차단) 취소 요청을 보냄.
 
 ```c
 int PQcancelBlocking(PGcancelConn *cancelConn);
@@ -957,7 +972,7 @@ int PQcancelBlocking(PGcancelConn *cancelConn);
 
 ##### PQcancelStart / PQcancelPoll
 
-비동기적으로(비차단) 취소 요청을 보냅니다.
+비동기적으로(비차단) 취소 요청을 보냄.
 
 ```c
 int PQcancelStart(PGcancelConn *cancelConn);
@@ -966,13 +981,13 @@ PostgresPollingStatusType PQcancelPoll(PGcancelConn *cancelConn);
 
 ##### PQcancelFinish
 
-취소 연결을 닫고 메모리를 해제합니다.
+취소 연결을 닫고 메모리를 해제함.
 
 ```c
 void PQcancelFinish(PGcancelConn *cancelConn);
 ```
 
-취소 시도가 실패하거나 중단된 경우에도 반드시 호출해야 메모리 누수를 방지할 수 있습니다.
+취소 시도가 실패하거나 중단된 경우에도 반드시 호출해야 메모리 누수를 방지 가능.
 
 #### 32.7.2 권장하지 않는 함수 (Obsolete Functions)
 
@@ -980,7 +995,7 @@ void PQcancelFinish(PGcancelConn *cancelConn);
 ```c
 PGcancel *PQgetCancel(PGconn *conn);
 ```
-취소 객체를 생성합니다. 권장하지 않음. 대신 `PQcancelCreate()` 사용.
+취소 객체를 생성함. 권장하지 않음. 대신 `PQcancelCreate()` 사용.
 
 ##### PQcancel (권장하지 않음)
 ```c
@@ -1005,7 +1020,7 @@ int PQcancel(PGcancel *cancel, char *errbuf, int errbufsize);
 
 ### 32.8 Fast-Path 인터페이스
 
-Fast-Path 인터페이스는 서버로 간단한 함수 호출을 보내는 오래된 메커니즘입니다. 현재는 대부분의 목적에 준비된 문장이 선호됩니다.
+Fast-Path 인터페이스는 서버로 간단한 함수 호출을 보내는 오래된 메커니즘임. 현재는 대부분의 목적에 준비된 문장이 선호됨.
 
 ```c
 PGresult *PQfn(PGconn *conn,
@@ -1021,7 +1036,7 @@ PGresult *PQfn(PGconn *conn,
 
 ### 32.9 비동기 알림 (Asynchronous Notification)
 
-PostgreSQL은 `LISTEN` 및 `NOTIFY` 명령을 통해 비동기 알림을 제공하여, 클라이언트가 폴링 없이 알림 채널을 구독하고 메시지를 수신할 수 있게 합니다.
+PostgreSQL은 `LISTEN` 및 `NOTIFY` 명령을 통해 비동기 알림을 제공하여, 클라이언트가 폴링 없이 알림 채널을 구독하고 메시지를 수신할 수 있게 함.
 
 #### 32.9.1 작동 방식
 
@@ -1061,7 +1076,7 @@ if (notify) {
 }
 ```
 
-항상 다음 호출 후 알림을 확인하세요:
+항상 다음 호출 후 알림을 확인할 것:
 - `PQgetResult()` 호출
 - `PQexec()` 호출
 - `PQconsumeInput()` 호출
@@ -1070,13 +1085,13 @@ if (notify) {
 
 ### 32.10 COPY 명령 관련 함수
 
-`COPY` 명령을 사용하면 libpq를 통해 네트워크 연결에서 읽거나 쓸 수 있습니다.
+`COPY` 명령을 사용하면 libpq를 통해 네트워크 연결에서 읽거나 쓸 수 있음.
 
 #### 32.10.1 COPY 데이터 전송 함수
 
 ##### PQputCopyData
 
-`COPY_IN` 상태에서 서버로 데이터를 전송합니다.
+`COPY_IN` 상태에서 서버로 데이터를 전송함.
 
 ```c
 int PQputCopyData(PGconn *conn,
@@ -1091,7 +1106,7 @@ int PQputCopyData(PGconn *conn,
 
 ##### PQputCopyEnd
 
-`COPY_IN` 작업을 종료합니다.
+`COPY_IN` 작업을 종료함.
 
 ```c
 int PQputCopyEnd(PGconn *conn,
@@ -1105,7 +1120,7 @@ int PQputCopyEnd(PGconn *conn,
 
 ##### PQgetCopyData
 
-`COPY_OUT` 상태에서 서버로부터 데이터를 수신합니다.
+`COPY_OUT` 상태에서 서버로부터 데이터를 수신함.
 
 ```c
 int PQgetCopyData(PGconn *conn,
@@ -1154,18 +1169,18 @@ if (PQresultStatus(res) == PGRES_COPY_OUT) {
 
 ### 32.11 제어 함수 (Control Functions)
 
-제어 함수는 libpq 동작의 다양한 세부 사항을 관리합니다.
+제어 함수는 libpq 동작의 다양한 세부 사항을 관리함.
 
 #### 32.11.1 클라이언트 인코딩 함수
 
 ##### PQclientEncoding
-클라이언트 인코딩 ID를 반환합니다.
+클라이언트 인코딩 ID를 반환함.
 ```c
 int PQclientEncoding(const PGconn *conn);
 ```
 
 ##### PQsetClientEncoding
-연결의 클라이언트 인코딩을 설정합니다.
+연결의 클라이언트 인코딩을 설정함.
 ```c
 int PQsetClientEncoding(PGconn *conn, const char *encoding);
 ```
@@ -1174,7 +1189,7 @@ int PQsetClientEncoding(PGconn *conn, const char *encoding);
 #### 32.11.2 오류 메시지 제어 함수
 
 ##### PQsetErrorVerbosity
-`PQerrorMessage()` 및 `PQresultErrorMessage()`의 오류 메시지 상세도를 결정합니다.
+`PQerrorMessage()` 및 `PQresultErrorMessage()`의 오류 메시지 상세도를 결정함.
 
 ```c
 typedef enum {
@@ -1188,7 +1203,7 @@ PGVerbosity PQsetErrorVerbosity(PGconn *conn, PGVerbosity verbosity);
 ```
 
 ##### PQsetErrorContextVisibility
-`CONTEXT` 필드가 오류 메시지에 나타나는지 제어합니다.
+`CONTEXT` 필드가 오류 메시지에 나타나는지 제어함.
 
 ```c
 typedef enum {
@@ -1204,13 +1219,13 @@ PGContextVisibility PQsetErrorContextVisibility(PGconn *conn,
 #### 32.11.3 추적 함수
 
 ##### PQtrace
-클라이언트/서버 통신 추적을 파일 스트림으로 활성화합니다.
+클라이언트/서버 통신 추적을 파일 스트림으로 활성화함.
 ```c
 void PQtrace(PGconn *conn, FILE *stream);
 ```
 
 ##### PQsetTraceFlags
-추적 동작을 제어합니다. `PQtrace()` 후에 호출해야 합니다.
+추적 동작을 제어함. `PQtrace()` 후에 호출 필요.
 ```c
 void PQsetTraceFlags(PGconn *conn, int flags);
 ```
@@ -1220,7 +1235,7 @@ void PQsetTraceFlags(PGconn *conn, int flags);
 - `PQTRACE_REGRESS_MODE` - 테스트를 위해 객체 OID 등의 필드를 수정
 
 ##### PQuntrace
-추적을 비활성화합니다.
+추적을 비활성화함.
 ```c
 void PQuntrace(PGconn *conn);
 ```
@@ -1230,21 +1245,21 @@ void PQuntrace(PGconn *conn);
 ### 32.12 기타 함수 (Miscellaneous Functions)
 
 #### PQfreemem
-libpq가 할당한 메모리를 해제합니다.
+libpq가 할당한 메모리를 해제함.
 ```c
 void PQfreemem(void *ptr);
 ```
 
-Windows에서 중요: DLL과 애플리케이션 간 메모리 할당 호환성 때문에 `free()` 대신 반드시 이 함수를 사용해야 합니다.
+Windows에서 중요: DLL과 애플리케이션 간 메모리 할당 호환성 때문에 `free()` 대신 반드시 이 함수를 사용 필요.
 
 #### PQconninfoFree
-연결 함수가 할당한 데이터 구조를 해제합니다.
+연결 함수가 할당한 데이터 구조를 해제함.
 ```c
 void PQconninfoFree(PQconninfoOption *connOptions);
 ```
 
 #### PQencryptPasswordConn
-PostgreSQL 비밀번호의 암호화된 형식을 준비합니다.
+PostgreSQL 비밀번호의 암호화된 형식을 준비함.
 ```c
 char *PQencryptPasswordConn(PGconn *conn, const char *passwd,
                             const char *user, const char *algorithm);
@@ -1256,7 +1271,7 @@ char *PQencryptPasswordConn(PGconn *conn, const char *passwd,
 - `algorithm`: 암호화 방법 (`md5`, `scram-sha-256`, `on`, 또는 `off`)
 
 #### PQlibVersion
-libpq 버전 번호를 반환합니다.
+libpq 버전 번호를 반환함.
 ```c
 int PQlibVersion(void);
 ```
@@ -1269,7 +1284,7 @@ int PQlibVersion(void);
 
 ### 32.13 알림 처리 (Notice Processing)
 
-PostgreSQL 서버가 생성한 알림 및 경고 메시지는 쿼리 실패가 아닌 알림 처리 시스템을 통해 전달됩니다.
+PostgreSQL 서버가 생성한 알림 및 경고 메시지는 쿼리 실패가 아닌 알림 처리 시스템을 통해 전달됨.
 
 #### 32.13.1 2계층 아키텍처
 
@@ -1312,7 +1327,7 @@ defaultNoticeProcessor(void *arg, const char *message)
 }
 ```
 
-메시지를 `stderr`에 출력합니다.
+메시지를 `stderr`에 출력함.
 
 ---
 
@@ -1322,37 +1337,31 @@ libpq에서 사용하는 다양한 환경 변수들:
 
 #### 연결 파라미터
 
-| 변수 | 설명 |
-|-----|------|
-| `PGHOST` | 데이터베이스 서버 호스트명 |
-| `PGHOSTADDR` | 데이터베이스 서버 IP 주소 (DNS 조회 회피) |
-| `PGPORT` | 데이터베이스 서버 포트 번호 |
-| `PGDATABASE` | 데이터베이스 이름 |
-| `PGUSER` | 데이터베이스 사용자 이름 |
-| `PGPASSWORD` | 데이터베이스 비밀번호 (보안 위험 - 대신 비밀번호 파일 사용) |
-| `PGPASSFILE` | 비밀번호 파일 경로 |
-| `PGSERVICE` | 연결용 서비스 이름 |
-| `PGOPTIONS` | 서버로 전달할 명령줄 옵션 |
-| `PGAPPNAME` | 연결용 애플리케이션 이름 |
-| `PGCONNECT_TIMEOUT` | 연결 타임아웃(초) |
-| `PGCLIENTENCODING` | 클라이언트 문자 인코딩 |
+- `PGHOST`: 데이터베이스 서버 호스트명
+- `PGHOSTADDR`: 데이터베이스 서버 IP 주소 (DNS 조회 회피)
+- `PGPORT`: 데이터베이스 서버 포트 번호
+- `PGDATABASE`: 데이터베이스 이름
+- `PGUSER`: 데이터베이스 사용자 이름
+- `PGPASSWORD`: 데이터베이스 비밀번호 (보안 위험 - 대신 비밀번호 파일 사용)
+- `PGPASSFILE`: 비밀번호 파일 경로
+- `PGSERVICE`: 연결용 서비스 이름
+- `PGOPTIONS`: 서버로 전달할 명령줄 옵션
+- `PGAPPNAME`: 연결용 애플리케이션 이름
+- `PGCONNECT_TIMEOUT`: 연결 타임아웃(초)
+- `PGCLIENTENCODING`: 클라이언트 문자 인코딩
 
 #### SSL/TLS 파라미터
 
-| 변수 | 설명 |
-|-----|------|
-| `PGSSLMODE` | SSL 연결 모드 |
-| `PGSSLCERT` | 클라이언트 인증서 파일 |
-| `PGSSLKEY` | 클라이언트 키 파일 |
-| `PGSSLROOTCERT` | 루트 인증서 파일 |
-| `PGSSLCRL` | 인증서 폐기 목록 |
+- `PGSSLMODE`: SSL 연결 모드
+- `PGSSLCERT`: 클라이언트 인증서 파일
+- `PGSSLKEY`: 클라이언트 키 파일
+- `PGSSLROOTCERT`: 루트 인증서 파일
+- `PGSSLCRL`: 인증서 폐기 목록
 
 #### GSSAPI 파라미터
 
-| 변수 | 설명 |
-|-----|------|
-| `PGGSSENCMODE` | GSSAPI 암호화 모드 |
-| `PGKRBSRVNAME` | Kerberos 서비스 이름 |
+- `PGGSSENCMODE`: GSSAPI 암호화 모드
+- `PGKRBSRVNAME`: Kerberos 서비스 이름
 
 #### 사용 참고 사항
 
@@ -1364,20 +1373,36 @@ libpq에서 사용하는 다양한 환경 변수들:
 
 ### 32.15 SSL 지원 (SSL Support)
 
-PostgreSQL은 SSL/TLS 암호화 클라이언트-서버 통신을 기본 지원합니다.
+PostgreSQL은 SSL/TLS 암호화 클라이언트-서버 통신을 기본 지원함.
 
 #### 32.15.1 SSL 모드 옵션
 
-`sslmode` 파라미터는 SSL 보호 수준을 제어합니다:
+`sslmode` 파라미터는 SSL 보호 수준을 제어함:
 
-| 모드 | 도청 방지 | MITM 보호 | 사용 사례 |
-|-----|---------|-----------|---------|
-| `disable` | 아니오 | 아니오 | 보안 불필요 |
-| `allow` | 가능 | 아니오 | 서버가 요구하면 선택적 암호화 |
-| `prefer` | 가능 | 아니오 | 암호화 선호하지만 필수 아님 (기본값 - 권장하지 않음) |
-| `require` | 예 | 아니오 | 암호화 필수; 네트워크 라우팅 신뢰 |
-| `verify-ca` | 예 | CA에 따라 다름 | 서버의 CA 인증서 신뢰 |
-| `verify-full` | 예 | 예 | 권장 - 서버 신원 및 호스트명이 인증서와 일치하는지 확인 |
+- `disable`
+  - 도청 방지: 아니오
+  - MITM 보호: 아니오
+  - 사용 사례: 보안 불필요
+- `allow`
+  - 도청 방지: 가능
+  - MITM 보호: 아니오
+  - 사용 사례: 서버가 요구하면 선택적 암호화
+- `prefer`
+  - 도청 방지: 가능
+  - MITM 보호: 아니오
+  - 사용 사례: 암호화 선호하지만 필수 아님 (기본값 - 권장하지 않음)
+- `require`
+  - 도청 방지: 예
+  - MITM 보호: 아니오
+  - 사용 사례: 암호화 필수; 네트워크 라우팅 신뢰
+- `verify-ca`
+  - 도청 방지: 예
+  - MITM 보호: CA에 따라 다름
+  - 사용 사례: 서버의 CA 인증서 신뢰
+- `verify-full`
+  - 도청 방지: 예
+  - MITM 보호: 예
+  - 사용 사례: 권장 - 서버 신원 및 호스트명이 인증서와 일치하는지 확인
 
 #### 32.15.2 서버 인증서 검증
 
@@ -1691,7 +1716,7 @@ gcc $(pkg-config --cflags --libs libpq) myprogram.c -o myprogram
 
 ### 요약
 
-libpq는 PostgreSQL의 핵심 C 라이브러리로서 다음 기능을 제공합니다:
+libpq는 PostgreSQL의 핵심 C 라이브러리로서 다음 기능을 제공함:
 
 1. 데이터베이스 연결: `PQconnectdb`, `PQconnectdbParams` 등으로 연결 설정
 2. 연결 상태 조회: `PQstatus`, `PQerrorMessage` 등으로 연결 상태 확인
@@ -1706,7 +1731,7 @@ libpq는 PostgreSQL의 핵심 C 라이브러리로서 다음 기능을 제공합
 
 ## Chapter 35: Large Objects (대용량 객체)
 
-PostgreSQL은 사용자 데이터에 대한 스트림 방식의 접근을 제공하는 대용량 객체(Large Object) 기능을 지원합니다. 스트림 방식 접근은 전체 데이터 블록을 한 번에 처리하기 어려운 경우에 유용합니다.
+PostgreSQL은 사용자 데이터에 대한 스트림 방식의 접근을 제공하는 대용량 객체(Large Object) 기능을 지원함. 스트림 방식 접근은 전체 데이터 블록을 한 번에 처리하기 어려운 경우에 유용함.
 
 ### 목차
 
@@ -1722,22 +1747,28 @@ PostgreSQL은 사용자 데이터에 대한 스트림 방식의 접근을 제공
 
 #### 대용량 객체란?
 
-PostgreSQL의 대용량 객체(Large Object) 기능은 특별히 큰 데이터 값을 저장하고 조작하기 위한 기능입니다.
+PostgreSQL의 대용량 객체(Large Object) 기능은 특별히 큰 데이터 값을 저장하고 조작하기 위한 기능임.
 
-- 모든 대용량 객체는 `pg_largeobject` 시스템 테이블에 저장됩니다.
-- 각 대용량 객체는 `pg_largeobject_metadata` 시스템 테이블에 메타데이터 항목을 가집니다.
-- 파일의 표준 작업(읽기, 쓰기, 탐색 등)과 유사한 읽기/쓰기 API를 사용하여 생성, 수정, 삭제할 수 있습니다.
+- 모든 대용량 객체는 `pg_largeobject` 시스템 테이블에 저장됨.
+- 각 대용량 객체는 `pg_largeobject_metadata` 시스템 테이블에 메타데이터 항목을 가짐.
+- 파일의 표준 작업(읽기, 쓰기, 탐색 등)과 유사한 읽기/쓰기 API를 사용하여 생성, 수정, 삭제 가능.
 
 #### Large Objects vs TOAST 비교
 
-| 특성 | Large Objects | TOAST |
-|------|---------------|-------|
-| 최대 크기 | 4 TB | 1 GB |
-| 부분 읽기/업데이트 | 효율적으로 지원 | 전체 값을 읽고 써야 함 |
-| 접근 방식 | 스트림 기반 API | 일반 SQL 컬럼 |
-| 저장 위치 | pg_largeobject 테이블 | 자동으로 보조 저장 영역 |
+- 최대 크기
+  - Large Objects: 4 TB
+  - TOAST: 1 GB
+- 부분 읽기/업데이트
+  - Large Objects: 효율적으로 지원
+  - TOAST: 전체 값을 읽고 써야 함
+- 접근 방식
+  - Large Objects: 스트림 기반 API
+  - TOAST: 일반 SQL 컬럼
+- 저장 위치
+  - Large Objects: pg_largeobject 테이블
+  - TOAST: 자동으로 보조 저장 영역
 
-> 참고: TOAST(The Oversized-Attribute Storage Technique) 저장 시스템의 도입으로 대용량 객체 기능이 부분적으로 구식화되었습니다. 하지만 매우 큰 데이터(1GB 초과)나 효율적인 부분 업데이트가 필요한 경우에는 여전히 대용량 객체가 유용합니다.
+> 참고: TOAST(The Oversized-Attribute Storage Technique) 저장 시스템의 도입으로 대용량 객체 기능이 부분적으로 구식화되었음. 하지만 매우 큰 데이터(1GB 초과)나 효율적인 부분 업데이트가 필요한 경우에는 여전히 대용량 객체가 유용함.
 
 ---
 
@@ -1745,11 +1776,11 @@ PostgreSQL의 대용량 객체(Large Object) 기능은 특별히 큰 데이터 �
 
 #### 기본 구조
 
-대용량 객체는 "청크(chunks)"로 분할되어 데이터베이스의 행(rows)에 저장됩니다. B-tree 인덱스를 통해 임의 접근(random access) 읽기/쓰기 시 빠른 청크 검색이 보장됩니다.
+대용량 객체는 "청크(chunks)"로 분할되어 데이터베이스의 행(rows)에 저장됨. B-tree 인덱스를 통해 임의 접근(random access) 읽기/쓰기 시 빠른 청크 검색이 보장됨.
 
 #### 희소 할당 (Sparse Allocation)
 
-대용량 객체의 청크는 연속적일 필요가 없습니다. 이는 Unix 파일 시스템의 "희소 할당(sparsely allocated)" 파일 동작과 동일합니다.
+대용량 객체의 청크는 연속적일 필요가 없음. 이는 Unix 파일 시스템의 "희소 할당(sparsely allocated)" 파일 동작과 동일함.
 
 예시:
 ```sql
@@ -1760,13 +1791,11 @@ PostgreSQL의 대용량 객체(Large Object) 기능은 특별히 큰 데이터 �
 
 #### 접근 제어 및 권한 (PostgreSQL 9.0 이상)
 
-대용량 객체는 소유자(owner)와 접근 권한(access permissions)을 가집니다.
+대용량 객체는 소유자(owner)와 접근 권한(access permissions)을 가짐.
 
-| 작업 | 필요한 권한 |
-|------|------------|
-| 읽기 | `SELECT` 권한 |
-| 쓰기/자르기 | `UPDATE` 권한 |
-| 삭제/주석 추가/소유자 변경 | 대용량 객체 소유자 또는 데이터베이스 슈퍼유저 |
+- 읽기: `SELECT` 권한
+- 쓰기/자르기: `UPDATE` 권한
+- 삭제/주석 추가/소유자 변경: 대용량 객체 소유자 또는 데이터베이스 슈퍼유저
 
 권한 관리:
 ```sql
@@ -1778,19 +1807,19 @@ GRANT UPDATE ON LARGE OBJECT 12345 TO username;
 REVOKE SELECT ON LARGE OBJECT 12345 FROM username;
 ```
 
-> 호환성: `lo_compat_privileges` 런타임 파라미터를 통해 이전 버전과의 호환성을 조정할 수 있습니다.
+> 호환성: `lo_compat_privileges` 런타임 파라미터를 통해 이전 버전과의 호환성을 조정 가능.
 
 ---
 
 ### 3. 클라이언트 인터페이스 (Client Interfaces)
 
-PostgreSQL의 libpq 클라이언트 라이브러리는 대용량 객체 접근 기능을 제공합니다. 이 인터페이스는 Unix 파일 시스템 인터페이스(open, read, write, lseek 등)를 모델로 삼아 설계되었습니다.
+PostgreSQL의 libpq 클라이언트 라이브러리는 대용량 객체 접근 기능을 제공함. 이 인터페이스는 Unix 파일 시스템 인터페이스(open, read, write, lseek 등)를 모델로 삼아 설계되었음.
 
 #### 중요 사항
 
-- 모든 대용량 객체 조작은 SQL 트랜잭션 블록 내에서 수행되어야 합니다.
+- 모든 대용량 객체 조작은 SQL 트랜잭션 블록 내에서 수행되어야 함.
 - 헤더 파일: `libpq/libpq-fs.h`
-- Pipeline 모드에서는 사용할 수 없습니다.
+- Pipeline 모드에서는 사용 불가.
 
 #### 3.1 대용량 객체 생성 (Creating a Large Object)
 
@@ -1800,7 +1829,7 @@ PostgreSQL의 libpq 클라이언트 라이브러리는 대용량 객체 접근 �
 Oid lo_create(PGconn *conn, Oid lobjId);
 ```
 
-새로운 대용량 객체를 생성합니다.
+새로운 대용량 객체를 생성함.
 
 매개변수:
 - `conn`: 데이터베이스 연결
@@ -1820,7 +1849,7 @@ Oid specific_oid = lo_create(conn, 12345);  // 특정 OID 요청
 Oid lo_creat(PGconn *conn, int mode);
 ```
 
-PostgreSQL 8.0 이전 버전과의 호환성을 위한 함수입니다.
+PostgreSQL 8.0 이전 버전과의 호환성을 위한 함수임.
 
 매개변수:
 - `mode`: `INV_READ`, `INV_WRITE`, 또는 둘 다 (`INV_READ | INV_WRITE`)
@@ -1833,9 +1862,9 @@ PostgreSQL 8.0 이전 버전과의 호환성을 위한 함수입니다.
 Oid lo_import(PGconn *conn, const char *filename);
 ```
 
-운영 체제 파일을 데이터베이스의 대용량 객체로 임포트합니다.
+운영 체제 파일을 데이터베이스의 대용량 객체로 임포트함.
 
-주의: 파일은 서버가 아닌 클라이언트 측에서 읽습니다.
+주의: 파일은 서버가 아닌 클라이언트 측에서 읽음.
 
 예시:
 ```c
@@ -1851,7 +1880,7 @@ if (imported_oid == InvalidOid) {
 Oid lo_import_with_oid(PGconn *conn, const char *filename, Oid lobjId);
 ```
 
-특정 OID를 지정하여 파일을 임포트합니다.
+특정 OID를 지정하여 파일을 임포트함.
 
 #### 3.3 대용량 객체 내보내기 (Exporting a Large Object)
 
@@ -1861,9 +1890,9 @@ Oid lo_import_with_oid(PGconn *conn, const char *filename, Oid lobjId);
 int lo_export(PGconn *conn, Oid lobjId, const char *filename);
 ```
 
-대용량 객체를 운영 체제 파일로 내보냅니다.
+대용량 객체를 운영 체제 파일로 내보냄.
 
-주의: 파일은 서버가 아닌 클라이언트 측에 씁니다.
+주의: 파일은 서버가 아닌 클라이언트 측에 씀.
 
 반환값: 1(성공), -1(실패)
 
@@ -1882,7 +1911,7 @@ if (lo_export(conn, lobjId, "/path/to/output/file.bin") < 0) {
 int lo_open(PGconn *conn, Oid lobjId, int mode);
 ```
 
-읽기 또는 쓰기용으로 기존 대용량 객체를 엽니다.
+읽기 또는 쓰기용으로 기존 대용량 객체를 염.
 
 매개변수:
 - `mode`: `INV_READ`, `INV_WRITE`, 또는 둘 다
@@ -1909,11 +1938,11 @@ if (fd < 0) {
 int lo_write(PGconn *conn, int fd, const char *buf, size_t len);
 ```
 
-대용량 객체 디스크립터에 데이터를 씁니다.
+대용량 객체 디스크립터에 데이터를 씀.
 
 반환값: 실제로 쓴 바이트 수(보통 len과 동일) 또는 -1(실패)
 
-주의: `len`은 `INT_MAX` 이하여야 합니다.
+주의: `len`은 `INT_MAX` 이하여야 함.
 
 예시:
 ```c
@@ -1932,7 +1961,7 @@ if (nbytes < 0) {
 int lo_read(PGconn *conn, int fd, char *buf, size_t len);
 ```
 
-대용량 객체 디스크립터에서 데이터를 읽습니다.
+대용량 객체 디스크립터에서 데이터를 읽음.
 
 반환값: 실제로 읽은 바이트 수(EOF 시 len보다 작을 수 있음) 또는 -1(실패)
 
@@ -1955,14 +1984,14 @@ if (nbytes > 0) {
 int lo_lseek(PGconn *conn, int fd, int offset, int whence);
 ```
 
-읽기/쓰기 위치를 변경합니다.
+읽기/쓰기 위치를 변경함.
 
 매개변수:
 - `whence`: `SEEK_SET`(시작), `SEEK_CUR`(현재 위치), `SEEK_END`(끝)
 
 반환값: 새 위치 또는 -1(실패)
 
-제한: 2GB 이상의 위치를 처리할 수 없습니다.
+제한: 2GB 이상의 위치를 처리 불가.
 
 예시:
 ```c
@@ -1982,7 +2011,7 @@ lo_lseek(conn, fd, -50, SEEK_END);
 int64_t lo_lseek64(PGconn *conn, int fd, int64_t offset, int whence);
 ```
 
-2GB 이상의 대용량 객체를 처리할 수 있는 64비트 버전입니다.
+2GB 이상의 대용량 객체를 처리할 수 있는 64비트 버전임.
 
 #### 3.8 현재 위치 조회 (Obtaining the Seek Position)
 
@@ -2000,7 +2029,7 @@ int lo_tell(PGconn *conn, int fd);
 int64_t lo_tell64(PGconn *conn, int fd);
 ```
 
-2GB 이상의 위치를 처리할 수 있는 64비트 버전입니다.
+2GB 이상의 위치를 처리할 수 있는 64비트 버전임.
 
 #### 3.9 대용량 객체 자르기 (Truncating a Large Object)
 
@@ -2010,7 +2039,7 @@ int64_t lo_tell64(PGconn *conn, int fd);
 int lo_truncate(PGconn *conn, int fd, size_t len);
 ```
 
-대용량 객체를 지정된 길이로 자르거나 확장합니다.
+대용량 객체를 지정된 길이로 자르거나 확장함.
 
 동작:
 - `len`이 현재 크기보다 작으면: 해당 길이로 자름
@@ -2018,7 +2047,7 @@ int lo_truncate(PGconn *conn, int fd, size_t len);
 
 반환값: 0(성공) 또는 -1(실패)
 
-주의: 읽기/쓰기 위치는 변경되지 않습니다.
+주의: 읽기/쓰기 위치는 변경되지 않음.
 
 예시:
 ```c
@@ -2034,7 +2063,7 @@ if (lo_truncate(conn, fd, 1024) < 0) {
 int lo_truncate64(PGconn *conn, int fd, int64_t len);
 ```
 
-2GB 이상의 크기를 처리할 수 있는 64비트 버전입니다.
+2GB 이상의 크기를 처리할 수 있는 64비트 버전임.
 
 #### 3.10 대용량 객체 디스크립터 닫기 (Closing a Large Object Descriptor)
 
@@ -2046,7 +2075,7 @@ int lo_close(PGconn *conn, int fd);
 
 반환값: 0(성공) 또는 -1(실패)
 
-주의: 트랜잭션 종료 시 열린 디스크립터는 자동으로 닫힙니다.
+주의: 트랜잭션 종료 시 열린 디스크립터는 자동으로 닫힘.
 
 예시:
 ```c
@@ -2063,7 +2092,7 @@ if (lo_close(conn, fd) < 0) {
 int lo_unlink(PGconn *conn, Oid lobjId);
 ```
 
-데이터베이스에서 대용량 객체를 제거합니다.
+데이터베이스에서 대용량 객체를 제거함.
 
 반환값: 1(성공) 또는 -1(실패)
 
@@ -2076,7 +2105,7 @@ if (lo_unlink(conn, lobjId) < 0) {
 
 #### 오류 처리
 
-오류 발생 시 함수는 유효하지 않은 값(보통 0 또는 -1)을 반환합니다. 오류 메시지는 연결 객체에 저장되며 `PQerrorMessage()`로 조회할 수 있습니다.
+오류 발생 시 함수는 유효하지 않은 값(보통 0 또는 -1)을 반환함. 오류 메시지는 연결 객체에 저장되며 `PQerrorMessage()`로 조회 가능.
 
 ```c
 if (result < 0) {
@@ -2088,7 +2117,7 @@ if (result < 0) {
 
 ### 4. 서버측 함수 (Server-Side Functions)
 
-SQL 쿼리에서 직접 사용할 수 있는 서버측 함수들입니다.
+SQL 쿼리에서 직접 사용할 수 있는 서버측 함수들임.
 
 #### 4.1 SQL 지향 Large Object 함수
 
@@ -2098,7 +2127,7 @@ SQL 쿼리에서 직접 사용할 수 있는 서버측 함수들입니다.
 lo_from_bytea(loid oid, data bytea) -> oid
 ```
 
-대용량 객체를 생성하고 데이터를 저장합니다.
+대용량 객체를 생성하고 데이터를 저장함.
 
 매개변수:
 - `loid`: 0이면 시스템이 자동 할당, 아니면 해당 OID 사용
@@ -2120,7 +2149,7 @@ SELECT lo_from_bytea(99999, 'Hello World'::bytea);
 lo_put(loid oid, offset bigint, data bytea) -> void
 ```
 
-지정된 오프셋부터 데이터를 씁니다. 필요시 대용량 객체가 자동으로 확대됩니다.
+지정된 오프셋부터 데이터를 씀. 필요시 대용량 객체가 자동으로 확대됨.
 
 예시:
 ```sql
@@ -2137,7 +2166,7 @@ SELECT lo_put(24528, 100, 'New data'::bytea);
 lo_get(loid oid [, offset bigint, length integer]) -> bytea
 ```
 
-대용량 객체의 전체 또는 일부 내용을 추출합니다.
+대용량 객체의 전체 또는 일부 내용을 추출함.
 
 예시:
 ```sql
@@ -2193,7 +2222,7 @@ WHERE name = 'beautiful image';
 
 #### 4.3 loread / lowrite - 서버측 읽기/쓰기
 
-서버측에서는 `lo_read`와 `lo_write` 대신 언더스코어 없는 `loread`, `lowrite`를 사용합니다.
+서버측에서는 `lo_read`와 `lo_write` 대신 언더스코어 없는 `loread`, `lowrite`를 사용함.
 
 ```sql
 -- 대용량 객체 열기
@@ -2212,16 +2241,16 @@ SELECT lo_close(0);
 #### 4.4 보안 주의사항
 
 lo_import / lo_export 보안 경고:
-- 기본적으로 슈퍼유저만 사용 가능합니다.
-- 이 함수들은 데이터베이스 소유자 권한으로 서버 파일 시스템에 접근합니다.
-- 비슈퍼유저에게 권한을 부여할 때는 매우 신중하게 검토해야 합니다.
-- 악의적인 사용자가 이 권한을 이용해 슈퍼유저 권한을 획득할 수 있습니다.
+- 기본적으로 슈퍼유저만 사용 가능함.
+- 이 함수들은 데이터베이스 소유자 권한으로 서버 파일 시스템에 접근함.
+- 비슈퍼유저에게 권한을 부여할 때는 매우 신중하게 검토 필요.
+- 악의적인 사용자가 이 권한을 이용해 슈퍼유저 권한을 획득 가능.
 
 ---
 
 ### 5. 예제 프로그램 (Example Program)
 
-다음은 libpq로 대용량 객체 인터페이스를 사용하는 C 예제 프로그램입니다. PostgreSQL 소스 배포의 `src/test/examples/testlo.c`에서도 확인할 수 있습니다.
+다음은 libpq로 대용량 객체 인터페이스를 사용하는 C 예제 프로그램임. PostgreSQL 소스 배포의 `src/test/examples/testlo.c`에서도 확인 가능.
 
 ```c
 /*-----------------------------------------------------------------
@@ -2503,19 +2532,39 @@ gcc -o testlo testlo.c -I$(pg_config --includedir) -L$(pg_config --libdir) -lpq
 
 ### 요약
 
-| 기능 | 클라이언트 함수 (libpq) | 서버측 함수 (SQL) |
-|------|------------------------|-------------------|
-| 생성 | `lo_create()`, `lo_creat()` | `lo_create()`, `lo_creat()`, `lo_from_bytea()` |
-| 임포트 | `lo_import()` | `lo_import()` |
-| 내보내기 | `lo_export()` | `lo_export()` |
-| 열기 | `lo_open()` | `lo_open()` |
-| 읽기 | `lo_read()` | `loread()`, `lo_get()` |
-| 쓰기 | `lo_write()` | `lowrite()`, `lo_put()` |
-| 탐색 | `lo_lseek()`, `lo_lseek64()` | `lo_lseek()`, `lo_lseek64()` |
-| 위치 조회 | `lo_tell()`, `lo_tell64()` | `lo_tell()`, `lo_tell64()` |
-| 자르기 | `lo_truncate()`, `lo_truncate64()` | `lo_truncate()`, `lo_truncate64()` |
-| 닫기 | `lo_close()` | `lo_close()` |
-| 삭제 | `lo_unlink()` | `lo_unlink()` |
+- 생성
+  - 클라이언트 함수 (libpq): `lo_create()`, `lo_creat()`
+  - 서버측 함수 (SQL): `lo_create()`, `lo_creat()`, `lo_from_bytea()`
+- 임포트
+  - 클라이언트 함수 (libpq): `lo_import()`
+  - 서버측 함수 (SQL): `lo_import()`
+- 내보내기
+  - 클라이언트 함수 (libpq): `lo_export()`
+  - 서버측 함수 (SQL): `lo_export()`
+- 열기
+  - 클라이언트 함수 (libpq): `lo_open()`
+  - 서버측 함수 (SQL): `lo_open()`
+- 읽기
+  - 클라이언트 함수 (libpq): `lo_read()`
+  - 서버측 함수 (SQL): `loread()`, `lo_get()`
+- 쓰기
+  - 클라이언트 함수 (libpq): `lo_write()`
+  - 서버측 함수 (SQL): `lowrite()`, `lo_put()`
+- 탐색
+  - 클라이언트 함수 (libpq): `lo_lseek()`, `lo_lseek64()`
+  - 서버측 함수 (SQL): `lo_lseek()`, `lo_lseek64()`
+- 위치 조회
+  - 클라이언트 함수 (libpq): `lo_tell()`, `lo_tell64()`
+  - 서버측 함수 (SQL): `lo_tell()`, `lo_tell64()`
+- 자르기
+  - 클라이언트 함수 (libpq): `lo_truncate()`, `lo_truncate64()`
+  - 서버측 함수 (SQL): `lo_truncate()`, `lo_truncate64()`
+- 닫기
+  - 클라이언트 함수 (libpq): `lo_close()`
+  - 서버측 함수 (SQL): `lo_close()`
+- 삭제
+  - 클라이언트 함수 (libpq): `lo_unlink()`
+  - 서버측 함수 (SQL): `lo_unlink()`
 
 ---
 
@@ -2545,7 +2594,7 @@ gcc -o testlo testlo.c -I$(pg_config --includedir) -L$(pg_config --libdir) -lpq
 
 ### 1. 개요
 
-ECPG(Embedded SQL in C)는 PostgreSQL의 C 언어(및 제한적으로 C++) 내장 SQL 패키지입니다. Linus Tolke와 Michael Meskes가 개발했으며, SQL 표준을 따라 개발자가 C 코드 내에 SQL을 직접 삽입할 수 있게 합니다.
+ECPG(Embedded SQL in C)는 PostgreSQL의 C 언어(및 제한적으로 C++) 내장 SQL 패키지임. Linus Tolke와 Michael Meskes가 개발했으며, SQL 표준을 따라 개발자가 C 코드 내에 SQL을 직접 삽입할 수 있게 함.
 
 #### 주요 특징
 
@@ -2564,7 +2613,7 @@ ECPG(Embedded SQL in C)는 PostgreSQL의 C 언어(및 제한적으로 C++) 내�
 
 #### 2.1 동작 원리
 
-ECPG 프로그램은 다음 단계를 거쳐 처리됩니다:
+ECPG 프로그램은 다음 단계를 거쳐 처리됨:
 
 ```
 1. 소스 코드 작성: *.pgc 파일에 C 코드와 SQL 혼합
@@ -2576,13 +2625,13 @@ ECPG 프로그램은 다음 단계를 거쳐 처리됩니다:
 
 #### 2.2 SQL 문 구문
 
-모든 내장 SQL 문은 다음 형식을 따릅니다:
+모든 내장 SQL 문은 다음 형식을 따름:
 
 ```c
 EXEC SQL ...;
 ```
 
-이 구문들은 일반 C 문장과 동일한 위치에 쓸 수 있으며, 전역 수준과 함수 내부 모두에서 사용 가능합니다.
+이 구문들은 일반 C 문장과 동일한 위치에 쓸 수 있으며, 전역 수준과 함수 내부 모두에서 사용 가능함.
 
 #### 2.3 ECPG의 장점
 
@@ -2647,7 +2696,7 @@ EXEC SQL CONNECT TO :target USER :user USING :passwd;
 
 ##### 보안 참고사항
 
-신뢰할 수 없는 사용자가 접근할 수 있는 환경에서는 `search_path`에서 공개 쓰기 가능 스키마를 제거하세요:
+신뢰할 수 없는 사용자가 접근할 수 있는 환경에서는 `search_path`에서 공개 쓰기 가능 스키마를 제거할 것:
 
 ```c
 EXEC SQL SELECT pg_catalog.set_config('search_path', '', false);
@@ -2655,7 +2704,7 @@ EXEC SQL SELECT pg_catalog.set_config('search_path', '', false);
 
 #### 3.2 연결 선택
 
-여러 연결을 관리하는 방법은 세 가지입니다:
+여러 연결을 관리하는 방법은 세 가지임:
 
 ##### 방법 1: 명시적 AT 절
 
@@ -2663,7 +2712,7 @@ EXEC SQL SELECT pg_catalog.set_config('search_path', '', false);
 EXEC SQL AT connection-name SELECT ...;
 ```
 
-여러 연결을 혼용해야 할 때 적합합니다.
+여러 연결을 혼용해야 할 때 적합함.
 
 ##### 방법 2: SET CONNECTION 문
 
@@ -2671,7 +2720,7 @@ EXEC SQL AT connection-name SELECT ...;
 EXEC SQL SET CONNECTION connection-name;
 ```
 
-동일 연결에서 많은 문장을 실행할 때 적합합니다.
+동일 연결에서 많은 문장을 실행할 때 적합함.
 
 ##### 완전한 예제 프로그램
 
@@ -2757,7 +2806,7 @@ int main(){
 
 ##### 스레딩 참고사항
 
-여러 스레드가 동시에 연결을 공유할 수 없습니다. 뮤텍스로 접근을 제어하거나 스레드별로 별도의 연결을 사용하세요.
+여러 스레드가 동시에 연결을 공유 불가. 뮤텍스로 접근을 제어하거나 스레드별로 별도의 연결을 사용할 것.
 
 #### 3.3 연결 닫기
 
@@ -2776,7 +2825,7 @@ EXEC SQL DISCONNECT [connection];
 
 ##### 모범 사례
 
-리소스 관리를 위해 열린 모든 연결을 명시적으로 해제하세요.
+리소스 관리를 위해 열린 모든 연결을 명시적으로 해제할 것.
 
 ```c
 EXEC SQL DISCONNECT ALL;
@@ -2788,7 +2837,7 @@ EXEC SQL DISCONNECT ALL;
 
 #### 4.1 SQL 문 실행
 
-SQL 명령은 `EXEC SQL`을 사용하여 직접 실행할 수 있습니다:
+SQL 명령은 `EXEC SQL`을 사용하여 직접 실행 가능:
 
 ##### 테이블 생성
 
@@ -2833,11 +2882,11 @@ EXEC SQL SELECT foo INTO :FooBar FROM table1 WHERE ascii = 'doodad';
 EXEC SQL SHOW search_path INTO :var;
 ```
 
-> 참고: `:something` 형태의 토큰은 C 프로그램 변수를 참조하는 호스트 변수입니다.
+> 참고: `:something` 형태의 토큰은 C 프로그램 변수를 참조하는 호스트 변수임.
 
 #### 4.2 커서 사용
 
-여러 행을 반환하는 결과 집합에는 커서를 사용합니다:
+여러 행을 반환하는 결과 집합에는 커서를 사용함:
 
 ```c
 /* 커서 선언 */
@@ -2857,27 +2906,25 @@ EXEC SQL CLOSE foo_bar;
 EXEC SQL COMMIT;
 ```
 
-> 중요: `ECPG DECLARE` 명령은 PostgreSQL 서버에 아무것도 전송하지 않습니다. 커서는 `OPEN`이 실행될 때 백엔드에서 실제로 열립니다.
+> 중요: `ECPG DECLARE` 명령은 PostgreSQL 서버에 아무것도 전송하지 않음. 커서는 `OPEN`이 실행될 때 백엔드에서 실제로 열림.
 
 #### 4.3 트랜잭션 관리
 
-| 명령 | 목적 |
-|------|------|
-| `EXEC SQL COMMIT` | 진행 중인 트랜잭션 커밋 |
-| `EXEC SQL ROLLBACK` | 진행 중인 트랜잭션 롤백 |
-| `EXEC SQL PREPARE TRANSACTION transaction_id` | 2단계 커밋 준비 |
-| `EXEC SQL COMMIT PREPARED transaction_id` | 준비된 트랜잭션 커밋 |
-| `EXEC SQL ROLLBACK PREPARED transaction_id` | 준비된 트랜잭션 롤백 |
-| `EXEC SQL SET AUTOCOMMIT TO ON` | 자동 커밋 모드 활성화 |
-| `EXEC SQL SET AUTOCOMMIT TO OFF` | 자동 커밋 모드 비활성화 (기본값) |
+- `EXEC SQL COMMIT`: 진행 중인 트랜잭션 커밋
+- `EXEC SQL ROLLBACK`: 진행 중인 트랜잭션 롤백
+- `EXEC SQL PREPARE TRANSACTION transaction_id`: 2단계 커밋 준비
+- `EXEC SQL COMMIT PREPARED transaction_id`: 준비된 트랜잭션 커밋
+- `EXEC SQL ROLLBACK PREPARED transaction_id`: 준비된 트랜잭션 롤백
+- `EXEC SQL SET AUTOCOMMIT TO ON`: 자동 커밋 모드 활성화
+- `EXEC SQL SET AUTOCOMMIT TO OFF`: 자동 커밋 모드 비활성화 (기본값)
 
-기본 모드: 문장은 `EXEC SQL COMMIT`이 실행될 때만 커밋됩니다.
+기본 모드: 문장은 `EXEC SQL COMMIT`이 실행될 때만 커밋됨.
 
-자동 커밋 모드: `ecpg`에 `-t` 명령줄 옵션을 전달하거나 `EXEC SQL SET AUTOCOMMIT TO ON`으로 활성화할 수 있습니다. 명시적 트랜잭션 블록 내부가 아닌 한 각 명령이 자동으로 커밋됩니다.
+자동 커밋 모드: `ecpg`에 `-t` 명령줄 옵션을 전달하거나 `EXEC SQL SET AUTOCOMMIT TO ON`으로 활성화 가능. 명시적 트랜잭션 블록 내부가 아닌 한 각 명령이 자동으로 커밋됨.
 
 #### 4.4 준비된 문장 (Prepared Statements)
 
-값을 미리 알 수 없거나 문장을 재사용해야 할 경우 준비된 문장을 사용합니다:
+값을 미리 알 수 없거나 문장을 재사용해야 할 경우 준비된 문장을 사용함:
 
 ##### 문장 준비
 
@@ -2914,7 +2961,7 @@ EXEC SQL CLOSE foo_bar;
 EXEC SQL DEALLOCATE PREPARE name;
 ```
 
-미지의 값에는 `?`를 플레이스홀더로 사용하고, `USING` 절로 실제 값을 전달합니다.
+미지의 값에는 `?`를 플레이스홀더로 사용하고, `USING` 절로 실제 값을 전달함.
 
 ---
 
@@ -2922,7 +2969,7 @@ EXEC SQL DEALLOCATE PREPARE name;
 
 #### 5.1 개요
 
-호스트 변수(Host Variables)는 내장 SQL 문에서 C 프로그램과 PostgreSQL 사이의 데이터 교환에 사용되는 C 변수입니다. SQL 문은 C 프로그램 코드("호스트 언어") 안에 삽입된 손님으로 취급되므로, C 변수를 호스트 변수라고 부릅니다.
+호스트 변수(Host Variables)는 내장 SQL 문에서 C 프로그램과 PostgreSQL 사이의 데이터 교환에 사용되는 C 변수임. SQL 문은 C 프로그램 코드("호스트 언어") 안에 삽입된 손님으로 취급되므로, C 변수를 호스트 변수라고 부름.
 
 ##### 기본 구문
 
@@ -2930,11 +2977,11 @@ EXEC SQL DEALLOCATE PREPARE name;
 EXEC SQL INSERT INTO sometable VALUES (:v1, 'foo', :v2);
 ```
 
-SQL 문에서 사용될 때 변수 앞에 콜론(`:`)을 붙입니다.
+SQL 문에서 사용될 때 변수 앞에 콜론(`:`)을 붙임.
 
 #### 5.2 선언 섹션 (Declare Sections)
 
-전처리기가 호스트 변수를 인식할 수 있도록, 특별히 표시된 섹션 안에서 선언해야 합니다.
+전처리기가 호스트 변수를 인식할 수 있도록, 특별히 표시된 섹션 안에서 선언 필요.
 
 ##### 구문
 
@@ -2963,7 +3010,7 @@ EXEC SQL int i = 4;
 
 ##### SELECT (단일 행)
 
-select 목록과 `FROM` 절 사이에 `INTO` 절을 사용합니다:
+select 목록과 `FROM` 절 사이에 `INTO` 절을 사용함:
 
 ```c
 EXEC SQL BEGIN DECLARE SECTION;
@@ -2976,7 +3023,7 @@ EXEC SQL SELECT a, b INTO :v1, :v2 FROM test;
 
 ##### FETCH (커서를 사용한 여러 행)
 
-모든 일반 절 뒤에 `INTO` 절을 사용합니다:
+모든 일반 절 뒤에 `INTO` 절을 사용함:
 
 ```c
 EXEC SQL BEGIN DECLARE SECTION;
@@ -2993,22 +3040,20 @@ do {
 
 #### 5.4 타입 매핑
 
-PostgreSQL 데이터 타입은 대응하는 C 변수 타입에 매핑되어야 합니다:
+PostgreSQL 데이터 타입은 대응하는 C 변수 타입에 매핑되어야 함:
 
-| PostgreSQL 타입 | C 변수 타입 |
-|----------------|-------------|
-| `smallint` | `short` |
-| `integer` | `int` |
-| `bigint` | `long long int` |
-| `real` | `float` |
-| `double precision` | `double` |
-| `character(n)`, `varchar(n)`, `text` | `char[n+1]`, `VARCHAR[n+1]` |
-| `boolean` | `bool` |
-| `timestamp` | `timestamp`* |
-| `date` | `date`* |
-| `interval` | `interval`* |
-| `numeric`, `decimal` | `numeric`, `decimal`* |
-| `bytea` | `char *`, `bytea[n]` |
+- `smallint`: `short`
+- `integer`: `int`
+- `bigint`: `long long int`
+- `real`: `float`
+- `double precision`: `double`
+- `character(n)`, `varchar(n)`, `text`: `char[n+1]`, `VARCHAR[n+1]`
+- `boolean`: `bool`
+- `timestamp`: `timestamp`*
+- `date`: `date`*
+- `interval`: `interval`*
+- `numeric`, `decimal`: `numeric`, `decimal`*
+- `bytea`: `char *`, `bytea[n]`
 
 *pgtypes 라이브러리 함수가 필요한 특수 타입
 
@@ -3022,7 +3067,7 @@ EXEC SQL BEGIN DECLARE SECTION;
 EXEC SQL END DECLARE SECTION;
 ```
 
-주의: 버퍼 오버플로우를 방지하려면 길이를 직접 관리해야 합니다.
+주의: 버퍼 오버플로우를 방지하려면 길이를 직접 관리 필요.
 
 ##### VARCHAR 사용
 
@@ -3030,7 +3075,7 @@ EXEC SQL END DECLARE SECTION;
 VARCHAR var[180];
 ```
 
-다음과 같이 변환됩니다:
+다음과 같이 변환됨:
 
 ```c
 struct varchar_var {
@@ -3039,7 +3084,7 @@ struct varchar_var {
 } var;
 ```
 
-입력값으로 사용할 때는 `strlen(arr)`과 `len` 중 더 짧은 값이 사용됩니다.
+입력값으로 사용할 때는 `strlen(arr)`과 `len` 중 더 짧은 값이 사용됨.
 
 #### 5.6 특수 데이터 타입
 
@@ -3152,7 +3197,7 @@ EXEC SQL CLOSE cur1;
 
 #### 5.9 NULL 처리를 위한 인디케이터
 
-인디케이터는 null 값과 잘림 여부를 추적합니다:
+인디케이터는 null 값과 잘림 여부를 추적함:
 
 ```c
 EXEC SQL BEGIN DECLARE SECTION;
@@ -3165,15 +3210,13 @@ EXEC SQL SELECT b INTO :val :val_ind FROM test1;
 
 ##### 인디케이터 값
 
-| 값 | 의미 |
-|----|------|
-| `0` | 값이 null이 아님 |
-| 음수 | 값이 null (실제 호스트 변수 무시됨) |
-| 양수 | 값이 null이 아니지만 잘림 |
+- `0`: 값이 null이 아님
+- 음수: 값이 null (실제 호스트 변수 무시됨)
+- 양수: 값이 null이 아니지만 잘림
 
 ##### no-indicator 모드
 
-전처리기에 `-r no_indicator`를 전달합니다. null 값은 다음과 같이 표현됩니다:
+전처리기에 `-r no_indicator`를 전달함. null 값은 다음과 같이 표현됨:
 - 문자 타입의 경우 빈 문자열
 - 정수 타입의 경우 가능한 가장 낮은 값 (예: `INT_MIN`)
 
@@ -3206,13 +3249,13 @@ while (1) {
 
 ### 6. 동적 SQL
 
-동적 SQL을 사용하면 런타임에 구성되거나 외부에서 제공된 SQL 문을 실행할 수 있습니다. ECPG는 동적 SQL 실행을 위해 세 가지 주요 방식을 제공합니다.
+동적 SQL을 사용하면 런타임에 구성되거나 외부에서 제공된 SQL 문을 실행 가능. ECPG는 동적 SQL 실행을 위해 세 가지 주요 방식을 제공함.
 
 #### 6.1 결과 집합 없이 문장 실행
 
 명령: `EXECUTE IMMEDIATE`
 
-행을 반환하지 않는 SQL 문(DDL, INSERT, UPDATE, DELETE)에 사용합니다.
+행을 반환하지 않는 SQL 문(DDL, INSERT, UPDATE, DELETE)에 사용함.
 
 ```c
 EXEC SQL BEGIN DECLARE SECTION;
@@ -3222,13 +3265,13 @@ EXEC SQL END DECLARE SECTION;
 EXEC SQL EXECUTE IMMEDIATE :stmt;
 ```
 
-제한사항: SELECT나 데이터를 조회하는 문장은 실행할 수 없습니다.
+제한사항: SELECT나 데이터를 조회하는 문장은 실행 불가.
 
 #### 6.2 입력 매개변수가 있는 문장 실행
 
-문장을 한 번 준비한 뒤, 다른 매개변수로 여러 번 실행하는 방식입니다.
+문장을 한 번 준비한 뒤, 다른 매개변수로 여러 번 실행하는 방식임.
 
-매개변수에 대한 플레이스홀더로 물음표(`?`)를 사용합니다:
+매개변수에 대한 플레이스홀더로 물음표(`?`)를 사용함:
 
 ```c
 EXEC SQL BEGIN DECLARE SECTION;
@@ -3240,7 +3283,7 @@ EXEC SQL PREPARE mystmt FROM :stmt;
 EXEC SQL EXECUTE mystmt USING 42, 'foobar';
 ```
 
-더 이상 필요하지 않은 준비된 문장은 해제합니다:
+더 이상 필요하지 않은 준비된 문장은 해제함:
 
 ```c
 EXEC SQL DEALLOCATE PREPARE name;
@@ -3250,7 +3293,7 @@ EXEC SQL DEALLOCATE PREPARE name;
 
 ##### 단일 결과 행
 
-`EXECUTE`에 `INTO` 절을 사용하여 결과를 저장합니다:
+`EXECUTE`에 `INTO` 절을 사용하여 결과를 저장함:
 
 ```c
 EXEC SQL BEGIN DECLARE SECTION;
@@ -3266,7 +3309,7 @@ EXEC SQL EXECUTE mystmt INTO :v1, :v2, :v3 USING 37;
 
 ##### 여러 결과 행
 
-여러 행을 반환하는 쿼리에는 커서를 사용합니다:
+여러 행을 반환하는 쿼리에는 커서를 사용함:
 
 ```c
 EXEC SQL BEGIN DECLARE SECTION;
@@ -3300,7 +3343,7 @@ EXEC SQL DISCONNECT ALL;
 
 #### 6.4 EXECUTE 절 조합
 
-`EXECUTE` 명령은 다음을 가질 수 있습니다:
+`EXECUTE` 명령은 다음을 가질 수 있음:
 - `INTO` 절만
 - `USING` 절만
 - `INTO`와 `USING` 절 모두
@@ -3310,7 +3353,7 @@ EXEC SQL DISCONNECT ALL;
 
 ### 7. 오류 처리
 
-ECPG는 예외와 경고 처리를 위해 서로 독립적으로 사용할 수 있는 두 가지 기능을 제공합니다:
+ECPG는 예외와 경고 처리를 위해 서로 독립적으로 사용할 수 있는 두 가지 기능을 제공함:
 1. 콜백 - `WHENEVER` 명령 사용
 2. 상세 정보 - `sqlca` 변수 접근
 
@@ -3324,23 +3367,19 @@ EXEC SQL WHENEVER condition action;
 
 ##### 조건 (Conditions)
 
-| 조건 | 설명 |
-|------|------|
-| `SQLERROR` | SQL 문 실행 중 오류 발생 시 호출 |
-| `SQLWARNING` | SQL 문 실행 중 경고 발생 시 호출 |
-| `NOT FOUND` | SQL 문이 0개의 행을 검색하거나 영향을 줄 때 호출 |
+- `SQLERROR`: SQL 문 실행 중 오류 발생 시 호출
+- `SQLWARNING`: SQL 문 실행 중 경고 발생 시 호출
+- `NOT FOUND`: SQL 문이 0개의 행을 검색하거나 영향을 줄 때 호출
 
 ##### 액션 (Actions)
 
-| 액션 | 설명 |
-|------|------|
-| `CONTINUE` | 조건 무시 (기본값) |
-| `GOTO label` / `GO TO label` | C `goto`를 사용하여 지정된 레이블로 점프 |
-| `SQLPRINT` | stderr에 메시지 출력 |
-| `STOP` | `exit(1)` 호출하여 프로그램 종료 |
-| `DO BREAK` | C `break` 문 실행 (루프/switch에서만) |
-| `DO CONTINUE` | C `continue` 문 실행 (루프에서만) |
-| `CALL name(args)` / `DO name(args)` | 지정된 C 함수 호출 |
+- `CONTINUE`: 조건 무시 (기본값)
+- `GOTO label` / `GO TO label`: C `goto`를 사용하여 지정된 레이블로 점프
+- `SQLPRINT`: stderr에 메시지 출력
+- `STOP`: `exit(1)` 호출하여 프로그램 종료
+- `DO BREAK`: C `break` 문 실행 (루프/switch에서만)
+- `DO CONTINUE`: C `continue` 문 실행 (루프에서만)
+- `CALL name(args)` / `DO name(args)`: 지정된 C 함수 호출
 
 ##### 기본 예제
 
@@ -3351,7 +3390,7 @@ EXEC SQL WHENEVER SQLERROR STOP;
 
 ##### 중요 참고사항
 
-`EXEC SQL WHENEVER`는 C 문이 아니라 전처리기 지시문입니다. 오류 핸들러는 C 제어 흐름과 무관하게 지시문이 위치한 곳 이후의 모든 내장 SQL 문에 적용됩니다. 다음 패턴은 동작하지 않습니다:
+`EXEC SQL WHENEVER`는 C 문이 아니라 전처리기 지시문임. 오류 핸들러는 C 제어 흐름과 무관하게 지시문이 위치한 곳 이후의 모든 내장 SQL 문에 적용됨. 다음 패턴은 동작하지 않음:
 
 ```c
 /* 잘못됨 - if 블록 내부의 핸들러 */
@@ -3400,21 +3439,19 @@ struct
 
 ##### 주요 필드
 
-| 필드 | 목적 |
-|------|------|
-| `sqlcode` | 오류 코드 (0 = 성공, 음수 = 오류, 양수 = 무해한 조건) |
-| `sqlstate` | 5문자 오류 코드 (sqlcode보다 선호됨) |
-| `sqlerrm.sqlerrmc` | 오류 메시지 문자열 |
-| `sqlerrm.sqlerrml` | 오류 메시지 길이 |
-| `sqlerrd[1]` | 처리된 행의 OID |
-| `sqlerrd[2]` | 처리/반환된 행 수 |
-| `sqlwarn[0]` | 경고가 있으면 'W'로 설정 |
-| `sqlwarn[1]` | 값이 잘리면 'W'로 설정 |
-| `sqlwarn[2]` | 경고에 대해 'W'로 설정 |
+- `sqlcode`: 오류 코드 (0 = 성공, 음수 = 오류, 양수 = 무해한 조건)
+- `sqlstate`: 5문자 오류 코드 (sqlcode보다 선호됨)
+- `sqlerrm.sqlerrmc`: 오류 메시지 문자열
+- `sqlerrm.sqlerrml`: 오류 메시지 길이
+- `sqlerrd[1]`: 처리된 행의 OID
+- `sqlerrd[2]`: 처리/반환된 행 수
+- `sqlwarn[0]`: 경고가 있으면 'W'로 설정
+- `sqlwarn[1]`: 값이 잘리면 'W'로 설정
+- `sqlwarn[2]`: 경고에 대해 'W'로 설정
 
 ##### 멀티스레딩
 
-멀티스레드 프로그램에서 각 스레드는 자동으로 `sqlca`의 독립적인 복사본을 갖습니다 (`errno`와 유사).
+멀티스레드 프로그램에서 각 스레드는 자동으로 `sqlca`의 독립적인 복사본을 갖음 (`errno`와 유사).
 
 ##### 예제: sqlca 내용 출력
 
@@ -3472,7 +3509,7 @@ sqlstate: 42P01
 
 ##### 권장사항
 
-새 애플리케이션에는 SQLSTATE를 사용하세요. 이식성과 일관성이 더 뛰어납니다.
+새 애플리케이션에는 SQLSTATE를 사용할 것. 이식성과 일관성이 더 뛰어남.
 
 #### 7.4 SQLCODE 오류 코드 참조
 
@@ -3586,11 +3623,11 @@ EXEC SQL WHENEVER NOT FOUND DO BREAK;
 
 ### 8. 전처리기 지시문
 
-PostgreSQL ECPG 전처리기는 파일 파싱 및 처리 방법을 수정하는 여러 지시문을 지원합니다.
+PostgreSQL ECPG 전처리기는 파일 파싱 및 처리 방법을 수정하는 여러 지시문을 지원함.
 
 #### 8.1 파일 포함
 
-`EXEC SQL INCLUDE` 지시문을 사용하여 외부 파일을 포함합니다:
+`EXEC SQL INCLUDE` 지시문을 사용하여 외부 파일을 포함함:
 
 ```c
 EXEC SQL INCLUDE filename;
@@ -3600,21 +3637,21 @@ EXEC SQL INCLUDE "filename";
 
 ##### 주요 동작
 
-- 파일 이름에 `.h`가 없으면 전처리기가 자동으로 추가합니다
+- 파일 이름에 `.h`가 없으면 전처리기가 자동으로 추가함
 - 검색 순서:
   1. 현재 디렉토리
   2. `/usr/local/include`
   3. PostgreSQL 포함 디렉토리 (예: `/usr/local/pgsql/include`)
   4. `/usr/include`
-- `EXEC SQL INCLUDE "filename"` 사용 시 현재 디렉토리만 검색됩니다
-- 포함된 파일도 전처리되므로 내장 SQL 문이 올바르게 처리됩니다
-- C의 `#include`와 동일하지 않습니다 — C의 `#include`는 SQL 명령을 전처리하지 않습니다
+- `EXEC SQL INCLUDE "filename"` 사용 시 현재 디렉토리만 검색됨
+- 포함된 파일도 전처리되므로 내장 SQL 문이 올바르게 처리됨
+- C의 `#include`와 동일하지 않음 — C의 `#include`는 SQL 명령을 전처리하지 않음
 
-참고: 포함 파일 이름은 대소문자를 구분합니다.
+참고: 포함 파일 이름은 대소문자를 구분함.
 
 #### 8.2 define 및 undef 지시문
 
-내장 SQL에서 사용할 상수를 정의합니다:
+내장 SQL에서 사용할 상수를 정의함:
 
 ```c
 EXEC SQL DEFINE name;
@@ -3624,7 +3661,7 @@ EXEC SQL DEFINE MYNUMBER 12;
 EXEC SQL DEFINE MYSTRING 'abc';
 ```
 
-`UNDEF`로 정의를 제거합니다:
+`UNDEF`로 정의를 제거함:
 
 ```c
 EXEC SQL UNDEF MYNUMBER;
@@ -3632,13 +3669,13 @@ EXEC SQL UNDEF MYNUMBER;
 
 ##### C `#define`과의 주요 차이점
 
-- `EXEC SQL DEFINE` 값은 ecpg 전처리기가 평가하고 컴파일 전에 대체합니다
-- 내장 SQL 쿼리에서 사용하는 상수에는 C의 `#define`을 사용할 수 없습니다
-- `EXEC SQL DEFINE`/`UNDEF`의 효과는 여러 입력 파일에 걸쳐 전파되지 않습니다; 각 파일은 `-D` 명령줄 심볼만으로 새로 시작합니다
+- `EXEC SQL DEFINE` 값은 ecpg 전처리기가 평가하고 컴파일 전에 대체함
+- 내장 SQL 쿼리에서 사용하는 상수에는 C의 `#define`을 사용 불가
+- `EXEC SQL DEFINE`/`UNDEF`의 효과는 여러 입력 파일에 걸쳐 전파되지 않음; 각 파일은 `-D` 명령줄 심볼만으로 새로 시작함
 
 #### 8.3 조건부 컴파일 지시문
 
-조건부 코드 컴파일을 위해 이러한 지시문을 사용합니다:
+조건부 코드 컴파일을 위해 이러한 지시문을 사용함:
 
 ```c
 EXEC SQL ifdef name;      /* name이 정의되어 있으면 처리 */
@@ -3651,7 +3688,7 @@ EXEC SQL endif;           /* 조건부 블록 종료 */
 ##### 특징
 
 - 구조는 최대 127 레벨까지 중첩 가능
-- `elif` 섹션은 name이 정의되어 있고 이전 섹션이 처리되지 않은 경우에만 처리됩니다
+- `elif` 섹션은 name이 정의되어 있고 이전 섹션이 처리되지 않은 경우에만 처리됨
 
 ##### 예제
 
@@ -3671,7 +3708,7 @@ EXEC SQL endif;
 
 #### 9.1 개요
 
-ECPG 프로그램은 컴파일 전에 전처리가 필요합니다. 워크플로우는 다음과 같습니다:
+ECPG 프로그램은 컴파일 전에 전처리가 필요함. 워크플로우는 다음과 같음:
 
 1. `ecpg` 도구로 SQL 문 전처리
 2. 생성된 C 코드 컴파일
@@ -3681,14 +3718,14 @@ ECPG 프로그램은 컴파일 전에 전처리가 필요합니다. 워크플로
 
 ##### 1. 전처리
 
-`ecpg` 전처리기는 내장 SQL 문을 특수 함수 호출로 변환합니다.
+`ecpg` 전처리기는 내장 SQL 문을 특수 함수 호출로 변환함.
 
 명령:
 ```bash
 ecpg prog1.pgc
 ```
 
-입력 파일 `prog1.pgc`에서 `prog1.c`를 생성합니다. ECPG 프로그램은 일반적으로 `.pgc` 확장자를 사용합니다.
+입력 파일 `prog1.pgc`에서 `prog1.c`를 생성함. ECPG 프로그램은 일반적으로 `.pgc` 확장자를 사용함.
 
 사용자 지정 출력 파일을 지정하려면:
 ```bash
@@ -3697,33 +3734,33 @@ ecpg -o output.c input.pgc
 
 ##### 2. 컴파일
 
-전처리된 C 파일을 일반적인 방법으로 컴파일합니다:
+전처리된 C 파일을 일반적인 방법으로 컴파일함:
 
 ```bash
 cc -c prog1.c
 ```
 
-중요: PostgreSQL 헤더가 기본 검색 경로에 없는 경우 경로를 명시합니다:
+중요: PostgreSQL 헤더가 기본 검색 경로에 없는 경우 경로를 명시함:
 ```bash
 cc -c prog1.c -I/usr/local/pgsql/include
 ```
 
 ##### 3. 링크
 
-`libecpg` 라이브러리와 링크합니다:
+`libecpg` 라이브러리와 링크함:
 
 ```bash
 cc -o myprog prog1.o prog2.o ... -lecpg
 ```
 
-라이브러리가 기본 경로에 없는 경우 경로를 추가합니다:
+라이브러리가 기본 경로에 없는 경우 경로를 추가함:
 ```bash
 cc -o myprog prog1.o prog2.o ... -lecpg -L/usr/local/pgsql/lib
 ```
 
 #### 9.3 설치 경로 찾기
 
-PostgreSQL 설치 경로를 확인하려면 `pg_config` 또는 `pkg-config`를 사용합니다:
+PostgreSQL 설치 경로를 확인하려면 `pg_config` 또는 `pkg-config`를 사용함:
 
 ```bash
 pg_config --includedir
@@ -3734,7 +3771,7 @@ pkg-config --cflags --libs libecpg
 
 #### 9.4 Make 통합
 
-대규모 프로젝트에서는 Makefile에 다음 암시적 규칙을 추가합니다:
+대규모 프로젝트에서는 Makefile에 다음 암시적 규칙을 추가함:
 
 ```makefile
 ECPG = ecpg
@@ -3745,13 +3782,13 @@ ECPG = ecpg
 
 #### 9.5 스레딩 지원
 
-`libecpg` 라이브러리는 기본적으로 스레드 안전하지만, 클라이언트 코드 컴파일 시 스레딩 컴파일러 플래그를 추가해야 할 수 있습니다.
+`libecpg` 라이브러리는 기본적으로 스레드 안전하지만, 클라이언트 코드 컴파일 시 스레딩 컴파일러 플래그를 추가해야 가능.
 
 ---
 
 ### 10. 완전한 예제 프로그램
 
-다음은 ECPG의 여러 기능을 보여주는 완전한 예제입니다:
+다음은 ECPG의 여러 기능을 보여주는 완전한 예제임:
 
 ```c
 /* 파일: example.pgc */
@@ -3911,26 +3948,32 @@ ID: 3, 이름: 이영희, 급여: (미정)
 
 ### 개요
 
-정보 스키마(Information Schema)는 현재 데이터베이스에 정의된 객체 정보를 담는 뷰의 집합입니다. SQL 표준에 정의되어 있으므로 다른 데이터베이스 시스템과의 이식성(portability)과 안정성(stability)이 우수합니다.
+정보 스키마(Information Schema)는 현재 데이터베이스에 정의된 객체 정보를 담는 뷰의 집합임. SQL 표준에 정의되어 있으므로 다른 데이터베이스 시스템과의 이식성(portability)과 안정성(stability)이 우수함.
 
 ---
 
 ### 37.1. 정보 스키마란?
 
-정보 스키마는 `information_schema`라는 이름의 스키마로, 모든 데이터베이스에 자동으로 존재합니다. 이 스키마의 소유자는 초기 데이터베이스 사용자이며, 삭제하는 것은 권장하지 않습니다.
+정보 스키마는 `information_schema`라는 이름의 스키마로, 모든 데이터베이스에 자동으로 존재함. 이 스키마의 소유자는 초기 데이터베이스 사용자이며, 삭제하는 것은 권장하지 않음.
 
 #### 시스템 카탈로그와의 차이점
 
-| 특성 | 정보 스키마 (Information Schema) | 시스템 카탈로그 (System Catalog) |
-|------|----------------------------------|----------------------------------|
-| 표준 준수 | SQL 표준 | PostgreSQL 고유 |
-| 이식성 | 다른 DBMS와 호환 | PostgreSQL 전용 |
-| 안정성 | 버전 간 변경이 적음 | PostgreSQL 내부 변경에 따라 변동 가능 |
-| 상세 정보 | 표준에 정의된 정보만 제공 | PostgreSQL 특화 정보까지 제공 |
+- 표준 준수
+  - 정보 스키마 (Information Schema): SQL 표준
+  - 시스템 카탈로그 (System Catalog): PostgreSQL 고유
+- 이식성
+  - 정보 스키마 (Information Schema): 다른 DBMS와 호환
+  - 시스템 카탈로그 (System Catalog): PostgreSQL 전용
+- 안정성
+  - 정보 스키마 (Information Schema): 버전 간 변경이 적음
+  - 시스템 카탈로그 (System Catalog): PostgreSQL 내부 변경에 따라 변동 가능
+- 상세 정보
+  - 정보 스키마 (Information Schema): 표준에 정의된 정보만 제공
+  - 시스템 카탈로그 (System Catalog): PostgreSQL 특화 정보까지 제공
 
 #### 사용 방법
 
-정보 스키마의 뷰를 쿼리하려면 `information_schema` 스키마를 명시적으로 지정해야 합니다:
+정보 스키마의 뷰를 쿼리하려면 `information_schema` 스키마를 명시적으로 지정 필요:
 
 ```sql
 -- 스키마를 명시적으로 지정
@@ -3943,15 +3986,13 @@ SELECT * FROM tables;
 
 #### 데이터 타입
 
-정보 스키마는 SQL 표준에 정의된 특별한 데이터 타입을 사용합니다:
+정보 스키마는 SQL 표준에 정의된 특별한 데이터 타입을 사용함:
 
-| 타입 | 설명 |
-|------|------|
-| `sql_identifier` | SQL 식별자를 위한 도메인, `text` 기반 |
-| `character_data` | 문자 데이터를 위한 도메인, `text` 기반 |
-| `cardinal_number` | 음이 아닌 정수를 위한 도메인, `integer` 기반 |
-| `yes_or_no` | 불리언 값을 나타내며, `YES` 또는 `NO` 문자열 |
-| `time_stamp` | 타임스탬프를 위한 도메인 |
+- `sql_identifier`: SQL 식별자를 위한 도메인, `text` 기반
+- `character_data`: 문자 데이터를 위한 도메인, `text` 기반
+- `cardinal_number`: 음이 아닌 정수를 위한 도메인, `integer` 기반
+- `yes_or_no`: 불리언 값을 나타내며, `YES` 또는 `NO` 문자열
+- `time_stamp`: 타임스탬프를 위한 도메인
 
 ---
 
@@ -3959,11 +4000,11 @@ SELECT * FROM tables;
 
 #### 37.2.1. information_schema_catalog_name
 
-현재 데이터베이스(카탈로그)의 이름을 포함하는 테이블입니다. 항상 단일 행만 포함합니다.
+현재 데이터베이스(카탈로그)의 이름을 포함하는 테이블임. 항상 단일 행만 포함함.
 
-| 컬럼 | 타입 | 설명 |
-|------|------|------|
-| `catalog_name` | `sql_identifier` | 현재 데이터베이스 이름 |
+- `catalog_name`
+  - 타입: `sql_identifier`
+  - 설명: 현재 데이터베이스 이름
 
 ```sql
 SELECT * FROM information_schema.information_schema_catalog_name;
@@ -3973,19 +4014,31 @@ SELECT * FROM information_schema.information_schema_catalog_name;
 
 ### 37.3. schemata - 스키마 정보
 
-`schemata` 뷰는 현재 데이터베이스에 존재하는 모든 스키마에 대한 정보를 제공합니다. 현재 사용자가 접근 권한을 가진 스키마만 표시됩니다.
+`schemata` 뷰는 현재 데이터베이스에 존재하는 모든 스키마에 대한 정보를 제공함. 현재 사용자가 접근 권한을 가진 스키마만 표시됨.
 
 #### 컬럼 정보
 
-| 컬럼명 | 타입 | 설명 |
-|--------|------|------|
-| `catalog_name` | `sql_identifier` | 데이터베이스 이름 (항상 현재 데이터베이스) |
-| `schema_name` | `sql_identifier` | 스키마 이름 |
-| `schema_owner` | `sql_identifier` | 스키마 소유자 이름 |
-| `default_character_set_catalog` | `sql_identifier` | PostgreSQL에서 미지원 (항상 null) |
-| `default_character_set_schema` | `sql_identifier` | PostgreSQL에서 미지원 (항상 null) |
-| `default_character_set_name` | `sql_identifier` | PostgreSQL에서 미지원 (항상 null) |
-| `sql_path` | `character_data` | PostgreSQL에서 미지원 (항상 null) |
+- `catalog_name`
+  - 타입: `sql_identifier`
+  - 설명: 데이터베이스 이름 (항상 현재 데이터베이스)
+- `schema_name`
+  - 타입: `sql_identifier`
+  - 설명: 스키마 이름
+- `schema_owner`
+  - 타입: `sql_identifier`
+  - 설명: 스키마 소유자 이름
+- `default_character_set_catalog`
+  - 타입: `sql_identifier`
+  - 설명: PostgreSQL에서 미지원 (항상 null)
+- `default_character_set_schema`
+  - 타입: `sql_identifier`
+  - 설명: PostgreSQL에서 미지원 (항상 null)
+- `default_character_set_name`
+  - 타입: `sql_identifier`
+  - 설명: PostgreSQL에서 미지원 (항상 null)
+- `sql_path`
+  - 타입: `character_data`
+  - 설명: PostgreSQL에서 미지원 (항상 null)
 
 #### 예제
 
@@ -4005,33 +4058,53 @@ WHERE schema_owner = 'myuser';
 
 ### 37.4. tables - 테이블 정보
 
-`tables` 뷰는 현재 데이터베이스의 모든 테이블과 뷰에 대한 정보를 제공합니다. 현재 사용자가 접근 권한을 가진 객체만 표시됩니다.
+`tables` 뷰는 현재 데이터베이스의 모든 테이블과 뷰에 대한 정보를 제공함. 현재 사용자가 접근 권한을 가진 객체만 표시됨.
 
 #### 컬럼 정보
 
-| 컬럼명 | 타입 | 설명 |
-|--------|------|------|
-| `table_catalog` | `sql_identifier` | 테이블이 포함된 데이터베이스 이름 |
-| `table_schema` | `sql_identifier` | 테이블이 포함된 스키마 이름 |
-| `table_name` | `sql_identifier` | 테이블 이름 |
-| `table_type` | `character_data` | 테이블 유형 (아래 표 참조) |
-| `self_referencing_column_name` | `sql_identifier` | PostgreSQL에서 미지원 |
-| `reference_generation` | `character_data` | PostgreSQL에서 미지원 |
-| `user_defined_type_catalog` | `sql_identifier` | 타입화된 테이블의 기본 타입 데이터베이스 |
-| `user_defined_type_schema` | `sql_identifier` | 타입화된 테이블의 기본 타입 스키마 |
-| `user_defined_type_name` | `sql_identifier` | 타입화된 테이블의 기본 타입 이름 |
-| `is_insertable_into` | `yes_or_no` | 테이블에 삽입 가능 여부 |
-| `is_typed` | `yes_or_no` | 타입화된 테이블 여부 |
-| `commit_action` | `character_data` | 아직 구현되지 않음 |
+- `table_catalog`
+  - 타입: `sql_identifier`
+  - 설명: 테이블이 포함된 데이터베이스 이름
+- `table_schema`
+  - 타입: `sql_identifier`
+  - 설명: 테이블이 포함된 스키마 이름
+- `table_name`
+  - 타입: `sql_identifier`
+  - 설명: 테이블 이름
+- `table_type`
+  - 타입: `character_data`
+  - 설명: 테이블 유형 (아래 표 참조)
+- `self_referencing_column_name`
+  - 타입: `sql_identifier`
+  - 설명: PostgreSQL에서 미지원
+- `reference_generation`
+  - 타입: `character_data`
+  - 설명: PostgreSQL에서 미지원
+- `user_defined_type_catalog`
+  - 타입: `sql_identifier`
+  - 설명: 타입화된 테이블의 기본 타입 데이터베이스
+- `user_defined_type_schema`
+  - 타입: `sql_identifier`
+  - 설명: 타입화된 테이블의 기본 타입 스키마
+- `user_defined_type_name`
+  - 타입: `sql_identifier`
+  - 설명: 타입화된 테이블의 기본 타입 이름
+- `is_insertable_into`
+  - 타입: `yes_or_no`
+  - 설명: 테이블에 삽입 가능 여부
+- `is_typed`
+  - 타입: `yes_or_no`
+  - 설명: 타입화된 테이블 여부
+- `commit_action`
+  - 타입: `character_data`
+  - 설명: 아직 구현되지 않음
 
 #### table_type 값
 
-| 값 | 설명 |
-|----|------|
-| `BASE TABLE` | 일반 테이블 |
-| `VIEW` | 뷰 |
-| `FOREIGN` | 외부 테이블 (Foreign Table) |
-| `LOCAL TEMPORARY` | 임시 테이블 |
+- `BASE TABLE`: 일반 테이블
+- `VIEW`: 뷰
+- `FOREIGN`: 외부 테이블 (Foreign Table)
+- `LOCAL TEMPORARY`: 임시 테이블
 
 #### 예제
 
@@ -4060,68 +4133,118 @@ ORDER BY table_count DESC;
 
 ### 37.5. columns - 컬럼 정보
 
-`columns` 뷰는 데이터베이스의 모든 테이블 및 뷰 컬럼에 대한 상세 정보를 제공합니다.
+`columns` 뷰는 데이터베이스의 모든 테이블 및 뷰 컬럼에 대한 상세 정보를 제공함.
 
 #### 기본 컬럼 정보
 
-| 컬럼명 | 타입 | 설명 |
-|--------|------|------|
-| `table_catalog` | `sql_identifier` | 테이블이 속한 데이터베이스 |
-| `table_schema` | `sql_identifier` | 테이블이 속한 스키마 |
-| `table_name` | `sql_identifier` | 테이블 이름 |
-| `column_name` | `sql_identifier` | 컬럼 이름 |
-| `ordinal_position` | `cardinal_number` | 테이블 내 컬럼 순서 (1부터 시작) |
-| `column_default` | `character_data` | 기본값 표현식 |
-| `is_nullable` | `yes_or_no` | NULL 허용 여부 |
-| `data_type` | `character_data` | 데이터 타입 이름 |
+- `table_catalog`
+  - 타입: `sql_identifier`
+  - 설명: 테이블이 속한 데이터베이스
+- `table_schema`
+  - 타입: `sql_identifier`
+  - 설명: 테이블이 속한 스키마
+- `table_name`
+  - 타입: `sql_identifier`
+  - 설명: 테이블 이름
+- `column_name`
+  - 타입: `sql_identifier`
+  - 설명: 컬럼 이름
+- `ordinal_position`
+  - 타입: `cardinal_number`
+  - 설명: 테이블 내 컬럼 순서 (1부터 시작)
+- `column_default`
+  - 타입: `character_data`
+  - 설명: 기본값 표현식
+- `is_nullable`
+  - 타입: `yes_or_no`
+  - 설명: NULL 허용 여부
+- `data_type`
+  - 타입: `character_data`
+  - 설명: 데이터 타입 이름
 
 #### 데이터 타입 관련 컬럼
 
-| 컬럼명 | 타입 | 설명 |
-|--------|------|------|
-| `character_maximum_length` | `cardinal_number` | 문자/비트 타입의 최대 길이 |
-| `character_octet_length` | `cardinal_number` | 문자 타입의 최대 바이트 수 |
-| `numeric_precision` | `cardinal_number` | 숫자 타입의 정밀도 |
-| `numeric_precision_radix` | `cardinal_number` | 정밀도 기수 (2 또는 10) |
-| `numeric_scale` | `cardinal_number` | 숫자 타입의 스케일 (소수점 이하 자릿수) |
-| `datetime_precision` | `cardinal_number` | 날짜/시간 타입의 소수 초 정밀도 |
+- `character_maximum_length`
+  - 타입: `cardinal_number`
+  - 설명: 문자/비트 타입의 최대 길이
+- `character_octet_length`
+  - 타입: `cardinal_number`
+  - 설명: 문자 타입의 최대 바이트 수
+- `numeric_precision`
+  - 타입: `cardinal_number`
+  - 설명: 숫자 타입의 정밀도
+- `numeric_precision_radix`
+  - 타입: `cardinal_number`
+  - 설명: 정밀도 기수 (2 또는 10)
+- `numeric_scale`
+  - 타입: `cardinal_number`
+  - 설명: 숫자 타입의 스케일 (소수점 이하 자릿수)
+- `datetime_precision`
+  - 타입: `cardinal_number`
+  - 설명: 날짜/시간 타입의 소수 초 정밀도
 
 #### 도메인 관련 컬럼
 
-| 컬럼명 | 타입 | 설명 |
-|--------|------|------|
-| `domain_catalog` | `sql_identifier` | 도메인이 정의된 데이터베이스 |
-| `domain_schema` | `sql_identifier` | 도메인이 정의된 스키마 |
-| `domain_name` | `sql_identifier` | 도메인 이름 |
+- `domain_catalog`
+  - 타입: `sql_identifier`
+  - 설명: 도메인이 정의된 데이터베이스
+- `domain_schema`
+  - 타입: `sql_identifier`
+  - 설명: 도메인이 정의된 스키마
+- `domain_name`
+  - 타입: `sql_identifier`
+  - 설명: 도메인 이름
 
 #### 식별 컬럼(Identity Column) 관련
 
-| 컬럼명 | 타입 | 설명 |
-|--------|------|------|
-| `is_identity` | `yes_or_no` | 식별 컬럼 여부 |
-| `identity_generation` | `character_data` | `ALWAYS` 또는 `BY DEFAULT` |
-| `identity_start` | `character_data` | 시퀀스 시작값 |
-| `identity_increment` | `character_data` | 시퀀스 증분 |
-| `identity_maximum` | `character_data` | 시퀀스 최대값 |
-| `identity_minimum` | `character_data` | 시퀀스 최소값 |
-| `identity_cycle` | `yes_or_no` | 시퀀스 순환 여부 |
+- `is_identity`
+  - 타입: `yes_or_no`
+  - 설명: 식별 컬럼 여부
+- `identity_generation`
+  - 타입: `character_data`
+  - 설명: `ALWAYS` 또는 `BY DEFAULT`
+- `identity_start`
+  - 타입: `character_data`
+  - 설명: 시퀀스 시작값
+- `identity_increment`
+  - 타입: `character_data`
+  - 설명: 시퀀스 증분
+- `identity_maximum`
+  - 타입: `character_data`
+  - 설명: 시퀀스 최대값
+- `identity_minimum`
+  - 타입: `character_data`
+  - 설명: 시퀀스 최소값
+- `identity_cycle`
+  - 타입: `yes_or_no`
+  - 설명: 시퀀스 순환 여부
 
 #### 생성된 컬럼(Generated Column) 관련
 
-| 컬럼명 | 타입 | 설명 |
-|--------|------|------|
-| `is_generated` | `character_data` | `ALWAYS` 또는 `NEVER` |
-| `generation_expression` | `character_data` | 생성 표현식 |
+- `is_generated`
+  - 타입: `character_data`
+  - 설명: `ALWAYS` 또는 `NEVER`
+- `generation_expression`
+  - 타입: `character_data`
+  - 설명: 생성 표현식
 
 #### 기타 컬럼
 
-| 컬럼명 | 타입 | 설명 |
-|--------|------|------|
-| `udt_catalog` | `sql_identifier` | 컬럼 데이터 타입이 정의된 데이터베이스 |
-| `udt_schema` | `sql_identifier` | 컬럼 데이터 타입이 정의된 스키마 |
-| `udt_name` | `sql_identifier` | 컬럼 데이터 타입 이름 |
-| `is_updatable` | `yes_or_no` | 컬럼 업데이트 가능 여부 |
-| `collation_name` | `sql_identifier` | 콜레이션 이름 |
+- `udt_catalog`
+  - 타입: `sql_identifier`
+  - 설명: 컬럼 데이터 타입이 정의된 데이터베이스
+- `udt_schema`
+  - 타입: `sql_identifier`
+  - 설명: 컬럼 데이터 타입이 정의된 스키마
+- `udt_name`
+  - 타입: `sql_identifier`
+  - 설명: 컬럼 데이터 타입 이름
+- `is_updatable`
+  - 타입: `yes_or_no`
+  - 설명: 컬럼 업데이트 가능 여부
+- `collation_name`
+  - 타입: `sql_identifier`
+  - 설명: 콜레이션 이름
 
 #### 예제
 
@@ -4179,22 +4302,40 @@ ORDER BY column_count DESC;
 
 ### 37.6. views - 뷰 정보
 
-`views` 뷰는 현재 데이터베이스의 모든 뷰에 대한 정보를 제공합니다.
+`views` 뷰는 현재 데이터베이스의 모든 뷰에 대한 정보를 제공함.
 
 #### 컬럼 정보
 
-| 컬럼명 | 타입 | 설명 |
-|--------|------|------|
-| `table_catalog` | `sql_identifier` | 뷰가 속한 데이터베이스 |
-| `table_schema` | `sql_identifier` | 뷰가 속한 스키마 |
-| `table_name` | `sql_identifier` | 뷰 이름 |
-| `view_definition` | `character_data` | 뷰 정의 쿼리 (소유자가 아니면 null) |
-| `check_option` | `character_data` | CHECK OPTION: `CASCADED`, `LOCAL`, 또는 `NONE` |
-| `is_updatable` | `yes_or_no` | UPDATE/DELETE 가능 여부 |
-| `is_insertable_into` | `yes_or_no` | INSERT 가능 여부 |
-| `is_trigger_updatable` | `yes_or_no` | INSTEAD OF UPDATE 트리거 존재 여부 |
-| `is_trigger_deletable` | `yes_or_no` | INSTEAD OF DELETE 트리거 존재 여부 |
-| `is_trigger_insertable_into` | `yes_or_no` | INSTEAD OF INSERT 트리거 존재 여부 |
+- `table_catalog`
+  - 타입: `sql_identifier`
+  - 설명: 뷰가 속한 데이터베이스
+- `table_schema`
+  - 타입: `sql_identifier`
+  - 설명: 뷰가 속한 스키마
+- `table_name`
+  - 타입: `sql_identifier`
+  - 설명: 뷰 이름
+- `view_definition`
+  - 타입: `character_data`
+  - 설명: 뷰 정의 쿼리 (소유자가 아니면 null)
+- `check_option`
+  - 타입: `character_data`
+  - 설명: CHECK OPTION: `CASCADED`, `LOCAL`, 또는 `NONE`
+- `is_updatable`
+  - 타입: `yes_or_no`
+  - 설명: UPDATE/DELETE 가능 여부
+- `is_insertable_into`
+  - 타입: `yes_or_no`
+  - 설명: INSERT 가능 여부
+- `is_trigger_updatable`
+  - 타입: `yes_or_no`
+  - 설명: INSTEAD OF UPDATE 트리거 존재 여부
+- `is_trigger_deletable`
+  - 타입: `yes_or_no`
+  - 설명: INSTEAD OF DELETE 트리거 존재 여부
+- `is_trigger_insertable_into`
+  - 타입: `yes_or_no`
+  - 설명: INSTEAD OF INSERT 트리거 존재 여부
 
 #### 예제
 
@@ -4224,32 +4365,50 @@ WHERE table_schema = 'public'
 
 #### 37.7.1. table_constraints - 테이블 제약조건
 
-`table_constraints` 뷰는 테이블에 정의된 모든 제약조건 정보를 제공합니다.
+`table_constraints` 뷰는 테이블에 정의된 모든 제약조건 정보를 제공함.
 
 ##### 컬럼 정보
 
-| 컬럼명 | 타입 | 설명 |
-|--------|------|------|
-| `constraint_catalog` | `sql_identifier` | 제약조건이 속한 데이터베이스 |
-| `constraint_schema` | `sql_identifier` | 제약조건이 속한 스키마 |
-| `constraint_name` | `sql_identifier` | 제약조건 이름 |
-| `table_catalog` | `sql_identifier` | 테이블이 속한 데이터베이스 |
-| `table_schema` | `sql_identifier` | 테이블이 속한 스키마 |
-| `table_name` | `sql_identifier` | 테이블 이름 |
-| `constraint_type` | `character_data` | 제약조건 유형 |
-| `is_deferrable` | `yes_or_no` | 지연 가능 여부 |
-| `initially_deferred` | `yes_or_no` | 초기 지연 여부 |
-| `enforced` | `yes_or_no` | 제약조건 적용 여부 |
-| `nulls_distinct` | `yes_or_no` | UNIQUE에서 NULL 구분 여부 |
+- `constraint_catalog`
+  - 타입: `sql_identifier`
+  - 설명: 제약조건이 속한 데이터베이스
+- `constraint_schema`
+  - 타입: `sql_identifier`
+  - 설명: 제약조건이 속한 스키마
+- `constraint_name`
+  - 타입: `sql_identifier`
+  - 설명: 제약조건 이름
+- `table_catalog`
+  - 타입: `sql_identifier`
+  - 설명: 테이블이 속한 데이터베이스
+- `table_schema`
+  - 타입: `sql_identifier`
+  - 설명: 테이블이 속한 스키마
+- `table_name`
+  - 타입: `sql_identifier`
+  - 설명: 테이블 이름
+- `constraint_type`
+  - 타입: `character_data`
+  - 설명: 제약조건 유형
+- `is_deferrable`
+  - 타입: `yes_or_no`
+  - 설명: 지연 가능 여부
+- `initially_deferred`
+  - 타입: `yes_or_no`
+  - 설명: 초기 지연 여부
+- `enforced`
+  - 타입: `yes_or_no`
+  - 설명: 제약조건 적용 여부
+- `nulls_distinct`
+  - 타입: `yes_or_no`
+  - 설명: UNIQUE에서 NULL 구분 여부
 
 ##### constraint_type 값
 
-| 값 | 설명 |
-|----|------|
-| `PRIMARY KEY` | 기본 키 제약조건 |
-| `UNIQUE` | 고유 제약조건 |
-| `FOREIGN KEY` | 외래 키 제약조건 |
-| `CHECK` | 검사 제약조건 |
+- `PRIMARY KEY`: 기본 키 제약조건
+- `UNIQUE`: 고유 제약조건
+- `FOREIGN KEY`: 외래 키 제약조건
+- `CHECK`: 검사 제약조건
 
 ##### 예제
 
@@ -4284,18 +4443,24 @@ WHERE constraint_type = 'FOREIGN KEY'
 
 #### 37.7.2. check_constraints - CHECK 제약조건
 
-`check_constraints` 뷰는 CHECK 제약조건의 상세 정보를 제공합니다.
+`check_constraints` 뷰는 CHECK 제약조건의 상세 정보를 제공함.
 
 ##### 컬럼 정보
 
-| 컬럼명 | 타입 | 설명 |
-|--------|------|------|
-| `constraint_catalog` | `sql_identifier` | 제약조건이 속한 데이터베이스 |
-| `constraint_schema` | `sql_identifier` | 제약조건이 속한 스키마 |
-| `constraint_name` | `sql_identifier` | 제약조건 이름 |
-| `check_clause` | `character_data` | CHECK 표현식 |
+- `constraint_catalog`
+  - 타입: `sql_identifier`
+  - 설명: 제약조건이 속한 데이터베이스
+- `constraint_schema`
+  - 타입: `sql_identifier`
+  - 설명: 제약조건이 속한 스키마
+- `constraint_name`
+  - 타입: `sql_identifier`
+  - 설명: 제약조건 이름
+- `check_clause`
+  - 타입: `character_data`
+  - 설명: CHECK 표현식
 
-> 참고: SQL 표준에서 NOT NULL 제약조건도 CHECK 제약조건으로 간주되어 `CHECK (column_name IS NOT NULL)` 형식으로 이 뷰에 포함됩니다.
+> 참고: SQL 표준에서 NOT NULL 제약조건도 CHECK 제약조건으로 간주되어 `CHECK (column_name IS NOT NULL)` 형식으로 이 뷰에 포함됨.
 
 ##### 예제
 
@@ -4310,31 +4475,45 @@ WHERE constraint_schema = 'public';
 
 #### 37.7.3. referential_constraints - 참조 제약조건 (외래 키)
 
-`referential_constraints` 뷰는 외래 키 제약조건의 상세 정보를 제공합니다.
+`referential_constraints` 뷰는 외래 키 제약조건의 상세 정보를 제공함.
 
 ##### 컬럼 정보
 
-| 컬럼명 | 타입 | 설명 |
-|--------|------|------|
-| `constraint_catalog` | `sql_identifier` | 제약조건이 속한 데이터베이스 |
-| `constraint_schema` | `sql_identifier` | 제약조건이 속한 스키마 |
-| `constraint_name` | `sql_identifier` | 제약조건 이름 |
-| `unique_constraint_catalog` | `sql_identifier` | 참조되는 제약조건의 데이터베이스 |
-| `unique_constraint_schema` | `sql_identifier` | 참조되는 제약조건의 스키마 |
-| `unique_constraint_name` | `sql_identifier` | 참조되는 UNIQUE/PK 제약조건 이름 |
-| `match_option` | `character_data` | 매칭 옵션: `FULL`, `PARTIAL`, `NONE` |
-| `update_rule` | `character_data` | UPDATE 규칙 |
-| `delete_rule` | `character_data` | DELETE 규칙 |
+- `constraint_catalog`
+  - 타입: `sql_identifier`
+  - 설명: 제약조건이 속한 데이터베이스
+- `constraint_schema`
+  - 타입: `sql_identifier`
+  - 설명: 제약조건이 속한 스키마
+- `constraint_name`
+  - 타입: `sql_identifier`
+  - 설명: 제약조건 이름
+- `unique_constraint_catalog`
+  - 타입: `sql_identifier`
+  - 설명: 참조되는 제약조건의 데이터베이스
+- `unique_constraint_schema`
+  - 타입: `sql_identifier`
+  - 설명: 참조되는 제약조건의 스키마
+- `unique_constraint_name`
+  - 타입: `sql_identifier`
+  - 설명: 참조되는 UNIQUE/PK 제약조건 이름
+- `match_option`
+  - 타입: `character_data`
+  - 설명: 매칭 옵션: `FULL`, `PARTIAL`, `NONE`
+- `update_rule`
+  - 타입: `character_data`
+  - 설명: UPDATE 규칙
+- `delete_rule`
+  - 타입: `character_data`
+  - 설명: DELETE 규칙
 
 ##### update_rule / delete_rule 값
 
-| 값 | 설명 |
-|----|------|
-| `CASCADE` | 참조 행을 함께 변경/삭제 |
-| `SET NULL` | 참조 컬럼을 NULL로 설정 |
-| `SET DEFAULT` | 참조 컬럼을 기본값으로 설정 |
-| `RESTRICT` | 참조하는 행이 있으면 거부 |
-| `NO ACTION` | RESTRICT와 유사하지만 지연 가능 |
+- `CASCADE`: 참조 행을 함께 변경/삭제
+- `SET NULL`: 참조 컬럼을 NULL로 설정
+- `SET DEFAULT`: 참조 컬럼을 기본값으로 설정
+- `RESTRICT`: 참조하는 행이 있으면 거부
+- `NO ACTION`: RESTRICT와 유사하지만 지연 가능
 
 ##### 예제
 
@@ -4351,21 +4530,37 @@ WHERE constraint_schema = 'public';
 
 #### 37.7.4. key_column_usage - 키 컬럼 사용
 
-`key_column_usage` 뷰는 PRIMARY KEY, UNIQUE, FOREIGN KEY 제약조건에 사용되는 컬럼을 식별합니다.
+`key_column_usage` 뷰는 PRIMARY KEY, UNIQUE, FOREIGN KEY 제약조건에 사용되는 컬럼을 식별함.
 
 ##### 컬럼 정보
 
-| 컬럼명 | 타입 | 설명 |
-|--------|------|------|
-| `constraint_catalog` | `sql_identifier` | 제약조건이 속한 데이터베이스 |
-| `constraint_schema` | `sql_identifier` | 제약조건이 속한 스키마 |
-| `constraint_name` | `sql_identifier` | 제약조건 이름 |
-| `table_catalog` | `sql_identifier` | 테이블이 속한 데이터베이스 |
-| `table_schema` | `sql_identifier` | 테이블이 속한 스키마 |
-| `table_name` | `sql_identifier` | 테이블 이름 |
-| `column_name` | `sql_identifier` | 컬럼 이름 |
-| `ordinal_position` | `cardinal_number` | 키 내 컬럼 순서 (1부터 시작) |
-| `position_in_unique_constraint` | `cardinal_number` | FK의 경우 참조 컬럼의 순서 |
+- `constraint_catalog`
+  - 타입: `sql_identifier`
+  - 설명: 제약조건이 속한 데이터베이스
+- `constraint_schema`
+  - 타입: `sql_identifier`
+  - 설명: 제약조건이 속한 스키마
+- `constraint_name`
+  - 타입: `sql_identifier`
+  - 설명: 제약조건 이름
+- `table_catalog`
+  - 타입: `sql_identifier`
+  - 설명: 테이블이 속한 데이터베이스
+- `table_schema`
+  - 타입: `sql_identifier`
+  - 설명: 테이블이 속한 스키마
+- `table_name`
+  - 타입: `sql_identifier`
+  - 설명: 테이블 이름
+- `column_name`
+  - 타입: `sql_identifier`
+  - 설명: 컬럼 이름
+- `ordinal_position`
+  - 타입: `cardinal_number`
+  - 설명: 키 내 컬럼 순서 (1부터 시작)
+- `position_in_unique_constraint`
+  - 타입: `cardinal_number`
+  - 설명: FK의 경우 참조 컬럼의 순서
 
 ##### 예제
 
@@ -4407,32 +4602,44 @@ WHERE kcu.table_schema = 'public';
 
 #### 37.8.1. table_privileges - 테이블 권한
 
-`table_privileges` 뷰는 테이블에 부여된 모든 권한을 표시합니다.
+`table_privileges` 뷰는 테이블에 부여된 모든 권한을 표시함.
 
 ##### 컬럼 정보
 
-| 컬럼명 | 타입 | 설명 |
-|--------|------|------|
-| `grantor` | `sql_identifier` | 권한을 부여한 역할 |
-| `grantee` | `sql_identifier` | 권한을 받은 역할 |
-| `table_catalog` | `sql_identifier` | 테이블이 속한 데이터베이스 |
-| `table_schema` | `sql_identifier` | 테이블이 속한 스키마 |
-| `table_name` | `sql_identifier` | 테이블 이름 |
-| `privilege_type` | `character_data` | 권한 유형 |
-| `is_grantable` | `yes_or_no` | 권한 재부여 가능 여부 |
-| `with_hierarchy` | `yes_or_no` | 계층 옵션 포함 여부 |
+- `grantor`
+  - 타입: `sql_identifier`
+  - 설명: 권한을 부여한 역할
+- `grantee`
+  - 타입: `sql_identifier`
+  - 설명: 권한을 받은 역할
+- `table_catalog`
+  - 타입: `sql_identifier`
+  - 설명: 테이블이 속한 데이터베이스
+- `table_schema`
+  - 타입: `sql_identifier`
+  - 설명: 테이블이 속한 스키마
+- `table_name`
+  - 타입: `sql_identifier`
+  - 설명: 테이블 이름
+- `privilege_type`
+  - 타입: `character_data`
+  - 설명: 권한 유형
+- `is_grantable`
+  - 타입: `yes_or_no`
+  - 설명: 권한 재부여 가능 여부
+- `with_hierarchy`
+  - 타입: `yes_or_no`
+  - 설명: 계층 옵션 포함 여부
 
 ##### privilege_type 값
 
-| 값 | 설명 |
-|----|------|
-| `SELECT` | 조회 권한 |
-| `INSERT` | 삽입 권한 |
-| `UPDATE` | 수정 권한 |
-| `DELETE` | 삭제 권한 |
-| `TRUNCATE` | 테이블 비우기 권한 |
-| `REFERENCES` | 외래 키 참조 권한 |
-| `TRIGGER` | 트리거 생성 권한 |
+- `SELECT`: 조회 권한
+- `INSERT`: 삽입 권한
+- `UPDATE`: 수정 권한
+- `DELETE`: 삭제 권한
+- `TRUNCATE`: 테이블 비우기 권한
+- `REFERENCES`: 외래 키 참조 권한
+- `TRIGGER`: 트리거 생성 권한
 
 ##### 예제
 
@@ -4459,20 +4666,34 @@ ORDER BY table_schema, table_name;
 
 #### 37.8.2. column_privileges - 컬럼 권한
 
-`column_privileges` 뷰는 컬럼 수준의 권한을 표시합니다.
+`column_privileges` 뷰는 컬럼 수준의 권한을 표시함.
 
 ##### 컬럼 정보
 
-| 컬럼명 | 타입 | 설명 |
-|--------|------|------|
-| `grantor` | `sql_identifier` | 권한을 부여한 역할 |
-| `grantee` | `sql_identifier` | 권한을 받은 역할 |
-| `table_catalog` | `sql_identifier` | 테이블이 속한 데이터베이스 |
-| `table_schema` | `sql_identifier` | 테이블이 속한 스키마 |
-| `table_name` | `sql_identifier` | 테이블 이름 |
-| `column_name` | `sql_identifier` | 컬럼 이름 |
-| `privilege_type` | `character_data` | 권한 유형 (`SELECT`, `INSERT`, `UPDATE`, `REFERENCES`) |
-| `is_grantable` | `yes_or_no` | 권한 재부여 가능 여부 |
+- `grantor`
+  - 타입: `sql_identifier`
+  - 설명: 권한을 부여한 역할
+- `grantee`
+  - 타입: `sql_identifier`
+  - 설명: 권한을 받은 역할
+- `table_catalog`
+  - 타입: `sql_identifier`
+  - 설명: 테이블이 속한 데이터베이스
+- `table_schema`
+  - 타입: `sql_identifier`
+  - 설명: 테이블이 속한 스키마
+- `table_name`
+  - 타입: `sql_identifier`
+  - 설명: 테이블 이름
+- `column_name`
+  - 타입: `sql_identifier`
+  - 설명: 컬럼 이름
+- `privilege_type`
+  - 타입: `character_data`
+  - 설명: 권한 유형 (`SELECT`, `INSERT`, `UPDATE`, `REFERENCES`)
+- `is_grantable`
+  - 타입: `yes_or_no`
+  - 설명: 권한 재부여 가능 여부
 
 ##### 예제
 
@@ -4492,25 +4713,49 @@ ORDER BY table_name, column_name;
 
 ### 37.9. routines - 함수/프로시저 정보
 
-`routines` 뷰는 현재 데이터베이스의 모든 함수와 프로시저 정보를 제공합니다.
+`routines` 뷰는 현재 데이터베이스의 모든 함수와 프로시저 정보를 제공함.
 
 #### 주요 컬럼 정보
 
-| 컬럼명 | 타입 | 설명 |
-|--------|------|------|
-| `specific_catalog` | `sql_identifier` | 함수가 속한 데이터베이스 |
-| `specific_schema` | `sql_identifier` | 함수가 속한 스키마 |
-| `specific_name` | `sql_identifier` | 함수의 고유 식별자 (오버로딩에도 유일) |
-| `routine_catalog` | `sql_identifier` | 함수가 속한 데이터베이스 |
-| `routine_schema` | `sql_identifier` | 함수가 속한 스키마 |
-| `routine_name` | `sql_identifier` | 함수 이름 (오버로딩 시 중복 가능) |
-| `routine_type` | `character_data` | `FUNCTION` 또는 `PROCEDURE` |
-| `data_type` | `character_data` | 반환 데이터 타입 |
-| `routine_body` | `character_data` | `SQL` 또는 `EXTERNAL` |
-| `routine_definition` | `character_data` | 함수 소스 코드 |
-| `external_language` | `character_data` | 작성 언어 (예: `plpgsql`, `sql`) |
-| `is_deterministic` | `yes_or_no` | 불변(IMMUTABLE) 함수 여부 |
-| `security_type` | `character_data` | `INVOKER` 또는 `DEFINER` |
+- `specific_catalog`
+  - 타입: `sql_identifier`
+  - 설명: 함수가 속한 데이터베이스
+- `specific_schema`
+  - 타입: `sql_identifier`
+  - 설명: 함수가 속한 스키마
+- `specific_name`
+  - 타입: `sql_identifier`
+  - 설명: 함수의 고유 식별자 (오버로딩에도 유일)
+- `routine_catalog`
+  - 타입: `sql_identifier`
+  - 설명: 함수가 속한 데이터베이스
+- `routine_schema`
+  - 타입: `sql_identifier`
+  - 설명: 함수가 속한 스키마
+- `routine_name`
+  - 타입: `sql_identifier`
+  - 설명: 함수 이름 (오버로딩 시 중복 가능)
+- `routine_type`
+  - 타입: `character_data`
+  - 설명: `FUNCTION` 또는 `PROCEDURE`
+- `data_type`
+  - 타입: `character_data`
+  - 설명: 반환 데이터 타입
+- `routine_body`
+  - 타입: `character_data`
+  - 설명: `SQL` 또는 `EXTERNAL`
+- `routine_definition`
+  - 타입: `character_data`
+  - 설명: 함수 소스 코드
+- `external_language`
+  - 타입: `character_data`
+  - 설명: 작성 언어 (예: `plpgsql`, `sql`)
+- `is_deterministic`
+  - 타입: `yes_or_no`
+  - 설명: 불변(IMMUTABLE) 함수 여부
+- `security_type`
+  - 타입: `character_data`
+  - 설명: `INVOKER` 또는 `DEFINER`
 
 #### 예제
 
@@ -4542,24 +4787,46 @@ WHERE external_language = 'plpgsql'
 
 ### 37.10. sequences - 시퀀스 정보
 
-`sequences` 뷰는 현재 데이터베이스의 모든 시퀀스 정보를 제공합니다.
+`sequences` 뷰는 현재 데이터베이스의 모든 시퀀스 정보를 제공함.
 
 #### 컬럼 정보
 
-| 컬럼명 | 타입 | 설명 |
-|--------|------|------|
-| `sequence_catalog` | `sql_identifier` | 시퀀스가 속한 데이터베이스 |
-| `sequence_schema` | `sql_identifier` | 시퀀스가 속한 스키마 |
-| `sequence_name` | `sql_identifier` | 시퀀스 이름 |
-| `data_type` | `character_data` | 시퀀스 데이터 타입 |
-| `numeric_precision` | `cardinal_number` | 정밀도 |
-| `numeric_precision_radix` | `cardinal_number` | 정밀도 기수 |
-| `numeric_scale` | `cardinal_number` | 스케일 |
-| `start_value` | `character_data` | 시작값 |
-| `minimum_value` | `character_data` | 최소값 |
-| `maximum_value` | `character_data` | 최대값 |
-| `increment` | `character_data` | 증분값 |
-| `cycle_option` | `yes_or_no` | 순환 여부 |
+- `sequence_catalog`
+  - 타입: `sql_identifier`
+  - 설명: 시퀀스가 속한 데이터베이스
+- `sequence_schema`
+  - 타입: `sql_identifier`
+  - 설명: 시퀀스가 속한 스키마
+- `sequence_name`
+  - 타입: `sql_identifier`
+  - 설명: 시퀀스 이름
+- `data_type`
+  - 타입: `character_data`
+  - 설명: 시퀀스 데이터 타입
+- `numeric_precision`
+  - 타입: `cardinal_number`
+  - 설명: 정밀도
+- `numeric_precision_radix`
+  - 타입: `cardinal_number`
+  - 설명: 정밀도 기수
+- `numeric_scale`
+  - 타입: `cardinal_number`
+  - 설명: 스케일
+- `start_value`
+  - 타입: `character_data`
+  - 설명: 시작값
+- `minimum_value`
+  - 타입: `character_data`
+  - 설명: 최소값
+- `maximum_value`
+  - 타입: `character_data`
+  - 설명: 최대값
+- `increment`
+  - 타입: `character_data`
+  - 설명: 증분값
+- `cycle_option`
+  - 타입: `yes_or_no`
+  - 설명: 순환 여부
 
 #### 예제
 
@@ -4586,7 +4853,7 @@ WHERE cycle_option = 'YES';
 
 #### 37.11.1. domains - 도메인
 
-사용자 정의 도메인에 대한 정보를 제공합니다.
+사용자 정의 도메인에 대한 정보를 제공함.
 
 ```sql
 SELECT domain_name, data_type, domain_default
@@ -4596,7 +4863,7 @@ WHERE domain_schema = 'public';
 
 #### 37.11.2. enabled_roles - 활성화된 역할
 
-현재 세션에서 활성화된 역할을 표시합니다.
+현재 세션에서 활성화된 역할을 표시함.
 
 ```sql
 SELECT * FROM information_schema.enabled_roles;
@@ -4604,7 +4871,7 @@ SELECT * FROM information_schema.enabled_roles;
 
 #### 37.11.3. applicable_roles - 적용 가능한 역할
 
-현재 사용자에게 적용 가능한 모든 역할을 표시합니다.
+현재 사용자에게 적용 가능한 모든 역할을 표시함.
 
 ```sql
 SELECT * FROM information_schema.applicable_roles;
@@ -4612,7 +4879,7 @@ SELECT * FROM information_schema.applicable_roles;
 
 #### 37.11.4. sql_features - SQL 기능
 
-PostgreSQL에서 지원하는 SQL 표준 기능 목록을 제공합니다.
+PostgreSQL에서 지원하는 SQL 표준 기능 목록을 제공함.
 
 ```sql
 -- 지원되는 SQL 기능 조회
@@ -4714,7 +4981,7 @@ ORDER BY table_name, grantee;
 
 #### 제약조건 이름 중복 문제
 
-SQL 표준에서는 스키마 내에서 제약조건 이름이 고유해야 하지만, PostgreSQL은 같은 이름의 제약조건을 허용합니다. 따라서 다음 뷰에서 같은 이름의 제약조건이 여러 개 반환될 수 있습니다:
+SQL 표준에서는 스키마 내에서 제약조건 이름이 고유해야 하지만, PostgreSQL은 같은 이름의 제약조건을 허용함. 따라서 다음 뷰에서 같은 이름의 제약조건이 여러 개 반환될 수 있음:
 
 - `check_constraints`
 - `domain_constraints`
@@ -4722,7 +4989,7 @@ SQL 표준에서는 스키마 내에서 제약조건 이름이 고유해야 하�
 
 #### PostgreSQL 고유 정보
 
-정보 스키마는 SQL 표준에 정의된 정보만 제공합니다. PostgreSQL 고유 기능(파티션, 상속, OID 등)에 대한 정보가 필요하면 시스템 카탈로그(`pg_catalog`)를 직접 쿼리해야 합니다:
+정보 스키마는 SQL 표준에 정의된 정보만 제공함. PostgreSQL 고유 기능(파티션, 상속, OID 등)에 대한 정보가 필요하면 시스템 카탈로그(`pg_catalog`)를 직접 쿼리 필요:
 
 ```sql
 -- PostgreSQL 시스템 카탈로그 사용 예
@@ -4733,78 +5000,76 @@ WHERE relnamespace = 'public'::regnamespace;
 
 #### 성능 고려사항
 
-정보 스키마 뷰는 시스템 카탈로그를 기반으로 한 복잡한 뷰입니다. 대규모 데이터베이스에서 자주 쿼리하면 성능에 영향을 줄 수 있으므로, 성능이 중요한 경우에는 시스템 카탈로그를 직접 사용하는 편이 더 효율적입니다.
+정보 스키마 뷰는 시스템 카탈로그를 기반으로 한 복잡한 뷰임. 대규모 데이터베이스에서 자주 쿼리하면 성능에 영향을 줄 수 있으므로, 성능이 중요한 경우에는 시스템 카탈로그를 직접 사용하는 편이 더 효율적임.
 
 ---
 
 ### 37.14. 정보 스키마 뷰 전체 목록
 
-| 뷰 이름 | 설명 |
-|---------|------|
-| `administrable_role_authorizations` | 관리 가능한 역할 권한 |
-| `applicable_roles` | 적용 가능한 역할 |
-| `attributes` | 복합 타입 속성 |
-| `character_sets` | 문자 집합 |
-| `check_constraint_routine_usage` | CHECK 제약조건에서 사용된 루틴 |
-| `check_constraints` | CHECK 제약조건 |
-| `collation_character_set_applicability` | 콜레이션과 문자 집합 관계 |
-| `collations` | 콜레이션 |
-| `column_column_usage` | 생성된 컬럼 종속성 |
-| `column_domain_usage` | 도메인을 사용하는 컬럼 |
-| `column_options` | 외부 테이블 컬럼 옵션 |
-| `column_privileges` | 컬럼 권한 |
-| `column_udt_usage` | UDT를 사용하는 컬럼 |
-| `columns` | 컬럼 정보 |
-| `constraint_column_usage` | 제약조건에 사용된 컬럼 |
-| `constraint_table_usage` | 제약조건에 사용된 테이블 |
-| `data_type_privileges` | 데이터 타입 권한 |
-| `domain_constraints` | 도메인 제약조건 |
-| `domain_udt_usage` | UDT를 사용하는 도메인 |
-| `domains` | 도메인 |
-| `element_types` | 배열 요소 타입 |
-| `enabled_roles` | 활성화된 역할 |
-| `foreign_data_wrapper_options` | FDW 옵션 |
-| `foreign_data_wrappers` | FDW |
-| `foreign_server_options` | 외부 서버 옵션 |
-| `foreign_servers` | 외부 서버 |
-| `foreign_table_options` | 외부 테이블 옵션 |
-| `foreign_tables` | 외부 테이블 |
-| `information_schema_catalog_name` | 현재 데이터베이스 이름 |
-| `key_column_usage` | 키 컬럼 사용 |
-| `parameters` | 루틴 매개변수 |
-| `referential_constraints` | 참조 제약조건 |
-| `role_column_grants` | 역할별 컬럼 권한 |
-| `role_routine_grants` | 역할별 루틴 권한 |
-| `role_table_grants` | 역할별 테이블 권한 |
-| `role_udt_grants` | 역할별 UDT 권한 |
-| `role_usage_grants` | 역할별 사용 권한 |
-| `routine_column_usage` | 루틴에서 사용된 컬럼 |
-| `routine_privileges` | 루틴 권한 |
-| `routine_routine_usage` | 루틴에서 사용된 루틴 |
-| `routine_sequence_usage` | 루틴에서 사용된 시퀀스 |
-| `routine_table_usage` | 루틴에서 사용된 테이블 |
-| `routines` | 함수/프로시저 |
-| `schemata` | 스키마 |
-| `sequences` | 시퀀스 |
-| `sql_features` | SQL 기능 |
-| `sql_implementation_info` | SQL 구현 정보 |
-| `sql_parts` | SQL 표준 부분 |
-| `sql_sizing` | SQL 크기 제한 |
-| `table_constraints` | 테이블 제약조건 |
-| `table_privileges` | 테이블 권한 |
-| `tables` | 테이블 |
-| `transforms` | 타입 변환 |
-| `triggered_update_columns` | 트리거 업데이트 컬럼 |
-| `triggers` | 트리거 |
-| `udt_privileges` | UDT 권한 |
-| `usage_privileges` | 사용 권한 |
-| `user_defined_types` | 사용자 정의 타입 |
-| `user_mapping_options` | 사용자 매핑 옵션 |
-| `user_mappings` | 사용자 매핑 |
-| `view_column_usage` | 뷰에서 사용된 컬럼 |
-| `view_routine_usage` | 뷰에서 사용된 루틴 |
-| `view_table_usage` | 뷰에서 사용된 테이블 |
-| `views` | 뷰 |
+- `administrable_role_authorizations`: 관리 가능한 역할 권한
+- `applicable_roles`: 적용 가능한 역할
+- `attributes`: 복합 타입 속성
+- `character_sets`: 문자 집합
+- `check_constraint_routine_usage`: CHECK 제약조건에서 사용된 루틴
+- `check_constraints`: CHECK 제약조건
+- `collation_character_set_applicability`: 콜레이션과 문자 집합 관계
+- `collations`: 콜레이션
+- `column_column_usage`: 생성된 컬럼 종속성
+- `column_domain_usage`: 도메인을 사용하는 컬럼
+- `column_options`: 외부 테이블 컬럼 옵션
+- `column_privileges`: 컬럼 권한
+- `column_udt_usage`: UDT를 사용하는 컬럼
+- `columns`: 컬럼 정보
+- `constraint_column_usage`: 제약조건에 사용된 컬럼
+- `constraint_table_usage`: 제약조건에 사용된 테이블
+- `data_type_privileges`: 데이터 타입 권한
+- `domain_constraints`: 도메인 제약조건
+- `domain_udt_usage`: UDT를 사용하는 도메인
+- `domains`: 도메인
+- `element_types`: 배열 요소 타입
+- `enabled_roles`: 활성화된 역할
+- `foreign_data_wrapper_options`: FDW 옵션
+- `foreign_data_wrappers`: FDW
+- `foreign_server_options`: 외부 서버 옵션
+- `foreign_servers`: 외부 서버
+- `foreign_table_options`: 외부 테이블 옵션
+- `foreign_tables`: 외부 테이블
+- `information_schema_catalog_name`: 현재 데이터베이스 이름
+- `key_column_usage`: 키 컬럼 사용
+- `parameters`: 루틴 매개변수
+- `referential_constraints`: 참조 제약조건
+- `role_column_grants`: 역할별 컬럼 권한
+- `role_routine_grants`: 역할별 루틴 권한
+- `role_table_grants`: 역할별 테이블 권한
+- `role_udt_grants`: 역할별 UDT 권한
+- `role_usage_grants`: 역할별 사용 권한
+- `routine_column_usage`: 루틴에서 사용된 컬럼
+- `routine_privileges`: 루틴 권한
+- `routine_routine_usage`: 루틴에서 사용된 루틴
+- `routine_sequence_usage`: 루틴에서 사용된 시퀀스
+- `routine_table_usage`: 루틴에서 사용된 테이블
+- `routines`: 함수/프로시저
+- `schemata`: 스키마
+- `sequences`: 시퀀스
+- `sql_features`: SQL 기능
+- `sql_implementation_info`: SQL 구현 정보
+- `sql_parts`: SQL 표준 부분
+- `sql_sizing`: SQL 크기 제한
+- `table_constraints`: 테이블 제약조건
+- `table_privileges`: 테이블 권한
+- `tables`: 테이블
+- `transforms`: 타입 변환
+- `triggered_update_columns`: 트리거 업데이트 컬럼
+- `triggers`: 트리거
+- `udt_privileges`: UDT 권한
+- `usage_privileges`: 사용 권한
+- `user_defined_types`: 사용자 정의 타입
+- `user_mapping_options`: 사용자 매핑 옵션
+- `user_mappings`: 사용자 매핑
+- `view_column_usage`: 뷰에서 사용된 컬럼
+- `view_routine_usage`: 뷰에서 사용된 루틴
+- `view_table_usage`: 뷰에서 사용된 테이블
+- `views`: 뷰
 
 ---
 

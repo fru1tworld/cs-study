@@ -41,13 +41,13 @@
 
 ### 1. 원격 통신(Remoting)이란 무엇인가
 
-원격 통신(remoting)은 서로 다른 노드(node) 위에 있는 액터 시스템(Actor System)들이 통신할 수 있게 해 주는 내부 메커니즘입니다.
+원격 통신(remoting)은 서로 다른 노드(node) 위에 있는 액터 시스템(Actor System)들이 통신할 수 있게 해 주는 내부 메커니즘.
 
-공식 문서는 중요한 권장사항을 강조합니다: 애플리케이션은 일반적으로 원격 통신을 직접 사용하기보다 Akka Cluster나 기술 중립적인 프로토콜(HTTP, gRPC 등)과 같은 상위 수준의 추상화(higher-level abstractions)를 활용해야 합니다. 원격 통신은 이러한 상위 계층 도구들의 기반이 되는 계층입니다.
+공식 문서의 핵심 권장사항: 애플리케이션은 일반적으로 원격 통신을 직접 사용하기보다 Akka Cluster나 기술 중립적인 프로토콜(HTTP, gRPC 등)과 같은 상위 수준의 추상화(higher-level abstractions) 활용 필요. 원격 통신은 이러한 상위 계층 도구들의 기반이 되는 계층.
 
 #### 의존성(Dependency)
 
-Akka 원격 통신 모듈을 프로젝트에 추가합니다(버전 2.10.19 기준).
+Akka 원격 통신 모듈을 프로젝트에 추가(버전 2.10.19 기준).
 
 **sbt:**
 ```scala
@@ -55,13 +55,13 @@ val AkkaVersion = "2.10.19"
 libraryDependencies += "com.typesafe.akka" %% "akka-remote" % AkkaVersion
 ```
 
-> 참고: 액터 프로바이더(provider)로는 `remote`보다 `cluster`를 권장합니다. 따라서 실무에서는 `akka-cluster` 의존성을 함께 사용하는 경우가 많습니다.
+> 참고: 액터 프로바이더(provider)로는 `remote`보다 `cluster` 권장. 실무에서는 `akka-cluster` 의존성을 함께 사용하는 경우 많음.
 
 ---
 
 ### 2. Artery란 무엇인가
 
-Artery는 Akka 원격 통신 계층(remoting layer)의 현대적인 재구현(reimplementation)으로, "고처리량(high-throughput), 저지연(low-latency) 통신"을 최우선으로 합니다. 주요 개선 사항은 다음과 같습니다.
+Artery는 Akka 원격 통신 계층(remoting layer)의 현대적인 재구현(reimplementation)으로, "고처리량(high-throughput), 저지연(low-latency) 통신"을 최우선 목표로 함. 주요 개선 사항:
 
 - Akka 스트림(Akka Streams) TCP/TLS 또는 Aeron(UDP)을 기반으로 한 전송(transport) 옵션
 - 전용 서브채널(dedicated subchannel)을 통한, 사용자 메시지(user messages)와 제어 메시지(control messages)의 격리(isolation)
@@ -70,25 +70,23 @@ Artery는 Akka 원격 통신 계층(remoting layer)의 현대적인 재구현(re
 - 성능 향상을 위한 ByteBuffer 기반 직렬화(serialization)
 - Akka 메이저(major) 버전 간 프로토콜 안정성(protocol stability)
 
-이러한 설계 목표 덕분에 Artery는 대용량 메시지 트래픽과 지연 민감 워크로드 모두에서 우수한 성능을 발휘합니다.
+이러한 설계 목표 덕분에 Artery는 대용량 메시지 트래픽과 지연 민감 워크로드 모두에서 우수한 성능 발휘.
 
 ---
 
 ### 3. 전송 방식(Transport) 선택
 
-`akka.remote.artery.transport` 설정을 통해 세 가지 전송 옵션을 사용할 수 있습니다.
+`akka.remote.artery.transport` 설정을 통해 세 가지 전송 옵션 사용 가능.
 
-| 전송 방식(Transport) | 특성 |
-|----------------------|------|
-| **tcp** | Akka 스트림 TCP(기본값). 좋은 성능과 운영 단순성(operational simplicity)을 제공 |
-| **tls-tcp** | 암호화(encryption)가 적용된 TCP. 보안이 필요할 때 권장됨 |
-| **aeron-udp** | 고성능 UDP 전송. 유휴 상태(idle)에서 CPU 사용량이 더 높음. 64비트 JVM 필요 |
+- `tcp`: Akka 스트림 TCP(기본값). 좋은 성능과 운영 단순성(operational simplicity) 제공
+- `tls-tcp`: 암호화(encryption)가 적용된 TCP. 보안이 필요할 때 권장
+- `aeron-udp`: 고성능 UDP 전송. 유휴 상태(idle)에서 CPU 사용량이 더 높음. 64비트 JVM 필요
 
-공식 문서는 다음과 같이 안내합니다: "무엇을 선택해야 할지 확신이 서지 않는다면 좋은 선택은 기본값인 `tcp`를 사용하는 것입니다(if you are uncertain of what to select a good choice is to use the default, which is `tcp`)."
+공식 문서 안내: "무엇을 선택해야 할지 확신이 서지 않는다면 좋은 선택은 기본값인 `tcp`를 사용하는 것"(if you are uncertain of what to select a good choice is to use the default, which is `tcp`).
 
 #### Aeron 전송을 위한 추가 의존성
 
-`aeron-udp` 전송을 사용하려면 다음 의존성을 추가해야 합니다.
+`aeron-udp` 전송을 사용하려면 다음 의존성 추가 필요.
 
 ```scala
 libraryDependencies ++= Seq(
@@ -99,7 +97,7 @@ libraryDependencies ++= Seq(
 
 #### Java 17에서 Aeron 사용 시 JVM 플래그
 
-Java 17 이상에서 Aeron 전송을 사용하려면 다음 JVM 플래그가 필요합니다.
+Java 17 이상에서 Aeron 전송을 사용하려면 다음 JVM 플래그 필요.
 
 ```
 --add-opens=java.base/sun.nio.ch=ALL-UNNAMED
@@ -109,7 +107,7 @@ Java 17 이상에서 Aeron 전송을 사용하려면 다음 JVM 플래그가 필
 
 ### 4. 원격 통신을 위한 ActorSystem 준비
 
-최소한의 `application.conf` 설정 예시는 다음과 같습니다.
+최소한의 `application.conf` 설정 예시:
 
 ```hocon
 akka {
@@ -126,22 +124,22 @@ akka {
 }
 ```
 
-원격 통신을 활성화하기 위한 네 가지 핵심 설정 요소는 다음과 같습니다.
+원격 통신을 활성화하기 위한 네 가지 핵심 설정 요소:
 
-1. 액터 프로바이더(actor provider)를 로컬(local)에서 변경합니다.
-2. Artery를 원격 통신 구현체(remoting implementation)로 활성화합니다.
-3. 호스트명(hostname)을 설정합니다. 프로덕션 환경에서는 localhost가 아닌 전역적으로 도달 가능한(globally reachable) 주소를 사용해야 합니다.
-4. 포트(port)를 설정합니다. 같은 머신에서 여러 액터 시스템을 운영하는 경우 각각 고유한 포트를 지정해야 합니다.
+1. 액터 프로바이더(actor provider)를 로컬(local)에서 변경
+2. Artery를 원격 통신 구현체(remoting implementation)로 활성화
+3. 호스트명(hostname) 설정. 프로덕션 환경에서는 localhost가 아닌 전역적으로 도달 가능한(globally reachable) 주소 사용 필요
+4. 포트(port) 설정. 같은 머신에서 여러 액터 시스템을 운영하는 경우 각각 고유한 포트 지정 필요
 
 ---
 
 ### 5. 표준 주소(Canonical Address)와 네트워크 토폴로지
 
-표준 주소(canonical address) 개념은 원격 통신의 핵심입니다. 문서에 따르면 "동일한 네트워크상의 각 시스템은 다른 어떤 시스템에든 메시지를 보낼 수 있다(each system can send messages to any other system on the same network)"는 것이 가능하려면 "고유하고 전역적으로 도달 가능한(unique, globally reachable) 주소와 포트"가 필요합니다. 이 주소는 시스템의 고유한 정체성(identity)의 일부가 되며, 원격 시스템들이 연결을 맺는 데 사용됩니다.
+표준 주소(canonical address) 개념은 원격 통신의 핵심. 문서에 따르면 "동일한 네트워크상의 각 시스템은 다른 어떤 시스템에든 메시지를 보낼 수 있다"(each system can send messages to any other system on the same network)는 것이 가능하려면 "고유하고 전역적으로 도달 가능한(unique, globally reachable) 주소와 포트" 필요. 이 주소는 시스템의 고유한 정체성(identity)의 일부가 되며, 원격 시스템들이 연결을 맺는 데 사용됨.
 
 #### NAT 또는 Docker 시나리오에서의 바인드 주소 분리
 
-NAT(Network Address Translation)나 Docker 환경에서는, 바인드(bind) 주소와 표준(canonical) 주소를 분리해야 합니다.
+NAT(Network Address Translation)나 Docker 환경에서는, 바인드(bind) 주소와 표준(canonical) 주소 분리 필요.
 
 ```hocon
 akka {
@@ -156,12 +154,12 @@ akka {
 }
 ```
 
-- `canonical.*`: 외부에서 이 시스템에 도달하기 위해 사용하는 논리적 주소입니다. 다른 노드들에게 광고(advertise)되는 주소입니다.
-- `bind.*`: 시스템이 실제로 소켓을 바인딩하는 로컬 네트워크 인터페이스 주소입니다.
+- `canonical.*`: 외부에서 이 시스템에 도달하기 위해 사용하는 논리적 주소. 다른 노드들에게 광고(advertise)되는 주소
+- `bind.*`: 시스템이 실제로 소켓을 바인딩하는 로컬 네트워크 인터페이스 주소
 
 #### 프로그래밍 방식 설정
 
-원격 통신 속성을 프로그래밍 방식으로 설정할 수도 있습니다.
+원격 통신 속성을 프로그래밍 방식으로 설정 가능.
 
 ```java
 ConfigFactory.parseString("akka.remote.artery.canonical.hostname=\"1.2.3.4\"")
@@ -174,7 +172,7 @@ ConfigFactory.parseString("akka.remote.artery.canonical.hostname=\"1.2.3.4\"")
 
 #### ActorSelection을 통한 조회(Lookup)
 
-원격 액터 참조(remote actor reference)를 획득하기 위한 문서화된 패턴은 다음과 같은 경로 형식을 사용합니다.
+원격 액터 참조(remote actor reference)를 획득하기 위한 문서화된 패턴은 다음과 같은 경로 형식 사용.
 
 ```
 akka://<actor system>@<hostname>:<port>/<actor path>
@@ -194,26 +192,26 @@ selection.tell("Pretty awesome feature", getSelf());
 
 #### ActorSelection을 ActorRef로 변환
 
-`ActorSelection`을 `ActorRef`로 변환하려면 내장된 `Identify` 메시지를 사용하거나 `resolveOne()` 메서드를 사용합니다. `resolveOne()`은 일치하는 `ActorRef`를 담은 `Future`/`CompletionStage`를 반환합니다.
+`ActorSelection`을 `ActorRef`로 변환하려면 내장된 `Identify` 메시지를 사용하거나 `resolveOne()` 메서드 사용. `resolveOne()`은 일치하는 `ActorRef`를 담은 `Future`/`CompletionStage` 반환.
 
 ---
 
 ### 7. 메시지 전달 보장(Delivery Guarantees)
 
-문서는 액터 메시지 전달의 보장 수준을 다음과 같이 명시합니다.
+문서가 명시하는 액터 메시지 전달의 보장 수준:
 
-- 일반 메시지(regular messages)는 **최대 한 번(at-most-once)** 전달을 보장합니다. 메시지는 한 번 전달되거나 전혀 전달되지 않으며, 중복 전달은 없습니다.
-- 시스템 메시지(system messages, 예: 데스 워치(death watch)와 배포(deployment))는 확인(confirmation)과 재전송(resending) 메커니즘을 통해 **정확히 한 번(exactly-once)** 전달이 보장됩니다.
+- 일반 메시지(regular messages): **최대 한 번(at-most-once)** 전달 보장. 메시지는 한 번 전달되거나 전혀 전달되지 않으며, 중복 전달 없음
+- 시스템 메시지(system messages, 예: 데스 워치(death watch)와 배포(deployment)): 확인(confirmation)과 재전송(resending) 메커니즘을 통해 **정확히 한 번(exactly-once)** 전달 보장
 
 ---
 
 ### 8. 직렬화 요구사항과 ByteBuffer 기반 직렬화
 
-문서는 "액터 메시지에 직렬화를 활성화해야 한다"고 명시합니다. 기본 선택지로는 Jackson 기반 직렬화가 권장됩니다.
+문서는 "액터 메시지에 직렬화를 활성화해야 한다"고 명시. 기본 선택지로는 Jackson 기반 직렬화 권장.
 
 #### ByteBuffer 기반 직렬화
 
-Artery는 고처리량 메시징(high-throughput messaging)에서의 성능 향상을 위해 `ByteBufferSerializer`를 도입했습니다.
+Artery는 고처리량 메시징(high-throughput messaging)에서의 성능 향상을 위해 `ByteBufferSerializer` 도입.
 
 **Scala:**
 ```scala
@@ -231,7 +229,7 @@ interface ByteBufferSerializer {
 }
 ```
 
-구현체는 일반적으로 `SerializerWithStringManifest`를 확장하며, 배열(array) 기반 메서드를 ByteBuffer 기반 메서드에 위임(delegate)해야 합니다.
+구현체는 일반적으로 `SerializerWithStringManifest`를 확장하며, 배열(array) 기반 메서드를 ByteBuffer 기반 메서드에 위임(delegate) 필요.
 
 ---
 
@@ -239,37 +237,37 @@ interface ByteBufferSerializer {
 
 #### Phi 누적 장애 감지기(Phi Accrual Failure Detector)
 
-시스템은 "Phi 누적 장애 감지기(The Phi Accrual Failure Detector)" 알고리즘을 구현하며, phi 값을 다음과 같이 계산합니다.
+시스템은 "Phi 누적 장애 감지기(The Phi Accrual Failure Detector)" 알고리즘을 구현하며, phi 값 계산 방식:
 
 ```
 phi = -log10(1 - F(timeSinceLastHeartbeat))
 ```
 
-여기서 F는 누적 분포 함수(cumulative distribution function)를 나타냅니다.
+여기서 F는 누적 분포 함수(cumulative distribution function).
 
-- `akka.remote.watch-failure-detector.threshold` (기본값: 10) 설정은 장애 감지의 민감도(sensitivity)를 결정합니다.
-- `acceptable-heartbeat-pause` 파라미터는 가비지 컬렉션(garbage collection) 일시 정지나 일시적인 네트워크 장애를 수용(accommodate)합니다.
+- `akka.remote.watch-failure-detector.threshold` (기본값: 10) 설정은 장애 감지의 민감도(sensitivity) 결정
+- `acceptable-heartbeat-pause` 파라미터는 가비지 컬렉션(garbage collection) 일시 정지나 일시적인 네트워크 장애 수용(accommodate)
 
 #### 격리(Quarantine) 메커니즘
 
-연관(association)이 격리(quarantine) 상태에 진입하는 경우는 다음과 같습니다.
+연관(association)이 격리(quarantine) 상태에 진입하는 경우:
 
 - 클러스터 노드가 멤버십(membership)에서 제거될 때
 - 원격 장애 감지기(remote failure detector)가 (감시(watch)를 통해) 발동할 때
 - 시스템 메시지 버퍼(system message buffer)가 오버플로(overflow)할 때
 - 예상치 못한 인프라 예외(infrastructure exception)가 발생할 때
 
-각 ActorSystem은 인카네이션(incarnation, 같은 주소로 재시작된 새로운 인스턴스)을 구별하기 위한 고유 식별자(UID, unique identifier)를 가집니다.
+각 ActorSystem은 인카네이션(incarnation, 같은 주소로 재시작된 새로운 인스턴스)을 구별하기 위한 고유 식별자(UID, unique identifier) 보유.
 
-문서에 따르면 "이 상태에서 복구하는 유일한 방법은 액터 시스템 중 하나를 재시작하는 것입니다." 격리된 시스템으로 전송된 메시지는 폐기(drop)되지만, `actorSelection` 메시지는 시스템 재시작 여부를 탐지(probe)하기 위해 여전히 전달될 수 있습니다.
+문서에 따르면 "이 상태에서 복구하는 유일한 방법은 액터 시스템 중 하나를 재시작하는 것". 격리된 시스템으로 전송된 메시지는 폐기(drop)되지만, `actorSelection` 메시지는 시스템 재시작 여부를 탐지(probe)하기 위해 여전히 전달 가능.
 
 ---
 
 ### 10. 원격 액터 감시(Watching Remote Actors)
 
-원격 데스 워치(remote death watching)는 하트비트(heartbeat) 메시지와 장애 감지기를 활용하여 `Terminated` 메시지를 생성합니다.
+원격 데스 워치(remote death watching)는 하트비트(heartbeat) 메시지와 장애 감지기를 활용하여 `Terminated` 메시지 생성.
 
-API 사용 방식은 로컬 액터를 감시하는 것과 동일합니다. 다만 장애 감지기는 원격 시스템이 정상적으로 종료(graceful shutdown)되지 않고 충돌(crash)하는 시나리오를 처리합니다. 즉, 원격 노드가 갑자기 사라지더라도 감시하는 액터는 `Terminated` 알림을 받을 수 있습니다.
+API 사용 방식은 로컬 액터를 감시하는 것과 동일. 다만 장애 감지기는 원격 시스템이 정상적으로 종료(graceful shutdown)되지 않고 충돌(crash)하는 시나리오를 처리 → 원격 노드가 갑자기 사라지더라도 감시하는 액터는 `Terminated` 알림 수신 가능.
 
 ---
 
@@ -277,7 +275,7 @@ API 사용 방식은 로컬 액터를 감시하는 것과 동일합니다. 다�
 
 #### 병렬 처리를 위한 레인(Lanes)
 
-여러 개의 인바운드(inbound) 및 아웃바운드(outbound) 레인을 두면 직렬화/역직렬화를 병렬로 처리할 수 있습니다.
+여러 개의 인바운드(inbound) 및 아웃바운드(outbound) 레인을 두면 직렬화/역직렬화를 병렬로 처리 가능.
 
 ```hocon
 akka.remote.artery {
@@ -286,13 +284,13 @@ akka.remote.artery {
 }
 ```
 
-레인 선택은 수신자(recipient) ActorRef의 일관된 해싱(consistent hashing)을 사용하여, 수신자별 메시지 순서(per-receiver message ordering)를 보존합니다.
+레인 선택은 수신자(recipient) ActorRef의 일관된 해싱(consistent hashing)을 사용하여, 수신자별 메시지 순서(per-receiver message ordering) 보존.
 
-문서는 다음과 같이 언급합니다: "가장 낮은 지연(lowest latency)은 `inbound-lanes=1`과 `outbound-lanes=1`로 달성할 수 있다(lowest latency can be achieved with `inbound-lanes=1` and `outbound-lanes=1`)." 여러 레인을 사용하면 비동기 경계(async boundaries)가 도입되기 때문입니다. 즉, 처리량(throughput)을 위해서는 레인을 늘리고, 최저 지연을 위해서는 레인을 1로 둡니다.
+문서 언급: "가장 낮은 지연(lowest latency)은 `inbound-lanes=1`과 `outbound-lanes=1`로 달성 가능"(lowest latency can be achieved with `inbound-lanes=1` and `outbound-lanes=1`). 여러 레인을 사용하면 비동기 경계(async boundaries)가 도입되기 때문 → 처리량(throughput)을 위해서는 레인을 늘리고, 최저 지연을 위해서는 레인을 1로 설정.
 
 #### 대용량 메시지 처리(Large Message Handling)
 
-전용 서브채널(dedicated subchannel)은 대용량 메시지를 일반 트래픽으로부터 격리합니다. 액터 경로 패턴(actor path patterns)을 통해 설정합니다.
+전용 서브채널(dedicated subchannel)은 대용량 메시지를 일반 트래픽으로부터 격리. 액터 경로 패턴(actor path patterns)을 통해 설정.
 
 ```hocon
 akka.remote.artery.large-message-destinations = [
@@ -303,13 +301,13 @@ akka.remote.artery.large-message-destinations = [
 ]
 ```
 
-패턴 매칭은 와일드카드(wildcard)를 지원합니다.
-- `*`: 한 단계(single level)를 매칭
-- `**`: 여러 단계(multiple levels)를 매칭
+패턴 매칭은 와일드카드(wildcard) 지원.
+- `*`: 한 단계(single level) 매칭
+- `**`: 여러 단계(multiple levels) 매칭
 
-와일드카드가 없는 정확한 매칭(non-wildcard match)이 더 높은 우선순위를 가집니다.
+와일드카드가 없는 정확한 매칭(non-wildcard match)이 더 높은 우선순위 보유.
 
-대용량 메시지 로깅(logging)을 활성화하려면 다음과 같이 설정합니다.
+대용량 메시지 로깅(logging)을 활성화하려면 다음과 같이 설정.
 
 ```hocon
 akka.remote.artery {
@@ -319,7 +317,7 @@ akka.remote.artery {
 
 #### Aeron 미디어 드라이버(Media Driver) 설정
 
-멀티 JVM 환경에서는, 외부 공유 미디어 드라이버(external shared media driver)를 사용하여 리소스 경합(resource contention)을 줄일 수 있습니다.
+멀티 JVM 환경에서는, 외부 공유 미디어 드라이버(external shared media driver)를 사용하여 리소스 경합(resource contention) 감소 가능.
 
 ```hocon
 akka.remote.artery.advanced.aeron {
@@ -335,7 +333,7 @@ akka.remote.artery.advanced.aeron {
 akka.remote.artery.advanced.aeron.idle-cpu-level = 5
 ```
 
-값이 낮을수록 유휴 시 대기(sleeping) 시간이 길어져 CPU 사용량은 줄어들지만 응답 시간(reaction time)이 늘어납니다.
+값이 낮을수록 유휴 시 대기(sleeping) 시간이 길어져 CPU 사용량은 줄어들지만 응답 시간(reaction time) 증가.
 
 ---
 
@@ -343,7 +341,7 @@ akka.remote.artery.advanced.aeron.idle-cpu-level = 5
 
 #### 풀(Pool) 기반 원격 라우팅
 
-라우터가 원격 노드에 라우티(routee) 액터를 생성합니다.
+라우터가 원격 노드에 라우티(routee) 액터 생성.
 
 ```hocon
 akka.actor.deployment {
@@ -360,7 +358,7 @@ akka.actor.deployment {
 
 #### 그룹(Group) 기반 원격 라우팅
 
-그룹 기반 원격 라우팅은 원격 노드에 이미 존재하는(pre-existing) 액터를 필요로 합니다.
+그룹 기반 원격 라우팅은 원격 노드에 이미 존재하는(pre-existing) 액터 필요.
 
 ```hocon
 akka.actor.deployment {
@@ -378,7 +376,7 @@ akka.actor.deployment {
 
 ### 13. 원격 액터 생성(Remote Deployment)
 
-> **권장되지 않음(Not Recommended)**: 문서는 다음과 같은 경고를 포함합니다. "원격 배포(remote deployment)라고도 알려진 원격 액터 생성(Creating Actors Remotely)은 권장하지 않으나, 완결성을 위해 여기에 문서화합니다(We recommend against Creating Actors Remotely, also known as remote deployment, but it is documented here for completeness)."
+> 권장되지 않음(Not Recommended): 문서의 경고. "원격 배포(remote deployment)라고도 알려진 원격 액터 생성(Creating Actors Remotely)은 권장하지 않으나, 완결성을 위해 여기에 문서화"(We recommend against Creating Actors Remotely, also known as remote deployment, but it is documented here for completeness).
 
 설정 예시:
 ```hocon
@@ -395,7 +393,7 @@ akka {
 
 #### 원격 배포를 위한 허용 목록(Allow List)
 
-어떤 액터가 원격으로 배포될 수 있는지 제한하려면 다음과 같이 설정합니다.
+어떤 액터가 원격으로 배포될 수 있는지 제한하려면 다음과 같이 설정.
 
 ```hocon
 akka.remote.deployment {
@@ -406,13 +404,13 @@ akka.remote.deployment {
 }
 ```
 
-문서에 따르면: "허용 목록에 포함되지 않은 액터 클래스는 이 시스템에 원격 배포될 수 없습니다(Actor classes not included in the allow list will not be allowed to be remote deployed onto this system)."
+문서에 따르면: "허용 목록에 포함되지 않은 액터 클래스는 이 시스템에 원격 배포될 수 없음"(Actor classes not included in the allow list will not be allowed to be remote deployed onto this system).
 
 ---
 
 ### 14. 컨테이너 환경(Docker/Kubernetes) 고려사항
 
-컨테이너화된(containerized) 환경에서 `aeron-udp`를 사용하는 경우, 충분한 공유 메모리(shared memory)를 확보해야 합니다.
+컨테이너화된(containerized) 환경에서 `aeron-udp`를 사용하는 경우, 충분한 공유 메모리(shared memory) 확보 필요.
 
 **Docker:**
 ```
@@ -434,13 +432,13 @@ volumes:
 
 ### 15. 플라이트 레코더(Flight Recorder)
 
-JDK 11 이상에서는 Artery 전용 Java 플라이트 레코더(Java Flight Recorder) 이벤트가 자동으로 활성화됩니다. 필요한 경우 비활성화할 수 있습니다.
+JDK 11 이상에서는 Artery 전용 Java 플라이트 레코더(Java Flight Recorder) 이벤트가 자동으로 활성화됨. 필요한 경우 비활성화 가능.
 
 ```hocon
 akka.java-flight-recorder.enabled = false
 ```
 
-플라이트 레코더는 원격 통신의 내부 동작을 진단(diagnose)하는 데 유용합니다.
+플라이트 레코더는 원격 통신의 내부 동작을 진단(diagnose)하는 데 유용.
 
 ---
 
@@ -448,13 +446,13 @@ akka.java-flight-recorder.enabled = false
 
 #### 핵심 보안 원칙
 
-문서에 따르면, `ActorSystem`은 신뢰할 수 없는 네트워크(예: 인터넷)에 평문 Aeron/UDP 또는 TCP로 노출되어서는 안 됩니다. 권장 대응책은 방화벽(firewall)으로 시스템을 보호하거나 상호 인증 TLS(TLS with mutual authentication)를 활성화하는 것입니다.
+문서에 따르면, `ActorSystem`은 신뢰할 수 없는 네트워크(예: 인터넷)에 평문 Aeron/UDP 또는 TCP로 노출 금지. 권장 대응책은 방화벽(firewall)으로 시스템을 보호하거나 상호 인증 TLS(TLS with mutual authentication) 활성화.
 
 #### SSL/TLS 설정
 
 ##### 기본 전송 설정
 
-TLS를 활성화하려면 전송 방식을 다음과 같이 설정합니다.
+TLS를 활성화하려면 전송 방식을 다음과 같이 설정.
 
 ```hocon
 akka.remote.artery {
@@ -464,7 +462,7 @@ akka.remote.artery {
 
 ##### SSL/TLS 파라미터
 
-완전한 설정 예시:
+완전한 설정 예시.
 
 ```hocon
 akka.remote.artery {
@@ -485,7 +483,7 @@ akka.remote.artery {
 }
 ```
 
-**중요한 실천 사항:** 자격 증명(credentials)을 설정 파일에 하드코딩(hardcoding)하지 말고, 비밀번호에 대해 환경 변수 치환(environment variable substitution)을 사용하십시오.
+중요한 실천 사항: 자격 증명(credentials)을 설정 파일에 하드코딩(hardcoding)하지 말고, 비밀번호에 대해 환경 변수 치환(environment variable substitution) 사용.
 
 ##### 권장 암호화 방식(Cipher Suites)
 
@@ -496,53 +494,53 @@ TLS 1.2에 대한 RFC 7525 권고에 따른 암호화 방식:
 - TLS_DHE_RSA_WITH_AES_256_GCM_SHA384
 - TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 
-문서는 설정 전에 현재의 보안 권고를 확인할 것을 권합니다.
+문서는 설정 전에 현재의 보안 권고 확인 권장.
 
 #### 상호 인증(Mutual Authentication)
 
-상호 인증(mutual authentication)은 기본적으로 활성화되어 있습니다. 즉, 연결의 수동 측(TLS 서버 측)도 상대 피어(peer)에게 인증서를 요청하고 검증합니다. Akka는 피어 투 피어(peer-to-peer) 통신을 사용하므로 두 노드 모두 키스토어(keystore)와 트러스트스토어(truststore)를 설정해야 합니다.
+상호 인증(mutual authentication)은 기본적으로 활성화됨 → 연결의 수동 측(TLS 서버 측)도 상대 피어(peer)에게 인증서를 요청하고 검증. Akka는 피어 투 피어(peer-to-peer) 통신을 사용하므로 두 노드 모두 키스토어(keystore)와 트러스트스토어(truststore) 설정 필요.
 
 ##### 호스트명 검증(Hostname Verification)
 
-호스트명 검증을 활성화하려면 다음과 같이 설정합니다.
+호스트명 검증을 활성화하려면 다음과 같이 설정.
 
 ```hocon
 akka.remote.artery.ssl.config-ssl-engine.hostname-verification=on
 ```
 
-이 설정은 목적지 호스트명이 피어 인증서의 호스트명과 일치하는지 검증합니다. 동적 호스트명을 사용하는 배포 환경에서는 검증을 비활성화할 수 있습니다.
+이 설정은 목적지 호스트명이 피어 인증서의 호스트명과 일치하는지 검증. 동적 호스트명을 사용하는 배포 환경에서는 검증 비활성화 가능.
 
 #### 인증서 전략 옵션(Certificate Strategy Options)
 
 ##### 옵션 1: 단일 인증서, 호스트명 검사 비활성화
 - 하나의 키/인증서를 모든 노드에 배포
 - 자체 서명(self-signed) 인증서 허용
-- 노드 추가가 단순함
-- **위험:** 키가 탈취되면 클러스터 전체가 위협받음
+- 노드 추가가 단순
+- 위험: 키가 탈취되면 클러스터 전체가 위협받음
 
 ##### 옵션 2: 모든 호스트명을 포함하는 단일 인증서, 호스트명 검사 활성화
 - 단일 인증서가 모든 신뢰된 호스트명을 나열
 - 노드가 인증서 안에 포함되어 있는지 검증 가능
-- 확장 시 와일드카드 인증서나 CA가 필요
-- **위험:** 탈취된 인증서는 신뢰된 호스트명에서만 사용 가능
+- 확장 시 와일드카드 인증서나 CA 필요
+- 위험: 탈취된 인증서는 신뢰된 호스트명에서만 사용 가능
 
 ##### 옵션 3: CA 기반, 노드별 개별 인증서, 호스트명 검사 활성화
 - 각 노드마다 개별 인증서
 - CA 인증서가 클러스터 전반에서 신뢰됨
 - 인증서 폐기(revocation) 지원
-- **위험:** (DNS가 변조되지 않는 한) 탈취된 노드만 클러스터에 접근 가능
+- 위험: (DNS가 변조되지 않는 한) 탈취된 노드만 클러스터에 접근 가능
 
 #### Kubernetes에서 키 회전(Rotating Keys, mTLS)
 
 ##### 아키텍처
 
-구현은 cert-manager를 사용하며 다음으로 구성됩니다.
+구현은 cert-manager를 사용하며 다음으로 구성.
 
-1. **자체 서명 발급자(Self-signed issuer)** — CA 인증서를 발급
-2. **CA 발급자(CA issuer)** — 자주 회전되는 서비스 인증서를 발급
-3. **서비스 인증서(Service certificates)** — 예시에서는 24시간마다 회전
+1. 자체 서명 발급자(Self-signed issuer) — CA 인증서 발급
+2. CA 발급자(CA issuer) — 자주 회전되는 서비스 인증서 발급
+3. 서비스 인증서(Service certificates) — 예시에서는 24시간마다 회전
 
-이 접근 방식은 전환 기간(transition period) 동안 노드 간에 동일한 인증서를 요구하지 않고도 인증서를 회전(rotate)할 수 있게 합니다.
+이 접근 방식은 전환 기간(transition period) 동안 노드 간에 동일한 인증서를 요구하지 않고도 인증서 회전(rotate) 가능.
 
 ##### Kubernetes 리소스
 
@@ -618,7 +616,7 @@ akka.remote.artery {
 
 ##### Kubernetes 배포 통합
 
-인증서 시크릿(secret)을 마운트합니다.
+인증서 시크릿(secret) 마운트.
 
 ```yaml
 volumes:
@@ -643,7 +641,7 @@ akka.remote.artery.untrusted-mode = on
 
 ##### 차단되는 작업(Blocked Operations)
 
-신뢰할 수 없는 모드가 활성화되면, 시스템은 다음을 무시합니다.
+신뢰할 수 없는 모드가 활성화되면, 시스템은 다음을 무시.
 
 - 원격 배포(remote deployment) 및 원격 감독(remote supervision)
 - 원격 데스 워치(remote DeathWatch)
@@ -653,7 +651,7 @@ akka.remote.artery.untrusted-mode = on
 
 ##### 신뢰된 셀렉션 경로(Trusted Selection Paths)
 
-특정 액터들이 셀렉션 메시지를 받을 수 있도록 허용합니다.
+특정 액터들이 셀렉션 메시지를 받을 수 있도록 허용.
 
 ```hocon
 akka.remote.artery.trusted-selection-paths = ["/user/receptionist", "/user/namingService"]
@@ -661,26 +659,26 @@ akka.remote.artery.trusted-selection-paths = ["/user/receptionist", "/user/namin
 
 ##### 한계(Limitations)
 
-신뢰할 수 없는 모드만으로는 완전한 보호를 제공하지 못합니다. 문서는 Java 직렬화는 여전히 활성화해서는 안 된다고 강조하며, 신뢰할 수 없는 모드를 네트워크 보안 및/또는 상호 인증 TLS와 함께 사용할 것을 권장합니다.
+신뢰할 수 없는 모드만으로는 완전한 보호 불가. 문서는 Java 직렬화는 여전히 활성화 금지를 강조하며, 신뢰할 수 없는 모드를 네트워크 보안 및/또는 상호 인증 TLS와 함께 사용할 것을 권장.
 
-모범 사례는 잘 정의된 진입점 액터 집합으로 시스템을 설계하고, 해당 진입점 액터들이 요청을 검증한 뒤 로컬 참조를 사용해 워커 시스템으로 전달하도록 구성하는 것입니다.
+모범 사례는 잘 정의된 진입점 액터 집합으로 시스템을 설계하고, 해당 진입점 액터들이 요청을 검증한 뒤 로컬 참조를 사용해 워커 시스템으로 전달하도록 구성하는 것.
 
 #### 추가 보안 권장사항
 
-- Akka에서는 알려진 공격 표면(attack surface)으로 인해 Java 직렬화가 기본적으로 비활성화되어 있습니다.
-- SHA1PRNG를 사용하는 Linux 시스템에서는 차단(blocking)을 방지하기 위해 `-Djava.security.egd=file:/dev/urandom`을 지정하십시오.
-- 키스토어와 인증서 리소스는 Lightbend의 SSL-Config 라이브러리에 문서화되어 있습니다.
-- 설정 상세 정보는 공식 Java Secure Socket Extension(JSSE) 문서를 참고하십시오.
+- Akka에서는 알려진 공격 표면(attack surface)으로 인해 Java 직렬화가 기본적으로 비활성화됨
+- SHA1PRNG를 사용하는 Linux 시스템에서는 차단(blocking) 방지를 위해 `-Djava.security.egd=file:/dev/urandom` 지정 필요
+- 키스토어와 인증서 리소스는 Lightbend의 SSL-Config 라이브러리에 문서화되어 있음
+- 설정 상세 정보는 공식 Java Secure Socket Extension(JSSE) 문서 참고
 
 ---
 
 ### 17. 직렬화(Serialization) 개요
 
-Akka의 직렬화(serialization) 메커니즘은 JVM 객체를 바이트 배열(byte array)로 변환하여 JVM 간 통신을 가능하게 합니다. 로컬 액터 메시지는 참조 전달(reference passing)을 사용하지만, 원격 메시지는 직렬화가 필요합니다. 프레임워크는 커스텀 직렬화기(custom serializer)와 바인딩(binding) 설정을 지원합니다.
+Akka의 직렬화(serialization) 메커니즘은 JVM 객체를 바이트 배열(byte array)로 변환하여 JVM 간 통신을 가능하게 함. 로컬 액터 메시지는 참조 전달(reference passing)을 사용하지만, 원격 메시지는 직렬화 필요. 프레임워크는 커스텀 직렬화기(custom serializer)와 바인딩(binding) 설정 지원.
 
 #### 의존성 설정
 
-코어 액터 의존성을 추가합니다(버전 2.10.19).
+코어 액터 의존성 추가(버전 2.10.19).
 
 **sbt:**
 ```scala
@@ -707,7 +705,7 @@ implementation "com.typesafe.akka:akka-actor_2.13:2.10.19"
 
 #### 직렬화기 등록(Serializer Registration)
 
-직렬화기 구현체를 설정에서 이름에 바인딩합니다.
+직렬화기 구현체를 설정에서 이름에 바인딩.
 
 ```hocon
 akka {
@@ -724,7 +722,7 @@ akka {
 
 #### 직렬화 바인딩(Serialization Bindings)
 
-메시지 타입(message type)을 직렬화기에 연결합니다.
+메시지 타입(message type)을 직렬화기에 연결.
 
 ```hocon
 akka {
@@ -737,14 +735,14 @@ akka {
 }
 ```
 
-**핵심 사항:**
-- 트레이트(trait)/인터페이스(interface) 이름이나 추상 기반 클래스(abstract base class)를 지정합니다.
-- 바인딩이 모호한 경우 가장 구체적인(most specific) 클래스가 선택됩니다.
-- Scala 객체(object) 안에 정의된 메시지 클래스는 완전한 정규화 이름(fully qualified name)에서 `Wrapper.Message` 대신 `Wrapper$Message` 형식을 사용해야 합니다.
+핵심 사항:
+- 트레이트(trait)/인터페이스(interface) 이름이나 추상 기반 클래스(abstract base class) 지정
+- 바인딩이 모호한 경우 가장 구체적인(most specific) 클래스 선택
+- Scala 객체(object) 안에 정의된 메시지 클래스는 완전한 정규화 이름(fully qualified name)에서 `Wrapper.Message` 대신 `Wrapper$Message` 형식 사용 필요
 
 #### 식별자 설정(Identifier Configuration)
 
-식별자를 하드코딩하는 대신 설정에서 정의할 수 있습니다.
+식별자를 하드코딩하는 대신 설정에서 정의 가능.
 
 ```hocon
 akka {
@@ -805,7 +803,7 @@ val system = ActorSystem(Behaviors.empty, "example")
 val serialization = SerializationExtension(system)
 ```
 
-**중요:** 역직렬화 시에는 매니페스트(manifest)와 직렬화기 ID(serializer ID)가 바이트와 함께 있어야 합니다. 직렬화 바인딩이 변경되는 롤링 업데이트(rolling update)를 지원하려면 이 세 가지(바이트, 직렬화기 ID, 매니페스트)를 함께 저장하십시오.
+중요: 역직렬화 시에는 매니페스트(manifest)와 직렬화기 ID(serializer ID)가 바이트와 함께 있어야 함. 직렬화 바인딩이 변경되는 롤링 업데이트(rolling update)를 지원하려면 이 세 가지(바이트, 직렬화기 ID, 매니페스트)를 함께 저장 필요.
 
 ---
 
@@ -813,7 +811,7 @@ val serialization = SerializationExtension(system)
 
 #### 기본 직렬화기(Basic Serializer)
 
-`Serializer`(Scala) 또는 `JSerializer`(Java)를 확장합니다.
+`Serializer`(Scala) 또는 `JSerializer`(Java) 확장.
 
 **Scala:**
 ```scala
@@ -858,14 +856,14 @@ static class MyOwnSerializer extends JSerializer {
 }
 ```
 
-**요구사항:**
-- 식별자(identifier)는 고유해야 하며, 버전 간에 일정하게 유지되어야 합니다.
-- 식별자 0~40은 Akka가 예약(reserved)했습니다.
-- 매니페스트(manifest)는 다형적(polymorphic) 역직렬화를 위한 타입 힌트(type hint)를 제공합니다.
+요구사항:
+- 식별자(identifier)는 고유해야 하며, 버전 간에 일정하게 유지 필요
+- 식별자 0~40은 Akka가 예약(reserved)
+- 매니페스트(manifest)는 다형적(polymorphic) 역직렬화를 위한 타입 힌트(type hint) 제공
 
 #### SerializerWithStringManifest (권장)
 
-문자열 기반 매니페스트(string-based manifest)를 사용하면 스키마 진화(schema evolution)와 영속성(persistence) 대응이 더 수월해집니다.
+문자열 기반 매니페스트(string-based manifest)를 사용하면 스키마 진화(schema evolution)와 영속성(persistence) 대응이 더 수월.
 
 **Scala:**
 ```scala
@@ -894,13 +892,13 @@ class MyOwnSerializer2 extends SerializerWithStringManifest {
 }
 ```
 
-**모범 사례:** 알 수 없는 매니페스트에 대해 `IllegalArgumentException`이나 `NotSerializableException`을 던지도록 구현하면, 혼합 버전이 공존하는 롤링 업데이트 상황에서도 안전하게 동작합니다.
+모범 사례: 알 수 없는 매니페스트에 대해 `IllegalArgumentException`이나 `NotSerializableException`을 던지도록 구현하면, 혼합 버전이 공존하는 롤링 업데이트 상황에서도 안전하게 동작.
 
 ---
 
 ### 21. ActorRef 직렬화
 
-액터 참조(actor reference)를 직렬화하려면 `ActorRefResolver`를 사용합니다.
+액터 참조(actor reference)를 직렬화하려면 `ActorRefResolver` 사용.
 
 **Scala:**
 ```scala
@@ -924,26 +922,26 @@ class PingSerializer(system: ExtendedActorSystem)
 }
 ```
 
-`ActorRefResolver`는 액터 참조를 직렬화 형식의 문자열로 변환(`toSerializationFormat`)하거나, 문자열로부터 액터 참조를 복원(`resolveActorRef`)하는 데 사용합니다.
+`ActorRefResolver`는 액터 참조를 직렬화 형식의 문자열로 변환(`toSerializationFormat`)하거나, 문자열로부터 액터 참조를 복원(`resolveActorRef`)하는 데 사용.
 
 ---
 
 ### 22. Java 직렬화 비활성화
 
-Java 직렬화는 성능과 보안 우려로 인해 기본적으로 비활성화되어 있습니다. 초기 프로토타이핑(early prototyping) 단계에서만 활성화하십시오.
+Java 직렬화는 성능과 보안 우려로 인해 기본적으로 비활성화됨. 초기 프로토타이핑(early prototyping) 단계에서만 활성화 권장.
 
 ```hocon
 akka.actor.allow-java-serialization = on
 akka.actor.warn-about-java-serializer-usage = off
 ```
 
-**경고:** 프로덕션(production) 사용은 강력히 권장되지 않습니다. 혼합 Scala 버전(mixed Scala versions)은 Java 직렬화와 함께 사용하기에 안전하지 않습니다.
+경고: 프로덕션(production) 사용은 강력히 권장하지 않음. 혼합 Scala 버전(mixed Scala versions)은 Java 직렬화와 함께 사용하기에 안전하지 않음.
 
 ---
 
 ### 23. 직렬화 검증(Verification)
 
-테스트 목적으로 로컬 메시지(local messages)에 대해 직렬화를 강제할 수 있습니다.
+테스트 목적으로 로컬 메시지(local messages)에 대해 직렬화 강제 가능.
 
 ```hocon
 akka {
@@ -954,24 +952,24 @@ akka {
 }
 ```
 
-특정 메시지를 검증에서 제외하려면 `NoSerializationVerificationNeeded` 마커 트레이트(marker trait)를 구현하거나 클래스 접두사(class prefix)를 설정하십시오.
+특정 메시지를 검증에서 제외하려면 `NoSerializationVerificationNeeded` 마커 트레이트(marker trait)를 구현하거나 클래스 접두사(class prefix) 설정.
 
-**참고:** 이 설정은 테스트(testing) 중에만 사용하십시오. 로컬 메시지 전달 최적화(local message passing optimization)를 비활성화합니다.
+참고: 이 설정은 테스트(testing) 중에만 사용. 로컬 메시지 전달 최적화(local message passing optimization)를 비활성화함.
 
 #### 주요 권장사항(요약)
 
-- 대부분의 경우 기본값으로 "Jackson 직렬화(Jackson serialization)"를 사용하십시오.
-- 엄격한 스키마 진화 제어가 필요하면 프로토콜 버퍼(Protocol Buffers)를 사용하십시오.
-- 영속성(persistence)을 위해서는 `SerializerWithStringManifest`를 구현하십시오.
-- 직렬화 검증은 테스트에서만 수행하십시오.
-- 직렬화기 식별자를 버전 간에 안정적으로 유지하십시오.
-- 저장/전송 시 바이트, 직렬화기 ID, 매니페스트를 함께 결합하십시오.
+- 대부분의 경우 기본값으로 "Jackson 직렬화(Jackson serialization)" 사용 권장
+- 엄격한 스키마 진화 제어가 필요하면 프로토콜 버퍼(Protocol Buffers) 사용
+- 영속성(persistence)을 위해서는 `SerializerWithStringManifest` 구현
+- 직렬화 검증은 테스트에서만 수행
+- 직렬화기 식별자는 버전 간에 안정적으로 유지
+- 저장/전송 시 바이트, 직렬화기 ID, 매니페스트를 함께 결합
 
 ---
 
 ### 24. Jackson을 이용한 직렬화
 
-Akka의 Jackson 직렬화기는 JSON 또는 CBOR(바이너리) 형식을 사용하여 메시지와 이벤트를 직렬화할 수 있게 합니다.
+Akka의 Jackson 직렬화기는 JSON 또는 CBOR(바이너리) 형식을 사용하여 메시지와 이벤트 직렬화 가능.
 
 #### 의존성 설정
 
@@ -996,7 +994,7 @@ implementation "com.typesafe.akka:akka-serialization-jackson_${versions.ScalaBin
 
 #### 마커 트레이트(Marker Trait)를 이용한 기본 사용법
 
-Akka는 Jackson 직렬화를 활성화하기 위한 두 가지 사전 정의된 마커 인터페이스를 제공합니다.
+Akka는 Jackson 직렬화를 활성화하기 위한 두 가지 사전 정의된 마커 인터페이스 제공.
 
 **Scala:**
 ```scala
@@ -1017,18 +1015,18 @@ class MyMessage implements JsonSerializable {
 }
 ```
 
-대안으로, 바이너리 CBOR 형식을 위해 `CborSerializable`을 구현하거나, 그에 상응하는 설정 바인딩을 가진 커스텀 마커 인터페이스를 만들 수 있습니다.
+대안으로, 바이너리 CBOR 형식을 위해 `CborSerializable`을 구현하거나, 그에 상응하는 설정 바인딩을 가진 커스텀 마커 인터페이스 생성 가능.
 
 #### 형식 선택(Format Selection)
 
-`serialization-bindings`를 통해 두 가지 형식을 지원합니다.
+`serialization-bindings`를 통해 두 가지 형식 지원.
 
-- **`jackson-json`**: 텍스트 기반 JSON 형식. 사람이 읽을 수 있으나(human-readable) 장황함(verbose).
-- **`jackson-cbor`**: 바이너리 CBOR 형식. 더 압축적(compact)이고 더 나은 성능을 제공.
+- `jackson-json`: 텍스트 기반 JSON 형식. 사람이 읽을 수 있으나(human-readable) 장황함(verbose)
+- `jackson-cbor`: 바이너리 CBOR 형식. 더 압축적(compact)이고 더 나은 성능 제공
 
 #### 다형적 타입 처리(Polymorphic Type Handling)
 
-중첩 필드가 추상 기반 타입(abstract base type)을 사용하는 경우, Jackson 애노테이션을 사용해 모든 구현체를 선언해야 합니다.
+중첩 필드가 추상 기반 타입(abstract base type)을 사용하는 경우, Jackson 애노테이션을 사용해 모든 구현체 선언 필요.
 
 **Scala:**
 ```scala
@@ -1067,11 +1065,11 @@ public final class Lion implements Animal {
 }
 ```
 
-> **중요한 보안 주의:** `@JsonTypeInfo(use = Id.CLASS)`나 `ObjectMapper.enableDefaultTyping()`을 절대 사용하지 마십시오. 이들은 직렬화 가젯 공격(serialization gadget attacks)에 대한 취약점을 만듭니다. 명시적인 서브타입 선언(`@JsonSubTypes`)이 안전하지 않은 역직렬화를 방지합니다.
+> 중요한 보안 주의: `@JsonTypeInfo(use = Id.CLASS)`나 `ObjectMapper.enableDefaultTyping()` 사용 금지. 이들은 직렬화 가젯 공격(serialization gadget attacks)에 대한 취약점을 만듦. 명시적인 서브타입 선언(`@JsonSubTypes`)이 안전하지 않은 역직렬화 방지.
 
 #### Scala 열거형(Enumeration) 지원
 
-더 깔끔한 직렬화를 위해 `@JsonScalaEnumeration` 애노테이션을 사용합니다.
+더 깔끔한 직렬화를 위해 `@JsonScalaEnumeration` 애노테이션 사용.
 
 ```scala
 object Planet extends Enumeration {
@@ -1089,7 +1087,7 @@ final case class Superhero(
 
 #### ADT와 케이스 객체(Case Objects)
 
-case object를 가진 Scala sealed trait의 경우, 커스텀 역직렬화기(custom deserializer)를 정의합니다.
+case object를 가진 Scala sealed trait의 경우, 커스텀 역직렬화기(custom deserializer) 정의 필요.
 
 ```scala
 @JsonSerialize(using = classOf[DirectionJsonSerializer])
@@ -1130,7 +1128,7 @@ class DirectionJsonDeserializer extends StdDeserializer[Direction](classOf[Direc
 
 #### 압축 설정(Compression Configuration)
 
-기본적으로 Jackson JSON은 32 KiB를 초과하는 페이로드(payload)에 대해 GZIP 압축을 활성화합니다.
+기본적으로 Jackson JSON은 32 KiB를 초과하는 페이로드(payload)에 대해 GZIP 압축 활성화.
 
 ```hocon
 akka.serialization.jackson.jackson-json.compression {
@@ -1139,11 +1137,11 @@ akka.serialization.jackson.jackson-json.compression {
 }
 ```
 
-CBOR 바인딩은 기본적으로 압축을 비활성화하지만, 동일한 설정을 지원합니다.
+CBOR 바인딩은 기본적으로 압축을 비활성화하지만, 동일한 설정 지원.
 
 #### 날짜/시간 직렬화(Date/Time Serialization)
 
-기본적으로 날짜는 상호 운용성(interoperability)을 위해 ISO-8601 형식으로 직렬화됩니다.
+기본적으로 날짜는 상호 운용성(interoperability)을 위해 ISO-8601 형식으로 직렬화됨.
 
 ```hocon
 akka.serialization.jackson.serialization-features {
@@ -1152,7 +1150,7 @@ akka.serialization.jackson.serialization-features {
 }
 ```
 
-외부 호환성이 필요하지 않을 때 더 나은 성능을 위해 타임스탬프(timestamp) 형식을 활성화할 수 있습니다.
+외부 호환성이 필요하지 않을 때 더 나은 성능을 위해 타임스탬프(timestamp) 형식 활성화 가능.
 
 ```hocon
 akka.serialization.jackson.serialization-features {
@@ -1161,11 +1159,11 @@ akka.serialization.jackson.serialization-features {
 }
 ```
 
-Jackson은 설정과 무관하게 두 형식 모두 역직렬화합니다.
+Jackson은 설정과 무관하게 두 형식 모두 역직렬화 가능.
 
 #### 바인딩별 설정(Per-Binding Configuration)
 
-특정 바인딩에 대해 전역 설정을 재정의(override)합니다.
+특정 바인딩에 대해 전역 설정 재정의(override).
 
 ```hocon
 akka.actor {
@@ -1195,7 +1193,7 @@ akka.serialization.jackson {
 
 #### 매니페스트 없는 직렬화(Manifest-Less Serialization)
 
-매니페스트에서 클래스 이름을 제외하여 영속성 오버헤드(persistence overhead)를 줄입니다.
+매니페스트에서 클래스 이름을 제외하여 영속성 오버헤드(persistence overhead) 감소.
 
 ```hocon
 akka.actor {
@@ -1215,11 +1213,11 @@ akka.serialization.jackson {
 }
 ```
 
-이 경우 타입이 구체적(concrete)이거나, 타입 구별(type discrimination)을 위해 다형적 Jackson 애노테이션을 사용해야 합니다.
+이 경우 타입이 구체적(concrete)이거나, 타입 구별(type discrimination)을 위해 다형적 Jackson 애노테이션 사용 필요.
 
 #### ObjectMapper 설정
 
-설정에서 Jackson의 직렬화/역직렬화 기능(features)을 커스터마이즈합니다.
+설정에서 Jackson의 직렬화/역직렬화 기능(features) 커스터마이즈 가능.
 
 ```hocon
 akka.serialization.jackson {
@@ -1245,15 +1243,15 @@ akka.serialization.jackson {
 
 #### 보안 고려사항(Security Considerations)
 
-직렬화기는 다음과 같은 여러 안전장치(safeguards)를 구현합니다.
+직렬화기가 구현하는 여러 안전장치(safeguards):
 
-- `java.lang.Object`, `java.io.Serializable`, `java.lang.Comparable` 같은 개방형 타입(open-ended types)에 Jackson 직렬화기를 바인딩하는 것은 허용되지 않습니다.
-- 알려진 직렬화 가젯 클래스(serialization gadget classes)에 대한 Jackson의 거부 목록(deny list)이 적용됩니다.
-- 명시적인 `@JsonSubTypes` 선언이 임의 클래스(arbitrary classes)의 로딩을 방지합니다.
+- `java.lang.Object`, `java.io.Serializable`, `java.lang.Comparable` 같은 개방형 타입(open-ended types)에 Jackson 직렬화기를 바인딩하는 것은 허용 안 됨
+- 알려진 직렬화 가젯 클래스(serialization gadget classes)에 대한 Jackson의 거부 목록(deny list) 적용
+- 명시적인 `@JsonSubTypes` 선언이 임의 클래스(arbitrary classes)의 로딩 방지
 
 #### 임베디드 Akka 직렬화(Embedded Akka Serialization)
 
-이미 Akka 직렬화기가 등록된 타입의 경우 `AkkaSerializationSerializer`와 `AkkaSerializationDeserializer`를 사용합니다.
+이미 Akka 직렬화기가 등록된 타입의 경우 `AkkaSerializationSerializer`와 `AkkaSerializationDeserializer` 사용.
 
 ```scala
 final case class MyMessage(
@@ -1263,11 +1261,11 @@ final case class MyMessage(
 ) extends JsonSerializable
 ```
 
-이는 직렬화기 ID, 매니페스트, base64로 인코딩된 페이로드를 임베드(embed)합니다.
+이는 직렬화기 ID, 매니페스트, base64로 인코딩된 페이로드를 임베드(embed).
 
 #### 기본 Jackson 모듈(Default Jackson Modules)
 
-다음 모듈들이 자동으로 로드됩니다.
+다음 모듈들이 자동으로 로드됨.
 
 ```hocon
 akka.serialization.jackson.jackson-modules += "akka.serialization.jackson.AkkaJacksonModule"
@@ -1279,11 +1277,11 @@ akka.serialization.jackson.jackson-modules += "com.fasterxml.jackson.datatype.js
 akka.serialization.jackson.jackson-modules += "com.fasterxml.jackson.module.scala.DefaultScalaModule"
 ```
 
-`-parameters` 컴파일러 플래그로 Java 파라미터 이름(parameter names)을 활성화하면 애노테이션 요구사항을 줄일 수 있습니다.
+`-parameters` 컴파일러 플래그로 Java 파라미터 이름(parameter names)을 활성화하면 애노테이션 요구사항 감소 가능.
 
 #### 바인딩 없이 역직렬화 허용하기
 
-직렬화 바인딩에서 클래스를 제거하면서도 역직렬화 능력은 보존합니다.
+직렬화 바인딩에서 클래스를 제거하면서도 역직렬화 능력은 보존.
 
 ```hocon
 akka.serialization.jackson.allowed-class-prefix = [
@@ -1292,7 +1290,7 @@ akka.serialization.jackson.allowed-class-prefix = [
 ]
 ```
 
-직렬화기 전환(serializer transition) 중이거나 레거시 저장 데이터를 읽을 때 유용합니다.
+직렬화기 전환(serializer transition) 중이거나 레거시 저장 데이터를 읽을 때 유용.
 
 ---
 
@@ -1300,7 +1298,7 @@ akka.serialization.jackson.allowed-class-prefix = [
 
 #### 필드 제거(Removing Fields)
 
-마이그레이션 코드(migration code)가 필요 없습니다. Jackson은 JSON의 알 수 없는 속성(unknown properties)을 무시합니다.
+마이그레이션 코드(migration code) 불필요. Jackson은 JSON의 알 수 없는 속성(unknown properties) 무시.
 
 #### 선택적 필드 추가(Adding Optional Fields)
 
@@ -1320,11 +1318,11 @@ case class ItemAdded(
 ) extends JsonSerializable
 ```
 
-직렬화된 데이터에서 누락된 경우, 선택적 필드는 자동으로 `None`/`Optional.empty`를 받습니다.
+직렬화된 데이터에서 누락된 경우, 선택적 필드는 자동으로 `None`/`Optional.empty` 수신.
 
 #### 필수 필드 추가(Adding Mandatory Fields)
 
-필수 신규 필드의 경우, `JacksonMigration` 클래스를 생성합니다.
+필수 신규 필드의 경우, `JacksonMigration` 클래스 생성 필요.
 
 **Scala 마이그레이션:**
 ```scala
@@ -1354,7 +1352,7 @@ akka.serialization.jackson.migrations {
 
 #### 필드 이름 변경(Renaming Fields)
 
-마이그레이션 로직에서 필드 이름을 변환합니다.
+마이그레이션 로직에서 필드 이름 변환.
 
 ```scala
 class ItemAddedMigration extends JacksonMigration {
@@ -1373,7 +1371,7 @@ class ItemAddedMigration extends JacksonMigration {
 
 #### 클래스 이름 변경(Renaming Classes)
 
-클래스 이름 변경을 처리하려면 `transformClassName()`을 재정의합니다.
+클래스 이름 변경을 처리하려면 `transformClassName()` 재정의.
 
 ```scala
 class OrderPlacedMigration extends JacksonMigration {
@@ -1386,7 +1384,7 @@ class OrderPlacedMigration extends JacksonMigration {
 }
 ```
 
-설정은 기존 클래스 이름(old class name)을 참조합니다.
+설정은 기존 클래스 이름(old class name)을 참조.
 
 ```hocon
 akka.serialization.jackson.migrations {
@@ -1400,23 +1398,23 @@ akka.serialization.jackson.migrations {
 
 #### 직렬화기 마이그레이션 전략(Serialization)
 
-서로 다른 직렬화기 간 마이그레이션은 2단계(두 번의) 롤링 업데이트를 사용합니다.
+서로 다른 직렬화기 간 마이그레이션은 2단계(두 번의) 롤링 업데이트 사용.
 
-**1단계:** 바인딩 없이 새 직렬화기를 등록
+1단계: 바인딩 없이 새 직렬화기 등록
 - 직렬화기 클래스를 설정에 추가
 - 모든 노드에 배포
 - 이 시점에서 기존 노드들은 아직 새 형식을 역직렬화할 수 없음
 
-**2단계:** 직렬화 바인딩 갱신
+2단계: 직렬화 바인딩 갱신
 - 메시지 클래스를 바인딩 설정에 추가
 - 롤링 업데이트 배포
 - 새 노드는 새 직렬화기를 사용하고, 기존 노드는 두 형식 모두 처리
 
-**선택적 3단계:** 어떤 영속 이벤트(persistent event)도 사용하지 않는다면 기존 직렬화기를 제거합니다.
+선택적 3단계: 어떤 영속 이벤트(persistent event)도 사용하지 않는다면 기존 직렬화기 제거.
 
 #### Jackson 순방향 호환성을 통한 롤링 업데이트(Forward Compatibility)
 
-무중단(zero-downtime) 배포를 위해 `supportedForwardVersion`을 사용하면, 현재 형식으로 쓰면서도 더 새로운 스키마를 읽을 수 있습니다.
+무중단(zero-downtime) 배포를 위해 `supportedForwardVersion`을 사용하면, 현재 형식으로 쓰면서도 더 새로운 스키마 읽기 가능.
 
 ```scala
 class ItemAddedMigration extends JacksonMigration {
@@ -1435,7 +1433,7 @@ class ItemAddedMigration extends JacksonMigration {
 }
 ```
 
-모든 노드가 버전 2를 처리할 수 있게 되면, 갱신된 클래스 정의와 최종 마이그레이션 코드를 담은 두 번째 바이너리를 배포합니다.
+모든 노드가 버전 2를 처리할 수 있게 되면, 갱신된 클래스 정의와 최종 마이그레이션 코드를 담은 두 번째 바이너리 배포.
 
 ---
 
@@ -1443,7 +1441,7 @@ class ItemAddedMigration extends JacksonMigration {
 
 #### 모듈 정보
 
-멀티노드 테스트 툴킷(Multi Node Testing toolkit)은 Akka 버전 2.10.19에서 `akka-multi-node-testkit` 아티팩트로 제공됩니다. Lightbend의 보안 라이브러리에 접근하려면 https://account.akka.io/token 에서 토큰화된 URL이 필요합니다.
+멀티노드 테스트 툴킷(Multi Node Testing toolkit)은 Akka 버전 2.10.19에서 `akka-multi-node-testkit` 아티팩트로 제공됨. Lightbend의 보안 라이브러리에 접근하려면 https://account.akka.io/token 에서 토큰화된 URL 필요.
 
 ##### 의존성 설정
 
@@ -1491,41 +1489,41 @@ dependencies {
 
 ##### 프로젝트 메타데이터
 
-- **아티팩트:** com.typesafe.akka / akka-multi-node-testkit
-- **라이선스:** BUSL-1.1
-- **상태:** Lightbend가 지원하는 정식 지원(Supported)
-- **JDK 지원:** Eclipse Temurin 11, 17, 21
-- **Scala 버전:** 2.13.17, 3.3.7
-- **JPMS 모듈:** akka.remote.testkit
+- 아티팩트: com.typesafe.akka / akka-multi-node-testkit
+- 라이선스: BUSL-1.1
+- 상태: Lightbend가 지원하는 정식 지원(Supported)
+- JDK 지원: Eclipse Temurin 11, 17, 21
+- Scala 버전: 2.13.17, 3.3.7
+- JPMS 모듈: akka.remote.testkit
 
 #### 핵심 개념
 
-멀티노드 테스트(Multi-node testing)는 별도의 JVM에서 실행되는 여러 액터 시스템에 걸쳐 테스트를 조율(coordinate)합니다. 이 툴킷은 세 가지 주요 구성 요소로 이루어집니다.
+멀티노드 테스트(Multi-node testing)는 별도의 JVM에서 실행되는 여러 액터 시스템에 걸쳐 테스트를 조율(coordinate). 이 툴킷은 세 가지 주요 구성 요소로 구성.
 
-1. **테스트 컨덕터(Test Conductor)**: 노드를 오케스트레이션(orchestrate)
-2. **MultiNodeSpec**: 편의 추상화(convenience abstractions) 제공
-3. **SbtMultiJvm 플러그인**: 테스트 실행 관리
+1. 테스트 컨덕터(Test Conductor): 노드를 오케스트레이션(orchestrate)
+2. MultiNodeSpec: 편의 추상화(convenience abstractions) 제공
+3. SbtMultiJvm 플러그인: 테스트 실행 관리
 
 #### 테스트 컨덕터(The Test Conductor)
 
-테스트 컨덕터(TestConductor)는 네트워크 스택에 연결되는 Akka 확장(Akka Extension)으로, 테스트 실행을 동기화합니다. 주요 기능은 다음과 같습니다.
+테스트 컨덕터(TestConductor)는 네트워크 스택에 연결되는 Akka 확장(Akka Extension)으로, 테스트 실행 동기화. 주요 기능:
 
-- **노드 주소 조회(Node Address Lookup):** 공유 설정 없이 원격 테스트 노드까지의 전체 경로(full path)를 해석
-- **배리어 조율(Barrier Coordination):** 노드들이 동료(peer)를 기다리는 동기화 지점(synchronization point)
-- **네트워크 장애 주입(Network Failure Injection):** 패킷 손실(packet loss), 스로틀링(throttling), 노드 단절(disconnection)을 시뮬레이션
+- 노드 주소 조회(Node Address Lookup): 공유 설정 없이 원격 테스트 노드까지의 전체 경로(full path) 해석
+- 배리어 조율(Barrier Coordination): 노드들이 동료(peer)를 기다리는 동기화 지점(synchronization point)
+- 네트워크 장애 주입(Network Failure Injection): 패킷 손실(packet loss), 스로틀링(throttling), 노드 단절(disconnection) 시뮬레이션
 
-컨덕터 아키텍처는 배리어(barrier)와 클라이언트 연결을 관리하는 서버를 사용하며, 클라이언트들이 장애 시나리오를 실행합니다. 서버는 배리어를 조율하고 트래픽 조작 명령을 클라이언트에 디스패치(dispatch)합니다.
+컨덕터 아키텍처는 배리어(barrier)와 클라이언트 연결을 관리하는 서버를 사용하며, 클라이언트들이 장애 시나리오를 실행. 서버는 배리어를 조율하고 트래픽 조작 명령을 클라이언트에 디스패치(dispatch).
 
 #### MultiNodeSpec
 
-이 컴포넌트는 두 부분으로 구성됩니다.
+이 컴포넌트는 두 부분으로 구성.
 
-- **MultiNodeConfig:** 공통 설정을 수립하고, 역할(roles)을 열거하며, 테스트 참가자(participants)에게 이름을 부여합니다.
-- **MultiNodeSpec:** 노드 상호작용을 가능하게 하는 편의 함수(convenience functions)를 제공합니다.
+- MultiNodeConfig: 공통 설정을 수립하고, 역할(roles)을 열거하며, 테스트 참가자(participants)에게 이름 부여
+- MultiNodeSpec: 노드 상호작용을 가능하게 하는 편의 함수(convenience functions) 제공
 
 ##### 시스템 속성(System Properties) 설정
 
-MultiNodeSpec은 Java 시스템 속성(`-Dproperty=value`)을 통해 설정합니다.
+MultiNodeSpec은 Java 시스템 속성(`-Dproperty=value`)을 통해 설정.
 
 - `multinode.max-nodes`: 최대 테스트 노드 수
 - `multinode.host`: 노드 호스트명/IP (InetAddress로 해석 가능해야 함)
@@ -1536,7 +1534,7 @@ MultiNodeSpec은 Java 시스템 속성(`-Dproperty=value`)을 통해 설정합�
 
 #### SbtMultiJvm 플러그인
 
-이 플러그인은 `multinode.*` 속성 생성을 자동화하여, 별도 설정 없이 단일 머신에서 실행할 수 있게 합니다. 멀티노드 확장은 SSH와 rsync를 사용한 여러 머신 간 분산 테스트(distributed testing)를 지원합니다.
+이 플러그인은 `multinode.*` 속성 생성을 자동화하여, 별도 설정 없이 단일 머신에서 실행 가능하게 함. 멀티노드 확장은 SSH와 rsync를 사용한 여러 머신 간 분산 테스트(distributed testing) 지원.
 
 ##### 멀티노드 전용 설정(Multi-Node Specific Settings)
 
@@ -1554,7 +1552,7 @@ user2@host2:/usr/lib/jvm/java-7-openjdk-amd64/bin/java
 host3:/usr/lib/jvm/java-6-openjdk-amd64/bin/java
 ```
 
-플러그인은 SbtAssembly를 사용하여 테스트 클래스와 의존성을 JAR로 패키징합니다: `<projectName>_<scalaVersion>-<projectVersion>-multi-jvm-assembly.jar`
+플러그인은 SbtAssembly를 사용하여 테스트 클래스와 의존성을 JAR로 패키징: `<projectName>_<scalaVersion>-<projectVersion>-multi-jvm-assembly.jar`
 
 ##### 테스트 실행
 
@@ -1672,17 +1670,17 @@ class MultiNodeSample
 
 #### 명심해야 할 사항(Things to Keep in Mind)
 
-안정적인 멀티노드 테스트를 위한 핵심 지침은 다음과 같습니다.
+안정적인 멀티노드 테스트를 위한 핵심 지침:
 
-- **노드 0 보호:** 첫 번째 노드(node 0)는 테스트 실행을 제어하므로 종료(shut down)하지 마십시오.
-- **장애 주입(Failure Injection):** `blackhole`, `passThrough`, `throttle`을 사용하려면 MultiNodeConfig에서 `testTransport(on = true)`로 장애 주입기(failure injector)/스로틀러(throttler) 어댑터를 활성화하십시오.
-- **장애 주입 위치:** 스로틀링과 장애 주입은 오직 노드 0에서만 실행하십시오.
-- **주소 캐싱(Address Caching):** 종료 전에 노드 주소를 미리 가져오십시오. 종료 후에는 `node(address)` 호출이 실패합니다.
-- **스레드 제약(Thread Restrictions):** MultiNodeSpec 메서드(주소 조회, 배리어 진입)를 메인 테스트 스레드(main test thread) 외부에서 호출하지 마십시오. 액터, 퓨처(future), 스케줄링된 작업에서 절대 호출하지 마십시오.
+- 노드 0 보호: 첫 번째 노드(node 0)는 테스트 실행을 제어하므로 종료(shut down) 금지
+- 장애 주입(Failure Injection): `blackhole`, `passThrough`, `throttle`을 사용하려면 MultiNodeConfig에서 `testTransport(on = true)`로 장애 주입기(failure injector)/스로틀러(throttler) 어댑터 활성화 필요
+- 장애 주입 위치: 스로틀링과 장애 주입은 오직 노드 0에서만 실행
+- 주소 캐싱(Address Caching): 종료 전에 노드 주소를 미리 가져와야 함. 종료 후에는 `node(address)` 호출 실패
+- 스레드 제약(Thread Restrictions): MultiNodeSpec 메서드(주소 조회, 배리어 진입)를 메인 테스트 스레드(main test thread) 외부에서 호출 금지. 액터, 퓨처(future), 스케줄링된 작업에서 절대 호출 금지
 
 #### 설정 참조(Configuration Reference)
 
-추가적인 멀티노드 테스트 모듈 속성은 레퍼런스 설정 문서(reference configuration documentation, 섹션: akka-multi-node-testkit)에 존재합니다. 고급 동작 커스터마이징(advanced behavioral customization)을 위해 이 설정들을 참고하십시오.
+추가적인 멀티노드 테스트 모듈 속성은 레퍼런스 설정 문서(reference configuration documentation, 섹션: akka-multi-node-testkit)에 존재. 고급 동작 커스터마이징(advanced behavioral customization)을 위해 이 설정들 참고.
 
 ---
 

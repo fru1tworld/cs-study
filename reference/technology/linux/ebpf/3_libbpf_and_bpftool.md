@@ -23,7 +23,7 @@
 
 ### libbpf란?
 
-BPF 프로그램을 로드·관리하는 표준 C 라이브러리. 커널 BPF 서브시스템 메인테이너들이 함께 관리합니다.
+BPF 프로그램을 로드·관리하는 표준 C 라이브러리 → 커널 BPF 서브시스템 메인테이너들이 함께 관리함.
 
 특징:
 - BPF ELF 파싱
@@ -36,24 +36,22 @@ BPF 프로그램을 로드·관리하는 표준 C 라이브러리. 커널 BPF �
 
 ### BCC vs libbpf
 
-| 항목 | BCC | libbpf |
-| --- | --- | --- |
-| 컴파일 시점 | 런타임 | 빌드 타임 |
-| 의존성 | LLVM, 커널 헤더 | 없음 (또는 BTF) |
-| 배포 크기 | 큼 | 작음 (몇 MB) |
-| 시작 시간 | 느림 (~수 초) | 빠름 (~수 십 ms) |
-| 사용 언어 | Python, C++ | C |
-| 학습 곡선 | 쉬움 | 약간 가파름 |
-| 휴대성 | 매번 컴파일 | CO-RE로 한 번 |
-| 권장 | 학습, prototyping | 프로덕션 |
+- 컴파일 시점: BCC는 런타임 · libbpf는 빌드 타임
+- 의존성: BCC는 LLVM, 커널 헤더 필요 · libbpf는 없음(또는 BTF)
+- 배포 크기: BCC는 큼 · libbpf는 작음(몇 MB)
+- 시작 시간: BCC는 느림(~수 초) · libbpf는 빠름(~수 십 ms)
+- 사용 언어: BCC는 Python, C++ · libbpf는 C
+- 학습 곡선: BCC는 쉬움 · libbpf는 약간 가파름
+- 휴대성: BCC는 매번 컴파일 필요 · libbpf는 CO-RE로 한 번
+- 권장 용도: BCC는 학습·prototyping · libbpf는 프로덕션
 
-현재 BCC의 일부 도구도 내부적으로 libbpf로 마이그레이션 중 (`/usr/share/bcc/libbpf-tools/`).
+현재 BCC의 일부 도구도 내부적으로 libbpf로 마이그레이션 중임 (`/usr/share/bcc/libbpf-tools/`).
 
 ---
 
 ### Skeleton
 
-`bpftool gen skeleton`으로 생성되는 헤더. BPF 오브젝트의 사용자 공간 인터페이스를 자동으로 생성합니다.
+`bpftool gen skeleton`으로 생성되는 헤더 → BPF 오브젝트의 사용자 공간 인터페이스를 자동으로 생성함.
 
 ```bash
 bpftool gen skeleton my.bpf.o > my.skel.h
@@ -197,7 +195,7 @@ perf_buffer__free(pb);
 
 ### Attach 종류
 
-skeleton의 `__attach()`는 모든 프로그램을 한꺼번에 부착하지만, 개별 프로그램만 부착할 수도 있습니다.
+skeleton의 `__attach()`는 모든 프로그램을 한꺼번에 부착 → 개별 프로그램만 부착도 가능.
 
 #### 자동 부착 (SEC()의 형식 따라)
 
@@ -252,7 +250,7 @@ bpf_program__attach_cgroup(skel->progs.cg_handler, cgroup_fd);
 
 ### bpftool과의 관계
 
-`bpftool`은 BPF 객체를 명령줄에서 다루는 도구. libbpf와 일부 코드를 공유합니다.
+`bpftool`은 BPF 객체를 명령줄에서 다루는 도구 → libbpf와 일부 코드를 공유함.
 
 #### Skeleton 생성
 
@@ -314,7 +312,7 @@ link, _ := link.Kprobe("vfs_open", prog, nil)
 defer link.Close()
 ```
 
-ebpf-go는 Pure Go 구현 (C 의존성 없음). 가장 널리 쓰입니다.
+ebpf-go는 Pure Go 구현(C 의존성 없음) → 가장 널리 쓰임.
 
 ##### libbpfgo
 
@@ -325,7 +323,7 @@ bpfModule, _ := libbpfgo.NewModuleFromFile("myprog.bpf.o")
 bpfModule.BPFLoadObject()
 ```
 
-libbpf C 라이브러리를 cgo로 래핑합니다.
+libbpf C 라이브러리를 cgo로 래핑함.
 
 #### Rust
 
@@ -341,17 +339,17 @@ program.load()?;
 program.attach("vfs_open", 0)?;
 ```
 
-Pure Rust. Rust BPF 생태계 중 가장 활발합니다.
+Pure Rust → Rust BPF 생태계 중 가장 활발함.
 
 ##### libbpf-rs
 
-C libbpf의 Rust 바인딩입니다.
+C libbpf의 Rust 바인딩임.
 
 #### Python
 
 ##### BCC
 
-여전히 활발히 사용됩니다. CO-RE는 일부만 지원합니다.
+여전히 활발히 사용됨 → CO-RE는 일부만 지원.
 
 ##### bpfd
 
@@ -393,7 +391,7 @@ C libbpf의 Rust 바인딩입니다.
 
 ### bpftool이란?
 
-커널 BPF 객체(프로그램, 맵, 링크)를 검사하고 관리하는 표준 CLI. 커널 트리(`tools/bpf/bpftool/`)에 포함되어 커널 버전과 항상 일치한다.
+커널 BPF 객체(프로그램, 맵, 링크)를 검사하고 관리하는 표준 CLI → 커널 트리(`tools/bpf/bpftool/`)에 포함되어 커널 버전과 항상 일치함.
 
 용도:
 - 현재 로드된 BPF 프로그램 조회
@@ -464,7 +462,7 @@ eBPF helpers supported for program type kprobe:
         - ...
 ```
 
-배포 환경에서 BPF 기능 동작 여부를 사전에 확인할 때 유용하다.
+배포 환경에서 BPF 기능 동작 여부를 사전에 확인할 때 유용함.
 
 ```bash
 # JSON 출력
@@ -527,7 +525,7 @@ sudo bpftool prog attach pinned /sys/fs/bpf/myprog \
 sudo bpftool prog profile id 123 duration 5 cycles instructions
 ```
 
-5초 동안 cycles와 instructions 카운터를 측정한다.
+5초 동안 cycles와 instructions 카운터를 측정함.
 
 #### 트레이싱 출력
 
@@ -535,7 +533,7 @@ sudo bpftool prog profile id 123 duration 5 cycles instructions
 sudo bpftool prog tracelog
 ```
 
-`/sys/kernel/debug/tracing/trace_pipe`를 읽는 것과 동일하다.
+`/sys/kernel/debug/tracing/trace_pipe`를 읽는 것과 동일함.
 
 ---
 
@@ -595,7 +593,7 @@ sudo bpftool map create /sys/fs/bpf/manual_map \
 sudo bpftool map dump id 5 --pretty
 ```
 
-PERCPU 맵은 모든 CPU의 값을 자동으로 표시한다.
+PERCPU 맵은 모든 CPU의 값을 자동으로 표시함.
 
 #### Watch (실시간)
 
@@ -608,7 +606,7 @@ watch -n 1 'bpftool map dump id 5 -p'
 
 ### link와 attach 관리
 
-`link`는 BPF 프로그램의 attachment를 추상화한 객체다. 커널 5.7+에서 지원.
+`link`는 BPF 프로그램의 attachment를 추상화한 객체임 → 커널 5.7+에서 지원.
 
 ```bash
 $ sudo bpftool link list
@@ -629,7 +627,7 @@ sudo bpftool link detach id 1
 sudo bpftool link pin id 1 /sys/fs/bpf/my_link
 ```
 
-핀하면 호출자 프로세스가 종료돼도 attach가 유지된다.
+핀하면 호출자 프로세스가 종료돼도 attach가 유지됨.
 
 ---
 
@@ -683,7 +681,7 @@ bpftool gen object my-merged.bpf.o my.bpf.o other.bpf.o   # 여러 ELF 머지
 
 ### Pin 관리
 
-BPF 객체를 영구화한다. `/sys/fs/bpf/`가 BPF FS 마운트 경로다.
+BPF 객체를 영구화함. `/sys/fs/bpf/`가 BPF FS 마운트 경로임.
 
 #### 마운트 확인
 
@@ -706,7 +704,7 @@ sudo bpftool link pin id 1 /sys/fs/bpf/my_link
 sudo rm /sys/fs/bpf/myprog
 ```
 
-객체에 대한 마지막 fd 참조가 사라지면 자동으로 해제된다.
+객체에 대한 마지막 fd 참조가 사라지면 자동으로 해제됨.
 
 #### 여러 객체 한 번에
 

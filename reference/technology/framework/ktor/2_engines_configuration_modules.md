@@ -8,21 +8,34 @@
 
 ### 엔진이란
 
-Ktor의 **엔진(Engine)** 은 실제로 TCP 소켓을 열고 HTTP 요청을 받아 Ktor 파이프라인에 전달하는 컴포넌트입니다. Ktor는 엔진을 추상화하기 때문에 같은 애플리케이션 코드를 Netty에서도 Jetty에서도 실행할 수 있습니다.
+Ktor의 엔진(Engine)은 실제로 TCP 소켓을 열고 HTTP 요청을 받아 Ktor 파이프라인에 전달하는 컴포넌트임. Ktor는 엔진을 추상화함 → 같은 애플리케이션 코드를 Netty에서도 Jetty에서도 실행 가능.
 
 ---
 
 ### 지원 엔진 비교
 
-| 엔진 | 플랫폼 | HTTP/2 | 비고 |
-| --- | --- | --- | --- |
-| **Netty** | JVM | ✓ | 고성능 비동기 NIO. 기본 선택지. |
-| **Jetty** | JVM | ✓ | Eclipse 기반. 서블릿 컨테이너 친화. |
-| **Tomcat** | JVM | ✓ | Apache 표준 컨테이너. |
-| **CIO** | JVM / Native / GraalVM / JS / WasmJs | ✗ | 코루틴 기반, 멀티플랫폼 가능. |
-| **ServletApplicationEngine** | JVM | ✓ | WAR로 외부 컨테이너에 배포할 때 사용. |
+- Netty
+  - 플랫폼: JVM
+  - HTTP/2: 지원
+  - 비고: 고성능 비동기 NIO, 기본 선택지
+- Jetty
+  - 플랫폼: JVM
+  - HTTP/2: 지원
+  - 비고: Eclipse 기반, 서블릿 컨테이너 친화
+- Tomcat
+  - 플랫폼: JVM
+  - HTTP/2: 지원
+  - 비고: Apache 표준 컨테이너
+- CIO
+  - 플랫폼: JVM / Native / GraalVM / JS / WasmJs
+  - HTTP/2: 미지원
+  - 비고: 코루틴 기반, 멀티플랫폼 가능
+- ServletApplicationEngine
+  - 플랫폼: JVM
+  - HTTP/2: 지원
+  - 비고: WAR로 외부 컨테이너에 배포할 때 사용
 
-> HTTP/2가 필요한 경우 Netty / Jetty / Tomcat 중 선택. Native 빌드가 필요하면 CIO.
+HTTP/2가 필요하면 Netty · Jetty · Tomcat 중 선택. Native 빌드가 필요하면 CIO 선택.
 
 ---
 
@@ -30,7 +43,7 @@ Ktor의 **엔진(Engine)** 은 실제로 TCP 소켓을 열고 HTTP 요청을 받
 
 #### embeddedServer (코드 중심)
 
-엔진, 포트, 모듈을 코드 인자로 직접 지정합니다. 빠른 프로토타이핑·테스트에 적합합니다.
+엔진, 포트, 모듈을 코드 인자로 직접 지정함. 빠른 프로토타이핑·테스트에 적합.
 
 ```kotlin
 fun main() {
@@ -42,7 +55,7 @@ fun main() {
 
 #### EngineMain (설정 파일 중심)
 
-엔진 모듈이 제공하는 `EngineMain.main(args)`를 사용합니다. 포트·모듈은 `application.conf` / `application.yaml`에서 읽습니다. 운영 배포에 적합합니다.
+엔진 모듈이 제공하는 `EngineMain.main(args)`를 사용함. 포트·모듈은 `application.conf` / `application.yaml`에서 읽음. 운영 배포에 적합.
 
 ```kotlin
 fun main(args: Array<String>) =
@@ -62,22 +75,20 @@ ktor:
       - com.example.ApplicationKt.module
 ```
 
-`EngineMain.createServer(args)`를 사용하면 서버 인스턴스만 생성하고 `start()` 호출 시점을 직접 제어할 수 있습니다.
+`EngineMain.createServer(args)`를 사용하면 서버 인스턴스만 생성하고 `start()` 호출 시점을 직접 제어 가능.
 
 ---
 
 ### 공통 엔진 설정 옵션
 
-`embeddedServer(... , configure = { ... })` 블록이나 설정 파일의 `ktor.deployment.*` 키로 지정합니다.
+`embeddedServer(... , configure = { ... })` 블록이나 설정 파일의 `ktor.deployment.*` 키로 지정함.
 
-| 옵션 | 의미 |
-| --- | --- |
-| `connectors` | 호스트/포트/SSL 등 수신 커넥터 목록 |
-| `connectionGroupSize` | 새 연결을 수락하는 스레드 수 |
-| `workerGroupSize` | 연결을 처리하는 이벤트 루프 그룹 크기 |
-| `callGroupSize` | 요청 핸들러를 실행하는 스레드 풀의 최소 크기 |
-| `shutdownGracePeriod` | 그레이스풀 셧다운 시 새 요청 거부 후 대기 시간(ms) |
-| `shutdownTimeout` | 셧다운 전체 최대 대기 시간(ms) |
+- `connectors`: 호스트/포트/SSL 등 수신 커넥터 목록
+- `connectionGroupSize`: 새 연결을 수락하는 스레드 수
+- `workerGroupSize`: 연결을 처리하는 이벤트 루프 그룹 크기
+- `callGroupSize`: 요청 핸들러를 실행하는 스레드 풀의 최소 크기
+- `shutdownGracePeriod`: 그레이스풀 셧다운 시 새 요청 거부 후 대기 시간(ms)
+- `shutdownTimeout`: 셧다운 전체 최대 대기 시간(ms)
 
 ---
 
@@ -85,32 +96,24 @@ ktor:
 
 #### Netty
 
-| 옵션 | 의미 |
-| --- | --- |
-| `requestQueueLimit` | 큐잉되는 요청 수 상한 |
-| `shareWorkGroup` | 워커 그룹 공유 여부 |
-| `responseWriteTimeoutSeconds` | 응답 쓰기 타임아웃 |
-| `requestReadTimeoutSeconds` | 요청 본문 읽기 타임아웃 |
-| `tcpKeepAlive` | TCP keep-alive |
+- `requestQueueLimit`: 큐잉되는 요청 수 상한
+- `shareWorkGroup`: 워커 그룹 공유 여부
+- `responseWriteTimeoutSeconds`: 응답 쓰기 타임아웃
+- `requestReadTimeoutSeconds`: 요청 본문 읽기 타임아웃
+- `tcpKeepAlive`: TCP keep-alive
 
 #### Jetty
 
-| 옵션 | 의미 |
-| --- | --- |
-| `configureServer` | 내부 `org.eclipse.jetty.server.Server`에 직접 접근 |
-| `idleTimeout` | 유휴 연결 종료 시간 |
+- `configureServer`: 내부 `org.eclipse.jetty.server.Server`에 직접 접근
+- `idleTimeout`: 유휴 연결 종료 시간
 
 #### CIO
 
-| 옵션 | 의미 |
-| --- | --- |
-| `connectionIdleTimeoutSeconds` | 연결 유휴 타임아웃 |
+- `connectionIdleTimeoutSeconds`: 연결 유휴 타임아웃
 
 #### Tomcat
 
-| 옵션 | 의미 |
-| --- | --- |
-| `configureTomcat` | 내부 Tomcat 인스턴스 핸들 |
+- `configureTomcat`: 내부 Tomcat 인스턴스 핸들
 
 ---
 
@@ -137,10 +140,10 @@ embeddedServer(Netty, configure = {
 
 ### 엔진 선택 가이드
 
-- **순수 HTTP 서버, 최고 성능** → Netty
-- **이미 Jetty / Tomcat 인프라 운영 중** → Jetty / Tomcat
-- **Native 바이너리, 멀티플랫폼** → CIO
-- **WAR로 외부 컨테이너 배포** → ServletApplicationEngine
+- 순수 HTTP 서버, 최고 성능 필요 → Netty
+- 이미 Jetty · Tomcat 인프라 운영 중 → Jetty / Tomcat
+- Native 바이너리, 멀티플랫폼 필요 → CIO
+- WAR로 외부 컨테이너 배포 필요 → ServletApplicationEngine
 
 ---
 
@@ -154,14 +157,18 @@ embeddedServer(Netty, configure = {
 
 ### 설정 포맷 — HOCON vs YAML
 
-Ktor는 두 가지 설정 포맷을 지원합니다. 둘 다 `src/main/resources/` 디렉터리에 위치합니다.
+Ktor는 두 가지 설정 포맷을 지원함. 둘 다 `src/main/resources/` 디렉터리에 위치.
 
-| 항목 | `application.conf` (HOCON) | `application.yaml` (YAML) |
-| --- | --- | --- |
-| 의존성 | 기본 제공 | `io.ktor:ktor-server-config-yaml` 필요 |
-| 환경변수 문법 | `${ENV}` | `${ENV}`, `$ENV` 모두 |
-| Maven 빌드 지원 | ✓ | (현 시점 미지원) |
-| 스타일 | 중괄호 블록 | 들여쓰기 |
+- `application.conf` (HOCON)
+  - 의존성: 기본 제공
+  - 환경변수 문법: `${ENV}`
+  - Maven 빌드 지원: 허용
+  - 스타일: 중괄호 블록
+- `application.yaml` (YAML)
+  - 의존성: `io.ktor:ktor-server-config-yaml` 필요
+  - 환경변수 문법: `${ENV}`, `$ENV` 모두 지원
+  - Maven 빌드 지원: 현 시점 미지원
+  - 스타일: 들여쓰기
 
 ---
 
@@ -169,24 +176,20 @@ Ktor는 두 가지 설정 포맷을 지원합니다. 둘 다 `src/main/resources
 
 #### `ktor.deployment.*`
 
-| 키 | 의미 |
-| --- | --- |
-| `port` | 평문 HTTP 포트 (`0`이면 랜덤) |
-| `sslPort` | SSL 포트 |
-| `host` | 바인딩 주소 (예: `0.0.0.0`) |
-| `watch` | 자동 재로드 대상 경로 목록 |
-| `rootPath` | 서블릿 컨텍스트 경로 |
-| `shutdownGracePeriod` | 신규 요청 거부 후 대기(ms) |
-| `shutdownTimeout` | 셧다운 최대 시간(ms) |
-| `connectionGroupSize` | accept 스레드 수 |
-| `workerGroupSize` | 이벤트 루프 크기 |
-| `callGroupSize` | 핸들러 풀 최소 크기 |
+- `port`: 평문 HTTP 포트 (`0`이면 랜덤)
+- `sslPort`: SSL 포트
+- `host`: 바인딩 주소 (예: `0.0.0.0`)
+- `watch`: 자동 재로드 대상 경로 목록
+- `rootPath`: 서블릿 컨텍스트 경로
+- `shutdownGracePeriod`: 신규 요청 거부 후 대기(ms)
+- `shutdownTimeout`: 셧다운 최대 시간(ms)
+- `connectionGroupSize`: accept 스레드 수
+- `workerGroupSize`: 이벤트 루프 크기
+- `callGroupSize`: 핸들러 풀 최소 크기
 
 #### `ktor.application.*`
 
-| 키 | 의미 |
-| --- | --- |
-| `modules` | 로드할 모듈 함수의 FQN 목록 (필수) |
+- `modules`: 로드할 모듈 함수의 FQN 목록 (필수)
 
 #### `ktor.security.ssl.*` (SSL 사용 시)
 
@@ -241,7 +244,7 @@ port: ${PORT:8080}  # 콜론 뒤가 기본값
 
 ### 커맨드라인 오버라이드
 
-`EngineMain` 사용 시 빌드된 jar에 인자를 전달하면 설정값을 덮어쓸 수 있습니다.
+`EngineMain` 사용 시 빌드된 jar에 인자를 전달하면 설정값을 덮어쓰기 가능.
 
 ```bash
 java -jar app.jar -port=9090
@@ -281,7 +284,7 @@ fun Application.module() {
 
 ### Application 모듈이란
 
-**모듈(Module)** 은 `Application` 클래스의 **확장 함수**로 정의되는 단위입니다. 라우팅, 플러그인 설치, 직렬화 등 한 묶음의 설정을 캡슐화합니다.
+모듈(Module)은 `Application` 클래스의 확장 함수로 정의되는 단위임. 라우팅, 플러그인 설치, 직렬화 등 한 묶음의 설정을 캡슐화.
 
 ```kotlin
 fun Application.module() {
@@ -313,7 +316,7 @@ fun main() {
 }
 ```
 
-여러 모듈을 람다 안에서 호출하는 형태도 흔합니다.
+여러 모듈을 람다 안에서 호출하는 형태도 흔함.
 
 ```kotlin
 embeddedServer(CIO, port = 8080) {
@@ -333,4 +336,4 @@ ktor:
       - com.example.AdminKt.adminModule
 ```
 
-> 설정 파일에서 등록할 때는 모듈 함수의 **완전한 정규화 이름**(예: `com.example.ApplicationKt.module`)을 정확히 명시해야 합니다.
+설정 파일에서 등록할 때는 모듈 함수의 완전한 정규화 이름(예: `com.example.ApplicationKt.module`)을 정확히 명시 필요.

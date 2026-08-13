@@ -20,7 +20,7 @@
 
 ### 개요
 
-Grafana Tempo는 **마이크로서비스 기반 아키텍처**로 동작하며, 각 컴포넌트를 독립적으로 확장할 수 있습니다. 모든 컴포넌트는 단일 바이너리에 포함되어 있고, `-target` 플래그로 실행할 컴포넌트를 지정합니다.
+Grafana Tempo는 마이크로서비스 기반 아키텍처로 동작 → 각 컴포넌트를 독립적으로 확장 가능. 모든 컴포넌트는 단일 바이너리에 포함되어 있고, `-target` 플래그로 실행할 컴포넌트를 지정함.
 
 핵심 디자인 원칙:
 
@@ -35,7 +35,7 @@ Grafana Tempo는 **마이크로서비스 기반 아키텍처**로 동작하며, 
 
 #### Distributor
 
-**역할**: 다양한 형식의 트레이스 스팬을 수신하여 Ingester로 라우팅합니다.
+역할: 다양한 형식의 트레이스 스팬을 수신 → Ingester로 라우팅.
 
 **지원 프로토콜**:
 - OpenTelemetry Protocol (OTLP) - gRPC, HTTP
@@ -52,7 +52,7 @@ Grafana Tempo는 **마이크로서비스 기반 아키텍처**로 동작하며, 
 
 #### Ingester
 
-**역할**: 수신한 스팬 데이터를 일정 단위로 모아 Parquet 형식으로 변환한 뒤 오브젝트 스토리지에 저장합니다.
+역할: 수신한 스팬 데이터를 일정 단위로 모아 Parquet 형식으로 변환 → 오브젝트 스토리지에 저장.
 
 **주요 동작**:
 - 메모리에서 스팬을 모음 (live trace)
@@ -67,7 +67,7 @@ Grafana Tempo는 **마이크로서비스 기반 아키텍처**로 동작하며, 
 
 #### Query Frontend
 
-**역할**: 사용자의 쿼리 요청을 받아 여러 Querier에 분산 실행합니다.
+역할: 사용자의 쿼리 요청을 받아 여러 Querier에 분산 실행.
 
 **주요 동작**:
 - TraceID 조회 요청 분배
@@ -79,7 +79,7 @@ Grafana Tempo는 **마이크로서비스 기반 아키텍처**로 동작하며, 
 
 #### Querier
 
-**역할**: 실제 트레이스 데이터를 조회합니다.
+역할: 실제 트레이스 데이터 조회.
 
 **주요 동작**:
 - Ingester에서 최근 데이터 조회
@@ -91,7 +91,7 @@ Grafana Tempo는 **마이크로서비스 기반 아키텍처**로 동작하며, 
 
 #### Compactor
 
-**역할**: 작은 블록들을 큰 블록으로 병합하고, 중복 스팬을 제거하며, 보존 기간이 만료된 데이터를 삭제합니다.
+역할: 작은 블록을 큰 블록으로 병합 · 중복 스팬 제거 · 보존 기간이 만료된 데이터 삭제.
 
 **주요 동작**:
 - 압축 작업 스케줄링
@@ -105,18 +105,18 @@ Compactor의 차세대 아키텍처:
 - **Scheduler**: 압축 작업을 큐에 등록하고 분배
 - **Worker**: 큐에서 작업을 받아 실행
 
-향후 Compactor를 완전히 대체할 예정입니다.
+향후 Compactor를 완전히 대체할 예정.
 
 #### Metrics Generator (선택적)
 
-**역할**: 수집된 트레이스에서 메트릭을 생성합니다.
+역할: 수집된 트레이스에서 메트릭 생성.
 
 **주요 기능**:
 - **Span Metrics**: RED 메트릭 (Rate, Error, Duration) 생성
 - **Service Graph Metrics**: 서비스 간 호출 그래프 메트릭 생성
 - **Local Blocks**: 로컬에 메트릭용 블록 저장 (TraceQL Metrics 지원)
 
-생성된 메트릭은 Prometheus나 Mimir로 Remote Write를 통해 전송됩니다.
+생성된 메트릭은 Prometheus나 Mimir로 Remote Write를 통해 전송됨.
 
 ---
 
@@ -200,7 +200,7 @@ Compactor의 차세대 아키텍처:
 
 #### 블룸 필터를 통한 빠른 검색
 
-각 Parquet 블록에는 트레이스 ID에 대한 **블룸 필터**(Bloom Filter)가 함께 저장됩니다. TraceID 조회 시 블룸 필터로 해당 블록에 트레이스가 존재할 가능성이 있는지 빠르게 판단할 수 있습니다.
+각 Parquet 블록에는 트레이스 ID에 대한 블룸 필터(Bloom Filter)가 함께 저장됨. TraceID 조회 시 블룸 필터로 해당 블록에 트레이스가 존재할 가능성이 있는지 빠르게 판단 가능.
 
 ---
 
@@ -208,7 +208,7 @@ Compactor의 차세대 아키텍처:
 
 #### 데이터 형식
 
-Tempo는 **Apache Parquet** 컬럼 형식을 사용하며, 다음과 같은 이점이 있습니다.
+Tempo는 Apache Parquet 컬럼 형식을 사용 → 다음과 같은 이점 존재.
 
 - **컬럼 지향**: TraceQL 쿼리에서 필요한 컬럼만 읽기
 - **압축 효율**: 동일 컬럼 데이터의 압축률이 높음
@@ -229,12 +229,10 @@ Tempo는 **Apache Parquet** 컬럼 형식을 사용하며, 다음과 같은 이�
 
 #### 백엔드 옵션
 
-| 백엔드 | 권장 사용 |
-|--------|----------|
-| AWS S3 | 가장 일반적 |
-| Google Cloud Storage | GCP 환경 |
-| Azure Blob Storage | Azure 환경 |
-| Filesystem | 개발/테스트 |
+- AWS S3: 가장 일반적
+- Google Cloud Storage: GCP 환경
+- Azure Blob Storage: Azure 환경
+- Filesystem: 개발/테스트
 
 ---
 
@@ -242,11 +240,11 @@ Tempo는 **Apache Parquet** 컬럼 형식을 사용하며, 다음과 같은 이�
 
 #### 테넌트 식별
 
-모든 Tempo API 요청에는 **`X-Scope-OrgID`** HTTP 헤더가 필요합니다.
+모든 Tempo API 요청에는 `X-Scope-OrgID` HTTP 헤더 필요.
 
 #### 단일 테넌트 모드
 
-`auth_enabled: false` 설정 시 모든 데이터가 `single-tenant` ID로 저장됩니다.
+`auth_enabled: false` 설정 시 모든 데이터가 `single-tenant` ID로 저장됨.
 
 #### 데이터 격리
 
@@ -260,14 +258,14 @@ Tempo는 **Apache Parquet** 컬럼 형식을 사용하며, 다음과 같은 이�
 
 #### Vparquet 버전
 
-Tempo는 여러 Parquet 스키마 버전을 지원합니다.
+Tempo는 여러 Parquet 스키마 버전을 지원함.
 
 - **vParquet4**: 기본 버전, 전용 속성 컬럼(dedicated columns) 지원
 - **vParquet5**: 최신 버전
 
 #### 전용 속성 컬럼 (Dedicated Attribute Columns)
 
-자주 쿼리하는 속성을 별도 컬럼으로 저장하여 성능을 향상시킬 수 있습니다.
+자주 쿼리하는 속성을 별도 컬럼으로 저장 → 성능 향상 가능.
 
 ```yaml
 storage:
@@ -282,11 +280,11 @@ storage:
           type: string
 ```
 
-이 설정을 통해 해당 속성에 대한 쿼리 속도를 크게 향상시킬 수 있습니다.
+이 설정으로 해당 속성 쿼리 속도를 크게 향상 가능.
 
 #### TraceQL과의 통합
 
-Parquet의 컬럼 구조 덕분에 TraceQL은 다음 작업을 효율적으로 수행합니다.
+Parquet의 컬럼 구조 덕분에 TraceQL은 다음 작업을 효율적으로 수행함.
 
 - 속성 기반 필터링 (특정 컬럼만 스캔)
 - 집계 (컬럼 값 직접 사용)
@@ -317,12 +315,16 @@ Parquet의 컬럼 구조 덕분에 TraceQL은 다음 작업을 효율적으로 �
 
 ### 배포 모드 개요
 
-| 모드 | 처리량 | 운영 복잡도 | 권장 환경 |
-|------|--------|-----------|----------|
-| **Monolithic** | ~수십 GB/일 | 낮음 | 개발, 소규모 |
-| **Microservices** | 페타바이트 | 높음 | 프로덕션 |
+- Monolithic
+  - 처리량: ~수십 GB/일
+  - 운영 복잡도: 낮음
+  - 권장 환경: 개발, 소규모
+- Microservices
+  - 처리량: 페타바이트
+  - 운영 복잡도: 높음
+  - 권장 환경: 프로덕션
 
-Tempo는 단일 바이너리에 모든 컴포넌트가 포함되어 있으며, `-target` 플래그로 실행할 컴포넌트를 지정합니다.
+Tempo는 단일 바이너리에 모든 컴포넌트가 포함되어 있으며, `-target` 플래그로 실행할 컴포넌트를 지정함.
 
 ---
 
@@ -330,7 +332,7 @@ Tempo는 단일 바이너리에 모든 컴포넌트가 포함되어 있으며, `
 
 #### 특징
 
-`-target=all` (기본값)을 사용하면 모든 컴포넌트가 단일 프로세스에서 실행됩니다.
+`-target=all`(기본값) 사용 시 모든 컴포넌트가 단일 프로세스에서 실행됨.
 
 #### 장점
 
@@ -355,7 +357,7 @@ Tempo는 단일 바이너리에 모든 컴포넌트가 포함되어 있으며, `
 
 #### 특징
 
-각 컴포넌트가 독립적인 프로세스로 실행됩니다.
+각 컴포넌트가 독립적인 프로세스로 실행됨.
 
 ```
 -target=distributor
@@ -387,17 +389,25 @@ Tempo는 단일 바이너리에 모든 컴포넌트가 포함되어 있으며, `
 
 ### 설치 방법
 
-| 방법 | 지원 모드 | 환경 |
-|------|---------|------|
-| **Docker** | Monolithic | 로컬, 단순 환경 |
-| **Helm** | 둘 다 | Kubernetes |
-| **Tempo Operator** | Microservices | Kubernetes |
-| **Tanka** | Microservices | Kubernetes (Jsonnet) |
-| **Linux 바이너리** | Monolithic | Linux 호스트 |
+- Docker
+  - 지원 모드: Monolithic
+  - 환경: 로컬, 단순 환경
+- Helm
+  - 지원 모드: 둘 다
+  - 환경: Kubernetes
+- Tempo Operator
+  - 지원 모드: Microservices
+  - 환경: Kubernetes
+- Tanka
+  - 지원 모드: Microservices
+  - 환경: Kubernetes (Jsonnet)
+- Linux 바이너리
+  - 지원 모드: Monolithic
+  - 환경: Linux 호스트
 
 #### 보안 주의사항
 
-> Tempo는 인증 레이어를 내장하고 있지 않습니다. nginx 등의 인증 리버스 프록시를 앞단에 배치하여 무단 접근을 방지해야 합니다.
+> Tempo는 인증 레이어를 내장하고 있지 않음. nginx 등의 인증 리버스 프록시를 앞단에 배치 → 무단 접근 방지 필요.
 
 ---
 
@@ -700,4 +710,4 @@ storage:
       version: vParquet4   # 새 버전
 ```
 
-기존 블록은 Compactor가 점진적으로 새 형식으로 변환합니다.
+기존 블록은 Compactor가 점진적으로 새 형식으로 변환함.

@@ -29,11 +29,11 @@
 
 ### 1. ZIO 스트림 소개(Introduction to ZIO Streams)
 
-ZIO 스트림(ZIO Streams)은 데이터 소스(data source)와 목적지(destination)를 사용한 읽기·쓰기 작업의 메커니즘을 추상화(abstract)하는 고수준 API입니다. 이를 통해 개발자는 저수준 구현 세부 사항이 아니라 비즈니스 로직(business logic)에 집중할 수 있습니다.
+ZIO 스트림(ZIO Streams)은 데이터 소스(data source)와 목적지(destination)를 사용한 읽기·쓰기 작업의 메커니즘을 추상화(abstract)하는 고수준 API. 이를 통해 개발자는 저수준 구현 세부 사항이 아니라 비즈니스 로직(business logic)에 집중 가능.
 
 #### 스트림이 나타나는 곳(Use Cases)
 
-스트림은 다양한 프로그래밍 맥락에서 나타납니다.
+스트림은 다양한 프로그래밍 맥락에서 나타남.
 
 - **파일(Files)**: 파일 I/O를 저수준 연산이 아닌 바이트(byte)의 스트림으로 표현
 - **소켓(Sockets)**: 소켓 통신을 입력 바이트 스트림에서 출력 스트림으로의 변환으로 모델링
@@ -43,7 +43,7 @@ ZIO 스트림(ZIO Streams)은 데이터 소스(data source)와 목적지(destina
 
 #### 동기(Motivation): 배치 처리 vs. 스트리밍
 
-다음은 배치(batch) 방식으로 1부터 1000까지의 수 중 소수(prime)를 찾아 추가 작업을 수행하는 예제입니다(`ZIO.filterPar`, `ZIO.foreachPar` 사용).
+다음은 배치(batch) 방식으로 1부터 1000까지의 수 중 소수(prime)를 찾아 추가 작업을 수행하는 예제(`ZIO.filterPar`, `ZIO.foreachPar` 사용).
 
 ```scala
 import zio.ZIOAspect._
@@ -56,12 +56,12 @@ for {
 } yield ()
 ```
 
-배치 방식의 문제점은 두 가지입니다.
+배치 방식의 문제점은 다음 두 가지임.
 
-- **높은 지연(High Latency)**: 다음 단계로 넘어가기 전에 전체 배치 처리를 끝내야 합니다.
-- **제한된 메모리(Limited Memory)**: 전체 리스트를 메모리에 보관해야 합니다.
+- **높은 지연(High Latency)**: 다음 단계로 넘어가기 전에 전체 배치 처리를 끝내야 함.
+- **제한된 메모리(Limited Memory)**: 전체 리스트를 메모리에 보관해야 함.
 
-스트리밍 방식은 이러한 문제를 해결합니다.
+스트리밍 방식은 이러한 문제를 해결함.
 
 ```scala
 def prime(number: Int): Task[(Boolean, Int)] = ZIO.succeed(???)
@@ -71,7 +71,7 @@ ZStream.fromIterable(numbers)
   .mapZIOParUnordered(20)(moreHardWork(_))
 ```
 
-파이버(fiber)와 큐(queue)로 파이프라인을 직접 구성하면 복잡하고 오류가 생기기 쉽습니다. ZIO 스트림은 이를 선언적으로 해결합니다.
+파이버(fiber)와 큐(queue)로 파이프라인을 직접 구성하면 복잡하고 오류가 생기기 쉬움 → ZIO 스트림은 이를 선언적으로 해결.
 
 ```scala
 def generateElement: Task[Int]    = ZIO.succeed(???)
@@ -90,13 +90,13 @@ ZStream
 #### 왜 스트림인가?(Why Streams?) — 8가지 핵심 이점
 
 1. **고수준이며 선언적(High-level and Declarative)**: "유려한 코드의 매우 짧은 스니펫만으로 터무니없이 복잡한 문제를 해결할 수 있습니다."
-2. **비동기·논블로킹(Asynchronous and Non-blocking)**: 리액티브(reactive)하고, 스레드 효율적이며, 확장 가능(scalable)합니다.
-3. **동시성과 병렬성(Concurrency and Parallelism)**: 안전한 동시성 연산자를 제공하며, `mapZIOPar`, `flatMapPar` 같은 병렬 변형(parallel variant)이 있습니다.
-4. **리소스 안전(Resource Safety)**: 타임아웃(timeout), 인터럽트(interruption), 에러가 발생하더라도 "리소스를 절대 누수하지 않을 것을 보장(guarantee that it will never leak resources)"합니다.
-5. **고성능과 효율(High Performance and Efficiency)**: 요소 단위 API를 유지하면서도 암묵적 청킹(implicit chunking)을 통해 I/O 효율을 확보합니다.
-6. **ZIO와의 매끄러운 통합(Seamless Integration with ZIO)**: `Scope`, `Schedule` 등 ZIO 데이터 타입을 그대로 사용합니다.
-7. **백프레셔(Back-Pressure)**: 풀 기반(pull-based) 메커니즘으로, "데이터 파이프라인의 끝에서 필요할 때 요소를 당겨오기 때문에 최소한의 계산만 필요"합니다.
-8. **유한한 메모리로 무한 데이터 처리(Infinite Data using Finite Memory)**: 무한 스트림을 유한 메모리 제약 안에서 처리할 수 있습니다.
+2. **비동기·논블로킹(Asynchronous and Non-blocking)**: 리액티브(reactive)하고, 스레드 효율적이며, 확장 가능(scalable)함.
+3. **동시성과 병렬성(Concurrency and Parallelism)**: 안전한 동시성 연산자를 제공하며, `mapZIOPar`, `flatMapPar` 같은 병렬 변형(parallel variant)이 있음.
+4. **리소스 안전(Resource Safety)**: 타임아웃(timeout), 인터럽트(interruption), 에러가 발생하더라도 "리소스를 절대 누수하지 않을 것을 보장(guarantee that it will never leak resources)"함.
+5. **고성능과 효율(High Performance and Efficiency)**: 요소 단위 API를 유지하면서도 암묵적 청킹(implicit chunking)을 통해 I/O 효율을 확보함.
+6. **ZIO와의 매끄러운 통합(Seamless Integration with ZIO)**: `Scope`, `Schedule` 등 ZIO 데이터 타입을 그대로 사용함.
+7. **백프레셔(Back-Pressure)**: 풀 기반(pull-based) 메커니즘으로, "데이터 파이프라인의 끝에서 필요할 때 요소를 당겨오기 때문에 최소한의 계산만 필요"함.
+8. **유한한 메모리로 무한 데이터 처리(Infinite Data using Finite Memory)**: 무한 스트림을 유한 메모리 제약 안에서 처리 가능.
 
 ##### 파일 처리 예제 비교
 
@@ -119,49 +119,49 @@ ZStream.fromFileName("file.txt")
 
 ### 2. 세 가지 핵심 추상화: ZStream, ZSink, ZPipeline(Core Abstractions)
 
-ZIO 스트리밍은 세 가지 핵심 추상화로 구성됩니다. 비유하면 파이프(pipe)와 같습니다. **ZStream은 값을 생산하는 소스(source)**, **ZSink은 값을 소비하는 수용기(receptacle)**, **ZPipeline은 값을 변환하는 변환기**(transformer)입니다.
+ZIO 스트리밍은 세 가지 핵심 추상화로 구성됨 → 비유하면 파이프(pipe)와 같음. ZStream은 값을 생산하는 소스(source), ZSink은 값을 소비하는 수용기(receptacle), ZPipeline은 값을 변환하는 변환기(transformer)임.
 
 #### ZStream (소스 / 생산자)
 
-- 값을 **생산**(produce)하는 소스 역할을 합니다.
-- `ZIO[R, E, A]`와 유사하지만, 단 하나가 아니라 0개 이상의 요소를 생산합니다.
+- 값을 **생산**(produce)하는 소스 역할을 함.
+- `ZIO[R, E, A]`와 유사하지만, 단 하나가 아니라 0개 이상의 요소를 생산함.
 - "비어 있지 않은(non-empty) `ZStream`이라는 것은 존재하지 않습니다. 모든 `ZStream`은 비어 있으며, 임의 개수의 `A`를 생산할 수 있습니다."
-- 극도로 게으르며(lazy), 소비하지 않고서는 비어 있는지조차 확인할 수 없습니다.
+- 극도로 게으르며(lazy), 소비하지 않고서는 비어 있는지조차 확인 불가.
 
 #### ZSink (수용기 / 소비자)
 
-- 값을 **소비**(consume)하는 수용기 역할을 합니다.
-- "어떤 타입의 값을 소비하고, 작업이 끝나면 종료됩니다." 파서(parser)나 데이터베이스에 비유할 수 있습니다.
+- 값을 **소비**(consume)하는 수용기 역할을 함.
+- "어떤 타입의 값을 소비하고, 작업이 끝나면 종료됩니다." 파서(parser)나 데이터베이스에 비유 가능.
 - "범주론(category theory)에서 스트림과 싱크는 쌍대(dual) 관계입니다. 하나는 값을 생산하고, 다른 하나는 값을 소비합니다."
-- 합성(compositional) 가능하고 변환(transformable) 가능합니다.
+- 합성(compositional) 가능하고 변환(transformable) 가능함.
 
 #### ZPipeline (변환기)
 
-- 값을 **변환**(transform)하는 변환기 역할을 합니다.
-- 타입 `A`에서 타입 `B`로 상태를 가진(stateful) 변환을 수행합니다.
+- 값을 **변환**(transform)하는 변환기 역할을 함.
+- 타입 `A`에서 타입 `B`로 상태를 가진(stateful) 변환을 수행함.
 - 사용 사례: 분할/카운팅(예: 줄을 단어로), 코덱(codec)(예: 바이트 → JSON → 사용자 정의 타입).
-- 스트림 위에 쌓아 요소 타입을 바꾸거나, 싱크 위에 쌓아 입력 타입을 바꿀 수 있습니다.
-- "요소들을 상태를 유지하며 계속 변환하는 파이프의 중간 부분"입니다.
+- 스트림 위에 쌓아 요소 타입을 바꾸거나, 싱크 위에 쌓아 입력 타입을 바꿀 수 있음.
+- "요소들을 상태를 유지하며 계속 변환하는 파이프의 중간 부분"임.
 
 ---
 
 ### 3. 스트림은 기본적으로 청크 단위(Streams Are Chunked by Default)
 
-스트림은 개별 요소가 아니라 청크(chunk) 단위로 동작합니다. 스트림을 평가하면 단일 항목이 아니라 요소들의 청크를 당겨옵니다.
+스트림은 개별 요소가 아니라 청크(chunk) 단위로 동작함 → 스트림을 평가하면 단일 항목이 아니라 요소들의 청크를 당겨옴.
 
-**근거**: "이는 효율성과 성능 문제 때문입니다. 프로그래밍 세계의 모든 I/O 연산은 배치(batch) 단위로 동작합니다." 파일 디스크립터 읽기/쓰기, 소켓 연산, HTTP 서버, JDBC 드라이버 모두 성능을 위해 여러 요소를 한 번에 처리합니다.
+**근거**: "이는 효율성과 성능 문제 때문입니다. 프로그래밍 세계의 모든 I/O 연산은 배치(batch) 단위로 동작합니다." 파일 디스크립터 읽기/쓰기, 소켓 연산, HTTP 서버, JDBC 드라이버 모두 성능을 위해 여러 요소를 한 번에 처리함.
 
-**Chunk에 대하여**: "Chunk는 ZIO의 불변(immutable) 배열 기반 컬렉션"입니다. 원래 ZIO 스트림을 위해 설계되었으나 범용 컬렉션 타입이 되었습니다. 핵심 특징은 "프리미티브(primitive)를 박싱하지 않은(unboxed) 상태로 유지하려 한다"는 점으로, 효율적인 파일/소켓 처리와 인코딩/디코딩, 트랜스듀서(transducer) 연산에 중요합니다.
+**Chunk에 대하여**: "Chunk는 ZIO의 불변(immutable) 배열 기반 컬렉션"임. 원래 ZIO 스트림을 위해 설계되었으나 범용 컬렉션 타입이 됨. 핵심 특징은 "프리미티브(primitive)를 박싱하지 않은(unboxed) 상태로 유지하려 한다"는 점으로, 효율적인 파일/소켓 처리와 인코딩/디코딩, 트랜스듀서(transducer) 연산에 중요함.
 
-청크 관련 연산자(`mapChunks`, `grouped`, `rechunk`, `flattenChunks`)는 [연산 섹션](#7-zstream-연산zstream-operations)에서 다룹니다.
+청크 관련 연산자(`mapChunks`, `grouped`, `rechunk`, `flattenChunks`)는 [연산 섹션](#7-zstream-연산zstream-operations)에서 다룸.
 
 ---
 
 ### 4. ZStream 정의와 타입(ZStream Definition and Types)
 
-`ZStream[R, E, O]`는 "평가될 때 0개 이상의 타입 `O` 값을 방출(emit)할 수 있고, 타입 `E`의 에러로 실패할 수 있는 프로그램의 설명(description)"이며, 환경 타입 `R`을 요구합니다.
+`ZStream[R, E, O]`는 "평가될 때 0개 이상의 타입 `O` 값을 방출(emit)할 수 있고, 타입 `E`의 에러로 실패할 수 있는 프로그램의 설명(description)"이며, 환경 타입 `R`을 요구함.
 
-`ZIO[R, E, A]`와의 핵심 차이는, ZIO 이펙트는 성공 시 정확히 하나의 값을 반환하는 반면, 스트림은 0개, 여러 개, 혹은 무한 개의 값을 산출할 수 있다는 점입니다.
+`ZIO[R, E, A]`와의 핵심 차이는, ZIO 이펙트는 성공 시 정확히 하나의 값을 반환하는 반면, 스트림은 0개, 여러 개, 혹은 무한 개의 값을 산출할 수 있다는 점임.
 
 #### 스트림이 표현할 수 있는 네 가지 시나리오
 
@@ -243,7 +243,7 @@ val randomInt: ZStream[Any, Nothing, Int] =
   ZStream.fromZIO(Random.nextInt)
 ```
 
-`ZStream.fromZIOOption`은 ZIO 결과에 따라 요소를 방출하거나 빈 스트림을 반환합니다. `None`은 스트림 종료를 의미합니다.
+`ZStream.fromZIOOption`은 ZIO 결과에 따라 요소를 방출하거나 빈 스트림을 반환함. `None`은 스트림 종료를 의미함.
 
 ```scala
 object ZStream {
@@ -461,7 +461,7 @@ for {
 
 ### 6. 리소스 안전 스트림(Resourceful Streams)
 
-대부분의 `ZStream` 생성자에는 스코프 리소스(scoped resource)를 스트림으로 들어올리는 특수 변형(예: `ZStream.fromReaderScoped`)이 있으며, 이들은 리소스 안전(resource-safe) 스트림을 만듭니다.
+대부분의 `ZStream` 생성자에는 스코프 리소스(scoped resource)를 스트림으로 들어올리는 특수 변형(예: `ZStream.fromReaderScoped`)이 있으며, 이들은 리소스 안전(resource-safe) 스트림을 만듦.
 
 #### 6.1 획득-해제(Acquire Release)
 
@@ -511,7 +511,7 @@ val myApp: ZStream[Any, IOException, Any] =
 
 #### 6.3 보장(Ensuring)
 
-`ensuring` 연산자는 스트림 종료 처리 이후에 코드를 실행합니다.
+`ensuring` 연산자는 스트림 종료 처리 이후에 코드를 실행함.
 
 ```scala
 ZStream
@@ -530,7 +530,7 @@ ZStream
 
 #### 7.1 탭핑(Tapping)
 
-각 방출마다 이펙트를 실행하되 요소는 바꾸지 않습니다. 관찰·로깅에 사용합니다.
+각 방출마다 이펙트를 실행하되 요소는 바꾸지 않음 → 관찰·로깅에 사용.
 
 ```scala
 val stream: ZStream[Any, IOException, Int] = ZStream(1, 2, 3)
@@ -557,7 +557,7 @@ val intStream: UStream[Int] = ZStream.fromIterable(0 to 100)
 val stringStream: UStream[String] = intStream.map(_.toString)
 ```
 
-`mapZIOPar`는 `mapZIO`처럼 동작하되 이펙트를 병렬로 평가하고, 결과는 원래 순서대로 다운스트림에 방출합니다. `n`은 동시에 실행할 이펙트의 수입니다.
+`mapZIOPar`는 `mapZIO`처럼 동작하되 이펙트를 병렬로 평가하고, 결과는 원래 순서대로 다운스트림에 방출함. `n`은 동시에 실행할 이펙트의 수임.
 
 ```scala
 def fetchUrl(url: URL): Task[String] = ZIO.succeed(???)
@@ -565,7 +565,7 @@ def getUrls: Task[List[URL]] = ZIO.succeed(???)
 val pages = ZStream.fromIterableZIO(getUrls).mapZIOPar(8)(fetchUrl)
 ```
 
-`mapChunks`는 내부 청크를 한꺼번에 변환합니다.
+`mapChunks`는 내부 청크를 한꺼번에 변환함.
 
 ```scala
 val chunked = ZStream.fromChunks(Chunk(1, 2, 3), Chunk(4, 5), Chunk(6, 7, 8, 9))
@@ -574,7 +574,7 @@ val stream = chunked.mapChunks(x => x.tail)
 // 출력:     2, 3,    5,    7, 8, 9
 ```
 
-`mapAccum`은 상태를 유지하며 매핑합니다(map + 누적).
+`mapAccum`은 상태를 유지하며 매핑함(map + 누적).
 
 ```scala
 abstract class ZStream[-R, +E, +O] {
@@ -588,7 +588,7 @@ def runningTotal(stream: UStream[Int]): UStream[Int] =
 // 출력: 0, 1, 3, 6, 10, 15
 ```
 
-`mapConcat`은 각 요소를 0개 이상의 `Iterable` 요소로 매핑한 뒤 평탄화(flatten)합니다.
+`mapConcat`은 각 요소를 0개 이상의 `Iterable` 요소로 매핑한 뒤 평탄화(flatten)함.
 
 ```scala
 val numbers: UStream[Int] = ZStream("1-2-3", "4-5", "6")
@@ -616,7 +616,7 @@ val s3 = ZStream.range(1, 11).filterNot(_ % 2 == 0)      // 1, 3, 5, 7, 9
 
 #### 7.5 스캐닝(Scanning)
 
-`scan`은 누적 중간 결과를 모두 방출하는 폴드(fold)입니다.
+`scan`은 누적 중간 결과를 모두 방출하는 폴드(fold)임.
 
 ```scala
 val scan = ZStream(1, 2, 3, 4, 5).scan(0)(_ + _)
@@ -628,7 +628,7 @@ val fold = ZStream(1, 2, 3, 4, 5).runFold(0)(_ + _)
 
 #### 7.6 드레이닝(Draining)
 
-`drain`은 스트림의 모든 출력 값을 버립니다(이펙트는 실행되지만 요소는 방출하지 않음).
+`drain`은 스트림의 모든 출력 값을 버림(이펙트는 실행되지만 요소는 방출하지 않음).
 
 ```scala
 val s1: ZStream[Any, Nothing, Nothing] = ZStream(1, 2, 3, 4, 5).drain
@@ -644,7 +644,7 @@ val stream2 = ZStream(1, 2, 3) ++ logging ++ ZStream(4, 5, 6)
 
 #### 7.7 변경 감지(Changes)
 
-`changes`는 직전 요소와 다른 요소만 방출합니다.
+`changes`는 직전 요소와 다른 요소만 방출함.
 
 ```scala
 val changes = ZStream(1, 1, 1, 2, 2, 3, 4).changes
@@ -658,7 +658,7 @@ val uniques = events.changesWith((e1, e2) =>
 
 #### 7.8 수집하기(Collecting)
 
-`collect`는 필터 + 맵을 한 단계로 수행합니다.
+`collect`는 필터 + 맵을 한 단계로 수행함.
 
 ```scala
 val source1 = ZStream(1, 2, 3, 4, 0, 5, 6, 7, 8)
@@ -723,14 +723,14 @@ val s6 = first crossRight second  // = first *> second   => 오른쪽 값만: a,
 
 #### 7.11 분할하기(Partitioning)
 
-`partition`은 술어(predicate)에 따라 두 스트림(참-스트림, 거짓-스트림)의 튜플로 나눕니다.
+`partition`은 술어(predicate)에 따라 두 스트림(참-스트림, 거짓-스트림)의 튜플로 나눔.
 
 ```scala
 val partitionResult: ZIO[Scope, Nothing, (ZStream[Any, Nothing, Int], ZStream[Any, Nothing, Int])] =
   ZStream.fromIterable(0 to 100).partition(_ % 2 == 0, buffer = 50)
 ```
 
-`partitionEither`는 이펙트성 술어로 분할합니다.
+`partitionEither`는 이펙트성 술어로 분할함.
 
 ```scala
 abstract class ZStream[-R, +E, +O] {
@@ -748,7 +748,7 @@ val partitioned =
 
 #### 7.12 그룹화 키로 묶기(GroupBy)
 
-`groupByKey`는 함수 `O => K`로 분할합니다.
+`groupByKey`는 함수 `O => K`로 분할함.
 
 ```scala
 import zio._
@@ -766,7 +766,7 @@ val groupByKeyResult: ZStream[Any, Nothing, (Int, Int)] = ZStream
   }
 ```
 
-`groupBy`는 이펙트성 분할 함수 `O => ZIO[R1, E1, (K, V)]`를 받습니다.
+`groupBy`는 이펙트성 분할 함수 `O => ZIO[R1, E1, (K, V)]`를 받음.
 
 ```scala
 val counted: UStream[(Char, Long)] = ZStream("Mary", "James", "Robert",
@@ -815,7 +815,7 @@ val allBooks: ZStream[Any, Throwable, Book] = authors.flatMap(getAuthorBooks _)
 
 #### 7.15 병합(Merging)
 
-`merge`는 지정된 스트림들에서 요소를 무작위로(비결정적으로) 가져옵니다.
+`merge`는 지정된 스트림들에서 요소를 무작위로(비결정적으로) 가져옴.
 
 ```scala
 val s1 = ZStream(1, 2, 3).rechunk(1)
@@ -833,7 +833,7 @@ val s2 = ZStream.repeat(0).rechunk(1)
 val merged = s1.merge(s2, HaltStrategy.Left)
 ```
 
-`mergeAll` / `mergeAllUnbounded`는 여러 스트리밍 컴포넌트를 동시에 결합합니다.
+`mergeAll` / `mergeAllUnbounded`는 여러 스트리밍 컴포넌트를 동시에 결합함.
 
 ```scala
 val main = for {
@@ -847,7 +847,7 @@ val main = for {
 } yield ()
 ```
 
-`mergeWith`는 두 스트림을 병합하면서 새 요소 타입으로 통일합니다.
+`mergeWith`는 두 스트림을 병합하면서 새 요소 타입으로 통일함.
 
 ```scala
 val s1 = ZStream("1", "2", "3")
@@ -857,7 +857,7 @@ val merged = s1.mergeWith(s2)(_.toInt, _.toInt)
 
 #### 7.16 인터리빙(Interleaving)
 
-병합과 달리 결정적(deterministic)이며, 각 스트림에서 번갈아 한 요소씩 가져옵니다.
+병합과 달리 결정적(deterministic)이며, 각 스트림에서 번갈아 한 요소씩 가져옴.
 
 ```scala
 val s1 = ZStream(1, 2, 3)
@@ -883,7 +883,7 @@ val s2 = ZStream("a", "b", "c", "d").intersperse("[", "-", "]")
 
 #### 7.18 브로드캐스팅(Broadcasting)
 
-`broadcast`는 원본과 동일한 요소를 갖는 스코프 스트림 목록을 반환하며, 각 요소를 반환된 모든 스트림에 방출합니다.
+`broadcast`는 원본과 동일한 요소를 갖는 스코프 스트림 목록을 반환하며, 각 요소를 반환된 모든 스트림에 방출함.
 
 ```scala
 val stream: ZIO[Any, IOException, Unit] = ZIO.scoped {
@@ -910,7 +910,7 @@ val stream: ZIO[Any, IOException, Unit] = ZIO.scoped {
 
 #### 7.19 분배(Distribution)
 
-`distributedWith`는 broadcast보다 강력하며, `decide` 함수를 사용해 요소를 다운스트림 큐들에 분배합니다.
+`distributedWith`는 broadcast보다 강력하며, `decide` 함수를 사용해 요소를 다운스트림 큐들에 분배함.
 
 ```scala
 abstract class ZStream[-R, +E, +O] {
@@ -939,7 +939,7 @@ val partitioned =
 
 #### 7.20 버퍼링(Buffering)
 
-ZIO 스트림은 풀 기반(pull-based)입니다. 빠른 생산자와 느린 소비자를 분리하려면 버퍼링 큐를 사용합니다.
+ZIO 스트림은 풀 기반(pull-based)임 → 빠른 생산자와 느린 소비자를 분리하려면 버퍼링 큐 사용.
 
 ```scala
 ZStream
@@ -955,7 +955,7 @@ ZStream
 
 #### 7.21 디바운싱(Debouncing)
 
-`debounce`는 요소 간 최소 주기 `d`를 강제합니다.
+`debounce`는 요소 간 최소 주기 `d`를 강제함.
 
 ```scala
 val stream = (ZStream(1, 2, 3) ++
@@ -967,9 +967,9 @@ val stream = (ZStream(1, 2, 3) ++
 
 #### 7.22 집계(Aggregation)
 
-싱크/트랜스듀서를 사용해 타입 `A`의 요소 하나 이상을 타입 `B`의 요소로 변환합니다.
+싱크/트랜스듀서를 사용해 타입 `A`의 요소 하나 이상을 타입 `B`의 요소로 변환함.
 
-**동기 집계(Synchronous Aggregation)** — `aggregate` / `transduce`. 트랜스듀서가 방출할 때 업스트림도 방출합니다.
+**동기 집계(Synchronous Aggregation)** — `aggregate` / `transduce`. 트랜스듀서가 방출할 때 업스트림도 방출함.
 
 ```scala
 val stream = ZStream(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
@@ -990,7 +990,7 @@ val sink = ZSink.foreach((e: Chunk[Int]) =>
 val myApp = source.transduce(ZSink.collectAllN[Int](5)).run(sink)
 ```
 
-**비동기 집계(Asynchronous Aggregation)** — `aggregateAsync`, `aggregateAsyncWithin`, `aggregateAsyncWithinEither`. 다운스트림이 바쁜 동안 업스트림을 집계합니다.
+**비동기 집계(Asynchronous Aggregation)** — `aggregateAsync`, `aggregateAsyncWithin`, `aggregateAsyncWithinEither`. 다운스트림이 바쁜 동안 업스트림을 집계함.
 
 ```scala
 abstract class ZStream[-R, +E, +O] {
@@ -1024,27 +1024,27 @@ dataStream
 
 ### 8. 동시성과 병렬성, 백프레셔(Concurrency, Parallelism and Back-Pressure)
 
-ZIO 스트림은 안전한 동시성 연산자를 제공합니다.
+ZIO 스트림은 안전한 동시성 연산자를 제공함.
 
-- **병렬 매핑**: `mapZIOPar(n)`(순서 보존), `mapZIOParUnordered(n)`(순서 무시, 더 빠름). `n`은 동시 실행 이펙트 수입니다.
-- **병렬 평탄화**: `flatMapPar`로 여러 하위 스트림을 동시에 실행합니다.
-- **병합과 분배**: `merge`/`mergeAll`(비결정적 결합), `broadcast`(다수에게 복제), `distributedWith`(큐로 분배)로 동시 처리를 합니다.
+- **병렬 매핑**: `mapZIOPar(n)`(순서 보존), `mapZIOParUnordered(n)`(순서 무시, 더 빠름). `n`은 동시 실행 이펙트 수임.
+- **병렬 평탄화**: `flatMapPar`로 여러 하위 스트림을 동시에 실행함.
+- **병합과 분배**: `merge`/`mergeAll`(비결정적 결합), `broadcast`(다수에게 복제), `distributedWith`(큐로 분배)로 동시 처리를 함.
 
 #### 백프레셔(Back-Pressure)
 
-ZIO 스트림의 백프레셔는 **풀 기반(pull-based)** 메커니즘에 기반합니다. 소비자가 데이터 파이프라인의 끝에서 필요할 때 요소를 당겨오기 때문에, 느린 소비자가 빠른 생산자를 자연스럽게 늦춥니다. 따라서 별도의 신호 프로토콜 없이 메모리 폭주를 방지합니다.
+ZIO 스트림의 백프레셔는 **풀 기반(pull-based)** 메커니즘에 기반함 → 소비자가 데이터 파이프라인의 끝에서 필요할 때 요소를 당겨오기 때문에, 느린 소비자가 빠른 생산자를 자연스럽게 늦춤 → 별도의 신호 프로토콜 없이 메모리 폭주를 방지함.
 
-빠른 생산자와 느린 소비자를 분리하려면 [버퍼링](#720-버퍼링buffering)을 사용해 둘 사이에 큐를 둡니다. 버퍼가 가득 차면 생산자가 자연스럽게 블로킹(논블로킹 방식으로 대기)됩니다. `bufferSliding`/`bufferDropping`을 쓰면 백프레셔 대신 오래된/새 요소를 버리는 정책을 선택할 수 있습니다.
+빠른 생산자와 느린 소비자를 분리하려면 [버퍼링](#720-버퍼링buffering)을 사용해 둘 사이에 큐를 둠. 버퍼가 가득 차면 생산자가 자연스럽게 블로킹(논블로킹 방식으로 대기)됨. `bufferSliding`/`bufferDropping`을 쓰면 백프레셔 대신 오래된/새 요소를 버리는 정책을 선택 가능.
 
 #### 리소스 안전(Resource Safety)
 
-ZIO 스트림은 타임아웃, 인터럽트, 에러가 발생해도 리소스를 누수하지 않습니다. `Scope` 기반 자원 관리(`acquireReleaseWith`, `*Scoped` 생성자, `finalizer`, `ensuring`)를 통해 모든 종료 경로에서 종료 처리(finalizer)가 실행되도록 보장합니다.
+ZIO 스트림은 타임아웃, 인터럽트, 에러가 발생해도 리소스를 누수하지 않음. `Scope` 기반 자원 관리(`acquireReleaseWith`, `*Scoped` 생성자, `finalizer`, `ensuring`)를 통해 모든 종료 경로에서 종료 처리(finalizer)가 실행되도록 보장함.
 
 ---
 
 ### 9. 스트림 소비하기(Consuming Streams)
 
-스트림을 소비하는 방법은 세 가지입니다: 싱크 사용, 폴드 사용, foreach 사용.
+스트림을 소비하는 방법은 세 가지임: 싱크 사용, 폴드 사용, foreach 사용.
 
 ```scala
 import zio._
@@ -1067,17 +1067,17 @@ val s2: ZIO[Any, Nothing, Int] = ZStream.iterate(1)(_ + 1).runFoldWhile(0)(_ <= 
 - `runFoldWhile(z)(cont)(op)`: 술어가 참인 동안 폴드
 - `foreach(f)`: 각 요소를 콜백 `O => ZIO[R1, E1, Any]`에 전달
 
-이 외에도 ZIO API에는 `runCollect`(모든 요소를 Chunk로 수집), `runDrain`, `runForeach`, `runCount`, `runHead`, `runLast`, `runSum`, `toIterator` 등 다양한 소비 연산자가 있습니다(`runCollect`는 SubscriptionRef 예제에서 사용됨).
+이 외에도 ZIO API에는 `runCollect`(모든 요소를 Chunk로 수집), `runDrain`, `runForeach`, `runCount`, `runHead`, `runLast`, `runSum`, `toIterator` 등 다양한 소비 연산자가 있음(`runCollect`는 SubscriptionRef 예제에서 사용됨).
 
 ---
 
 ### 10. 에러 처리(Error Handling)
 
-`ZStream[R, E, O]`는 타입이 지정된 실패(typed failure)를 `E` 채널에 담습니다. 실패는 스트림을 단락(short-circuit)시키며, 그 시점까지의 요소가 방출된 뒤 복구 로직이 작동합니다. 디펙트(defect)는 `E`를 우회하므로 `*Cause` 계열이나 `refineOrDie`로만 잡을 수 있습니다.
+`ZStream[R, E, O]`는 타입이 지정된 실패(typed failure)를 `E` 채널에 담음. 실패는 스트림을 단락(short-circuit)시키며, 그 시점까지의 요소가 방출된 뒤 복구 로직이 작동함. 디펙트(defect)는 `E`를 우회하므로 `*Cause` 계열이나 `refineOrDie`로만 잡을 수 있음.
 
 #### 10.1 실패로부터 복구(Recovering from Failure)
 
-`orElse`는 초기 스트림이 실패하면 대체 스트림으로 전환합니다.
+`orElse`는 초기 스트림이 실패하면 대체 스트림으로 전환함.
 
 ```scala
 import zio.stream._
@@ -1087,7 +1087,7 @@ val stream = s1.orElse(s2)
 // 출력: 1, 2, 3, 6, 7, 8
 ```
 
-`catchAll`은 실패 값에 따라 복구 스트림을 결정합니다.
+`catchAll`은 실패 값에 따라 복구 스트림을 결정함.
 
 ```scala
 val first = ZStream(1, 2, 3) ++ ZStream.fail("Uh Oh!") ++ ZStream(4, 5) ++ ZStream.fail("Ouch")
@@ -1102,11 +1102,11 @@ val stream = first.catchAll {
 
 > **전파에 대한 주의**: 스트림은 첫 번째 실패에서 멈춥니다. 위 예제에서 `"Uh Oh!"` 이전의 `1, 2, 3`만 방출된 뒤 `second`(`6, 7, 8`)로 전환되며, 원본 스트림은 이미 첫 실패에서 종료되었으므로 `4, 5`와 `"Ouch"` 분기에는 결코 도달하지 않습니다.
 
-`orElseEither`는 동일하게 동작하되 `Either`로 요소를 태그합니다(`Left`는 첫 스트림, `Right`는 복구 스트림).
+`orElseEither`는 동일하게 동작하되 `Either`로 요소를 태그함(`Left`는 첫 스트림, `Right`는 복구 스트림).
 
 #### 10.2 디펙트로부터 복구(Recovering from Defects)
 
-`catchAllCause`는 디펙트(die)를 포함한 모든 실패 원인으로부터 복구합니다.
+`catchAllCause`는 디펙트(die)를 포함한 모든 실패 원인으로부터 복구함.
 
 ```scala
 val s1 = ZStream(1, 2, 3) ++ ZStream.dieMessage("Oh! Boom!") ++ ZStream(4, 5)
@@ -1117,7 +1117,7 @@ val stream = s1.catchAllCause(_ => s2)
 
 #### 10.3 일부 에러로부터 복구(Recovery from Some Errors)
 
-`catchSome`은 특정 실패로부터(에러에 대한 부분 함수), `catchSomeCause`는 특정 원인으로부터(`Cause`에 대한 부분 함수) 복구합니다.
+`catchSome`은 특정 실패로부터(에러에 대한 부분 함수), `catchSomeCause`는 특정 원인으로부터(`Cause`에 대한 부분 함수) 복구함.
 
 ```scala
 val s1 = ZStream(1, 2, 3) ++ ZStream.fail("Oh! Error!") ++ ZStream(4, 5)
@@ -1136,7 +1136,7 @@ val stream = s1.catchSomeCause { case Die(value, _) => s2 }
 
 #### 10.4 ZIO 이펙트로 복구(Recovering to ZIO Effect)
 
-`onError`는 스트림이 실패할 때 정리(cleanup) ZIO 이펙트를 실행합니다.
+`onError`는 스트림이 실패할 때 정리(cleanup) ZIO 이펙트를 실행함.
 
 ```scala
 import zio._
@@ -1148,7 +1148,7 @@ val stream =
 
 #### 10.5 실패하는 스트림 재시도(Retry a Failing Stream)
 
-`retry`는 `Schedule`에 따라 스트림을 재시도합니다.
+`retry`는 `Schedule`에 따라 스트림을 재시도함.
 
 ```scala
 val numbers = ZStream(1, 2, 3) ++
@@ -1167,7 +1167,7 @@ val numbers = ZStream(1, 2, 3) ++
 
 #### 10.6 Either와의 변환(From/To Either)
 
-- `ZStream.absolve`: `Either` 값들의 스트림을 에러 채널로 들어올립니다(레거시 `Either` 반환 API 적응에 유용).
+- `ZStream.absolve`: `Either` 값들의 스트림을 에러 채널로 들어올림(레거시 `Either` 반환 API 적응에 유용).
 - `ZStream#either`: 에러를 값 채널의 `Either`로 노출(에러 채널은 `Nothing`이 됨).
 - `ZStream#rightOrFail`: `Either` 스트림을 right 값 스트림으로 변환하고, 첫 `Left`에서 지정 에러로 실패.
 
@@ -1188,7 +1188,7 @@ val stream: ZStream[Any, String, Int] = eitherStream.rightOrFail("fail")
 
 #### 10.7 에러 정제(Refining Errors)
 
-`refineOrDie`는 부분 함수에 매칭되는 에러는 타입 에러 채널 `E`에 유지하고, 그 외의 에러는 디펙트로 만들어 파이버를 종료시킵니다.
+`refineOrDie`는 부분 함수에 매칭되는 에러는 타입 에러 채널 `E`에 유지하고, 그 외의 에러는 디펙트로 만들어 파이버를 종료시킴.
 
 ```scala
 val stream: ZStream[Any, Throwable, Int] = ZStream.fail(new Throwable)
@@ -1212,7 +1212,7 @@ stream.timeoutTo(10.seconds)(alternative)
 
 ### 11. 스케줄링(Scheduling)
 
-스트림의 출력을 스케줄링하려면 `ZStream#schedule` 콤비네이터를 사용합니다. 다음은 각 방출 사이에 간격을 두는 예제입니다.
+스트림의 출력을 스케줄링하려면 `ZStream#schedule` 콤비네이터를 사용함. 다음은 각 방출 사이에 간격을 두는 예제임.
 
 ```scala
 import zio._
@@ -1220,7 +1220,7 @@ import zio.stream._
 val stream = ZStream(1, 2, 3, 4, 5).schedule(Schedule.spaced(1.second))
 ```
 
-이 외에도 ZIO에는 `repeat`, `throttleShape`, `throttleEnforce`, `Schedule.fixed` 등 스케줄/스로틀 관련 연산자가 있으며, 위 예제들에서 `Schedule.spaced`, `Schedule.fixed`, `Schedule.exponential`, `Schedule.duration(...).jittered` 등이 함께 사용됩니다.
+이 외에도 ZIO에는 `repeat`, `throttleShape`, `throttleEnforce`, `Schedule.fixed` 등 스케줄/스로틀 관련 연산자가 있으며, 위 예제들에서 `Schedule.spaced`, `Schedule.fixed`, `Schedule.exponential`, `Schedule.duration(...).jittered` 등이 함께 사용됨.
 
 ---
 
@@ -1228,7 +1228,7 @@ val stream = ZStream(1, 2, 3, 4, 5).schedule(Schedule.spaced(1.second))
 
 #### 12.1 정의(Definition)
 
-`ZSink[R, E, I, L, Z]`는 `ZStream`이 생산한 요소를 소비하는 데 사용됩니다. 싱크는 0개, 1개, 또는 그 이상의 `I` 요소를 소비하고, 타입 `E`의 에러로 실패할 수 있으며, 최종적으로 타입 `L`의 잔여물(leftover)과 함께 타입 `Z`의 값을 산출하는 함수로 생각할 수 있습니다.
+`ZSink[R, E, I, L, Z]`는 `ZStream`이 생산한 요소를 소비하는 데 사용됨. 싱크는 0개, 1개, 또는 그 이상의 `I` 요소를 소비하고, 타입 `E`의 에러로 실패할 수 있으며, 최종적으로 타입 `L`의 잔여물(leftover)과 함께 타입 `Z`의 값을 산출하는 함수로 생각 가능.
 
 타입 파라미터:
 
@@ -1238,7 +1238,7 @@ val stream = ZStream(1, 2, 3, 4, 5).schedule(Schedule.spaced(1.second))
 - **L** — 잔여물(leftover) 타입(업스트림에서 소비했지만 사용하지 않은 요소)
 - **Z** — 출력 / done 값 타입
 
-스트림을 싱크로 소비하려면 `ZStream#run`에 싱크를 전달합니다.
+스트림을 싱크로 소비하려면 `ZStream#run`에 싱크를 전달함.
 
 ```scala
 import zio._
@@ -1251,7 +1251,7 @@ val sum    = stream.run(sink)
 
 #### 12.2 타입 별칭(Type Alias)
 
-`Sink[E, A, L, B]`는 `ZSink[Any, E, A, L, B]`의 별칭으로, 서비스를 요구하지 않는 싱크입니다.
+`Sink[E, A, L, B]`는 `ZSink[Any, E, A, L, B]`의 별칭으로, 서비스를 요구하지 않는 싱크임.
 
 ```scala
 type Sink[+E, A, +L, +B] = ZSink[Any, E, A, L, B]
@@ -1364,7 +1364,7 @@ ZStream(1, 2, 3, 4, 5, 6, 7, 8, 9, 10).run(ZSink.foldUntil(0, 3)(_ + _))
 // 6, 15, 24, 10
 ```
 
-`foldWeighted`는 `costFn`이 정한 `max` 만큼의 가중치에 도달할 때까지 폴드한 뒤, 계산된 값을 방출하고 재시작합니다.
+`foldWeighted`는 `costFn`이 정한 `max` 만큼의 가중치에 도달할 때까지 폴드한 뒤, 계산된 값을 방출하고 재시작함.
 
 ```scala
 object ZSink {
@@ -1442,7 +1442,7 @@ val queueApp: IO[IOException, Unit] =
 
 ##### contramap
 
-`map`은 함수의 공역(co-domain)을, `contramap`은 정의역(domain)을 변환합니다. 즉 `contramap`은 입력을 변환합니다. 예를 들어 `ZSink.sum`은 수치 입력을 합산하는데, `String` 스트림에 적용하고 싶을 때 사용합니다.
+`map`은 함수의 공역(co-domain)을, `contramap`은 정의역(domain)을 변환함 → 즉 `contramap`은 입력을 변환. 예를 들어 `ZSink.sum`은 수치 입력을 합산하는데, `String` 스트림에 적용하고 싶을 때 사용.
 
 ```scala
 import zio._
@@ -1456,7 +1456,7 @@ val sum: ZIO[Any, Nothing, Int] = ZStream("1", "2", "3", "4", "5").run(stringSum
 
 ##### dimap
 
-`dimap`은 입력과 출력을 모두 변환하는 확장된 `contramap`입니다.
+`dimap`은 입력과 출력을 모두 변환하는 확장된 `contramap`임.
 
 ```scala
 val sumSink: ZSink[Any, Nothing, String, Nothing, String] =
@@ -1467,7 +1467,7 @@ val sum: ZIO[Any, Nothing, String] = ZStream("1", "2", "3", "4", "5").run(sumSin
 
 ##### filterInput (필터링)
 
-싱크는 입력 요소를 필터링하는 `filterInput`을 제공합니다.
+싱크는 입력 요소를 필터링하는 `filterInput`을 제공함.
 
 ```scala
 ZStream(1, -2, 0, 1, 3, -3, 4, 2, 0, 1, -3, 1, 1, 6)
@@ -1479,7 +1479,7 @@ ZStream(1, -2, 0, 1, 3, -3, 4, 2, 0, 1, -3, 1, 1, 6)
 
 ##### 병렬 지핑(Parallel Zipping)
 
-두 `ZSink`을 함께 지핑할 수 있습니다. 둘 다 병렬로 실행되며 결과는 튜플로 결합됩니다.
+두 `ZSink`을 함께 지핑 가능 → 둘 다 병렬로 실행되며 결과는 튜플로 결합됨.
 
 ```scala
 import zio._
@@ -1496,7 +1496,7 @@ val zipped: ZSink[Any, Throwable, Record, Record, Unit] = kafkaSink zipPar pulsa
 
 ##### 레이싱(Racing)
 
-여러 싱크를 `race`할 수 있습니다. 병렬로 실행되어 먼저 완료된 쪽이 결과를 제공합니다. 어느 쪽이 이겼는지 알려면 `raceBoth`(`Either` 결과 반환)를 씁니다.
+여러 싱크를 `race` 가능 → 병렬로 실행되어 먼저 완료된 쪽이 결과를 제공함. 어느 쪽이 이겼는지 알려면 `raceBoth`(`Either` 결과 반환)를 사용.
 
 ```scala
 val raced: ZSink[Any, Throwable, Record, Record, Unit] = kafkaSink race pulsarSink
@@ -1504,7 +1504,7 @@ val raced: ZSink[Any, Throwable, Record, Record, Unit] = kafkaSink race pulsarSi
 
 #### 12.6 잔여물(Leftovers)
 
-싱크는 업스트림에서 0개 이상의 `I` 요소를 소비합니다. 업스트림이 유한하면 `ZSink#collectLeftover`로 잔여물을 수집할 수 있습니다. 싱크의 결과와 잔여물의 튜플을 반환합니다.
+싱크는 업스트림에서 0개 이상의 `I` 요소를 소비함. 업스트림이 유한하면 `ZSink#collectLeftover`로 잔여물 수집 가능 → 싱크의 결과와 잔여물의 튜플을 반환.
 
 ```scala
 val s1: ZIO[Any, Nothing, (Chunk[Int], Chunk[Int])] =
@@ -1516,7 +1516,7 @@ val s2: ZIO[Any, Nothing, (Option[Int], Chunk[Int])] =
 // (Some(1), Chunk(2, 3, 4, 5))
 ```
 
-잔여물이 필요 없으면 `ZSink#ignoreLeftover`로 버립니다.
+잔여물이 필요 없으면 `ZSink#ignoreLeftover`로 버림.
 
 ```scala
 ZSink.take[Int](3).ignoreLeftover
@@ -1530,7 +1530,7 @@ ZSink.take[Int](3).ignoreLeftover
 
 #### 13.1 정의(Definition)
 
-`ZPipeline[-Env, +Err, -In, +Out]`은 **스트림 변환기**입니다. 스트림을 입력으로 받아 변환된 스트림을 출력으로 반환합니다. 개념적 타입 별칭은 다음과 같습니다.
+`ZPipeline[-Env, +Err, -In, +Out]`은 **스트림 변환기**임. 스트림을 입력으로 받아 변환된 스트림을 출력으로 반환함. 개념적 타입 별칭은 다음과 같음.
 
 ```scala
 type ZPipeline[Env, Err, In, Out] = ZStream[Env, Err, In] => ZStream[Env, Err, Out]
@@ -1543,13 +1543,13 @@ type ZPipeline[Env, Err, In, Out] = ZStream[Env, Err, In] => ZStream[Env, Err, O
 - `In` — 입력 스트림 요소 타입
 - `Out` — 출력 스트림 요소 타입
 
-**핵심 개념**: "파이프라인은 스트림 변환을 소스 스트림 자체로부터 분리합니다. 그 결과 값 수준에서 스트림 변환을 추상화할 수 있게 되어, 재사용 가능한 변환 파이프라인을 만들고, 저장하고, 전달하며, 다양한 스트림에 적용할 수 있습니다." 파이프라인이 하는 모든 일은 스트림에 직접 할 수도 있지만, 파이프라인은 변환 로직을 합성 가능한 값으로 **추상화·재사용**할 수 있게 합니다.
+**핵심 개념**: "파이프라인은 스트림 변환을 소스 스트림 자체로부터 분리합니다. 그 결과 값 수준에서 스트림 변환을 추상화할 수 있게 되어, 재사용 가능한 변환 파이프라인을 만들고, 저장하고, 전달하며, 다양한 스트림에 적용할 수 있습니다." 파이프라인이 하는 모든 일은 스트림에 직접 할 수도 있지만, 파이프라인은 변환 로직을 합성 가능한 값으로 **추상화·재사용**할 수 있게 함.
 
 #### 13.2 생성(Creation)
 
 ##### 함수로부터(From Function)
 
-`ZPipeline.map`으로 함수를 파이프라인으로 변환합니다. 이펙트를 포함하는 버전으로 `ZPipeline.mapZIO`도 있습니다.
+`ZPipeline.map`으로 함수를 파이프라인으로 변환함. 이펙트를 포함하는 버전으로 `ZPipeline.mapZIO`도 있음.
 
 ```scala
 val chars = ZPipeline.map[String, Chunk[Char]](s => Chunk.fromArray(s.toArray)) >>>
@@ -1558,7 +1558,7 @@ val chars = ZPipeline.map[String, Chunk[Char]](s => Chunk.fromArray(s.toArray)) 
 
 ##### 커스텀 채널로부터(From Custom Channels)
 
-`map`이나 `mapZIO`로 표현하기 어려운 상태 유지(stateful) 변환에는 `ZPipeline.fromChannel`을 사용합니다. 다음은 각 요소를 직전 요소와 짝지어 청크를 넘나들며 `prev` 상태를 유지하는 예제입니다.
+`map`이나 `mapZIO`로 표현하기 어려운 상태 유지(stateful) 변환에는 `ZPipeline.fromChannel`을 사용함. 다음은 각 요소를 직전 요소와 짝지어 청크를 넘나들며 `prev` 상태를 유지하는 예제임.
 
 ```scala
 import zio.{ZNothing, Cause}
@@ -1586,7 +1586,7 @@ def pairwiseGo[A](
   )
 ```
 
-`ZChannel.readWithCause`는 세 가지 케이스를 받습니다: 입력 핸들러, 에러/원인 핸들러, done 핸들러.
+`ZChannel.readWithCause`는 세 가지 케이스를 받음: 입력 핸들러, 에러/원인 핸들러, done 핸들러.
 
 #### 13.3 내장 파이프라인(Built-in Pipelines)
 
@@ -1686,7 +1686,7 @@ def decompressGzipped(gzipped: ZStream[Any, Nothing, Byte]): ZStream[Any, Compre
 }
 ```
 
-`ZPipeline.gunzipAuto`는 입력이 gzip이면 압축을 풀고, 아니면 그대로 다운스트림으로 통과시킵니다.
+`ZPipeline.gunzipAuto`는 입력이 gzip이면 압축을 풀고, 아니면 그대로 다운스트림으로 통과시킴.
 
 ```scala
 import zio.stream.ZPipeline.gunzipAuto
@@ -1698,19 +1698,17 @@ def decompressMaybeGzipped(maybeGzipped: ZStream[Any, Nothing, Byte]): ZStream[A
 
 ##### 디코더(Decoders)
 
-바이트를 문자열로 디코딩하는 파이프라인 계열입니다.
+바이트를 문자열로 디코딩하는 파이프라인 계열.
 
-| 디코더 | 입력 | 출력 |
-|---------|-------|--------|
-| `ZPipeline.utfDecode` | Unicode 바이트 | String |
-| `ZPipeline.utf8Decode` | UTF-8 바이트 | String |
-| `ZPipeline.utf16Decode` | UTF-16 | String |
-| `ZPipeline.utf16BEDecode` | UTF-16BE 바이트 | String |
-| `ZPipeline.utf16LEDecode` | UTF-16LE 바이트 | String |
-| `ZPipeline.utf32Decode` | UTF-32 바이트 | String |
-| `ZPipeline.utf32BEDecode` | UTF-32BE 바이트 | String |
-| `ZPipeline.utf32LEDecode` | UTF-32LE 바이트 | String |
-| `ZPipeline.usASCIIDecode` | US-ASCII 바이트 | String |
+- `ZPipeline.utfDecode`: 입력 Unicode 바이트 → 출력 String
+- `ZPipeline.utf8Decode`: 입력 UTF-8 바이트 → 출력 String
+- `ZPipeline.utf16Decode`: 입력 UTF-16 → 출력 String
+- `ZPipeline.utf16BEDecode`: 입력 UTF-16BE 바이트 → 출력 String
+- `ZPipeline.utf16LEDecode`: 입력 UTF-16LE 바이트 → 출력 String
+- `ZPipeline.utf32Decode`: 입력 UTF-32 바이트 → 출력 String
+- `ZPipeline.utf32BEDecode`: 입력 UTF-32BE 바이트 → 출력 String
+- `ZPipeline.utf32LEDecode`: 입력 UTF-32LE 바이트 → 출력 String
+- `ZPipeline.usASCIIDecode`: 입력 US-ASCII 바이트 → 출력 String
 
 ```scala
 val lines: ZStream[Any, Throwable, String] =
@@ -1723,11 +1721,11 @@ val lines: ZStream[Any, Throwable, String] =
 
 ##### 출력 변환(Output Transformation, Mapping)
 
-성공 채널 출력은 `ZPipeline#map`으로, 실패 채널은 `ZPipeline#mapError`로 변환합니다. `ZPipeline.mapChunks`는 `Chunk[O] => Chunk[O2]` 함수를 받아 방출되는 청크를 변환합니다.
+성공 채널 출력은 `ZPipeline#map`으로, 실패 채널은 `ZPipeline#mapError`로 변환함. `ZPipeline.mapChunks`는 `Chunk[O] => Chunk[O2]` 함수를 받아 방출되는 청크를 변환함.
 
 ##### 입력 변환(Input Transformation, Contramap)
 
-입력을 변환하려면 `ZPipeline#contramap`을 사용합니다. `J => I` 매핑 함수를 받아 `ZPipeline[R, E, I, O]`를 `ZPipeline[R, E, J, O]`로 바꿉니다.
+입력을 변환하려면 `ZPipeline#contramap`을 사용함. `J => I` 매핑 함수를 받아 `ZPipeline[R, E, I, O]`를 `ZPipeline[R, E, J, O]`로 바꿈.
 
 ```scala
 class ZPipeline[-R, +E, -I, +O] {
@@ -1742,7 +1740,7 @@ val numbers: ZStream[Any, Nothing, Int] = ZStream("1-2-3-4-5")
 
 ##### 합성(Composing)
 
-파이프라인은 **다른 파이프라인**과 `>>>`로 합성되어 새 파이프라인을 만듭니다.
+파이프라인은 **다른 파이프라인**과 `>>>`로 합성되어 새 파이프라인을 만듦.
 
 ```scala
 val lines: ZStream[Any, Throwable, String] =
@@ -1751,7 +1749,7 @@ val lines: ZStream[Any, Throwable, String] =
     .via(ZPipeline.utf8Decode >>> ZPipeline.splitLines)
 ```
 
-파이프라인은 `.via(pipeline)`로 **스트림에 부착**됩니다. 또한 파이프라인은 `>>>`로 **싱크와 합성**되어 결합된 싱크를 만들고, 스트림도 `>>>`로 싱크와 합성됩니다.
+파이프라인은 `.via(pipeline)`로 **스트림에 부착**됨. 또한 파이프라인은 `>>>`로 **싱크와 합성**되어 결합된 싱크를 만들고, 스트림도 `>>>`로 싱크와 합성됨.
 
 ```scala
 import java.nio.charset.CharacterCodingException
@@ -1773,9 +1771,9 @@ val refine: ZIO[Any, Throwable, Long] = {
 
 ### 14. SubscriptionRef: 구독 가능한 공유 상태(SubscriptionRef)
 
-`SubscriptionRef[A]`는 현재 값과 이후의 모든 변경(change)을 구독(subscribe)할 수 있는 `Ref`입니다. `Ref.Synchronized[A]`를 확장하므로 표준 Ref 연산(`get`, `set`, `update`, `modify`, ...)을 지원하며, 추가로 `changes` 스트림을 제공합니다.
+`SubscriptionRef[A]`는 현재 값과 이후의 모든 변경(change)을 구독(subscribe)할 수 있는 `Ref`임. `Ref.Synchronized[A]`를 확장하므로 표준 Ref 연산(`get`, `set`, `update`, `modify`, ...)을 지원하며, 추가로 `changes` 스트림을 제공함.
 
-`changes` 스트림을 소비하면 현재 값과 이후의 모든 변경을 관찰할 수 있습니다. `changes`를 실행하는 각 소비자는 구독 시점의 현재 값을 먼저 받고, 이후의 모든 변경을 이어서 받습니다.
+`changes` 스트림을 소비하면 현재 값과 이후의 모든 변경을 관찰 가능. `changes`를 실행하는 각 소비자는 구독 시점의 현재 값을 먼저 받고, 이후의 모든 변경을 이어서 받음.
 
 ```scala
 object SubscriptionRef {
@@ -1785,7 +1783,7 @@ object SubscriptionRef {
 
 #### 사용 사례(Use Case)
 
-"`SubscriptionRef`는 하나 이상의 관찰자(observer)가 공유 상태의 모든 변경에 대해 어떤 동작을 수행해야 하는 공유 상태를 모델링하는 데 매우 유용합니다." 함수형 리액티브 프로그래밍(FRP)이나 pub-sub 도메인(예: 애플리케이션 상태 변경에 반응해 갱신되는 UI 요소)에 적합합니다. 하나의 작성자(writer)가 공유 상태를 변경하고, 다수의 관찰자가 각자 `.changes`를 구독해 모든 갱신에 반응합니다.
+"`SubscriptionRef`는 하나 이상의 관찰자(observer)가 공유 상태의 모든 변경에 대해 어떤 동작을 수행해야 하는 공유 상태를 모델링하는 데 매우 유용합니다." 함수형 리액티브 프로그래밍(FRP)이나 pub-sub 도메인(예: 애플리케이션 상태 변경에 반응해 갱신되는 UI 요소)에 적합함. 하나의 작성자(writer)가 공유 상태를 변경하고, 다수의 관찰자가 각자 `.changes`를 구독해 모든 갱신에 반응함.
 
 ```scala
 // 서버: 공유 상태를 무한히 증가시킴
@@ -1809,21 +1807,21 @@ for {
 } yield ()
 ```
 
-**참고**: `subscriptionRef.changes`는 `ZStream[Any, Nothing, A]`입니다. 스트림이므로 관찰자가 소비하기 전에 변환·필터링·다른 스트림과의 병합 등 일반 스트림 연산자로 합성할 수 있습니다. 또한 `SubscriptionRef[A] <: Ref[A]`이므로 `Ref`가 기대되는 곳에 그대로 전달할 수 있고, 관찰자는 별도로 `.changes`를 탭합니다.
+**참고**: `subscriptionRef.changes`는 `ZStream[Any, Nothing, A]`임. 스트림이므로 관찰자가 소비하기 전에 변환·필터링·다른 스트림과의 병합 등 일반 스트림 연산자로 합성 가능. 또한 `SubscriptionRef[A] <: Ref[A]`이므로 `Ref`가 기대되는 곳에 그대로 전달 가능하고, 관찰자는 별도로 `.changes`를 탭함.
 
 ---
 
 ### 15. ZChannel: 통합 기본 요소(ZChannel: The Unified Primitive)
 
-`ZChannel`은 ZIO 스트리밍 라이브러리의 근본 추상화입니다. 타입 시그니처는 다음과 같습니다.
+`ZChannel`은 ZIO 스트리밍 라이브러리의 근본 추상화임. 타입 시그니처는 다음과 같음.
 
 ```scala
 ZChannel[-Env, -InErr, -InElem, -InDone, +OutErr, +OutElem, +OutDone]
 ```
 
-이는 환경을 요구하고, 실패할 수 있는 입력 요소를 읽으며, 역시 실패할 수 있는 출력 요소를 쓰는 양방향 통신 기본 요소(bidirectional communication primitive)를 나타냅니다.
+이는 환경을 요구하고, 실패할 수 있는 입력 요소를 읽으며, 역시 실패할 수 있는 출력 요소를 쓰는 양방향 통신 기본 요소(bidirectional communication primitive)를 나타냄.
 
-ZChannel은 세 가지 스트리밍 타입의 바탕 구현입니다.
+ZChannel은 세 가지 스트리밍 타입의 바탕 구현임.
 
 - **ZStream** — 출력 측(요소 방출)
 - **ZSink** — 입력 측(요소 소비)
@@ -1838,7 +1836,7 @@ case class ZPipeline[-R, +E, -In, +Out](
   val channel: ZChannel[R, ZNothing, Chunk[In], Any, E, Chunk[Out], Any])
 ```
 
-ZChannel은 강력한 저수준 제어를 제공하지만, 대부분의 사용자는 채널을 직접 다루기보다 위의 고수준 추상화를 사용합니다.
+ZChannel은 강력한 저수준 제어를 제공하지만, 대부분의 사용자는 채널을 직접 다루기보다 위의 고수준 추상화를 사용함.
 
 > **버전 참고**: 본 문서는 현대 ZIO 2.x API(`ZStream.fromZIO`, `acquireReleaseWith`, `Scope` 기반 자원 관리, `mapZIOPar`)를 기준으로 합니다. 구버전(ZIO 1.x) 문서/튜토리얼에서는 `fromEffect`, `bracket`, `Managed`, `mapMPar` 같은 이름을 쓸 수 있습니다.
 

@@ -19,12 +19,12 @@
 
 ## Journal Namespace란?
 
-systemd 245+ 에서 도입된 기능. **여러 개의 독립된 journald 인스턴스** 를 운영할 수 있게 해줍니다.
+systemd 245+에서 도입된 기능. 여러 개의 독립된 journald 인스턴스를 운영 가능하게 해줌.
 
-기본 namespace는 이름이 비어있고 `/var/log/journal/<machine-id>/` 에 저장. 추가 namespace는:
-- 별도 데몬 인스턴스 (`systemd-journald@<name>.service`)
-- 별도 디렉터리 (`/var/log/journal/<machine-id>.<name>/`)
-- 별도 소켓 (`/run/systemd/journal.<name>/`)
+기본 namespace는 이름이 비어있고 `/var/log/journal/<machine-id>/`에 저장. 추가 namespace는:
+- 별도 데몬 인스턴스(`systemd-journald@<name>.service`)
+- 별도 디렉터리(`/var/log/journal/<machine-id>.<name>/`)
+- 별도 소켓(`/run/systemd/journal.<name>/`)
 
 용도:
 - 특정 서비스의 로그를 격리해 다른 로그와 섞이지 않게
@@ -45,7 +45,7 @@ SystemMaxUse=2G
 MaxRetentionSec=1month
 ```
 
-파일 이름이 `journald@<namespace>.conf` 형식이어야 합니다.
+파일 이름이 `journald@<namespace>.conf` 형식이어야 함.
 
 ### 2. unit에 namespace 지정
 
@@ -56,9 +56,9 @@ ExecStart=/usr/local/bin/myapp
 LogNamespace=myapp
 ```
 
-`LogNamespace=` 가 지정된 unit은:
+`LogNamespace=`가 지정된 unit은:
 - 그 namespace의 journal로만 stdout/stderr 전송
-- 자동으로 `systemd-journald@myapp.service` 가 활성화
+- 자동으로 `systemd-journald@myapp.service` 활성화
 
 ### 3. 조회
 
@@ -67,7 +67,7 @@ journalctl --namespace=myapp
 journalctl --namespace=myapp -u myapp.service -f
 ```
 
-namespace를 지정하지 않으면 기본 namespace의 로그만 표시됩니다.
+namespace를 지정하지 않으면 기본 namespace의 로그만 표시됨.
 
 ### 4. 모든 namespace 동시 조회
 
@@ -81,10 +81,10 @@ journalctl --namespace='*'
 
 ### 적합한 경우
 
-- **로그 폭주 격리**: 특정 서비스의 폭주 로그가 다른 서비스 로그를 회전시키지 않게
-- **다른 보존 정책**: 감사 로그는 6개월, 애플리케이션은 2주 등
-- **권한 분리**: namespace별로 다른 그룹이 읽도록
-- **컨테이너 호스트**: 호스트와 컨테이너 로그 분리
+- 로그 폭주 격리: 특정 서비스의 폭주 로그가 다른 서비스 로그를 회전시키지 않게
+- 다른 보존 정책: 감사 로그는 6개월, 애플리케이션은 2주 등
+- 권한 분리: namespace별로 다른 그룹이 읽도록
+- 컨테이너 호스트: 호스트와 컨테이너 로그 분리
 
 ### 한계
 
@@ -97,18 +97,18 @@ journalctl --namespace='*'
 
 ## FSS (Forward Secure Sealing)
 
-journal 파일의 **무결성을 사후에 검증**할 수 있는 암호학적 기능. 디스크가 공격받거나 백업이 변조되었을 때 변조가 시작된 지점을 탐지할 수 있습니다.
+journal 파일의 무결성을 사후에 검증할 수 있는 암호학적 기능. 디스크가 공격받거나 백업이 변조되었을 때 변조가 시작된 지점을 탐지 가능.
 
 ### 작동 원리
 
 1. 서버가 seed key를 생성해 디스크에 저장
-2. 이와 쌍을 이루는 verification key를 생성 → 별도 보관 (다른 머신, 종이, 비밀번호 매니저)
+2. 이와 쌍을 이루는 verification key를 생성 → 별도 보관(다른 머신, 종이, 비밀번호 매니저)
 3. journald가 일정 간격마다 journal 파일에 sealing tag를 추가
 4. tag는 그 시점까지의 모든 엔트리를 해시한 값
 5. 시간이 흐르면 seed key가 forward-evolve하여 과거 시점의 tag를 위조할 수 없게 됨
 6. 검증 시 verification key로 모든 tag를 재계산해 일치 여부를 확인
 
-> 핵심: 공격자가 서버에 침투해 seed key를 훔쳐도 **이미 sealing된 과거 데이터** 는 변조할 수 없습니다 (forward security).
+핵심: 공격자가 서버에 침투해 seed key를 훔쳐도 이미 sealing된 과거 데이터는 변조 불가(forward security).
 
 ### 활성화
 
@@ -138,7 +138,7 @@ Please save the verify key. To watch for journal inconsistencies, run
 "journalctl --verify --verify-key=abc123-..."
 ```
 
-verification key를 안전한 곳(다른 머신, 비밀번호 매니저, 종이)에 보관하세요.
+verification key는 안전한 곳(다른 머신, 비밀번호 매니저, 종이)에 보관 필요.
 
 간격 변경:
 ```bash
@@ -171,7 +171,7 @@ sudo journalctl --verify --verify-key=abc123-def456-...
 FAIL: /var/log/journal/abc/system.journal (Tag/Seal Failure)
 ```
 
-어느 epoch에서 검증이 실패했는지 표시되어 변조 시점을 좁혀 파악할 수 있습니다.
+어느 epoch에서 검증이 실패했는지 표시됨 → 변조 시점을 좁혀 파악 가능.
 
 ### 정기 검증
 
@@ -195,7 +195,7 @@ Persistent=true
 WantedBy=timers.target
 ```
 
-매일 검증을 실행하고 실패 시 알림을 전송하도록 구성할 수 있습니다.
+매일 검증을 실행하고 실패 시 알림을 전송하도록 구성 가능.
 
 ---
 
@@ -204,12 +204,9 @@ WantedBy=timers.target
 ### 그룹
 
 journald가 사용하는 그룹:
-
-| 그룹 | 권한 |
-| --- | --- |
-| `systemd-journal` | 모든 journal 읽기 |
-| `adm` | ACL로 모든 journal 읽기 (배포판 따라) |
-| `wheel` | 일부 배포판에서 |
+- `systemd-journal`: 모든 journal 읽기
+- `adm`: ACL로 모든 journal 읽기(배포판 따라)
+- `wheel`: 일부 배포판에서
 
 ```bash
 $ getfacl /var/log/journal/<machine-id>
@@ -226,11 +223,11 @@ sudo usermod -aG systemd-journal alice
 
 ### 자기 user unit 로그
 
-`SplitMode=uid` (기본)면 사용자는 자동으로 자기 user unit의 로그를 읽을 수 있습니다.
+`SplitMode=uid`(기본)면 사용자는 자동으로 자기 user unit의 로그를 읽을 수 있음.
 
 ### 격리된 namespace 권한
 
-namespace의 journal 디렉터리에 별도 ACL을 적용해 특정 그룹만 읽도록 할 수 있습니다.
+namespace의 journal 디렉터리에 별도 ACL을 적용해 특정 그룹만 읽도록 할 수 있음.
 
 ```bash
 sudo setfacl -m g:audit-readers:rx /var/log/journal.audit
@@ -265,7 +262,7 @@ sudo setfacl -m g:audit-readers:rx /var/log/journal.audit
 sudo setfacl -d -m g:audit-readers:rx /var/log/journal.audit  # 새 파일에도 적용
 ```
 
-`audit-readers` 그룹만 감사 로그를 읽을 수 있으며, 다른 사용자는 일반 journal에만 접근할 수 있습니다.
+`audit-readers` 그룹만 감사 로그를 읽을 수 있음 → 다른 사용자는 일반 journal에만 접근 가능.
 
 ### 패턴 2: 컨테이너 namespace
 

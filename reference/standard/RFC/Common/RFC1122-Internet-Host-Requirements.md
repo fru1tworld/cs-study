@@ -4,21 +4,19 @@
 
 ## 문서 정보
 
-| 항목 | 내용 |
-|------|------|
-| RFC 번호 | 1122 |
-| 분류 | STD 3 (Internet Standard) |
-| 편집자 | R. Braden (ISI) |
-| 발행일 | 1989년 10월 |
-| 상태 | 현행 표준 |
-| 관련 문서 | RFC 1123 (Application Layer) |
+- RFC 번호: 1122
+- 분류: STD 3 (Internet Standard)
+- 편집자: R. Braden (ISI)
+- 발행일: 1989년 10월
+- 상태: 현행 표준
+- 관련 문서: RFC 1123 (Application Layer)
 
 ## 개요
 
-RFC 1122는 인터넷 호스트 소프트웨어의 통신 프로토콜 계층 에 대한 요구사항을 정의합니다.
- 이 문서는 벤더, 구현자, 인터넷 통신 소프트웨어 사용자를 위한 가이드라인을 제공합니다.
+RFC 1122: 인터넷 호스트 소프트웨어의 통신 프로토콜 계층에 대한 요구사항 정의.
+벤더·구현자·인터넷 통신 소프트웨어 사용자를 위한 가이드라인 제공.
 
-이 문서는 RFC 1123과 함께 호스트 요구사항의 표준 문서(STD 3) 를 구성합니다:
+RFC 1123과 함께 호스트 요구사항의 표준 문서(STD 3) 구성:
 - RFC 1122: Link Layer, IP Layer, Transport Layer (이 문서)
 - RFC 1123: Application Layer 및 지원 프로토콜
 
@@ -32,9 +30,9 @@ RFC 1122는 인터넷 호스트 소프트웨어의 통신 프로토콜 계층 �
 >
 > "받는 것에는 관대하고, 보내는 것에는 보수적으로 하라"
 
-이 원칙은 인터넷 아키텍처의 초석 입니다:
+인터넷 아키텍처의 초석이 되는 원칙:
 
-- 하나의 잘못 동작하는 호스트가 다른 많은 호스트에게 서비스 장애를 일으킬 수 있음
+- 잘못 동작하는 호스트 하나 → 다른 많은 호스트에 서비스 장애 유발 가능
 - 모든 구현체는 명세를 엄격히 따라 전송해야 함
 - 다른 구현체의 결함을 수용할 수 있도록 수신에는 유연해야 함
 
@@ -88,17 +86,15 @@ RFC 1122는 인터넷 호스트 소프트웨어의 통신 프로토콜 계층 �
 
 ### 개요
 
-링크 계층은 직접 연결된 네트워크에서 통신을 처리합니다.
- 다양한 네트워크 유형에 따라 여러 종류의 링크 계층 프로토콜이 존재합니다.
+링크 계층: 직접 연결된 네트워크에서의 통신 처리.
+네트워크 유형에 따라 여러 종류의 링크 계층 프로토콜 존재.
 
 ### 핵심 요구사항
 
 #### Trailer Protocol (트레일러 프로토콜)
 
-| 요구사항 | 수준 |
-|----------|------|
-| 양쪽 시스템이 지원하는지 확인 후에만 사용 | MAY |
-| 기본값은 비활성화 | MUST |
+- 양쪽 시스템이 지원하는지 확인 후에만 사용: MAY
+- 기본값은 비활성화: MUST
 
 #### ARP (Address Resolution Protocol) 관리
 
@@ -114,7 +110,7 @@ RFC 1122는 인터넷 호스트 소프트웨어의 통신 프로토콜 계층 �
 └────────────────────────────────────────────────────────────┘
 ```
 
-ARP 캐시 항목 무효화가 필요한 이유:
+ARP 캐시 항목 무효화가 필요한 경우:
 - 네트워크 카드 교체
 - IP 주소 재할당
 - 호스트 이동
@@ -122,18 +118,14 @@ ARP 캐시 항목 무효화가 필요한 이유:
 
 #### Ethernet 지원
 
-| 요구사항 | 수준 | 설명 |
-|----------|------|------|
-| RFC-894 캡슐화 송수신 | MUST | 표준 Ethernet 프레임 |
-| RFC-1042 캡슐화 수신 | SHOULD | IEEE 802.3 프레임 |
-| RFC-1042 캡슐화 송신 | MAY | 구성 스위치로 제어, 기본값 RFC-894 |
+- RFC-894 캡슐화 송수신: MUST — 표준 Ethernet 프레임
+- RFC-1042 캡슐화 수신: SHOULD — IEEE 802.3 프레임
+- RFC-1042 캡슐화 송신: MAY — 구성 스위치로 제어, 기본값 RFC-894
 
 #### MTU (Maximum Transmission Unit) 값
 
-| 네트워크 유형 | MTU (바이트) |
-|--------------|-------------|
-| Ethernet | 1500 |
-| IEEE 802.3 | 1492 |
+- Ethernet: 1500바이트
+- IEEE 802.3: 1492바이트
 
 ---
 
@@ -141,8 +133,8 @@ ARP 캐시 항목 무효화가 필요한 이유:
 
 ### 개요
 
-인터넷 계층은 IP 주소 지정, 서비스 유형 지정, 단편화 및 재조립, 보안 정보를 포함합니다.
- 비연결형(connectionless) 특성 이 인터넷 아키텍처의 근본적인 특징입니다.
+인터넷 계층: IP 주소 지정, 서비스 유형 지정, 단편화 및 재조립, 보안 정보 포함.
+비연결형(connectionless) 특성 → 인터넷 아키텍처의 근본적인 특징.
 
 ### IP 프로토콜 요구사항
 
@@ -163,11 +155,9 @@ ARP 캐시 항목 무효화가 필요한 이유:
 
 #### 단편화 및 재조립
 
-| 요구사항 | 수준 |
-|----------|------|
-| 단편화된 데이터그램 재조립 지원 | MUST |
-| TTL 값 0으로 전송하지 않음 | MUST |
-| 전송 계층에 TOS/TTL 설정 수단 제공 | MUST |
+- 단편화된 데이터그램 재조립 지원: MUST
+- TTL 값 0으로 전송하지 않음: MUST
+- 전송 계층에 TOS/TTL 설정 수단 제공: MUST
 
 #### IP 옵션 처리
 
@@ -177,12 +167,10 @@ IP/Transport 계층은:
 - 이해하지 못하는 옵션은 조용히 무시해야 함 (MUST)
 ```
 
-| IP 옵션 | 요구사항 |
-|---------|----------|
-| Source Route | 발신 지원 (MUST), 최종 목적지 역할 (MUST) |
-| Record Route | 지원 (SHOULD) |
-| Timestamp | 지원 (SHOULD) |
-| Stream Identifier | 폐기됨 - 전송 금지 (SHOULD NOT), 수신 시 무시 (MUST) |
+- Source Route: 발신 지원 (MUST), 최종 목적지 역할 (MUST)
+- Record Route: 지원 (SHOULD)
+- Timestamp: 지원 (SHOULD)
+- Stream Identifier: 폐기됨 - 전송 금지 (SHOULD NOT), 수신 시 무시 (MUST)
 
 ### 게이트웨이 기능
 
@@ -200,37 +188,29 @@ IP/Transport 계층은:
 └─────────────────────────────────────────────────────────────┘
 ```
 
-중요: 멀티홈 호스트(여러 인터페이스를 가진 호스트)라고 해서 자동으로 게이트웨이 역할을 해서는 안 됩니다.
+주의: 멀티홈 호스트(여러 인터페이스를 가진 호스트) → 자동으로 게이트웨이 역할 부여 금지.
 
 ### ICMP (Internet Control Message Protocol)
 
-ICMP는 IP의 필수적인 부분 으로, 아키텍처적으로는 IP 위에 계층화되어 있습니다.
+ICMP: IP의 필수적인 부분, 아키텍처적으로는 IP 위에 계층화.
 
 #### ICMP 주요 기능
 
-```
-┌────────────────┬────────────────────────────────────────────┐
-│   기능         │   설명                                      │
-├────────────────┼────────────────────────────────────────────┤
-│ 오류 보고      │ 전달 불가, 시간 초과 등                    │
-│ 혼잡 보고      │ Source Quench 메시지                       │
-│ 리다이렉트     │ 첫 번째 홉 게이트웨이 재지정               │
-│ 진단          │ Echo Request/Reply (ping)                  │
-└────────────────┴────────────────────────────────────────────┘
-```
+- 오류 보고: 전달 불가, 시간 초과 등
+- 혼잡 보고: Source Quench 메시지
+- 리다이렉트: 첫 번째 홉 게이트웨이 재지정
+- 진단: Echo Request/Reply (ping)
 
 #### ICMP 요구사항
 
-| 요구사항 | 수준 |
-|----------|------|
-| 알 수 없는 타입의 ICMP 메시지는 조용히 폐기 | MUST |
-| ICMP 오류 메시지에 원본 데이터그램의 8 옥텟 이상 포함 | SHOULD |
-| ICMP 오류를 전송 프로토콜로 역다중화 | MUST |
-| ICMP 오류 메시지 전송 시 TOS=0 사용 | MUST |
+- 알 수 없는 타입의 ICMP 메시지는 조용히 폐기: MUST
+- ICMP 오류 메시지에 원본 데이터그램의 8 옥텟 이상 포함: SHOULD
+- ICMP 오류를 전송 프로토콜로 역다중화: MUST
+- ICMP 오류 메시지 전송 시 TOS=0 사용: MUST
 
 ### 라우팅 결정
 
-호스트는 나가는 데이터그램의 "다음 홉(next hop)" 을 결정해야 합니다:
+호스트는 나가는 데이터그램의 "다음 홉(next hop)"을 결정해야 함.
 
 ```
                     목적지 주소
@@ -258,9 +238,9 @@ ICMP는 IP의 필수적인 부분 으로, 아키텍처적으로는 IP 위에 계
 
 ### "조용히 폐기 (Silently Discard)" 정의
 
-> 데이터그램을 추가 처리 없이 폐기하며, ICMP 오류 메시지를 보내지 않습니다.
+> 데이터그램을 추가 처리 없이 폐기하며, ICMP 오류 메시지를 보내지 않음.
 
-하지만:
+단, 다음은 필요:
 - 오류 로깅 기능 제공 (SHOULD)
 - 폐기된 데이터그램 내용 포함 (SHOULD)
 - 통계 카운터에 이벤트 기록 (SHOULD)
@@ -295,201 +275,137 @@ ICMP는 IP의 필수적인 부분 으로, 아키텍처적으로는 IP 위에 계
 
 #### 오류 메시지 (Error Messages)
 
-| 메시지 유형 | Type | 요구사항 | 처리 방법 |
-|-------------|------|----------|-----------|
-| Destination Unreachable | 3 | MUST 처리 | 상위 계층에 통지, 연결 중단 판단 |
-| Redirect | 5 | MUST 처리 | 라우팅 테이블 업데이트 |
-| Time Exceeded | 11 | MUST 처리 | Traceroute 지원, 재조립 실패 알림 |
-| Parameter Problem | 12 | MUST 처리 | 잘못된 헤더 필드 진단 |
-| Source Quench | 4 | MAY 처리 | 혼잡 제어 신호 (폐기 예정) |
+- Destination Unreachable (Type 3): MUST 처리 → 상위 계층에 통지, 연결 중단 판단
+- Redirect (Type 5): MUST 처리 → 라우팅 테이블 업데이트
+- Time Exceeded (Type 11): MUST 처리 → Traceroute 지원, 재조립 실패 알림
+- Parameter Problem (Type 12): MUST 처리 → 잘못된 헤더 필드 진단
+- Source Quench (Type 4): MAY 처리 → 혼잡 제어 신호 (폐기 예정)
 
 #### Destination Unreachable 코드별 처리
 
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│              Destination Unreachable 코드 상세                       │
-├──────┬──────────────────────────────┬───────────────────────────────┤
-│ Code │ 의미                          │ 처리 방법                      │
-├──────┼──────────────────────────────┼───────────────────────────────┤
-│  0   │ Net Unreachable              │ 라우팅 실패로 처리            │
-│  1   │ Host Unreachable             │ 해당 호스트 도달 불가         │
-│  2   │ Protocol Unreachable         │ 프로토콜 사용 불가            │
-│  3   │ Port Unreachable             │ 포트 닫힘 (UDP: 연결 거부)    │
-│  4   │ Fragmentation Needed         │ Path MTU Discovery 지원       │
-│  5   │ Source Route Failed          │ 소스 라우팅 실패              │
-│  6   │ Destination Network Unknown  │ 네트워크 존재하지 않음        │
-│  7   │ Destination Host Unknown     │ 호스트 존재하지 않음          │
-│  8   │ Source Host Isolated         │ 소스 호스트 격리됨            │
-│  9   │ Network Administratively     │ 관리적으로 네트워크 금지      │
-│      │ Prohibited                   │                               │
-│ 10   │ Host Administratively        │ 관리적으로 호스트 금지        │
-│      │ Prohibited                   │                               │
-│ 11   │ Network Unreachable for TOS  │ 해당 TOS로 네트워크 도달 불가 │
-│ 12   │ Host Unreachable for TOS     │ 해당 TOS로 호스트 도달 불가   │
-└──────┴──────────────────────────────┴───────────────────────────────┘
-```
+- Code 0 (Net Unreachable): 라우팅 실패로 처리
+- Code 1 (Host Unreachable): 해당 호스트 도달 불가
+- Code 2 (Protocol Unreachable): 프로토콜 사용 불가
+- Code 3 (Port Unreachable): 포트 닫힘 (UDP: 연결 거부)
+- Code 4 (Fragmentation Needed): Path MTU Discovery 지원
+- Code 5 (Source Route Failed): 소스 라우팅 실패
+- Code 6 (Destination Network Unknown): 네트워크 존재하지 않음
+- Code 7 (Destination Host Unknown): 호스트 존재하지 않음
+- Code 8 (Source Host Isolated): 소스 호스트 격리됨
+- Code 9 (Network Administratively Prohibited): 관리적으로 네트워크 금지
+- Code 10 (Host Administratively Prohibited): 관리적으로 호스트 금지
+- Code 11 (Network Unreachable for TOS): 해당 TOS로 네트워크 도달 불가
+- Code 12 (Host Unreachable for TOS): 해당 TOS로 호스트 도달 불가
 
 #### ICMP 오류 메시지 생성 규칙
 
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│           ICMP 오류 메시지를 생성하지 말아야 하는 경우              │
-├─────────────────────────────────────────────────────────────────────┤
-│  ✗ ICMP 오류 메시지에 대한 응답으로 (MUST NOT)                      │
-│  ✗ 첫 번째 단편이 아닌 IP 단편에 대해 (MUST NOT)                   │
-│  ✗ 브로드캐스트/멀티캐스트 주소로 전송된 데이터그램에 대해         │
-│    (MUST NOT)                                                        │
-│  ✗ 링크 계층 브로드캐스트로 전송된 데이터그램에 대해 (MUST NOT)    │
-│  ✗ 소스 주소가 0.0.0.0인 데이터그램에 대해 (MUST NOT)              │
-│  ✗ 소스 주소가 루프백인 데이터그램에 대해 (MUST NOT)               │
-└─────────────────────────────────────────────────────────────────────┘
-```
+ICMP 오류 메시지를 생성하지 말아야 하는 경우 (모두 MUST NOT):
+- ICMP 오류 메시지에 대한 응답
+- 첫 번째 단편이 아닌 IP 단편에 대해
+- 브로드캐스트/멀티캐스트 주소로 전송된 데이터그램에 대해
+- 링크 계층 브로드캐스트로 전송된 데이터그램에 대해
+- 소스 주소가 0.0.0.0인 데이터그램에 대해
+- 소스 주소가 루프백인 데이터그램에 대해
 
 ### IGMP (Internet Group Management Protocol)
 
-IGMP는 호스트가 멀티캐스트 그룹 멤버십을 라우터에 보고하는 데 사용됩니다.
+IGMP: 호스트가 멀티캐스트 그룹 멤버십을 라우터에 보고하는 용도.
 
 #### IGMP 개요
 
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│                        IGMP 기능                                     │
-├─────────────────────────────────────────────────────────────────────┤
-│  • 멀티캐스트 그룹 참가/탈퇴 관리                                   │
-│  • 로컬 멀티캐스트 라우터에 그룹 멤버십 보고                        │
-│  • 효율적인 멀티캐스트 트래픽 배포 지원                             │
-└─────────────────────────────────────────────────────────────────────┘
-```
+- 멀티캐스트 그룹 참가/탈퇴 관리
+- 로컬 멀티캐스트 라우터에 그룹 멤버십 보고
+- 효율적인 멀티캐스트 트래픽 배포 지원
 
 #### IGMP 요구사항
 
-| 요구사항 | 수준 | 설명 |
-|----------|------|------|
-| IGMP 구현 | SHOULD | 멀티캐스트 지원 시 |
-| Host Membership Query 응답 | MUST | 멀티캐스트 지원 시 |
-| Host Membership Report 전송 | MUST | 그룹 참가 시 |
-| 모든 호스트 그룹(224.0.0.1) 참가 | MUST | 멀티캐스트 지원 시 |
-| 그룹 탈퇴 시 Leave 메시지 | SHOULD | IGMPv2 이상 |
+- IGMP 구현: SHOULD — 멀티캐스트 지원 시
+- Host Membership Query 응답: MUST — 멀티캐스트 지원 시
+- Host Membership Report 전송: MUST — 그룹 참가 시
+- 모든 호스트 그룹(224.0.0.1) 참가: MUST — 멀티캐스트 지원 시
+- 그룹 탈퇴 시 Leave 메시지: SHOULD — IGMPv2 이상
 
 #### IGMP 메시지 유형
 
-```
-┌────────────────────────────────────────────────────────────────────┐
-│                     IGMP 메시지 유형                                │
-├────────────────────────────────────────────────────────────────────┤
-│                                                                     │
-│  Membership Query (Type 0x11)                                       │
-│  ├─ 라우터가 그룹 멤버십 확인을 위해 전송                          │
-│  ├─ General Query: 모든 그룹에 대한 질의                           │
-│  └─ Group-Specific Query: 특정 그룹에 대한 질의                    │
-│                                                                     │
-│  Membership Report (Type 0x16 for IGMPv2)                           │
-│  ├─ 호스트가 그룹 멤버십을 보고                                    │
-│  └─ Query 응답 또는 그룹 참가 시 전송                               │
-│                                                                     │
-│  Leave Group (Type 0x17 for IGMPv2)                                 │
-│  ├─ 호스트가 그룹 탈퇴를 알림                                      │
-│  └─ 마지막 멤버가 탈퇴 시 신속한 정리 지원                         │
-│                                                                     │
-└────────────────────────────────────────────────────────────────────┘
-```
+- Membership Query (Type 0x11)
+  - 라우터가 그룹 멤버십 확인을 위해 전송
+  - General Query: 모든 그룹에 대한 질의
+  - Group-Specific Query: 특정 그룹에 대한 질의
+- Membership Report (Type 0x16 for IGMPv2)
+  - 호스트가 그룹 멤버십을 보고
+  - Query 응답 또는 그룹 참가 시 전송
+- Leave Group (Type 0x17 for IGMPv2)
+  - 호스트가 그룹 탈퇴를 알림
+  - 마지막 멤버가 탈퇴 시 신속한 정리 지원
 
 #### IGMP 타이밍 요구사항
 
-| 파라미터 | 기본값 | 설명 |
-|----------|--------|------|
-| Query 응답 간격 | 10초 | 최대 응답 시간 |
-| Unsolicited Report 간격 | 1-10초 | 무작위 지연 |
-| Robustness Variable | 2 | 패킷 손실 대비 |
+- Query 응답 간격: 기본값 10초 — 최대 응답 시간
+- Unsolicited Report 간격: 기본값 1-10초 — 무작위 지연
+- Robustness Variable: 기본값 2 — 패킷 손실 대비
 
-> 위 수치는 RFC 1122가 아니라 RFC 2236(IGMPv2)에서 정의한 값입니다.
- RFC 1122는 IGMP 지원 여부만 다루며 구체적인 타이밍 값을 규정하지 않습니다.
+> 위 수치는 RFC 1122가 아니라 RFC 2236(IGMPv2)에서 정의한 값.
+> RFC 1122는 IGMP 지원 여부만 다루며 구체적인 타이밍 값은 규정하지 않음.
 
 ### 브로드캐스트 및 멀티캐스트 처리
 
 #### 브로드캐스트 주소 유형
 
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    브로드캐스트 주소 유형                            │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                      │
-│  Limited Broadcast: 255.255.255.255                                  │
-│  ├─ 로컬 네트워크로만 제한                                          │
-│  └─ 라우터를 통과하지 않음                                          │
-│                                                                      │
-│  Directed Broadcast: 네트워크.255 (예: 192.168.1.255)               │
-│  ├─ 특정 네트워크의 모든 호스트에 전달                              │
-│  └─ 라우터를 통과할 수 있음                                         │
-│                                                                      │
-│  Subnet Broadcast: 서브넷.255                                        │
-│  └─ 특정 서브넷의 모든 호스트에 전달                                │
-│                                                                      │
-│  All-zeros Broadcast (구형): 네트워크.0                              │
-│  └─ 역사적 이유로 인식해야 함                                       │
-│                                                                      │
-└─────────────────────────────────────────────────────────────────────┘
-```
+- Limited Broadcast (255.255.255.255)
+  - 로컬 네트워크로만 제한
+  - 라우터를 통과하지 않음
+- Directed Broadcast (네트워크.255, 예: 192.168.1.255)
+  - 특정 네트워크의 모든 호스트에 전달
+  - 라우터를 통과할 수 있음
+- Subnet Broadcast (서브넷.255)
+  - 특정 서브넷의 모든 호스트에 전달
+- All-zeros Broadcast (구형, 네트워크.0)
+  - 역사적 이유로 인식해야 함
 
 #### 브로드캐스트 처리 요구사항
 
-| 요구사항 | 수준 | 설명 |
-|----------|------|------|
-| Limited Broadcast 수신 인식 | MUST | 255.255.255.255 |
-| Directed Broadcast 수신 인식 | MUST | 자신의 네트워크로 향하는 경우 |
-| 브로드캐스트 주소를 소스로 사용 금지 | MUST NOT | |
-| 브로드캐스트 수신 시 ICMP 오류 응답 금지 | MUST NOT | |
-| All-zeros 브로드캐스트 형식 인식 | SHOULD | 수신 시 |
+- Limited Broadcast 수신 인식: MUST — 255.255.255.255
+- Directed Broadcast 수신 인식: MUST — 자신의 네트워크로 향하는 경우
+- 브로드캐스트 주소를 소스로 사용 금지: MUST NOT
+- 브로드캐스트 수신 시 ICMP 오류 응답 금지: MUST NOT
+- All-zeros 브로드캐스트 형식 인식: SHOULD — 수신 시
 
 #### 멀티캐스트 처리 요구사항
 
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│                  멀티캐스트 요구사항                                 │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                      │
-│  IP 멀티캐스트 지원 (SHOULD)                                        │
-│  ├─ 클래스 D 주소 (224.0.0.0 - 239.255.255.255) 인식               │
-│  ├─ 멀티캐스트 그룹 참가/탈퇴 기능                                  │
-│  └─ IGMP 프로토콜 구현                                              │
-│                                                                      │
-│  로컬 멀티캐스트 (링크-로컬) 지원 (MUST, 멀티캐스트 지원 시)       │
-│  ├─ 224.0.0.0 - 224.0.0.255 범위                                    │
-│  └─ TTL=1로 전송, 라우터 통과 금지                                  │
-│                                                                      │
-│  멀티캐스트 전송 시 요구사항                                        │
-│  ├─ 적절한 TTL 설정 (MUST)                                          │
-│  ├─ 루프백 제어 가능 (SHOULD)                                       │
-│  └─ 소스 주소는 유니캐스트여야 함 (MUST)                            │
-│                                                                      │
-│  멀티캐스트 수신 시 요구사항                                        │
-│  ├─ 참가한 그룹의 패킷만 상위 계층에 전달 (MUST)                   │
-│  └─ 멀티캐스트 수신 시 ICMP 오류 응답 금지 (MUST NOT)              │
-│                                                                      │
-└─────────────────────────────────────────────────────────────────────┘
-```
+- IP 멀티캐스트 지원 (SHOULD)
+  - 클래스 D 주소 (224.0.0.0 - 239.255.255.255) 인식
+  - 멀티캐스트 그룹 참가/탈퇴 기능
+  - IGMP 프로토콜 구현
+- 로컬 멀티캐스트 (링크-로컬) 지원 (MUST, 멀티캐스트 지원 시)
+  - 224.0.0.0 - 224.0.0.255 범위
+  - TTL=1로 전송, 라우터 통과 금지
+- 멀티캐스트 전송 시 요구사항
+  - 적절한 TTL 설정 (MUST)
+  - 루프백 제어 가능 (SHOULD)
+  - 소스 주소는 유니캐스트여야 함 (MUST)
+- 멀티캐스트 수신 시 요구사항
+  - 참가한 그룹의 패킷만 상위 계층에 전달 (MUST)
+  - 멀티캐스트 수신 시 ICMP 오류 응답 금지 (MUST NOT)
 
 #### 예약된 멀티캐스트 주소
 
-| 주소 | 설명 | 용도 |
-|------|------|------|
-| 224.0.0.1 | All Hosts | 서브넷의 모든 멀티캐스트 가능 호스트 |
-| 224.0.0.2 | All Routers | 서브넷의 모든 멀티캐스트 라우터 |
-| 224.0.0.5 | OSPF All Routers | OSPF 라우팅 프로토콜 |
-| 224.0.0.6 | OSPF DR Routers | OSPF Designated Router |
-| 224.0.0.9 | RIPv2 Routers | RIP 라우팅 프로토콜 |
+- 224.0.0.1 (All Hosts): 서브넷의 모든 멀티캐스트 가능 호스트
+- 224.0.0.2 (All Routers): 서브넷의 모든 멀티캐스트 라우터
+- 224.0.0.5 (OSPF All Routers): OSPF 라우팅 프로토콜
+- 224.0.0.6 (OSPF DR Routers): OSPF Designated Router
+- 224.0.0.9 (RIPv2 Routers): RIP 라우팅 프로토콜
 
 ---
 
 ## 3. Transport Layer (전송 계층)
 
-전송 계층은 애플리케이션을 위한 종단간(end-to-end) 통신 서비스 를 제공합니다.
+전송 계층: 애플리케이션을 위한 종단간(end-to-end) 통신 서비스 제공.
 
 ### UDP (User Datagram Protocol)
 
 #### 개요
 
-UDP는 단순하고 비연결형 의 전송 서비스를 제공합니다.
+UDP: 단순하고 비연결형인 전송 서비스 제공.
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -505,19 +421,17 @@ UDP는 단순하고 비연결형 의 전송 서비스를 제공합니다.
 
 #### UDP 요구사항
 
-| 요구사항 | 수준 | 설명 |
-|----------|------|------|
-| 포트 주소 지정 적절히 처리 | MUST | |
-| IP 옵션 및 ICMP 메시지 처리 | SHOULD | |
-| 체크섬 | RECOMMENDED | 일부 컨텍스트에서는 필수 |
-| 멀티홈 지원 | SHOULD | 해당되는 경우 |
-| ICMP 오류 메시지를 애플리케이션 계층으로 전달 | MUST | |
+- 포트 주소 지정 적절히 처리: MUST
+- IP 옵션 및 ICMP 메시지 처리: SHOULD
+- 체크섬: RECOMMENDED — 일부 컨텍스트에서는 필수
+- 멀티홈 지원: SHOULD — 해당되는 경우
+- ICMP 오류 메시지를 애플리케이션 계층으로 전달: MUST
 
 ### TCP (Transmission Control Protocol)
 
 #### 개요
 
-TCP는 신뢰성 있는 연결 지향 전송 서비스를 제공합니다:
+TCP: 신뢰성 있는 연결 지향 전송 서비스 제공.
 - 종단간 신뢰성 (End-to-end Reliability)
 - 재정렬 (Resequencing)
 - 흐름 제어 (Flow Control)
@@ -537,8 +451,8 @@ TCP는 신뢰성 있는 연결 지향 전송 서비스를 제공합니다:
 
 #### TCP 상태 머신 (State Machine)
 
-TCP 연결은 유한 상태 머신(Finite State Machine)으로 관리됩니다.
- 모든 TCP 구현체는 이 상태 전이를 정확히 따라야 합니다 (MUST).
+TCP 연결: 유한 상태 머신(Finite State Machine)으로 관리.
+모든 TCP 구현체는 이 상태 전이를 정확히 따라야 함 (MUST).
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
@@ -586,41 +500,35 @@ TCP 연결은 유한 상태 머신(Finite State Machine)으로 관리됩니다.
 
 ##### TCP 상태 설명
 
-| 상태 | 설명 |
-|------|------|
-| CLOSED | 연결 없음 (초기/최종 상태) |
-| LISTEN | 수동 열기, 연결 요청 대기 중 |
-| SYN-SENT | SYN 전송, 연결 설정 시도 중 |
-| SYN-RCVD | SYN 수신, SYN+ACK 전송 완료 |
-| ESTABLISHED | 연결 설정 완료, 데이터 전송 가능 |
-| FIN-WAIT-1 | 종료 시작, FIN 전송 완료 |
-| FIN-WAIT-2 | FIN에 대한 ACK 수신, 상대방 FIN 대기 |
-| CLOSE-WAIT | 상대방 FIN 수신, 애플리케이션 종료 대기 |
-| LAST-ACK | FIN 전송, 최종 ACK 대기 |
-| TIME-WAIT | 2MSL 대기 (지연된 세그먼트 처리) |
-| CLOSING | 동시 종료 상황 (양측이 동시에 FIN 전송) |
+- CLOSED: 연결 없음 (초기/최종 상태)
+- LISTEN: 수동 열기, 연결 요청 대기 중
+- SYN-SENT: SYN 전송, 연결 설정 시도 중
+- SYN-RCVD: SYN 수신, SYN+ACK 전송 완료
+- ESTABLISHED: 연결 설정 완료, 데이터 전송 가능
+- FIN-WAIT-1: 종료 시작, FIN 전송 완료
+- FIN-WAIT-2: FIN에 대한 ACK 수신, 상대방 FIN 대기
+- CLOSE-WAIT: 상대방 FIN 수신, 애플리케이션 종료 대기
+- LAST-ACK: FIN 전송, 최종 ACK 대기
+- TIME-WAIT: 2MSL 대기 (지연된 세그먼트 처리)
+- CLOSING: 동시 종료 상황 (양측이 동시에 FIN 전송)
 
 ##### 상태 머신 요구사항
 
-| 요구사항 | 수준 | 설명 |
-|----------|------|------|
-| 모든 상태 전이 정확히 구현 | MUST | RFC 793 상태 다이어그램 준수 |
-| TIME-WAIT 상태에서 2MSL 대기 | MUST | 일반적으로 2분 (MSL=1분) |
-| 동시 열기(Simultaneous Open) 처리 | MUST | 양측이 동시에 SYN 전송 |
-| 동시 종료(Simultaneous Close) 처리 | MUST | 양측이 동시에 FIN 전송 |
-| Half-Close 지원 | MUST | 한쪽만 종료 가능 |
+- 모든 상태 전이 정확히 구현: MUST — RFC 793 상태 다이어그램 준수
+- TIME-WAIT 상태에서 2MSL 대기: MUST — 일반적으로 2분 (MSL=1분)
+- 동시 열기(Simultaneous Open) 처리: MUST — 양측이 동시에 SYN 전송
+- 동시 종료(Simultaneous Close) 처리: MUST — 양측이 동시에 FIN 전송
+- Half-Close 지원: MUST — 한쪽만 종료 가능
 
 #### TCP 상세 요구사항
 
 ##### 연결 관리 (Connection Management)
 
-| 요구사항 | 수준 |
-|----------|------|
-| 적절한 상태 전이 | MUST |
-| 동시 열기(simultaneous opens) 처리 | MUST |
-| RST 세그먼트 동작 적절히 처리 | MUST |
-| 초기 시퀀스 번호(ISN) 임의 선택 | MUST |
-| 연결당 고유 소켓 쌍 사용 | MUST |
+- 적절한 상태 전이: MUST
+- 동시 열기(simultaneous opens) 처리: MUST
+- RST 세그먼트 동작 적절히 처리: MUST
+- 초기 시퀀스 번호(ISN) 임의 선택: MUST
+- 연결당 고유 소켓 쌍 사용: MUST
 
 ##### RST 세그먼트 처리
 
@@ -667,7 +575,7 @@ TCP 연결은 유한 상태 머신(Finite State Machine)으로 관리됩니다.
 
 ##### 혼잡 제어 (Congestion Control)
 
-TCP는 슬로우 스타트(slow start) 와 혼잡 회피(congestion avoidance) 를 구현해야 합니다 (MUST).
+TCP는 슬로우 스타트(slow start)와 혼잡 회피(congestion avoidance)를 구현해야 함 (MUST).
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -697,16 +605,15 @@ TCP는 슬로우 스타트(slow start) 와 혼잡 회피(congestion avoidance) �
 └─────────────────────────────────────────────────────────────┘
 ```
 
-중요: 타임아웃 시 슬로우 스타트에 들어가는 것은 인터넷 혼잡 안정성의 초석 입니다.
- TCP가 이를 따르지 않으면 네트워크는 "혼잡 붕괴(congestion collapse)" 위험에 처합니다.
+주의: 타임아웃 시 슬로우 스타트 진입 → 인터넷 혼잡 안정성의 초석.
+TCP가 이를 따르지 않으면 네트워크는 "혼잡 붕괴(congestion collapse)" 위험에 처함.
 
 ##### 흐름 제어 (Flow Control)
 
-| 섹션 | 주제 |
-|------|------|
-| 4.2.3.2 | When to Send an ACK Segment |
-| 4.2.3.3 | When to Send a Window Update |
-| 4.2.3.4 | When to Send Data |
+관련 섹션:
+- 4.2.3.2: When to Send an ACK Segment
+- 4.2.3.3: When to Send a Window Update
+- 4.2.3.4: When to Send Data
 
 요구사항:
 - 윈도우 관리 (Window management)
@@ -715,7 +622,7 @@ TCP는 슬로우 스타트(slow start) 와 혼잡 회피(congestion avoidance) �
 
 ##### Silly Window Syndrome (SWS) 회피
 
-Silly Window Syndrome은 송신자와 수신자가 매우 작은 세그먼트를 교환하여 효율성이 크게 저하되는 현상입니다.
+Silly Window Syndrome: 송신자와 수신자가 매우 작은 세그먼트를 교환 → 효율성 크게 저하되는 현상.
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
@@ -786,24 +693,20 @@ Silly Window Syndrome은 송신자와 수신자가 매우 작은 세그먼트를
 └─────────────────────────────────────────────────────────────────────┘
 ```
 
-| SWS 회피 요구사항 | 수준 | 설명 |
-|-------------------|------|------|
-| 수신측 SWS 회피 | MUST | 작은 윈도우 광고 방지 |
-| 송신측 SWS 회피 | SHOULD | 작은 세그먼트 전송 방지 |
-| Nagle 알고리즘과 함께 사용 | SHOULD | 효율적인 전송 보장 |
+- 수신측 SWS 회피: MUST — 작은 윈도우 광고 방지
+- 송신측 SWS 회피: SHOULD — 작은 세그먼트 전송 방지
+- Nagle 알고리즘과 함께 사용: SHOULD — 효율적인 전송 보장
 
 ##### 데이터 전송 (Data Transmission)
 
-| 요구사항 | 수준 |
-|----------|------|
-| PUSH 플래그 처리 | MUST |
-| 최대 세그먼트 크기(MSS) 협상 | MUST |
-| Nagle 알고리즘 구현 | SHOULD |
+- PUSH 플래그 처리: MUST
+- 최대 세그먼트 크기(MSS) 협상: MUST
+- Nagle 알고리즘 구현: SHOULD
 
 ##### Nagle 알고리즘 (Nagle Algorithm)
 
-Nagle 알고리즘은 작은 패킷의 과도한 전송을 방지하여 네트워크 효율성을 높이는 알고리즘입니다.
- RFC 896에서 처음 제안되었습니다.
+Nagle 알고리즘: 작은 패킷의 과도한 전송 방지 → 네트워크 효율성 향상.
+RFC 896에서 처음 제안.
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
@@ -873,11 +776,9 @@ Nagle 알고리즘은 작은 패킷의 과도한 전송을 방지하여 네트�
 
 ###### Nagle 알고리즘 요구사항
 
-| 요구사항 | 수준 | 설명 |
-|----------|------|------|
-| Nagle 알고리즘 구현 | SHOULD | 작은 세그먼트 통합 |
-| 비활성화 옵션 제공 | MUST | TCP_NODELAY 소켓 옵션 |
-| 연결별로 구성 가능 | SHOULD | 일부 애플리케이션은 비활성화 필요 |
+- Nagle 알고리즘 구현: SHOULD — 작은 세그먼트 통합
+- 비활성화 옵션 제공: MUST — TCP_NODELAY 소켓 옵션
+- 연결별로 구성 가능: SHOULD — 일부 애플리케이션은 비활성화 필요
 
 ###### Nagle 알고리즘을 비활성화해야 하는 경우
 
@@ -935,16 +836,14 @@ Nagle 알고리즘은 작은 패킷의 과도한 전송을 방지하여 네트�
 
 ##### 연결 유지 (Keep-Alives)
 
-| 요구사항 | 수준 |
-|----------|------|
-| Keep-alive 메커니즘 | MAY (선택적) |
-| 죽은 연결 탐지 목적 | - |
+- Keep-alive 메커니즘: MAY (선택적)
+- 목적: 죽은 연결 탐지
 
-섹션 4.2.3.6: TCP Keep-Alives - 연결이 아직 유효한지 확인하는 선택적 메커니즘
+섹션 4.2.3.6: TCP Keep-Alives — 연결이 아직 유효한지 확인하는 선택적 메커니즘.
 
 ##### TCP Keep-Alive 메커니즘 상세
 
-TCP Keep-Alive는 유휴(idle) 연결이 아직 유효한지 확인하는 선택적 메커니즘입니다.
+TCP Keep-Alive: 유휴(idle) 연결이 아직 유효한지 확인하는 선택적 메커니즘.
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
@@ -990,11 +889,9 @@ TCP Keep-Alive는 유휴(idle) 연결이 아직 유효한지 확인하는 선택
 
 ###### Keep-Alive 타이밍 파라미터
 
-| 파라미터 | 기본값 | 설명 |
-|----------|--------|------|
-| Keep-Alive 시간 | 2시간 (7200초) | 유휴 상태 후 첫 프로브까지 대기 시간 |
-| Keep-Alive 간격 | 75초 | 프로브 재전송 간격 |
-| Keep-Alive 횟수 | 9 | 최대 프로브 재전송 횟수 |
+- Keep-Alive 시간: 기본값 2시간 (7200초) — 유휴 상태 후 첫 프로브까지 대기 시간
+- Keep-Alive 간격: 기본값 75초 — 프로브 재전송 간격
+- Keep-Alive 횟수: 기본값 9 — 최대 프로브 재전송 횟수
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
@@ -1033,13 +930,11 @@ TCP Keep-Alive는 유휴(idle) 연결이 아직 유효한지 확인하는 선택
 
 ###### Keep-Alive 요구사항
 
-| 요구사항 | 수준 | 설명 |
-|----------|------|------|
-| Keep-Alive 구현 | MAY | 선택적 기능 |
-| 기본값은 비활성화 | MUST | 명시적으로 활성화해야 함 |
-| 애플리케이션별 제어 가능 | MUST | SO_KEEPALIVE 소켓 옵션 |
-| 최소 2시간 유휴 후 프로브 | MUST | 구성 가능해야 함 |
-| 프로브에 대한 응답 적절히 처리 | MUST | ACK, RST, 무응답 |
+- Keep-Alive 구현: MAY — 선택적 기능
+- 기본값은 비활성화: MUST — 명시적으로 활성화해야 함
+- 애플리케이션별 제어 가능: MUST — SO_KEEPALIVE 소켓 옵션
+- 최소 2시간 유휴 후 프로브: MUST — 구성 가능해야 함
+- 프로브에 대한 응답 적절히 처리: MUST — ACK, RST, 무응답
 
 ###### Keep-Alive 사용 시 고려사항
 
@@ -1096,24 +991,20 @@ TCP Keep-Alive는 유휴(idle) 연결이 아직 유효한지 확인하는 선택
 └─────────────────────────────────────────────────────────────────────┘
 ```
 
-> RFC 1122가 요구하는 것은 "설정 가능하고 기본값이 2시간 이상인 유휴 시간" 뿐입니다.
- 프로브 간격(75초)과 재시도 횟수(9회)는 Linux 등 구현체가 정한 기본값이며 RFC 1122의 요구 사항이 아닙니다.
+> RFC 1122가 요구하는 것은 "설정 가능하고 기본값이 2시간 이상인 유휴 시간" 뿐.
+> 프로브 간격(75초)과 재시도 횟수(9회)는 Linux 등 구현체가 정한 기본값이며 RFC 1122의 요구 사항이 아님.
 
 ##### 연결 실패 처리
 
 섹션 4.2.3.5: TCP Connection Failures
 
-| 요구사항 | 수준 |
-|----------|------|
-| ICMP 메시지에 대한 응답 | MUST |
-| 연결 실패 처리 | MUST |
+- ICMP 메시지에 대한 응답: MUST
+- 연결 실패 처리: MUST
 
 ##### 멀티홈 지원 (Multihoming Support)
 
-| 요구사항 | 수준 |
-|----------|------|
-| 적절한 소스 주소 선택 | MUST |
-| 여러 인터페이스 지원 | SHOULD |
+- 적절한 소스 주소 선택: MUST
+- 여러 인터페이스 지원: SHOULD
 
 ---
 
@@ -1121,73 +1012,63 @@ TCP Keep-Alive는 유휴(idle) 연결이 아직 유효한지 확인하는 선택
 
 ### Link Layer
 
-| 기능 | MUST | SHOULD | MAY |
-|------|:----:|:------:|:---:|
-| RFC-894 Ethernet 캡슐화 송수신 | ✓ | | |
-| RFC-1042 캡슐화 수신 | | ✓ | |
-| RFC-1042 캡슐화 송신 | | | ✓ |
-| ARP 캐시 타임아웃 | ✓ | | |
-| ARP 요청 속도 제한 | ✓ | | |
+- RFC-894 Ethernet 캡슐화 송수신: MUST
+- RFC-1042 캡슐화 수신: SHOULD
+- RFC-1042 캡슐화 송신: MAY
+- ARP 캐시 타임아웃: MUST
+- ARP 요청 속도 제한: MUST
 
 ### Internet Layer (IP/ICMP/IGMP)
 
-| 기능 | MUST | SHOULD | MAY | MUST NOT |
-|------|:----:|:------:|:---:|:--------:|
-| 헤더 체크섬 검증 | ✓ | | | |
-| 유효하지 않은 데이터그램 폐기 | ✓ | | | |
-| 서브넷 주소 마스크 지원 | ✓ | | | |
-| 소스 라우트 발신/목적지 | ✓ | | | |
-| Record Route 옵션 | | ✓ | | |
-| Timestamp 옵션 | | ✓ | | |
-| Stream Identifier 전송 | | | | ✓ |
-| 자동 게이트웨이 모드 | | | | ✓ |
-| ICMP Echo Reply 응답 | ✓ | | | |
-| ICMP Destination Unreachable 처리 | ✓ | | | |
-| ICMP Redirect 처리 | ✓ | | | |
-| ICMP 오류 메시지에 대한 ICMP 응답 금지 | | | | ✓ |
-| 브로드캐스트 주소 인식 | ✓ | | | |
-| 브로드캐스트 소스 주소 사용 금지 | | | | ✓ |
-| IP 멀티캐스트 지원 | | ✓ | | |
-| IGMP 구현 (멀티캐스트 지원 시) | | ✓ | | |
-| 멀티캐스트 그룹 224.0.0.1 참가 | ✓ | | | |
+- 헤더 체크섬 검증: MUST
+- 유효하지 않은 데이터그램 폐기: MUST
+- 서브넷 주소 마스크 지원: MUST
+- 소스 라우트 발신/목적지: MUST
+- Record Route 옵션: SHOULD
+- Timestamp 옵션: SHOULD
+- Stream Identifier 전송: MUST NOT
+- 자동 게이트웨이 모드: MUST NOT
+- ICMP Echo Reply 응답: MUST
+- ICMP Destination Unreachable 처리: MUST
+- ICMP Redirect 처리: MUST
+- ICMP 오류 메시지에 대한 ICMP 응답 금지: MUST NOT
+- 브로드캐스트 주소 인식: MUST
+- 브로드캐스트 소스 주소 사용 금지: MUST NOT
+- IP 멀티캐스트 지원: SHOULD
+- IGMP 구현 (멀티캐스트 지원 시): SHOULD
+- 멀티캐스트 그룹 224.0.0.1 참가: MUST
 
 ### Transport Layer (TCP)
 
-| 기능 | MUST | SHOULD | MAY |
-|------|:----:|:------:|:---:|
-| 슬로우 스타트 구현 | ✓ | | |
-| 혼잡 회피 구현 | ✓ | | |
-| MSS 협상 | ✓ | | |
-| 재전송 타이머 계산 | ✓ | | |
-| Nagle 알고리즘 | | ✓ | |
-| Keep-Alive | | | ✓ |
+- 슬로우 스타트 구현: MUST
+- 혼잡 회피 구현: MUST
+- MSS 협상: MUST
+- 재전송 타이머 계산: MUST
+- Nagle 알고리즘: SHOULD
+- Keep-Alive: MAY
 
 ---
 
 ## 관련 RFC 문서
 
-| RFC | 제목 | 관계 |
-|-----|------|------|
-| RFC 1123 | Requirements for Internet Hosts - Application and Support | 동반 문서 |
-| RFC 2119 | Key words for use in RFCs to Indicate Requirement Levels | 용어 정의 |
-| RFC 6298 | Computing TCP's Retransmission Timer | RFC 1122의 RTO 요구사항 업데이트 |
-| RFC 9293 | Transmission Control Protocol (TCP) | TCP 부분 대체 |
-| RFC 2001 | TCP Slow Start, Congestion Avoidance, Fast Retransmit, and Fast Recovery | 혼잡 제어 알고리즘 |
+- RFC 1123 (Requirements for Internet Hosts - Application and Support): 동반 문서
+- RFC 2119 (Key words for use in RFCs to Indicate Requirement Levels): 용어 정의
+- RFC 6298 (Computing TCP's Retransmission Timer): RFC 1122의 RTO 요구사항 업데이트
+- RFC 9293 (Transmission Control Protocol (TCP)): TCP 부분 대체
+- RFC 2001 (TCP Slow Start, Congestion Avoidance, Fast Retransmit, and Fast Recovery): 혼잡 제어 알고리즘
 
 ---
 
 ## 주요 용어
 
-| 용어 | 설명 |
-|------|------|
-| MTU | Maximum Transmission Unit - 전송 가능한 최대 패킷 크기 |
-| MSS | Maximum Segment Size - TCP 세그먼트의 최대 데이터 크기 |
-| RTT | Round-Trip Time - 왕복 시간 |
-| RTO | Retransmission Timeout - 재전송 타임아웃 |
-| cwnd | Congestion Window - 혼잡 윈도우 |
-| ssthresh | Slow Start Threshold - 슬로우 스타트 임계값 |
-| TOS | Type of Service - 서비스 유형 |
-| TTL | Time to Live - 생존 시간 |
+- MTU: Maximum Transmission Unit — 전송 가능한 최대 패킷 크기
+- MSS: Maximum Segment Size — TCP 세그먼트의 최대 데이터 크기
+- RTT: Round-Trip Time — 왕복 시간
+- RTO: Retransmission Timeout — 재전송 타임아웃
+- cwnd: Congestion Window — 혼잡 윈도우
+- ssthresh: Slow Start Threshold — 슬로우 스타트 임계값
+- TOS: Type of Service — 서비스 유형
+- TTL: Time to Live — 생존 시간
 
 ---
 
@@ -1200,4 +1081,4 @@ TCP Keep-Alive는 유휴(idle) 연결이 아직 유효한지 확인하는 선택
 
 ---
 
-*이 문서는 RFC 1122의 한국어 번역 및 정리본입니다.*
+*이 문서는 RFC 1122의 한국어 번역 및 정리본.*

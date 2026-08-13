@@ -23,7 +23,10 @@
 
 #### 웹 알림이란
 
-Notifications API는 웹 애플리케이션이 시스템 수준의 알림을 표시할 수 있게 해주는 WHATWG Living Standard이다. 이 알림은 브라우저 탭 밖에서도 사용자에게 표시되며, 운영체제의 네이티브 알림 시스템과 통합된다.
+Notifications API: 웹 애플리케이션이 시스템 수준의 알림을 표시할 수 있게 해주는 WHATWG Living Standard
+
+- 브라우저 탭 밖에서도 사용자에게 표시됨
+- 운영체제의 네이티브 알림 시스템과 통합
 
 ```
 [웹 알림의 구조]
@@ -39,10 +42,12 @@ Notifications API는 웹 애플리케이션이 시스템 수준의 알림을 표
 
 #### 두 가지 알림 컨텍스트
 
-| 컨텍스트 | 설명 | API |
-|----------|------|-----|
-| 페이지 컨텍스트 | 웹 페이지에서 직접 생성 | `new Notification()` |
-| Service Worker 컨텍스트 | 백그라운드에서 생성 | `registration.showNotification()` |
+- 페이지 컨텍스트
+  - 설명: 웹 페이지에서 직접 생성
+  - API: `new Notification()`
+- Service Worker 컨텍스트
+  - 설명: 백그라운드에서 생성
+  - API: `registration.showNotification()`
 
 ```javascript
 // 페이지 컨텍스트 알림
@@ -62,13 +67,17 @@ self.registration.showNotification('안녕하세요', {
 
 #### 2.1 권한 상태
 
-Notifications API는 3단계 권한 모델을 사용한다.
+Notifications API: 3단계 권한 모델 사용
 
-| 상태 | 값 | 설명 |
-|------|-----|------|
-| 기본 | `"default"` | 사용자가 아직 선택하지 않음. `"denied"`와 동일하게 동작 |
-| 허용 | `"granted"` | 사용자가 알림을 허용함 |
-| 거부 | `"denied"` | 사용자가 알림을 거부함 |
+- 기본
+  - 값: `"default"`
+  - 설명: 사용자가 아직 선택하지 않음 · `"denied"`와 동일하게 동작
+- 허용
+  - 값: `"granted"`
+  - 설명: 사용자가 알림을 허용함
+- 거부
+  - 값: `"denied"`
+  - 설명: 사용자가 알림을 거부함
 
 ```javascript
 // 현재 권한 상태 확인
@@ -187,10 +196,14 @@ const notification = new Notification(title, options);
 
 ##### 매개변수
 
-| 매개변수 | 타입 | 필수 | 설명 |
-|----------|------|------|------|
-| `title` | `string` | 필수 | 알림의 제목 |
-| `options` | `NotificationOptions` | 선택 | 알림 설정 객체 |
+- `title`
+  - 타입: `string`
+  - 필수 여부: 필수
+  - 설명: 알림의 제목
+- `options`
+  - 타입: `NotificationOptions`
+  - 필수 여부: 선택
+  - 설명: 알림 설정 객체
 
 #### 3.2 NotificationOptions 전체 구조
 
@@ -347,7 +360,7 @@ new Notification('앱 알림', {
 
 #### 4.3 tag (태그)
 
-태그는 알림을 그룹화하고 교체하는 데 사용된다.
+태그: 알림을 그룹화하고 교체하는 데 사용
 
 ```javascript
 // 같은 태그의 알림은 교체됨
@@ -548,12 +561,18 @@ console.log('최대 액션 수:', Notification.maxActions);
 
 #### 5.1 이벤트 종류
 
-| 이벤트 | 속성 | 발생 시점 |
-|--------|------|----------|
-| `show` | `onshow` | 알림이 표시될 때 |
-| `click` | `onclick` | 알림을 클릭할 때 |
-| `close` | `onclose` | 알림이 닫힐 때 |
-| `error` | `onerror` | 알림 표시 오류 시 |
+- `show`
+  - 속성: `onshow`
+  - 발생 시점: 알림이 표시될 때
+- `click`
+  - 속성: `onclick`
+  - 발생 시점: 알림을 클릭할 때
+- `close`
+  - 속성: `onclose`
+  - 발생 시점: 알림이 닫힐 때
+- `error`
+  - 속성: `onerror`
+  - 발생 시점: 알림 표시 오류 시
 
 #### 5.2 onclick
 
@@ -636,7 +655,10 @@ notification.onshow = function(event) {
 
 #### 6.1 ServiceWorkerRegistration.showNotification()
 
-Service Worker를 통한 알림은 페이지가 닫혀 있어도 표시할 수 있으며, 푸시 알림과 연동된다.
+Service Worker를 통한 알림
+
+- 페이지가 닫혀 있어도 표시 가능
+- 푸시 알림과 연동
 
 ```javascript
 // Service Worker 등록 및 알림 표시
@@ -1379,20 +1401,18 @@ class ChatNotifier {
 
 #### 12.1 브라우저 지원 현황
 
-| 기능 | Chrome | Firefox | Safari | Edge |
-|------|--------|---------|--------|------|
-| `Notification` 생성자 | 지원 | 지원 | 지원 | 지원 |
-| `requestPermission()` (Promise) | 46+ | 47+ | 15+ | 지원 |
-| `showNotification()` | 42+ | 44+ | 16+ | 지원 |
-| `getNotifications()` | 42+ | 지원 | 16+ | 지원 |
-| `actions` | 48+ | 미지원 | 미지원 | 지원 |
-| `badge` | 53+ | 미지원 | 미지원 | 지원 |
-| `image` | 56+ | 미지원 | 미지원 | 지원 |
-| `renotify` | 50+ | 미지원 | 미지원 | 지원 |
-| `requireInteraction` | 47+ | 미지원 | 미지원 | 지원 |
-| `silent` | 43+ | 미지원 | 미지원 | 지원 |
-| `vibrate` | 53+ | 미지원 | 미지원 | 지원 |
-| `timestamp` | 50+ | 미지원 | 미지원 | 지원 |
+- `Notification` 생성자 · Chrome 지원 · Firefox 지원 · Safari 지원 · Edge 지원
+- `requestPermission()` (Promise) · Chrome 46+ · Firefox 47+ · Safari 15+ · Edge 지원
+- `showNotification()` · Chrome 42+ · Firefox 44+ · Safari 16+ · Edge 지원
+- `getNotifications()` · Chrome 42+ · Firefox 지원 · Safari 16+ · Edge 지원
+- `actions` · Chrome 48+ · Firefox 미지원 · Safari 미지원 · Edge 지원
+- `badge` · Chrome 53+ · Firefox 미지원 · Safari 미지원 · Edge 지원
+- `image` · Chrome 56+ · Firefox 미지원 · Safari 미지원 · Edge 지원
+- `renotify` · Chrome 50+ · Firefox 미지원 · Safari 미지원 · Edge 지원
+- `requireInteraction` · Chrome 47+ · Firefox 미지원 · Safari 미지원 · Edge 지원
+- `silent` · Chrome 43+ · Firefox 미지원 · Safari 미지원 · Edge 지원
+- `vibrate` · Chrome 53+ · Firefox 미지원 · Safari 미지원 · Edge 지원
+- `timestamp` · Chrome 50+ · Firefox 미지원 · Safari 미지원 · Edge 지원
 
 #### 12.2 플랫폼별 제한사항
 
@@ -1479,7 +1499,9 @@ console.table(support);
 
 #### 전체 화면 API란
 
-Fullscreen API는 WHATWG Living Standard로, 웹 페이지의 특정 요소를 전체 화면으로 표시하거나 전체 화면에서 나갈 수 있게 해주는 API이다. 비디오 재생, 게임, 프레젠테이션, 이미지 갤러리 등에서 광범위하게 사용된다.
+Fullscreen API: 웹 페이지의 특정 요소를 전체 화면으로 표시하거나 전체 화면에서 나갈 수 있게 해주는 WHATWG Living Standard
+
+- 비디오 재생·게임·프레젠테이션·이미지 갤러리 등에서 광범위하게 사용
 
 ```
 [일반 모드]                        [전체 화면 모드]
@@ -1500,16 +1522,30 @@ Fullscreen API는 WHATWG Living Standard로, 웹 페이지의 특정 요소를 �
 
 #### 핵심 구성 요소
 
-| 구성 요소 | 타입 | 설명 |
-|-----------|------|------|
-| `Element.requestFullscreen()` | 메서드 | 전체 화면 진입 요청 |
-| `Document.exitFullscreen()` | 메서드 | 전체 화면 종료 |
-| `Document.fullscreenElement` | 속성 | 현재 전체 화면 요소 |
-| `Document.fullscreenEnabled` | 속성 | 전체 화면 가능 여부 |
-| `fullscreenchange` | 이벤트 | 전체 화면 상태 변경 시 |
-| `fullscreenerror` | 이벤트 | 전체 화면 진입 실패 시 |
-| `:fullscreen` | CSS 의사 클래스 | 전체 화면 요소 스타일링 |
-| `::backdrop` | CSS 의사 요소 | 전체 화면 배경 스타일링 |
+- `Element.requestFullscreen()`
+  - 타입: 메서드
+  - 설명: 전체 화면 진입 요청
+- `Document.exitFullscreen()`
+  - 타입: 메서드
+  - 설명: 전체 화면 종료
+- `Document.fullscreenElement`
+  - 타입: 속성
+  - 설명: 현재 전체 화면 요소
+- `Document.fullscreenEnabled`
+  - 타입: 속성
+  - 설명: 전체 화면 가능 여부
+- `fullscreenchange`
+  - 타입: 이벤트
+  - 설명: 전체 화면 상태 변경 시
+- `fullscreenerror`
+  - 타입: 이벤트
+  - 설명: 전체 화면 진입 실패 시
+- `:fullscreen`
+  - 타입: CSS 의사 클래스
+  - 설명: 전체 화면 요소 스타일링
+- `::backdrop`
+  - 타입: CSS 의사 요소
+  - 설명: 전체 화면 배경 스타일링
 
 ---
 
@@ -1532,7 +1568,7 @@ element.requestFullscreen()
 
 #### 2.2 FullscreenOptions
 
-`requestFullscreen()`은 선택적으로 옵션 객체를 받는다.
+`requestFullscreen()`: 선택적으로 옵션 객체를 받음
 
 ```typescript
 interface FullscreenOptions {
@@ -1555,7 +1591,10 @@ element.requestFullscreen({ navigationUI: 'show' });
 element.requestFullscreen({ navigationUI: 'hide' });
 ```
 
-`keyboardLock` 옵션은 전체 화면 진입과 동시에 키보드 잠금을 적용할지를 지정한다. `'browser'`로 지정하면 별도로 `navigator.keyboard.lock()`을 호출하지 않아도 Esc 등 브라우저가 예약한 키까지 캡처할 수 있고, 기본값인 `'none'`은 잠금을 적용하지 않는다.
+`keyboardLock` 옵션: 전체 화면 진입과 동시에 키보드 잠금을 적용할지 지정
+
+- `'browser'` 지정 → 별도로 `navigator.keyboard.lock()`을 호출하지 않아도 Esc 등 브라우저가 예약한 키까지 캡처 가능
+- 기본값 `'none'` → 잠금 미적용
 
 ```javascript
 // requestFullscreen()에 keyboardLock을 통합한 방식
@@ -2002,7 +2041,7 @@ class FullscreenUI {
 
 #### 6.1 :fullscreen 의사 클래스
 
-`:fullscreen` 의사 클래스는 현재 전체 화면 모드인 요소에 스타일을 적용한다.
+`:fullscreen` 의사 클래스: 현재 전체 화면 모드인 요소에 스타일 적용
 
 ```css
 /* 전체 화면일 때의 스타일 */
@@ -2060,7 +2099,7 @@ class FullscreenUI {
 
 #### 6.2 ::backdrop 의사 요소
 
-`::backdrop`은 전체 화면 요소 뒤에 표시되는 배경 레이어를 스타일링한다.
+`::backdrop`: 전체 화면 요소 뒤에 표시되는 배경 레이어 스타일링
 
 ```css
 /* 전체 화면 배경 스타일 */
@@ -2177,7 +2216,9 @@ class FullscreenUI {
 
 #### 7.1 전체 화면 요소 스택
 
-Fullscreen API는 전체 화면 요소의 스택(stack)을 관리한다. 하나의 문서에서 여러 요소가 순차적으로 전체 화면을 요청할 수 있다.
+Fullscreen API: 전체 화면 요소의 스택(stack) 관리
+
+- 하나의 문서에서 여러 요소가 순차적으로 전체 화면을 요청 가능
 
 ```
 [전체 화면 스택 예시]
@@ -2262,7 +2303,7 @@ await D.requestFullscreen();  // fullscreenerror 발생
 
 #### 8.1 allowfullscreen 속성
 
-`<iframe>` 내부의 콘텐츠가 전체 화면을 사용하려면, iframe에 `allowfullscreen` 속성이 필요하다.
+`<iframe>` 내부의 콘텐츠가 전체 화면을 사용하려면 → iframe에 `allowfullscreen` 속성 필요
 
 ```html
 <!-- 전체 화면 허용 -->
@@ -2816,18 +2857,16 @@ const game = new GameFullscreen('gameCanvas');
 
 #### 11.1 지원 현황
 
-| 기능 | Chrome | Firefox | Safari | Edge |
-|------|--------|---------|--------|------|
-| `requestFullscreen()` | 71+ | 64+ | 16.4+ | 79+ |
-| `exitFullscreen()` | 71+ | 64+ | 16.4+ | 79+ |
-| `fullscreenElement` | 71+ | 64+ | 16.4+ | 79+ |
-| `fullscreenEnabled` | 71+ | 64+ | 16.4+ | 79+ |
-| `fullscreenchange` | 71+ | 64+ | 16.4+ | 79+ |
-| `fullscreenerror` | 71+ | 64+ | 16.4+ | 79+ |
-| `:fullscreen` | 71+ | 64+ | 16.4+ | 79+ |
-| `::backdrop` | 37+ | 47+ | 15.4+ | 79+ |
-| `FullscreenOptions` | 71+ | 64+ | 16.4+ | 79+ |
-| `allowfullscreen` (iframe) | 27+ | 9+ | 7+ | 12+ |
+- `requestFullscreen()` · Chrome 71+ · Firefox 64+ · Safari 16.4+ · Edge 79+
+- `exitFullscreen()` · Chrome 71+ · Firefox 64+ · Safari 16.4+ · Edge 79+
+- `fullscreenElement` · Chrome 71+ · Firefox 64+ · Safari 16.4+ · Edge 79+
+- `fullscreenEnabled` · Chrome 71+ · Firefox 64+ · Safari 16.4+ · Edge 79+
+- `fullscreenchange` · Chrome 71+ · Firefox 64+ · Safari 16.4+ · Edge 79+
+- `fullscreenerror` · Chrome 71+ · Firefox 64+ · Safari 16.4+ · Edge 79+
+- `:fullscreen` · Chrome 71+ · Firefox 64+ · Safari 16.4+ · Edge 79+
+- `::backdrop` · Chrome 37+ · Firefox 47+ · Safari 15.4+ · Edge 79+
+- `FullscreenOptions` · Chrome 71+ · Firefox 64+ · Safari 16.4+ · Edge 79+
+- `allowfullscreen` (iframe) · Chrome 27+ · Firefox 9+ · Safari 7+ · Edge 12+
 
 #### 11.2 접두사 버전 (레거시)
 

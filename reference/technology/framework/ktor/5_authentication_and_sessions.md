@@ -8,28 +8,26 @@
 
 ### 개념
 
-Ktor 인증은 **`Authentication` 플러그인 + 명명된 프로바이더 + `authenticate("name") { }` 블록** 구조로 동작합니다. 인증에 성공하면 **Principal** 객체가 생성되며 `call.principal<T>()`로 꺼낼 수 있습니다.
+Ktor 인증은 `Authentication` 플러그인 + 명명된 프로바이더 + `authenticate("name") { }` 블록 구조로 동작함 → 인증에 성공하면 Principal 객체가 생성되며 `call.principal<T>()`로 꺼낼 수 있음.
 
 핵심 용어:
 
-- **Credential**: 자격 정보 (예: 사용자명+비밀번호, API 키, JWT 토큰)
-- **Principal**: 인증된 주체 (User, Service 등)
-- **Provider**: 어떤 방식으로 자격을 검증할지 정의한 단위
+- Credential: 자격 정보 (예: 사용자명+비밀번호, API 키, JWT 토큰)
+- Principal: 인증된 주체 (User, Service 등)
+- Provider: 어떤 방식으로 자격을 검증할지 정의하는 단위
 
 ---
 
 ### 지원 방식
 
-| 방식 | 용도 |
-| --- | --- |
-| `basic` | HTTP Basic (HTTPS와 함께 사용) |
-| `digest` | HTTP Digest |
-| `bearer` | Bearer 토큰 (커스텀/일반) |
-| `form` | HTML 폼 로그인 |
-| `jwt` | JWT 토큰 검증 |
-| `oauth` | OAuth1/2 — Google/GitHub 등 외부 IdP |
-| `session` | 세션 기반 (Sessions 플러그인과 함께) |
-| `ldap` | LDAP 디렉터리 |
+- `basic`: HTTP Basic (HTTPS와 함께 사용)
+- `digest`: HTTP Digest
+- `bearer`: Bearer 토큰(커스텀/일반)
+- `form`: HTML 폼 로그인
+- `jwt`: JWT 토큰 검증
+- `oauth`: OAuth1/2 - Google·GitHub 등 외부 IdP
+- `session`: 세션 기반(Sessions 플러그인과 함께 사용)
+- `ldap`: LDAP 디렉터리
 
 ---
 
@@ -61,7 +59,7 @@ routing {
 }
 ```
 
-여러 프로바이더를 동시에 허용하려면 이름을 여러 개 전달하면 됩니다.
+여러 프로바이더를 동시에 허용하려면 이름을 여러 개 전달함.
 
 ```kotlin
 authenticate("auth-basic", "auth-jwt") { ... }
@@ -121,7 +119,7 @@ install(Authentication) {
 
 #### Session
 
-세션에 저장된 값으로 인증하려면 `Sessions`를 먼저 설치한 뒤:
+세션에 저장된 값으로 인증하려면 `Sessions`를 먼저 설치함.
 
 ```kotlin
 data class UserSession(val name: String) : Principal
@@ -164,15 +162,15 @@ install(Authentication) {
 
 ### challenge
 
-인증 실패 시 클라이언트에 반환할 응답을 정의합니다. 미정의 시 `401 Unauthorized`(basic은 `WWW-Authenticate` 헤더 포함)가 기본 동작입니다.
+인증 실패 시 클라이언트에 반환할 응답을 정의함 → 미정의 시 `401 Unauthorized`(basic은 `WWW-Authenticate` 헤더 포함)가 기본 동작임.
 
 ---
 
 ### 자주 쓰는 패턴
 
-- **로그인** 라우트는 인증 블록 바깥에 두고, 검증 성공 시 토큰을 발급하거나 세션을 설정한다.
-- **재발급/로그아웃** 라우트는 `authenticate {}` 안에 둔다.
-- JWT 키/시크릿은 `application.conf`의 환경변수 보간으로 주입한다 (`${JWT_SECRET}`).
+- 로그인 라우트는 인증 블록 바깥에 두고, 검증 성공 시 토큰을 발급하거나 세션을 설정함
+- 재발급/로그아웃 라우트는 `authenticate {}` 안에 둠
+- JWT 키/시크릿은 `application.conf`의 환경변수 보간으로 주입함 (`${JWT_SECRET}`)
 
 ---
 
@@ -184,11 +182,11 @@ install(Authentication) {
 
 ### 개요
 
-`Sessions` 플러그인은 요청 간에 데이터를 **유지**합니다. 결정해야 할 축이 세 가지입니다.
+`Sessions` 플러그인은 요청 간에 데이터를 유지함 → 결정해야 할 축은 세 가지임.
 
-1. **트랜스포트** — 어떻게 클라이언트와 주고받을 것인가? (`cookie` / `header`)
-2. **저장 위치** — 페이로드를 어디에 두는가? (클라이언트 측 / 서버 측)
-3. **보호 방식** — 변조 방지(서명) / 노출 방지(암호화)
+1. 트랜스포트 — 어떻게 클라이언트와 주고받을 것인가? (`cookie` / `header`)
+2. 저장 위치 — 페이로드를 어디에 두는가? (클라이언트 측 / 서버 측)
+3. 보호 방식 — 변조 방지(서명) / 노출 방지(암호화)
 
 ---
 
@@ -198,7 +196,7 @@ install(Authentication) {
 data class UserSession(val userId: String, val count: Int = 0)
 ```
 
-세션 객체는 직렬화 가능해야 합니다. 기본 직렬화는 자체 포맷을 사용하지만 kotlinx.serialization도 쓸 수 있습니다.
+세션 객체는 직렬화 가능해야 함 → 기본 직렬화는 자체 포맷을 사용하지만 kotlinx.serialization도 사용 가능함.
 
 ---
 
@@ -216,7 +214,7 @@ install(Sessions) {
 }
 ```
 
-`cookie<T>(name)` 대신 `header<T>(name)`을 쓰면 API용으로 헤더를 사용하게 됩니다.
+`cookie<T>(name)` 대신 `header<T>(name)`을 쓰면 API용으로 헤더를 사용함.
 
 ```kotlin
 install(Sessions) {
@@ -230,11 +228,11 @@ install(Sessions) {
 
 #### 클라이언트 측 (기본)
 
-쿠키/헤더 값에 페이로드를 직접 인코딩하여 클라이언트가 보관합니다. 서버는 stateless.
+쿠키/헤더 값에 페이로드를 직접 인코딩하여 클라이언트가 보관함 → 서버는 stateless임.
 
 #### 서버 측
 
-세션 ID만 클라이언트에 두고, 페이로드는 서버 저장소에 보관합니다.
+세션 ID만 클라이언트에 두고, 페이로드는 서버 저장소에 보관함.
 
 ```kotlin
 install(Sessions) {
@@ -244,9 +242,9 @@ install(Sessions) {
 }
 ```
 
-- `SessionStorageMemory()` — 로컬 개발용. 재시작 시 소실.
-- `directorySessionStorage(File("..."))` — 파일 기반.
-- `SessionStorage` 인터페이스를 직접 구현하면 Redis/DB 등으로 확장 가능.
+- `SessionStorageMemory()`: 로컬 개발용, 재시작 시 소실됨
+- `directorySessionStorage(File("..."))`: 파일 기반
+- `SessionStorage` 인터페이스를 직접 구현하면 Redis·DB 등으로 확장 가능
 
 ---
 
@@ -272,7 +270,7 @@ cookie<UserSession>("user_session") {
 }
 ```
 
-`signKey`, `encryptKey`는 충분히 긴 무작위 바이트로, 환경변수에서 주입합니다.
+`signKey`, `encryptKey`는 충분히 긴 무작위 바이트로, 환경변수에서 주입함.
 
 ---
 
@@ -296,13 +294,13 @@ get("/logout") {
 }
 ```
 
-같은 요청 안에서 같은 타입에 대해 `set`을 다시 호출하면 값이 갱신됩니다.
+같은 요청 안에서 같은 타입에 대해 `set`을 다시 호출하면 값이 갱신됨.
 
 ---
 
 ### 인증과의 결합
 
-Authentication의 `session` 프로바이더와 묶으면 "쿠키 = 로그인 토큰" 구조를 만들 수 있습니다 — [09_authentication.md](09_authentication.md) 참고.
+Authentication의 `session` 프로바이더와 묶으면 "쿠키 = 로그인 토큰" 구조를 만들 수 있음 → [09_authentication.md](09_authentication.md) 참고.
 
 ```kotlin
 install(Authentication) {
@@ -326,6 +324,6 @@ routing {
 
 ### 운영 팁
 
-- 쿠키에는 항상 `httpOnly = true`, 가능하면 `secure = true`, `SameSite=Lax` 이상.
-- 서명/암호화 키는 환경변수 또는 시크릿 매니저로 주입.
-- 페이로드가 커지면 모든 요청에 비용이 발생하므로 → server-side 저장으로 전환.
+- 쿠키에는 항상 `httpOnly = true`, 가능하면 `secure = true`, `SameSite=Lax` 이상 적용
+- 서명/암호화 키는 환경변수 또는 시크릿 매니저로 주입
+- 페이로드가 커지면 모든 요청에 비용이 발생함 → server-side 저장으로 전환

@@ -21,36 +21,36 @@
 
 ### W3C란 무엇인가
 
-W3C(World Wide Web Consortium) 는 월드 와이드 웹(WWW)의 국제 표준을 개발하고 관리하는 국제 표준화 기구이다. 웹 기술의 상호운용성(interoperability)을 보장하고, 웹이 장기적으로 성장할 수 있도록 가이드라인과 프로토콜, 기술 표준을 제정한다.
+W3C(World Wide Web Consortium): 월드 와이드 웹(WWW)의 국제 표준을 개발·관리하는 국제 표준화 기구
+- 웹 기술의 상호운용성(interoperability) 보장 → 가이드라인·프로토콜·기술 표준 제정
+- 웹의 장기적 성장 지원
 
 - 공식 웹사이트: https://www.w3.org/
 - 설립일: 1994년 10월
 - 설립자: 팀 버너스리(Tim Berners-Lee)
 - 본부: 미국 매사추세츠주 (MIT 내)
-- 법적 지위: 2022년 6월 전환 계획 발표, 2023년 1월 비영리 공익법인(501(c)(3))으로 법인 설립 완료
-- 회원: 약 450여 개 기업, 연구기관, 정부기관 등
+- 법적 지위: 2022년 6월 전환 계획 발표 → 2023년 1월 비영리 공익법인(501(c)(3))으로 법인 설립 완료
+- 회원: 약 450여 개 기업·연구기관·정부기관 등
 
 ### 설립 목적
 
-W3C는 다음과 같은 핵심 목적을 위해 설립되었다:
+핵심 목적 세 가지:
 
-1. 웹 표준의 통일성 확보: 각 브라우저 벤더가 독자적 기술을 추구하면서 발생하는 호환성 문제를 해결
-2. 웹의 보편적 접근성 보장: 장애, 기기, 언어, 지역에 관계없이 누구나 웹에 접근할 수 있도록 보장
-3. 웹 기술의 장기적 발전 주도: 단기적 상업 이해가 아닌, 웹의 장기적 이익을 위한 기술 방향 설정
+1. 웹 표준의 통일성 확보: 각 브라우저 벤더의 독자적 기술 추구 → 호환성 문제 해결
+2. 웹의 보편적 접근성 보장: 장애·기기·언어·지역 무관하게 누구나 웹 접근 가능하도록 함
+3. 웹 기술의 장기적 발전 주도: 단기적 상업 이해가 아닌 웹의 장기적 이익 중심 기술 방향 설정
 
 ### 미션 (Mission Statement)
 
 > "Leading the Web to its full potential"
 > (웹이 최대한의 잠재력을 발휘하도록 이끈다)
 
-W3C의 미션은 다음 네 가지 설계 원칙에 기반한다:
+W3C 미션의 네 가지 설계 원칙:
 
-| 원칙 | 설명 |
-|------|------|
-| Web for All | 모든 사람이 접근 가능한 웹 |
-| Web on Everything | 모든 기기에서 동작하는 웹 |
-| Web for Rich Interaction | 풍부한 상호작용이 가능한 웹 |
-| Web of Data and Services | 데이터와 서비스의 웹 |
+- Web for All: 모든 사람이 접근 가능한 웹
+- Web on Everything: 모든 기기에서 동작하는 웹
+- Web for Rich Interaction: 풍부한 상호작용이 가능한 웹
+- Web of Data and Services: 데이터와 서비스의 웹
 
 ---
 
@@ -58,42 +58,40 @@ W3C의 미션은 다음 네 가지 설계 원칙에 기반한다:
 
 ### 팀 버너스리와 W3C의 탄생
 
-팀 버너스리(Sir Timothy John Berners-Lee) 는 1989년 CERN(유럽입자물리연구소)에서 근무하면서 전 세계 과학자들이 정보를 공유할 수 있는 시스템을 구상했다. 그 결과물이 바로 월드 와이드 웹(World Wide Web) 이다.
+팀 버너스리(Sir Timothy John Berners-Lee): 1989년 CERN(유럽입자물리연구소) 근무 중 전 세계 과학자들의 정보 공유 시스템 구상 → 그 결과물이 월드 와이드 웹(World Wide Web)
 
-- 1989년 3월: 팀 버너스리가 "Information Management: A Proposal"이라는 제안서를 CERN에 제출
+- 1989년 3월: 팀 버너스리가 "Information Management: A Proposal" 제안서를 CERN에 제출
 - 1990년 12월: 최초의 웹 브라우저(WorldWideWeb)와 웹 서버를 NeXT 컴퓨터에서 구현
 - 1991년 8월: 최초의 웹사이트(http://info.cern.ch) 공개
 
-웹이 폭발적으로 성장하면서, 표준 없이 각 브라우저 업체(특히 Netscape와 Microsoft)가 독자적인 기능을 추가하기 시작했다. 이른바 "브라우저 전쟁(Browser Wars)" 시대가 도래하면서, 웹의 파편화를 막기 위한 표준화 기구의 필요성이 대두되었다.
+웹의 폭발적 성장 → 표준 없이 각 브라우저 업체(특히 Netscape·Microsoft)가 독자적 기능 추가 → "브라우저 전쟁(Browser Wars)" 시대 도래 → 웹 파편화 방지를 위한 표준화 기구 필요성 대두
 
 ### 주요 연혁
 
-| 연도 | 사건 |
-|------|------|
-| 1994년 10월 | 팀 버너스리가 MIT에서 W3C를 설립. MIT/LCS(현 MIT/CSAIL)가 최초 호스트 기관 |
-| 1995년 | INRIA(프랑스)가 유럽 호스트로 합류. HTML 2.0 표준화 |
-| 1996년 | CSS Level 1 권고안 발표 |
-| 1997년 | HTML 3.2 권고안, HTML 4.0 권고안 발표 |
-| 1998년 | XML 1.0 권고안, CSS Level 2 권고안, DOM Level 1 발표 |
-| 1999년 | HTML 4.01 권고안 (HTML 4.x의 최종 버전) |
-| 2000년 | XHTML 1.0 권고안 발표 |
-| 2003년 | ERCIM이 INRIA를 대체하여 유럽 호스트가 됨 |
-| 2004년 | WHATWG 결성 (W3C의 XHTML 2.0 방향에 반발) |
-| 2006년 | 팀 버너스리가 W3C도 HTML5 작업에 참여할 것임을 발표 |
-| 2007년 | HTML5 작업 그룹 공식 출범 |
-| 2008년 | WCAG 2.0 권고안 발표 |
-| 2009년 | XHTML 2.0 워킹 그룹 해산, HTML5에 집중 |
-| 2012년 | HTML5 Candidate Recommendation |
-| 2014년 10월 | HTML5 공식 권고안(W3C Recommendation) 발표 |
-| 2017년 | HTML 5.1, HTML 5.2 권고안 |
-| 2018년 | WCAG 2.1 권고안, WebAssembly Core Specification 1.0 |
-| 2019년 5월 | W3C와 WHATWG가 HTML/DOM 표준에 대해 합의 (WHATWG가 Living Standard 유지) |
-| 2020년 | WebAssembly W3C Recommendation |
-| 2022년 6월 | W3C가 비영리 공익법인(501(c)(3)) 전환 계획 발표 |
-| 2023년 1월 | W3C가 비영리 공익법인(501(c)(3))으로 법인 설립 완료 |
-| 2022년 12월 | WCAG 2.2 Candidate Recommendation |
-| 2023년 10월 | WCAG 2.2 W3C Recommendation |
-| 2024년 | 다양한 Web API 표준 지속적 개발 및 업데이트 |
+- 1994년 10월: 팀 버너스리가 MIT에서 W3C 설립. MIT/LCS(현 MIT/CSAIL)가 최초 호스트 기관
+- 1995년: INRIA(프랑스)가 유럽 호스트로 합류. HTML 2.0 표준화
+- 1996년: CSS Level 1 권고안 발표
+- 1997년: HTML 3.2 권고안, HTML 4.0 권고안 발표
+- 1998년: XML 1.0 권고안, CSS Level 2 권고안, DOM Level 1 발표
+- 1999년: HTML 4.01 권고안 (HTML 4.x의 최종 버전)
+- 2000년: XHTML 1.0 권고안 발표
+- 2003년: ERCIM이 INRIA를 대체해 유럽 호스트가 됨
+- 2004년: WHATWG 결성 (W3C의 XHTML 2.0 방향에 반발)
+- 2006년: 팀 버너스리가 W3C도 HTML5 작업에 참여할 것임을 발표
+- 2007년: HTML5 작업 그룹 공식 출범
+- 2008년: WCAG 2.0 권고안 발표
+- 2009년: XHTML 2.0 워킹 그룹 해산, HTML5에 집중
+- 2012년: HTML5 Candidate Recommendation
+- 2014년 10월: HTML5 공식 권고안(W3C Recommendation) 발표
+- 2017년: HTML 5.1, HTML 5.2 권고안
+- 2018년: WCAG 2.1 권고안, WebAssembly Core Specification 1.0
+- 2019년 5월: W3C와 WHATWG가 HTML/DOM 표준에 대해 합의 (WHATWG가 Living Standard 유지)
+- 2020년: WebAssembly W3C Recommendation
+- 2022년 6월: W3C가 비영리 공익법인(501(c)(3)) 전환 계획 발표
+- 2023년 1월: W3C가 비영리 공익법인(501(c)(3))으로 법인 설립 완료
+- 2022년 12월: WCAG 2.2 Candidate Recommendation
+- 2023년 10월: WCAG 2.2 W3C Recommendation
+- 2024년: 다양한 Web API 표준 지속적 개발·업데이트
 
 ---
 
@@ -101,7 +99,7 @@ W3C의 미션은 다음 네 가지 설계 원칙에 기반한다:
 
 ### 전체 구조 개요
 
-W3C는 2022년 법인 전환 이후 다음과 같은 거버넌스 구조를 가진다:
+W3C는 2022년 법인 전환 이후 다음 거버넌스 구조를 가짐:
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -139,37 +137,47 @@ W3C는 2022년 법인 전환 이후 다음과 같은 거버넌스 구조를 가�
 
 ### 디렉터 (Director)
 
-- 설립 이래 팀 버너스리가 W3C의 유일한 디렉터로서 기술적 방향을 이끌어 왔다
-- 디렉터는 모든 W3C 표준의 최종 승인 권한을 가졌으며, Working Group 간의 분쟁을 조정하는 역할을 수행
-- 2022년 법인 전환 이후, 디렉터 1인 체제에서 Board of Directors(이사회) 와 CEO 중심의 거버넌스로 전환
-- 팀 버너스리는 W3C의 창립자이자 명예 직위를 유지
+- 설립 이래 팀 버너스리가 W3C의 유일한 디렉터로서 기술적 방향을 이끎
+- 디렉터: 모든 W3C 표준의 최종 승인 권한 보유, Working Group 간 분쟁 조정 역할 수행
+- 2022년 법인 전환 이후, 디렉터 1인 체제 → Board of Directors(이사회)와 CEO 중심 거버넌스로 전환
+- 팀 버너스리는 W3C의 창립자이자 명예 직위 유지
 
 ### 호스트 기관 (Host Institutions)
 
-W3C는 설립 이래 여러 대학/연구기관이 물리적으로 호스팅하는 독특한 구조를 유지해 왔다:
+W3C는 설립 이래 여러 대학·연구기관이 물리적으로 호스팅하는 독특한 구조를 유지:
 
-| 기관 | 지역 | 역할 | 참여 시기 |
-|------|------|------|-----------|
-| MIT/CSAIL | 북미 (미국 매사추세츠) | 최초 호스트, 북미 거점 | 1994년~ |
-| ERCIM | 유럽 (프랑스 소피아 앙티폴리스) | 유럽 거점 (INRIA 후임) | 2003년~ |
-| Keio University (게이오대학) | 아시아 (일본) | 아시아 거점 | 1996년~ |
-| Beihang University (베이항대학) | 중국 (베이징) | 중국 거점 | 2013년~ |
+- MIT/CSAIL
+  - 지역: 북미 (미국 매사추세츠)
+  - 역할: 최초 호스트, 북미 거점
+  - 참여 시기: 1994년~
+- ERCIM
+  - 지역: 유럽 (프랑스 소피아 앙티폴리스)
+  - 역할: 유럽 거점 (INRIA 후임)
+  - 참여 시기: 2003년~
+- Keio University (게이오대학)
+  - 지역: 아시아 (일본)
+  - 역할: 아시아 거점
+  - 참여 시기: 1996년~
+- Beihang University (베이항대학)
+  - 지역: 중국 (베이징)
+  - 역할: 중국 거점
+  - 참여 시기: 2013년~
 
-> 2022년 법인 전환 이후, 호스트 기관의 역할은 점차 줄어들고 있으며, W3C Inc.가 독립적으로 운영된다.
+> 2022년 법인 전환 이후, 호스트 기관의 역할은 점차 축소 → W3C Inc.가 독립적으로 운영
 
 ### Advisory Board (AB)
 
 - 구성: 9명의 위원 (W3C 회원 기관에서 선출)
-- 역할: W3C의 전략, 경영, 법적/프로세스 이슈에 대한 자문
+- 역할: W3C의 전략·경영·법적/프로세스 이슈 자문
 - 임기: 2년, 재선 가능
-- W3C Process Document의 관리 및 개선을 담당
-- 기술적 사안이 아닌, 조직 운영 및 정책에 대한 가이드라인 제시
+- W3C Process Document의 관리·개선 담당
+- 기술적 사안이 아닌 조직 운영·정책 가이드라인 제시
 
 ### Technical Architecture Group (TAG)
 
 - 구성: 최대 12명 (디렉터 지명 + 회원 선출)
-- 역할: 웹 아키텍처의 일관성과 무결성을 보장
-- 핵심 문서: *"Architecture of the World Wide Web, Volume One"* (2004)
+- 역할: 웹 아키텍처의 일관성과 무결성 보장
+- 핵심 문서: "Architecture of the World Wide Web, Volume One" (2004)
 - 주요 활동:
   - 웹 아키텍처 원칙 문서화
   - Working Group 간 아키텍처 충돌 해결
@@ -178,20 +186,30 @@ W3C는 설립 이래 여러 대학/연구기관이 물리적으로 호스팅하�
 
 ### Advisory Committee (AC)
 
-- 각 W3C 회원 기관에서 1명의 AC Representative를 파견
+- 각 W3C 회원 기관에서 1명의 AC Representative 파견
 - W3C의 주요 의사결정(신규 Working Group 설립, 표준 최종 승인 등)에 대한 투표권 보유
 - 매년 2회 AC Meeting 개최 (TPAC 중 1회 포함)
 
 ### Working Group (WG), Interest Group (IG), Community Group (CG)
 
-| 그룹 유형 | 참여 조건 | 산출물 | 예시 |
-|-----------|----------|--------|------|
-| Working Group | W3C 회원만 | W3C Recommendation (표준) | CSS WG, Web Platform WG, WebAssembly WG |
-| Interest Group | W3C 회원만 | Note, Use Case 문서 | Web & Networks IG, Accessible Platform Architectures |
-| Community Group | 누구나 참여 가능 | Community Group Report | WICG (Web Incubator CG), WebXR CG |
-| Business Group | 누구나 참여 가능 | 비즈니스 관련 보고서 | Automotive BG |
+- Working Group
+  - 참여 조건: W3C 회원만
+  - 산출물: W3C Recommendation (표준)
+  - 예시: CSS WG, Web Platform WG, WebAssembly WG
+- Interest Group
+  - 참여 조건: W3C 회원만
+  - 산출물: Note, Use Case 문서
+  - 예시: Web & Networks IG, Accessible Platform Architectures
+- Community Group
+  - 참여 조건: 누구나 참여 가능
+  - 산출물: Community Group Report
+  - 예시: WICG (Web Incubator CG), WebXR CG
+- Business Group
+  - 참여 조건: 누구나 참여 가능
+  - 산출물: 비즈니스 관련 보고서
+  - 예시: Automotive BG
 
-> WICG (Web Incubator Community Group): 새로운 웹 플랫폼 기능의 인큐베이터 역할. 아이디어가 충분히 성숙하면 공식 Working Group으로 이관된다.
+> WICG (Web Incubator Community Group): 새로운 웹 플랫폼 기능의 인큐베이터 역할 → 아이디어가 충분히 성숙하면 공식 Working Group으로 이관
 
 ---
 
@@ -199,7 +217,7 @@ W3C는 설립 이래 여러 대학/연구기관이 물리적으로 호스팅하�
 
 ### W3C Recommendation Track
 
-W3C 표준(Recommendation)이 되기까지의 과정은 엄격한 다단계 프로세스를 따른다. 이를 Recommendation Track이라 한다.
+W3C 표준(Recommendation)이 되기까지 엄격한 다단계 프로세스를 따름 → 이를 Recommendation Track이라 함
 
 ```
 [비공식 제안]
@@ -236,10 +254,10 @@ W3C 표준(Recommendation)이 되기까지의 과정은 엄격한 다단계 프�
 
 - 목적: 커뮤니티와 W3C 회원의 피드백 수집
 - 특징:
-  - 불완전하며 큰 폭의 변경이 가능
-  - First Public Working Draft (FPWD): 처음으로 공개되는 초안, 특허 정책의 시작점
+  - 불완전하며 큰 폭의 변경 가능
+  - First Public Working Draft (FPWD): 처음 공개되는 초안, 특허 정책의 시작점
   - 여러 차례 업데이트되며 반복적으로 개선
-  - 구현자에게 "아직 이 단계의 스펙에 의존하지 말라"는 경고가 포함
+  - 구현자에게 "아직 이 단계의 스펙에 의존하지 말라"는 경고 포함
 - 발행 주체: Working Group
 
 #### 2단계: Candidate Recommendation (CR) - 후보 권고안
@@ -247,12 +265,12 @@ W3C 표준(Recommendation)이 되기까지의 과정은 엄격한 다단계 프�
 - 목적: 실제 구현을 통한 검증
 - 특징:
   - 기술적으로 완성되었다고 판단된 상태
-  - 최소 2개 이상의 독립적 구현(implementation)이 필요
+  - 최소 2개 이상의 독립적 구현(implementation) 필요
   - 테스트 스위트(Test Suite)를 통해 상호운용성 검증
   - CR Snapshot: 특정 시점의 안정된 스냅샷
   - CR Draft: 지속적으로 업데이트되는 CR
   - 이 단계에서 발견된 문제로 WD로 되돌아갈 수 있음
-- 특허 정책: 이 단계에서 회원사의 특허 공개 의무가 확정됨 (Exclusion Opportunity)
+- 특허 정책: 이 단계에서 회원사의 특허 공개 의무 확정 (Exclusion Opportunity)
 
 #### 3단계: Proposed Recommendation (PR) - 제안 권고안
 
@@ -261,7 +279,7 @@ W3C 표준(Recommendation)이 되기까지의 과정은 엄격한 다단계 프�
   - 기술적 내용이 확정된 상태
   - AC Representative들이 최소 28일간 리뷰
   - 찬성/반대/기권 투표
-  - 반대 의견이 있을 경우 조정 과정을 거침
+  - 반대 의견이 있을 경우 조정 과정 거침
 - 투표 결과에 따라: Recommendation으로 진행 또는 이전 단계로 회귀
 
 #### 4단계: W3C Recommendation (REC) - W3C 권고안
@@ -275,16 +293,14 @@ W3C 표준(Recommendation)이 되기까지의 과정은 엄격한 다단계 프�
 
 ### 기타 문서 유형
 
-| 유형 | 설명 |
-|------|------|
-| W3C Note (Group Note) | 표준이 아닌 참고 문서. 사용 가이드, 모범 사례, 해설 등 |
-| W3C Statement | W3C의 공식 입장을 표명하는 문서 |
-| Registry | 값의 레지스트리 (예: MIME 타입 등) |
-| Editor's Draft | 에디터가 작성 중인 최신 비공식 초안 (가장 최신이지만 비공식) |
+- W3C Note (Group Note): 표준이 아닌 참고 문서. 사용 가이드·모범 사례·해설 등
+- W3C Statement: W3C의 공식 입장을 표명하는 문서
+- Registry: 값의 레지스트리 (예: MIME 타입 등)
+- Editor's Draft: 에디터가 작성 중인 최신 비공식 초안 (가장 최신이지만 비공식)
 
 ### 표준화에 걸리는 시간
 
-일반적으로 FPWD에서 Recommendation까지 3~10년 이상 소요된다. 예를 들어:
+일반적으로 FPWD에서 Recommendation까지 3~10년 이상 소요. 예:
 
 - CSS Grid Layout: 약 6년 (2011 FPWD → 2017 CR)
 - HTML5: 약 6년 (2008 FPWD → 2014 REC)
@@ -297,20 +313,18 @@ W3C 표준(Recommendation)이 되기까지의 과정은 엄격한 다단계 프�
 ### 5.1 HTML (HyperText Markup Language)
 
 #### 개요
-HTML은 웹 페이지의 구조를 정의하는 마크업 언어이다. 웹의 가장 기본적인 빌딩 블록이다.
+HTML: 웹 페이지의 구조를 정의하는 마크업 언어. 웹의 가장 기본적인 빌딩 블록
 
 #### 역사와 버전
 
-| 버전 | 연도 | 주요 특징 |
-|------|------|-----------|
-| HTML 2.0 | 1995 | 최초의 표준 (RFC 1866) |
-| HTML 3.2 | 1997 | 테이블, 앱릿, 텍스트 흐름 |
-| HTML 4.01 | 1999 | CSS 분리, Strict/Transitional/Frameset |
-| XHTML 1.0 | 2000 | XML 기반 재정의 |
-| HTML5 | 2014 | 시맨틱 태그, Canvas, Video/Audio, 로컬 저장소 |
-| HTML 5.1 | 2016 | 추가 개선 |
-| HTML 5.2 | 2017 | Payment Request API 참조 등 |
-| HTML Living Standard | 2019~ | WHATWG가 유지보수하는 지속적 업데이트 표준 |
+- HTML 2.0 (1995): 최초의 표준 (RFC 1866)
+- HTML 3.2 (1997): 테이블, 앱릿, 텍스트 흐름
+- HTML 4.01 (1999): CSS 분리, Strict/Transitional/Frameset
+- XHTML 1.0 (2000): XML 기반 재정의
+- HTML5 (2014): 시맨틱 태그, Canvas, Video/Audio, 로컬 저장소
+- HTML 5.1 (2016): 추가 개선
+- HTML 5.2 (2017): Payment Request API 참조 등
+- HTML Living Standard (2019~): WHATWG가 유지보수하는 지속적 업데이트 표준
 
 #### HTML5의 핵심 기능
 
@@ -335,59 +349,53 @@ HTML은 웹 페이지의 구조를 정의하는 마크업 언어이다. 웹의 �
 - Web Workers: 백그라운드 스레드
 - Server-Sent Events: 서버에서 클라이언트로의 푸시
 
-> 현재 상태: W3C는 2019년 합의 이후 HTML 표준의 유지보수를 WHATWG에 위임했다. WHATWG HTML Living Standard가 사실상의 단일 HTML 표준이다.
+> 현재 상태: W3C는 2019년 합의 이후 HTML 표준의 유지보수를 WHATWG에 위임. WHATWG HTML Living Standard가 사실상의 단일 HTML 표준
 
 ---
 
 ### 5.2 CSS (Cascading Style Sheets)
 
 #### 개요
-CSS는 HTML 문서의 시각적 표현을 정의하는 스타일시트 언어이다. W3C의 CSS Working Group이 관리한다.
+CSS: HTML 문서의 시각적 표현을 정의하는 스타일시트 언어. W3C의 CSS Working Group이 관리
 
 #### 버전과 모듈화
 
-| 버전 | 연도 | 주요 내용 |
-|------|------|-----------|
-| CSS1 | 1996 | 기본 폰트, 색상, 여백, 정렬 |
-| CSS2 | 1998 | 포지셔닝, z-index, 미디어 타입 |
-| CSS2.1 | 2011 | CSS2의 버그 수정, 실제 구현 반영 |
-| CSS3 | 2011~ | 모듈 단위 개별 스펙으로 분리 |
+- CSS1 (1996): 기본 폰트, 색상, 여백, 정렬
+- CSS2 (1998): 포지셔닝, z-index, 미디어 타입
+- CSS2.1 (2011): CSS2의 버그 수정, 실제 구현 반영
+- CSS3 (2011~): 모듈 단위 개별 스펙으로 분리
 
-CSS3부터는 단일 스펙이 아닌 모듈별로 독립적인 레벨을 가진다:
+CSS3부터는 단일 스펙이 아닌 모듈별로 독립적인 레벨을 가짐:
 
-| 모듈 | 레벨 | 상태 | 주요 기능 |
-|------|------|------|-----------|
-| Selectors | Level 4 | WD | `:is()`, `:where()`, `:has()` |
-| Flexbox | Level 1 | CR | 1차원 레이아웃 |
-| Grid Layout | Level 2 | WD | 2차원 레이아웃, Subgrid |
-| Custom Properties | Level 1 | CR | CSS 변수 (`--var`) |
-| Containment | Level 3 | WD | Container Queries |
-| Color | Level 4 | CR | `oklch()`, `color-mix()` |
-| Cascade | Level 6 | WD | `@scope`, Cascade Layers |
-| Animations | Level 1 | WD | `@keyframes`, `animation` |
-| Transitions | Level 1 | WD | `transition` 속성 |
-| Media Queries | Level 5 | WD | `prefers-color-scheme` 등 |
-| Scroll Snap | Level 1 | CR | 스크롤 위치 스냅 |
-| Fonts | Level 4 | WD | 가변 폰트, `font-variation-settings` |
+- Selectors: Level 4, WD - `:is()`, `:where()`, `:has()`
+- Flexbox: Level 1, CR - 1차원 레이아웃
+- Grid Layout: Level 2, WD - 2차원 레이아웃, Subgrid
+- Custom Properties: Level 1, CR - CSS 변수 (`--var`)
+- Containment: Level 3, WD - Container Queries
+- Color: Level 4, CR - `oklch()`, `color-mix()`
+- Cascade: Level 6, WD - `@scope`, Cascade Layers
+- Animations: Level 1, WD - `@keyframes`, `animation`
+- Transitions: Level 1, WD - `transition` 속성
+- Media Queries: Level 5, WD - `prefers-color-scheme` 등
+- Scroll Snap: Level 1, CR - 스크롤 위치 스냅
+- Fonts: Level 4, WD - 가변 폰트, `font-variation-settings`
 
-> "CSS4"는 없다: CSS는 Level 3 이후 모듈별로 독립 버전이 관리되므로, 단일 "CSS4"라는 버전은 존재하지 않는다.
+> "CSS4"는 없음: CSS는 Level 3 이후 모듈별로 독립 버전이 관리 → 단일 "CSS4"라는 버전은 존재하지 않음
 
 ---
 
 ### 5.3 DOM (Document Object Model)
 
 #### 개요
-DOM은 HTML/XML 문서를 트리 구조의 객체 모델로 표현하는 프로그래밍 인터페이스이다.
+DOM: HTML/XML 문서를 트리 구조의 객체 모델로 표현하는 프로그래밍 인터페이스
 
 #### 주요 버전
 
-| 버전 | 연도 | 주요 내용 |
-|------|------|-----------|
-| DOM Level 1 | 1998 | Core, HTML 인터페이스 |
-| DOM Level 2 | 2000-2003 | Events, Style, Traversal, Range |
-| DOM Level 3 | 2004 | Load/Save, Validation, XPath |
-| DOM Level 4 (DOM4) | 2015 | MutationObserver, Promise 기반 |
-| DOM Living Standard | 현재 | WHATWG에서 유지보수 |
+- DOM Level 1 (1998): Core, HTML 인터페이스
+- DOM Level 2 (2000-2003): Events, Style, Traversal, Range
+- DOM Level 3 (2004): Load/Save, Validation, XPath
+- DOM Level 4 (DOM4, 2015): MutationObserver, Promise 기반
+- DOM Living Standard (현재): WHATWG에서 유지보수
 
 #### 핵심 인터페이스
 
@@ -409,22 +417,20 @@ Document
 - `MutationObserver` (DOM 변경 감지)
 - `element.append()`, `element.prepend()`, `element.replaceWith()`
 
-> 현재 상태: DOM 표준도 2019년 합의 이후 WHATWG DOM Living Standard로 통합되었다.
+> 현재 상태: DOM 표준도 2019년 합의 이후 WHATWG DOM Living Standard로 통합
 
 ---
 
 ### 5.4 SVG (Scalable Vector Graphics)
 
 #### 개요
-SVG는 XML 기반의 2차원 벡터 그래픽 포맷이다. 해상도에 무관하게 선명한 그래픽을 제공한다.
+SVG: XML 기반의 2차원 벡터 그래픽 포맷. 해상도 무관하게 선명한 그래픽 제공
 
 #### 주요 버전
 
-| 버전 | 연도 | 상태 |
-|------|------|------|
-| SVG 1.0 | 2001 | REC (Superseded) |
-| SVG 1.1 | 2003 (2nd Ed. 2011) | REC |
-| SVG 2 | 진행 중 | CR |
+- SVG 1.0 (2001): REC (Superseded)
+- SVG 1.1 (2003, 2nd Ed. 2011): REC
+- SVG 2 (진행 중): CR
 
 #### 주요 기능
 
@@ -443,43 +449,37 @@ SVG는 XML 기반의 2차원 벡터 그래픽 포맷이다. 해상도에 무관�
 
 #### XML (eXtensible Markup Language)
 
-XML은 데이터의 구조화된 표현을 위한 범용 마크업 언어이다.
+XML: 데이터의 구조화된 표현을 위한 범용 마크업 언어
 
-| 스펙 | 버전 | 연도 | 설명 |
-|------|------|------|------|
-| XML | 1.0 (5th Ed.) | 2008 | 핵심 문법 |
-| XML | 1.1 (2nd Ed.) | 2006 | 유니코드 확장 |
-| XML Namespaces | 1.0 (3rd Ed.) | 2009 | 이름 충돌 방지 |
-| XPath | 3.1 | 2017 | XML 노드 질의 |
-| XSLT | 3.0 | 2017 | XML 변환 |
-| XML Schema (XSD) | 1.1 | 2012 | XML 구조 정의 |
+- XML 1.0 (5th Ed., 2008): 핵심 문법
+- XML 1.1 (2nd Ed., 2006): 유니코드 확장
+- XML Namespaces 1.0 (3rd Ed., 2009): 이름 충돌 방지
+- XPath 3.1 (2017): XML 노드 질의
+- XSLT 3.0 (2017): XML 변환
+- XML Schema (XSD) 1.1 (2012): XML 구조 정의
 
 #### XHTML (eXtensible HTML)
 
-XHTML은 HTML을 XML 규칙에 맞게 재정의한 것이다.
+XHTML: HTML을 XML 규칙에 맞게 재정의한 것
 
-| 버전 | 연도 | 특징 |
-|------|------|------|
-| XHTML 1.0 | 2000 | HTML 4.01의 XML 재정의 |
-| XHTML 1.1 | 2001 | 모듈화, Strict만 지원 |
-| XHTML 2.0 | 폐기 | 하위 호환성 포기로 실패, 2009년 WG 해산 |
+- XHTML 1.0 (2000): HTML 4.01의 XML 재정의
+- XHTML 1.1 (2001): 모듈화, Strict만 지원
+- XHTML 2.0 (폐기): 하위 호환성 포기로 실패, 2009년 WG 해산
 
-> 교훈: XHTML 2.0의 실패는 W3C 역사에서 중요한 전환점이다. 하위 호환성(backward compatibility)을 무시한 표준은 실패한다는 교훈을 남겼으며, 이는 WHATWG 결성과 HTML5 탄생의 직접적 원인이 되었다.
+> 교훈: XHTML 2.0의 실패는 W3C 역사에서 중요한 전환점 → 하위 호환성(backward compatibility)을 무시한 표준은 실패한다는 교훈 → WHATWG 결성과 HTML5 탄생의 직접적 원인
 
 ---
 
 ### 5.6 WebAssembly (Wasm)
 
 #### 개요
-WebAssembly는 브라우저에서 네이티브에 가까운 성능으로 실행되는 바이너리 명령어 포맷이다. W3C의 WebAssembly Working Group이 관리한다.
+WebAssembly: 브라우저에서 네이티브에 가까운 성능으로 실행되는 바이너리 명령어 포맷. W3C의 WebAssembly Working Group이 관리
 
 #### 핵심 스펙
 
-| 스펙 | 상태 | 설명 |
-|------|------|------|
-| WebAssembly Core Specification | REC (2.0 진행 중) | 바이너리 포맷, 명령어 집합, 검증 규칙 |
-| WebAssembly JavaScript Interface | REC | JS에서 Wasm 모듈 로드/실행 |
-| WebAssembly Web API | REC | `fetch()`로 `.wasm` 스트리밍 컴파일 |
+- WebAssembly Core Specification: REC (2.0 진행 중) - 바이너리 포맷, 명령어 집합, 검증 규칙
+- WebAssembly JavaScript Interface: REC - JS에서 Wasm 모듈 로드/실행
+- WebAssembly Web API: REC - `fetch()`로 `.wasm` 스트리밍 컴파일
 
 #### 특징
 
@@ -501,19 +501,17 @@ WebAssembly는 브라우저에서 네이티브에 가까운 성능으로 실행�
 
 #### WCAG (Web Content Accessibility Guidelines)
 
-웹 콘텐츠의 접근성을 보장하기 위한 가이드라인이다. 자세한 내용은 [8장 웹 접근성 활동 상세](#8-웹-접근성accessibility-활동-상세)에서 다룬다.
+웹 콘텐츠의 접근성을 보장하기 위한 가이드라인. 자세한 내용은 [8장 웹 접근성 활동 상세](#8-웹-접근성accessibility-활동-상세)에서 다룸
 
-| 버전 | 연도 | 주요 변화 |
-|------|------|-----------|
-| WCAG 1.0 | 1999 | 14개 가이드라인, HTML 중심 |
-| WCAG 2.0 | 2008 | 기술 독립적, 4원칙(POUR), ISO 40500 채택 |
-| WCAG 2.1 | 2018 | 모바일, 저시력, 인지장애 대응 추가 |
-| WCAG 2.2 | 2023 | 인지/학습 장애 관련 기준 강화 |
-| WCAG 3.0 | 진행 중 | 완전한 재설계, 새로운 적합성 모델 |
+- WCAG 1.0 (1999): 14개 가이드라인, HTML 중심
+- WCAG 2.0 (2008): 기술 독립적, 4원칙(POUR), ISO 40500 채택
+- WCAG 2.1 (2018): 모바일, 저시력, 인지장애 대응 추가
+- WCAG 2.2 (2023): 인지/학습 장애 관련 기준 강화
+- WCAG 3.0 (진행 중): 완전한 재설계, 새로운 적합성 모델
 
 #### WAI-ARIA (Accessible Rich Internet Applications)
 
-동적 웹 애플리케이션의 접근성을 개선하기 위한 기술 사양이다.
+동적 웹 애플리케이션의 접근성을 개선하기 위한 기술 사양
 
 ```html
 <!-- ARIA 역할(Role) -->
@@ -543,33 +541,31 @@ WebAssembly는 브라우저에서 네이티브에 가까운 성능으로 실행�
 
 ### 5.8 Web APIs
 
-W3C는 브라우저에서 사용할 수 있는 수많은 Web API의 표준화를 담당한다.
+W3C는 브라우저에서 사용할 수 있는 수많은 Web API의 표준화를 담당
 
 #### 주요 Web API 목록
 
-| API | 상태 | 설명 |
-|-----|------|------|
-| Fetch API | Living Standard (WHATWG) | `XMLHttpRequest` 대체, Promise 기반 네트워크 요청 |
-| WebSocket API | Living Standard (WHATWG) | 양방향 실시간 통신 |
-| Web Storage API | REC | `localStorage`, `sessionStorage` |
-| IndexedDB | REC | 브라우저 내 대용량 구조화 데이터 저장 |
-| Service Workers | WD/CR | 오프라인 지원, 푸시 알림, 백그라운드 동기화 |
-| Web Workers | Living Standard (WHATWG) | 백그라운드 스레드 실행 |
-| Geolocation API | REC | 사용자 위치 정보 |
-| Web Notifications | REC | 시스템 알림 표시 |
-| Pointer Events | REC | 마우스/터치/펜 통합 입력 처리 |
-| Intersection Observer | WD | 요소의 뷰포트 진입/이탈 감지 |
-| Resize Observer | WD | 요소 크기 변경 감지 |
-| Performance API | REC | 성능 측정 (`performance.now()`, Navigation Timing 등) |
-| Clipboard API | WD | 클립보드 읽기/쓰기 |
-| File API | WD | 파일 읽기 (`FileReader`, `Blob`) |
-| Web Animations API | WD | CSS 애니메이션/트랜지션의 프로그래밍 인터페이스 |
-| Web Crypto API | REC | 암호화 연산 (해시, 서명, 암호화/복호화) |
-| Permissions API | WD | 권한 상태 쿼리/요청 |
-| Screen Wake Lock API | WD | 화면 꺼짐 방지 |
-| Badging API | WD | 앱 아이콘 배지 표시 |
-| [CSP3](./csp3.md) | WD | 출처 기반 리소스 로드 제한, nonce/hash, Trusted Types 연계 |
-| [WebMCP](./webmcp.md) | WICG 초안 | 웹 페이지가 AI 에이전트에 함수형 도구를 노출하는 실험적 API |
+- Fetch API: Living Standard (WHATWG) - `XMLHttpRequest` 대체, Promise 기반 네트워크 요청
+- WebSocket API: Living Standard (WHATWG) - 양방향 실시간 통신
+- Web Storage API: REC - `localStorage`, `sessionStorage`
+- IndexedDB: REC - 브라우저 내 대용량 구조화 데이터 저장
+- Service Workers: WD/CR - 오프라인 지원, 푸시 알림, 백그라운드 동기화
+- Web Workers: Living Standard (WHATWG) - 백그라운드 스레드 실행
+- Geolocation API: REC - 사용자 위치 정보
+- Web Notifications: REC - 시스템 알림 표시
+- Pointer Events: REC - 마우스/터치/펜 통합 입력 처리
+- Intersection Observer: WD - 요소의 뷰포트 진입/이탈 감지
+- Resize Observer: WD - 요소 크기 변경 감지
+- Performance API: REC - 성능 측정 (`performance.now()`, Navigation Timing 등)
+- Clipboard API: WD - 클립보드 읽기/쓰기
+- File API: WD - 파일 읽기 (`FileReader`, `Blob`)
+- Web Animations API: WD - CSS 애니메이션/트랜지션의 프로그래밍 인터페이스
+- Web Crypto API: REC - 암호화 연산 (해시, 서명, 암호화/복호화)
+- Permissions API: WD - 권한 상태 쿼리/요청
+- Screen Wake Lock API: WD - 화면 꺼짐 방지
+- Badging API: WD - 앱 아이콘 배지 표시
+- [CSP3](./csp3.md): WD - 출처 기반 리소스 로드 제한, nonce/hash, Trusted Types 연계
+- [WebMCP](./webmcp.md): WICG 초안 - 웹 페이지가 AI 에이전트에 함수형 도구를 노출하는 실험적 API
 
 #### Service Workers 상세
 
@@ -600,7 +596,7 @@ Service Worker의 주요 역할:
 
 #### Semantic Web 비전
 
-팀 버너스리가 2001년 제안한 차세대 웹 비전이다. 기계가 웹의 데이터를 이해하고 처리할 수 있는 "의미 있는 웹"을 목표로 한다.
+팀 버너스리가 2001년 제안한 차세대 웹 비전. 기계가 웹의 데이터를 이해하고 처리할 수 있는 "의미 있는 웹"을 목표로 함
 
 #### Semantic Web 기술 스택
 
@@ -630,14 +626,12 @@ Service Worker의 주요 역할:
 
 #### 주요 표준
 
-| 표준 | 설명 |
-|------|------|
-| RDF (Resource Description Framework) | 주어-서술어-목적어(Triple) 형태로 데이터를 표현하는 프레임워크 |
-| RDFS (RDF Schema) | RDF 어휘의 클래스/프로퍼티 계층 정의 |
-| OWL (Web Ontology Language) | 온톨로지 정의를 위한 표현력 높은 언어 |
-| SPARQL | RDF 데이터를 질의하는 쿼리 언어 |
-| JSON-LD | JSON 기반의 Linked Data 직렬화 포맷 |
-| RDFa | HTML에 RDF 메타데이터를 삽입하는 방법 |
+- RDF (Resource Description Framework): 주어-서술어-목적어(Triple) 형태로 데이터를 표현하는 프레임워크
+- RDFS (RDF Schema): RDF 어휘의 클래스/프로퍼티 계층 정의
+- OWL (Web Ontology Language): 온톨로지 정의를 위한 표현력 높은 언어
+- SPARQL: RDF 데이터를 질의하는 쿼리 언어
+- JSON-LD: JSON 기반의 Linked Data 직렬화 포맷
+- RDFa: HTML에 RDF 메타데이터를 삽입하는 방법
 
 ```turtle
 # RDF Triple 예시 (Turtle 구문)
@@ -659,25 +653,23 @@ WHERE {
 }
 ```
 
-> 현재 상태: 시맨틱 웹은 원래의 "웹 전체를 의미 있게" 라는 비전은 완전히 실현되지 못했으나, Knowledge Graph(Google, Wikidata), Linked Open Data, JSON-LD for SEO(Schema.org) 등의 형태로 실질적 영향력을 행사하고 있다.
+> 현재 상태: 시맨틱 웹은 원래의 "웹 전체를 의미 있게"라는 비전을 완전히 실현하지는 못했으나, Knowledge Graph(Google, Wikidata)·Linked Open Data·JSON-LD for SEO(Schema.org) 등의 형태로 실질적 영향력 행사 중
 
 ---
 
 ### 5.10 WebRTC (Web Real-Time Communication)
 
 #### 개요
-WebRTC는 브라우저 간 플러그인 없이 실시간 음성/영상/데이터 통신을 가능하게 하는 기술이다.
+WebRTC: 브라우저 간 플러그인 없이 실시간 음성/영상/데이터 통신을 가능하게 하는 기술
 
 #### W3C에서 관리하는 스펙
 
-| 스펙 | 상태 | 설명 |
-|------|------|------|
-| WebRTC 1.0 | REC | 피어 연결, 미디어 스트림, 데이터 채널 |
-| Media Capture and Streams | CR | `getUserMedia()`, MediaStream API |
-| MediaStream Recording | WD | 미디어 스트림 녹화 |
-| Screen Capture | WD | 화면 공유 (`getDisplayMedia()`) |
+- WebRTC 1.0: REC - 피어 연결, 미디어 스트림, 데이터 채널
+- Media Capture and Streams: CR - `getUserMedia()`, MediaStream API
+- MediaStream Recording: WD - 미디어 스트림 녹화
+- Screen Capture: WD - 화면 공유 (`getDisplayMedia()`)
 
-> 참고: WebRTC의 프로토콜 계층(ICE, STUN, TURN, SDP, SRTP 등)은 IETF에서 표준화한다. W3C는 브라우저 JavaScript API 부분을 담당한다.
+> 참고: WebRTC의 프로토콜 계층(ICE, STUN, TURN, SDP, SRTP 등)은 IETF에서 표준화. W3C는 브라우저 JavaScript API 부분을 담당
 
 #### 핵심 API
 
@@ -709,15 +701,13 @@ dataChannel.onmessage = event => console.log(event.data);
 ### 5.11 Web Payments
 
 #### 개요
-웹에서의 결제를 표준화하여 사용자 경험을 개선하고 보안을 강화하는 것을 목표로 한다.
+웹에서의 결제 표준화 → 사용자 경험 개선, 보안 강화를 목표로 함
 
 #### 주요 스펙
 
-| 스펙 | 상태 | 설명 |
-|------|------|------|
-| Payment Request API | REC | 브라우저 네이티브 결제 UI |
-| Payment Handler API | WD | 결제 앱/서비스 워커 기반 핸들러 |
-| Payment Method Identifiers | REC | 결제 수단 식별 |
+- Payment Request API: REC - 브라우저 네이티브 결제 UI
+- Payment Handler API: WD - 결제 앱/서비스 워커 기반 핸들러
+- Payment Method Identifiers: REC - 결제 수단 식별
 
 ```javascript
 // Payment Request API 예시
@@ -745,7 +735,7 @@ await response.complete('success');
 
 ### WHATWG란
 
-WHATWG(Web Hypertext Application Technology Working Group) 는 2004년에 Apple, Mozilla, Opera의 개발자들이 결성한 비공식 커뮤니티 그룹이다.
+WHATWG(Web Hypertext Application Technology Working Group): 2004년에 Apple, Mozilla, Opera의 개발자들이 결성한 비공식 커뮤니티 그룹
 
 ### 갈등의 배경
 
@@ -789,13 +779,21 @@ W3C HTML5 WG 출범 (2007)
 
 ### 핵심 쟁점
 
-| 쟁점 | W3C 입장 | WHATWG 입장 |
-|------|----------|------------|
-| 표준 버전 관리 | 안정적 스냅샷 버전 (5.0, 5.1...) | Living Standard (지속적 업데이트) |
-| 하위 호환성 | XHTML 2.0에서 한때 무시 | 최우선 원칙 |
-| 참여 모델 | 회원제 (회비 기반) | 누구나 참여 가능 |
-| 특허 정책 | 엄격한 Royalty-Free 특허 정책 | 2017년 W3C 특허 정책 도입 |
-| 의사결정 | 합의 기반 + 디렉터 결정권 | 에디터 주도 |
+- 표준 버전 관리
+  - W3C 입장: 안정적 스냅샷 버전 (5.0, 5.1...)
+  - WHATWG 입장: Living Standard (지속적 업데이트)
+- 하위 호환성
+  - W3C 입장: XHTML 2.0에서 한때 무시
+  - WHATWG 입장: 최우선 원칙
+- 참여 모델
+  - W3C 입장: 회원제 (회비 기반)
+  - WHATWG 입장: 누구나 참여 가능
+- 특허 정책
+  - W3C 입장: 엄격한 Royalty-Free 특허 정책
+  - WHATWG 입장: 2017년 W3C 특허 정책 도입
+- 의사결정
+  - W3C 입장: 합의 기반 + 디렉터 결정권
+  - WHATWG 입장: 에디터 주도
 
 ### 2019년 합의의 의미
 
@@ -809,15 +807,13 @@ W3C HTML5 WG 출범 (2007)
 
 ### 주요 표준화 기구 비교
 
-| 기구 | 정식 명칭 | 설립 | 관할 영역 |
-|------|----------|------|-----------|
-| W3C | World Wide Web Consortium | 1994 | 웹 클라이언트 기술 (HTML, CSS, DOM, Web API 등) |
-| IETF | Internet Engineering Task Force | 1986 | 인터넷 프로토콜 (HTTP, TLS, TCP, DNS 등) |
-| Ecma International | European Computer Manufacturers Association | 1961 | 프로그래밍 언어 표준 (ECMAScript/JavaScript 등) |
-| ISO | International Organization for Standardization | 1947 | 국제 산업 표준 전반 |
-| WHATWG | Web Hypertext Application Technology Working Group | 2004 | HTML, DOM, Fetch 등의 Living Standard |
-| Unicode Consortium | - | 1991 | 문자 인코딩 (Unicode) |
-| Khronos Group | - | 2000 | 그래픽 API (WebGL, WebGPU, Vulkan) |
+- W3C: World Wide Web Consortium, 설립 1994년 - 웹 클라이언트 기술 (HTML, CSS, DOM, Web API 등)
+- IETF: Internet Engineering Task Force, 설립 1986년 - 인터넷 프로토콜 (HTTP, TLS, TCP, DNS 등)
+- Ecma International: European Computer Manufacturers Association, 설립 1961년 - 프로그래밍 언어 표준 (ECMAScript/JavaScript 등)
+- ISO: International Organization for Standardization, 설립 1947년 - 국제 산업 표준 전반
+- WHATWG: Web Hypertext Application Technology Working Group, 설립 2004년 - HTML, DOM, Fetch 등의 Living Standard
+- Unicode Consortium: 설립 1991년 - 문자 인코딩 (Unicode)
+- Khronos Group: 설립 2000년 - 그래픽 API (WebGL, WebGPU, Vulkan)
 
 ### W3C와 IETF의 관계
 
@@ -858,15 +854,15 @@ W3C HTML5 WG 출범 (2007)
 
 - 역할 분담: Ecma TC39는 JavaScript 언어 자체(문법, 내장 객체), W3C는 브라우저 환경의 API를 담당
 - 예시: `Promise`는 ECMAScript 표준, `fetch()`는 WHATWG/W3C 표준
-- Web IDL: W3C가 정의한 인터페이스 기술 언어로, JavaScript 바인딩을 명세하는 데 사용
+- Web IDL: W3C가 정의한 인터페이스 기술 언어, JavaScript 바인딩 명세에 사용
 
 ### W3C와 ISO의 관계
 
-- W3C의 일부 표준은 ISO 표준으로 채택됨
+- W3C의 일부 표준은 ISO 표준으로 채택
   - WCAG 2.0 → ISO/IEC 40500:2012
   - XML → ISO 표준 참조
   - PNG → ISO/IEC 15948:2004
-- PAS(Publicly Available Specification) 제출자: W3C는 ISO/IEC JTC 1의 PAS 제출자 자격을 보유
+- PAS(Publicly Available Specification) 제출자: W3C는 ISO/IEC JTC 1의 PAS 제출자 자격 보유
 
 ### W3C와 Khronos Group의 관계
 
@@ -880,84 +876,70 @@ W3C HTML5 WG 출범 (2007)
 
 ### WAI (Web Accessibility Initiative)
 
-W3C의 WAI(Web Accessibility Initiative) 는 1997년에 시작된 웹 접근성 전문 이니셔티브이다. 장애인을 포함한 모든 사람이 웹을 사용할 수 있도록 가이드라인, 기술 사양, 지원 리소스를 개발한다.
+W3C의 WAI(Web Accessibility Initiative): 1997년에 시작된 웹 접근성 전문 이니셔티브. 장애인을 포함한 모든 사람이 웹을 사용할 수 있도록 가이드라인·기술 사양·지원 리소스 개발
 
 ### WCAG 4원칙 (POUR)
 
-WCAG의 모든 성공 기준은 네 가지 원칙 아래 조직된다:
+WCAG의 모든 성공 기준은 네 가지 원칙 아래 조직됨:
 
-| 원칙 | 영문 | 의미 |
-|------|------|------|
-| 인식의 용이성 | Perceivable | 정보와 UI 컴포넌트를 사용자가 인식할 수 있어야 한다 |
-| 운용의 용이성 | Operable | UI 컴포넌트와 내비게이션을 조작할 수 있어야 한다 |
-| 이해의 용이성 | Understandable | 정보와 UI 조작이 이해 가능해야 한다 |
-| 견고성 | Robust | 다양한 사용자 에이전트(보조 기술 포함)와 호환되어야 한다 |
+- 인식의 용이성 (Perceivable): 정보와 UI 컴포넌트를 사용자가 인식할 수 있어야 함
+- 운용의 용이성 (Operable): UI 컴포넌트와 내비게이션을 조작할 수 있어야 함
+- 이해의 용이성 (Understandable): 정보와 UI 조작이 이해 가능해야 함
+- 견고성 (Robust): 다양한 사용자 에이전트(보조 기술 포함)와 호환되어야 함
 
 ### WCAG 적합성 수준
 
-| 수준 | 의미 | 설명 |
-|------|------|------|
-| Level A | 최소 수준 | 이 수준을 충족하지 못하면 일부 사용자가 웹 콘텐츠에 전혀 접근 불가 |
-| Level AA | 권장 수준 | 대부분의 법률/정책에서 요구하는 수준. 많은 장벽을 제거 |
-| Level AAA | 최고 수준 | 가장 높은 접근성. 모든 콘텐츠에 적용하기는 비현실적 |
+- Level A (최소 수준): 이 수준을 충족하지 못하면 일부 사용자가 웹 콘텐츠에 전혀 접근 불가
+- Level AA (권장 수준): 대부분의 법률/정책에서 요구하는 수준. 많은 장벽 제거
+- Level AAA (최고 수준): 가장 높은 접근성. 모든 콘텐츠에 적용하기는 비현실적
 
 ### WCAG 2.2의 주요 성공 기준 (예시)
 
 #### Level A 기준 (예시)
-| 기준 | 제목 | 설명 |
-|------|------|------|
-| 1.1.1 | 대체 텍스트 (Non-text Content) | 모든 비텍스트 콘텐츠에 텍스트 대안 제공 |
-| 1.3.1 | 정보와 관계 (Info and Relationships) | 구조/관계 정보를 프로그래밍 방식으로 결정 가능 |
-| 2.1.1 | 키보드 (Keyboard) | 모든 기능을 키보드로 조작 가능 |
-| 2.4.1 | 블록 건너뛰기 (Bypass Blocks) | 반복 콘텐츠 블록을 건너뛸 수 있는 메커니즘 |
-| 4.1.2 | 이름, 역할, 값 (Name, Role, Value) | 모든 UI 컴포넌트의 이름/역할을 프로그래밍 방식으로 결정 가능 |
+- 1.1.1 대체 텍스트 (Non-text Content): 모든 비텍스트 콘텐츠에 텍스트 대안 제공
+- 1.3.1 정보와 관계 (Info and Relationships): 구조/관계 정보를 프로그래밍 방식으로 결정 가능
+- 2.1.1 키보드 (Keyboard): 모든 기능을 키보드로 조작 가능
+- 2.4.1 블록 건너뛰기 (Bypass Blocks): 반복 콘텐츠 블록을 건너뛸 수 있는 메커니즘
+- 4.1.2 이름, 역할, 값 (Name, Role, Value): 모든 UI 컴포넌트의 이름/역할을 프로그래밍 방식으로 결정 가능
 
 #### Level AA 기준 (예시)
-| 기준 | 제목 | 설명 |
-|------|------|------|
-| 1.4.3 | 대비 (최소) (Contrast Minimum) | 텍스트와 배경의 명암비 최소 4.5:1 |
-| 1.4.4 | 텍스트 크기 변경 (Resize Text) | 200%까지 확대 시 콘텐츠/기능 손실 없음 |
-| 2.4.7 | 초점 표시 (Focus Visible) | 키보드 포커스 위치가 시각적으로 확인 가능 |
-| 1.4.11 | 비텍스트 대비 (Non-text Contrast) | UI 컴포넌트/그래픽 명암비 최소 3:1 |
+- 1.4.3 대비 (최소) (Contrast Minimum): 텍스트와 배경의 명암비 최소 4.5:1
+- 1.4.4 텍스트 크기 변경 (Resize Text): 200%까지 확대 시 콘텐츠/기능 손실 없음
+- 2.4.7 초점 표시 (Focus Visible): 키보드 포커스 위치가 시각적으로 확인 가능
+- 1.4.11 비텍스트 대비 (Non-text Contrast): UI 컴포넌트/그래픽 명암비 최소 3:1
 
 ### WCAG 2.2의 새로운 성공 기준
 
-| 기준 | 제목 | 수준 | 설명 |
-|------|------|------|------|
-| 2.4.11 | Focus Not Obscured (Minimum) | AA | 포커스 받은 요소가 다른 콘텐츠에 의해 완전히 가려지지 않아야 함 |
-| 2.4.12 | Focus Not Obscured (Enhanced) | AAA | 포커스 받은 요소가 전혀 가려지지 않아야 함 |
-| 2.4.13 | Focus Appearance | AAA | 포커스 인디케이터의 최소 크기와 대비 |
-| 2.5.7 | Dragging Movements | AA | 드래그 동작의 단일 포인터 대안 제공 |
-| 2.5.8 | Target Size (Minimum) | AA | 터치/클릭 대상의 최소 크기 24x24 CSS 픽셀 |
-| 3.2.6 | Consistent Help | A | 도움말의 일관된 위치 |
-| 3.3.7 | Redundant Entry | A | 이전에 입력한 정보의 재입력 방지 |
-| 3.3.8 | Accessible Authentication (Minimum) | AA | 인지 기능 테스트 없이 인증 가능 |
-| 3.3.9 | Accessible Authentication (Enhanced) | AAA | 더 엄격한 인증 접근성 |
+- 2.4.11 Focus Not Obscured (Minimum), AA: 포커스 받은 요소가 다른 콘텐츠에 의해 완전히 가려지지 않아야 함
+- 2.4.12 Focus Not Obscured (Enhanced), AAA: 포커스 받은 요소가 전혀 가려지지 않아야 함
+- 2.4.13 Focus Appearance, AAA: 포커스 인디케이터의 최소 크기와 대비
+- 2.5.7 Dragging Movements, AA: 드래그 동작의 단일 포인터 대안 제공
+- 2.5.8 Target Size (Minimum), AA: 터치/클릭 대상의 최소 크기 24x24 CSS 픽셀
+- 3.2.6 Consistent Help, A: 도움말의 일관된 위치
+- 3.3.7 Redundant Entry, A: 이전에 입력한 정보의 재입력 방지
+- 3.3.8 Accessible Authentication (Minimum), AA: 인지 기능 테스트 없이 인증 가능
+- 3.3.9 Accessible Authentication (Enhanced), AAA: 더 엄격한 인증 접근성
 
 ### WAI가 개발하는 기술 사양
 
-| 사양 | 설명 |
-|------|------|
-| [WAI-ARIA 1.2](./wai-aria.md) | 동적 콘텐츠와 고급 UI의 접근성 |
-| [Core-AAM 1.2](./core-aam.md) | ARIA를 OS 접근성 API(UIA/AX/ATK)로 매핑하는 규칙 |
-| ARIA Authoring Practices Guide (APG) | ARIA 위젯/패턴 구현 가이드 |
-| ATAG 2.0 | 저작 도구의 접근성 가이드라인 |
-| UAAG 2.0 | 사용자 에이전트(브라우저 등)의 접근성 가이드라인 |
-| WAI-Adapt | 콘텐츠 적응/개인화 |
-| Pronunciation | 텍스트 음성 변환 발음 |
+- [WAI-ARIA 1.2](./wai-aria.md): 동적 콘텐츠와 고급 UI의 접근성
+- [Core-AAM 1.2](./core-aam.md): ARIA를 OS 접근성 API(UIA/AX/ATK)로 매핑하는 규칙
+- ARIA Authoring Practices Guide (APG): ARIA 위젯/패턴 구현 가이드
+- ATAG 2.0: 저작 도구의 접근성 가이드라인
+- UAAG 2.0: 사용자 에이전트(브라우저 등)의 접근성 가이드라인
+- WAI-Adapt: 콘텐츠 적응/개인화
+- Pronunciation: 텍스트 음성 변환 발음
 
 ### 접근성 관련 법률
 
-WCAG는 전 세계 접근성 법률의 기술적 기반이 된다:
+WCAG는 전 세계 접근성 법률의 기술적 기반:
 
-| 국가/지역 | 법률/정책 | WCAG 요구 수준 |
-|-----------|----------|---------------|
-| 한국 | 장애인차별금지법, 웹 접근성 인증 (KWCAG) | WCAG 2.1 기반 |
-| 미국 | ADA, Section 508 | WCAG 2.0 Level AA |
-| EU | European Accessibility Act (EAA) | WCAG 2.1 Level AA |
-| 영국 | Equality Act 2010 | WCAG 2.1 Level AA |
-| 캐나다 | Accessible Canada Act | WCAG 2.0 Level AA |
-| 일본 | JIS X 8341-3 | WCAG 2.0 기반 |
+- 한국: 장애인차별금지법, 웹 접근성 인증 (KWCAG) - WCAG 2.1 기반
+- 미국: ADA, Section 508 - WCAG 2.0 Level AA
+- EU: European Accessibility Act (EAA) - WCAG 2.1 Level AA
+- 영국: Equality Act 2010 - WCAG 2.1 Level AA
+- 캐나다: Accessible Canada Act - WCAG 2.0 Level AA
+- 일본: JIS X 8341-3 - WCAG 2.0 기반
 
 ---
 
@@ -966,13 +948,13 @@ WCAG는 전 세계 접근성 법률의 기술적 기반이 된다:
 ### 장점
 
 #### 1. 개방적이고 로열티 프리(Royalty-Free)인 표준
-- W3C 표준은 누구나 무료로 구현할 수 있다
+- W3C 표준은 누구나 무료로 구현 가능
 - W3C Patent Policy: 회원사는 자신의 특허를 로열티 프리로 라이선스해야 함
-- 이는 웹의 개방성을 유지하는 핵심 메커니즘이다
+- 웹의 개방성을 유지하는 핵심 메커니즘
 
 #### 2. 광범위한 이해관계자 참여
-- 브라우저 벤더(Google, Apple, Mozilla, Microsoft), 기업, 학계, 정부 기관, 시민 단체 등 다양한 참여자
-- 합의(consensus) 기반 의사결정으로 특정 기업의 독점 방지
+- 브라우저 벤더(Google, Apple, Mozilla, Microsoft)·기업·학계·정부 기관·시민 단체 등 다양한 참여자
+- 합의(consensus) 기반 의사결정 → 특정 기업의 독점 방지
 
 #### 3. 상호운용성(Interoperability) 보장
 - 동일한 웹 페이지가 모든 브라우저에서 동일하게 동작하도록 보장
@@ -984,7 +966,7 @@ WCAG는 전 세계 접근성 법률의 기술적 기반이 된다:
 
 #### 5. 장기적 안정성
 - 30년 이상의 역사를 가진 검증된 표준화 기구
-- 하위 호환성을 중시하여 기존 웹 콘텐츠가 깨지지 않음
+- 하위 호환성을 중시 → 기존 웹 콘텐츠가 깨지지 않음
 
 ### 단점 및 비판
 
@@ -1001,7 +983,7 @@ WCAG는 전 세계 접근성 법률의 기술적 기반이 된다:
 - 개선: 2022년 법인 전환 이후 참여 구조 개선 노력 중
 
 #### 3. 대형 기업의 영향력
-- 실질적으로 Google(Chrome), Apple(Safari), Microsoft(Edge), Mozilla(Firefox)의 의사가 표준에 큰 영향
+- 실질적으로 Google(Chrome)·Apple(Safari)·Microsoft(Edge)·Mozilla(Firefox)의 의사가 표준에 큰 영향
 - 브라우저 벤더가 구현을 거부하면 표준은 사실상 의미를 잃음
 - 예시: Google의 AMP, Apple의 Web Push 지연 등
 
@@ -1013,7 +995,7 @@ WCAG는 전 세계 접근성 법률의 기술적 기반이 된다:
 #### 5. EME(Encrypted Media Extensions) 논란
 - 2017년, DRM 기술인 EME를 W3C Recommendation으로 승인
 - EFF(Electronic Frontier Foundation)가 이에 항의하며 W3C 탈퇴
-- 비판의 핵심: DRM은 웹의 개방성 원칙에 반하며, 보안 연구자의 활동을 제한할 수 있다
+- 비판의 핵심: DRM은 웹의 개방성 원칙에 반하며, 보안 연구자의 활동을 제한할 수 있음
 - 찬성의 핵심: DRM 없이는 넷플릭스 등 콘텐츠 사업자가 웹 플랫폼을 사용하지 않을 것
 
 #### 6. 표준의 파편화
@@ -1042,40 +1024,36 @@ WCAG는 전 세계 접근성 법률의 기술적 기반이 된다:
 사용자 경험
 ```
 
-- W3C 표준을 따르면 크로스 브라우저 호환성이 보장된다
-- 특정 브라우저에 종속된(vendor-specific) 코드를 작성할 필요가 줄어든다
+- W3C 표준을 따르면 크로스 브라우저 호환성 보장
+- 특정 브라우저에 종속된(vendor-specific) 코드를 작성할 필요 감소
 
 #### 2. 표준 문서를 읽는 능력
 
 W3C 스펙을 직접 읽을 수 있으면:
 - MDN 등 2차 문서에 오류가 있을 때 원본으로 검증 가능
-- 새로운 API의 정확한 동작을 파악할 수 있음
+- 새로운 API의 정확한 동작 파악 가능
 - 엣지 케이스에 대한 명확한 답을 찾을 수 있음
 
 #### 3. 실질적 영향을 주는 주요 표준들
 
-| 분야 | 관련 표준 | 개발자에게 미치는 영향 |
-|------|----------|---------------------|
-| 프론트엔드 개발 | HTML, CSS, DOM, Web APIs | 일상적 코드의 기반 |
-| 성능 최적화 | Performance API, Resource Hints, Preload | 로딩 성능 측정/개선 |
-| PWA 개발 | Service Workers, Web App Manifest, Push API | 오프라인/설치 가능한 웹 앱 |
-| 실시간 통신 | WebRTC, WebSocket | 화상회의, 채팅, 협업 도구 |
-| 접근성 | WCAG, WAI-ARIA | 법적 준수, 사용자 경험 향상 |
-| 보안 | Web Crypto, CSP, Permissions Policy | 안전한 웹 애플리케이션 |
-| 고성능 컴퓨팅 | WebAssembly, WebGPU | 네이티브급 성능의 웹 앱 |
-| SEO | JSON-LD, Schema.org (Semantic Web 기반) | 검색 엔진 최적화 |
+- 프론트엔드 개발: HTML, CSS, DOM, Web APIs - 일상적 코드의 기반
+- 성능 최적화: Performance API, Resource Hints, Preload - 로딩 성능 측정/개선
+- PWA 개발: Service Workers, Web App Manifest, Push API - 오프라인/설치 가능한 웹 앱
+- 실시간 통신: WebRTC, WebSocket - 화상회의, 채팅, 협업 도구
+- 접근성: WCAG, WAI-ARIA - 법적 준수, 사용자 경험 향상
+- 보안: Web Crypto, CSP, Permissions Policy - 안전한 웹 애플리케이션
+- 고성능 컴퓨팅: WebAssembly, WebGPU - 네이티브급 성능의 웹 앱
+- SEO: JSON-LD, Schema.org (Semantic Web 기반) - 검색 엔진 최적화
 
 #### 4. 표준화 프로세스 참여
 
-개발자도 W3C 표준화에 기여할 수 있다:
+개발자도 W3C 표준화에 기여 가능:
 
-| 방법 | 난이도 | 설명 |
-|------|--------|------|
-| GitHub Issue 제출 | 낮음 | 대부분의 W3C 스펙은 GitHub에서 관리됨. 버그/제안 제출 |
-| Community Group 참여 | 낮음 | WICG 등 누구나 참여 가능한 그룹에서 새 기능 논의 |
-| Web Platform Tests 기여 | 중간 | 표준 구현 테스트 작성 (https://github.com/web-platform-tests/wpt) |
-| 스펙 리뷰/피드백 | 중간 | Wide Review 기간에 기술적 피드백 제공 |
-| Working Group 참여 | 높음 | W3C 회원 기관을 통해 WG에 참여 |
+- GitHub Issue 제출 (난이도 낮음): 대부분의 W3C 스펙은 GitHub에서 관리. 버그/제안 제출
+- Community Group 참여 (난이도 낮음): WICG 등 누구나 참여 가능한 그룹에서 새 기능 논의
+- Web Platform Tests 기여 (난이도 중간): 표준 구현 테스트 작성 (https://github.com/web-platform-tests/wpt)
+- 스펙 리뷰/피드백 (난이도 중간): Wide Review 기간에 기술적 피드백 제공
+- Working Group 참여 (난이도 높음): W3C 회원 기관을 통해 WG에 참여
 
 #### 5. 개발 도구에서의 활용
 
@@ -1098,21 +1076,19 @@ W3C 스펙을 직접 읽을 수 있으면:
 
 개발자가 주목해야 할 진행 중인 표준:
 
-| 표준 | 상태 | 의미 |
-|------|------|------|
-| WebGPU | 진행 중 | 차세대 GPU API (WebGL 후속) |
-| CSS Container Queries | 안정화 | 부모 컨테이너 기반 반응형 디자인 |
-| View Transitions API | 진행 중 | 네이티브급 페이지 전환 애니메이션 |
-| Speculation Rules API | 진행 중 | 프리렌더링/프리패치 최적화 |
-| Web Components v2 | 진행 중 | 컴포넌트 모델 개선 |
-| WCAG 3.0 | 초기 WD | 차세대 접근성 가이드라인 |
-| WebAssembly 2.0 | 진행 중 | GC, 스레드, SIMD 등 확장 |
-| WebTransport | 진행 중 | HTTP/3 기반 양방향 전송 |
-| Federated Credential Management | 진행 중 | 프라이버시 보호형 인증 |
+- WebGPU (진행 중): 차세대 GPU API (WebGL 후속)
+- CSS Container Queries (안정화): 부모 컨테이너 기반 반응형 디자인
+- View Transitions API (진행 중): 네이티브급 페이지 전환 애니메이션
+- Speculation Rules API (진행 중): 프리렌더링/프리패치 최적화
+- Web Components v2 (진행 중): 컴포넌트 모델 개선
+- WCAG 3.0 (초기 WD): 차세대 접근성 가이드라인
+- WebAssembly 2.0 (진행 중): GC, 스레드, SIMD 등 확장
+- WebTransport (진행 중): HTTP/3 기반 양방향 전송
+- Federated Credential Management (진행 중): 프라이버시 보호형 인증
 
 ### 핵심 요약
 
-> W3C는 단순한 표준 문서 발행 기관이 아니다. 웹이라는 플랫폼의 설계 철학과 방향을 결정하는 곳이다. 개발자로서 W3C 표준을 이해하는 것은 "규칙을 아는 것"이 아니라, 웹이라는 플랫폼이 왜 이렇게 설계되었는지를 이해하는 것이다.
+> W3C는 단순한 표준 문서 발행 기관이 아님. 웹이라는 플랫폼의 설계 철학과 방향을 결정하는 곳. 개발자로서 W3C 표준을 이해하는 것은 "규칙을 아는 것"이 아니라, 웹이라는 플랫폼이 왜 이렇게 설계되었는지를 이해하는 것
 
 ---
 

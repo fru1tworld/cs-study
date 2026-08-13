@@ -21,7 +21,7 @@
 
 ### 개요
 
-애플리케이션이 Tempo로 트레이스를 전송하려면 **계측(instrumentation)** 이 필요합니다.
+애플리케이션이 Tempo로 트레이스를 전송하려면 계측(instrumentation) 필요.
 
 #### 권장 라이브러리
 
@@ -31,11 +31,15 @@
 
 #### 계측 방식
 
-| 방식 | 설명 | 장단점 |
-|------|------|--------|
-| **자동(Auto)** | 에이전트가 자동으로 라이브러리 후킹 | 코드 변경 없음, 깊이 제한 |
-| **수동(Manual)** | 코드에서 직접 스팬 생성 | 정밀 제어, 코드 수정 필요 |
-| **하이브리드** | 자동 + 필요한 부분 수동 | 권장 |
+- 자동(Auto)
+  - 설명: 에이전트가 자동으로 라이브러리 후킹
+  - 장단점: 코드 변경 없음, 깊이 제한
+- 수동(Manual)
+  - 설명: 코드에서 직접 스팬 생성
+  - 장단점: 정밀 제어, 코드 수정 필요
+- 하이브리드
+  - 설명: 자동 + 필요한 부분 수동
+  - 장단점: 권장
 
 ---
 
@@ -308,7 +312,7 @@ end
 
 ### 수동 계측 (Manual)
 
-자동 계측이 다루지 않는 비즈니스 로직을 직접 추적한다.
+자동 계측이 다루지 않는 비즈니스 로직을 직접 추적함.
 
 #### 스팬 속성 추가
 
@@ -353,18 +357,16 @@ with tracer.start_as_current_span("riskOperation") as span:
 
 ### 자동 계측 (Auto)
 
-각 언어별 SDK는 주요 라이브러리와 프레임워크를 자동으로 계측한다.
+각 언어별 SDK는 주요 라이브러리와 프레임워크를 자동으로 계측함.
 
 #### 지원 라이브러리 예 (언어별)
 
-| 언어 | 자동 계측 라이브러리 |
-|------|---------------------|
-| Java | Spring, Servlet, JDBC, Kafka, gRPC, AWS SDK 등 |
-| Go | net/http, gRPC, Gin, AWS SDK 등 (수동 추가 형태) |
-| Python | Flask, Django, FastAPI, requests, SQLAlchemy 등 |
-| Node.js | Express, Fastify, Koa, http, MongoDB, MySQL 등 |
-| .NET | ASP.NET Core, HttpClient, SqlClient 등 |
-| Ruby | Rails, Sinatra, Net::HTTP, ActiveRecord 등 |
+- Java: Spring, Servlet, JDBC, Kafka, gRPC, AWS SDK 등
+- Go: net/http, gRPC, Gin, AWS SDK 등 (수동 추가 형태)
+- Python: Flask, Django, FastAPI, requests, SQLAlchemy 등
+- Node.js: Express, Fastify, Koa, http, MongoDB, MySQL 등
+- .NET: ASP.NET Core, HttpClient, SqlClient 등
+- Ruby: Rails, Sinatra, Net::HTTP, ActiveRecord 등
 
 ---
 
@@ -381,7 +383,7 @@ tracestate: <vendor-specific>
 
 #### Baggage
 
-요청 전체에 걸쳐 키-값 메타데이터를 전파한다:
+요청 전체에 걸쳐 키-값 메타데이터를 전파함.
 
 ```python
 from opentelemetry import baggage
@@ -404,7 +406,7 @@ propagate.set_global_textmap(B3MultiFormat())
 
 ### 샘플링
 
-모든 트레이스를 전송하면 비용과 성능에 부담이 생긴다. 샘플링으로 일부만 수집한다.
+모든 트레이스를 전송 → 비용과 성능에 부담 발생. 샘플링으로 일부만 수집함.
 
 #### Head-based Sampling (시작 시 결정)
 
@@ -431,7 +433,7 @@ provider = TracerProvider(
 
 #### Tail-based Sampling (Collector에서)
 
-OTel Collector나 Alloy에서 트레이스가 완전히 수집된 후 샘플링 여부를 결정한다 (느린 트레이스·에러 트레이스만 보존하는 방식 등).
+OTel Collector나 Alloy에서 트레이스가 완전히 수집된 후 샘플링 여부를 결정함 (느린 트레이스·에러 트레이스만 보존하는 방식 등).
 
 ```alloy
 otelcol.processor.tail_sampling "default" {

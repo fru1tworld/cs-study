@@ -6,9 +6,9 @@
 
 ### 개요
 
-Vector의 Transforms는 데이터가 파이프라인을 통과하는 동안 데이터를 변형하고 조작할 수 있게 해주는 컴포넌트입니다. Sources에서 수집한 데이터를 Sinks로 전송하기 전에 파싱, 필터링, 라우팅, 집계 등 다양한 처리를 수행할 수 있습니다.
+Vector의 Transforms는 데이터가 파이프라인을 통과하는 동안 데이터를 변형·조작하는 컴포넌트임. Sources에서 수집한 데이터를 Sinks로 전송하기 전에 파싱·필터링·라우팅·집계 등 다양한 처리 수행 가능.
 
-Vector는 YAML, TOML, JSON 설정 형식을 지원합니다. 대부분의 Linux 시스템에서 설정 파일은 `/etc/vector/vector.yaml`에 위치합니다.
+Vector는 YAML, TOML, JSON 설정 형식 지원. 대부분의 Linux 시스템에서 설정 파일은 `/etc/vector/vector.yaml`에 위치.
 
 ---
 
@@ -18,9 +18,9 @@ Vector는 YAML, TOML, JSON 설정 형식을 지원합니다. 대부분의 Linux 
 
 #### 개요
 
-Remap Transform은 Vector Remap Language(VRL)를 사용하여 이벤트 데이터를 수정하는 핵심 Transform입니다. Vector에서 데이터를 파싱, 변형, 조작하는 데 권장됩니다.
+Remap Transform은 Vector Remap Language(VRL)를 사용해 이벤트 데이터를 수정하는 핵심 Transform. Vector에서 데이터를 파싱·변형·조작하는 데 권장됨.
 
-VRL은 관측 데이터(로그 및 메트릭)를 안전하고 효율적으로 처리하기 위해 특별히 설계된 표현식 지향 언어입니다. 기본적인 데이터 변형을 위해 여러 Transform을 체인으로 연결할 필요 없이, 단일 remap Transform에서 복잡한 변환을 수행할 수 있습니다.
+VRL은 관측 데이터(로그 및 메트릭)를 안전하고 효율적으로 처리하기 위해 설계된 표현식 지향 언어. 기본적인 데이터 변형을 위해 여러 Transform을 체인으로 연결할 필요 없이, 단일 remap Transform에서 복잡한 변환 수행 가능.
 
 #### 기본 설정 예제
 
@@ -73,19 +73,31 @@ transforms:
 
 #### 주요 설정 옵션
 
-| 옵션 | 타입 | 설명 |
-|------|------|------|
-| `inputs` | array | 필수. 업스트림 source 또는 transform ID 목록. 와일드카드(*) 지원 |
-| `source` | string | VRL 프로그램 소스 코드 |
-| `file` | string | VRL 프로그램 파일 경로 (source 대신 사용 가능) |
-| `drop_on_error` | boolean | 에러 발생 시 이벤트 삭제 여부 (기본값: false) |
-| `drop_on_abort` | boolean | abort 발생 시 이벤트 삭제 여부 (기본값: true) |
-| `reroute_dropped` | boolean | 삭제된 이벤트를 별도 출력으로 라우팅 (기본값: false) |
-| `timezone` | string | 타임스탬프 변환에 사용할 시간대 |
+- `inputs`
+  - 타입: array
+  - 설명: 필수. 업스트림 source 또는 transform ID 목록. 와일드카드(*) 지원
+- `source`
+  - 타입: string
+  - 설명: VRL 프로그램 소스 코드
+- `file`
+  - 타입: string
+  - 설명: VRL 프로그램 파일 경로 (source 대신 사용 가능)
+- `drop_on_error`
+  - 타입: boolean
+  - 설명: 에러 발생 시 이벤트 삭제 여부 (기본값: false)
+- `drop_on_abort`
+  - 타입: boolean
+  - 설명: abort 발생 시 이벤트 삭제 여부 (기본값: true)
+- `reroute_dropped`
+  - 타입: boolean
+  - 설명: 삭제된 이벤트를 별도 출력으로 라우팅 (기본값: false)
+- `timezone`
+  - 타입: string
+  - 설명: 타임스탬프 변환에 사용할 시간대
 
 #### 에러 처리 및 재라우팅
 
-`drop_on_error` 또는 `drop_on_abort`가 true이고 `reroute_dropped`도 true이면, 런타임 에러나 abort가 발생한 이벤트는 기본 출력 스트림에서 제거되어 dropped 출력으로 전송됩니다.
+`drop_on_error` 또는 `drop_on_abort`가 true이고 `reroute_dropped`도 true이면, 런타임 에러나 abort가 발생한 이벤트는 기본 출력 스트림에서 제거 → dropped 출력으로 전송됨.
 
 ```yaml
 transforms:
@@ -158,17 +170,17 @@ transforms:
 
 #### VRL 테스트
 
-Vector REPL을 사용하여 VRL 프로그램을 테스트할 수 있습니다:
+Vector REPL을 사용해 VRL 프로그램 테스트 가능:
 
 ```bash
 vector vrl
 ```
 
-REPL에서 `help`를 입력하면 도움말을 볼 수 있습니다. REPL은 실제 Vector 설정과 거의 동일하게 동작하므로, 프로덕션에 적용하기 전에 복잡한 프로그램의 개별 스니펫을 검증할 수 있습니다.
+REPL에서 `help`를 입력하면 도움말 확인 가능. REPL은 실제 Vector 설정과 거의 동일하게 동작 → 프로덕션 적용 전 복잡한 프로그램의 개별 스니펫 검증 가능.
 
 #### VRL 주요 함수 카테고리
 
-VRL은 다양한 내장 함수를 제공합니다:
+VRL은 다양한 내장 함수 제공:
 
 - Array 함수: `append`, `chunks`, `push`, `zip` 등
 - String 함수: `upcase`, `downcase`, `replace`, `split` 등
@@ -187,7 +199,7 @@ VRL은 다양한 내장 함수를 제공합니다:
 
 #### 개요
 
-Filter Transform은 조건에 따라 이벤트를 필터링합니다. 조건에 일치하는 이벤트만 다운스트림으로 전달되고, 일치하지 않는 이벤트는 삭제됩니다.
+Filter Transform은 조건에 따라 이벤트를 필터링함. 조건에 일치하는 이벤트만 다운스트림으로 전달 → 일치하지 않는 이벤트는 삭제됨.
 
 #### 기본 설정 예제
 
@@ -224,10 +236,12 @@ JSON:
 
 #### 주요 설정 옵션
 
-| 옵션 | 타입 | 설명 |
-|------|------|------|
-| `inputs` | array | 필수. 업스트림 source 또는 transform ID 목록 |
-| `condition` | string | 필수. 각 이벤트에 적용되는 VRL 조건 표현식 |
+- `inputs`
+  - 타입: array
+  - 설명: 필수. 업스트림 source 또는 transform ID 목록
+- `condition`
+  - 타입: string
+  - 설명: 필수. 각 이벤트에 적용되는 VRL 조건 표현식
 
 #### 실제 사용 예제
 
@@ -280,7 +294,7 @@ condition.source = '.status_code != 200 && !includes(["info", "debug"], .severit
 
 #### 개요
 
-Route Transform은 사용자 정의 조건에 따라 이벤트를 고유한 서브 스트림으로 분기합니다. 하나의 이벤트가 여러 라우트에 동시에 전달될 수 있습니다.
+Route Transform은 사용자 정의 조건에 따라 이벤트를 고유한 서브 스트림으로 분기. 하나의 이벤트가 여러 라우트에 동시 전달 가능.
 
 #### 기본 설정 예제
 
@@ -309,15 +323,19 @@ host = '.namespace == "host"'
 
 #### 주요 설정 옵션
 
-| 옵션 | 타입 | 설명 |
-|------|------|------|
-| `inputs` | array | 필수. 업스트림 source 또는 transform ID 목록 |
-| `route` | map | 필수. 라우트 식별자에서 논리적 조건으로의 맵 |
-| `reroute_unmatched` | boolean | 매치되지 않는 이벤트를 `_unmatched` 출력으로 라우팅 (기본값: true) |
+- `inputs`
+  - 타입: array
+  - 설명: 필수. 업스트림 source 또는 transform ID 목록
+- `route`
+  - 타입: map
+  - 설명: 필수. 라우트 식별자에서 논리적 조건으로의 맵
+- `reroute_unmatched`
+  - 타입: boolean
+  - 설명: 매치되지 않는 이벤트를 `_unmatched` 출력으로 라우팅 (기본값: true)
 
 #### 라우트를 입력으로 참조
 
-각 라우트는 `<transform_name>.<route_id>` 형식으로 다른 컴포넌트의 입력으로 참조할 수 있습니다.
+각 라우트는 `<transform_name>.<route_id>` 형식으로 다른 컴포넌트의 입력으로 참조 가능.
 
 ```yaml
 transforms:
@@ -367,7 +385,7 @@ transforms:
 
 #### 매치되지 않는 이벤트 처리
 
-`reroute_unmatched`가 true(기본값)이면, 어떤 라우트와도 일치하지 않는 이벤트는 `<transform_name>._unmatched` 출력으로 전송됩니다. false로 설정하면 일치하지 않는 이벤트는 자동으로 삭제됩니다.
+`reroute_unmatched`가 true(기본값)이면, 어떤 라우트와도 일치하지 않는 이벤트는 `<transform_name>._unmatched` 출력으로 전송됨. false로 설정하면 일치하지 않는 이벤트는 자동으로 삭제됨.
 
 ```yaml
 transforms:
@@ -401,7 +419,7 @@ transforms:
 
 #### 개요
 
-Exclusive Route Transform은 이벤트를 단일 출력으로만 라우팅합니다. 일반 route transform과 달리 first-match-wins 방식으로 동작하며, 라우트는 선언 순서대로 평가됩니다.
+Exclusive Route Transform은 이벤트를 단일 출력으로만 라우팅함. 일반 route transform과 달리 first-match-wins 방식으로 동작 → 라우트는 선언 순서대로 평가됨.
 
 #### 기본 설정 예제
 
@@ -469,12 +487,18 @@ transforms:
 
 #### 주요 설정 옵션
 
-| 옵션 | 타입 | 설명 |
-|------|------|------|
-| `inputs` | array | 필수. 업스트림 source 또는 transform ID 목록 |
-| `routes` | array | 필수. 순서대로 평가되는 라우트 배열 |
-| `routes[].name` | string | 라우트 이름 (고유해야 함, `_unmatched` 예약어) |
-| `routes[].condition` | string/object | VRL 조건 표현식 |
+- `inputs`
+  - 타입: array
+  - 설명: 필수. 업스트림 source 또는 transform ID 목록
+- `routes`
+  - 타입: array
+  - 설명: 필수. 순서대로 평가되는 라우트 배열
+- `routes[].name`
+  - 타입: string
+  - 설명: 라우트 이름 (고유해야 함, `_unmatched` 예약어)
+- `routes[].condition`
+  - 타입: string/object
+  - 설명: VRL 조건 표현식
 
 #### 라우트 참조
 
@@ -494,15 +518,15 @@ transforms:
 
 #### 개요
 
-Aggregate Transform은 설정된 시간 간격 동안 메트릭 이벤트를 집계합니다. 볼륨 감소가 주요 장점으로, 메트릭 볼륨 기준으로 요금이 부과되는 환경에서 직접적인 비용 절감 효과를 얻거나, CPU 처리량과 네트워크 대역폭을 줄여 간접적으로 비용을 절감할 수 있습니다.
+Aggregate Transform은 설정된 시간 간격 동안 메트릭 이벤트를 집계함. 볼륨 감소가 주요 장점 → 메트릭 볼륨 기준으로 요금이 부과되는 환경에서 직접적인 비용 절감 효과를 얻거나, CPU 처리량과 네트워크 대역폭을 줄여 간접적으로 비용 절감 가능.
 
 #### 작동 방식
 
-메트릭은 종류(kind)에 따라 다르게 집계됩니다:
-- Incremental 메트릭: 간격 동안 누적됩니다
-- Absolute 메트릭: 새 값이 이전 값을 대체합니다
+메트릭은 종류(kind)에 따라 다르게 집계됨:
+- Incremental 메트릭: 간격 동안 누적됨
+- Absolute 메트릭: 새 값이 이전 값을 대체함
 
-예를 들어, 값이 10과 13인 두 incremental 카운터 메트릭이 한 기간에 처리되면, 값이 23인 단일 incremental 카운터로 집계됩니다.
+예를 들어, 값이 10과 13인 두 incremental 카운터 메트릭이 한 기간에 처리되면, 값이 23인 단일 incremental 카운터로 집계됨.
 
 #### 기본 설정 예제
 
@@ -527,11 +551,15 @@ interval_ms = 5000
 
 #### 주요 설정 옵션
 
-| 옵션 | 타입 | 설명 |
-|------|------|------|
-| `inputs` | array | 필수. 업스트림 source 또는 transform ID 목록 |
-| `interval_ms` | integer | 플러시 간격 (밀리초). 이 시간 동안 동일한 시리즈 데이터(이름, 네임스페이스, 태그 등)를 가진 메트릭이 집계됨 |
-| `mode` | string | 집계에 사용할 함수. 일부 함수는 incremental에서만, 일부는 absolute에서만 작동 |
+- `inputs`
+  - 타입: array
+  - 설명: 필수. 업스트림 source 또는 transform ID 목록
+- `interval_ms`
+  - 타입: integer
+  - 설명: 플러시 간격 (밀리초). 이 시간 동안 동일한 시리즈 데이터(이름, 네임스페이스, 태그 등)를 가진 메트릭이 집계됨
+- `mode`
+  - 타입: string
+  - 설명: 집계에 사용할 함수. 일부 함수는 incremental에서만, 일부는 absolute에서만 작동
 
 #### 실제 사용 예제
 
@@ -559,13 +587,13 @@ sinks:
 
 #### 개요
 
-Dedupe Transform은 파이프라인을 통과하는 로그에서 중복 이벤트를 제거합니다. 데이터 무결성을 유지하고 의도치 않은 로그 중복을 방지하는 데 유용합니다.
+Dedupe Transform은 파이프라인을 통과하는 로그에서 중복 이벤트를 제거함. 데이터 무결성 유지·의도치 않은 로그 중복 방지에 유용.
 
 #### 작동 방식
 
-이 Transform은 `cache.num_events` 크기의 LRU 캐시를 사용합니다. 최근 처리한 `cache.num_events`개의 이벤트 정보를 메모리에 유지하며, 항목은 삽입 순서대로 캐시에서 제거됩니다.
+이 Transform은 `cache.num_events` 크기의 LRU 캐시를 사용함. 최근 처리한 `cache.num_events`개의 이벤트 정보를 메모리에 유지 → 항목은 삽입 순서대로 캐시에서 제거됨.
 
-캐시에 이미 존재하는 이벤트의 중복이 수신되면, 해당 이벤트는 캐시의 최신 위치로 이동하며 제거 대기열에서의 순서가 초기화됩니다.
+캐시에 이미 존재하는 이벤트의 중복이 수신되면, 해당 이벤트는 캐시의 최신 위치로 이동 → 제거 대기열에서의 순서가 초기화됨.
 
 #### 기본 설정 예제
 
@@ -588,17 +616,23 @@ fields.match = ["timestamp", "host", "message"]
 
 #### 주요 설정 옵션
 
-| 옵션 | 타입 | 설명 |
-|------|------|------|
-| `inputs` | array | 필수. 업스트림 source 또는 transform ID 목록 |
-| `fields.match` | array | 매칭에 사용할 필드 목록 |
-| `fields.ignore` | array | 매칭에서 제외할 필드 목록 |
-| `cache.num_events` | integer | 캐시에 저장할 최대 이벤트 수 |
+- `inputs`
+  - 타입: array
+  - 설명: 필수. 업스트림 source 또는 transform ID 목록
+- `fields.match`
+  - 타입: array
+  - 설명: 매칭에 사용할 필드 목록
+- `fields.ignore`
+  - 타입: array
+  - 설명: 매칭에서 제외할 필드 목록
+- `cache.num_events`
+  - 타입: integer
+  - 설명: 캐시에 저장할 최대 이벤트 수
 
 #### 필드 매칭 옵션
 
-- `fields.match`: 지정된 필드만 매칭에 고려됩니다
-- `fields.ignore`: 지정된 필드를 제외한 모든 필드가 매칭에 포함됩니다
+- `fields.match`: 지정된 필드만 매칭에 고려됨
+- `fields.ignore`: 지정된 필드를 제외한 모든 필드가 매칭에 포함됨
 
 #### 실제 사용 예제
 
@@ -619,9 +653,9 @@ transforms:
 
 #### 중요 사항
 
-- 명시적으로 null 값을 가진 필드는 해당 필드가 완전히 생략된 것과 항상 다른 것으로 간주됩니다
-- 예: `fields.match = ["a"]`로 실행할 때, `{a: null, b:5}`와 `{b:5}`는 서로 다른 이벤트로 간주됩니다
-- 이 컴포넌트는 상태를 가지므로, 이전 입력(이벤트)에 따라 동작이 변경됩니다
+- 명시적으로 null 값을 가진 필드는 해당 필드가 완전히 생략된 것과 항상 다른 것으로 간주됨
+- 예: `fields.match = ["a"]`로 실행할 때, `{a: null, b:5}`와 `{b:5}`는 서로 다른 이벤트로 간주됨
+- 이 컴포넌트는 상태를 가짐 → 이전 입력(이벤트)에 따라 동작이 변경됨
 
 ---
 
@@ -631,7 +665,7 @@ transforms:
 
 #### 개요
 
-Reduce Transform은 조건과 병합 전략에 따라 여러 로그 이벤트를 단일 이벤트로 합칩니다. 다수의 소규모 이벤트 스트림을 더 적은 수의 이벤트 스트림으로 변환할 수 있습니다.
+Reduce Transform은 조건과 병합 전략에 따라 여러 로그 이벤트를 단일 이벤트로 합침. 다수의 소규모 이벤트 스트림을 더 적은 수의 이벤트 스트림으로 변환 가능.
 
 #### 기본 설정 예제
 
@@ -655,29 +689,37 @@ transforms:
 
 #### 주요 설정 옵션
 
-| 옵션 | 타입 | 설명 |
-|------|------|------|
-| `inputs` | array | 필수. 업스트림 source 또는 transform ID 목록 |
-| `group_by` | array | 이벤트 그룹화에 사용할 필드 목록 |
-| `merge_strategies` | map | 필드별 사용자 정의 병합 전략 |
-| `expire_after_ms` | integer | 그룹 플러시 간격 (밀리초) |
-| `ends_when` | string | 트랜잭션의 마지막 이벤트를 구분하는 조건 |
-| `starts_when` | string | 트랜잭션의 시작 이벤트를 구분하는 조건 |
+- `inputs`
+  - 타입: array
+  - 설명: 필수. 업스트림 source 또는 transform ID 목록
+- `group_by`
+  - 타입: array
+  - 설명: 이벤트 그룹화에 사용할 필드 목록
+- `merge_strategies`
+  - 타입: map
+  - 설명: 필드별 사용자 정의 병합 전략
+- `expire_after_ms`
+  - 타입: integer
+  - 설명: 그룹 플러시 간격 (밀리초)
+- `ends_when`
+  - 타입: string
+  - 설명: 트랜잭션의 마지막 이벤트를 구분하는 조건
+- `starts_when`
+  - 타입: string
+  - 설명: 트랜잭션의 시작 이벤트를 구분하는 조건
 
 #### 병합 전략
 
-| 전략 | 설명 |
-|------|------|
-| `concat` | 문자열 값 연결 |
-| `concat_newline` | 개행 문자로 문자열 값 연결 |
-| `concat_raw` | 구분자 없이 문자열 값 연결 |
-| `array` | 값을 배열로 수집 |
-| `sum` | 숫자 값 합계 |
-| `max` | 최대값 |
-| `min` | 최소값 |
-| `discard` | 첫 번째 값만 유지하고 나머지 삭제 |
-| `retain` | 마지막 값 유지 |
-| `flat_unique` | 고유 값만 평면 배열로 수집 |
+- `concat`: 문자열 값 연결
+- `concat_newline`: 개행 문자로 문자열 값 연결
+- `concat_raw`: 구분자 없이 문자열 값 연결
+- `array`: 값을 배열로 수집
+- `sum`: 숫자 값 합계
+- `max`: 최대값
+- `min`: 최소값
+- `discard`: 첫 번째 값만 유지하고 나머지 삭제
+- `retain`: 마지막 값 유지
+- `flat_unique`: 고유 값만 평면 배열로 수집
 
 #### 기본 병합 동작
 
@@ -704,7 +746,7 @@ merge_strategies.response_duration_ms = "sum"
 
 #### VRL 조건 사용
 
-VRL 표현식을 사용하면 조건을 더 간결하고 표현력 있게 작성할 수 있습니다:
+VRL 표현식을 사용하면 조건을 더 간결하고 표현력 있게 작성 가능:
 
 ```yaml
 transforms:
@@ -727,7 +769,7 @@ transforms:
 
 #### 개요
 
-Sample Transform은 설정된 비율로 이벤트를 샘플링합니다. 전체 이벤트 중 일부만 선택적으로 처리할 때 유용합니다.
+Sample Transform은 설정된 비율로 이벤트를 샘플링함. 전체 이벤트 중 일부만 선택적으로 처리할 때 유용.
 
 #### 기본 설정 예제
 
@@ -764,21 +806,31 @@ JSON:
 
 #### 주요 설정 옵션
 
-| 옵션 | 타입 | 설명 |
-|------|------|------|
-| `inputs` | array | 필수. 업스트림 source 또는 transform ID 목록 |
-| `rate` | integer | 1/N으로 표현되는 샘플링 비율. 예: rate=10이면 10개 중 1개 전달 |
-| `ratio` | float | 전달되는 이벤트 비율 (0.0 ~ 1.0). 예: ratio=0.13이면 13% 전달 |
-| `key` | string | 이벤트 샘플링 여부를 결정하기 위해 해시되는 필드 이름 |
-| `group_by` | string | 별도로 샘플링할 그룹을 결정하는 값. Vector 템플릿 구문 지원 |
-| `condition` | string | VRL 조건 표현식 |
+- `inputs`
+  - 타입: array
+  - 설명: 필수. 업스트림 source 또는 transform ID 목록
+- `rate`
+  - 타입: integer
+  - 설명: 1/N으로 표현되는 샘플링 비율. 예: rate=10이면 10개 중 1개 전달
+- `ratio`
+  - 타입: float
+  - 설명: 전달되는 이벤트 비율 (0.0 ~ 1.0). 예: ratio=0.13이면 13% 전달
+- `key`
+  - 타입: string
+  - 설명: 이벤트 샘플링 여부를 결정하기 위해 해시되는 필드 이름
+- `group_by`
+  - 타입: string
+  - 설명: 별도로 샘플링할 그룹을 결정하는 값. Vector 템플릿 구문 지원
+- `condition`
+  - 타입: string
+  - 설명: VRL 조건 표현식
 
 #### rate vs ratio
 
 - rate: 1/N으로 표현됨. rate=1500이면 1500개 중 1개 전달
 - ratio: 비율로 표현됨. ratio=0.13이면 13% 전달
 
-두 옵션을 동시에 설정하면 에러가 발생합니다.
+두 옵션을 동시에 설정하면 에러 발생.
 
 #### 실제 사용 예제
 
@@ -810,15 +862,15 @@ transforms:
 
 #### 개요
 
-Throttle Transform은 파이프라인을 통과하는 로그의 처리 속도를 제한합니다. Generic Cell Rate Algorithm을 사용하여 이벤트 스트림을 조율합니다.
+Throttle Transform은 파이프라인을 통과하는 로그의 처리 속도를 제한함. Generic Cell Rate Algorithm을 사용해 이벤트 스트림을 조율.
 
 #### 작동 방식
 
-throttle transform은 `key_field`에 따라 이벤트를 버킷으로 분류합니다(`key_field`를 지정하지 않으면 단일 버킷을 사용). 각 버킷은 독립적으로 속도 제한됩니다.
+throttle transform은 `key_field`에 따라 이벤트를 버킷으로 분류함(`key_field`를 지정하지 않으면 단일 버킷 사용). 각 버킷은 독립적으로 속도 제한됨.
 
-속도 제한기는 "셀"을 소비하여 이벤트 통과 여부를 결정합니다. 각 이벤트는 사용 가능한 셀을 하나씩 소비하며, 셀이 부족하면 해당 이벤트는 속도 제한에 걸립니다.
+속도 제한기는 "셀"을 소비해 이벤트 통과 여부를 결정함. 각 이벤트는 사용 가능한 셀을 하나씩 소비 → 셀이 부족하면 해당 이벤트는 속도 제한에 걸림.
 
-예를 들어, `window_secs`가 60이고 `threshold`가 10이면 6초마다 셀이 하나씩 보충되며, 최대 10개 이벤트의 버스트를 허용합니다.
+예를 들어, `window_secs`가 60이고 `threshold`가 10이면 6초마다 셀이 하나씩 보충 → 최대 10개 이벤트의 버스트 허용.
 
 #### 기본 설정 예제
 
@@ -857,17 +909,25 @@ transforms:
 
 #### 주요 설정 옵션
 
-| 옵션 | 타입 | 설명 |
-|------|------|------|
-| `inputs` | array | 필수. 업스트림 source 또는 transform ID 목록 |
-| `threshold` | integer | 필수. 시간 창 내에서 허용되는 최대 이벤트 수 |
-| `window_secs` | integer | 필수. 임계값이 적용되는 시간 창 (초) |
-| `key_field` | string | 개별적으로 속도 제한할 그룹을 결정하는 값. 템플릿 구문 지원 |
-| `exclude` | string | 속도 제한에서 제외할 VRL 조건 |
+- `inputs`
+  - 타입: array
+  - 설명: 필수. 업스트림 source 또는 transform ID 목록
+- `threshold`
+  - 타입: integer
+  - 설명: 필수. 시간 창 내에서 허용되는 최대 이벤트 수
+- `window_secs`
+  - 타입: integer
+  - 설명: 필수. 임계값이 적용되는 시간 창 (초)
+- `key_field`
+  - 타입: string
+  - 설명: 개별적으로 속도 제한할 그룹을 결정하는 값. 템플릿 구문 지원
+- `exclude`
+  - 타입: string
+  - 설명: 속도 제한에서 제외할 VRL 조건
 
 #### 내부 메트릭 설정
 
-throttle transform의 `events_discarded_total` 내부 메트릭(key 태그 포함)은 opt-in 방식으로만 출력됩니다. 이 메트릭을 활성화하려면 `internal_metrics.emit_events_discarded_per_key`를 true로 설정하세요.
+throttle transform의 `events_discarded_total` 내부 메트릭(key 태그 포함)은 opt-in 방식으로만 출력됨. 이 메트릭을 활성화하려면 `internal_metrics.emit_events_discarded_per_key`를 true로 설정.
 
 ```yaml
 transforms:
@@ -881,7 +941,7 @@ transforms:
       emit_events_discarded_per_key: true
 ```
 
-주의: key 태그는 카디널리티가 무한히 증가할 수 있으므로 기본값은 false입니다. 고유 키의 수가 제한적인 경우에만 true로 설정하세요.
+주의: key 태그는 카디널리티가 무한히 증가할 수 있어 기본값은 false. 고유 키의 수가 제한적인 경우에만 true로 설정 권장.
 
 ---
 
@@ -891,19 +951,17 @@ transforms:
 
 #### 개요
 
-Log to Metric Transform은 로그 이벤트에서 하나 이상의 메트릭 이벤트를 파생합니다.
+Log to Metric Transform은 로그 이벤트에서 하나 이상의 메트릭 이벤트를 파생함.
 
-중요: 이 Transform은 여러 로그를 하나의 메트릭으로 집계하지 않습니다. 로그 이벤트를 세분화된 개별 메트릭으로 변환하며, 이후 엣지에서 별도로 집계할 수 있습니다.
+중요: 이 Transform은 여러 로그를 하나의 메트릭으로 집계하지 않음. 로그 이벤트를 세분화된 개별 메트릭으로 변환 → 이후 엣지에서 별도 집계 가능.
 
 #### 메트릭 타입
 
-| 타입 | 설명 |
-|------|------|
-| `counter` | 증가 또는 0으로 리셋될 수 있는 단일 값 (감소 불가) |
-| `gauge` | 증가하거나 감소할 수 있는 시점 값 |
-| `histogram` | 샘플링된 값의 분포를 나타냄 |
-| `set` | 고유 값의 집합 |
-| `summary` | 샘플링된 값의 분포 (글로벌 히스토그램 및 요약을 지원하는 서비스에서 사용) |
+- `counter`: 증가 또는 0으로 리셋될 수 있는 단일 값 (감소 불가)
+- `gauge`: 증가하거나 감소할 수 있는 시점 값
+- `histogram`: 샘플링된 값의 분포를 나타냄
+- `set`: 고유 값의 집합
+- `summary`: 샘플링된 값의 분포 (글로벌 히스토그램 및 요약을 지원하는 서비스에서 사용)
 
 #### 기본 설정 예제
 
@@ -926,7 +984,7 @@ transforms:
 
 #### increment_by_value 사용
 
-필드 값만큼 카운터를 증가시키려면 `increment_by_value`를 true로 설정합니다:
+필드 값만큼 카운터를 증가시키려면 `increment_by_value`를 true로 설정:
 
 ```yaml
 transforms:
@@ -977,13 +1035,13 @@ transforms:
 
 #### 주요 동작
 
-- 단일 로그 이벤트에서 여러 메트릭 이벤트가 생성되는 경우, 메트릭은 배열이 아닌 개별 이벤트로 출력됩니다
-- 다운스트림 컴포넌트는 해당 메트릭이 단일 로그에서 파생되었다는 사실을 알 수 없습니다
-- 대상 로그 필드의 값이 null이면 해당 항목은 무시되며 메트릭이 생성되지 않습니다
+- 단일 로그 이벤트에서 여러 메트릭 이벤트가 생성되는 경우, 메트릭은 배열이 아닌 개별 이벤트로 출력됨
+- 다운스트림 컴포넌트는 해당 메트릭이 단일 로그에서 파생되었다는 사실을 알 수 없음
+- 대상 로그 필드의 값이 null이면 해당 항목은 무시 → 메트릭 생성되지 않음
 
 #### VRL을 사용한 고급 사용법 (v0.35.0+)
 
-`all_metrics` 옵션을 사용하면 VRL로 구조화된 로그 이벤트를 메트릭으로 변환하는 커스텀 코드를 작성할 수 있습니다.
+`all_metrics` 옵션을 사용하면 VRL로 구조화된 로그 이벤트를 메트릭으로 변환하는 커스텀 코드 작성 가능.
 
 ---
 
@@ -993,7 +1051,7 @@ transforms:
 
 #### 개요
 
-Metric to Log Transform은 메트릭 이벤트를 로그 이벤트로 변환합니다. 로그만 지원하는 다운스트림 컴포넌트로 메트릭을 전달할 때 유용합니다.
+Metric to Log Transform은 메트릭 이벤트를 로그 이벤트로 변환함. 로그만 지원하는 다운스트림 컴포넌트로 메트릭을 전달할 때 유용.
 
 #### 기본 설정 예제
 
@@ -1036,12 +1094,18 @@ host_tag = "host"
 
 #### 주요 설정 옵션
 
-| 옵션 | 타입 | 설명 |
-|------|------|------|
-| `inputs` | array | 필수. 업스트림 source 또는 transform ID 목록 |
-| `host_tag` | string | 소스 호스트에 사용할 메트릭 태그 이름. 해당 태그 값이 생성된 로그 이벤트의 `host` 필드에 설정됨 |
-| `metric_tag_values` | string | 메트릭 태그 값 인코딩 방식. `single`: 마지막 값만 표시, `full`: 모든 태그를 별도 할당으로 표시 |
-| `timezone` | string | 타임스탬프 변환에 사용할 시간대 |
+- `inputs`
+  - 타입: array
+  - 설명: 필수. 업스트림 source 또는 transform ID 목록
+- `host_tag`
+  - 타입: string
+  - 설명: 소스 호스트에 사용할 메트릭 태그 이름. 해당 태그 값이 생성된 로그 이벤트의 `host` 필드에 설정됨
+- `metric_tag_values`
+  - 타입: string
+  - 설명: 메트릭 태그 값 인코딩 방식. `single`: 마지막 값만 표시, `full`: 모든 태그를 별도 할당으로 표시
+- `timezone`
+  - 타입: string
+  - 설명: 타임스탬프 변환에 사용할 시간대
 
 #### 변환 예제
 
@@ -1066,7 +1130,7 @@ host_tag = "host"
 ```
 
 출력 (로그 이벤트):
-히스토그램 데이터가 로그 필드로 변환되며, `host_tag = "host"` 설정 시 태그의 host 값이 로그 이벤트의 `host` 필드로 추출됩니다.
+히스토그램 데이터가 로그 필드로 변환 → `host_tag = "host"` 설정 시 태그의 host 값이 로그 이벤트의 `host` 필드로 추출됨.
 
 ---
 
@@ -1076,23 +1140,21 @@ host_tag = "host"
 
 #### 개요
 
-Lua Transform은 Lua 프로그래밍 언어로 이벤트 데이터를 수정합니다. 내장 Lua 5.4 엔진을 통해 이벤트를 변환합니다.
+Lua Transform은 Lua 프로그래밍 언어로 이벤트 데이터를 수정함. 내장 Lua 5.4 엔진을 통해 이벤트를 변환.
 
-주의: lua transform은 remap transform보다 약 60% 느리므로, 가능하면 remap transform을 사용하는 것이 좋습니다. lua transform은 remap transform으로 처리하기 어려운 엣지 케이스를 위해 설계되었습니다.
+주의: lua transform은 remap transform보다 약 60% 느림 → 가능하면 remap transform 사용 권장. lua transform은 remap transform으로 처리하기 어려운 엣지 케이스를 위해 설계됨.
 
 #### Hooks
 
-| Hook | 설명 |
-|------|------|
-| `init` | Transform 초기화 시 호출 |
-| `process` | 각 수신 이벤트에 대해 호출 |
-| `shutdown` | Transform 종료 시 호출 |
+- `init`: Transform 초기화 시 호출
+- `process`: 각 수신 이벤트에 대해 호출
+- `shutdown`: Transform 종료 시 호출
 
-`process`가 핵심 hook으로, 단일 이벤트를 입력으로 받아 두 번째 인자로 전달되는 `emit` 함수를 통해 하나 이상의 이벤트를 출력할 수 있습니다.
+`process`가 핵심 hook으로, 단일 이벤트를 입력으로 받아 두 번째 인자로 전달되는 `emit` 함수를 통해 하나 이상의 이벤트 출력 가능.
 
 #### Timers
 
-타이머 핸들러는 hook과 마찬가지로 이벤트를 생성할 수 있는 Lua 함수입니다. 다만 미리 정해진 간격으로 주기적으로 호출된다는 점이 다릅니다.
+타이머 핸들러는 hook과 마찬가지로 이벤트를 생성할 수 있는 Lua 함수. 다만 미리 정해진 간격으로 주기적으로 호출된다는 점이 다름.
 
 #### 기본 설정 예제
 
@@ -1129,15 +1191,27 @@ timers = [{interval_seconds = 5, handler = """
 
 #### 주요 설정 옵션
 
-| 옵션 | 타입 | 설명 |
-|------|------|------|
-| `inputs` | array | 필수. 업스트림 source 또는 transform ID 목록 |
-| `version` | string | 필수. Lua transform API 버전 ("2" 권장) |
-| `hooks.init` | string | 초기화 hook Lua 코드 |
-| `hooks.process` | string | 필수. 이벤트 처리 hook Lua 코드 |
-| `hooks.shutdown` | string | 종료 hook Lua 코드 |
-| `timers` | array | 주기적으로 호출되는 타이머 핸들러 목록 |
-| `search_dirs` | array | Lua require 함수에서 검색할 디렉토리 경로 |
+- `inputs`
+  - 타입: array
+  - 설명: 필수. 업스트림 source 또는 transform ID 목록
+- `version`
+  - 타입: string
+  - 설명: 필수. Lua transform API 버전 ("2" 권장)
+- `hooks.init`
+  - 타입: string
+  - 설명: 초기화 hook Lua 코드
+- `hooks.process`
+  - 타입: string
+  - 설명: 필수. 이벤트 처리 hook Lua 코드
+- `hooks.shutdown`
+  - 타입: string
+  - 설명: 종료 hook Lua 코드
+- `timers`
+  - 타입: array
+  - 설명: 주기적으로 호출되는 타이머 핸들러 목록
+- `search_dirs`
+  - 타입: array
+  - 설명: Lua require 함수에서 검색할 디렉토리 경로
 
 #### 외부 Lua 모듈 사용
 
@@ -1151,7 +1225,7 @@ source = "require('my_aggregator')"
 
 #### Version 2 개선사항
 
-Version 2는 개선된 API, 더 나은 데이터 처리 인터페이스, 향상된 성능을 제공합니다:
+Version 2는 개선된 API·더 나은 데이터 처리 인터페이스·향상된 성능 제공:
 
 - 이벤트를 타입 변환이 적용된 Lua 테이블로 표현
 - 전역 상태 유지를 위한 hooks 도입
@@ -1166,9 +1240,9 @@ Version 2는 개선된 API, 더 나은 데이터 처리 인터페이스, 향상�
 
 #### 개요
 
-Tag Cardinality Limit Transform은 메트릭 이벤트의 태그 카디널리티를 제한하여 카디널리티 폭발을 방지합니다.
+Tag Cardinality Limit Transform은 메트릭 이벤트의 태그 카디널리티를 제한해 카디널리티 폭발을 방지함.
 
-Prometheus에서는 카디널리티가 높은 메트릭 이름과 레이블이 성능 및 안정성 문제를 일으킬 수 있어 주의가 필요합니다.
+Prometheus에서는 카디널리티가 높은 메트릭 이름과 레이블이 성능 및 안정성 문제를 일으킬 수 있어 주의 필요.
 
 #### 기본 설정 예제
 
@@ -1187,13 +1261,21 @@ transforms:
 
 #### 주요 설정 옵션
 
-| 옵션 | 타입 | 설명 |
-|------|------|------|
-| `inputs` | array | 필수. 업스트림 source 또는 transform ID 목록 |
-| `mode` | string | 알고리즘 모드. `exact`: 정확한 중복 감지, `probabilistic`: 확률적 감지 (메모리 효율적) |
-| `value_limit` | integer | 허용되는 고유 태그 값의 수 |
-| `limit_exceeded_action` | string | 제한 초과 시 동작. `drop_tag`: 태그 삭제, `drop_event`: 이벤트 삭제 |
-| `cache_size_per_key` | integer | 중복 태그 감지를 위한 캐시 크기 (바이트) |
+- `inputs`
+  - 타입: array
+  - 설명: 필수. 업스트림 source 또는 transform ID 목록
+- `mode`
+  - 타입: string
+  - 설명: 알고리즘 모드. `exact`: 정확한 중복 감지, `probabilistic`: 확률적 감지 (메모리 효율적)
+- `value_limit`
+  - 타입: integer
+  - 설명: 허용되는 고유 태그 값의 수
+- `limit_exceeded_action`
+  - 타입: string
+  - 설명: 제한 초과 시 동작. `drop_tag`: 태그 삭제, `drop_event`: 이벤트 삭제
+- `cache_size_per_key`
+  - 타입: integer
+  - 설명: 중복 태그 감지를 위한 캐시 크기 (바이트)
 
 #### 모드 설명
 
@@ -1227,7 +1309,7 @@ transforms:
 
 #### 개요
 
-AWS EC2 Metadata Transform은 AWS EC2 인스턴스 메타데이터를 이벤트에 추가합니다.
+AWS EC2 Metadata Transform은 AWS EC2 인스턴스 메타데이터를 이벤트에 추가함.
 
 #### 기본 설정 예제
 
@@ -1252,14 +1334,24 @@ transforms:
 
 #### 주요 설정 옵션
 
-| 옵션 | 타입 | 설명 |
-|------|------|------|
-| `inputs` | array | 필수. 업스트림 source 또는 transform ID 목록 |
-| `endpoint` | string | EC2 메타데이터 엔드포인트 (기본값: http://169.254.169.254) |
-| `fields` | array | 이벤트에 포함할 메타데이터 필드 목록 |
-| `namespace` | string | Transform이 추가하는 모든 이벤트 필드의 접두사 |
-| `refresh_interval_secs` | integer | 업데이트된 메타데이터 쿼리 간격 (초) |
-| `tags` | array | 이벤트에 포함할 인스턴스 태그 목록 |
+- `inputs`
+  - 타입: array
+  - 설명: 필수. 업스트림 source 또는 transform ID 목록
+- `endpoint`
+  - 타입: string
+  - 설명: EC2 메타데이터 엔드포인트 (기본값: http://169.254.169.254)
+- `fields`
+  - 타입: array
+  - 설명: 이벤트에 포함할 메타데이터 필드 목록
+- `namespace`
+  - 타입: string
+  - 설명: Transform이 추가하는 모든 이벤트 필드의 접두사
+- `refresh_interval_secs`
+  - 타입: integer
+  - 설명: 업데이트된 메타데이터 쿼리 간격 (초)
+- `tags`
+  - 타입: array
+  - 설명: 이벤트에 포함할 인스턴스 태그 목록
 
 #### 기본 필드 목록
 
@@ -1294,7 +1386,7 @@ aws ec2 modify-instance-metadata-options \
   --instance-metadata-tags enabled
 ```
 
-주의: Vector를 Aggregator로 실행하는 경우 이 Transform을 활성화하지 마세요. 메타데이터가 클라이언트가 아닌 Aggregator 노드의 메타데이터 서버에서 조회됩니다.
+주의: Vector를 Aggregator로 실행하는 경우 이 Transform 활성화 금지. 메타데이터가 클라이언트가 아닌 Aggregator 노드의 메타데이터 서버에서 조회됨.
 
 #### 지원되는 이벤트 타입
 
@@ -1308,13 +1400,13 @@ aws ec2 modify-instance-metadata-options \
 
 #### 개요
 
-Window Transform은 링 버퍼 기반의 슬라이딩 윈도우로 구현된 백트레이스 로깅 컴포넌트입니다. `flush_when` 조건이 일치할 때까지 이벤트를 버퍼에 보관하며, 버퍼가 가득 차면 가장 오래된 이벤트부터 삭제됩니다.
+Window Transform은 링 버퍼 기반의 슬라이딩 윈도우로 구현된 백트레이스 로깅 컴포넌트. `flush_when` 조건이 일치할 때까지 이벤트를 버퍼에 보관 → 버퍼가 가득 차면 가장 오래된 이벤트부터 삭제됨.
 
 #### 작동 방식
 
-이벤트 스트림이 Transform을 통과할 때, `flush_when` 조건과 일치하는 이벤트를 기준으로 `num_events_before`와 `num_events_after` 범위의 "윈도우"가 구성됩니다. 조건이 일치하면 해당 이벤트와 `num_events_after`가 0보다 큰 경우 이후 이벤트를 포함한 전체 윈도우가 출력으로 플러시됩니다.
+이벤트 스트림이 Transform을 통과할 때, `flush_when` 조건과 일치하는 이벤트를 기준으로 `num_events_before`와 `num_events_after` 범위의 "윈도우"가 구성됨. 조건이 일치하면 해당 이벤트와 `num_events_after`가 0보다 큰 경우 이후 이벤트를 포함한 전체 윈도우가 출력으로 플러시됨.
 
-백트레이스 로깅 또는 링 버퍼 로깅이라고도 합니다.
+백트레이스 로깅 또는 링 버퍼 로깅이라고도 함.
 
 #### 기본 설정 예제
 
@@ -1332,13 +1424,21 @@ transforms:
 
 #### 주요 설정 옵션
 
-| 옵션 | 타입 | 설명 |
-|------|------|------|
-| `inputs` | array | 필수. 업스트림 source 또는 transform ID 목록 |
-| `flush_when` | string | 필수. 윈도우 플러시를 트리거하는 VRL 조건 |
-| `num_events_before` | integer | `flush_when` 조건과 일치하는 이벤트 이전에 보관할 최대 이벤트 수 |
-| `num_events_after` | integer | `flush_when` 조건과 일치하는 이벤트 이후에 보관할 최대 이벤트 수 |
-| `pass_through` | string | 버퍼링 없이 이벤트를 통과시키는 조건 (주의해서 사용) |
+- `inputs`
+  - 타입: array
+  - 설명: 필수. 업스트림 source 또는 transform ID 목록
+- `flush_when`
+  - 타입: string
+  - 설명: 필수. 윈도우 플러시를 트리거하는 VRL 조건
+- `num_events_before`
+  - 타입: integer
+  - 설명: `flush_when` 조건과 일치하는 이벤트 이전에 보관할 최대 이벤트 수
+- `num_events_after`
+  - 타입: integer
+  - 설명: `flush_when` 조건과 일치하는 이벤트 이후에 보관할 최대 이벤트 수
+- `pass_through`
+  - 타입: string
+  - 설명: 버퍼링 없이 이벤트를 통과시키는 조건 (주의해서 사용)
 
 #### 버퍼 동작
 
@@ -1370,7 +1470,7 @@ transforms:
 
 ### Transform 구성 생성
 
-Vector의 `generate` 명령으로 Transform이 포함된 보일러플레이트 설정을 생성할 수 있습니다:
+Vector의 `generate` 명령으로 Transform이 포함된 보일러플레이트 설정 생성 가능:
 
 ```bash
 vector generate /remap,filter,reduce > vector.toml
@@ -1393,7 +1493,7 @@ vector generate /remap,filter,reduce > vector.toml
 
 ### 개요
 
-Sinks 는 Vector에서 데이터를 외부 서비스나 목적지로 전송하는 컴포넌트입니다. Vector 토폴로지는 세 가지 유형의 컴포넌트로 구성됩니다:
+Sinks는 Vector에서 데이터를 외부 서비스나 목적지로 전송하는 컴포넌트. Vector 토폴로지는 세 가지 유형의 컴포넌트로 구성:
 - Sources: 관측 데이터 소스로부터 데이터를 수집하거나 수신
 - Transforms: 토폴로지를 통과하는 관측 데이터를 조작하거나 변경
 - Sinks: Vector에서 외부 서비스나 목적지로 데이터를 전송
@@ -1402,30 +1502,28 @@ Sinks 는 Vector에서 데이터를 외부 서비스나 목적지로 전송하�
 
 ### 지원되는 Sinks 전체 목록
 
-Vector는 다양한 싱크를 지원합니다:
+Vector는 다양한 싱크 지원:
 
-| 카테고리 | Sinks |
-|---------|-------|
-| 메시징/스트리밍 | AMQP, Kafka, MQTT, NATS, Pulsar, Redis |
-| 클라우드 스토리지 | AWS S3, Azure Blob Storage, GCP Cloud Storage |
-| AWS 서비스 | AWS CloudWatch Logs, AWS CloudWatch Metrics, AWS Kinesis Data Firehose, AWS Kinesis Streams, AWS SNS, AWS SQS |
-| GCP 서비스 | GCP Chronicle, GCP Cloud Monitoring, GCP PubSub, GCP Stackdriver |
-| Azure 서비스 | Azure Blob Storage, Azure Monitor Logs |
-| 관측성 플랫폼 | Datadog (Events, Logs, Metrics, Traces), Elasticsearch, Loki, New Relic, OpenTelemetry, Prometheus, Splunk HEC |
-| 로깅 서비스 | Axiom, Honeycomb, Humio, Mezmo (LogDNA), Papertrail, Sematext |
-| 데이터베이스 | ClickHouse, Databend, GreptimeDB, InfluxDB, Postgres |
-| 네트워크 | HTTP, Socket, WebSocket, WebSocket Server |
-| 기타 | Blackhole, Console, File, StatsD, Vector |
+- 메시징/스트리밍: AMQP, Kafka, MQTT, NATS, Pulsar, Redis
+- 클라우드 스토리지: AWS S3, Azure Blob Storage, GCP Cloud Storage
+- AWS 서비스: AWS CloudWatch Logs, AWS CloudWatch Metrics, AWS Kinesis Data Firehose, AWS Kinesis Streams, AWS SNS, AWS SQS
+- GCP 서비스: GCP Chronicle, GCP Cloud Monitoring, GCP PubSub, GCP Stackdriver
+- Azure 서비스: Azure Blob Storage, Azure Monitor Logs
+- 관측성 플랫폼: Datadog (Events, Logs, Metrics, Traces), Elasticsearch, Loki, New Relic, OpenTelemetry, Prometheus, Splunk HEC
+- 로깅 서비스: Axiom, Honeycomb, Humio, Mezmo (LogDNA), Papertrail, Sematext
+- 데이터베이스: ClickHouse, Databend, GreptimeDB, InfluxDB, Postgres
+- 네트워크: HTTP, Socket, WebSocket, WebSocket Server
+- 기타: Blackhole, Console, File, StatsD, Vector
 
 ---
 
 ### 공통 설정 옵션
 
-대부분의 싱크에서 공유하는 공통 설정 패턴입니다.
+대부분의 싱크에서 공유하는 공통 설정 패턴.
 
 #### 1. Acknowledgements (승인)
 
-승인 기능은 end-to-end 데이터 전송을 보장하기 위해 사용됩니다.
+승인 기능은 end-to-end 데이터 전송을 보장하기 위해 사용됨.
 
 ```toml
 [sinks.my_sink]
@@ -1437,12 +1535,12 @@ enabled = true
 ```
 
 설명:
-- 싱크에서 승인이 활성화되면, end-to-end 승인을 지원하는 연결된 소스는 해당 싱크가 이벤트를 승인할 때까지 대기합니다
-- 싱크 레벨의 승인 설정은 전역 승인 설정보다 우선적으로 적용됩니다
+- 싱크에서 승인이 활성화되면, end-to-end 승인을 지원하는 연결된 소스는 해당 싱크가 이벤트를 승인할 때까지 대기함
+- 싱크 레벨의 승인 설정은 전역 승인 설정보다 우선적으로 적용됨
 
 #### 2. Batching (배칭)
 
-이벤트 배칭 동작을 구성합니다.
+이벤트 배칭 동작 구성.
 
 ```toml
 [sinks.my_sink]
@@ -1461,7 +1559,7 @@ timeout_secs = 1        # 최대 배치 대기 시간 (초)
 
 #### 3. Buffering (버퍼링)
 
-싱크의 버퍼링 동작을 구성합니다.
+싱크의 버퍼링 동작 구성.
 
 ```toml
 [sinks.my_sink]
@@ -1484,7 +1582,7 @@ when_full = "block"
 
 #### 4. Health Checks (헬스 체크)
 
-다운스트림 서비스의 접근성과 데이터 수신 준비 상태를 확인합니다.
+다운스트림 서비스의 접근성과 데이터 수신 준비 상태 확인.
 
 ```toml
 [sinks.my_sink]
@@ -1500,7 +1598,7 @@ vector --config /etc/vector/vector.toml --require-healthy
 
 #### 5. Inputs (입력)
 
-업스트림 소스 또는 트랜스폼 ID 목록을 지정합니다.
+업스트림 소스 또는 트랜스폼 ID 목록 지정.
 
 ```toml
 [sinks.my_sink]
@@ -1515,7 +1613,7 @@ inputs = ["my_source", "my_transform"]    # 특정 ID 지정
 
 #### 1. Elasticsearch Sink
 
-Elasticsearch 클러스터로 로그 이벤트를 전송합니다.
+Elasticsearch 클러스터로 로그 이벤트 전송.
 
 상태: Stable | 전송 보장: At-least-once | 승인 지원: Yes
 
@@ -1582,7 +1680,7 @@ index = "logs"
 
 #### 2. Kafka Sink
 
-Apache Kafka 토픽으로 이벤트를 발행합니다.
+Apache Kafka 토픽으로 이벤트 발행.
 
 상태: Stable | 전송 보장: At-least-once | 승인 지원: Yes
 
@@ -1648,7 +1746,7 @@ enabled = true
 
 #### 3. HTTP Sink
 
-HTTP 엔드포인트로 이벤트를 전송합니다.
+HTTP 엔드포인트로 이벤트 전송.
 
 상태: Stable | 전송 보장: At-least-once | 승인 지원: Yes
 
@@ -1717,13 +1815,13 @@ codec = "json"
 - `auth.strategy`: 인증 전략 (basic, bearer)
 
 Adaptive Request Concurrency:
-Vector는 TCP 혼잡 제어 알고리즘에서 영감을 받은 피드백 루프를 사용하여 HTTP 동시성을 자동으로 최적화합니다.
+Vector는 TCP 혼잡 제어 알고리즘에서 영감을 받은 피드백 루프를 사용해 HTTP 동시성을 자동으로 최적화함.
 
 ---
 
 #### 4. File Sink
 
-로컬 파일 시스템에 이벤트를 기록합니다.
+로컬 파일 시스템에 이벤트 기록.
 
 상태: Stable | 전송 보장: At-least-once | 승인 지원: Yes
 
@@ -1777,7 +1875,7 @@ codec = "text"
 
 #### 5. Console Sink
 
-표준 출력(stdout/stderr)으로 이벤트를 출력합니다. 디버깅에 유용합니다.
+표준 출력(stdout/stderr)으로 이벤트 출력. 디버깅에 유용.
 
 상태: Stable | 전송 보장: Best-effort | 승인 지원: No
 
@@ -1830,7 +1928,7 @@ codec = "json"
 
 #### 6. Loki Sink
 
-Grafana Loki 로그 집계 시스템으로 로그를 전송합니다.
+Grafana Loki 로그 집계 시스템으로 로그 전송.
 
 상태: Stable | 전송 보장: At-least-once | 승인 지원: Yes
 
@@ -1896,13 +1994,13 @@ job = "vector"
 - `out_of_order_action`: 순서가 어긋난 로그 처리 방식 (accept, drop, rewrite_timestamp)
 - `tenant_id`: 멀티 테넌시 환경에서의 테넌트 ID
 
-주의: 레이블 카디널리티가 높으면 Loki에 심각한 성능 문제가 발생할 수 있습니다. 고유 레이블 키와 값의 수는 최소화하는 것이 좋습니다.
+주의: 레이블 카디널리티가 높으면 Loki에 심각한 성능 문제 발생 가능. 고유 레이블 키와 값의 수는 최소화 권장.
 
 ---
 
 #### 7. Datadog Sinks
 
-Datadog 플랫폼으로 로그, 메트릭, 이벤트, 트레이스를 전송합니다.
+Datadog 플랫폼으로 로그·메트릭·이벤트·트레이스 전송.
 
 ##### 7.1 Datadog Logs Sink
 
@@ -1950,13 +2048,13 @@ site = "datadoghq.com"
 공통 옵션:
 - `default_api_key`: Datadog API 키 (환경 변수 `DD_API_KEY`로도 설정 가능)
 - `site`: Datadog 사이트 (datadoghq.com, datadoghq.eu 등)
-- 특수 필드: 이벤트에 `ddsource`, `ddtags`, `hostname`, `message`, `service`가 있으면 API 규격에 따라 처리됩니다.
+- 특수 필드: 이벤트에 `ddsource`, `ddtags`, `hostname`, `message`, `service`가 있으면 API 규격에 따라 처리됨.
 
 ---
 
 #### 8. AWS S3 Sink
 
-AWS S3 객체 스토리지에 이벤트를 저장합니다.
+AWS S3 객체 스토리지에 이벤트 저장.
 
 상태: Stable | 전송 보장: At-least-once | 승인 지원: Yes
 
@@ -2022,7 +2120,7 @@ assume_role = "arn:aws:iam::123456789012:role/VectorS3Role"
 
 #### 9. AWS CloudWatch Logs Sink
 
-AWS CloudWatch Logs로 로그를 전송합니다.
+AWS CloudWatch Logs로 로그 전송.
 
 상태: Stable | 전송 보장: At-least-once | 승인 지원: Yes
 
@@ -2070,11 +2168,11 @@ enabled = true
 
 #### 10. Prometheus Sinks
 
-Prometheus와 통합하기 위한 두 가지 싱크를 제공합니다.
+Prometheus와 통합하기 위한 두 가지 싱크 제공.
 
 ##### 10.1 Prometheus Exporter Sink
 
-Prometheus 스크래핑을 위한 HTTP 엔드포인트를 노출합니다.
+Prometheus 스크래핑을 위한 HTTP 엔드포인트 노출.
 
 상태: Stable | 전송 보장: Best-effort
 
@@ -2087,11 +2185,11 @@ flush_period_secs = 60
 default_namespace = "vector"
 ```
 
-메트릭 경로: `/metrics`에서 노출됩니다.
+메트릭 경로: `/metrics`에서 노출됨.
 
 ##### 10.2 Prometheus Remote Write Sink
 
-Prometheus Remote Write 프로토콜을 사용하여 메트릭을 전송합니다.
+Prometheus Remote Write 프로토콜을 사용해 메트릭 전송.
 
 상태: Stable | 전송 보장: At-least-once
 
@@ -2117,15 +2215,15 @@ user = "your-user-id"
 password = "${GRAFANA_API_KEY}"
 ```
 
-압축 옵션: Prometheus Remote Write 프로토콜은 공식적으로 Snappy만 지원하지만, Vector는 Gzip과 Zstd도 지원합니다.
+압축 옵션: Prometheus Remote Write 프로토콜은 공식적으로 Snappy만 지원하지만, Vector는 Gzip과 Zstd도 지원함.
 
-주의: 카디널리티가 높은 메트릭 이름과 레이블은 Prometheus 성능에 문제를 일으킬 수 있습니다. `tag_cardinality_limit` 트랜스폼 사용을 고려하세요.
+주의: 카디널리티가 높은 메트릭 이름과 레이블은 Prometheus 성능에 문제를 일으킬 수 있음. `tag_cardinality_limit` 트랜스폼 사용 고려.
 
 ---
 
 #### 11. InfluxDB Sinks
 
-InfluxDB로 로그와 메트릭을 전송합니다.
+InfluxDB로 로그와 메트릭 전송.
 
 ##### 11.1 InfluxDB Metrics Sink
 
@@ -2179,7 +2277,7 @@ password = "password"
 
 #### 12. Splunk HEC Sinks
 
-Splunk HTTP Event Collector로 로그와 메트릭을 전송합니다.
+Splunk HTTP Event Collector로 로그와 메트릭 전송.
 
 ##### Splunk HEC Logs Sink
 
@@ -2237,13 +2335,13 @@ index = "metrics"
 ```
 
 인덱서 승인:
-Splunk HEC 토큰에 인덱서 승인 기능이 활성화되어 있으면, 싱크가 자동으로 연동되어 데이터 전송 성공 여부를 확인합니다.
+Splunk HEC 토큰에 인덱서 승인 기능이 활성화되어 있으면, 싱크가 자동으로 연동되어 데이터 전송 성공 여부를 확인함.
 
 ---
 
 #### 13. ClickHouse Sink
 
-ClickHouse 데이터베이스로 로그를 전송합니다.
+ClickHouse 데이터베이스로 로그 전송.
 
 상태: Stable | 전송 보장: At-least-once | 승인 지원: Yes
 
@@ -2300,7 +2398,7 @@ in_flight_limit = 20
 
 #### 14. Redis Sink
 
-Redis로 이벤트를 발행합니다.
+Redis로 이벤트 발행.
 
 상태: Stable | 전송 보장: At-least-once | 승인 지원: Yes
 
@@ -2338,7 +2436,7 @@ codec = "json"
 
 #### 15. NATS Sink
 
-NATS 메시징 시스템으로 이벤트를 발행합니다.
+NATS 메시징 시스템으로 이벤트 발행.
 
 상태: Stable | 전송 보장: Best-effort | 승인 지원: Yes
 
@@ -2378,7 +2476,7 @@ codec = "json"
 
 #### 16. Pulsar Sink
 
-Apache Pulsar 토픽으로 이벤트를 발행합니다.
+Apache Pulsar 토픽으로 이벤트 발행.
 
 상태: Stable | 전송 보장: At-least-once | 승인 지원: Yes
 
@@ -2423,7 +2521,7 @@ token = "${PULSAR_TOKEN}"
 
 #### 17. GCP Sinks
 
-Google Cloud Platform 서비스로 데이터를 전송합니다.
+Google Cloud Platform 서비스로 데이터 전송.
 
 ##### 17.1 GCP PubSub Sink
 
@@ -2468,13 +2566,13 @@ filename_time_format = "%s"
 codec = "json"
 ```
 
-인증: API 키나 서비스 계정 JSON 파일 경로를 지정하거나, `GOOGLE_APPLICATION_CREDENTIALS` 환경 변수를 사용합니다.
+인증: API 키나 서비스 계정 JSON 파일 경로를 지정하거나, `GOOGLE_APPLICATION_CREDENTIALS` 환경 변수를 사용함.
 
 ---
 
 #### 18. Azure Sinks
 
-Azure 서비스로 데이터를 전송합니다.
+Azure 서비스로 데이터 전송.
 
 ##### 18.1 Azure Blob Storage Sink
 
@@ -2507,7 +2605,7 @@ azure_resource_id = "/subscriptions/.../resourceGroups/.../providers/..."
 
 #### 19. Socket Sink
 
-TCP, UDP 또는 Unix 소켓으로 이벤트를 전송합니다.
+TCP, UDP 또는 Unix 소켓으로 이벤트 전송.
 
 상태: Stable | 전송 보장: Best-effort
 
@@ -2560,7 +2658,7 @@ codec = "text"
 
 #### 20. WebSocket Sinks
 
-WebSocket을 통해 이벤트를 전송합니다.
+WebSocket을 통해 이벤트 전송.
 
 ##### 20.1 WebSocket Sink (클라이언트)
 
@@ -2607,7 +2705,7 @@ codec = "json"
 
 #### 21. OpenTelemetry Sink
 
-OTLP 프로토콜을 통해 로그, 메트릭, 트레이스를 전송합니다.
+OTLP 프로토콜을 통해 로그·메트릭·트레이스 전송.
 
 상태: Beta | 전송 보장: At-least-once | 승인 지원: Yes
 
@@ -2624,13 +2722,13 @@ uri = "http://localhost:4318/v1/logs"
 codec = "otlp"
 ```
 
-입력 형식: `<component_id>.logs`, `<component_id>.metrics`, `<component_id>.traces` 형식으로 입력을 지정합니다.
+입력 형식: `<component_id>.logs`, `<component_id>.metrics`, `<component_id>.traces` 형식으로 입력 지정.
 
 ---
 
 #### 22. New Relic Sink
 
-New Relic으로 로그, 메트릭, 트레이스를 전송합니다.
+New Relic으로 로그·메트릭·트레이스 전송.
 
 상태: Stable | 전송 보장: At-least-once
 
@@ -2664,7 +2762,7 @@ api = "metrics"
 
 #### 23. Honeycomb Sink
 
-Honeycomb으로 로그를 전송합니다.
+Honeycomb으로 로그 전송.
 
 상태: Stable | 전송 보장: At-least-once
 
@@ -2680,7 +2778,7 @@ dataset = "my-dataset"
 
 #### 24. Blackhole Sink
 
-이벤트를 삭제합니다. 테스트와 벤치마킹에 유용합니다.
+이벤트 삭제. 테스트와 벤치마킹에 유용.
 
 상태: Stable | 전송 보장: At-least-once | 승인 지원: Yes
 
@@ -2700,7 +2798,7 @@ rate = 1000                 # 초당 소비 가능한 이벤트 수 (선택)
 
 #### 25. Vector Sink
 
-다른 Vector 인스턴스로 이벤트를 전송합니다. 분산 아키텍처에 유용합니다.
+다른 Vector 인스턴스로 이벤트 전송. 분산 아키텍처에 유용.
 
 상태: Stable | 전송 보장: At-least-once | 승인 지원: Yes
 
@@ -2729,7 +2827,7 @@ ca_file = "/etc/vector/ca.crt"
 
 #### 26. AMQP Sink
 
-RabbitMQ 등 AMQP 0.9.1 호환 브로커로 이벤트를 전송합니다.
+RabbitMQ 등 AMQP 0.9.1 호환 브로커로 이벤트 전송.
 
 상태: Beta | 전송 보장: At-least-once | 승인 지원: Yes
 
@@ -2749,7 +2847,7 @@ codec = "json"
 
 #### 27. MQTT Sink
 
-MQTT 브로커로 이벤트를 전송합니다.
+MQTT 브로커로 이벤트 전송.
 
 상태: Beta | 전송 보장: Best-effort | 승인 지원: Yes
 
@@ -2788,7 +2886,7 @@ codec = "json"
 
 #### 28. StatsD Sink
 
-StatsD 서버로 메트릭을 전송합니다.
+StatsD 서버로 메트릭 전송.
 
 상태: Stable | 전송 보장: Best-effort
 
@@ -2815,7 +2913,7 @@ mode = "tcp"
 
 #### 29. Papertrail Sink
 
-Papertrail로 로그를 전송합니다.
+Papertrail로 로그 전송.
 
 상태: Stable | 전송 보장: Best-effort
 
@@ -2827,13 +2925,13 @@ endpoint = "logs.papertrailapp.com:12345"
 process = "{{ application }}"
 ```
 
-설정: Papertrail에서 Log Destination을 생성하고 TCP를 활성화한 뒤 엔드포인트를 지정합니다.
+설정: Papertrail에서 Log Destination을 생성하고 TCP를 활성화한 뒤 엔드포인트 지정.
 
 ---
 
 #### 30. Sematext Sinks
 
-Sematext로 로그와 메트릭을 전송합니다.
+Sematext로 로그와 메트릭 전송.
 
 ##### Sematext Logs Sink
 
@@ -2856,13 +2954,13 @@ region = "us"
 default_namespace = "vector"
 ```
 
-참고: Sematext 모니터링은 단일 값을 가진 메트릭만 허용하므로 counter와 gauge 메트릭만 지원됩니다.
+참고: Sematext 모니터링은 단일 값을 가진 메트릭만 허용 → counter와 gauge 메트릭만 지원됨.
 
 ---
 
 ### 설정 형식
 
-Vector는 세 가지 설정 형식을 지원합니다:
+Vector는 세 가지 설정 형식 지원:
 
 #### TOML (권장)
 ```toml

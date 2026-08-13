@@ -26,21 +26,19 @@ alloy [global flags] <command> [command flags] [args]
 
 #### 명령 목록
 
-| 명령 | 설명 |
-|------|------|
-| `run` | Alloy 실행 |
-| `validate` | 구성 파일 검증 |
-| `fmt` | 구성 포맷 정리 |
-| `convert` | 다른 형식에서 변환 |
-| `tools` | 보조 도구 |
-| `--version` | 버전 확인 |
-| `--help` | 도움말 |
+- `run`: Alloy 실행
+- `validate`: 구성 파일 검증
+- `fmt`: 구성 포맷 정리
+- `convert`: 다른 형식에서 변환
+- `tools`: 보조 도구
+- `--version`: 버전 확인
+- `--help`: 도움말
 
 ---
 
 ### `alloy run`
 
-가장 많이 사용하는 명령으로, Alloy를 실행한다.
+가장 많이 사용하는 명령 → Alloy 실행.
 
 ```bash
 alloy run [flags] <config-path>
@@ -50,68 +48,92 @@ alloy run [flags] <config-path>
 
 ##### Server
 
-| 플래그 | 기본값 | 설명 |
-|--------|--------|------|
-| `--server.http.listen-addr` | `127.0.0.1:12345` | HTTP 서버 |
-| `--server.http.ui-path-prefix` | `/` | UI 경로 |
-| `--server.http.memory-addr` | `alloy.internal:12345` | 메모리 listener (테스트) |
+- `--server.http.listen-addr`
+  - 기본값: `127.0.0.1:12345`
+  - 설명: HTTP 서버
+- `--server.http.ui-path-prefix`
+  - 기본값: `/`
+  - 설명: UI 경로
+- `--server.http.memory-addr`
+  - 기본값: `alloy.internal:12345`
+  - 설명: 메모리 listener(테스트용)
 
 ##### Storage
 
-| 플래그 | 기본값 | 설명 |
-|--------|--------|------|
-| `--storage.path` | `data-alloy/` | WAL, 중간 상태 저장 |
+- `--storage.path`
+  - 기본값: `data-alloy/`
+  - 설명: WAL, 중간 상태 저장
 
 ##### Config
 
-| 플래그 | 기본값 | 설명 |
-|--------|--------|------|
-| `--config.format` | `alloy` | `alloy`, `prometheus`, `promtail`, `static`, `flow`, `otelcol` |
-| `--config.bypass-conversion-errors` | false | 변환 오류 무시 |
-| `--config.extra-args` | "" | static 변환 시 추가 인자 |
+- `--config.format`
+  - 기본값: `alloy`
+  - 설명: `alloy`, `prometheus`, `promtail`, `static`, `flow`, `otelcol`
+- `--config.bypass-conversion-errors`
+  - 기본값: false
+  - 설명: 변환 오류 무시
+- `--config.extra-args`
+  - 기본값: ""
+  - 설명: static 변환 시 추가 인자
 
 ##### Cluster
 
-| 플래그 | 기본값 | 설명 |
-|--------|--------|------|
-| `--cluster.enabled` | false | 클러스터링 활성화 |
-| `--cluster.node-name` | (hostname) | 노드 이름 |
-| `--cluster.advertise-address` | "" | 광고할 주소 |
-| `--cluster.advertise-interfaces` | (auto) | 자동 광고할 NIC |
-| `--cluster.join-addresses` | "" | 가입할 노드 |
-| `--cluster.discover-peers` | "" | 자동 피어 발견 |
-| `--cluster.rejoin-interval` | `60s` | 재가입 시도 주기 |
-| `--cluster.max-join-peers` | 5 | 한 번에 가입할 피어 수 |
-| `--cluster.name` | "" | 클러스터 이름 |
-| `--cluster.wait-for-size` | 0 | 시작 전 대기할 클러스터 크기 |
-| `--cluster.wait-timeout` | `0s` | 클러스터 대기 타임아웃 |
+- `--cluster.enabled`
+  - 기본값: false
+  - 설명: 클러스터링 활성화
+- `--cluster.node-name`
+  - 기본값: (hostname)
+  - 설명: 노드 이름
+- `--cluster.advertise-address`
+  - 기본값: ""
+  - 설명: 광고할 주소
+- `--cluster.advertise-interfaces`
+  - 기본값: (auto)
+  - 설명: 자동 광고할 NIC
+- `--cluster.join-addresses`
+  - 기본값: ""
+  - 설명: 가입할 노드
+- `--cluster.discover-peers`
+  - 기본값: ""
+  - 설명: 자동 피어 발견
+- `--cluster.rejoin-interval`
+  - 기본값: `60s`
+  - 설명: 재가입 시도 주기
+- `--cluster.max-join-peers`
+  - 기본값: 5
+  - 설명: 한 번에 가입할 피어 수
+- `--cluster.name`
+  - 기본값: ""
+  - 설명: 클러스터 이름
+- `--cluster.wait-for-size`
+  - 기본값: 0
+  - 설명: 시작 전 대기할 클러스터 크기
+- `--cluster.wait-timeout`
+  - 기본값: `0s`
+  - 설명: 클러스터 대기 타임아웃
 
 ##### Cluster TLS (gossip)
 
-| 플래그 | 설명 |
-|--------|------|
-| `--cluster.tls-ca-path` | CA 인증서 |
-| `--cluster.tls-cert-path` | 클라이언트 인증서 |
-| `--cluster.tls-key-path` | 클라이언트 키 |
-| `--cluster.tls-server-name` | 서버 이름 |
+- `--cluster.tls-ca-path`: CA 인증서
+- `--cluster.tls-cert-path`: 클라이언트 인증서
+- `--cluster.tls-key-path`: 클라이언트 키
+- `--cluster.tls-server-name`: 서버 이름
 
 ##### Stability
 
-| 플래그 | 기본값 | 설명 |
-|--------|--------|------|
-| `--stability.level` | `generally-available` | `experimental`, `public-preview`, `generally-available` |
+- `--stability.level`
+  - 기본값: `generally-available`
+  - 설명: `experimental`, `public-preview`, `generally-available`
 
 ##### Reporting
 
-| 플래그 | 기본값 | 설명 |
-|--------|--------|------|
-| `--disable-reporting` | false | Grafana로 사용 통계 보고 비활성화 |
+- `--disable-reporting`
+  - 기본값: false
+  - 설명: Grafana로 사용 통계 보고 비활성화
 
 ##### Live Debugging
 
-| 플래그 | 설명 |
-|--------|------|
-| `--feature.community-components.enabled` | 커뮤니티 컴포넌트 활성화 |
+- `--feature.community-components.enabled`: 커뮤니티 컴포넌트 활성화
 
 #### 사용 예시
 
@@ -153,7 +175,7 @@ alloy run --stability.level=experimental /etc/alloy/config.alloy
 alloy run --config.format=prometheus /etc/prometheus/prometheus.yml
 ```
 
-내부적으로 변환 후 실행하므로, 일회성 실행에 유용하다.
+내부적으로 변환 후 실행 → 일회성 실행에 유용함.
 
 ---
 
@@ -167,12 +189,10 @@ alloy validate [flags] <config-path>
 
 #### 옵션
 
-| 플래그 | 설명 |
-|--------|------|
-| `--config.format` | 구성 형식 |
-| `--config.bypass-conversion-errors` | 변환 오류 무시 |
-| `--feature.community-components.enabled` | 커뮤니티 컴포넌트 |
-| `--stability.level` | 안정성 레벨 |
+- `--config.format`: 구성 형식
+- `--config.bypass-conversion-errors`: 변환 오류 무시
+- `--feature.community-components.enabled`: 커뮤니티 컴포넌트
+- `--stability.level`: 안정성 레벨
 
 #### 사용
 
@@ -210,10 +230,8 @@ alloy fmt [flags] <config-path>
 
 #### 옵션
 
-| 플래그 | 설명 |
-|--------|------|
-| `-w, --write` | 파일을 직접 수정 |
-| `-t, --test` | 변경 사항이 있으면 0이 아닌 종료 코드 반환 (파일 미수정) |
+- `-w, --write`: 파일을 직접 수정
+- `-t, --test`: 변경 사항이 있으면 0이 아닌 종료 코드 반환(파일은 수정하지 않음)
 
 #### 사용
 
@@ -251,22 +269,18 @@ alloy convert [flags] <input-file>
 
 #### 주요 플래그
 
-| 플래그 | 설명 |
-|--------|------|
-| `--source-format=<format>` | 입력 형식 (필수) |
-| `-o, --output=<file>` | 출력 파일 |
-| `-r, --report=<file>` | 변환 보고서 |
-| `-b, --bypass-errors` | 에러 무시 |
-| `--extra-args=<args>` | 형식별 추가 인자 |
+- `--source-format=<format>`: 입력 형식(필수)
+- `-o, --output=<file>`: 출력 파일
+- `-r, --report=<file>`: 변환 보고서
+- `-b, --bypass-errors`: 에러 무시
+- `--extra-args=<args>`: 형식별 추가 인자
 
 #### 지원 형식
 
-| Source Format | 변환 대상 |
-|---------------|----------|
-| `prometheus` | Prometheus 구성 (메트릭 스크래핑) |
-| `promtail` | Promtail 구성 (Loki 로그) |
-| `static` | Grafana Agent Static |
-| `otelcol` | OpenTelemetry Collector |
+- `prometheus`: Prometheus 구성(메트릭 스크래핑)
+- `promtail`: Promtail 구성(Loki 로그)
+- `static`: Grafana Agent Static
+- `otelcol`: OpenTelemetry Collector
 
 #### 사용 예시
 
@@ -310,7 +324,7 @@ alloy convert \
 
 #### 변환 보고서
 
-`--report` 옵션을 사용하면 변환 중 발생한 경고와 오류를 파일에 기록한다.
+`--report` 옵션 사용 → 변환 중 발생한 경고와 오류를 파일에 기록.
 
 ```
 === Conversion Report ===
@@ -353,7 +367,7 @@ alloy tools prometheus.remote_write \
 
 #### 향후 추가될 도구
 
-Alloy는 빠르게 발전하고 있으므로 `alloy tools --help`로 최신 도구를 확인한다.
+Alloy는 빠르게 발전 중 → `alloy tools --help`로 최신 도구 확인 필요.
 
 ---
 
@@ -391,14 +405,12 @@ alloy --version
 
 ### 환경 변수
 
-Alloy CLI는 환경 변수도 지원한다.
+Alloy CLI는 환경 변수도 지원함.
 
-| 환경변수 | 동등 플래그 |
-|---------|-----------|
-| `ALLOY_DEPLOY_DIR` | `--storage.path` |
-| `HTTP_PROXY` | HTTP 프록시 |
-| `HTTPS_PROXY` | HTTPS 프록시 |
-| `NO_PROXY` | 프록시 제외 |
+- `ALLOY_DEPLOY_DIR`: `--storage.path`와 동등
+- `HTTP_PROXY`: HTTP 프록시
+- `HTTPS_PROXY`: HTTPS 프록시
+- `NO_PROXY`: 프록시 제외
 
 ---
 
@@ -495,7 +507,7 @@ spec:
 
 ### 개요
 
-Alloy HTTP 서버는 기본 포트 **12345**에서 실행됩니다.
+Alloy HTTP 서버는 기본 포트 12345에서 실행됨.
 
 ```bash
 alloy run --server.http.listen-addr=0.0.0.0:12345 config.alloy
@@ -503,7 +515,7 @@ alloy run --server.http.listen-addr=0.0.0.0:12345 config.alloy
 
 #### 인증
 
-기본적으로 인증을 제공하지 않으며, 운영 환경에서는 리버스 프록시 사용을 권장합니다.
+기본적으로 인증 미제공 → 운영 환경에서는 리버스 프록시 사용 권장.
 
 ---
 
@@ -511,7 +523,7 @@ alloy run --server.http.listen-addr=0.0.0.0:12345 config.alloy
 
 #### `GET /-/healthy`
 
-기본 헬스체크. Alloy 프로세스가 실행 중인지 확인합니다.
+기본 헬스체크 → Alloy 프로세스 실행 여부 확인.
 
 ```bash
 curl http://localhost:12345/-/healthy
@@ -524,7 +536,7 @@ curl http://localhost:12345/-/healthy
 
 #### `GET /-/ready`
 
-준비 상태 확인. 모든 컴포넌트가 준비되었는지 반환합니다.
+준비 상태 확인 → 모든 컴포넌트의 준비 여부 반환.
 
 ```bash
 curl http://localhost:12345/-/ready
@@ -545,7 +557,7 @@ curl http://localhost:12345/-/ready
 
 #### `POST /-/reload`
 
-구성 파일을 다시 로드합니다.
+구성 파일을 다시 로드함.
 
 ```bash
 curl -X POST http://localhost:12345/-/reload
@@ -553,7 +565,7 @@ curl -X POST http://localhost:12345/-/reload
 
 응답:
 - 200: 성공
-- 400: 잘못된 구성 (롤백됨)
+- 400: 잘못된 구성(롤백됨)
 
 리로드 동작:
 1. 구성 파일 다시 읽기
@@ -563,7 +575,7 @@ curl -X POST http://localhost:12345/-/reload
 
 #### `GET /api/v0/web/config`
 
-현재 구성을 텍스트 형식으로 조회합니다.
+현재 구성을 텍스트 형식으로 조회함.
 
 ```bash
 curl http://localhost:12345/api/v0/web/config
@@ -575,7 +587,7 @@ curl http://localhost:12345/api/v0/web/config
 
 #### `GET /api/v0/web/components`
 
-모든 컴포넌트의 목록과 상태를 반환합니다.
+모든 컴포넌트의 목록과 상태를 반환함.
 
 ```bash
 curl http://localhost:12345/api/v0/web/components
@@ -604,7 +616,7 @@ curl http://localhost:12345/api/v0/web/components
 
 #### `GET /api/v0/web/components/<id>`
 
-특정 컴포넌트의 상세 정보를 반환합니다.
+특정 컴포넌트의 상세 정보를 반환함.
 
 ```bash
 curl http://localhost:12345/api/v0/web/components/prometheus.scrape.default
@@ -627,7 +639,7 @@ curl http://localhost:12345/api/v0/web/components/prometheus.scrape.default
 
 #### `GET /api/v0/web/peers`
 
-클러스터 피어 목록을 반환합니다 (클러스터링 활성화 시).
+클러스터 피어 목록을 반환함(클러스터링 활성화 시).
 
 ```bash
 curl http://localhost:12345/api/v0/web/peers
@@ -639,7 +651,7 @@ curl http://localhost:12345/api/v0/web/peers
 
 #### `GET /api/v1/cluster/peers`
 
-클러스터의 모든 피어 정보를 반환합니다.
+클러스터의 모든 피어 정보를 반환함.
 
 ```bash
 curl http://localhost:12345/api/v1/cluster/peers
@@ -667,7 +679,7 @@ curl http://localhost:12345/api/v1/cluster/peers
 
 #### `GET /api/v1/cluster/state`
 
-클러스터 상태를 반환합니다.
+클러스터 상태를 반환함.
 
 상태 값:
 - `alive`: 정상
@@ -681,7 +693,7 @@ curl http://localhost:12345/api/v1/cluster/peers
 
 #### `GET /metrics`
 
-Prometheus 형식으로 자체 메트릭을 노출합니다.
+Prometheus 형식으로 자체 메트릭을 노출함.
 
 ```bash
 curl http://localhost:12345/metrics
@@ -717,7 +729,7 @@ cluster_transport_stream_*
 
 ##### Component-specific
 
-각 컴포넌트가 자체 메트릭을 노출합니다:
+각 컴포넌트가 자체 메트릭을 노출함.
 
 ```
 prometheus_remote_write_*
@@ -731,7 +743,7 @@ otelcol_*
 
 #### `GET /debug/pprof/*`
 
-Go pprof 프로파일 엔드포인트입니다.
+Go pprof 프로파일 엔드포인트임.
 
 ```bash
 # Heap
@@ -762,7 +774,7 @@ go tool pprof heap.pprof
 
 #### `GET /debug/fgprof`
 
-Off-CPU 프로파일링을 수행합니다 (실험적 기능).
+Off-CPU 프로파일링 수행(실험적 기능).
 
 ```bash
 curl "http://localhost:12345/debug/fgprof?seconds=30" > fgprof.pprof
@@ -778,14 +790,12 @@ curl "http://localhost:12345/debug/fgprof?seconds=30" > fgprof.pprof
 
 #### 주요 페이지
 
-| 경로 | 내용 |
-|------|------|
-| `/` | 컴포넌트 그래프 |
-| `/component/<id>` | 컴포넌트 상세 |
-| `/cluster` | 클러스터 노드 (클러스터링 활성화 시) |
-| `/-/ready` | Readiness |
-| `/-/healthy` | Liveness |
-| `/-/reload` | 구성 리로드 (POST) |
+- `/`: 컴포넌트 그래프
+- `/component/<id>`: 컴포넌트 상세
+- `/cluster`: 클러스터 노드(클러스터링 활성화 시)
+- `/-/ready`: Readiness
+- `/-/healthy`: Liveness
+- `/-/reload`: 구성 리로드(POST)
 
 #### 컴포넌트 그래프
 
@@ -798,19 +808,19 @@ curl "http://localhost:12345/debug/fgprof?seconds=30" > fgprof.pprof
 각 컴포넌트 페이지에서 확인 가능:
 
 ##### Arguments
-컴포넌트에 전달된 인자를 표시합니다.
+컴포넌트에 전달된 인자를 표시함.
 
 ##### Exports
-다른 컴포넌트가 참조할 수 있는 출력 값을 표시합니다.
+다른 컴포넌트가 참조할 수 있는 출력 값을 표시함.
 
 ##### Health
-현재 상태와 마지막 업데이트 시각을 표시합니다.
+현재 상태와 마지막 업데이트 시각을 표시함.
 
 ##### Debug Info
-컴포넌트별 실시간 디버그 정보를 표시합니다 (예: `prometheus.scrape`의 마지막 스크래핑 시간 및 결과).
+컴포넌트별 실시간 디버그 정보를 표시함(예: `prometheus.scrape`의 마지막 스크래핑 시간 및 결과).
 
 ##### Live Debugging
-`livedebugging` 활성화 시 실시간 입출력 데이터를 확인할 수 있습니다.
+`livedebugging` 활성화 시 실시간 입출력 데이터 확인 가능.
 
 ---
 

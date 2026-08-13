@@ -23,7 +23,7 @@
 
 ### systemctl이란?
 
-systemd와 통신하는 메인 CLI 도구. 내부적으로 D-Bus(`org.freedesktop.systemd1`)를 통해 PID 1과 통신합니다.
+systemd와 통신하는 메인 CLI 도구 → 내부적으로 D-Bus(`org.freedesktop.systemd1`)를 통해 PID 1과 통신
 
 기본 형식:
 ```
@@ -201,14 +201,14 @@ unit 파일을 직접 수정한 경우 반드시 호출. `systemctl edit` 은 �
 
 ### Mask와 Unmask
 
-unit을 **완전히 비활성화**. `disable` 보다 강함 — 다른 unit이 의존성으로 끌어와도 시작되지 않음.
+unit을 완전히 비활성화 → `disable` 보다 강함 — 다른 unit이 의존성으로 끌어와도 시작되지 않음
 
 ```bash
 sudo systemctl mask cups.service       # /etc/systemd/system/cups.service → /dev/null
 sudo systemctl unmask cups.service
 ```
 
-내부적으로 `/etc/systemd/system/cups.service` 를 `/dev/null` 로 향하는 심볼릭 링크로 만들어, 어떤 수단으로도 해당 unit을 시작할 수 없게 합니다.
+내부적으로 `/etc/systemd/system/cups.service` 를 `/dev/null` 로 향하는 심볼릭 링크로 만듦 → 어떤 수단으로도 해당 unit을 시작할 수 없음
 
 언제 쓰나:
 - 절대 시작되면 안 되는 서비스
@@ -259,7 +259,7 @@ sudo systemctl isolate emergency.target
 systemctl --host=user@server status nginx
 ```
 
-내부적으로 SSH를 사용하며, systemctl에 SSH 클라이언트 기능이 내장되어 있습니다.
+내부적으로 SSH를 사용 → systemctl에 SSH 클라이언트 기능이 내장
 
 ```bash
 systemctl --machine=container-name status nginx    # 컨테이너 안의 systemd
@@ -300,7 +300,7 @@ sudo systemd-run --unit=oneshot-task --scope --slice=batch.slice \
   /usr/local/bin/heavy-task.sh
 ```
 
-서비스 파일 없이 즉석에서 cgroup·격리를 적용하여 명령어를 실행합니다. 백그라운드 작업 처리에 유용합니다.
+서비스 파일 없이 즉석에서 cgroup·격리를 적용해 명령어를 실행 → 백그라운드 작업 처리에 유용
 
 #### 부팅 분석
 
@@ -331,7 +331,7 @@ $ systemctl cat nginx.service
 Restart=always
 ```
 
-원본 unit과 모든 drop-in을 합쳐서 보여줍니다.
+원본 unit과 모든 drop-in을 합쳐서 보여줌
 
 ---
 
@@ -366,7 +366,7 @@ Restart=always
 
 ### 개요
 
-`systemd-analyze` 는 systemd 동작을 진단하고 분석하는 도구입니다. 부팅 시간 분석부터 unit 파일 검증, 보안 점수 측정까지 다양한 기능을 제공합니다.
+`systemd-analyze` 는 systemd 동작을 진단·분석하는 도구 → 부팅 시간 분석·unit 파일 검증·보안 점수 측정 등 다양한 기능 제공
 
 기본 형식:
 ```
@@ -403,9 +403,9 @@ $ systemd-analyze blame
   ...
 ```
 
-가장 오래 걸린 unit부터 정렬. 부팅 시간 단축 작업의 출발점으로 활용할 수 있습니다.
+가장 오래 걸린 unit부터 정렬 → 부팅 시간 단축 작업의 출발점으로 활용 가능
 
-> 주의: 병렬로 실행되는 unit이 많으므로 blame 시간을 단순히 합치면 실제 부팅 시간과 다릅니다. 진짜 critical path는 `critical-chain` 에서 봐야 합니다.
+> 주의: 병렬로 실행되는 unit이 많음 → blame 시간을 단순히 합치면 실제 부팅 시간과 다름 → 진짜 critical path는 `critical-chain` 에서 확인 필요
 
 ---
 
@@ -427,7 +427,7 @@ graphical.target @4.567s
               └─...
 ```
 
-각 노드는 `@시점 +지속시간` 형식. 진짜 부팅 지연의 critical path를 보여줍니다. 이 경로 위의 unit을 최적화하지 않으면 부팅이 빨라지지 않습니다.
+각 노드는 `@시점 +지속시간` 형식 → 진짜 부팅 지연의 critical path를 보여줌 → 이 경로 위의 unit을 최적화하지 않으면 부팅 속도 개선 불가
 
 특정 unit의 critical-chain만 보기:
 ```bash
@@ -443,7 +443,7 @@ systemd-analyze plot > boot.svg
 xdg-open boot.svg
 ```
 
-부팅 과정의 시각적 Gantt 차트를 SVG로 출력. 각 unit이 언제 시작되어 언제 활성화됐는지 한눈에 보입니다. 병렬 부팅 패턴을 이해하는 데 가장 좋은 도구.
+부팅 과정의 시각적 Gantt 차트를 SVG로 출력 → 각 unit이 언제 시작되어 언제 활성화됐는지 한눈에 확인 가능 → 병렬 부팅 패턴 이해에 가장 좋은 도구
 
 ---
 

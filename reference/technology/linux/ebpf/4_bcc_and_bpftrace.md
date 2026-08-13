@@ -21,11 +21,11 @@
 
 ### bcc란?
 
-**BPF Compiler Collection**. IO Visor 프로젝트가 만든 BPF 학습·관측 도구 모음. 100+개의 즉시 사용 가능한 트레이싱 도구와 Python/C++ 라이브러리를 제공합니다.
+**BPF Compiler Collection**. IO Visor 프로젝트가 만든 BPF 학습·관측 도구 모음. 100+개의 즉시 사용 가능한 트레이싱 도구와 Python/C++ 라이브러리를 제공함.
 
 특징:
 - **런타임 컴파일**: Python에서 BPF C 코드를 문자열로 작성, Clang으로 즉석 컴파일
-- 학습에 최적 — 같은 도구의 .py 소스를 보면 BPF 동작 이해
+- 학습에 최적 → 같은 도구의 .py 소스를 보면 BPF 동작 이해 가능
 - 풍부한 ready-made 도구
 - 단점: LLVM/커널 헤더 필요, 시작 시간 느림
 
@@ -39,7 +39,7 @@
 sudo apt install bpfcc-tools libbpfcc python3-bpfcc linux-headers-$(uname -r)
 ```
 
-도구는 `/usr/sbin/<tool>-bpfcc` 같은 이름으로 설치됩니다.
+도구는 `/usr/sbin/<tool>-bpfcc` 같은 이름으로 설치됨.
 
 #### RHEL/Fedora
 
@@ -74,7 +74,7 @@ sudo memleak            # 메모리 누수 추적
 
 #### 옵션 패턴
 
-대부분의 도구가 비슷한 옵션 패턴을 따릅니다:
+대부분의 도구가 비슷한 옵션 패턴을 따름:
 
 ```bash
 # 특정 PID
@@ -95,7 +95,7 @@ sudo execsnoop -h
 man execsnoop
 ```
 
-각 도구는 자체 매뉴얼이 있습니다.
+각 도구는 자체 매뉴얼 보유.
 
 ---
 
@@ -155,17 +155,15 @@ while True:
 
 #### 매크로 단축
 
-bcc는 BPF 코드 안에서 자체 매크로를 제공:
+bcc는 BPF 코드 안에서 자체 매크로 제공:
 
-| BCC 매크로 | 의미 |
-| --- | --- |
-| `BPF_HASH(name, key_type, value_type)` | hash map 선언 |
-| `BPF_ARRAY(name, type, size)` | array map |
-| `BPF_PERCPU_ARRAY(...)` | percpu |
-| `BPF_HISTOGRAM(name)` | 히스토그램 |
-| `BPF_PERF_OUTPUT(name)` | perf event array |
+- `BPF_HASH(name, key_type, value_type)`: hash map 선언
+- `BPF_ARRAY(name, type, size)`: array map
+- `BPF_PERCPU_ARRAY(...)`: percpu
+- `BPF_HISTOGRAM(name)`: 히스토그램
+- `BPF_PERF_OUTPUT(name)`: perf event array
 
-이 매크로들은 컴파일 타임에 raw libbpf 선언으로 확장됩니다.
+이 매크로들은 컴파일 타임에 raw libbpf 선언으로 확장됨.
 
 #### Tracepoint
 
@@ -182,7 +180,7 @@ b = BPF(text=text)
 b.trace_print()
 ```
 
-`TRACEPOINT_PROBE` 매크로가 SEC 지정과 인자 구조체를 자동으로 처리합니다.
+`TRACEPOINT_PROBE` 매크로가 SEC 지정과 인자 구조체를 자동으로 처리.
 
 #### Perf event 출력
 
@@ -217,70 +215,58 @@ while True:
 
 #### 프로세스/시스템콜
 
-| 도구 | 용도 |
-| --- | --- |
-| `execsnoop` | exec() 호출 (새 명령어) |
-| `exitsnoop` | 프로세스 종료 |
-| `killsnoop` | kill() syscall |
-| `opensnoop` | 파일 열기 |
-| `statsnoop` | stat() |
-| `syscount` | syscall 빈도 |
+- `execsnoop`: exec() 호출 (새 명령어)
+- `exitsnoop`: 프로세스 종료
+- `killsnoop`: kill() syscall
+- `opensnoop`: 파일 열기
+- `statsnoop`: stat()
+- `syscount`: syscall 빈도
 
 #### CPU/성능
 
-| 도구 | 용도 |
-| --- | --- |
-| `profile` | CPU 스택 샘플링 (flame graph 데이터) |
-| `offcputime` | off-CPU 시간 (대기 분석) |
-| `runqlat` | 런 큐 지연 |
-| `runqlen` | 런 큐 길이 |
-| `cpudist` | CPU 사용 분포 |
-| `funccount` | 함수 호출 빈도 |
-| `funclatency` | 함수 지연 |
-| `argdist` | 인자 분포 |
+- `profile`: CPU 스택 샘플링 (flame graph 데이터)
+- `offcputime`: off-CPU 시간 (대기 분석)
+- `runqlat`: 런 큐 지연
+- `runqlen`: 런 큐 길이
+- `cpudist`: CPU 사용 분포
+- `funccount`: 함수 호출 빈도
+- `funclatency`: 함수 지연
+- `argdist`: 인자 분포
 
 #### IO/디스크
 
-| 도구 | 용도 |
-| --- | --- |
-| `biolatency` | 블록 IO 지연 히스토그램 |
-| `biosnoop` | 블록 IO 트레이싱 (per IO) |
-| `biotop` | 블록 IO top |
-| `xfsslower` / `ext4slower` | 느린 파일시스템 op |
-| `dcsnoop` / `dcstat` | dentry 캐시 |
-| `cachestat` | 페이지 캐시 통계 |
+- `biolatency`: 블록 IO 지연 히스토그램
+- `biosnoop`: 블록 IO 트레이싱 (per IO)
+- `biotop`: 블록 IO top
+- `xfsslower` / `ext4slower`: 느린 파일시스템 op
+- `dcsnoop` / `dcstat`: dentry 캐시
+- `cachestat`: 페이지 캐시 통계
 
 #### 네트워크
 
-| 도구 | 용도 |
-| --- | --- |
-| `tcpconnect` | TCP active open |
-| `tcpaccept` | TCP passive open |
-| `tcpretrans` | TCP 재전송 |
-| `tcptop` | TCP throughput per connection |
-| `tcplife` | TCP 연결 라이프타임 |
-| `tcpdrop` | TCP drop 원인 |
-| `sockstat` | 소켓 통계 |
-| `udpconnect` | UDP 연결 |
+- `tcpconnect`: TCP active open
+- `tcpaccept`: TCP passive open
+- `tcpretrans`: TCP 재전송
+- `tcptop`: TCP throughput per connection
+- `tcplife`: TCP 연결 라이프타임
+- `tcpdrop`: TCP drop 원인
+- `sockstat`: 소켓 통계
+- `udpconnect`: UDP 연결
 
 #### 메모리
 
-| 도구 | 용도 |
-| --- | --- |
-| `memleak` | 메모리 누수 |
-| `oomkill` | OOM 킬러 |
-| `slabratetop` | SLAB 할당률 |
-| `mountsnoop` | mount/umount |
+- `memleak`: 메모리 누수
+- `oomkill`: OOM 킬러
+- `slabratetop`: SLAB 할당률
+- `mountsnoop`: mount/umount
 
 #### 기타
 
-| 도구 | 용도 |
-| --- | --- |
-| `trace` | 임의 함수 trace (강력) |
-| `argdist` | 함수 인자 분포 |
-| `stackcount` | 함수 호출별 스택 카운트 |
-| `dbslower` | MySQL/Postgres 느린 쿼리 |
-| `gethostlatency` | DNS 해석 지연 |
+- `trace`: 임의 함수 trace (강력)
+- `argdist`: 함수 인자 분포
+- `stackcount`: 함수 호출별 스택 카운트
+- `dbslower`: MySQL/Postgres 느린 쿼리
+- `gethostlatency`: DNS 해석 지연
 
 ---
 
@@ -301,7 +287,7 @@ flamegraph.pl < out.stacks > flame.svg    # FlameGraph로 시각화
 sudo offcputime -df 30
 ```
 
-프로세스가 어디서 대기하는지 (mutex, IO, 네트워크 등).
+프로세스가 어디서 대기하는지 확인 (mutex, IO, 네트워크 등).
 
 #### 3. 디스크 IO 지연
 
@@ -330,7 +316,7 @@ sudo trace -K 'tcp_v4_connect "%pK", arg1'   # 스택까지
 sudo syscount -P -d 10
 ```
 
-10초간 프로세스별 syscall 빈도.
+10초간 프로세스별 syscall 빈도 확인.
 
 ---
 
@@ -345,7 +331,7 @@ sudo syscount -P -d 10
 
 #### libbpf-tools
 
-bcc 도구 일부가 CO-RE 기반 libbpf로 재작성됨 — 더 빠르고 가볍습니다.
+bcc 도구 일부가 CO-RE 기반 libbpf로 재작성됨 → 더 빠르고 가벼움.
 
 ```bash
 sudo apt install bcc-libbpf-tools
@@ -356,16 +342,14 @@ ls /usr/sbin/*-libbpf       # 또는 /usr/share/bcc/libbpf-tools/
 
 #### bpftrace
 
-원라이너 빠른 디버깅에는 bpftrace가 더 편합니다 (다음 챕터).
+원라이너 빠른 디버깅에는 bpftrace가 더 편함 (다음 챕터 참고).
 
 #### 마이그레이션 가이드
 
-```
-"학습/탐색" → bcc Python
-"원라이너" → bpftrace
-"프로덕션 도구" → libbpf + CO-RE
-"인프라 시스템" → Cilium, Falco, Tetragon
-```
+- "학습/탐색" 용도 → bcc Python
+- "원라이너" 용도 → bpftrace
+- "프로덕션 도구" 용도 → libbpf + CO-RE
+- "인프라 시스템" 용도 → Cilium, Falco, Tetragon
 
 ---
 
@@ -401,7 +385,7 @@ ls /usr/sbin/*-libbpf       # 또는 /usr/share/bcc/libbpf-tools/
 
 ### bpftrace란?
 
-DTrace에서 영감을 받은 **고수준 트레이싱 언어**로, BPF 위에서 동작하며 짧은 스크립트로 복잡한 관측을 표현할 수 있습니다.
+DTrace에서 영감을 받은 **고수준 트레이싱 언어**로, BPF 위에서 동작하며 짧은 스크립트로 복잡한 관측 표현 가능.
 
 특징:
 - 원라이너 친화 (CLI에서 즉석 트레이싱)
@@ -426,7 +410,7 @@ sudo dnf install bpftrace
 
 #### 권한
 
-CAP_BPF, CAP_PERFMON 또는 root.
+CAP_BPF, CAP_PERFMON 또는 root 권한 필요.
 
 ```bash
 sudo bpftrace -e 'BEGIN { printf("hello\n"); }'
@@ -475,7 +459,7 @@ tracepoint:syscalls:sys_enter_openat
 tracepoint:sched:sched_switch
 ```
 
-`args->필드` 형식으로 인자에 접근합니다.
+`args->필드` 형식으로 인자에 접근.
 
 #### usdt
 
@@ -520,24 +504,22 @@ kfunc:vfs_read {
 
 ### 내장 변수
 
-| 변수 | 의미 |
-| --- | --- |
-| `pid` | 현재 PID (TGID) |
-| `tid` | 스레드 ID |
-| `uid`, `gid` | UID, GID |
-| `comm` | 명령어 이름 |
-| `cpu` | CPU 번호 |
-| `ncpus` | CPU 수 |
-| `nsecs` | nanosecond 타임스탬프 |
-| `elapsed` | 프로그램 시작 후 ns |
-| `cgroup` | cgroup ID |
-| `args` | tracepoint/kfunc 인자 (`args->name`) |
-| `arg0..arg9` | kprobe/uprobe 인자 (정수) |
-| `retval` | kretprobe 반환값 |
-| `func` | 현재 함수 이름 |
-| `kstack` | 커널 스택 |
-| `ustack` | 사용자 스택 |
-| `probe` | 현재 probe 이름 |
+- `pid`: 현재 PID (TGID)
+- `tid`: 스레드 ID
+- `uid`, `gid`: UID, GID
+- `comm`: 명령어 이름
+- `cpu`: CPU 번호
+- `ncpus`: CPU 수
+- `nsecs`: nanosecond 타임스탬프
+- `elapsed`: 프로그램 시작 후 ns
+- `cgroup`: cgroup ID
+- `args`: tracepoint/kfunc 인자 (`args->name`)
+- `arg0..arg9`: kprobe/uprobe 인자 (정수)
+- `retval`: kretprobe 반환값
+- `func`: 현재 함수 이름
+- `kstack`: 커널 스택
+- `ustack`: 사용자 스택
+- `probe`: 현재 probe 이름
 
 #### 인자 접근
 
@@ -573,59 +555,49 @@ kfunc:vfs_read {
 
 #### 출력
 
-| 함수 | 설명 |
-| --- | --- |
-| `printf("...", ...)` | C printf |
-| `print(@map)` | map 출력 |
-| `time("...")` / `strftime("...", nsec)` | 시간 포맷 |
-| `cat("/path")` | 파일 내용 출력 |
-| `system("cmd")` | 외부 명령 실행 (느림 — 디버깅 용도 외에는 사용 비권장) |
+- `printf("...", ...)`: C printf
+- `print(@map)`: map 출력
+- `time("...")` / `strftime("...", nsec)`: 시간 포맷
+- `cat("/path")`: 파일 내용 출력
+- `system("cmd")`: 외부 명령 실행 (느림 → 디버깅 용도 외에는 사용 비권장)
 
 #### 메모리 접근
 
-| 함수 | 설명 |
-| --- | --- |
-| `str(ptr)` | 문자열 |
-| `str(ptr, len)` | 길이 제한 문자열 |
-| `buf(ptr, size)` | hex 덤프용 |
-| `kaddr("symbol")` | 커널 심볼 주소 |
-| `uaddr("symbol")` | 유저 심볼 주소 |
-| `usym(addr)` | 유저 심볼 이름 |
-| `ksym(addr)` | 커널 심볼 이름 |
+- `str(ptr)`: 문자열
+- `str(ptr, len)`: 길이 제한 문자열
+- `buf(ptr, size)`: hex 덤프용
+- `kaddr("symbol")`: 커널 심볼 주소
+- `uaddr("symbol")`: 유저 심볼 주소
+- `usym(addr)`: 유저 심볼 이름
+- `ksym(addr)`: 커널 심볼 이름
 
 #### 시간
 
-| 함수 | 설명 |
-| --- | --- |
-| `nsecs` | 현재 ns |
-| `elapsed` | 시작 후 ns |
+- `nsecs`: 현재 ns
+- `elapsed`: 시작 후 ns
 
 #### 스택
 
-| 함수 | 설명 |
-| --- | --- |
-| `kstack` | 커널 스택 (변수처럼) |
-| `kstack(N)` | 깊이 N |
-| `ustack` | 유저 스택 |
-| `ustack(N, mode)` | mode: `perf` 또는 `bpftrace` |
+- `kstack`: 커널 스택 (변수처럼)
+- `kstack(N)`: 깊이 N
+- `ustack`: 유저 스택
+- `ustack(N, mode)`: mode는 `perf` 또는 `bpftrace`
 
 #### 데이터 변환
 
-| 함수 | 설명 |
-| --- | --- |
-| `count()` | 1 증가 (집계) |
-| `sum(x)` | 누적 합 |
-| `avg(x)` | 평균 |
-| `min(x)`, `max(x)` | 최소/최대 |
-| `hist(x)` | 로그 스케일 히스토그램 |
-| `lhist(x, min, max, step)` | 선형 히스토그램 |
-| `stats(x)` | count + avg + total |
+- `count()`: 1 증가 (집계)
+- `sum(x)`: 누적 합
+- `avg(x)`: 평균
+- `min(x)`, `max(x)`: 최소/최대
+- `hist(x)`: 로그 스케일 히스토그램
+- `lhist(x, min, max, step)`: 선형 히스토그램
+- `stats(x)`: count + avg + total
 
 ---
 
 ### 맵과 집계
 
-맵은 `@` 으로 시작합니다:
+맵은 `@` 으로 시작:
 
 #### 단순 카운터
 
@@ -635,7 +607,7 @@ tracepoint:syscalls:sys_enter_openat {
 }
 ```
 
-프로그램 종료 시 자동으로 출력됩니다. 수동으로 제어하려면:
+프로그램 종료 시 자동으로 출력됨. 수동으로 제어하려면:
 
 ```
 END {
@@ -711,7 +683,7 @@ kprobe:vfs_read {
 
 #### 변수
 
-스칼라 변수는 `$` 접두사를 사용합니다:
+스칼라 변수는 `$` 접두사 사용:
 
 ```
 {
@@ -720,7 +692,7 @@ kprobe:vfs_read {
 }
 ```
 
-전역 맵은 `@`을 사용합니다.
+전역 맵은 `@`을 사용.
 
 #### exit
 
@@ -817,7 +789,7 @@ sudo bpftrace -e 'uprobe:/usr/lib/libc.so.6:malloc /arg0 > 1048576/ { printf("%s
 
 ### 스크립트 파일
 
-긴 트레이싱 스크립트는 `.bt` 파일로 작성합니다:
+긴 트레이싱 스크립트는 `.bt` 파일로 작성:
 
 ```bpftrace
 #!/usr/bin/env bpftrace
@@ -858,7 +830,7 @@ sudo ./tcpconn.bt
 
 #### 라이브러리
 
-`/usr/share/bpftrace/tools/` 에 100개 이상의 예제 스크립트가 있습니다.
+`/usr/share/bpftrace/tools/` 에 100개 이상의 예제 스크립트 존재.
 
 ```bash
 ls /usr/share/bpftrace/tools/

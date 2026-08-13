@@ -25,9 +25,15 @@
 
 #### DOM이란 무엇인가
 
-DOM(Document Object Model)은 HTML, XML, SVG 문서를 프로그래밍 방식으로 접근하고 조작할 수 있도록 하는 플랫폼 및 언어 중립적인 인터페이스다. 웹 브라우저가 HTML 문서를 파싱하면, 그 결과물이 바로 DOM 트리(tree)이며, JavaScript를 통해 이 트리의 노드를 생성, 수정, 삭제할 수 있다.
+DOM(Document Object Model): HTML·XML·SVG 문서를 프로그래밍 방식으로 접근·조작하는 플랫폼 및 언어 중립 인터페이스
 
-DOM은 단순한 API가 아니라, 문서의 구조적 표현(structural representation)이다. 브라우저는 HTML 소스 코드를 읽고, 이를 메모리 상의 객체 트리로 변환한다. 이 트리의 각 요소는 노드(Node) 객체로 표현되며, 부모-자식(parent-child), 형제(sibling) 관계를 형성한다.
+- 웹 브라우저가 HTML 문서를 파싱 → 결과물이 바로 DOM 트리(tree)
+- JavaScript를 통해 트리의 노드를 생성·수정·삭제 가능
+
+DOM: 단순한 API가 아니라 문서의 구조적 표현(structural representation)
+
+- 브라우저가 HTML 소스 코드를 읽어 메모리 상의 객체 트리로 변환
+- 트리의 각 요소는 노드(Node) 객체로 표현 → 부모-자식(parent-child)·형제(sibling) 관계 형성
 
 ```
 Document
@@ -45,7 +51,9 @@ Document
 
 #### Living Standard로서의 DOM
 
-WHATWG(Web Hypertext Application Technology Working Group)는 DOM 명세를 Living Standard 방식으로 관리한다. 이는 버전 번호 없이 지속적으로 업데이트되는 단일 문서를 의미한다. W3C의 스냅샷 기반 표준과 달리, Living Standard는 항상 최신 상태를 유지하며 브라우저 구현과 동기화된다.
+WHATWG(Web Hypertext Application Technology Working Group): DOM 명세를 Living Standard 방식으로 관리 → 버전 번호 없이 지속적으로 업데이트되는 단일 문서
+
+- W3C의 스냅샷 기반 표준과 차이: Living Standard는 항상 최신 상태를 유지하며 브라우저 구현과 동기화
 
 Living Standard의 장점:
 - 브라우저 벤더와의 실시간 동기화
@@ -55,25 +63,35 @@ Living Standard의 장점:
 
 #### 역사: DOM Level 1 -> Living Standard
 
-DOM 명세의 역사는 웹의 발전과 궤를 같이한다:
+DOM 명세의 역사: 웹의 발전과 궤를 같이함
 
-| 시기 | 버전 | 주요 내용 |
-|------|------|-----------|
-| 1998 | DOM Level 1 | Core, HTML 기본 인터페이스 정의 |
-| 2000 | DOM Level 2 | Events, Style, Traversal, Range 추가 |
-| 2004 | DOM Level 3 | XPath, Load/Save, Validation 추가 |
-| 2015 | DOM4 (W3C) | 현대화된 API, Promise 기반 설계 |
-| 현재 | Living Standard | WHATWG 단일 명세, 지속적 업데이트 |
+- 1998 · DOM Level 1: Core·HTML 기본 인터페이스 정의
+- 2000 · DOM Level 2: Events·Style·Traversal·Range 추가
+- 2004 · DOM Level 3: XPath·Load/Save·Validation 추가
+- 2015 · DOM4 (W3C): 현대화된 API·Promise 기반 설계
+- 현재 · Living Standard: WHATWG 단일 명세·지속적 업데이트
 
-DOM Level 1에서는 기본적인 트리 조작(createElement, appendChild 등)만 가능했다. DOM Level 2에서 이벤트 모델(addEventListener)이 도입되었고, DOM Level 3에서 키보드 이벤트와 XPath가 추가되었다. 현재의 Living Standard는 이 모든 것을 통합하고, MutationObserver, Shadow DOM, Custom Elements 등 현대적 기능을 포함한다.
+- DOM Level 1: 기본적인 트리 조작(createElement, appendChild 등)만 가능
+- DOM Level 2: 이벤트 모델(addEventListener) 도입
+- DOM Level 3: 키보드 이벤트·XPath 추가
+- 현재 Living Standard: 위 전체를 통합 + MutationObserver·Shadow DOM·Custom Elements 등 현대적 기능 포함
 
 #### DOM의 핵심 개념
 
-트리 구조(Tree Structure): DOM은 순서가 있는 트리(ordered tree)다. 모든 노드는 최대 하나의 부모를 가지며, 0개 이상의 자식을 가질 수 있다. 트리의 루트(root)는 부모가 없는 노드이며, 잎(leaf)은 자식이 없는 노드다.
+트리 구조(Tree Structure): DOM은 순서가 있는 트리(ordered tree)
 
-노드(Node): 트리의 각 참여자(participant)를 노드라 한다. Document, Element, Text, Comment 등이 모두 Node를 상속한다. 모든 노드는 `nodeType`으로 구분되며, 12가지 타입이 정의되어 있다(실제 사용되는 것은 7가지).
+- 모든 노드는 최대 하나의 부모를 가지며 0개 이상의 자식을 가질 수 있음
+- 루트(root): 부모가 없는 노드
+- 잎(leaf): 자식이 없는 노드
 
-인터페이스(Interface): DOM은 IDL(Interface Definition Language)로 정의된다. 각 인터페이스는 속성(attribute)과 메서드(method)를 가지며, 상속 계층을 형성한다:
+노드(Node): 트리의 각 참여자(participant)
+
+- Document, Element, Text, Comment 등이 모두 Node를 상속
+- 모든 노드는 `nodeType`으로 구분 → 12가지 타입이 정의(실제 사용되는 것은 7가지)
+
+인터페이스(Interface): DOM은 IDL(Interface Definition Language)로 정의
+
+- 각 인터페이스는 속성(attribute)과 메서드(method)를 가지며 상속 계층을 형성
 
 ```
 EventTarget
@@ -92,17 +110,22 @@ EventTarget
     └── Attr
 ```
 
-모든 노드는 `EventTarget`을 상속하므로, 모든 DOM 노드에 이벤트 리스너를 등록할 수 있다. 이것이 DOM 이벤트 시스템의 기반이다.
+모든 노드는 `EventTarget`을 상속 → 모든 DOM 노드에 이벤트 리스너 등록 가능 → DOM 이벤트 시스템의 기반
 
 ---
 
 ### 2. 노드(Node) 인터페이스
 
-Node 인터페이스는 DOM 트리의 모든 참여자가 구현하는 기본 인터페이스다. Document, Element, Text, Comment 등 모든 노드 타입이 Node를 상속하며, 트리 탐색과 조작을 위한 핵심 속성과 메서드를 제공한다.
+Node 인터페이스: DOM 트리의 모든 참여자가 구현하는 기본 인터페이스
+
+- Document, Element, Text, Comment 등 모든 노드 타입이 Node를 상속
+- 트리 탐색과 조작을 위한 핵심 속성·메서드 제공
 
 #### 2.1 Node 타입 상수
 
-Node 인터페이스는 노드의 종류를 구분하기 위한 상수를 정의한다. `nodeType` 속성이 반환하는 값이며, 각 상수는 unsigned short(정수) 값이다.
+Node 인터페이스: 노드의 종류를 구분하기 위한 상수를 정의
+
+- `nodeType` 속성이 반환하는 값이며, 각 상수는 unsigned short(정수) 값
 
 ```javascript
 // Node 타입 상수 (IDL 정의)
@@ -121,17 +144,15 @@ interface Node : EventTarget {
 };
 ```
 
-| 상수 | 값 | 설명 | nodeName 반환값 |
-|------|-----|------|-----------------|
-| `ELEMENT_NODE` | 1 | HTML/SVG 요소 | 태그명 (대문자, 예: "DIV") |
-| `ATTRIBUTE_NODE` | 2 | 속성 노드 (레거시) | 속성명 |
-| `TEXT_NODE` | 3 | 텍스트 내용 | "#text" |
-| `CDATA_SECTION_NODE` | 4 | XML CDATA 섹션 | "#cdata-section" |
-| `PROCESSING_INSTRUCTION_NODE` | 7 | XML 처리 명령 | target 값 |
-| `COMMENT_NODE` | 8 | 주석 | "#comment" |
-| `DOCUMENT_NODE` | 9 | 문서 루트 | "#document" |
-| `DOCUMENT_TYPE_NODE` | 10 | DOCTYPE 선언 | doctype name |
-| `DOCUMENT_FRAGMENT_NODE` | 11 | 문서 조각 | "#document-fragment" |
+- `ELEMENT_NODE` (값 1): HTML/SVG 요소 · nodeName은 태그명(대문자, 예: "DIV")
+- `ATTRIBUTE_NODE` (값 2): 속성 노드(레거시) · nodeName은 속성명
+- `TEXT_NODE` (값 3): 텍스트 내용 · nodeName은 "#text"
+- `CDATA_SECTION_NODE` (값 4): XML CDATA 섹션 · nodeName은 "#cdata-section"
+- `PROCESSING_INSTRUCTION_NODE` (값 7): XML 처리 명령 · nodeName은 target 값
+- `COMMENT_NODE` (값 8): 주석 · nodeName은 "#comment"
+- `DOCUMENT_NODE` (값 9): 문서 루트 · nodeName은 "#document"
+- `DOCUMENT_TYPE_NODE` (값 10): DOCTYPE 선언 · nodeName은 doctype name
+- `DOCUMENT_FRAGMENT_NODE` (값 11): 문서 조각 · nodeName은 "#document-fragment"
 
 ```javascript
 // 노드 타입 확인 예제
@@ -183,7 +204,10 @@ console.log(commentNode.nodeValue);              // "주석 내용"
 
 ##### textContent 속성
 
-`textContent`는 노드와 그 자손의 텍스트 내용을 반환하거나 설정한다. `innerText`와 달리 CSS에 의해 숨겨진 텍스트도 포함하며, 렌더링을 트리거하지 않아 성능이 우수하다.
+`textContent`: 노드와 그 자손의 텍스트 내용을 반환·설정
+
+- `innerText`와 차이: CSS에 의해 숨겨진 텍스트도 포함
+- 렌더링을 트리거하지 않음 → 성능 우수
 
 ```javascript
 // textContent 읽기
@@ -578,7 +602,10 @@ parent.replaceChildren();
 
 ### 3. Document 인터페이스
 
-Document 인터페이스는 웹 페이지 전체를 나타내는 진입점(entry point)이다. HTML 문서에서 `document` 전역 객체가 바로 Document 인터페이스의 인스턴스이며, DOM 트리의 루트 역할을 한다. 요소 생성, 검색, 문서 메타데이터 접근 등 핵심 기능을 제공한다.
+Document 인터페이스: 웹 페이지 전체를 나타내는 진입점(entry point)
+
+- HTML 문서에서 `document` 전역 객체가 바로 Document 인터페이스의 인스턴스 → DOM 트리의 루트 역할
+- 요소 생성·검색·문서 메타데이터 접근 등 핵심 기능 제공
 
 #### 3.1 Document 속성
 
@@ -899,7 +926,10 @@ console.log(impl.hasFeature());              // true
 
 ### 4. Element 인터페이스
 
-Element 인터페이스는 DOM 트리에서 요소를 나타내는 인터페이스다. HTML 요소(`<div>`, `<p>`, `<span>` 등), SVG 요소(`<svg>`, `<circle>` 등), 그리고 사용자 정의 요소(Custom Elements)가 모두 Element를 상속한다. 속성(attribute) 조작, DOM 탐색, 기하학적 정보 접근, Shadow DOM 등 광범위한 기능을 제공한다.
+Element 인터페이스: DOM 트리에서 요소를 나타내는 인터페이스
+
+- HTML 요소(`<div>`, `<p>`, `<span>` 등)·SVG 요소(`<svg>`, `<circle>` 등)·사용자 정의 요소(Custom Elements)가 모두 Element를 상속
+- 속성(attribute) 조작·DOM 탐색·기하학적 정보 접근·Shadow DOM 등 광범위한 기능 제공
 
 #### 4.1 Element 기본 속성
 
@@ -1340,7 +1370,10 @@ slot.addEventListener('slotchange', () => {
 
 ### 5. Attr 인터페이스
 
-Attr 인터페이스는 요소의 속성을 나타낸다. 현재 Living Standard의 IDL에서도 `interface Attr : Node`로 여전히 Node를 상속하며, nodeType은 하위 호환성을 위해 2(ATTRIBUTE_NODE)를 반환한다. Attr을 Node에서 분리하자는 제안(whatwg/dom #102)이 논의된 적은 있지만, 이는 아직 병합되지 않은 오픈 이슈일 뿐 스펙에 반영되지 않았다.
+Attr 인터페이스: 요소의 속성을 나타냄
+
+- 현재 Living Standard의 IDL에서도 `interface Attr : Node`로 여전히 Node를 상속 → nodeType은 하위 호환성을 위해 2(ATTRIBUTE_NODE) 반환
+- Attr을 Node에서 분리하자는 제안(whatwg/dom #102) 논의된 바 있으나, 병합되지 않은 오픈 이슈일 뿐 스펙에는 미반영
 
 ```javascript
 // Attr 객체 얻기
@@ -1390,7 +1423,9 @@ console.log(retrieved.ownerElement === el);   // true
 
 ### 6. CharacterData 인터페이스
 
-CharacterData는 Text, Comment, CDATASection, ProcessingInstruction의 공통 부모 인터페이스다. 문자 데이터를 가진 노드의 공통 속성과 메서드를 정의한다.
+CharacterData: Text·Comment·CDATASection·ProcessingInstruction의 공통 부모 인터페이스
+
+- 문자 데이터를 가진 노드의 공통 속성·메서드 정의
 
 #### 6.1 CharacterData 속성과 메서드
 
@@ -1512,7 +1547,10 @@ console.log(pi.nodeType);                   // 7 (PROCESSING_INSTRUCTION_NODE)
 
 ### 7. DocumentFragment 인터페이스
 
-DocumentFragment는 부모가 없는 최소한의 문서 객체다. DOM 트리의 경량 버전으로, 여러 노드를 그룹화하여 한 번에 삽입할 때 사용한다. Document와 유사하게 동작하지만 활성 문서 트리의 일부가 아니므로, Fragment에 대한 변경이 실제 DOM에 영향을 주지 않고 리플로우(reflow)를 발생시키지 않는다.
+DocumentFragment: 부모가 없는 최소한의 문서 객체 → DOM 트리의 경량 버전
+
+- 여러 노드를 그룹화하여 한 번에 삽입할 때 사용
+- Document와 유사하게 동작하지만 활성 문서 트리의 일부가 아님 → Fragment에 대한 변경이 실제 DOM에 영향을 주지 않고 리플로우(reflow)도 발생시키지 않음
 
 #### 7.1 생성 및 기본 사용
 
@@ -1598,11 +1636,15 @@ container.appendChild(createCard('제목 2', '본문 2'));
 
 ### 8. DOM Collections
 
-DOM API는 여러 종류의 컬렉션을 반환한다. 컬렉션의 종류에 따라 live/static 여부, 사용 가능한 메서드, 순회 방식이 다르므로 정확히 이해해야 한다.
+DOM API: 여러 종류의 컬렉션을 반환
+
+- 컬렉션 종류에 따라 live/static 여부·사용 가능한 메서드·순회 방식이 다름 → 정확한 이해 필요
 
 #### 8.1 NodeList
 
-NodeList는 노드의 순서가 있는 컬렉션이다. live와 static 두 가지 변형이 존재한다.
+NodeList: 노드의 순서가 있는 컬렉션
+
+- live와 static 두 가지 변형 존재
 
 ```javascript
 // Live NodeList: DOM 변경이 자동 반영됨
@@ -1665,7 +1707,9 @@ const arr2 = [...staticList];
 
 #### 8.2 HTMLCollection
 
-HTMLCollection은 항상 live인 요소 컬렉션이다. getElementsByClassName, getElementsByTagName, children 등이 반환한다.
+HTMLCollection: 항상 live인 요소 컬렉션
+
+- getElementsByClassName, getElementsByTagName, children 등이 반환
 
 ```javascript
 // HTMLCollection은 항상 live
@@ -1735,7 +1779,7 @@ for (let i = divs.length - 1; i >= 0; i--) {
 
 #### 8.3 NamedNodeMap
 
-NamedNodeMap은 Attr 노드의 컬렉션으로, Element의 `attributes` 속성이 반환한다. 항상 live이다.
+NamedNodeMap: Attr 노드의 컬렉션 → Element의 `attributes` 속성이 반환, 항상 live
 
 ```javascript
 const el = document.createElement('div');
@@ -1779,7 +1823,9 @@ for (let i = 0; i < attrs.length; i++) {
 
 #### 8.4 DOMTokenList
 
-DOMTokenList는 공백으로 구분된 토큰 집합이다. Element의 `classList`가 대표적이며, `relList` 등에서도 사용된다.
+DOMTokenList: 공백으로 구분된 토큰 집합
+
+- Element의 `classList`가 대표적, `relList` 등에서도 사용
 
 ```javascript
 const el = document.createElement('a');
@@ -1843,11 +1889,13 @@ for (const [index, token] of classList.entries()) {
 
 ### 9. DOM Traversal Mixins
 
-DOM은 여러 인터페이스에 공통 기능을 추가하기 위해 mixin 패턴을 사용한다. Mixin은 독립적으로 인스턴스화할 수 없으며, 다른 인터페이스에 "혼합(mix-in)"되어 사용된다.
+DOM: 여러 인터페이스에 공통 기능을 추가하기 위해 mixin 패턴 사용
+
+- Mixin은 독립적으로 인스턴스화할 수 없으며, 다른 인터페이스에 "혼합(mix-in)"되어 사용
 
 #### 9.1 ParentNode Mixin
 
-ParentNode는 자식을 가질 수 있는 노드(Document, DocumentFragment, Element)에 혼합되는 인터페이스다.
+ParentNode: 자식을 가질 수 있는 노드(Document, DocumentFragment, Element)에 혼합되는 인터페이스
 
 ```javascript
 // children: 자식 요소만 포함하는 live HTMLCollection (Text, Comment 제외)
@@ -1927,7 +1975,10 @@ console.log(allItems.length);               // 2
 
 ##### moveBefore()
 
-2025년 3월경 ParentNode mixin에 병합된 메서드로, `insertBefore()`처럼 노드를 특정 위치로 옮기지만 내부적으로 제거 후 재삽입하는 대신 원자적(atomic)으로 이동시켜 노드의 상태를 보존한다. iframe 로딩 상태, 비디오 재생, 포커스, 애니메이션/트랜지션 상태 등이 유지되며, Interop 2026 주요 관심 영역 중 하나이기도 하다.
+2025년 3월경 ParentNode mixin에 병합된 메서드
+
+- `insertBefore()`처럼 노드를 특정 위치로 옮기지만, 내부적으로 제거 후 재삽입하는 대신 원자적(atomic)으로 이동시켜 노드의 상태를 보존
+- iframe 로딩 상태·비디오 재생·포커스·애니메이션/트랜지션 상태 등이 유지 → Interop 2026 주요 관심 영역 중 하나
 
 ```javascript
 // insertBefore()와 시그니처는 동일하지만 상태를 보존한다
@@ -1941,7 +1992,7 @@ newContainer.moveBefore(iframe, null);
 
 #### 9.2 ChildNode Mixin
 
-ChildNode는 부모를 가질 수 있는 비문서 노드(DocumentType, Element, CharacterData)에 혼합된다.
+ChildNode: 부모를 가질 수 있는 비문서 노드(DocumentType, Element, CharacterData)에 혼합
 
 ```javascript
 // before(...nodes): 이 노드 앞에 형제로 삽입
@@ -1983,7 +2034,7 @@ oldEl.replaceWith(frag1, ' 그리고 ', frag2);
 
 #### 9.3 NonDocumentTypeChildNode Mixin
 
-NonDocumentTypeChildNode는 Element와 CharacterData에 혼합되어, 요소 단위 형제 탐색을 제공한다.
+NonDocumentTypeChildNode: Element와 CharacterData에 혼합 → 요소 단위 형제 탐색 제공
 
 ```javascript
 // HTML 구조:
@@ -2050,7 +2101,7 @@ function getNextSiblings(element) {
 
 #### 9.4 Slottable Mixin
 
-Slottable은 Element와 Text에 혼합되어, Shadow DOM의 슬롯 메커니즘을 지원한다.
+Slottable: Element와 Text에 혼합 → Shadow DOM의 슬롯 메커니즘 지원
 
 ```javascript
 // assignedSlot: 이 노드가 할당된 <slot> 요소 (없으면 null)
@@ -2110,7 +2161,7 @@ Part 2는 [dom-events.md](dom-events.md)에서 계속됩니다. (이벤트 시�
 
 ## DOM Living Standard - 이벤트 시스템 및 고급 기능 (Part 2)
 
-> 이 문서는 [DOM Living Standard 기본](dom.md)의 후속 문서입니다.
+> [DOM Living Standard 기본](dom.md)의 후속 문서
 
 ---
 
@@ -2135,22 +2186,27 @@ Part 2는 [dom-events.md](dom-events.md)에서 계속됩니다. (이벤트 시�
 
 #### DOM 이벤트 모델의 역사
 
-웹 초창기에는 표준화된 이벤트 모델이 없었다. Netscape는 이벤트 캡처링(Event Capturing) 모델을, Internet Explorer는 이벤트 버블링(Event Bubbling) 모델을 각각 독자적으로 구현했다.
+웹 초창기: 표준화된 이벤트 모델 없음
 
-| 시기 | 모델 | 특징 |
-|------|------|------|
-| ~1997 | 인라인 이벤트 핸들러 | `onclick="..."` HTML 속성 |
-| ~1997 | DOM Level 0 | `element.onclick = fn` 프로퍼티 방식 |
-| 2000 | DOM Level 2 Events | `addEventListener` 도입, 캡처+버블 통합 |
-| 현재 | Living Standard | `options` 객체, `passive`, `signal` 등 추가 |
+- Netscape → 이벤트 캡처링(Event Capturing) 모델 독자 구현
+- Internet Explorer → 이벤트 버블링(Event Bubbling) 모델 독자 구현
 
-DOM Level 2에서 두 모델을 통합하여 캡처 → 타겟 → 버블 3단계 전파 모델을 확립했다. 현재의 Living Standard는 이를 기반으로 성능 최적화(passive)와 생명주기 관리(signal) 기능을 추가했다.
+- ~1997 · 인라인 이벤트 핸들러: `onclick="..."` HTML 속성
+- ~1997 · DOM Level 0: `element.onclick = fn` 프로퍼티 방식
+- 2000 · DOM Level 2 Events: `addEventListener` 도입·캡처+버블 통합
+- 현재 · Living Standard: `options` 객체·`passive`·`signal` 등 추가
+
+DOM Level 2에서 두 모델을 통합 → 캡처 → 타겟 → 버블 3단계 전파 모델 확립
+
+- 현재의 Living Standard는 이를 기반으로 성능 최적화(passive)와 생명주기 관리(signal) 기능 추가
 
 ---
 
 ### 2. EventTarget
 
-`EventTarget`은 DOM 이벤트 시스템의 근간이 되는 인터페이스다. `Node`, `Window`, `XMLHttpRequest` 등 이벤트를 수신할 수 있는 모든 객체가 이를 상속한다.
+`EventTarget`: DOM 이벤트 시스템의 근간이 되는 인터페이스
+
+- `Node`, `Window`, `XMLHttpRequest` 등 이벤트를 수신할 수 있는 모든 객체가 이를 상속
 
 ```webidl
 interface EventTarget {
@@ -2180,10 +2236,13 @@ button.addEventListener('click', handleClick, {
 
 각 옵션의 역할:
 
-- `capture`: `true`이면 캡처 단계에서 리스너가 실행된다. 같은 핸들러라도 `capture` 값이 다르면 별개의 리스너로 등록된다.
-- `once`: 리스너가 최초 1회 호출된 후 자동으로 제거된다. 초기화 로직이나 일회성 애니메이션에 유용하다.
-- `passive`: 브라우저에게 이 리스너가 `preventDefault()`를 호출하지 않을 것임을 알린다. 스크롤/터치 이벤트에서 브라우저가 기본 동작을 즉시 실행할 수 있어 성능이 향상된다.
-- `signal`: `AbortSignal`을 전달하면, 해당 시그널이 중단될 때 리스너가 자동 제거된다.
+- `capture`: `true`이면 캡처 단계에서 리스너 실행
+  - 같은 핸들러라도 `capture` 값이 다르면 별개의 리스너로 등록됨
+- `once`: 리스너가 최초 1회 호출된 후 자동 제거
+  - 초기화 로직이나 일회성 애니메이션에 유용
+- `passive`: 브라우저에게 이 리스너가 `preventDefault()`를 호출하지 않을 것임을 알림
+  - 스크롤/터치 이벤트에서 브라우저가 기본 동작을 즉시 실행 가능 → 성능 향상
+- `signal`: `AbortSignal`을 전달하면 해당 시그널이 중단될 때 리스너 자동 제거
 
 ```js
 // passive 리스너 - 스크롤 성능 최적화
@@ -2202,7 +2261,7 @@ controller.abort();
 
 #### removeEventListener
 
-리스너를 제거할 때는 등록 시와 동일한 함수 참조와 동일한 `capture` 값을 전달해야 한다.
+리스너 제거: 등록 시와 동일한 함수 참조·동일한 `capture` 값 전달 필요
 
 ```js
 // 올바른 제거
@@ -2217,7 +2276,9 @@ el.removeEventListener('click', (e) => console.log(e)); // 다른 참조 -> 제�
 
 #### dispatchEvent
 
-프로그래밍 방식으로 이벤트를 발생시킨다. 동기적으로 실행되며 `isTrusted`는 `false`가 된다.
+프로그래밍 방식으로 이벤트 발생
+
+- 동기적으로 실행되며 `isTrusted`는 `false`
 
 ```js
 const event = new Event('build', { bubbles: true, cancelable: true });
@@ -2231,7 +2292,7 @@ if (canceled) {
 
 ### 3. Event 인터페이스
 
-모든 이벤트 객체의 기반 인터페이스다.
+모든 이벤트 객체의 기반 인터페이스
 
 ```webidl
 interface Event {
@@ -2256,16 +2317,14 @@ interface Event {
 
 #### 핵심 속성
 
-| 속성 | 설명 |
-|------|------|
-| `type` | 이벤트 이름 문자열 (`"click"`, `"input"` 등) |
-| `target` | 이벤트가 최초로 디스패치된 객체 (이벤트 원점) |
-| `currentTarget` | 현재 실행 중인 리스너가 등록된 객체 |
-| `eventPhase` | 현재 전파 단계 (0: None, 1: Capture, 2: Target, 3: Bubble) |
-| `bubbles` | 이벤트가 버블링되는지 여부 |
-| `cancelable` | `preventDefault()`로 취소 가능한지 여부 |
-| `composed` | Shadow DOM 경계를 넘어 전파되는지 여부 |
-| `isTrusted` | 브라우저가 생성한 이벤트이면 `true`, 스크립트가 생성하면 `false` |
+- `type`: 이벤트 이름 문자열(`"click"`, `"input"` 등)
+- `target`: 이벤트가 최초로 디스패치된 객체(이벤트 원점)
+- `currentTarget`: 현재 실행 중인 리스너가 등록된 객체
+- `eventPhase`: 현재 전파 단계(0: None, 1: Capture, 2: Target, 3: Bubble)
+- `bubbles`: 이벤트가 버블링되는지 여부
+- `cancelable`: `preventDefault()`로 취소 가능한지 여부
+- `composed`: Shadow DOM 경계를 넘어 전파되는지 여부
+- `isTrusted`: 브라우저가 생성한 이벤트이면 `true`, 스크립트가 생성하면 `false`
 
 #### target vs currentTarget
 
@@ -2279,7 +2338,10 @@ document.getElementById('parent').addEventListener('click', (e) => {
 
 #### composedPath
 
-`composedPath()`는 이벤트가 실제로 통과한 전체 경로를 타겟에서 최상위 순서로 배열로 반환한다. Shadow DOM 내부에서 발생한 이벤트는 `target`이 호스트 요소로 리타게팅되어 원래 발생 지점을 알기 어려운데, `composedPath()`는 리타게팅 이전의 실제 경로(Shadow 경계 포함)를 그대로 보여준다.
+`composedPath()`: 이벤트가 실제로 통과한 전체 경로를 타겟에서 최상위 순서로 배열로 반환
+
+- Shadow DOM 내부에서 발생한 이벤트는 `target`이 호스트 요소로 리타게팅되어 원래 발생 지점을 알기 어려움
+- `composedPath()`는 리타게팅 이전의 실제 경로(Shadow 경계 포함)를 그대로 보여줌
 
 ```js
 shadow.addEventListener('click', (e) => {
@@ -2304,7 +2366,7 @@ element.addEventListener('click', (e) => {
 
 #### 3단계 전파 모델
 
-이벤트가 발생하면 DOM 트리를 따라 3단계로 전파된다.
+이벤트 발생 → DOM 트리를 따라 3단계로 전파
 
 ```
 Phase 1: Capture (Window → Document → ... → Target의 부모)
@@ -2334,7 +2396,10 @@ parent.addEventListener('click', handler, false);
 
 #### 이벤트 위임 패턴
 
-이벤트 버블링을 활용하여 부모 요소에 단일 리스너를 등록하는 패턴이다. 동적으로 추가되는 자식 요소도 자동으로 처리할 수 있고, 메모리 효율이 높다.
+이벤트 버블링을 활용하여 부모 요소에 단일 리스너를 등록하는 패턴
+
+- 동적으로 추가되는 자식 요소도 자동으로 처리 가능
+- 메모리 효율이 높음
 
 ```js
 // 비효율적: 각 항목에 리스너 등록
@@ -2350,13 +2415,15 @@ document.querySelector('ul').addEventListener('click', (e) => {
 });
 ```
 
-`closest()` 메서드를 사용하면 클릭된 요소가 `<li>` 내부의 `<span>`이라 하더라도 올바르게 `<li>`를 찾아낼 수 있다.
+`closest()` 메서드 사용 시, 클릭된 요소가 `<li>` 내부의 `<span>`이라 하더라도 올바르게 `<li>`를 찾아낼 수 있음
 
 ---
 
 ### 5. CustomEvent
 
-애플리케이션 고유의 이벤트를 정의할 수 있다. `detail` 속성으로 임의의 데이터를 전달한다.
+애플리케이션 고유의 이벤트 정의 가능
+
+- `detail` 속성으로 임의의 데이터 전달
 
 ```js
 // 커스텀 이벤트 생성 및 디스패치
@@ -2379,7 +2446,7 @@ document.addEventListener('user:login', (e) => {
 
 #### 컴포넌트 간 통신
 
-CustomEvent는 느슨하게 결합된 컴포넌트 간 통신에 적합하다.
+CustomEvent: 느슨하게 결합된 컴포넌트 간 통신에 적합
 
 ```js
 // 컴포넌트 A: 장바구니에 상품 추가 알림
@@ -2491,7 +2558,7 @@ element.addEventListener('pointerdown', (e) => {
 
 #### CompositionEvent
 
-IME(Input Method Editor)로 한글, 일본어, 중국어 등을 입력할 때 발생한다.
+IME(Input Method Editor)로 한글·일본어·중국어 등을 입력할 때 발생
 
 ```js
 input.addEventListener('compositionstart', (e) => {
@@ -2509,7 +2576,9 @@ input.addEventListener('compositionend', (e) => {
 
 ### 7. MutationObserver
 
-DOM 변경을 비동기적으로 감시한다. 이전의 `MutationEvents`(DOM Level 2)는 동기적 실행으로 인한 성능 문제로 폐기되었고, `MutationObserver`가 대체제로 도입되었다.
+DOM 변경을 비동기적으로 감시
+
+- 이전의 `MutationEvents`(DOM Level 2)는 동기적 실행으로 인한 성능 문제로 폐기 → `MutationObserver`가 대체제로 도입
 
 ```js
 const observer = new MutationObserver((mutations, observer) => {
@@ -2546,16 +2615,14 @@ observer.observe(targetNode, {
 
 #### MutationRecord 구조
 
-| 속성 | 설명 |
-|------|------|
-| `type` | `'childList'`, `'attributes'`, `'characterData'` |
-| `target` | 변경이 발생한 노드 |
-| `addedNodes` | 추가된 노드 목록 (NodeList) |
-| `removedNodes` | 제거된 노드 목록 (NodeList) |
-| `previousSibling` | 추가/제거된 노드의 이전 형제 |
-| `nextSibling` | 추가/제거된 노드의 다음 형제 |
-| `attributeName` | 변경된 속성 이름 |
-| `oldValue` | 변경 전 값 |
+- `type`: `'childList'`·`'attributes'`·`'characterData'`
+- `target`: 변경이 발생한 노드
+- `addedNodes`: 추가된 노드 목록(NodeList)
+- `removedNodes`: 제거된 노드 목록(NodeList)
+- `previousSibling`: 추가/제거된 노드의 이전 형제
+- `nextSibling`: 추가/제거된 노드의 다음 형제
+- `attributeName`: 변경된 속성 이름
+- `oldValue`: 변경 전 값
 
 #### disconnect와 takeRecords
 
@@ -2573,7 +2640,9 @@ observer.disconnect();
 
 #### Range
 
-`Range`는 문서 내 연속된 영역을 표현한다. 텍스트 선택, DOM 조작, 에디터 구현에 핵심적이다.
+`Range`: 문서 내 연속된 영역을 표현
+
+- 텍스트 선택·DOM 조작·에디터 구현에 핵심적
 
 ```js
 const range = new Range();
@@ -2639,11 +2708,13 @@ const text = selection.toString();
 
 ### 9. NodeIterator와 TreeWalker
 
-DOM 트리를 순회하기 위한 전용 인터페이스다.
+DOM 트리를 순회하기 위한 전용 인터페이스
 
 #### NodeIterator
 
-순차적(flat) 순회에 적합하다. `nextNode()`와 `previousNode()`로 이동한다.
+순차적(flat) 순회에 적합
+
+- `nextNode()`와 `previousNode()`로 이동
 
 ```js
 const iterator = document.createNodeIterator(
@@ -2667,7 +2738,9 @@ while (node = iterator.nextNode()) {
 
 #### TreeWalker
 
-트리 구조 탐색에 적합하다. 부모/자식/형제 방향으로 자유롭게 이동할 수 있다.
+트리 구조 탐색에 적합
+
+- 부모/자식/형제 방향으로 자유롭게 이동 가능
 
 ```js
 const walker = document.createTreeWalker(
@@ -2695,22 +2768,26 @@ walker.currentNode;       // 현재 노드 (읽기/쓰기 가능)
 
 #### NodeFilter 상수
 
-| 상수 | 값 | 대상 |
-|------|------|------|
-| `SHOW_ALL` | `0xFFFFFFFF` | 모든 노드 |
-| `SHOW_ELEMENT` | `0x1` | Element 노드 |
-| `SHOW_TEXT` | `0x4` | Text 노드 |
-| `SHOW_COMMENT` | `0x80` | Comment 노드 |
-| `SHOW_DOCUMENT` | `0x100` | Document 노드 |
-| `SHOW_DOCUMENT_FRAGMENT` | `0x400` | DocumentFragment |
+- `SHOW_ALL` (`0xFFFFFFFF`): 모든 노드
+- `SHOW_ELEMENT` (`0x1`): Element 노드
+- `SHOW_TEXT` (`0x4`): Text 노드
+- `SHOW_COMMENT` (`0x80`): Comment 노드
+- `SHOW_DOCUMENT` (`0x100`): Document 노드
+- `SHOW_DOCUMENT_FRAGMENT` (`0x400`): DocumentFragment
 
-FILTER_REJECT vs FILTER_SKIP: `REJECT`는 해당 노드와 그 하위 트리 전체를 건너뛰고, `SKIP`은 해당 노드만 건너뛰고 자식은 계속 순회한다. (NodeIterator에서는 둘 다 동일하게 동작한다.)
+FILTER_REJECT vs FILTER_SKIP
+
+- `REJECT`: 해당 노드와 그 하위 트리 전체를 건너뜀
+- `SKIP`: 해당 노드만 건너뛰고 자식은 계속 순회
+- NodeIterator에서는 둘 다 동일하게 동작
 
 ---
 
 ### 10. AbortController와 AbortSignal
 
-비동기 작업의 취소를 위한 범용 메커니즘이다. fetch 요청뿐 아니라 이벤트 리스너, 스트림, 커스텀 비동기 작업 등에 널리 사용된다.
+비동기 작업의 취소를 위한 범용 메커니즘
+
+- fetch 요청뿐 아니라 이벤트 리스너·스트림·커스텀 비동기 작업 등에 널리 사용
 
 #### 기본 사용
 
@@ -2780,7 +2857,9 @@ class MyComponent {
 
 ### 11. Shadow DOM
 
-Shadow DOM은 DOM의 캡슐화(encapsulation) 메커니즘이다. 컴포넌트 내부의 DOM 구조와 스타일을 외부로부터 격리한다.
+Shadow DOM: DOM의 캡슐화(encapsulation) 메커니즘
+
+- 컴포넌트 내부의 DOM 구조와 스타일을 외부로부터 격리
 
 #### attachShadow
 
@@ -2828,7 +2907,7 @@ customElements.define('my-card', MyCard);
 
 #### Slot
 
-`<slot>`은 외부 콘텐츠(Light DOM)가 Shadow DOM 내부에 투영(projection)되는 지점이다.
+`<slot>`: 외부 콘텐츠(Light DOM)가 Shadow DOM 내부에 투영(projection)되는 지점
 
 ```js
 // slotchange 이벤트로 슬롯 변경 감지
@@ -2840,13 +2919,11 @@ shadow.querySelector('slot').addEventListener('slotchange', (e) => {
 
 #### Shadow DOM CSS 셀렉터
 
-| 셀렉터 | 적용 대상 |
-|--------|----------|
-| `:host` | Shadow Root의 호스트 요소 |
-| `:host(selector)` | 조건부 호스트 스타일링 |
-| `:host-context(selector)` | 호스트의 조상이 조건에 맞을 때 |
-| `::slotted(selector)` | 슬롯에 분배된 Light DOM 요소 (직계만) |
-| `::part(name)` | 외부에서 Shadow DOM 내부 요소를 스타일링 |
+- `:host`: Shadow Root의 호스트 요소
+- `:host(selector)`: 조건부 호스트 스타일링
+- `:host-context(selector)`: 호스트의 조상이 조건에 맞을 때
+- `::slotted(selector)`: 슬롯에 분배된 Light DOM 요소(직계만)
+- `::part(name)`: 외부에서 Shadow DOM 내부 요소를 스타일링
 
 ```css
 /* 외부 CSS에서 part를 통해 Shadow DOM 내부 스타일링 */
@@ -2863,7 +2940,9 @@ shadow.innerHTML = `<header part="header">...</header>`;
 
 #### 이벤트와 Shadow DOM
 
-`composed: true`인 이벤트만 Shadow DOM 경계를 넘어 전파된다. 네이티브 UI 이벤트(click, input 등)는 대부분 composed이다.
+`composed: true`인 이벤트만 Shadow DOM 경계를 넘어 전파
+
+- 네이티브 UI 이벤트(click, input 등)는 대부분 composed
 
 ```js
 // Shadow DOM 내부에서 발생한 이벤트
@@ -2879,11 +2958,13 @@ shadowChild.dispatchEvent(new CustomEvent('internal', {
 
 ### 12. Mutation Algorithms
 
-DOM 명세는 노드 조작 시 내부적으로 실행되는 알고리즘을 정의한다. 이 알고리즘들은 `appendChild`, `removeChild`, `replaceChild` 등의 API 호출 시 브라우저가 실제로 수행하는 단계를 기술한다.
+DOM 명세: 노드 조작 시 내부적으로 실행되는 알고리즘을 정의
+
+- 이 알고리즘들은 `appendChild`, `removeChild`, `replaceChild` 등의 API 호출 시 브라우저가 실제로 수행하는 단계를 기술
 
 #### Insert (삽입)
 
-`parent.appendChild(node)` 또는 `parent.insertBefore(node, child)` 호출 시 실행된다.
+`parent.appendChild(node)` 또는 `parent.insertBefore(node, child)` 호출 시 실행
 
 ```
 1. 삽입할 노드가 DocumentFragment이면 그 자식 노드들을 삽입 대상으로 설정
@@ -2921,7 +3002,7 @@ parent.removeChild(element);
 
 #### Replace (교체)
 
-`parent.replaceChild(newChild, oldChild)` 호출 시 실행된다.
+`parent.replaceChild(newChild, oldChild)` 호출 시 실행
 
 ```
 1. 새 노드의 유효성 검증 (Document 구조 위반 확인)
@@ -2941,7 +3022,9 @@ oldElement.replaceWith(span, ' 텍스트 ', anotherSpan);
 
 #### Adopt (입양)
 
-노드를 다른 Document로 이동시키는 알고리즘이다. `document.adoptNode(node)` 호출 시 또는 다른 Document의 노드를 삽입할 때 자동으로 실행된다.
+노드를 다른 Document로 이동시키는 알고리즘
+
+- `document.adoptNode(node)` 호출 시 또는 다른 Document의 노드를 삽입할 때 자동으로 실행
 
 ```
 1. 노드의 기존 부모가 있으면 해당 부모에서 제거
@@ -2965,7 +3048,7 @@ document.body.appendChild(imported);
 
 #### 주요 유효성 검사 규칙
 
-DOM 트리의 무결성을 보장하기 위해 삽입/교체 시 다음 규칙이 적용된다.
+DOM 트리의 무결성 보장을 위해 삽입/교체 시 다음 규칙 적용
 
 ```
 - Document는 최대 하나의 Element 자식(document element)을 가질 수 있다

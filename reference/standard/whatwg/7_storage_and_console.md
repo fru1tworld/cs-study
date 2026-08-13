@@ -23,7 +23,10 @@
 
 #### 웹 스토리지 관리 표준이란
 
-Storage Standard는 WHATWG에서 관리하는 Living Standard로, 웹 브라우저에서 사이트별 데이터 저장과 관련된 인프라를 정의한다. 이 표준은 개별 스토리지 API(localStorage, IndexedDB, Cache API 등)를 직접 정의하지는 않지만, 이들 API가 공유하는 공통 기반을 제공한다.
+Storage Standard: WHATWG에서 관리하는 Living Standard · 웹 브라우저의 사이트별 데이터 저장 인프라 정의
+
+- localStorage·IndexedDB·Cache API 등 개별 스토리지 API 자체는 직접 정의하지 않음
+- 대신 이들 API가 공유하는 공통 기반(쿼터·지속성·격리 정책)을 제공
 
 ```
 [Storage Standard의 위치]
@@ -42,14 +45,12 @@ Storage Standard는 WHATWG에서 관리하는 Living Standard로, 웹 브라우�
 
 #### 핵심 개념
 
-| 개념 | 설명 |
-|------|------|
-| Storage shelf | 출처(origin)별 스토리지 컨테이너 |
-| Storage bucket | 스토리지 선반 내의 논리적 그룹 |
-| Storage bottle | 스토리지 버킷 내의 개별 API 영역 |
-| Quota | 출처별 스토리지 사용량 제한 |
-| Persistence | 데이터의 지속성(best-effort vs persistent) |
-| Partitioning | 사이트 간 스토리지 격리 |
+- Storage shelf: 출처(origin)별 스토리지 컨테이너
+- Storage bucket: 스토리지 선반 내의 논리적 그룹
+- Storage bottle: 스토리지 버킷 내의 개별 API 영역
+- Quota: 출처별 스토리지 사용량 제한
+- Persistence: 데이터의 지속성(best-effort vs persistent)
+- Partitioning: 사이트 간 스토리지 격리
 
 #### 스토리지 계층 구조
 
@@ -68,7 +69,9 @@ Storage shelf (출처당 하나)
 
 #### 2.1 Best-effort 스토리지
 
-best-effort 스토리지는 기본 스토리지 모드로, 브라우저가 저장 공간이 부족할 때 자동으로 데이터를 삭제할 수 있다.
+best-effort 스토리지: 기본 스토리지 모드
+
+- 브라우저가 저장 공간이 부족할 때 자동으로 데이터를 삭제 가능
 
 ```javascript
 // 기본적으로 모든 웹 스토리지는 best-effort
@@ -84,7 +87,7 @@ localStorage.setItem('data', 'value');  // best-effort
 
 #### 2.2 Persistent 스토리지
 
-persistent 스토리지는 사용자가 명시적으로 삭제하지 않는 한 브라우저가 자동으로 데이터를 삭제하지 않는다.
+persistent 스토리지: 사용자가 명시적으로 삭제하지 않는 한 브라우저가 자동으로 삭제하지 않는 모드
 
 ```javascript
 // persistent 스토리지 요청
@@ -103,17 +106,25 @@ async function requestPersistentStorage() {
 
 #### 2.3 두 유형 비교
 
-| 특성 | Best-effort | Persistent |
-|------|-------------|-----------|
-| 기본 상태 | 기본값 | 명시적 요청 필요 |
-| 자동 삭제 | 가능 (저장 공간 부족 시) | 불가 (사용자만 삭제 가능) |
-| 요청 방법 | 별도 요청 불필요 | `navigator.storage.persist()` |
-| 삭제 순서 | LRU 기반 (가장 오래 미사용) | 삭제 대상에서 제외 |
-| 사용 사례 | 캐시, 임시 데이터 | 사용자 생성 문서, 중요 데이터 |
+- 기본 상태
+  - Best-effort: 기본값
+  - Persistent: 명시적 요청 필요
+- 자동 삭제
+  - Best-effort: 가능(저장 공간 부족 시)
+  - Persistent: 불가(사용자만 삭제 가능)
+- 요청 방법
+  - Best-effort: 별도 요청 불필요
+  - Persistent: `navigator.storage.persist()`
+- 삭제 순서
+  - Best-effort: LRU 기반(가장 오래 미사용)
+  - Persistent: 삭제 대상에서 제외
+- 사용 사례
+  - Best-effort: 캐시·임시 데이터
+  - Persistent: 사용자 생성 문서·중요 데이터
 
 #### 2.4 Persistent 스토리지 부여 조건
 
-브라우저마다 persistent 스토리지를 자동으로 부여하는 조건이 다르다.
+브라우저마다 persistent 스토리지를 자동으로 부여하는 조건이 다름
 
 ```
 [Chrome의 자동 persistent 부여 조건]
@@ -154,7 +165,7 @@ interface StorageEstimate {
 
 #### 3.2 navigator.storage.estimate()
 
-현재 출처의 스토리지 사용량과 할당량을 확인한다.
+현재 출처의 스토리지 사용량과 할당량 확인
 
 ```javascript
 async function checkStorageUsage() {
@@ -267,7 +278,7 @@ async function accessOPFS() {
 
 #### 4.1 쿼터 개념
 
-스토리지 쿼터(quota)는 각 출처(origin)가 사용할 수 있는 최대 스토리지 공간이다.
+스토리지 쿼터(quota): 각 출처(origin)가 사용할 수 있는 최대 스토리지 공간
 
 ```
 [쿼터 계산 개념]
@@ -284,14 +295,24 @@ async function accessOPFS() {
 
 #### 4.2 브라우저별 쿼터 정책
 
-| 브라우저 | 전체 쿼터 | 출처별 쿼터 | 비고 |
-|----------|----------|------------|------|
-| Chrome | 디스크의 ~60% | 전체 풀의 ~60% | 동적 계산 |
-| Firefox | 디스크의 ~50%(그룹 단위) | eTLD+1 그룹당 디스크의 ~10%, 최대 10GiB | 같은 eTLD+1의 모든 출처가 그룹 한도를 공유 |
-| Safari | 디바이스/앱 유형에 따라 동적 | 브라우저 앱: 디스크의 최대 ~60%, 그 외 앱: 최대 ~15% | 버전별로 정책이 자주 바뀜, 최신 문서 확인 필요 |
-| Edge | Chrome과 동일 | Chrome과 동일 | Chromium 기반 |
+- Chrome
+  - 전체 쿼터: 디스크의 ~60%
+  - 출처별 쿼터: 전체 풀의 ~60%
+  - 비고: 동적 계산
+- Firefox
+  - 전체 쿼터: 디스크의 ~50%(그룹 단위)
+  - 출처별 쿼터: eTLD+1 그룹당 디스크의 ~10%, 최대 10GiB
+  - 비고: 같은 eTLD+1의 모든 출처가 그룹 한도를 공유
+- Safari
+  - 전체 쿼터: 디바이스/앱 유형에 따라 동적
+  - 출처별 쿼터: 브라우저 앱은 디스크의 최대 ~60%, 그 외 앱은 최대 ~15%
+  - 비고: 버전별로 정책이 자주 바뀜 → 최신 문서 확인 필요
+- Edge
+  - 전체 쿼터: Chrome과 동일
+  - 출처별 쿼터: Chrome과 동일
+  - 비고: Chromium 기반
 
-> 위 수치는 브라우저 정책 변경이 잦으므로 참고용이며, 정확한 값은 각 브라우저의 최신 공식 문서를 확인해야 한다.
+위 수치는 브라우저 정책 변경이 잦아 참고용 → 정확한 값은 각 브라우저의 최신 공식 문서로 확인
 
 ```javascript
 // 브라우저별 쿼터 확인 예제
@@ -388,7 +409,7 @@ navigator.storage.estimate() 에 포함:
 
 #### 5.1 Storage Buckets 개념
 
-Storage Buckets API는 하나의 출처 내에서 스토리지를 논리적으로 분리하는 메커니즘이다.
+Storage Buckets API: 하나의 출처 내에서 스토리지를 논리적으로 분리하는 메커니즘
 
 ```
 [Storage Buckets 구조]
@@ -409,7 +430,8 @@ Storage Buckets API는 하나의 출처 내에서 스토리지를 논리적으�
 
 #### 5.2 Storage Buckets API
 
-Storage Buckets API 자체는 Chrome 122+에서 정식 출시(stable)되었다. 다만 이 절에서 다루는 `durability` 옵션은 WHATWG Storage Standard가 아니라 별도의 WICG 제안(Storage Buckets Explainer)에 속하는 확장 기능이다.
+- Storage Buckets API 자체: Chrome 122+에서 정식 출시(stable)
+- 이 절에서 다루는 `durability` 옵션: WHATWG Storage Standard가 아니라 별도의 WICG 제안(Storage Buckets Explainer)에 속하는 확장 기능
 
 ```javascript
 // Storage Buckets API (Chrome 122+ 정식 지원, 다른 브라우저는 아직 미지원)
@@ -474,7 +496,9 @@ const relaxedBucket = await navigator.storageBuckets.open('cache', {
 
 #### 6.1 스토리지 압력이란
 
-스토리지 압력(Storage Pressure)은 디바이스의 저장 공간이 부족해지는 상태를 의미한다. 이 상태에서 브라우저는 데이터를 자동으로 삭제하여 공간을 확보한다.
+스토리지 압력(Storage Pressure): 디바이스의 저장 공간이 부족해지는 상태
+
+- 이 상태에서 브라우저는 데이터를 자동으로 삭제 → 공간 확보
 
 ```
 [스토리지 압력 레벨]
@@ -648,7 +672,7 @@ setInterval(() => pressureManager.handlePressure(), 60000); // 1분마다
 
 #### 7.1 스토리지 파티셔닝
 
-스토리지 파티셔닝(Storage Partitioning)은 서드파티 컨텍스트에서의 스토리지를 격리하여 교차 사이트 추적을 방지하는 메커니즘이다.
+스토리지 파티셔닝(Storage Partitioning): 서드파티 컨텍스트에서의 스토리지를 격리 → 교차 사이트 추적 방지
 
 ```
 [파티셔닝 이전 (기존 동작)]
@@ -697,20 +721,18 @@ tracker.com의 스토리지 ← 공유됨 → tracker.com의 스토리지
 
 #### 7.3 파티셔닝의 영향을 받는 API
 
-| API | 파티셔닝 영향 |
-|-----|--------------|
-| Cookies | 서드파티 쿠키 차단/파티셔닝 |
-| localStorage | 서드파티 컨텍스트에서 파티셔닝 |
-| sessionStorage | 서드파티 컨텍스트에서 파티셔닝 |
-| IndexedDB | 서드파티 컨텍스트에서 파티셔닝 |
-| Cache API | 서드파티 컨텍스트에서 파티셔닝 |
-| BroadcastChannel | 파티션 내에서만 동작 |
-| SharedWorker | 파티션 내에서만 공유 |
-| Service Worker | 퍼스트파티에서만 등록 가능 |
+- Cookies: 서드파티 쿠키 차단/파티셔닝
+- localStorage: 서드파티 컨텍스트에서 파티셔닝
+- sessionStorage: 서드파티 컨텍스트에서 파티셔닝
+- IndexedDB: 서드파티 컨텍스트에서 파티셔닝
+- Cache API: 서드파티 컨텍스트에서 파티셔닝
+- BroadcastChannel: 파티션 내에서만 동작
+- SharedWorker: 파티션 내에서만 공유
+- Service Worker: 퍼스트파티에서만 등록 가능
 
 #### 7.4 Storage Access API
 
-파티셔닝된 컨텍스트에서 퍼스트파티 스토리지에 접근해야 하는 경우 Storage Access API를 사용한다.
+파티셔닝된 컨텍스트에서 퍼스트파티 스토리지에 접근해야 하는 경우 → Storage Access API 사용
 
 ```javascript
 // iframe 내부에서 (서드파티 컨텍스트)
@@ -962,16 +984,54 @@ async function listDirectory(dirHandle) {
 
 #### 8.6 스토리지 API 비교
 
-| 특성 | localStorage | sessionStorage | IndexedDB | Cache API | OPFS |
-|------|-------------|---------------|-----------|-----------|------|
-| 용량 | ~5-10MB | ~5-10MB | 쿼터까지 | 쿼터까지 | 쿼터까지 |
-| 동기/비동기 | 동기 | 동기 | 비동기 | 비동기 | 비동기(+동기) |
-| 데이터 형식 | 문자열 | 문자열 | 구조화 | HTTP 응답 | 파일/바이너리 |
-| 지속성 | 영구 | 세션 | 영구 | 영구 | 영구 |
-| 인덱스 | 없음 | 없음 | 있음 | URL 기반 | 없음 |
-| 워커 사용 | 불가 | 불가 | 가능 | 가능 | 가능 |
-| 트랜잭션 | 없음 | 없음 | 있음 | 없음 | 없음 |
-| 사용 사례 | 설정, 토큰 | 임시 상태 | 앱 데이터 | 오프라인 캐시 | 파일 처리 |
+- 용량
+  - localStorage: ~5-10MB
+  - sessionStorage: ~5-10MB
+  - IndexedDB: 쿼터까지
+  - Cache API: 쿼터까지
+  - OPFS: 쿼터까지
+- 동기/비동기
+  - localStorage: 동기
+  - sessionStorage: 동기
+  - IndexedDB: 비동기
+  - Cache API: 비동기
+  - OPFS: 비동기(+동기)
+- 데이터 형식
+  - localStorage: 문자열
+  - sessionStorage: 문자열
+  - IndexedDB: 구조화
+  - Cache API: HTTP 응답
+  - OPFS: 파일/바이너리
+- 지속성
+  - localStorage: 영구
+  - sessionStorage: 세션
+  - IndexedDB: 영구
+  - Cache API: 영구
+  - OPFS: 영구
+- 인덱스
+  - localStorage: 없음
+  - sessionStorage: 없음
+  - IndexedDB: 있음
+  - Cache API: URL 기반
+  - OPFS: 없음
+- 워커 사용
+  - localStorage: 불가
+  - sessionStorage: 불가
+  - IndexedDB: 가능
+  - Cache API: 가능
+  - OPFS: 가능
+- 트랜잭션
+  - localStorage: 없음
+  - sessionStorage: 없음
+  - IndexedDB: 있음
+  - Cache API: 없음
+  - OPFS: 없음
+- 사용 사례
+  - localStorage: 설정·토큰
+  - sessionStorage: 임시 상태
+  - IndexedDB: 앱 데이터
+  - Cache API: 오프라인 캐시
+  - OPFS: 파일 처리
 
 ---
 
@@ -1325,14 +1385,12 @@ class OfflineDataManager {
 
 #### 11.1 StorageManager API 지원 현황
 
-| 기능 | Chrome | Firefox | Safari | Edge |
-|------|--------|---------|--------|------|
-| `navigator.storage` | 55+ | 57+ | 15.2+ | 79+ |
-| `estimate()` | 55+ | 57+ | 17+ | 79+ |
-| `persist()` | 52+ | 55+ | 15.2+ | 79+ |
-| `persisted()` | 52+ | 55+ | 15.2+ | 79+ |
-| `getDirectory()` (OPFS) | 86+ | 111+ | 15.2+ | 86+ |
-| Storage Buckets | 122+ (정식 지원) | 미지원 | 미지원 | 122+ (Chromium 기반) |
+- `navigator.storage`: Chrome 55+ · Firefox 57+ · Safari 15.2+ · Edge 79+
+- `estimate()`: Chrome 55+ · Firefox 57+ · Safari 17+ · Edge 79+
+- `persist()`: Chrome 52+ · Firefox 55+ · Safari 15.2+ · Edge 79+
+- `persisted()`: Chrome 52+ · Firefox 55+ · Safari 15.2+ · Edge 79+
+- `getDirectory()` (OPFS): Chrome 86+ · Firefox 111+ · Safari 15.2+ · Edge 86+
+- Storage Buckets: Chrome 122+(정식 지원) · Firefox 미지원 · Safari 미지원 · Edge 122+(Chromium 기반)
 
 #### 11.2 기능 감지
 
@@ -1369,6 +1427,8 @@ console.table(checkStorageSupport());
 ### 12. 보안 및 개인정보 고려사항
 
 #### 12.1 보안 컨텍스트
+
+Storage Standard의 대부분의 API: 보안 컨텍스트(HTTPS) 필요
 
 ```javascript
 // Storage Standard의 대부분의 API는 보안 컨텍스트(HTTPS) 필요
@@ -1475,39 +1535,39 @@ async function decryptAndRetrieve(key, encryptionKey) {
 
 #### 1.1 Console Standard란
 
-WHATWG(Web Hypertext Application Technology Working Group) Console Standard는 JavaScript 런타임 환경에서
-`console` 객체의 API를 정의하는 공식 표준 명세이다. 이 표준은 개발자가 디버깅, 로깅, 성능 측정 등을 수행할 때
-사용하는 `console` 객체의 메서드와 동작 방식을 규정한다.
+Console Standard: WHATWG(Web Hypertext Application Technology Working Group)가 JavaScript 런타임 환경의 `console` 객체 API를 정의하는 공식 표준 명세
 
-표준 문서의 공식 URL은 다음과 같다.
+- 개발자가 디버깅·로깅·성능 측정 등을 수행할 때 사용하는 `console` 객체의 메서드와 동작 방식 규정
+
+공식 URL:
 
 ```
 https://console.spec.whatwg.org/
 ```
 
-이 명세는 Living Standard(살아있는 표준) 형태로 유지되며, 필요에 따라 지속적으로 갱신된다.
-W3C의 전통적인 스냅샷 방식과 달리, WHATWG의 Living Standard는 항상 최신 상태를 반영한다.
+- Living Standard(살아있는 표준) 형태로 유지 → 필요에 따라 지속적으로 갱신
+- W3C의 전통적인 스냅샷 방식과 차이: WHATWG의 Living Standard는 항상 최신 상태 반영
 
 #### 1.2 왜 표준이 필요한가
 
-`console` 객체는 본래 어떤 공식 표준에도 정의되지 않은 비표준 API였다.
-각 브라우저 벤더와 JavaScript 런타임이 독자적으로 구현했기 때문에 다음과 같은 문제가 있었다.
+`console` 객체: 본래 어떤 공식 표준에도 정의되지 않은 비표준 API
 
-- 일관성 부재: 동일한 메서드가 브라우저마다 다르게 동작
-- 호환성 문제: 특정 브라우저에서만 사용 가능한 메서드 존재
-- 예측 불가능한 출력: 동일한 코드가 환경마다 다른 결과를 출력
-- 문서화 부재: 공식 레퍼런스가 없어 개발자가 혼란을 겪음
+- 각 브라우저 벤더와 JavaScript 런타임이 독자적으로 구현 → 다음과 같은 문제 발생
+  - 일관성 부재: 동일한 메서드가 브라우저마다 다르게 동작
+  - 호환성 문제: 특정 브라우저에서만 사용 가능한 메서드 존재
+  - 예측 불가능한 출력: 동일한 코드가 환경마다 다른 결과를 출력
+  - 문서화 부재: 공식 레퍼런스가 없어 개발자가 혼란을 겪음
 
-표준화를 통해 최소한의 공통 동작을 보장하고, 개발자가 어떤 환경에서든 예측 가능한 디버깅 도구를
-사용할 수 있도록 하는 것이 Console Standard의 목적이다.
+Console Standard의 목적: 표준화를 통해 최소한의 공통 동작을 보장 → 어떤 환경에서든 예측 가능한 디버깅 도구 사용 가능
 
 #### 1.3 역사: 브라우저별 독자 구현에서 표준화까지
 
 ##### 초기 (2000년대 초반)
 
-`console` 객체는 2006년경 Firebug에서 처음 도입되었다. Firebug는 Firefox 브라우저용
-디버깅 확장 프로그램으로, 웹 개발 디버깅의 혁명을 가져왔다. Joe Hewitt가 개발한 이 도구에서
-`console.log()`를 비롯한 콘솔 API가 처음 등장했다.
+`console` 객체: 2006년경 Firebug에서 처음 도입
+
+- Firebug: Firefox 브라우저용 디버깅 확장 프로그램 → 웹 개발 디버깅의 혁명
+- Joe Hewitt가 개발 → 이 도구에서 `console.log()`를 비롯한 콘솔 API가 처음 등장
 
 ```javascript
 // Firebug에서 처음 사용된 콘솔 로깅
@@ -1516,19 +1576,16 @@ console.log("Hello from Firebug!");
 
 ##### 각 브라우저의 독자 구현 (2006~2012)
 
-Firebug의 성공 이후 각 브라우저 벤더가 자체 개발자 도구를 만들면서 `console` 객체를 독자적으로 구현했다.
+Firebug의 성공 이후 각 브라우저 벤더가 자체 개발자 도구를 만들면서 `console` 객체를 독자적으로 구현
 
-| 브라우저 | 개발자 도구 | 도입 시기 | 특이사항 |
-|---------|-----------|----------|---------|
-| Firefox | Firebug (확장) | 2006 | 최초 도입, 이후 내장 도구로 전환 |
-| Safari | Web Inspector | 2007 | WebKit 기반 독자 구현 |
-| Chrome | DevTools | 2008 | V8 엔진의 콘솔 구현 |
-| IE | F12 Developer Tools | 2009 (IE8) | 개발자 도구를 열어야만 console 객체 존재 |
-| Opera | Dragonfly | 2008 | Presto 엔진 기반, 이후 Chromium으로 전환 |
-| Node.js | 내장 모듈 | 2009 | 서버 사이드에서의 console 구현 |
+- Firefox: Firebug(확장) · 2006 도입 · 최초 도입, 이후 내장 도구로 전환
+- Safari: Web Inspector · 2007 도입 · WebKit 기반 독자 구현
+- Chrome: DevTools · 2008 도입 · V8 엔진의 콘솔 구현
+- IE: F12 Developer Tools · 2009(IE8) 도입 · 개발자 도구를 열어야만 console 객체 존재
+- Opera: Dragonfly · 2008 도입 · Presto 엔진 기반, 이후 Chromium으로 전환
+- Node.js: 내장 모듈 · 2009 도입 · 서버 사이드에서의 console 구현
 
-특히 Internet Explorer의 경우 개발자 도구(F12)를 열지 않으면 `console` 객체 자체가 정의되지 않아
-다음과 같은 방어 코드가 필수적이었다.
+특히 Internet Explorer: 개발자 도구(F12)를 열지 않으면 `console` 객체 자체가 정의되지 않음 → 다음과 같은 방어 코드가 필수적
 
 ```javascript
 // IE 대응을 위한 방어 코드 (2010년대 초반 흔히 사용)
@@ -1543,13 +1600,13 @@ if (typeof console === "undefined") {
 
 ##### 표준화 움직임 (2012~2015)
 
-브라우저 간 불일치가 심화되면서 표준화 필요성이 대두되었다. 처음에는 개별적으로 문서화 시도가
-있었으나, 결국 WHATWG에서 Console Standard를 Living Standard로 관리하기로 결정했다.
+- 브라우저 간 불일치가 심화 → 표준화 필요성 대두
+- 처음에는 개별적으로 문서화 시도 → 결국 WHATWG에서 Console Standard를 Living Standard로 관리하기로 결정
 
 ##### WHATWG Console Standard 확립 (2015~현재)
 
-WHATWG가 Console Standard를 공식 명세로 채택하면서 주요 브라우저 벤더(Google, Mozilla, Apple, Microsoft)가
-합의한 공통 동작이 문서화되었다. 이후 Node.js, Deno, Bun 등 서버 사이드 런타임도 이 표준을 따르고 있다.
+- WHATWG가 Console Standard를 공식 명세로 채택 → 주요 브라우저 벤더(Google, Mozilla, Apple, Microsoft)가 합의한 공통 동작 문서화
+- 이후 Node.js, Deno, Bun 등 서버 사이드 런타임도 이 표준을 따름
 
 ---
 
@@ -1557,10 +1614,11 @@ WHATWG가 Console Standard를 공식 명세로 채택하면서 주요 브라우�
 
 #### 2.1 console 객체의 정의
 
-Console Standard에 따르면 `console`은 네임스페이스 객체(namespace object) 로 정의된다.
-이는 일반적인 클래스 인스턴스가 아니라, 관련 메서드들을 모아놓은 컨테이너 역할을 하는 객체이다.
+Console Standard에 따른 `console`: 네임스페이스 객체(namespace object)로 정의
 
-Web IDL(Interface Definition Language)에서는 다음과 같이 정의된다.
+- 일반적인 클래스 인스턴스가 아니라, 관련 메서드들을 모아놓은 컨테이너 역할
+
+Web IDL(Interface Definition Language) 정의:
 
 ```webidl
 [Exposed=*]
@@ -1596,20 +1654,17 @@ namespace console {
 
 #### 2.2 `[Exposed=*]` 의 의미
 
-Web IDL의 `[Exposed=*]` 확장 속성은 `console` 객체가 모든 전역 스코프에서 사용 가능함을 의미한다.
-구체적으로 다음 환경에서 접근 가능하다.
+Web IDL의 `[Exposed=*]` 확장 속성: `console` 객체가 모든 전역 스코프에서 사용 가능함을 의미
 
-| 환경 | 전역 객체 | 접근 방식 |
-|-----|----------|----------|
-| 브라우저 메인 스레드 | `Window` | `window.console` 또는 `console` |
-| Web Worker | `WorkerGlobalScope` | `self.console` 또는 `console` |
-| Service Worker | `ServiceWorkerGlobalScope` | `self.console` 또는 `console` |
-| Node.js | `global` | `global.console` 또는 `console` |
-| Deno | `globalThis` | `globalThis.console` 또는 `console` |
+- 브라우저 메인 스레드: 전역 객체 `Window` · `window.console` 또는 `console`로 접근
+- Web Worker: 전역 객체 `WorkerGlobalScope` · `self.console` 또는 `console`로 접근
+- Service Worker: 전역 객체 `ServiceWorkerGlobalScope` · `self.console` 또는 `console`로 접근
+- Node.js: 전역 객체 `global` · `global.console` 또는 `console`로 접근
+- Deno: 전역 객체 `globalThis` · `globalThis.console` 또는 `console`로 접근
 
 #### 2.3 전역 접근과 특성
 
-`console`은 전역 객체의 속성으로 존재하므로 어디서든 직접 접근할 수 있다.
+`console`: 전역 객체의 속성으로 존재 → 어디서든 직접 접근 가능
 
 ```javascript
 // 다양한 접근 방식 (모두 동일한 객체를 참조)
@@ -1626,8 +1681,9 @@ typeof console; // "object"
 
 #### 2.4 console 메서드의 바인딩
 
-`console` 메서드를 변수에 할당하여 사용할 수 있다. 그러나 구현에 따라 `this` 바인딩 문제가
-발생할 수 있으므로 주의가 필요하다.
+`console` 메서드를 변수에 할당하여 사용 가능
+
+- 다만 구현에 따라 `this` 바인딩 문제가 발생할 수 있어 주의 필요
 
 ```javascript
 // 메서드를 변수에 할당
@@ -1651,8 +1707,10 @@ const { log: myLog, warn: myWarn, error: myError } = console;
 
 #### 3.1 console.log(...data)
 
-가장 기본적이고 널리 사용되는 로깅 메서드이다. 임의의 개수의 인수를 받아 콘솔에 출력한다.
-표준에서는 로그 레벨 "log" 으로 분류된다.
+가장 기본적이고 널리 사용되는 로깅 메서드
+
+- 임의의 개수의 인수를 받아 콘솔에 출력
+- 표준에서는 로그 레벨 "log"로 분류
 
 ```javascript
 // 기본 사용법
@@ -1679,8 +1737,9 @@ console.log("문자열: %s, 숫자: %d", "테스트", 42);
 
 #### 3.2 console.debug(...data)
 
-`console.log()`와 동일하게 동작하지만, 로그 레벨이 "debug" 로 분류된다.
-브라우저 개발자 도구에서 로그 레벨 필터링을 통해 debug 메시지만 표시하거나 숨길 수 있다.
+`console.log()`와 동일하게 동작 · 로그 레벨은 "debug"로 분류
+
+- 브라우저 개발자 도구에서 로그 레벨 필터링으로 debug 메시지만 표시하거나 숨길 수 있음
 
 ```javascript
 console.debug("디버그 정보: 변수 x의 값은", x);
@@ -1690,14 +1749,14 @@ console.debug("이 메시지는 기본적으로 숨겨질 수 있음");
 console.debug("상세 디버깅 정보", { step: 1, status: "init" });
 ```
 
-> 참고: Chrome DevTools에서 `console.debug()`의 출력은 기본적으로 "Verbose" 로그 레벨에
-> 해당하며, 이 레벨이 비활성화되어 있으면 출력이 표시되지 않는다.
+- 참고: Chrome DevTools에서 `console.debug()`의 출력은 기본적으로 "Verbose" 로그 레벨에 해당 → 이 레벨이 비활성화되어 있으면 출력이 표시되지 않음
 
 #### 3.3 console.info(...data)
 
-정보성 메시지를 출력한다. 로그 레벨은 "info" 이다.
-대부분의 브라우저에서 `console.log()`와 시각적으로 동일하게 표시되지만,
-일부 환경에서는 정보 아이콘(i)이 함께 표시될 수 있다.
+정보성 메시지를 출력 · 로그 레벨은 "info"
+
+- 대부분의 브라우저에서 `console.log()`와 시각적으로 동일하게 표시
+- 일부 환경에서는 정보 아이콘(i)이 함께 표시될 수 있음
 
 ```javascript
 console.info("애플리케이션이 시작되었습니다.");
@@ -1707,8 +1766,9 @@ console.info("환경:", process.env.NODE_ENV);
 
 #### 3.4 console.warn(...data)
 
-경고 메시지를 출력한다. 로그 레벨은 "warn" 이다.
-대부분의 브라우저에서 노란색 배경과 경고 아이콘으로 표시된다.
+경고 메시지를 출력 · 로그 레벨은 "warn"
+
+- 대부분의 브라우저에서 노란색 배경과 경고 아이콘으로 표시
 
 ```javascript
 console.warn("이 API는 더 이상 사용되지 않습니다.");
@@ -1725,8 +1785,9 @@ function oldMethod() {
 
 #### 3.5 console.error(...data)
 
-에러 메시지를 출력한다. 로그 레벨은 "error" 이다.
-대부분의 브라우저에서 빨간색 배경과 에러 아이콘으로 표시되며, 스택 트레이스가 포함될 수 있다.
+에러 메시지를 출력 · 로그 레벨은 "error"
+
+- 대부분의 브라우저에서 빨간색 배경과 에러 아이콘으로 표시 · 스택 트레이스가 포함될 수 있음
 
 ```javascript
 console.error("치명적 오류가 발생했습니다!");
@@ -1744,22 +1805,21 @@ try {
 console.error("요청 실패", { url: "/api/data", status: 500 });
 ```
 
-> 주의: `console.error()`는 표준 에러(stderr)로 출력되는 경우가 많다.
-> Node.js에서는 `process.stderr`에 기록되며, 이는 `console.log()`가
-> `process.stdout`에 기록되는 것과 구분된다.
+- 주의: `console.error()`는 표준 에러(stderr)로 출력되는 경우가 많음 → Node.js에서는 `process.stderr`에 기록 (`console.log()`가 `process.stdout`에 기록되는 것과 구분)
 
 #### 3.6 console.assert(condition, ...data)
 
-첫 번째 인수 `condition`이 거짓(falsy) 일 때만 나머지 인수를 에러 레벨로 출력한다.
-`condition`이 참(truthy)이면 아무것도 출력하지 않는다.
+첫 번째 인수 `condition`이 거짓(falsy)일 때만 나머지 인수를 에러 레벨로 출력
+
+- `condition`이 참(truthy)이면 아무것도 출력하지 않음
 
 표준에 따른 동작:
 
-1. `condition`이 `true`이면 아무 동작도 하지 않고 반환한다.
+1. `condition`이 `true`이면 아무 동작도 하지 않고 반환
 2. `condition`이 `false`이면:
-   - `data`가 비어 있으면 `"Assertion failed"` 메시지를 출력한다.
-   - `data`의 첫 번째 항목이 문자열이면 `"Assertion failed: "` 접두사를 붙여 출력한다.
-   - 그렇지 않으면 `"Assertion failed"` 를 `data` 앞에 삽입하여 출력한다.
+   - `data`가 비어 있으면 `"Assertion failed"` 메시지를 출력
+   - `data`의 첫 번째 항목이 문자열이면 `"Assertion failed: "` 접두사를 붙여 출력
+   - 그렇지 않으면 `"Assertion failed"`를 `data` 앞에 삽입하여 출력
 
 ```javascript
 // 조건이 참이면 아무것도 출력되지 않음
@@ -1784,14 +1844,14 @@ console.assert(items.length > 0, "배열이 비어 있습니다!", items);
 // 출력: Assertion failed: 배열이 비어 있습니다! []
 ```
 
-> 중요: `console.assert()`는 프로그램 실행을 중단하지 않는다. 단순히 에러 레벨의
-> 메시지를 출력할 뿐이며, 예외를 발생시키지 않는다. 진정한 단언(assertion)이 필요하면
-> Node.js의 `assert` 모듈이나 직접 예외를 발생시켜야 한다.
+- 중요: `console.assert()`는 프로그램 실행을 중단하지 않음 → 단순히 에러 레벨의 메시지를 출력할 뿐이며, 예외를 발생시키지 않음
+  - 진정한 단언(assertion)이 필요하면 Node.js의 `assert` 모듈이나 직접 예외를 발생시켜야 함
 
 #### 3.7 console.dir(item, options)
 
-JavaScript 객체의 속성을 대화형 목록(interactive listing)으로 표시한다.
-`console.log()`와 달리 DOM 요소도 JavaScript 객체로 표시한다.
+JavaScript 객체의 속성을 대화형 목록(interactive listing)으로 표시
+
+- `console.log()`와 차이: DOM 요소도 JavaScript 객체로 표시
 
 ```javascript
 // 객체의 속성 나열
@@ -1818,14 +1878,14 @@ console.dir(complexObject, { depth: null }); // 무한 깊이로 펼침
 console.dir(complexObject, { colors: true }); // 색상 적용
 ```
 
-> 참고: `options` 매개변수는 표준에서 `object?` 타입으로 선택적으로 정의되어 있지만,
-> 구체적인 옵션 키는 표준에서 규정하지 않는다. Node.js의 `util.inspect()` 옵션과 동일한
-> 옵션을 지원하는 것은 Node.js의 독자적 확장이다.
+- 참고: `options` 매개변수는 표준에서 `object?` 타입으로 선택적으로 정의 · 구체적인 옵션 키는 표준에서 규정하지 않음
+  - Node.js의 `util.inspect()` 옵션과 동일한 옵션을 지원하는 것은 Node.js의 독자적 확장
 
 #### 3.8 console.dirxml(...data)
 
-가능한 경우 인수를 XML/HTML 형태로 표시한다. XML 표현이 불가능하면
-`console.log()`처럼 JavaScript 표현으로 대체한다.
+가능한 경우 인수를 XML/HTML 형태로 표시
+
+- XML 표현이 불가능하면 `console.log()`처럼 JavaScript 표현으로 대체
 
 ```javascript
 // DOM 요소를 HTML 트리로 표시
@@ -1849,8 +1909,9 @@ console.dirxml({ key: "value" });
 
 #### 3.9 console.table(tabularData, properties)
 
-데이터를 표(table) 형태로 출력한다. 배열이나 객체를 시각적으로 정렬된 표로 보여주어
-데이터 구조를 빠르게 파악할 수 있게 한다.
+데이터를 표(table) 형태로 출력
+
+- 배열이나 객체를 시각적으로 정렬된 표로 보여줌 → 데이터 구조를 빠르게 파악 가능
 
 ```javascript
 // 배열 표시
@@ -1919,8 +1980,9 @@ console.table(inventory);
 
 #### 3.10 console.trace(...data)
 
-호출 스택 추적(stack trace)을 콘솔에 출력한다. 로그 레벨은 "log" 이다.
-인수가 제공되면 해당 데이터도 함께 출력된다. 코드의 실행 경로를 추적하는 데 매우 유용하다.
+호출 스택 추적(stack trace)을 콘솔에 출력 · 로그 레벨은 "log"
+
+- 인수가 제공되면 해당 데이터도 함께 출력 → 코드의 실행 경로를 추적하는 데 유용
 
 ```javascript
 function outer() {
@@ -1955,8 +2017,10 @@ function processData(data) {
 
 #### 3.11 console.clear()
 
-콘솔을 비운다. 환경이 허용하는 경우 콘솔의 모든 출력을 제거하고,
-일부 브라우저에서는 "Console was cleared" 같은 메시지를 표시한다.
+콘솔을 비움
+
+- 환경이 허용하는 경우 콘솔의 모든 출력을 제거
+- 일부 브라우저에서는 "Console was cleared" 같은 메시지를 표시
 
 ```javascript
 // 콘솔 초기화
@@ -1970,9 +2034,8 @@ setInterval(() => {
 }, 1000);
 ```
 
-> 참고: Node.js에서 `console.clear()`는 stdout이 TTY(터미널)인 경우
-> ANSI 이스케이프 코드를 사용하여 화면을 지운다. 파일로 리다이렉트된 경우에는
-> 아무 동작도 하지 않는다.
+- 참고: Node.js에서 `console.clear()`는 stdout이 TTY(터미널)인 경우 ANSI 이스케이프 코드를 사용하여 화면을 지움
+  - 파일로 리다이렉트된 경우에는 아무 동작도 하지 않음
 
 ---
 
@@ -1980,14 +2043,15 @@ setInterval(() => {
 
 #### 4.1 console.count(label)
 
-특정 레이블에 대한 호출 횟수를 카운트하여 출력한다.
-각 레이블별로 독립적인 카운터가 유지된다.
+특정 레이블에 대한 호출 횟수를 카운트하여 출력
+
+- 각 레이블별로 독립적인 카운터가 유지됨
 
 표준에 따른 동작:
 
-1. `label`이 제공되지 않으면 기본값 `"default"`를 사용한다.
-2. 해당 레이블에 대한 내부 카운터(count map)를 1 증가시킨다.
-3. `"label: count"` 형식으로 출력한다.
+1. `label`이 제공되지 않으면 기본값 `"default"`를 사용
+2. 해당 레이블에 대한 내부 카운터(count map)를 1 증가
+3. `"label: count"` 형식으로 출력
 
 ```javascript
 // 기본 사용법
@@ -2024,14 +2088,13 @@ document.addEventListener("click", () => {
 
 #### 4.2 console.countReset(label)
 
-특정 레이블의 카운터를 0으로 초기화한다.
+특정 레이블의 카운터를 0으로 초기화
 
 표준에 따른 동작:
 
-1. `label`이 제공되지 않으면 기본값 `"default"`를 사용한다.
-2. 해당 레이블에 대한 카운터가 존재하면 0으로 초기화한다.
-3. 해당 레이블에 대한 카운터가 존재하지 않으면 경고 메시지를 출력한다:
-   `"Count for 'label' does not exist"`
+1. `label`이 제공되지 않으면 기본값 `"default"`를 사용
+2. 해당 레이블에 대한 카운터가 존재하면 0으로 초기화
+3. 해당 레이블에 대한 카운터가 존재하지 않으면 경고 메시지를 출력: `"Count for 'label' does not exist"`
 
 ```javascript
 // 기본 사용법
@@ -2065,14 +2128,16 @@ function processBatch(items) {
 
 ### 5. 그룹 메서드
 
-그룹 메서드는 콘솔 출력을 시각적으로 그룹화하여 관련 메시지를 계층 구조로 표시한다.
-표준에서는 그룹 스택(group stack) 이라는 개념을 정의하며, 이는 중첩 가능한 그룹의
-논리적 스택 구조이다.
+그룹 메서드: 콘솔 출력을 시각적으로 그룹화하여 관련 메시지를 계층 구조로 표시
+
+- 표준에서는 그룹 스택(group stack) 개념을 정의 → 중첩 가능한 그룹의 논리적 스택 구조
 
 #### 5.1 console.group(...data)
 
-새로운 인라인 그룹을 시작한다. 이후 출력되는 모든 메시지는 들여쓰기되어 표시된다.
-인수가 제공되면 그룹의 레이블로 사용된다.
+새로운 인라인 그룹을 시작
+
+- 이후 출력되는 모든 메시지는 들여쓰기되어 표시
+- 인수가 제공되면 그룹의 레이블로 사용
 
 ```javascript
 console.group("사용자 정보");
@@ -2090,8 +2155,9 @@ console.groupEnd();
 
 #### 5.2 console.groupCollapsed(...data)
 
-`console.group()`과 동일하지만, 그룹이 접힌 상태(collapsed) 로 시작된다.
-사용자가 클릭하여 펼칠 수 있다. 대량의 디버그 정보를 출력할 때 유용하다.
+`console.group()`과 동일하지만, 그룹이 접힌 상태(collapsed)로 시작
+
+- 사용자가 클릭하여 펼칠 수 있음 → 대량의 디버그 정보를 출력할 때 유용
 
 ```javascript
 console.groupCollapsed("상세 디버그 정보");
@@ -2108,12 +2174,13 @@ console.groupEnd();
 
 #### 5.3 console.groupEnd()
 
-현재 그룹을 종료하고 들여쓰기 레벨을 이전 수준으로 되돌린다.
-그룹 스택에서 최상위 항목을 제거한다.
+현재 그룹을 종료하고 들여쓰기 레벨을 이전 수준으로 되돌림
+
+- 그룹 스택에서 최상위 항목을 제거
 
 #### 5.4 중첩 그룹
 
-그룹은 중첩하여 사용할 수 있으며, 이를 통해 복잡한 계층 구조를 표현할 수 있다.
+그룹은 중첩하여 사용 가능 → 복잡한 계층 구조 표현 가능
 
 ```javascript
 console.group("애플리케이션 초기화");
@@ -2169,15 +2236,15 @@ console.groupEnd();
 
 #### 6.1 console.time(label)
 
-지정된 레이블로 타이머를 시작한다. 동일한 페이지(또는 런타임)에서 최대
-10,000개의 타이머를 동시에 실행할 수 있다(구현에 따라 다름).
+지정된 레이블로 타이머를 시작
+
+- 동일한 페이지(또는 런타임)에서 최대 10,000개의 타이머를 동시에 실행 가능(구현에 따라 다름)
 
 표준에 따른 동작:
 
-1. `label`이 제공되지 않으면 기본값 `"default"`를 사용한다.
-2. 해당 레이블의 타이머가 이미 존재하면 경고 메시지를 출력한다:
-   `"Timer 'label' already exists"`
-3. 타이머가 존재하지 않으면 현재 시간을 기록하여 타이머 테이블(timer table)에 저장한다.
+1. `label`이 제공되지 않으면 기본값 `"default"`를 사용
+2. 해당 레이블의 타이머가 이미 존재하면 경고 메시지를 출력: `"Timer 'label' already exists"`
+3. 타이머가 존재하지 않으면 현재 시간을 기록하여 타이머 테이블(timer table)에 저장
 
 ```javascript
 // 기본 사용법
@@ -2198,15 +2265,15 @@ console.timeEnd("중복");
 
 #### 6.2 console.timeLog(label, ...data)
 
-타이머를 종료하지 않고 현재까지의 경과 시간을 출력한다.
-추가 데이터를 함께 출력할 수 있어 중간 지점의 시간을 측정하는 데 유용하다.
+타이머를 종료하지 않고 현재까지의 경과 시간을 출력
+
+- 추가 데이터를 함께 출력 가능 → 중간 지점의 시간을 측정하는 데 유용
 
 표준에 따른 동작:
 
-1. `label`이 제공되지 않으면 기본값 `"default"`를 사용한다.
-2. 해당 레이블의 타이머가 존재하지 않으면 경고 메시지를 출력한다:
-   `"Timer 'label' does not exist"`
-3. 타이머가 존재하면 경과 시간과 추가 데이터를 함께 출력한다.
+1. `label`이 제공되지 않으면 기본값 `"default"`를 사용
+2. 해당 레이블의 타이머가 존재하지 않으면 경고 메시지를 출력: `"Timer 'label' does not exist"`
+3. 타이머가 존재하면 경과 시간과 추가 데이터를 함께 출력
 
 ```javascript
 console.time("처리");
@@ -2233,14 +2300,13 @@ console.timeLog("없는타이머");
 
 #### 6.3 console.timeEnd(label)
 
-타이머를 종료하고 총 경과 시간을 출력한다.
+타이머를 종료하고 총 경과 시간을 출력
 
 표준에 따른 동작:
 
-1. `label`이 제공되지 않으면 기본값 `"default"`를 사용한다.
-2. 해당 레이블의 타이머가 존재하지 않으면 경고 메시지를 출력한다:
-   `"Timer 'label' does not exist"`
-3. 타이머가 존재하면 경과 시간을 출력하고 타이머 테이블에서 해당 항목을 제거한다.
+1. `label`이 제공되지 않으면 기본값 `"default"`를 사용
+2. 해당 레이블의 타이머가 존재하지 않으면 경고 메시지를 출력: `"Timer 'label' does not exist"`
+3. 타이머가 존재하면 경과 시간을 출력하고 타이머 테이블에서 해당 항목을 제거
 
 ```javascript
 // 기본 사용법
@@ -2268,8 +2334,9 @@ console.timeEnd("test"); // 경고: Timer 'test' does not exist
 
 #### 6.4 타이밍 메서드의 내부 구조
 
-Console Standard에서 타이머는 내부적으로 타이머 테이블(timer table) 을 사용하여 관리된다.
-이 테이블은 레이블을 키로, 시작 시간을 값으로 저장하는 맵(map) 구조이다.
+Console Standard에서 타이머: 내부적으로 타이머 테이블(timer table)을 사용하여 관리
+
+- 이 테이블은 레이블을 키로, 시작 시간을 값으로 저장하는 맵(map) 구조
 
 ```
 타이머 테이블 (Timer Table)
@@ -2286,20 +2353,18 @@ Console Standard에서 타이머는 내부적으로 타이머 테이블(timer ta
 
 ### 7. 포매팅
 
-Console Standard는 문자열 형식 지정(formatting)을 위한 형식 지정자(format specifier) 를
-정의한다. 첫 번째 인수가 문자열이고 형식 지정자를 포함하는 경우, 이후 인수가 해당 지정자에
-치환(substitution)되어 출력된다.
+Console Standard: 문자열 형식 지정(formatting)을 위한 형식 지정자(format specifier)를 정의
+
+- 첫 번째 인수가 문자열이고 형식 지정자를 포함하는 경우 → 이후 인수가 해당 지정자에 치환(substitution)되어 출력
 
 #### 7.1 형식 지정자 목록
 
-| 형식 지정자 | 설명 | 변환 방식 |
-|-----------|------|---------|
-| `%s` | 문자열 | `String(value)` 변환 |
-| `%d` 또는 `%i` | 정수 | `parseInt(value, 10)` 변환 |
-| `%f` | 부동소수점 | `parseFloat(value)` 변환 |
-| `%o` | 최적화된 객체 표시 | 구현 정의(일반적으로 펼칠 수 있는 형태) |
-| `%O` | 일반 객체 표시 | 구현 정의(일반적으로 JavaScript 객체로 표시) |
-| `%c` | CSS 스타일 적용 | 이후 텍스트에 CSS 스타일 적용 |
+- `%s`: 문자열 · `String(value)` 변환
+- `%d` 또는 `%i`: 정수 · `parseInt(value, 10)` 변환
+- `%f`: 부동소수점 · `parseFloat(value)` 변환
+- `%o`: 최적화된 객체 표시 · 구현 정의(일반적으로 펼칠 수 있는 형태)
+- `%O`: 일반 객체 표시 · 구현 정의(일반적으로 JavaScript 객체로 표시)
+- `%c`: CSS 스타일 적용 · 이후 텍스트에 CSS 스타일 적용
 
 #### 7.2 %s - 문자열 치환
 
@@ -2373,14 +2438,14 @@ console.log("%o", div); // DOM 노드로 표시 (HTML 형태)
 console.log("%O", div); // JavaScript 객체로 표시 (속성 나열)
 ```
 
-> 참고: `%o`와 `%O`의 실제 표시 방식은 구현에 따라 다르다. 표준에서는 이 둘을
-> "optimally useful formatting" 과 "generic JavaScript object formatting" 으로만
-> 구분하며, 정확한 표시 형태는 규정하지 않는다.
+- 참고: `%o`와 `%O`의 실제 표시 방식은 구현에 따라 다름
+  - 표준에서는 이 둘을 "optimally useful formatting"과 "generic JavaScript object formatting"으로만 구분 · 정확한 표시 형태는 규정하지 않음
 
 #### 7.6 %c - CSS 스타일 적용
 
-브라우저 콘솔에서 텍스트에 CSS 스타일을 적용할 수 있다. `%c` 이후의 텍스트에
-해당 CSS 스타일이 적용된다.
+브라우저 콘솔에서 텍스트에 CSS 스타일을 적용 가능
+
+- `%c` 이후의 텍스트에 해당 CSS 스타일이 적용됨
 
 ```javascript
 // 기본 스타일 적용
@@ -2419,17 +2484,17 @@ console.log(
 
 #### 7.7 치환 문자열(Substitution Strings)의 동작 알고리즘
 
-Console Standard에서 정의하는 포매팅 알고리즘은 다음과 같다.
+Console Standard에서 정의하는 포매팅 알고리즘:
 
-1. `data`의 첫 번째 요소를 `target`으로 설정한다.
-2. `target`이 문자열이 아니면 포매팅을 수행하지 않는다.
-3. `target`에서 첫 번째 형식 지정자를 찾는다.
-4. 형식 지정자에 대응하는 값을 `data`의 다음 요소에서 가져온다.
-5. 형식 지정자의 타입에 따라 값을 변환한다.
-6. 변환된 값으로 형식 지정자를 치환한다.
-7. 사용된 `data` 요소를 제거한다.
-8. 더 이상 형식 지정자가 없거나 대응할 값이 없을 때까지 3~7을 반복한다.
-9. 남은 `data` 요소는 공백으로 구분하여 뒤에 추가한다.
+1. `data`의 첫 번째 요소를 `target`으로 설정
+2. `target`이 문자열이 아니면 포매팅을 수행하지 않음
+3. `target`에서 첫 번째 형식 지정자를 찾음
+4. 형식 지정자에 대응하는 값을 `data`의 다음 요소에서 가져옴
+5. 형식 지정자의 타입에 따라 값을 변환
+6. 변환된 값으로 형식 지정자를 치환
+7. 사용된 `data` 요소를 제거
+8. 더 이상 형식 지정자가 없거나 대응할 값이 없을 때까지 3~7을 반복
+9. 남은 `data` 요소는 공백으로 구분하여 뒤에 추가
 
 ```javascript
 // 치환 값이 부족한 경우
@@ -2451,26 +2516,26 @@ console.log("100%%"); // 구현에 따라 다름
 
 #### 7.8 CSS 스타일의 보안 고려사항
 
-표준은 `%c` 처리 부분을 "TODO: process %c"로 남겨두고 있어, 허용되는 CSS 속성 목록을
-직접 규정하지 않는다. 아래 표는 표준의 요구사항이 아니라 Chrome 등 주요 브라우저 구현체가
-보안상 이유로 실제 적용하고 있는 관행을 정리한 것이다.
+표준은 `%c` 처리 부분을 "TODO: process %c"로 남겨두고 있어, 허용되는 CSS 속성 목록을 직접 규정하지 않음
 
-| 허용되는 CSS 속성 | 설명 |
-|-----------------|------|
-| `background` 관련 | `background`, `background-color`, `background-image` 등 |
-| `border` 관련 | `border`, `border-radius` 등 |
-| `color` | 텍스트 색상 |
-| `font` 관련 | `font-size`, `font-weight`, `font-style`, `font-family` 등 |
-| `line-height` | 행간 |
-| `margin` | 외부 여백 |
-| `padding` | 내부 여백 |
-| `text-decoration` | 텍스트 장식 |
-| `text-transform` | 텍스트 변환 |
-| `white-space` | 공백 처리 |
-| `word-spacing` | 단어 간격 |
-| `writing-mode` | 텍스트 방향 |
+- 아래 목록은 표준의 요구사항이 아니라 Chrome 등 주요 브라우저 구현체가 보안상 이유로 실제 적용하고 있는 관행 정리
 
-`url()`, `image()` 등 외부 리소스를 참조하는 값은 보안상 이유로 차단될 수 있다.
+허용되는 CSS 속성:
+
+- `background` 관련: `background`, `background-color`, `background-image` 등
+- `border` 관련: `border`, `border-radius` 등
+- `color`: 텍스트 색상
+- `font` 관련: `font-size`, `font-weight`, `font-style`, `font-family` 등
+- `line-height`: 행간
+- `margin`: 외부 여백
+- `padding`: 내부 여백
+- `text-decoration`: 텍스트 장식
+- `text-transform`: 텍스트 변환
+- `white-space`: 공백 처리
+- `word-spacing`: 단어 간격
+- `writing-mode`: 텍스트 방향
+
+`url()`, `image()` 등 외부 리소스를 참조하는 값은 보안상 이유로 차단될 수 있음
 
 ---
 
@@ -2478,28 +2543,27 @@ console.log("100%%"); // 구현에 따라 다름
 
 #### 8.1 로그 레벨(Log Level)
 
-Console Standard에서는 네 가지 로그 레벨 그룹을 문서화한다. 다만 표준은 이 그룹을
-"common practices를 문서화하기 위한 것일 뿐, 구현체가 각 메서드에 특별한 동작을 부여하는
-것을 제약하지 않는다"라고 명시하는 비규범적(informative) 안내로 규정한다. 즉 아래 표는
-강제 규칙이 아니라 참고용 분류다.
+Console Standard: 네 가지 로그 레벨 그룹을 문서화
 
-| 로그 레벨 | 해당 메서드 | 의미 |
-|----------|-----------|------|
-| `"log"` | `console.log()`, `console.trace()`, `console.dir()`, `console.dirxml()`, `console.group()`, `console.groupCollapsed()`, `console.debug()`, `console.timeLog()` | 일반 로그 메시지 |
-| `"info"` | `console.info()`, `console.count()`, `console.timeEnd()` | 정보성 메시지 |
-| `"warn"` | `console.warn()`, `console.countReset()` | 경고 메시지 |
-| `"error"` | `console.error()`, `console.assert()` (실패 시) | 에러 메시지 |
+- 다만 표준은 이 그룹을 "common practices를 문서화하기 위한 것일 뿐, 구현체가 각 메서드에 특별한 동작을 부여하는 것을 제약하지 않는다"라고 명시하는 비규범적(informative) 안내로 규정
+- 즉 아래 분류는 강제 규칙이 아니라 참고용 분류
+
+- `"log"`: `console.log()`, `console.trace()`, `console.dir()`, `console.dirxml()`, `console.group()`, `console.groupCollapsed()`, `console.debug()`, `console.timeLog()` → 일반 로그 메시지
+- `"info"`: `console.info()`, `console.count()`, `console.timeEnd()` → 정보성 메시지
+- `"warn"`: `console.warn()`, `console.countReset()` → 경고 메시지
+- `"error"`: `console.error()`, `console.assert()`(실패 시) → 에러 메시지
 
 #### 8.2 Logger 추상 연산
 
-Console Standard에서는 Logger 라는 추상 연산(abstract operation)을 정의한다.
-대부분의 로깅 메서드는 이 Logger 연산을 호출하여 동작한다.
+Console Standard: Logger라는 추상 연산(abstract operation)을 정의
+
+- 대부분의 로깅 메서드는 이 Logger 연산을 호출하여 동작
 
 Logger(logLevel, args) 추상 연산의 단계:
 
-1. `args`가 비어 있으면 아무 동작 없이 반환한다.
-2. `args`의 첫 번째 요소가 문자열이고 형식 지정자를 포함하면 포매팅을 수행한다.
-3. 결과를 Printer 추상 연산에 전달한다.
+1. `args`가 비어 있으면 아무 동작 없이 반환
+2. `args`의 첫 번째 요소가 문자열이고 형식 지정자를 포함하면 포매팅을 수행
+3. 결과를 Printer 추상 연산에 전달
 
 ```
 Logger("log", ["Hello, %s!", "World"])
@@ -2509,25 +2573,23 @@ Logger("log", ["Hello, %s!", "World"])
 
 #### 8.3 Printer 추상 연산
 
-Printer는 Console Standard에서 핵심적인 추상 연산이다.
-실제로 콘솔에 데이터를 출력하는 최종 단계를 담당한다.
+Printer: Console Standard에서 핵심적인 추상 연산
+
+- 실제로 콘솔에 데이터를 출력하는 최종 단계를 담당
 
 Printer(logLevel, args, options) 추상 연산:
 
 - `logLevel`: `"log"`, `"info"`, `"warn"`, `"error"` 중 하나
 - `args`: 출력할 데이터의 리스트
-- `options`: 선택적 옵션 (현재는 그룹 스택 관련)
+- `options`: 선택적 옵션(현재는 그룹 스택 관련)
 
-표준에서 Printer의 정의:
+표준에서 Printer의 정의: "구현 정의(implementation-defined)된 방식으로 args를 logLevel에 맞게 사용자에게 표시한다."
 
-> "구현 정의(implementation-defined)된 방식으로 args를 logLevel에 맞게 사용자에게 표시한다."
-
-이는 의도적으로 모호하게 정의된 것이다. Printer의 실제 동작은 구현체(브라우저, Node.js 등)가
-결정한다. 표준은 다음 사항만 요구한다:
-
-1. 출력은 사람이 읽을 수 있어야 한다.
-2. 로그 레벨에 따라 적절히 구분되어야 한다.
-3. 그룹 스택의 깊이에 따라 적절히 들여쓰기되어야 한다.
+- 의도적으로 모호하게 정의됨 → Printer의 실제 동작은 구현체(브라우저, Node.js 등)가 결정
+- 표준은 다음 사항만 요구:
+  1. 출력은 사람이 읽을 수 있어야 함
+  2. 로그 레벨에 따라 적절히 구분되어야 함
+  3. 그룹 스택의 깊이에 따라 적절히 들여쓰기되어야 함
 
 #### 8.4 Printer와 로그 레벨의 관계
 
@@ -2541,7 +2603,7 @@ console.debug("msg")   → Logger("debug", ["msg"])   → Printer("debug", ["msg
 
 #### 8.5 각 메서드의 내부 동작 흐름
 
-표준에서 각 메서드가 어떻게 Logger/Printer를 호출하는지 정리하면 다음과 같다.
+표준에서 각 메서드가 Logger/Printer를 호출하는 방식:
 
 ##### console.log(...data) / console.debug(...data) / console.info(...data) / console.warn(...data) / console.error(...data)
 
@@ -2580,12 +2642,13 @@ console.debug("msg")   → Logger("debug", ["msg"])   → Printer("debug", ["msg
 
 #### 9.1 표준에서 정의하는 것
 
-Console Standard가 명확히 정의하는 사항은 다음과 같다.
+Console Standard가 명확히 정의하는 사항:
 
 ##### 메서드 시그니처
 
-각 메서드의 이름, 매개변수, 반환 타입이 정의되어 있다.
-모든 메서드는 `undefined`를 반환한다.
+각 메서드의 이름, 매개변수, 반환 타입이 정의됨
+
+- 모든 메서드는 `undefined`를 반환
 
 ```javascript
 // 모든 console 메서드는 undefined를 반환
@@ -2595,7 +2658,7 @@ console.log(result); // undefined
 
 ##### 형식 지정자의 변환 규칙
 
-`%s`, `%d`, `%i`, `%f`의 변환 방식이 명확히 정의되어 있다.
+`%s`, `%d`, `%i`, `%f`의 변환 방식이 명확히 정의됨
 
 ```javascript
 // 표준에서 보장하는 변환
@@ -2606,24 +2669,24 @@ console.log("%s", 42);       // 반드시 "42"로 변환
 
 ##### 메서드의 의미론적 동작
 
-- `console.assert()`는 조건이 거짓일 때만 출력한다.
-- `console.count()`는 호출 횟수를 추적한다.
-- `console.time()`/`console.timeEnd()`는 경과 시간을 측정한다.
-- `console.group()`/`console.groupEnd()`는 그룹화를 제공한다.
+- `console.assert()`는 조건이 거짓일 때만 출력
+- `console.count()`는 호출 횟수를 추적
+- `console.time()`/`console.timeEnd()`는 경과 시간을 측정
+- `console.group()`/`console.groupEnd()`는 그룹화를 제공
 
 ##### 카운터 및 타이머의 상태 관리
 
-- count map과 timer table의 존재와 기본 동작이 정의되어 있다.
-- 기본 레이블이 `"default"`임이 명시되어 있다.
-- 존재하지 않는 카운터/타이머에 대한 경고 메시지가 정의되어 있다.
+- count map과 timer table의 존재와 기본 동작이 정의됨
+- 기본 레이블이 `"default"`임이 명시됨
+- 존재하지 않는 카운터/타이머에 대한 경고 메시지가 정의됨
 
 #### 9.2 표준에서 정의하지 않는 것
 
-Console Standard가 의도적으로 구현에 맡기는 사항은 다음과 같다.
+Console Standard가 의도적으로 구현에 맡기는 사항:
 
 ##### 출력 형태와 시각적 표현
 
-표준은 데이터가 "어떻게 보여야 하는지"를 규정하지 않는다.
+표준은 데이터가 "어떻게 보여야 하는지"를 규정하지 않음
 
 ```javascript
 // 객체의 출력 형태는 구현마다 다름
@@ -2635,7 +2698,7 @@ console.log({ a: 1, b: 2 });
 
 ##### 출력 대상(destination)
 
-표준은 메시지가 어디에 출력되는지 규정하지 않는다.
+표준은 메시지가 어디에 출력되는지 규정하지 않음
 
 - 브라우저: 개발자 도구 콘솔 패널
 - Node.js: stdout/stderr
@@ -2643,7 +2706,7 @@ console.log({ a: 1, b: 2 });
 
 ##### 객체의 대화형(interactive) 표현
 
-객체를 펼쳐볼 수 있는지, 클릭하여 탐색할 수 있는지 등은 구현에 달려 있다.
+객체를 펼쳐볼 수 있는지, 클릭하여 탐색할 수 있는지 등은 구현에 달려 있음
 
 ##### 비동기 동작 여부
 
@@ -2656,27 +2719,26 @@ obj.value = 2;
 // (비동기 구현에서는 출력 시점에 이미 값이 변경되었을 수 있음)
 ```
 
-> 중요: 이 문제는 실무에서 매우 중요하다. 브라우저 콘솔에서 객체를 로깅할 때,
-> 출력 시점이 아닌 펼치는 시점의 값이 표시될 수 있다. 이를 방지하려면
-> `JSON.parse(JSON.stringify(obj))` 또는 `structuredClone(obj)`로 깊은 복사를 사용한다.
+- 중요: 이 문제는 실무에서 매우 중요함 → 브라우저 콘솔에서 객체를 로깅할 때 출력 시점이 아닌 펼치는 시점의 값이 표시될 수 있음
+  - 방지하려면 `JSON.parse(JSON.stringify(obj))` 또는 `structuredClone(obj)`로 깊은 복사를 사용
 
 ##### %o와 %O의 구체적 차이
 
-두 지정자의 구체적인 표시 방식은 구현에 맡겨져 있다.
+두 지정자의 구체적인 표시 방식은 구현에 맡겨져 있음
 
 ##### console.clear()의 동작
 
-콘솔을 비우는 구체적인 방식(화면 전체 지우기, 구분선 삽입 등)은 구현에 따라 다르다.
+콘솔을 비우는 구체적인 방식(화면 전체 지우기, 구분선 삽입 등)은 구현에 따라 다름
 
 ##### 에러 메시지의 정확한 문구
 
-경고 및 에러 메시지의 구체적인 텍스트는 구현마다 다를 수 있다.
+경고 및 에러 메시지의 구체적인 텍스트는 구현마다 다를 수 있음
 
 #### 9.3 Side Effect 관련 주의사항
 
-표준은 console 메서드가 프로그램의 실행에 영향을 미치는 부작용(side effect)을
-발생시켜서는 안 된다고 암묵적으로 가정한다. 그러나 다음과 같은 상황에서는
-부작용이 발생할 수 있다.
+표준은 console 메서드가 프로그램의 실행에 영향을 미치는 부작용(side effect)을 발생시켜서는 안 된다고 암묵적으로 가정
+
+- 그러나 다음과 같은 상황에서는 부작용이 발생할 수 있음
 
 ```javascript
 // getter가 있는 객체를 로깅할 때

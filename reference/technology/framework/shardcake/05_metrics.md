@@ -15,7 +15,7 @@
 
 ## 1. 메트릭 개요
 
-Shardcake는 클러스터 상태를 더 잘 들여다볼 수 있도록 몇 가지 메트릭을 제공합니다. 이 메트릭은 [ZIO Metrics](https://zio.dev/reference/observability/metrics/)로 노출되므로, [원하는 백엔드](https://zio.dev/zio-metrics-connectors/)를 골라 쓰면 됩니다.
+Shardcake는 클러스터 상태를 더 잘 들여다볼 수 있도록 몇 가지 메트릭을 제공함. 이 메트릭은 [ZIO Metrics](https://zio.dev/reference/observability/metrics/)로 노출됨 → [원하는 백엔드](https://zio.dev/zio-metrics-connectors/) 선택 가능.
 
 ---
 

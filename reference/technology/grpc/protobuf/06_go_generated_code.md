@@ -22,13 +22,13 @@
 
 ## 컴파일러 설치와 호출
 
-Go 플러그인을 먼저 설치합니다.
+Go 플러그인을 먼저 설치함.
 
 ```bash
 go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
 ```
 
-`protoc`를 `--go_out`과 함께 호출합니다.
+`protoc`를 `--go_out`과 함께 호출함.
 
 ```bash
 protoc --go_out=. --go_opt=paths=source_relative addressbook.proto
@@ -36,31 +36,31 @@ protoc --go_out=. --go_opt=paths=source_relative addressbook.proto
 
 **출력 경로 모드(`--go_opt=paths=...`)**
 
-- `paths=import` (기본): Go 패키지 import 경로에 해당하는 디렉터리에 출력 파일을 생성합니다.
-- `paths=source_relative`: 입력 파일과 동일한 상대 디렉터리에 출력합니다(일반적으로 권장).
-- `module=$PREFIX`: import 경로에서 지정한 접두사를 제거해 출력 위치를 결정합니다(Go 모듈용).
+- `paths=import` (기본): Go 패키지 import 경로에 해당하는 디렉터리에 출력 파일을 생성함
+- `paths=source_relative`: 입력 파일과 동일한 상대 디렉터리에 출력함(일반적으로 권장)
+- `module=$PREFIX`: import 경로에서 지정한 접두사를 제거해 출력 위치를 결정함(Go 모듈용)
 
-**M 플래그** — 특정 proto 파일을 Go import 경로로 매핑합니다.
+**M 플래그** — 특정 proto 파일을 Go import 경로로 매핑함.
 
 ```bash
 protoc --go_out=. --go_opt=Mprotos/foo.proto=example.com/package protos/foo.proto
 ```
 
-buf 원격 플러그인을 쓸 경우 `protocolbuffers/go:v1.34.2` 같은 플러그인을 지정할 수 있습니다.
+buf 원격 플러그인을 쓸 경우 `protocolbuffers/go:v1.34.2` 같은 플러그인을 지정 가능.
 
 ---
 
 ## go_package 옵션
 
-`.proto` 파일에 Go import 경로를 지정합니다.
+`.proto` 파일에 Go import 경로를 지정함.
 
 ```proto
 option go_package = "github.com/protocolbuffers/protobuf/examples/go/tutorialpb";
 ```
 
-- 이 import 경로는 다른 proto 파일이 이 파일에 의존할 때 import할 패키지와 출력 파일 위치에 영향을 줍니다.
-- 패키지 이름은 import 경로의 마지막 요소에서 자동으로 유도됩니다(위 예시는 `tutorialpb`).
-- `"경로;패키지명"` 형식으로 세미콜론을 사용해 패키지명을 명시할 수도 있으나, 자동 유도가 권장되므로 지양합니다.
+- 이 import 경로는 다른 proto 파일이 이 파일에 의존할 때 import할 패키지와 출력 파일 위치에 영향을 줌
+- 패키지 이름은 import 경로의 마지막 요소에서 자동으로 유도됨(위 예시는 `tutorialpb`)
+- `"경로;패키지명"` 형식으로 세미콜론을 사용해 패키지명을 명시할 수도 있으나, 자동 유도가 권장되므로 지양
 
 ---
 
@@ -70,30 +70,30 @@ option go_package = "github.com/protocolbuffers/protobuf/examples/go/tutorialpb"
 message Artist {}
 ```
 
-다음 Go 구조체가 생성됩니다.
+다음 Go 구조체가 생성됨.
 
 ```go
 type Artist struct { /* 필드들 */ }
 ```
 
-`*Artist`는 `proto.Message` 인터페이스를 구현하며, `ProtoReflect()`로 리플렉션 접근(`protoreflect.Message`)을 제공합니다.
+`*Artist`는 `proto.Message` 인터페이스를 구현하며, `ProtoReflect()`로 리플렉션 접근(`protoreflect.Message`)을 제공함.
 
 ---
 
 ## 필드 이름과 getter
 
-생성된 Go 필드 이름은 `.proto`가 snake_case를 쓰더라도 항상 카멜케이스(CamelCase)로 변환됩니다.
+생성된 Go 필드 이름은 `.proto`가 snake_case를 쓰더라도 항상 카멜케이스(CamelCase)로 변환됨.
 
 - `birth_year` → `BirthYear`
 - 밑줄로 시작하면 앞에 `X`를 붙임: `_birth_year_2` → `XBirthYear_2`
 
-각 필드에는 nil-safe한 getter가 생성됩니다.
+각 필드에는 nil-safe한 getter가 생성됨.
 
 ```go
 func (m *Artist) GetBirthYear() int32 { /* 값 또는 기본값 반환 */ }
 ```
 
-메시지 필드 getter는 수신자가 `nil`이어도 안전하게 동작하므로 중간에 nil 검사 없이 체이닝(chaining)할 수 있습니다.
+메시지 필드 getter는 수신자가 `nil`이어도 안전하게 동작함 → 중간에 nil 검사 없이 체이닝(chaining) 가능.
 
 ---
 
@@ -123,7 +123,7 @@ type Artist struct {
 func (m *Artist) GetBirthYear() int32 { /* 설정값 또는 기본값 */ }
 ```
 
-**메시지 필드** — 항상 포인터. `nil`이면 미설정.
+**메시지 필드** — 항상 포인터, `nil`이면 미설정.
 
 ```proto
 message Concert { Band headliner = 1; }
@@ -135,7 +135,7 @@ type Concert struct {
 func (m *Concert) GetHeadliner() *Band { /* nil-safe */ }
 ```
 
-**repeated 필드** — 슬라이스. 메시지 요소는 포인터.
+**repeated 필드** — 슬라이스, 메시지 요소는 포인터.
 
 ```proto
 message Concert { repeated Band support_acts = 1; }
@@ -146,7 +146,7 @@ type Concert struct {
 }
 ```
 
-**map 필드** — Go map. 메시지 값은 포인터.
+**map 필드** — Go map, 메시지 값은 포인터.
 
 ```proto
 message MerchBooth { map<string, MerchItem> items = 1; }
@@ -189,7 +189,7 @@ var Genre_value = map[string]int32{
 }
 ```
 
-중첩 enum은 부모 이름을 접두사로 붙입니다: `Venue_Kind`.
+중첩 enum은 부모 이름을 접두사로 붙임: `Venue_Kind`.
 
 ---
 
@@ -204,7 +204,7 @@ message Profile {
 }
 ```
 
-oneof 필드는 인터페이스와 래퍼(wrapper) 구조체로 생성됩니다.
+oneof 필드는 인터페이스와 래퍼(wrapper) 구조체로 생성됨.
 
 ```go
 type Profile struct {
@@ -218,7 +218,7 @@ type Profile_ImageUrl struct { ImageUrl string }
 type Profile_ImageData struct { ImageData []byte }
 ```
 
-설정된 멤버는 타입 스위치로 확인합니다.
+설정된 멤버는 타입 스위치로 확인함.
 
 ```go
 switch x := m.Avatar.(type) {
@@ -231,13 +231,13 @@ case nil:
 }
 ```
 
-각 멤버에 대한 getter(`GetImageUrl()` 등)도 함께 생성되며, 미설정 시 제로 값을 반환합니다.
+각 멤버에 대한 getter(`GetImageUrl()` 등)도 함께 생성되며, 미설정 시 제로 값을 반환함.
 
 ---
 
 ## 중첩 타입
 
-중첩 메시지는 부모 메시지 이름을 접두사로 붙여 생성됩니다.
+중첩 메시지는 부모 메시지 이름을 접두사로 붙여 생성됨.
 
 ```proto
 message Artist {
@@ -252,7 +252,7 @@ type Artist_Name struct { /* ... */ }
 
 ## Marshal / Unmarshal
 
-`google.golang.org/protobuf/proto` 패키지를 사용해 직렬화·역직렬화합니다.
+`google.golang.org/protobuf/proto` 패키지를 사용해 직렬화·역직렬화함.
 
 ```go
 import "google.golang.org/protobuf/proto"
@@ -287,7 +287,7 @@ p := &pb.Person{
 
 ## 서비스
 
-Go 코드 생성기는 **기본적으로 서비스(rpc) 코드를 생성하지 않습니다.** gRPC 서비스 코드가 필요하면 `protoc-gen-go-grpc` 플러그인을 사용합니다.
+Go 코드 생성기는 기본적으로 서비스(rpc) 코드를 생성하지 않음. gRPC 서비스 코드가 필요하면 `protoc-gen-go-grpc` 플러그인을 사용함.
 
 ```bash
 protoc --go_out=. --go_opt=paths=source_relative \

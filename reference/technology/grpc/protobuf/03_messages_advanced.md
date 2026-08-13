@@ -19,7 +19,7 @@
 
 ## 열거형 (enum)
 
-미리 정의된 값들의 집합을 나타냅니다.
+미리 정의된 값들의 집합을 나타냄.
 
 ```proto
 enum Corpus {
@@ -35,11 +35,11 @@ message SearchRequest {
 
 **규칙**
 
-- 첫 번째 값은 **반드시 0**이어야 하며, 이는 기본값으로 사용됩니다.
-- 첫 값의 이름은 `ENUM_TYPE_NAME_UNSPECIFIED` 또는 `..._UNKNOWN`을 권장합니다.
-- enum 값은 32비트 정수 범위 내여야 합니다.
+- 첫 번째 값은 반드시 0이어야 함 → 기본값으로 사용됨
+- 첫 값의 이름은 `ENUM_TYPE_NAME_UNSPECIFIED` 또는 `..._UNKNOWN` 권장
+- enum 값은 32비트 정수 범위 내여야 함
 
-**별칭(alias)** — 같은 값에 여러 이름을 부여하려면 `allow_alias`를 켭니다.
+**별칭(alias)** — 같은 값에 여러 이름을 부여하려면 `allow_alias`를 켬.
 
 ```proto
 enum EnumAllowingAlias {
@@ -51,7 +51,7 @@ enum EnumAllowingAlias {
 }
 ```
 
-**예약 값** — 삭제한 enum 항목의 재사용을 막습니다.
+**예약 값** — 삭제한 enum 항목의 재사용을 막음.
 
 ```proto
 enum Foo {
@@ -64,7 +64,7 @@ enum Foo {
 
 ## 중첩 타입 (Nested Types)
 
-메시지 안에 다른 메시지를 정의할 수 있습니다. 점(`.`) 표기로 참조합니다.
+메시지 안에 다른 메시지를 정의 가능 → 점(`.`) 표기로 참조.
 
 ```proto
 message SearchResponse {
@@ -85,7 +85,7 @@ message SomeOtherMessage {
 
 ## oneof
 
-여러 필드 중 **최대 하나만** 설정될 수 있는 그룹입니다. 하나를 설정하면 나머지는 자동으로 해제됩니다.
+여러 필드 중 최대 하나만 설정 가능한 그룹 → 하나를 설정하면 나머지는 자동 해제됨.
 
 ```proto
 message SampleMessage {
@@ -98,16 +98,16 @@ message SampleMessage {
 
 **규칙**
 
-- `map`이나 `repeated` 필드는 oneof에 넣을 수 없습니다.
-- 여러 값이 설정되면 마지막에 설정한 값이 이전 값을 덮어씁니다.
-- 어떤 필드가 설정됐는지는 (Go에서는) 타입 스위치로 확인합니다.
-- 와이어에 oneof 멤버가 여러 개 나타나면 파서는 기존 멤버를 해제하고 마지막 값을 적용합니다(원시 값은 덮어쓰고, 메시지 필드는 병합).
+- `map`이나 `repeated` 필드는 oneof에 넣기 금지
+- 여러 값이 설정되면 마지막에 설정한 값이 이전 값을 덮어씀
+- 어떤 필드가 설정됐는지는 (Go에서는) 타입 스위치로 확인
+- 와이어에 oneof 멤버가 여러 개 나타나면 파서는 기존 멤버를 해제하고 마지막 값을 적용 → 원시 값은 덮어쓰고, 메시지 필드는 병합
 
 ---
 
 ## map
 
-키-값 쌍 필드를 간단한 문법으로 정의합니다.
+키-값 쌍 필드를 간단한 문법으로 정의.
 
 ```proto
 message Project { /* ... */ }
@@ -119,12 +119,12 @@ message Example {
 
 **제약**
 
-- 키 타입: 정수형 또는 문자열 스칼라 타입(float, bytes, enum, message는 불가).
-- 값 타입: 또 다른 map을 제외한 모든 타입.
-- map 필드는 `repeated`일 수 없습니다.
-- 와이어상의 순서와 맵 순회 순서는 정의되지 않습니다(undefined).
+- 키 타입: 정수형 또는 문자열 스칼라 타입(float·bytes·enum·message는 불가)
+- 값 타입: 또 다른 map을 제외한 모든 타입
+- map 필드는 `repeated` 불가
+- 와이어상의 순서와 맵 순회 순서는 정의되지 않음(undefined)
 
-map은 와이어 포맷상 다음과 동등합니다.
+map은 와이어 포맷상 다음과 동등함.
 
 ```proto
 message MapFieldEntry {
@@ -138,7 +138,7 @@ repeated MapFieldEntry map_field = N;
 
 ## Any
 
-`.proto` 정의 없이도 임의의 메시지 타입을 담을 수 있는 타입입니다.
+`.proto` 정의 없이도 임의의 메시지 타입을 담을 수 있는 타입.
 
 ```proto
 import "google/protobuf/any.proto";
@@ -150,13 +150,13 @@ message ErrorStatus {
 ```
 
 - 기본 타입 URL: `type.googleapis.com/패키지명.메시지명`
-- 사용 시 언어별 pack/unpack 메서드로 실제 메시지를 직렬화하거나 역직렬화합니다. Go에서는 `anypb.New` / `(*anypb.Any).UnmarshalTo` 등을 사용합니다.
+- 사용 시 언어별 pack/unpack 메서드로 실제 메시지를 직렬화·역직렬화 → Go에서는 `anypb.New` · `(*anypb.Any).UnmarshalTo` 등을 사용
 
 ---
 
 ## 예약 (reserved)
 
-삭제한 필드 번호와 이름이 미래에 실수로 재사용되는 것을 막습니다.
+삭제한 필드 번호와 이름이 미래에 실수로 재사용되는 것을 막음.
 
 ```proto
 message Foo {
@@ -165,24 +165,38 @@ message Foo {
 }
 ```
 
-이후 누군가 예약된 번호나 이름을 다시 쓰려고 하면 컴파일러가 오류를 냅니다. 같은 `reserved` 문에 번호와 이름을 섞어 쓸 수는 없으며 별도 줄로 작성합니다.
+이후 누군가 예약된 번호나 이름을 다시 쓰려고 하면 컴파일러가 오류를 냄. 같은 `reserved` 문에 번호와 이름을 섞어 쓰기 불가 → 별도 줄로 작성 필요.
 
 ---
 
 ## Well-Known Types
 
-구글이 제공하는 표준 메시지 타입입니다. `import "google/protobuf/..."`로 가져와 사용합니다. 직접 비슷한 타입을 만들지 말고 이것을 재사용하세요.
+구글이 제공하는 표준 메시지 타입. `import "google/protobuf/..."`로 가져와 사용. 직접 비슷한 타입을 만들지 말고 재사용 필요.
 
-| 타입 | import 경로 | 용도 |
-|------|------------|------|
-| `Timestamp` | `google/protobuf/timestamp.proto` | 시각(UTC 기준 초+나노초) |
-| `Duration` | `google/protobuf/duration.proto` | 시간 간격 |
-| `Any` | `google/protobuf/any.proto` | 임의의 메시지 래핑 |
-| `Struct` | `google/protobuf/struct.proto` | JSON 유사 동적 구조 |
-| `Value` / `ListValue` | `google/protobuf/struct.proto` | 동적 값 / 값 목록 |
-| `Empty` | `google/protobuf/empty.proto` | 빈 메시지(RPC 반환 등) |
-| `FieldMask` | `google/protobuf/field_mask.proto` | 부분 갱신 대상 필드 지정 |
-| Wrappers (`Int32Value`, `StringValue`, `BoolValue` 등) | `google/protobuf/wrappers.proto` | 스칼라에 presence 부여(null 구분) |
+- `Timestamp`
+  - import 경로: `google/protobuf/timestamp.proto`
+  - 용도: 시각(UTC 기준 초+나노초)
+- `Duration`
+  - import 경로: `google/protobuf/duration.proto`
+  - 용도: 시간 간격
+- `Any`
+  - import 경로: `google/protobuf/any.proto`
+  - 용도: 임의의 메시지 래핑
+- `Struct`
+  - import 경로: `google/protobuf/struct.proto`
+  - 용도: JSON 유사 동적 구조
+- `Value` / `ListValue`
+  - import 경로: `google/protobuf/struct.proto`
+  - 용도: 동적 값 / 값 목록
+- `Empty`
+  - import 경로: `google/protobuf/empty.proto`
+  - 용도: 빈 메시지(RPC 반환 등)
+- `FieldMask`
+  - import 경로: `google/protobuf/field_mask.proto`
+  - 용도: 부분 갱신 대상 필드 지정
+- Wrappers (`Int32Value`, `StringValue`, `BoolValue` 등)
+  - import 경로: `google/protobuf/wrappers.proto`
+  - 용도: 스칼라에 presence 부여(null 구분)
 
 ```proto
 import "google/protobuf/timestamp.proto";
@@ -195,13 +209,13 @@ message Event {
 }
 ```
 
-> Wrapper 타입은 proto3에서 스칼라 값의 "설정됨 vs 미설정"을 구분하기 위해 쓰였습니다. proto3에서는 `optional`로도 같은 효과를 얻을 수 있습니다.
+> Wrapper 타입은 proto3에서 스칼라 값의 "설정됨 vs 미설정"을 구분하기 위해 쓰였음. proto3에서는 `optional`로도 같은 효과를 얻을 수 있음.
 
 ---
 
 ## 서비스 정의 (rpc)
 
-RPC 엔드포인트를 `service`로 정의합니다.
+RPC 엔드포인트를 `service`로 정의.
 
 ```proto
 service SearchService {
@@ -209,10 +223,10 @@ service SearchService {
 }
 ```
 
-- protobuf와 함께 권장되는 RPC 시스템은 **gRPC**입니다.
-- 서비스 코드는 컴파일러만으로 생성되지 않으며, 별도의 코드 생성 플러그인(예: `protoc-gen-go-grpc`)이 필요합니다. 기본 `protoc-gen-go`는 서비스 코드를 생성하지 않습니다.
+- protobuf와 함께 권장되는 RPC 시스템은 gRPC
+- 서비스 코드는 컴파일러만으로 생성되지 않음 → 별도의 코드 생성 플러그인(예: `protoc-gen-go-grpc`) 필요, 기본 `protoc-gen-go`는 서비스 코드를 생성하지 않음
 
-스트리밍(streaming) RPC도 정의할 수 있습니다.
+스트리밍(streaming) RPC도 정의 가능.
 
 ```proto
 service ChatService {

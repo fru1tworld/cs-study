@@ -21,27 +21,25 @@
 
 ### 설치 방법 개요
 
-Loki는 다음 5가지 방법으로 설치할 수 있습니다.
+Loki 설치 방법은 5가지.
 
-| 방법 | 권장 환경 | 난이도 |
-|------|----------|--------|
-| **Helm** | 프로덕션 (Kubernetes) | 중간 (권장) |
-| **Tanka** | 프로덕션 (Kubernetes, Jsonnet) | 중상 |
-| **Docker / Docker Compose** | 개발, 테스트, 소규모 | 쉬움 |
-| **로컬 바이너리** | 개발, 학습 | 쉬움 |
-| **소스 빌드** | 개발 기여 | 상 |
+- Helm: 프로덕션(Kubernetes)용 · 난이도 중간(권장)
+- Tanka: 프로덕션(Kubernetes, Jsonnet)용 · 난이도 중상
+- Docker / Docker Compose: 개발·테스트·소규모용 · 난이도 쉬움
+- 로컬 바이너리: 개발·학습용 · 난이도 쉬움
+- 소스 빌드: 개발 기여용 · 난이도 상
 
 #### 일반 설치 흐름
 
-1. **Loki 다운로드 및 설치**
-2. **구성 파일 준비** (배포 모드, 스토리지, 보존 등)
-3. **(보안) 인증/리버스 프록시 설정** — Loki는 자체 인증을 제공하지 않음
-4. **Loki 시작**
-5. **Alloy(또는 다른 클라이언트) 설치 및 구성**
-6. **Alloy 시작**
-7. **Grafana에 Loki 데이터 소스 추가**
+1. Loki 다운로드 및 설치
+2. 구성 파일 준비(배포 모드, 스토리지, 보존 등)
+3. (보안) 인증/리버스 프록시 설정 → Loki는 자체 인증 미제공
+4. Loki 시작
+5. Alloy(또는 다른 클라이언트) 설치 및 구성
+6. Alloy 시작
+7. Grafana에 Loki 데이터 소스 추가
 
-> **보안 경고**: Loki는 인증 기능이 내장되어 있지 않습니다. nginx, Caddy 같은 리버스 프록시를 앞단에 배치하여 보안을 확보하거나, Grafana Cloud Loki를 사용해야 합니다.
+> 보안 경고: Loki는 인증 기능 내장하지 않음 → nginx, Caddy 같은 리버스 프록시를 앞단에 배치해 보안 확보 필요, 또는 Grafana Cloud Loki 사용.
 
 ---
 
@@ -55,11 +53,9 @@ Loki는 다음 5가지 방법으로 설치할 수 있습니다.
 
 #### Helm 차트 종류
 
-| 차트 | 용도 |
-|------|------|
-| `loki` | Simple Scalable Deployment (SSD) — 기본값 |
-| `loki-distributed` | Microservices 모드 |
-| `loki-stack` | Loki + Promtail + Grafana 통합 (Deprecated) |
+- `loki`: Simple Scalable Deployment(SSD) → 기본값
+- `loki-distributed`: Microservices 모드
+- `loki-stack`: Loki + Promtail + Grafana 통합(Deprecated)
 
 #### 설치 단계
 
@@ -259,7 +255,7 @@ wget https://raw.githubusercontent.com/grafana/loki/main/cmd/loki/loki-local-con
 loki -config.file=loki-local-config.yaml
 ```
 
-기본 포트는 3100입니다.
+기본 포트는 3100.
 
 #### systemd 서비스 등록 (Linux)
 
@@ -318,25 +314,25 @@ make logcli
 
 #### 버전 호환성 정책
 
-Loki는 시맨틱 버전을 따릅니다.
+Loki는 시맨틱 버전 따름.
 
-- **Major (X.0.0)**: 호환성 깨질 수 있음
-- **Minor (x.Y.0)**: 하위 호환 유지
-- **Patch (x.y.Z)**: 버그 수정만
+- Major (X.0.0): 호환성 깨질 수 있음
+- Minor (x.Y.0): 하위 호환 유지
+- Patch (x.y.Z): 버그 수정만
 
 #### 업그레이드 순서
 
-1. **릴리스 노트 확인** — Breaking changes 확인
-2. **백업** — 구성 파일과 가능한 경우 데이터
-3. **단계적 업그레이드** — 한 번에 한 마이너 버전씩 권장
-4. **순서**:
-   - Ingester → Querier 및 나머지 컴포넌트 순으로 권장 (Ingester가 먼저 새 API를 노출해야 Querier가 의존할 수 있음)
-   - Microservices 모드의 경우 컴포넌트 의존 관계 고려
+1. 릴리스 노트 확인 → Breaking changes 확인
+2. 백업 → 구성 파일과 가능한 경우 데이터
+3. 단계적 업그레이드 → 한 번에 한 마이너 버전씩 권장
+4. 순서:
+   - Ingester → Querier 및 나머지 컴포넌트 순으로 권장 (Ingester가 먼저 새 API 노출해야 Querier가 의존 가능)
+   - Microservices 모드의 경우 컴포넌트 의존 관계 고려 필요
 
 #### 주요 업그레이드 시 체크포인트
 
-- **2.x → 3.0**: BoltDB Shipper 폐기, TSDB로 마이그레이션 필요
-- **schema_config**: 새 스키마는 미래 시점부터 적용 (`from` 날짜)
+- 2.x → 3.0: BoltDB Shipper 폐기, TSDB로 마이그레이션 필요
+- schema_config: 새 스키마는 미래 시점부터 적용(`from` 날짜)
 
 ---
 
@@ -346,8 +342,8 @@ Loki는 시맨틱 버전을 따릅니다.
 
 ##### Elasticsearch / OpenSearch에서
 
-- 기존 로그를 백필(backfill)하려면 OTel Collector + Loki Exporter를 활용
-- 신규 로그부터 Loki로 전송하고 점진적으로 전환
+- 기존 로그 백필(backfill) 시 OTel Collector + Loki Exporter 활용
+- 신규 로그부터 Loki로 전송 → 점진적으로 전환
 
 ##### Splunk에서
 
@@ -356,7 +352,7 @@ Loki는 시맨틱 버전을 따릅니다.
 
 #### Promtail에서 Alloy로
 
-Promtail은 점진적으로 Alloy로 통합되고 있습니다. 마이그레이션 방법:
+Promtail은 점진적으로 Alloy로 통합 중. 마이그레이션 방법.
 
 ```bash
 # Promtail 구성을 Alloy로 변환
@@ -367,7 +363,7 @@ alloy convert --source-format=promtail \
 
 #### 스토리지 백엔드 변경
 
-스토리지를 변경할 때는 `schema_config`에 새 스키마를 추가합니다. 기존 데이터는 그대로 유지됩니다.
+스토리지 변경 시 `schema_config`에 새 스키마 추가 → 기존 데이터는 그대로 유지됨.
 
 ```yaml
 schema_config:
@@ -421,7 +417,7 @@ schema_config:
 
 ### 구성 개요
 
-Loki는 YAML 형식의 구성 파일로 동작합니다. 명령줄 플래그로도 모든 옵션을 설정할 수 있으나, 일반적으로 `-config.file=loki.yaml`을 사용하는 방식이 권장됩니다.
+Loki는 YAML 형식의 구성 파일로 동작함. 명령줄 플래그로도 모든 옵션 설정 가능하나, 일반적으로 `-config.file=loki.yaml` 사용 방식 권장.
 
 ```bash
 loki -config.file=/etc/loki/loki.yaml
@@ -465,7 +461,7 @@ analytics: { ... }
 
 #### `target`
 
-실행할 컴포넌트를 지정합니다.
+실행할 컴포넌트 지정.
 
 ```yaml
 target: all  # Monolithic
@@ -477,7 +473,7 @@ target: distributor  # 단일 컴포넌트
 
 #### `auth_enabled`
 
-`true`로 설정하면 멀티 테넌시가 활성화되며, 모든 요청에 `X-Scope-OrgID` 헤더가 필요합니다. `false`이면 테넌트 ID가 `fake`로 고정됩니다.
+`true`로 설정 시 멀티 테넌시 활성화됨 → 모든 요청에 `X-Scope-OrgID` 헤더 필요. `false` 시 테넌트 ID는 `fake`로 고정됨.
 
 ```yaml
 auth_enabled: true
@@ -485,7 +481,7 @@ auth_enabled: true
 
 #### `ballast_bytes`
 
-GC 최적화를 위해 예약하는 가상 메모리 크기. 일반적으로 사용 가능한 메모리의 10~20%로 설정합니다.
+GC 최적화용으로 예약하는 가상 메모리 크기. 일반적으로 사용 가능한 메모리의 10~20%로 설정.
 
 ```yaml
 ballast_bytes: 1073741824  # 1GB
@@ -656,7 +652,7 @@ query_range:
 
 ### storage_config
 
-스토리지 백엔드를 설정합니다.
+스토리지 백엔드 설정.
 
 ```yaml
 storage_config:
@@ -704,7 +700,7 @@ storage_config:
 
 ### schema_config
 
-청크 인덱스 스키마와 저장 위치를 정의합니다. **여러 시기의 스키마를 누적하여 정의**할 수 있습니다.
+청크 인덱스 스키마와 저장 위치 정의. 여러 시기의 스키마를 누적하여 정의 가능.
 
 ```yaml
 schema_config:
@@ -730,11 +726,9 @@ schema_config:
 
 #### 스키마 버전
 
-| 버전 | 설명 | 권장 |
-|------|------|------|
-| v9-v11 | 구식 인덱스 형식 | X |
-| v12 | BoltDB Shipper | X (Deprecated) |
-| v13 | TSDB | O (현재 권장) |
+- v9-v11: 구식 인덱스 형식 · 권장 안 함
+- v12: BoltDB Shipper · 권장 안 함(Deprecated)
+- v13: TSDB · 권장(현재 권장)
 
 #### 스토어 종류
 
@@ -746,7 +740,7 @@ schema_config:
 
 ### chunk_store_config
 
-청크 캐싱 및 보존 기간을 설정합니다.
+청크 캐싱 및 보존 기간 설정.
 
 ```yaml
 chunk_store_config:
@@ -768,7 +762,7 @@ chunk_store_config:
 
 ### limits_config
 
-전역 및 테넌트별 한도를 설정합니다. **runtime_config**를 통해 테넌트별로 오버라이드할 수 있습니다.
+전역 및 테넌트별 한도 설정. runtime_config로 테넌트별 오버라이드 가능.
 
 ```yaml
 limits_config:
@@ -841,7 +835,7 @@ compactor:
 
 ### ruler
 
-알림 룰과 Recording 룰을 평가합니다.
+알림 룰과 Recording 룰 평가.
 
 ```yaml
 ruler:
@@ -895,7 +889,7 @@ groups:
 
 ### memberlist
 
-Hashicorp memberlist 기반의 클러스터 멤버십을 설정합니다.
+Hashicorp memberlist 기반의 클러스터 멤버십 설정.
 
 ```yaml
 memberlist:
@@ -918,7 +912,7 @@ memberlist:
 
 ### runtime_config
 
-테넌트별 한도 및 설정을 동적으로 오버라이드합니다.
+테넌트별 한도 및 설정을 동적으로 오버라이드.
 
 ```yaml
 runtime_config:
@@ -993,26 +987,24 @@ analytics:
 
 ### 개요
 
-Loki는 다양한 클라이언트로부터 로그를 수신할 수 있습니다. 모두 **HTTP 기반 Push 방식**으로 데이터를 전송합니다.
+Loki는 다양한 클라이언트로부터 로그 수신 가능. 모두 HTTP 기반 Push 방식으로 데이터 전송.
 
 #### 주요 클라이언트 비교
 
-| 클라이언트 | 용도 | 권장도 |
-|----------|------|--------|
-| **Grafana Alloy** | 통합 텔레메트리 (메트릭, 로그, 트레이스) | 강력 권장 |
-| **OpenTelemetry Collector** | OTel 표준 환경 | 권장 |
-| **Promtail** | 기존 사용자 | Deprecated → Alloy로 이전 |
-| **Docker Driver** | Docker 환경 단순 통합 | Docker 환경 |
-| **Fluent Bit** | Kubernetes, 가벼운 수집기 | 좋음 |
-| **Fluentd** | 기존 Fluentd 사용자 | 좋음 |
-| **Logstash** | Elastic Stack 전환 | 보조 |
-| **Vector** | 고성능 라우팅/처리 | 좋음 |
+- Grafana Alloy: 통합 텔레메트리(메트릭, 로그, 트레이스)용 · 강력 권장
+- OpenTelemetry Collector: OTel 표준 환경용 · 권장
+- Promtail: 기존 사용자용 · Deprecated → Alloy로 이전
+- Docker Driver: Docker 환경 단순 통합용 · Docker 환경에 적합
+- Fluent Bit: Kubernetes, 가벼운 수집기용 · 좋음
+- Fluentd: 기존 Fluentd 사용자용 · 좋음
+- Logstash: Elastic Stack 전환용 · 보조
+- Vector: 고성능 라우팅/처리용 · 좋음
 
 ---
 
 ### Grafana Alloy (권장)
 
-Alloy는 OpenTelemetry Collector 배포판으로, 메트릭/로그/트레이스를 통합 수집합니다.
+Alloy는 OpenTelemetry Collector 배포판 → 메트릭/로그/트레이스 통합 수집.
 
 #### 파일 로그 수집 예시
 
@@ -1115,7 +1107,7 @@ loki.source.syslog "syslog" {
 
 ### Promtail (Deprecated)
 
-Promtail은 Loki 전용 로그 수집기로 Grafana Agent의 일부였습니다. 현재는 **Alloy로 통합** 되어 향후 폐기 예정입니다.
+Promtail은 Loki 전용 로그 수집기로 Grafana Agent의 일부였음. 현재는 Alloy로 통합되어 향후 폐기 예정.
 
 #### Promtail 구성 예시
 
@@ -1161,7 +1153,7 @@ alloy convert --source-format=promtail \
 
 ### OpenTelemetry Collector
 
-Loki는 **OTLP HTTP** 로그 수신을 네이티브 지원합니다.
+Loki는 OTLP HTTP 로그 수신을 네이티브 지원.
 
 #### Loki 설정
 
@@ -1201,20 +1193,18 @@ service:
 
 #### OTel 속성 → Loki 라벨 매핑
 
-OTel Resource Attributes의 마침표는 언더스코어로 변환됩니다.
+OTel Resource Attributes의 마침표는 언더스코어로 변환됨.
 
-| OTel Attribute | Loki Label |
-|----------------|-----------|
-| `service.name` | `service_name` |
-| `service.namespace` | `service_namespace` |
-| `deployment.environment` | `deployment_environment` |
-| `k8s.namespace.name` | `k8s_namespace_name` |
+- `service.name` → `service_name`
+- `service.namespace` → `service_namespace`
+- `deployment.environment` → `deployment_environment`
+- `k8s.namespace.name` → `k8s_namespace_name`
 
 ---
 
 ### Docker Driver
 
-Docker 컨테이너의 stdout/stderr을 자동으로 Loki로 전송합니다.
+Docker 컨테이너의 stdout/stderr을 자동으로 Loki로 전송.
 
 #### 설치
 
@@ -1290,7 +1280,7 @@ gem install fluent-plugin-grafana-loki
 
 ### Fluent Bit
 
-Loki는 Fluent Bit의 공식 출력 플러그인을 제공합니다.
+Loki는 Fluent Bit의 공식 출력 플러그인 제공.
 
 #### 구성 예시
 
@@ -1404,7 +1394,7 @@ encoding.codec = "json"
 
 ### 언어/프레임워크 클라이언트
 
-Loki Push API로 직접 로그를 전송하는 라이브러리들입니다.
+Loki Push API로 직접 로그를 전송하는 라이브러리 목록.
 
 #### Java (Logback)
 
@@ -1483,7 +1473,7 @@ logger.info("hello");
 
 ### Loki HTTP Push API
 
-직접 API를 호출할 수도 있습니다.
+직접 API 호출도 가능.
 
 #### 엔드포인트
 
@@ -1512,20 +1502,18 @@ curl -H "Content-Type: application/json" \
 
 #### 요청 형식 (Protobuf, Snappy 압축)
 
-기본(default) 형식은 Protobuf + Snappy입니다.
+기본(default) 형식은 Protobuf + Snappy.
 
 - `Content-Type: application/x-protobuf`
 - 페이로드: Snappy 압축된 Protobuf
 
 #### 응답
 
-| 상태 코드 | 의미 |
-|---------|------|
-| 200 | 성공 |
-| 400 | 잘못된 요청 |
-| 401 | 인증 실패 |
-| 429 | Rate Limit 초과 |
-| 500 | 서버 에러 |
+- 200: 성공
+- 400: 잘못된 요청
+- 401: 인증 실패
+- 429: Rate Limit 초과
+- 500: 서버 에러
 
 #### 구조화된 메타데이터 (Structured Metadata)
 

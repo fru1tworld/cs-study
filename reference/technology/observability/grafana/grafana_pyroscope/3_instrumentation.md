@@ -24,12 +24,10 @@
 
 ### 계측 방식 선택
 
-| 방식 | 장점 | 단점 | 권장 시나리오 |
-|------|------|------|----------------|
-| 언어 SDK (Push) | 정밀 제어, 라벨 풍부 | 코드 수정 필요 | 핵심 서비스 |
-| pprof endpoint (Pull) | 코드 변경 적음 | 라벨 제어 제한 | 이미 pprof 노출하는 Go 앱 |
-| Alloy 자동 수집 | 중앙 집중 관리 | 파이프라인 구축 필요 | 다수 서비스 운영 |
-| eBPF | 무계측, 모든 프로세스 | 컨테이너/커널 호환성 주의 | 시스템 전체, 레거시 |
+- 언어 SDK(Push): 장점 정밀 제어, 라벨 풍부 · 단점 코드 수정 필요 · 권장 시나리오 핵심 서비스
+- pprof endpoint(Pull): 장점 코드 변경 적음 · 단점 라벨 제어 제한 · 권장 시나리오 이미 pprof 노출하는 Go 앱
+- Alloy 자동 수집: 장점 중앙 집중 관리 · 단점 파이프라인 구축 필요 · 권장 시나리오 다수 서비스 운영
+- eBPF: 장점 무계측, 모든 프로세스 · 단점 컨테이너/커널 호환성 주의 · 권장 시나리오 시스템 전체, 레거시
 
 ---
 
@@ -55,7 +53,7 @@
 
 #### 옵션 1: 표준 pprof endpoint (권장)
 
-Go 표준 라이브러리는 pprof를 기본 지원합니다.
+Go 표준 라이브러리는 pprof를 기본 지원함.
 
 ```go
 import (
@@ -77,7 +75,7 @@ func main() {
 - `http://host:6060/debug/pprof/mutex`
 - `http://host:6060/debug/pprof/block`
 
-이후 Alloy가 해당 엔드포인트를 스크레이핑합니다.
+이후 Alloy가 해당 엔드포인트를 스크레이핑함.
 
 #### 옵션 2: Push SDK
 
@@ -104,7 +102,7 @@ func main() {
 
 #### 동적 라벨 (Tag wrapper)
 
-특정 작업 단위에만 라벨을 붙입니다.
+특정 작업 단위에만 라벨을 붙임.
 
 ```go
 pyroscope.TagWrapper(ctx, pyroscope.Labels("endpoint", "/api/checkout"), func(ctx context.Context) {
@@ -147,14 +145,12 @@ java -javaagent:pyroscope.jar \
 
 #### 환경 변수
 
-| 변수 | 설명 |
-|------|------|
-| `PYROSCOPE_APPLICATION_NAME` | 서비스 이름 |
-| `PYROSCOPE_SERVER_ADDRESS` | 서버 URL |
-| `PYROSCOPE_AUTH_TOKEN` | 인증 토큰 (Grafana Cloud 등) |
-| `PYROSCOPE_PROFILER_EVENT` | `cpu`, `alloc`, `lock`, `wall` |
-| `PYROSCOPE_PROFILER_LOCK` | 락 컨텐션 임계값(예: `10ms`) |
-| `PYROSCOPE_LABELS` | `env=prod,region=us-east-1` |
+- `PYROSCOPE_APPLICATION_NAME`: 서비스 이름
+- `PYROSCOPE_SERVER_ADDRESS`: 서버 URL
+- `PYROSCOPE_AUTH_TOKEN`: 인증 토큰(Grafana Cloud 등)
+- `PYROSCOPE_PROFILER_EVENT`: `cpu`, `alloc`, `lock`, `wall`
+- `PYROSCOPE_PROFILER_LOCK`: 락 컨텐션 임계값(예: `10ms`)
+- `PYROSCOPE_LABELS`: `env=prod,region=us-east-1`
 
 ---
 
@@ -177,7 +173,7 @@ with pyroscope.tag_wrapper({"endpoint": "/api/checkout"}):
     handle_checkout()
 ```
 
-py-spy 기반 외부 프로파일러도 사용할 수 있습니다.
+py-spy 기반 외부 프로파일러도 사용 가능.
 
 ```bash
 py-spy record -o profile.pprof --pyroscope-server http://pyroscope:4040 -- python app.py
@@ -218,13 +214,13 @@ Pyroscope.configure do |config|
 end
 ```
 
-내부적으로 [rbspy](https://rbspy.github.io/)와 유사한 외부 프로세스 방식이 사용됩니다.
+내부적으로 [rbspy](https://rbspy.github.io/)와 유사한 외부 프로세스 방식이 사용됨.
 
 ---
 
 ### .NET 계측
 
-`dotnet diagnostics`와 통합한 패키지를 사용합니다.
+`dotnet diagnostics`와 통합한 패키지를 사용함.
 
 ```csharp
 using Pyroscope;
@@ -262,7 +258,7 @@ let agent_running = agent.start()?;
 
 ### Grafana Alloy 기반 자동 계측
 
-[Grafana Alloy](https://grafana.com/docs/alloy/)는 OpenTelemetry Collector, Prometheus Agent, Pyroscope agent를 통합한 에이전트입니다.
+[Grafana Alloy](https://grafana.com/docs/alloy/)는 OpenTelemetry Collector, Prometheus Agent, Pyroscope agent를 통합한 에이전트임.
 
 #### 풀 모드 (Go pprof 스크레이핑)
 
@@ -293,7 +289,7 @@ pyroscope.write "default" {
 
 #### 푸시 수신
 
-SDK가 전송하는 프로파일을 Alloy에서 수신하여 변환·포워딩할 수 있습니다(`pyroscope.receive_http`).
+SDK가 전송하는 프로파일을 Alloy에서 수신해 변환·포워딩 가능(`pyroscope.receive_http`).
 
 #### 어노테이션 기반 자동 발견
 
@@ -306,13 +302,13 @@ metadata:
     profiles.grafana.com/memory.scrape: "true"
 ```
 
-Alloy가 어노테이션을 읽어 자동으로 타겟을 등록합니다.
+Alloy가 어노테이션을 읽어 자동으로 타겟을 등록함.
 
 ---
 
 ### eBPF 기반 무계측 프로파일링
 
-eBPF를 활용하여 **코드 변경 없이** 호스트의 모든 프로세스를 프로파일링합니다.
+eBPF를 활용해 코드 변경 없이 호스트의 모든 프로세스를 프로파일링함.
 
 #### 장점
 
@@ -335,7 +331,7 @@ pyroscope.ebpf "system" {
 }
 ```
 
-Alloy가 호스트의 프로세스 목록을 탐색하고 eBPF로 스택을 캡처합니다.
+Alloy가 호스트의 프로세스 목록을 탐색하고 eBPF로 스택을 캡처함.
 
 ---
 

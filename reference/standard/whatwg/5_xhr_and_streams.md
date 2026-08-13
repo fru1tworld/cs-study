@@ -23,9 +23,12 @@
 
 #### 1.1 XMLHttpRequest Standard란?
 
-XMLHttpRequest Standard는 WHATWG(Web Hypertext Application Technology Working Group)에서 관리하는 웹 표준으로, 클라이언트 측 스크립트에서 HTTP(S) 요청을 프로그래밍 방식으로 전송하고 응답을 처리하기 위한 API를 정의한다. 이름에 "XML"이 포함되어 있지만 XML에 국한되지 않으며, JSON, HTML, 텍스트, 바이너리 등 다양한 형식의 데이터를 주고받을 수 있다.
+XMLHttpRequest Standard: WHATWG(Web Hypertext Application Technology Working Group)에서 관리하는 웹 표준 → 클라이언트 측 스크립트에서 HTTP(S) 요청을 프로그래밍 방식으로 전송·응답 처리하기 위한 API 정의
 
-이 표준은 다음의 핵심 인터페이스를 정의한다:
+- 이름에 "XML" 포함 → 그러나 XML에 국한되지 않음
+- JSON·HTML·텍스트·바이너리 등 다양한 형식의 데이터 송수신 가능
+
+이 표준이 정의하는 핵심 인터페이스:
 
 - XMLHttpRequest: HTTP 요청과 응답을 처리하는 주 인터페이스
 - XMLHttpRequestUpload: 업로드 진행 상황 모니터링 인터페이스
@@ -36,20 +39,19 @@ XMLHttpRequest Standard는 WHATWG(Web Hypertext Application Technology Working G
 
 #### 1.2 역사
 
-XMLHttpRequest의 역사는 웹 개발 패러다임 전환의 핵심 축이다.
+XMLHttpRequest의 역사: 웹 개발 패러다임 전환의 핵심 축
 
-| 시기 | 사건 |
-|------|------|
-| 1998~1999 | Microsoft가 Outlook Web Access를 위해 `XMLHTTP` ActiveX 객체 개발 |
-| 2000 | IE 5.0에서 `new ActiveXObject("Microsoft.XMLHTTP")`로 사용 가능 |
-| 2002 | Mozilla가 `XMLHttpRequest`라는 이름으로 네이티브 객체 구현 |
-| 2004 | Gmail 출시 — XHR을 활용한 비동기 인터페이스로 웹 애플리케이션의 가능성 입증 |
-| 2005 | Jesse James Garrett이 "AJAX" 용어를 처음 사용 (Asynchronous JavaScript and XML) |
-| 2005 | Google Maps 출시 — XHR 기반 동적 지도 로딩으로 AJAX 대중화 |
-| 2006 | W3C가 XMLHttpRequest Level 1 초안 발행 |
-| 2008 | XMLHttpRequest Level 2 초안 — CORS, 진행률 이벤트, 바이너리 데이터 지원 추가 |
-| 2012 | Level 1과 Level 2가 단일 XMLHttpRequest 표준으로 통합 |
-| 2014~ | WHATWG가 Living Standard로 관리 |
+시기별 사건:
+- 1998~1999: Microsoft가 Outlook Web Access를 위해 `XMLHTTP` ActiveX 객체 개발
+- 2000: IE 5.0에서 `new ActiveXObject("Microsoft.XMLHTTP")`로 사용 가능
+- 2002: Mozilla가 `XMLHttpRequest`라는 이름으로 네이티브 객체 구현
+- 2004: Gmail 출시 · XHR을 활용한 비동기 인터페이스로 웹 애플리케이션의 가능성 입증
+- 2005: Jesse James Garrett이 "AJAX" 용어를 처음 사용 (Asynchronous JavaScript and XML)
+- 2005: Google Maps 출시 · XHR 기반 동적 지도 로딩으로 AJAX 대중화
+- 2006: W3C가 XMLHttpRequest Level 1 초안 발행
+- 2008: XMLHttpRequest Level 2 초안 · CORS·진행률 이벤트·바이너리 데이터 지원 추가
+- 2012: Level 1과 Level 2가 단일 XMLHttpRequest 표준으로 통합
+- 2014~: WHATWG가 Living Standard로 관리
 
 ```javascript
 // 2000년대 초반: IE에서의 XHR 생성 (ActiveX)
@@ -66,9 +68,11 @@ const xhr = new XMLHttpRequest();
 
 #### 1.3 AJAX의 탄생
 
-AJAX(Asynchronous JavaScript and XML)는 특정 기술이 아니라 여러 기술의 조합을 지칭하는 용어이다. 2005년 Jesse James Garrett이 발표한 글에서 처음 명명되었다.
+AJAX(Asynchronous JavaScript and XML): 특정 기술이 아니라 여러 기술의 조합을 지칭하는 용어
 
-AJAX의 핵심 개념은 전체 페이지를 새로고침하지 않고도 서버와 데이터를 교환하여 페이지 일부만 동적으로 갱신하는 것이다.
+- 2005년 Jesse James Garrett이 발표한 글에서 처음 명명
+
+AJAX의 핵심 개념: 전체 페이지를 새로고침하지 않고도 서버와 데이터를 교환 → 페이지 일부만 동적으로 갱신
 
 AJAX 이전과 이후의 웹 상호작용 모델:
 
@@ -95,24 +99,51 @@ xhr.send();
 
 #### 1.4 Fetch API와의 비교
 
-XMLHttpRequest와 Fetch API는 동일한 목적(HTTP 통신)을 수행하지만 설계 철학이 근본적으로 다르다.
+XMLHttpRequest와 Fetch API: 동일한 목적(HTTP 통신) 수행 → 그러나 설계 철학이 근본적으로 다름
 
-| 특성 | XMLHttpRequest | Fetch API |
-|------|---------------|-----------|
-| API 패러다임 | 이벤트 기반 (콜백) | Promise 기반 |
-| 요청/응답 객체 | 단일 객체가 모든 것을 관리 | `Request`, `Response` 분리 |
-| 스트리밍 | 제한적 (`responseType` 의존) | `ReadableStream` 네이티브 지원 |
-| 업로드 진행률 | `xhr.upload.onprogress` 네이티브 지원 | 직접 구현 필요 (ReadableStream) |
-| 다운로드 진행률 | `xhr.onprogress` 네이티브 지원 | `Response.body` ReadableStream으로 구현 |
-| 요청 취소 | `xhr.abort()` | `AbortController` / `AbortSignal` |
-| 타임아웃 | `xhr.timeout` 속성 | `AbortSignal.timeout()` |
-| 동기 요청 | 지원 (비권장) | 미지원 (비동기 전용) |
-| 쿠키 전송 | 동일 출처 시 기본 전송 | `credentials` 옵션으로 명시적 제어 |
-| HTTP 에러 | `status`로 직접 확인 | Promise가 reject되지 않음 (`ok` 속성 확인) |
-| Service Worker | 사용 불가 | 네이티브 지원 |
-| 캐시 제어 | 헤더로 수동 제어 | `cache` 옵션 제공 |
-| 리다이렉트 제어 | 자동 추적 (제어 불가) | `redirect` 옵션 제공 |
-| 표준 관리 | WHATWG XMLHttpRequest Standard | WHATWG Fetch Standard |
+특성별 비교:
+- API 패러다임
+  - XMLHttpRequest: 이벤트 기반 (콜백)
+  - Fetch API: Promise 기반
+- 요청/응답 객체
+  - XMLHttpRequest: 단일 객체가 모든 것을 관리
+  - Fetch API: `Request`, `Response` 분리
+- 스트리밍
+  - XMLHttpRequest: 제한적 (`responseType` 의존)
+  - Fetch API: `ReadableStream` 네이티브 지원
+- 업로드 진행률
+  - XMLHttpRequest: `xhr.upload.onprogress` 네이티브 지원
+  - Fetch API: 직접 구현 필요 (ReadableStream)
+- 다운로드 진행률
+  - XMLHttpRequest: `xhr.onprogress` 네이티브 지원
+  - Fetch API: `Response.body` ReadableStream으로 구현
+- 요청 취소
+  - XMLHttpRequest: `xhr.abort()`
+  - Fetch API: `AbortController` / `AbortSignal`
+- 타임아웃
+  - XMLHttpRequest: `xhr.timeout` 속성
+  - Fetch API: `AbortSignal.timeout()`
+- 동기 요청
+  - XMLHttpRequest: 지원 (비권장)
+  - Fetch API: 미지원 (비동기 전용)
+- 쿠키 전송
+  - XMLHttpRequest: 동일 출처 시 기본 전송
+  - Fetch API: `credentials` 옵션으로 명시적 제어
+- HTTP 에러
+  - XMLHttpRequest: `status`로 직접 확인
+  - Fetch API: Promise가 reject되지 않음 (`ok` 속성 확인)
+- Service Worker
+  - XMLHttpRequest: 사용 불가
+  - Fetch API: 네이티브 지원
+- 캐시 제어
+  - XMLHttpRequest: 헤더로 수동 제어
+  - Fetch API: `cache` 옵션 제공
+- 리다이렉트 제어
+  - XMLHttpRequest: 자동 추적 (제어 불가)
+  - Fetch API: `redirect` 옵션 제공
+- 표준 관리
+  - XMLHttpRequest: WHATWG XMLHttpRequest Standard
+  - Fetch API: WHATWG Fetch Standard
 
 ```javascript
 // 동일한 작업의 두 가지 접근 방식
@@ -155,37 +186,33 @@ async function getJSON_Fetch(url) {
 
 #### 2.1 생성자
 
-`XMLHttpRequest` 객체는 `new` 키워드로 생성한다. 생성자는 인자를 받지 않는다.
+`XMLHttpRequest` 객체: `new` 키워드로 생성 → 생성자는 인자를 받지 않음
 
 ```javascript
 const xhr = new XMLHttpRequest();
 ```
 
 생성 직후 객체의 초기 상태:
-
-| 속성 | 초기값 |
-|------|--------|
-| `readyState` | `0` (UNSENT) |
-| `status` | `0` |
-| `statusText` | `""` |
-| `responseType` | `""` |
-| `response` | `""` |
-| `responseText` | `""` |
-| `responseURL` | `""` |
-| `timeout` | `0` |
-| `withCredentials` | `false` |
+- `readyState`: `0` (UNSENT)
+- `status`: `0`
+- `statusText`: `""`
+- `responseType`: `""`
+- `response`: `""`
+- `responseText`: `""`
+- `responseURL`: `""`
+- `timeout`: `0`
+- `withCredentials`: `false`
 
 #### 2.2 readyState
 
-`readyState` 속성은 XHR 객체의 현재 상태를 나타내는 읽기 전용 정수값이다. 요청의 생명주기 전체를 5단계로 표현한다.
+`readyState` 속성: XHR 객체의 현재 상태를 나타내는 읽기 전용 정수값 → 요청의 생명주기 전체를 5단계로 표현
 
-| 상수 | 값 | 설명 |
-|------|----|------|
-| `XMLHttpRequest.UNSENT` | `0` | 객체가 생성되었지만 `open()`이 호출되지 않은 상태 |
-| `XMLHttpRequest.OPENED` | `1` | `open()`이 호출된 상태. `setRequestHeader()`와 `send()` 호출 가능 |
-| `XMLHttpRequest.HEADERS_RECEIVED` | `2` | `send()`가 호출되었고, 응답 헤더가 수신된 상태 |
-| `XMLHttpRequest.LOADING` | `3` | 응답 본문(body)을 수신 중인 상태 |
-| `XMLHttpRequest.DONE` | `4` | 요청이 완료된 상태 (성공 또는 실패) |
+상수별 값과 설명:
+- `XMLHttpRequest.UNSENT`: `0` · 객체가 생성되었지만 `open()`이 호출되지 않은 상태
+- `XMLHttpRequest.OPENED`: `1` · `open()`이 호출된 상태. `setRequestHeader()`와 `send()` 호출 가능
+- `XMLHttpRequest.HEADERS_RECEIVED`: `2` · `send()`가 호출되었고, 응답 헤더가 수신된 상태
+- `XMLHttpRequest.LOADING`: `3` · 응답 본문(body)을 수신 중인 상태
+- `XMLHttpRequest.DONE`: `4` · 요청이 완료된 상태 (성공 또는 실패)
 
 ```
 상태 전이 흐름:
@@ -228,7 +255,7 @@ xhr.send();
 
 ##### status / statusText
 
-HTTP 응답 상태 코드와 상태 메시지를 나타낸다. `readyState`가 `UNSENT` 또는 `OPENED`일 때 접근하면 각각 `0`과 `""`을 반환한다.
+HTTP 응답 상태 코드와 상태 메시지 나타냄 → `readyState`가 `UNSENT` 또는 `OPENED`일 때 접근하면 각각 `0`과 `""` 반환
 
 ```javascript
 xhr.onload = function () {
@@ -237,20 +264,19 @@ xhr.onload = function () {
 };
 ```
 
-> 참고: HTTP/2에서는 상태 텍스트가 정의되지 않으므로 `statusText`는 빈 문자열일 수 있다.
+> 참고: HTTP/2에서는 상태 텍스트가 정의되지 않으므로 `statusText`는 빈 문자열일 수 있음
 
 ##### responseType
 
-응답 데이터의 타입을 지정한다. `open()` 호출 후, `send()` 호출 전에 설정해야 한다.
+응답 데이터의 타입 지정 → `open()` 호출 후, `send()` 호출 전에 설정해야 함
 
-| 값 | `response` 타입 | 설명 |
-|----|-----------------|------|
-| `""` (기본값) | `string` | 텍스트로 반환 (`responseText`와 동일) |
-| `"text"` | `string` | 텍스트로 반환 |
-| `"json"` | `object` / `null` | JSON 파싱 결과 반환 |
-| `"document"` | `Document` / `null` | HTML/XML 문서로 파싱 |
-| `"arraybuffer"` | `ArrayBuffer` / `null` | 바이너리 데이터 |
-| `"blob"` | `Blob` / `null` | Blob 객체 |
+값별 `response` 타입과 설명:
+- `""` (기본값): `string` · 텍스트로 반환 (`responseText`와 동일)
+- `"text"`: `string` · 텍스트로 반환
+- `"json"`: `object` / `null` · JSON 파싱 결과 반환
+- `"document"`: `Document` / `null` · HTML/XML 문서로 파싱
+- `"arraybuffer"`: `ArrayBuffer` / `null` · 바이너리 데이터
+- `"blob"`: `Blob` / `null` · Blob 객체
 
 ```javascript
 // JSON 응답 자동 파싱
@@ -268,7 +294,7 @@ xhr.send();
 ##### response / responseText / responseXML
 
 - `response`: `responseType`에 따라 적절한 타입의 데이터를 반환하는 범용 속성
-- `responseText`: 응답을 텍스트 문자열로 반환. `responseType`이 `""` 또는 `"text"`일 때만 접근 가능하며, 그 외의 경우 `InvalidStateError`가 발생한다
+- `responseText`: 응답을 텍스트 문자열로 반환. `responseType`이 `""` 또는 `"text"`일 때만 접근 가능 → 그 외의 경우 `InvalidStateError` 발생
 - `responseXML`: 응답을 `Document`로 파싱하여 반환. `responseType`이 `""` 또는 `"document"`일 때만 접근 가능
 
 ```javascript
@@ -296,7 +322,7 @@ xhr2.send();
 
 ##### responseURL
 
-최종 응답의 URL을 반환한다. 리다이렉트가 발생한 경우 리다이렉트 후의 최종 URL이 된다. URL 프래그먼트(#)는 제거된다.
+최종 응답의 URL 반환 → 리다이렉트가 발생한 경우 리다이렉트 후의 최종 URL이 됨 → URL 프래그먼트(#)는 제거됨
 
 ```javascript
 const xhr = new XMLHttpRequest();
@@ -309,7 +335,7 @@ xhr.send();
 
 ##### timeout
 
-요청 타임아웃을 밀리초 단위로 설정한다. 기본값은 `0`(무제한)이다. 설정된 시간 내에 응답이 완료되지 않으면 요청이 자동으로 종료되고 `timeout` 이벤트가 발생한다.
+요청 타임아웃을 밀리초 단위로 설정 → 기본값은 `0`(무제한) → 설정된 시간 내에 응답이 완료되지 않으면 요청이 자동으로 종료되고 `timeout` 이벤트 발생
 
 ```javascript
 const xhr = new XMLHttpRequest();
@@ -321,11 +347,11 @@ xhr.ontimeout = function () {
 xhr.send();
 ```
 
-> 주의: 동기 요청에서 `timeout`을 설정하면 `InvalidAccessError`가 발생한다.
+> 주의: 동기 요청에서 `timeout`을 설정하면 `InvalidAccessError` 발생
 
 ##### withCredentials
 
-크로스 오리진 요청 시 쿠키, HTTP 인증 정보, TLS 클라이언트 인증서 등의 자격 증명(credentials)을 포함할지 여부를 지정한다. 기본값은 `false`이다.
+크로스 오리진 요청 시 쿠키·HTTP 인증 정보·TLS 클라이언트 인증서 등의 자격 증명(credentials) 포함 여부 지정 → 기본값은 `false`
 
 ```javascript
 const xhr = new XMLHttpRequest();
@@ -339,7 +365,7 @@ xhr.send();
 
 ##### upload
 
-`XMLHttpRequestUpload` 객체를 반환한다. 이 객체에 이벤트 핸들러를 등록하여 업로드 진행 상황을 모니터링할 수 있다. 자세한 내용은 [6장](#6-xmlhttprequestupload)을 참고한다.
+`XMLHttpRequestUpload` 객체 반환 → 이 객체에 이벤트 핸들러를 등록하여 업로드 진행 상황 모니터링 가능. 자세한 내용은 [6장](#6-xmlhttprequestupload) 참고
 
 ---
 
@@ -347,15 +373,14 @@ xhr.send();
 
 #### 3.1 open(method, url [, async [, username [, password]]])
 
-요청을 초기화한다. 이미 활성화된 요청이 있으면 `abort()`를 호출한 것과 동일하게 동작한다.
+요청을 초기화함 → 이미 활성화된 요청이 있으면 `abort()`를 호출한 것과 동일하게 동작
 
-| 매개변수 | 타입 | 설명 |
-|----------|------|------|
-| `method` | `string` | HTTP 메서드 (`GET`, `POST`, `PUT`, `DELETE`, `PATCH` 등) |
-| `url` | `string` | 요청 URL (상대 또는 절대 경로) |
-| `async` | `boolean` | 비동기 여부 (기본값: `true`) |
-| `username` | `string` | HTTP 인증 사용자명 (선택) |
-| `password` | `string` | HTTP 인증 비밀번호 (선택) |
+매개변수별 타입과 설명:
+- `method`: `string` · HTTP 메서드 (`GET`, `POST`, `PUT`, `DELETE`, `PATCH` 등)
+- `url`: `string` · 요청 URL (상대 또는 절대 경로)
+- `async`: `boolean` · 비동기 여부 (기본값: `true`)
+- `username`: `string` · HTTP 인증 사용자명 (선택)
+- `password`: `string` · HTTP 인증 비밀번호 (선택)
 
 ```javascript
 const xhr = new XMLHttpRequest();
@@ -379,11 +404,11 @@ xhr.open('GET', '/protected/resource', true, 'admin', 'secret');
 - `statusText` → `""`로 초기화
 - 기존에 설정된 요청 헤더가 모두 제거됨
 
-> 금지된 메서드: `CONNECT`, `TRACE`, `TRACK`은 보안상의 이유로 사용할 수 없으며, `SecurityError`가 발생한다.
+> 금지된 메서드: `CONNECT`, `TRACE`, `TRACK`은 보안상의 이유로 사용할 수 없으며, `SecurityError` 발생
 
 #### 3.2 setRequestHeader(name, value)
 
-요청 헤더를 설정한다. 반드시 `open()` 호출 후, `send()` 호출 전에 사용해야 한다. 동일한 헤더를 여러 번 호출하면 값이 쉼표로 구분되어 합쳐진다.
+요청 헤더를 설정함 → 반드시 `open()` 호출 후, `send()` 호출 전에 사용해야 함 → 동일한 헤더를 여러 번 호출하면 값이 쉼표로 구분되어 합쳐짐
 
 ```javascript
 const xhr = new XMLHttpRequest();
@@ -403,21 +428,20 @@ xhr.setRequestHeader('Accept', 'text/plain');
 xhr.send(JSON.stringify({ key: 'value' }));
 ```
 
-금지된 요청 헤더(forbidden request headers)는 설정할 수 없으며, 시도해도 조용히 무시된다. 자세한 목록은 [11장](#11-보안-제한)을 참고한다.
+금지된 요청 헤더(forbidden request headers)는 설정 불가 → 시도해도 조용히 무시됨. 자세한 목록은 [11장](#11-보안-제한) 참고
 
 #### 3.3 send(body)
 
-요청을 전송한다. `body` 매개변수는 요청 본문이며, 다양한 타입을 지원한다.
+요청을 전송함 → `body` 매개변수는 요청 본문이며, 다양한 타입을 지원함
 
-| body 타입 | 자동 Content-Type | 설명 |
-|-----------|-------------------|------|
-| `null` / 생략 | 없음 | GET, HEAD 요청 시 사용 |
-| `string` | `text/plain;charset=UTF-8` | 텍스트 데이터 |
-| `FormData` | `multipart/form-data` (boundary 포함) | 폼 데이터, 파일 업로드 |
-| `Blob` | Blob의 `type` 속성 | 바이너리 데이터 |
-| `ArrayBuffer` / `ArrayBufferView` | 없음 | 로우 바이너리 데이터 |
-| `URLSearchParams` | `application/x-www-form-urlencoded;charset=UTF-8` | URL 인코딩된 데이터 |
-| `Document` | HTML: `text/html`, XML: `application/xml` | HTML/XML 문서 |
+body 타입별 자동 Content-Type과 설명:
+- `null` / 생략: 없음 · GET, HEAD 요청 시 사용
+- `string`: `text/plain;charset=UTF-8` · 텍스트 데이터
+- `FormData`: `multipart/form-data` (boundary 포함) · 폼 데이터, 파일 업로드
+- `Blob`: Blob의 `type` 속성 · 바이너리 데이터
+- `ArrayBuffer` / `ArrayBufferView`: 없음 · 로우 바이너리 데이터
+- `URLSearchParams`: `application/x-www-form-urlencoded;charset=UTF-8` · URL 인코딩된 데이터
+- `Document`: HTML: `text/html`, XML: `application/xml` · HTML/XML 문서
 
 ```javascript
 // GET 요청 — body 없이 전송
@@ -466,11 +490,11 @@ xhr6.open('POST', '/api/binary');
 xhr6.send(buffer);
 ```
 
-> `send()`는 비동기 요청일 때 즉시 반환되며, 동기 요청일 때는 응답이 완료될 때까지 블로킹한다.
+> `send()`는 비동기 요청일 때 즉시 반환되며, 동기 요청일 때는 응답이 완료될 때까지 블로킹함
 
 #### 3.4 abort()
 
-이미 전송된 요청을 중단한다. 호출 시 다음이 발생한다:
+이미 전송된 요청을 중단함. 호출 시 다음이 발생:
 
 1. `readyState`가 `UNSENT`로 초기화
 2. `status`가 `0`으로 초기화
@@ -497,7 +521,7 @@ setTimeout(() => xhr.abort(), 5000); // 5초 후 강제 중단
 
 #### 3.5 overrideMimeType(mime)
 
-서버가 반환한 MIME 타입을 무시하고 지정된 MIME 타입으로 응답을 해석하도록 강제한다. `send()` 호출 전에 사용해야 한다.
+서버가 반환한 MIME 타입을 무시하고 지정된 MIME 타입으로 응답을 해석하도록 강제함 → `send()` 호출 전에 사용해야 함
 
 ```javascript
 // 서버가 text/plain으로 응답하지만 실제로는 XML인 경우
@@ -530,7 +554,7 @@ xhr2.send();
 
 #### 4.1 getResponseHeader(name)
 
-지정된 이름의 응답 헤더 값을 반환한다. 이름은 대소문자를 구분하지 않는다. 해당 헤더가 없으면 `null`을 반환한다. 동일 이름의 헤더가 여러 개 있으면 쉼표로 구분된 단일 문자열로 반환한다.
+지정된 이름의 응답 헤더 값 반환 → 이름은 대소문자를 구분하지 않음 → 해당 헤더가 없으면 `null` 반환 → 동일 이름의 헤더가 여러 개 있으면 쉼표로 구분된 단일 문자열로 반환
 
 ```javascript
 xhr.onload = function () {
@@ -545,11 +569,11 @@ xhr.onload = function () {
 };
 ```
 
-> 참고: CORS 환경에서는 기본적으로 "단순 응답 헤더(CORS-safelisted response headers)"만 접근 가능하다: `Cache-Control`, `Content-Language`, `Content-Length`, `Content-Type`, `Expires`, `Last-Modified`, `Pragma`. 그 외 헤더는 서버가 `Access-Control-Expose-Headers`로 명시적 허용해야 한다.
+> 참고: CORS 환경에서는 기본적으로 "단순 응답 헤더(CORS-safelisted response headers)"만 접근 가능함 · `Cache-Control`, `Content-Language`, `Content-Length`, `Content-Type`, `Expires`, `Last-Modified`, `Pragma`. 그 외 헤더는 서버가 `Access-Control-Expose-Headers`로 명시적 허용해야 함
 
 #### 4.2 getAllResponseHeaders()
 
-모든 응답 헤더를 하나의 문자열로 반환한다. 각 헤더는 `\r\n`(CRLF)으로 구분되며, 헤더 이름과 값은 `: `(콜론+공백)으로 구분된다.
+모든 응답 헤더를 하나의 문자열로 반환함 → 각 헤더는 `\r\n`(CRLF)으로 구분 → 헤더 이름과 값은 `: `(콜론+공백)으로 구분
 
 ```javascript
 xhr.onload = function () {
@@ -579,7 +603,7 @@ xhr.onload = function () {
 
 #### 4.3 responseType 상세
 
-`responseType`을 설정하면 브라우저가 응답 데이터를 자동으로 해당 형식으로 변환한다.
+`responseType`을 설정하면 브라우저가 응답 데이터를 자동으로 해당 형식으로 변환함
 
 ```javascript
 // "json" — 자동 JSON 파싱
@@ -641,22 +665,21 @@ xhr4.send();
 
 #### 5.1 이벤트 목록
 
-XMLHttpRequest와 XMLHttpRequestUpload는 `XMLHttpRequestEventTarget`을 상속하며, 다음 이벤트를 지원한다.
+XMLHttpRequest와 XMLHttpRequestUpload는 `XMLHttpRequestEventTarget`을 상속함 → 다음 이벤트를 지원함
 
-| 이벤트 | 발생 시점 | 이벤트 객체 |
-|--------|-----------|-------------|
-| `readystatechange` | `readyState`가 변경될 때 | `Event` |
-| `loadstart` | 요청 전송이 시작될 때 | `ProgressEvent` |
-| `progress` | 데이터 수신/전송 중 (주기적) | `ProgressEvent` |
-| `abort` | `abort()` 호출로 요청이 취소될 때 | `ProgressEvent` |
-| `error` | 네트워크 오류 발생 시 | `ProgressEvent` |
-| `load` | 요청이 성공적으로 완료될 때 | `ProgressEvent` |
-| `timeout` | 설정된 시간 내에 응답이 오지 않을 때 | `ProgressEvent` |
-| `loadend` | 요청이 완료될 때 (성공/실패/취소 불문) | `ProgressEvent` |
+이벤트별 발생 시점과 이벤트 객체:
+- `readystatechange`: `readyState`가 변경될 때 · `Event`
+- `loadstart`: 요청 전송이 시작될 때 · `ProgressEvent`
+- `progress`: 데이터 수신/전송 중 (주기적) · `ProgressEvent`
+- `abort`: `abort()` 호출로 요청이 취소될 때 · `ProgressEvent`
+- `error`: 네트워크 오류 발생 시 · `ProgressEvent`
+- `load`: 요청이 성공적으로 완료될 때 · `ProgressEvent`
+- `timeout`: 설정된 시간 내에 응답이 오지 않을 때 · `ProgressEvent`
+- `loadend`: 요청이 완료될 때 (성공/실패/취소 불문) · `ProgressEvent`
 
 #### 5.2 이벤트 발생 순서
 
-표준에서 정의하는 이벤트 발생 순서는 다음과 같다.
+표준에서 정의하는 이벤트 발생 순서:
 
 성공적인 요청 시:
 ```
@@ -690,7 +713,7 @@ XMLHttpRequest와 XMLHttpRequestUpload는 `XMLHttpRequestEventTarget`을 상속�
 4. loadend
 ```
 
-> `readystatechange`는 별도로, `readyState`가 변경될 때마다 발생한다. `load`, `error`, `timeout`, `abort` 중 하나만 발생하며, `loadend`는 항상 마지막에 발생한다.
+> `readystatechange`는 별도로, `readyState`가 변경될 때마다 발생함. `load`, `error`, `timeout`, `abort` 중 하나만 발생하며, `loadend`는 항상 마지막에 발생함
 
 ```javascript
 const xhr = new XMLHttpRequest();
@@ -738,7 +761,7 @@ xhr.send();
 
 #### 5.3 이벤트 핸들러 등록 방식
 
-이벤트 핸들러는 두 가지 방식으로 등록할 수 있다.
+이벤트 핸들러는 두 가지 방식으로 등록 가능:
 
 ```javascript
 // 방식 1: on* 속성 (하나의 핸들러만 등록 가능)
@@ -756,12 +779,14 @@ xhr.addEventListener('load', function (event) {
 ```
 
 ---
-
 ### 6. XMLHttpRequestUpload
 
 #### 6.1 개요
 
-`XMLHttpRequestUpload`은 업로드 과정을 모니터링하기 위한 인터페이스이다. `XMLHttpRequest` 객체의 `upload` 속성을 통해 접근하며, `XMLHttpRequestEventTarget`을 상속하므로 동일한 이벤트 세트(`loadstart`, `progress`, `load`, `error`, `abort`, `timeout`, `loadend`)를 지원한다.
+`XMLHttpRequestUpload`: 업로드 과정을 모니터링하기 위한 인터페이스
+
+- `XMLHttpRequest` 객체의 `upload` 속성을 통해 접근
+- `XMLHttpRequestEventTarget`을 상속 → 동일한 이벤트 세트(`loadstart`, `progress`, `load`, `error`, `abort`, `timeout`, `loadend`) 지원
 
 #### 6.2 업로드 진행률 모니터링
 
@@ -807,7 +832,10 @@ xhr.send(formData);
 
 #### 6.3 upload 이벤트와 CORS
 
-중요한 보안 사항: 크로스 오리진 요청에서 `xhr.upload`에 이벤트 리스너를 등록하면 해당 요청이 "단순 요청(simple request)"에서 제외되어 반드시 preflight 요청이 발생한다. 이는 업로드 진행률을 통해 서버의 존재 여부나 네트워크 특성을 추론하는 공격을 방지하기 위한 것이다.
+보안 사항:
+
+- 크로스 오리진 요청에서 `xhr.upload`에 이벤트 리스너 등록 → 해당 요청이 "단순 요청(simple request)"에서 제외 → 반드시 preflight 요청 발생
+- 목적: 업로드 진행률을 통해 서버의 존재 여부·네트워크 특성을 추론하는 공격 방지
 
 ```javascript
 // 크로스 오리진 요청에서의 upload 이벤트 주의
@@ -828,13 +856,12 @@ xhr.send(formData);
 
 #### 7.1 인터페이스 정의
 
-`ProgressEvent`는 작업의 진행 상태를 나타내는 이벤트이다. `Event`를 상속하며 세 가지 추가 속성을 갖는다.
+`ProgressEvent`: 작업의 진행 상태를 나타내는 이벤트
 
-| 속성 | 타입 | 설명 |
-|------|------|------|
-| `lengthComputable` | `boolean` | 전체 크기를 알 수 있는지 여부 |
-| `loaded` | `number` | 현재까지 전송된 바이트 수 |
-| `total` | `number` | 전체 바이트 수 (`lengthComputable`이 `false`이면 `0`) |
+- `Event`를 상속 → 세 가지 추가 속성 보유
+  - `lengthComputable` (`boolean`): 전체 크기를 알 수 있는지 여부
+  - `loaded` (`number`): 현재까지 전송된 바이트 수
+  - `total` (`number`): 전체 바이트 수 (`lengthComputable`이 `false`이면 `0`)
 
 ```javascript
 xhr.onprogress = function (event) {
@@ -851,7 +878,8 @@ xhr.onprogress = function (event) {
 
 #### 7.2 lengthComputable이 false인 경우
 
-서버가 `Content-Length` 헤더를 제공하지 않거나 Transfer-Encoding이 chunked인 경우 `lengthComputable`이 `false`가 된다. 이 경우 `total`은 `0`이다.
+- 서버가 `Content-Length` 헤더를 제공하지 않거나 Transfer-Encoding이 chunked인 경우 → `lengthComputable`이 `false`
+- 이 경우 `total`은 `0`
 
 ```javascript
 xhr.onprogress = function (event) {
@@ -876,7 +904,7 @@ function formatBytes(bytes) {
 
 #### 7.3 ProgressEvent 생성
 
-커스텀 ProgressEvent를 생성할 수도 있다 (테스트 등의 목적).
+- 커스텀 ProgressEvent 생성 가능 (테스트 등의 목적)
 
 ```javascript
 const event = new ProgressEvent('progress', {
@@ -897,7 +925,9 @@ console.log(event.total);           // 1000
 
 #### 8.1 개요
 
-`FormData` 인터페이스는 HTML 폼 데이터를 키-값 쌍으로 쉽게 관리할 수 있게 해주는 API이다. `XMLHttpRequest.send()`에 직접 전달할 수 있으며, 이 경우 `multipart/form-data` 인코딩으로 자동 전송된다.
+`FormData` 인터페이스: HTML 폼 데이터를 키-값 쌍으로 관리할 수 있게 해주는 API
+
+- `XMLHttpRequest.send()`에 직접 전달 가능 → 이 경우 `multipart/form-data` 인코딩으로 자동 전송
 
 #### 8.2 생성자
 
@@ -945,7 +975,7 @@ console.log(fd.has('hobby'));    // false
 
 #### 8.4 이터레이터 메서드
 
-`FormData`는 이터러블(iterable)이며, `entries()`, `keys()`, `values()` 메서드를 제공한다.
+- `FormData`는 이터러블(iterable) → `entries()`, `keys()`, `values()` 메서드 제공
 
 ```javascript
 const fd = new FormData();
@@ -1025,7 +1055,8 @@ form.addEventListener('submit', function (e) {
 
 #### 9.1 동일 출처와 교차 출처 요청
 
-XMLHttpRequest는 기본적으로 동일 출처 정책(Same-Origin Policy)의 제약을 받는다. 동일 출처란 프로토콜, 호스트, 포트가 모두 같은 것을 의미한다.
+- XMLHttpRequest: 기본적으로 동일 출처 정책(Same-Origin Policy)의 제약을 받음
+- 동일 출처: 프로토콜·호스트·포트가 모두 같은 경우
 
 ```
 페이지 출처: https://example.com:443
@@ -1039,9 +1070,9 @@ https://example.com:8080/data      → 교차 출처 (포트 다름)
 
 #### 9.2 CORS 동작 방식
 
-교차 출처 요청이 허용되려면 서버가 적절한 CORS 헤더를 응답에 포함해야 한다.
+- 교차 출처 요청 허용 조건: 서버가 적절한 CORS 헤더를 응답에 포함
 
-단순 요청(Simple Request): 다음 조건을 모두 만족하면 preflight 없이 직접 전송된다.
+단순 요청(Simple Request): 다음 조건을 모두 만족하면 preflight 없이 직접 전송
 
 - 메서드: `GET`, `HEAD`, `POST` 중 하나
 - 헤더: `Accept`, `Accept-Language`, `Content-Language`, `Content-Type` (값 제한 있음)만 사용
@@ -1060,7 +1091,7 @@ xhr.onload = function () {
 xhr.send();
 ```
 
-Preflight 요청: 단순 요청 조건을 충족하지 않으면 브라우저가 자동으로 `OPTIONS` 메서드의 preflight 요청을 먼저 전송한다.
+Preflight 요청: 단순 요청 조건 미충족 시 → 브라우저가 자동으로 `OPTIONS` 메서드의 preflight 요청을 먼저 전송
 
 ```javascript
 // Preflight가 발생하는 요청
@@ -1094,7 +1125,8 @@ Access-Control-Max-Age: 86400
 
 #### 9.3 withCredentials
 
-교차 출처 요청에서 쿠키나 인증 정보를 포함하려면 `withCredentials`를 `true`로 설정해야 하며, 서버는 `Access-Control-Allow-Credentials: true`를 응답해야 한다. 이 경우 `Access-Control-Allow-Origin`에 와일드카드(`*`)를 사용할 수 없다.
+- 교차 출처 요청에서 쿠키·인증 정보 포함 → `withCredentials`를 `true`로 설정 + 서버가 `Access-Control-Allow-Credentials: true` 응답 필요
+- 이 경우 `Access-Control-Allow-Origin`에 와일드카드(`*`) 사용 불가
 
 ```javascript
 const xhr = new XMLHttpRequest();
@@ -1116,7 +1148,8 @@ xhr.send();
 
 #### 10.1 비동기 요청 (기본)
 
-`open()`의 세 번째 인자 `async`가 `true`(기본값)이면 비동기 요청이다. `send()` 호출 즉시 반환되며, 응답은 이벤트 핸들러를 통해 처리한다.
+- `open()`의 세 번째 인자 `async`가 `true`(기본값) → 비동기 요청
+- `send()` 호출 즉시 반환 → 응답은 이벤트 핸들러를 통해 처리
 
 ```javascript
 const xhr = new XMLHttpRequest();
@@ -1130,7 +1163,8 @@ console.log('send() 직후 — 응답 대기 중'); // 이 줄이 먼저 실행�
 
 #### 10.2 동기 요청
 
-`async`를 `false`로 설정하면 동기 요청이다. `send()`가 응답이 올 때까지 블로킹한다.
+- `async`를 `false`로 설정 → 동기 요청
+- `send()`가 응답이 올 때까지 블로킹
 
 ```javascript
 const xhr = new XMLHttpRequest();
@@ -1142,11 +1176,11 @@ console.log('동기 응답:', xhr.responseText); // 응답 즉시 사용 가능
 
 #### 10.3 동기 XHR의 문제점
 
-동기 XHR은 여러 심각한 문제를 유발하며, 메인 스레드(document 환경)에서의 사용은 강력히 비권장(deprecated)되고 있다.
+동기 XHR: 여러 심각한 문제 유발 → 메인 스레드(document 환경)에서의 사용은 강력히 비권장(deprecated)
 
-1. UI 프리징: 메인 스레드가 네트워크 응답을 기다리는 동안 모든 사용자 상호작용(클릭, 스크롤, 입력)이 차단된다
-2. 이벤트 처리 중단: 타이머, 애니메이션, 다른 비동기 작업이 모두 대기 상태가 된다
-3. 사용자 경험 저하: 브라우저가 "응답 없음" 상태로 보이며, 탭이 멈춘 것처럼 느껴진다
+- UI 프리징: 메인 스레드가 네트워크 응답을 기다리는 동안 모든 사용자 상호작용(클릭·스크롤·입력) 차단
+- 이벤트 처리 중단: 타이머·애니메이션·다른 비동기 작업 모두 대기 상태
+- 사용자 경험 저하: 브라우저가 "응답 없음" 상태로 보임 → 탭이 멈춘 것처럼 느껴짐
 
 ```javascript
 // 동기 XHR의 제한 사항
@@ -1162,12 +1196,10 @@ xhr.responseType = 'json'; // InvalidAccessError 발생!
 
 브라우저 경고 및 제한:
 
-| 환경 | 동기 XHR 동작 |
-|------|---------------|
-| 메인 스레드 (window) | 동작하지만 콘솔 경고 발생, 일부 기능 제한 |
-| Worker 내부 | 제한 없이 동작 (Worker는 별도 스레드) |
-| 페이지 unload 중 (`beforeunload`, `unload`) | 브라우저에 따라 무시될 수 있음 |
-| `document` 환경에서 `async=false` | 표준에서 deprecated, 향후 제거 가능 |
+- 메인 스레드 (window): 동작하지만 콘솔 경고 발생 · 일부 기능 제한
+- Worker 내부: 제한 없이 동작 (Worker는 별도 스레드)
+- 페이지 unload 중 (`beforeunload`, `unload`): 브라우저에 따라 무시될 수 있음
+- `document` 환경에서 `async=false`: 표준에서 deprecated · 향후 제거 가능
 
 ```javascript
 // Worker에서의 동기 XHR (허용되는 유일한 적절한 사용처)
@@ -1189,17 +1221,16 @@ self.addEventListener('message', function (e) {
 
 #### 11.1 Same-Origin Policy
 
-XMLHttpRequest는 기본적으로 동일 출처 정책의 적용을 받는다. 교차 출처 요청은 CORS 메커니즘을 통해서만 허용된다.
+- XMLHttpRequest: 기본적으로 동일 출처 정책의 적용을 받음
+- 교차 출처 요청은 CORS 메커니즘을 통해서만 허용
 
 #### 11.2 금지 메서드 (Forbidden Methods)
 
-다음 HTTP 메서드는 `open()`에서 사용할 수 없으며, `SecurityError`가 발생한다.
+다음 HTTP 메서드는 `open()`에서 사용 불가 → `SecurityError` 발생
 
-| 메서드 | 금지 이유 |
-|--------|-----------|
-| `CONNECT` | 프록시 터널링에 사용되며, 악용 시 내부 네트워크 접근 가능 |
-| `TRACE` | 요청 내용을 그대로 반환하므로 쿠키/인증 정보 탈취 위험(XST 공격) |
-| `TRACK` | `TRACE`의 Microsoft 구현체, 동일한 보안 위험 |
+- `CONNECT`: 프록시 터널링에 사용 · 악용 시 내부 네트워크 접근 가능
+- `TRACE`: 요청 내용을 그대로 반환 → 쿠키·인증 정보 탈취 위험(XST 공격)
+- `TRACK`: `TRACE`의 Microsoft 구현체 · 동일한 보안 위험
 
 ```javascript
 const xhr = new XMLHttpRequest();
@@ -1213,7 +1244,7 @@ try {
 
 #### 11.3 금지 요청 헤더 (Forbidden Request Headers)
 
-다음 헤더는 `setRequestHeader()`로 설정할 수 없다. 시도하면 조용히 무시된다(에러 없음).
+다음 헤더는 `setRequestHeader()`로 설정 불가 → 시도해도 조용히 무시됨(에러 없음)
 
 - `Accept-Charset`
 - `Accept-Encoding`
@@ -1263,7 +1294,7 @@ xhr.send();
 
 #### 11.4 금지 응답 헤더 (Forbidden Response Headers)
 
-CORS 교차 출처 요청 시, 기본적으로 접근 가능한 응답 헤더는 CORS-safelisted response headers로 제한된다.
+- CORS 교차 출처 요청 시 → 기본적으로 접근 가능한 응답 헤더는 CORS-safelisted response headers로 제한
 
 ```javascript
 // 교차 출처 응답에서 기본 접근 가능한 헤더
@@ -1889,22 +1920,21 @@ console.log('댓글:', comments.data.length);
 
 #### Streams Standard란
 
-WHATWG Streams Standard는 웹 플랫폼에서 스트리밍 데이터를 생성하고 소비하기 위한 API를 정의하는 표준이다. 이 표준은 데이터를 한 번에 전부 메모리에 올리지 않고, 청크(chunk) 단위로 점진적으로 처리할 수 있는 추상화 계층을 제공한다.
+WHATWG Streams Standard: 웹 플랫폼에서 스트리밍 데이터를 생성·소비하기 위한 API를 정의하는 표준
 
-공식 명세: https://streams.spec.whatwg.org/
+- 데이터를 한 번에 전부 메모리에 올리지 않고 청크(chunk) 단위로 점진적 처리 가능한 추상화 계층 제공
+- 공식 명세: https://streams.spec.whatwg.org/
 
 #### 왜 필요한가
 
-전통적인 웹 API(예: `XMLHttpRequest`)는 응답 전체가 도착해야만 데이터를 사용할 수 있었다. 이 접근 방식은 다음과 같은 한계를 가진다.
+전통적인 웹 API(예: `XMLHttpRequest`) → 응답 전체가 도착해야만 데이터 사용 가능 → 다음 한계 존재
 
-| 문제 | 설명 |
-|------|------|
-| 메모리 비효율 | 수 GB 파일을 다운로드할 때 전체를 메모리에 적재해야 한다 |
-| 지연 시간 | 전체 데이터가 도착할 때까지 아무것도 할 수 없다 |
-| 배압 부재 | 생산자와 소비자 간 속도 차이를 제어할 수 없다 |
-| 조합 불가 | 데이터 변환 파이프라인을 유연하게 구성할 수 없다 |
+- 메모리 비효율: 수 GB 파일 다운로드 시 전체를 메모리에 적재해야 함
+- 지연 시간: 전체 데이터가 도착할 때까지 아무것도 할 수 없음
+- 배압 부재: 생산자와 소비자 간 속도 차이 제어 불가
+- 조합 불가: 데이터 변환 파이프라인을 유연하게 구성 불가
 
-Streams API는 이 모든 문제를 해결한다.
+Streams API → 이 모든 문제 해결
 
 ```js
 // 전통적 방식: 전체 응답을 한 번에 가져옴
@@ -1924,31 +1954,31 @@ while (true) {
 
 #### 스트림의 개념
 
-스트림은 시간에 걸쳐 사용 가능해지는 일련의 데이터를 추상화한 것이다. 물리적인 비유로는 수도관을 생각하면 된다. 물(데이터)이 수도관(스트림)을 통해 흐르며, 수도꼭지(소비자)에서 필요한 만큼 받아 사용한다.
+스트림: 시간에 걸쳐 사용 가능해지는 일련의 데이터를 추상화한 것
 
-Streams Standard는 세 가지 유형의 스트림을 정의한다.
+- 물리적 비유: 수도관 → 물(데이터)이 수도관(스트림)을 통해 흐르며, 수도꼭지(소비자)에서 필요한 만큼 받아 사용
+
+Streams Standard가 정의하는 세 가지 유형의 스트림
 
 ```
 ReadableStream  →  TransformStream  →  WritableStream
 (데이터 소스)       (데이터 변환)         (데이터 싱크)
 ```
 
-- ReadableStream: 데이터를 읽을 수 있는 소스. `fetch()` 응답의 `body`가 대표적이다.
-- WritableStream: 데이터를 쓸 수 있는 싱크. 파일 쓰기, 네트워크 전송 등.
-- TransformStream: 데이터를 변환하는 중간 단계. 읽기 가능 면(readable)과 쓰기 가능 면(writable)을 모두 가진다.
+- ReadableStream: 데이터를 읽을 수 있는 소스 · `fetch()` 응답의 `body`가 대표적
+- WritableStream: 데이터를 쓸 수 있는 싱크 · 파일 쓰기·네트워크 전송 등
+- TransformStream: 데이터를 변환하는 중간 단계 · 읽기 가능 면(readable)과 쓰기 가능 면(writable)을 모두 가짐
 
 #### 역사
 
-| 시기 | 사건 |
-|------|------|
-| 2013년 | Streams API 초기 논의 시작 |
-| 2014년 | WHATWG에서 Streams Standard 초안 작성 시작 (Domenic Denicola 주도) |
-| 2015년 | Chrome에서 `ReadableStream` 최초 구현 |
-| 2016년 | `WritableStream`, `TransformStream` 명세 추가 |
-| 2017년 | Fetch API와 Streams 통합 (response.body) |
-| 2020년 | 모든 주요 브라우저에서 기본 Streams API 지원 |
-| 2022년 | `ReadableStream.from()` 정적 메서드 추가 |
-| 2023-현재 | 바이트 스트림, async iterable 지원 등 지속 확장 |
+- 2013년: Streams API 초기 논의 시작
+- 2014년: WHATWG에서 Streams Standard 초안 작성 시작(Domenic Denicola 주도)
+- 2015년: Chrome에서 `ReadableStream` 최초 구현
+- 2016년: `WritableStream`, `TransformStream` 명세 추가
+- 2017년: Fetch API와 Streams 통합(response.body)
+- 2020년: 모든 주요 브라우저에서 기본 Streams API 지원
+- 2022년: `ReadableStream.from()` 정적 메서드 추가
+- 2023-현재: 바이트 스트림, async iterable 지원 등 지속 확장
 
 ---
 
@@ -1956,7 +1986,9 @@ ReadableStream  →  TransformStream  →  WritableStream
 
 #### 청크 (Chunk)
 
-청크는 스트림을 구성하는 개별 데이터 조각이다. 청크는 어떤 타입이든 될 수 있다. 문자열, `Uint8Array`, JSON 객체 등 자바스크립트의 모든 값이 청크가 될 수 있다.
+청크: 스트림을 구성하는 개별 데이터 조각
+
+- 어떤 타입이든 가능 · 문자열, `Uint8Array`, JSON 객체 등 자바스크립트의 모든 값이 청크가 될 수 있음
 
 ```js
 // 문자열 청크를 사용하는 스트림
@@ -1981,18 +2013,23 @@ const byteStream = new ReadableStream({
 
 #### 내부 큐 (Internal Queue)
 
-모든 스트림은 내부 큐를 가지고 있다. 이 큐는 아직 소비되지 않은 청크들을 임시 보관하는 버퍼 역할을 한다.
+모든 스트림 → 내부 큐 보유
+
+- 아직 소비되지 않은 청크들을 임시 보관하는 버퍼 역할
 
 ```
 [생산자] → [ 큐: [청크1][청크2][청크3] ] → [소비자]
              ↑ enqueue()                    ↑ read()
 ```
 
-내부 큐의 크기는 큐잉 전략(Queuing Strategy)에 의해 관리된다. 큐가 가득 차면 생산자에게 배압(backpressure)이 전달된다.
+- 내부 큐의 크기는 큐잉 전략(Queuing Strategy)이 관리
+- 큐가 가득 차면 → 생산자에게 배압(backpressure) 전달
 
 #### 배압 (Backpressure)
 
-배압은 스트림 시스템의 핵심 메커니즘이다. 소비자가 처리할 수 있는 속도보다 생산자가 더 빠르게 데이터를 만들어 내는 상황을 제어한다.
+배압: 스트림 시스템의 핵심 메커니즘
+
+- 소비자가 처리할 수 있는 속도보다 생산자가 더 빠르게 데이터를 만들어 내는 상황 제어
 
 ```
 빠른 생산자 ──→ [큐가 차오름] ──→ 배압 신호 ──→ 생산자 속도 감소
@@ -2002,7 +2039,7 @@ const byteStream = new ReadableStream({
                                           생산자 재개
 ```
 
-배압이 없으면 메모리 사용량이 무한히 증가하거나 데이터가 손실될 수 있다.
+배압 부재 → 메모리 사용량 무한 증가 또는 데이터 손실 가능
 
 ```js
 // 배압이 적용되는 예제
@@ -2018,7 +2055,9 @@ const readable = new ReadableStream({
 
 #### 파이프 체인 (Pipe Chain)
 
-여러 스트림을 연결하여 데이터 처리 파이프라인을 구성할 수 있다. Unix의 파이프(`|`)와 유사한 개념이다.
+여러 스트림을 연결 → 데이터 처리 파이프라인 구성 가능
+
+- Unix의 파이프(`|`)와 유사한 개념
 
 ```js
 // 파이프 체인 예시
@@ -2033,13 +2072,15 @@ await readableStream
   .pipeTo(writableStream);                    // 최종 싱크로 전달
 ```
 
-파이프 체인에서 배압은 역방향으로 전파된다. 최종 싱크(WritableStream)가 느려지면 그 영향이 체인을 따라 역순으로 전파되어 소스(ReadableStream)의 생산 속도까지 제어한다.
+파이프 체인에서 배압은 역방향으로 전파
+
+- 최종 싱크(WritableStream)가 느려지면 → 그 영향이 체인을 따라 역순으로 전파 → 소스(ReadableStream)의 생산 속도까지 제어
 
 ---
 
 ### 3. ReadableStream
 
-`ReadableStream`은 데이터를 읽을 수 있는 스트림을 나타낸다. 스트림 API의 가장 기본이 되는 인터페이스이다.
+`ReadableStream`: 데이터를 읽을 수 있는 스트림을 나타내는, 스트림 API의 가장 기본이 되는 인터페이스
 
 #### 생성자
 
@@ -2049,17 +2090,17 @@ new ReadableStream(underlyingSource?, queuingStrategy?)
 
 ##### underlyingSource 객체
 
-| 속성 | 설명 |
-|------|------|
-| `start(controller)` | 스트림 생성 시 한 번 호출. 초기화 로직 수행 |
-| `pull(controller)` | 내부 큐에 여유가 있을 때 호출. 데이터 공급 |
-| `cancel(reason)` | 스트림이 취소될 때 호출. 리소스 정리 |
-| `type` | `"bytes"`로 설정하면 바이트 스트림 생성 |
-| `autoAllocateChunkSize` | 바이트 스트림에서 자동 버퍼 할당 크기 |
+- `start(controller)`: 스트림 생성 시 한 번 호출 · 초기화 로직 수행
+- `pull(controller)`: 내부 큐에 여유가 있을 때 호출 · 데이터 공급
+- `cancel(reason)`: 스트림이 취소될 때 호출 · 리소스 정리
+- `type`: `"bytes"`로 설정하면 바이트 스트림 생성
+- `autoAllocateChunkSize`: 바이트 스트림에서 자동 버퍼 할당 크기
 
 ##### start(controller)
 
-스트림이 생성될 때 즉시 한 번 호출된다. Promise를 반환할 수 있으며, 이 경우 Promise가 이행될 때까지 다른 메서드 호출이 지연된다.
+스트림이 생성될 때 즉시 한 번 호출
+
+- Promise를 반환할 수 있음 → 이 경우 Promise가 이행될 때까지 다른 메서드 호출이 지연됨
 
 ```js
 const stream = new ReadableStream({
@@ -2079,7 +2120,9 @@ const stream = new ReadableStream({
 
 ##### pull(controller)
 
-내부 큐의 크기가 `highWaterMark` 미만일 때 반복적으로 호출된다. 비동기 데이터 소스에서 데이터를 가져오는 데 적합하다.
+내부 큐의 크기가 `highWaterMark` 미만일 때 반복적으로 호출
+
+- 비동기 데이터 소스에서 데이터를 가져오는 데 적합
 
 ```js
 const stream = new ReadableStream({
@@ -2106,11 +2149,13 @@ const stream = new ReadableStream({
 });
 ```
 
-중요: `pull()`이 Promise를 반환하면, 해당 Promise가 이행될 때까지 다음 `pull()` 호출이 보류된다. 이를 통해 자연스러운 배압이 형성된다.
+중요: `pull()`이 Promise를 반환하면 → 해당 Promise가 이행될 때까지 다음 `pull()` 호출이 보류 → 자연스러운 배압 형성
 
 ##### cancel(reason)
 
-소비자가 스트림을 취소했을 때 호출된다. 리소스 정리(파일 핸들 닫기, 네트워크 연결 해제 등)에 사용한다.
+소비자가 스트림을 취소했을 때 호출
+
+- 리소스 정리(파일 핸들 닫기, 네트워크 연결 해제 등)에 사용
 
 ```js
 const stream = new ReadableStream({
@@ -2129,7 +2174,9 @@ const stream = new ReadableStream({
 
 ##### type
 
-`"bytes"`로 설정하면 바이트 스트림이 된다. 바이트 스트림은 `ReadableByteStreamController`를 사용하며 BYOB(Bring Your Own Buffer) 리더를 지원한다.
+`"bytes"`로 설정 → 바이트 스트림
+
+- `ReadableByteStreamController`를 사용하며 BYOB(Bring Your Own Buffer) 리더 지원
 
 ```js
 const byteStream = new ReadableStream({
@@ -2143,12 +2190,10 @@ const byteStream = new ReadableStream({
 
 #### queuingStrategy
 
-내부 큐의 동작을 제어한다.
+내부 큐의 동작을 제어
 
-| 속성 | 설명 |
-|------|------|
-| `highWaterMark` | 배압이 적용되기 시작하는 큐 크기 임계값 |
-| `size(chunk)` | 각 청크의 크기를 계산하는 함수 |
+- `highWaterMark`: 배압이 적용되기 시작하는 큐 크기 임계값
+- `size(chunk)`: 각 청크의 크기를 계산하는 함수
 
 ```js
 const stream = new ReadableStream(
@@ -2168,7 +2213,9 @@ const stream = new ReadableStream(
 
 ##### getReader(options?)
 
-스트림에서 데이터를 읽기 위한 Reader를 획득한다. Reader가 활성 상태인 동안 스트림은 잠긴(locked) 상태가 된다.
+스트림에서 데이터를 읽기 위한 Reader를 획득
+
+- Reader가 활성 상태인 동안 스트림은 잠긴(locked) 상태
 
 ```js
 const reader = stream.getReader();
@@ -2183,7 +2230,7 @@ const byobReader = byteStream.getReader({ mode: 'byob' }); // ReadableStreamBYOB
 
 ##### pipeThrough(transformStream, options?)
 
-스트림 데이터를 `TransformStream`에 통과시킨다. 변환된 결과를 새로운 `ReadableStream`으로 반환한다.
+스트림 데이터를 `TransformStream`에 통과 → 변환된 결과를 새로운 `ReadableStream`으로 반환
 
 ```js
 const uppercased = readableStream.pipeThrough(new TransformStream({
@@ -2203,7 +2250,9 @@ const result = readableStream.pipeThrough(transformStream, {
 
 ##### pipeTo(writableStream, options?)
 
-스트림 데이터를 `WritableStream`에 보낸다. 파이프가 완료되면 이행되는 Promise를 반환한다.
+스트림 데이터를 `WritableStream`에 전송
+
+- 파이프가 완료되면 이행되는 Promise를 반환
 
 ```js
 await readableStream.pipeTo(writableStream);
@@ -2231,7 +2280,9 @@ try {
 
 ##### tee()
 
-스트림을 두 개의 독립적인 스트림으로 분기한다. 원본 스트림의 데이터가 두 분기 모두에 동일하게 전달된다.
+스트림을 두 개의 독립적인 스트림으로 분기
+
+- 원본 스트림의 데이터가 두 분기 모두에 동일하게 전달됨
 
 ```js
 const [branch1, branch2] = readableStream.tee();
@@ -2244,7 +2295,9 @@ const reader2 = branch2.getReader();
 
 ##### cancel(reason?)
 
-스트림을 취소한다. underlying source의 `cancel()` 메서드가 호출되고, 스트림이 닫힌다.
+스트림 취소
+
+- underlying source의 `cancel()` 메서드가 호출되고 스트림이 닫힘
 
 ```js
 const stream = new ReadableStream({
@@ -2258,7 +2311,7 @@ await stream.cancel('더 이상 데이터가 필요 없음');
 
 ##### locked (속성)
 
-스트림이 Reader에 의해 잠겨 있는지 여부를 나타내는 불리언 값이다.
+스트림이 Reader에 의해 잠겨 있는지 여부를 나타내는 불리언 값
 
 ```js
 console.log(stream.locked); // false
@@ -2272,7 +2325,9 @@ console.log(stream.locked); // false
 
 ##### values(options?)
 
-스트림을 비동기 이터러블(async iterable)로 변환한다. `for await...of` 루프에서 사용할 수 있다.
+스트림을 비동기 이터러블(async iterable)로 변환
+
+- `for await...of` 루프에서 사용 가능
 
 ```js
 const stream = new ReadableStream({
@@ -2303,7 +2358,7 @@ for await (const chunk of stream) {
 
 ##### ReadableStream.from(asyncIterable) (정적 메서드)
 
-비동기 이터러블 또는 이터러블을 `ReadableStream`으로 변환한다.
+비동기 이터러블 또는 이터러블을 `ReadableStream`으로 변환
 
 ```js
 // 배열에서 스트림 생성
@@ -2335,11 +2390,13 @@ const stream3 = ReadableStream.from(asyncIterable);
 
 ### 4. ReadableStreamDefaultReader
 
-`ReadableStreamDefaultReader`는 `ReadableStream`에서 청크를 읽기 위한 기본 리더이다.
+`ReadableStreamDefaultReader`: `ReadableStream`에서 청크를 읽기 위한 기본 리더
 
 #### read()
 
-스트림에서 다음 청크를 읽는다. `{ value, done }` 형태의 결과를 반환하는 Promise를 반환한다.
+스트림에서 다음 청크를 읽음
+
+- `{ value, done }` 형태의 결과를 반환하는 Promise를 반환
 
 ```js
 const reader = stream.getReader();
@@ -2368,11 +2425,13 @@ async function readAll(stream) {
 }
 ```
 
-`done`이 `true`이면 스트림이 닫힌 것이며, 이 경우 `value`는 `undefined`이다.
+- `done`이 `true`이면 스트림이 닫힌 것 → 이 경우 `value`는 `undefined`
 
 #### releaseLock()
 
-리더와 스트림 간의 잠금을 해제한다. 이후 다른 리더를 획득할 수 있다.
+리더와 스트림 간의 잠금을 해제
+
+- 이후 다른 리더를 획득 가능
 
 ```js
 const reader = stream.getReader();
@@ -2383,11 +2442,11 @@ reader.releaseLock();
 const newReader = stream.getReader();
 ```
 
-주의: 아직 미완료된 `read()` 요청이 있는 상태에서 `releaseLock()`을 호출하면, 그 `read()` Promise는 `TypeError`로 거부된다.
+주의: 아직 미완료된 `read()` 요청이 있는 상태에서 `releaseLock()`을 호출 → 그 `read()` Promise는 `TypeError`로 거부됨
 
 #### cancel(reason?)
 
-리더를 통해 기반 스트림을 취소한다.
+리더를 통해 기반 스트림을 취소
 
 ```js
 const reader = stream.getReader();
@@ -2400,7 +2459,7 @@ if (value === 'ERROR_MARKER') {
 
 #### closed (속성)
 
-스트림이 닫히거나 오류가 발생했을 때 이행/거부되는 Promise이다.
+스트림이 닫히거나 오류가 발생했을 때 이행/거부되는 Promise
 
 ```js
 const reader = stream.getReader();
@@ -2456,11 +2515,13 @@ async function processStream(readableStream) {
 
 ### 5. ReadableStreamBYOBReader
 
-`ReadableStreamBYOBReader`는 바이트 스트림 전용 리더이다. BYOB는 "Bring Your Own Buffer"의 약자로, 소비자가 직접 제공한 버퍼에 데이터를 채워 넣는다. 이를 통해 메모리 할당을 최소화할 수 있다.
+`ReadableStreamBYOBReader`: 바이트 스트림 전용 리더
+
+- BYOB = "Bring Your Own Buffer"의 약자 → 소비자가 직접 제공한 버퍼에 데이터를 채워 넣음 → 메모리 할당 최소화 가능
 
 #### read(view)
 
-사용자가 제공한 `ArrayBufferView`에 데이터를 읽어 들인다.
+사용자가 제공한 `ArrayBufferView`에 데이터를 읽어 들임
 
 ```js
 const byteStream = new ReadableStream({
@@ -2482,7 +2543,7 @@ const { value, done } = await reader.read(view);
 // value.byteLength는 실제로 읽힌 바이트 수
 ```
 
-핵심 개념: `read(view)` 호출 후 원본 `view`는 더 이상 유효하지 않다(내부 `ArrayBuffer`가 전이(transfer)됨). 반환된 `value`를 사용해야 한다.
+핵심 개념: `read(view)` 호출 후 원본 `view`는 더 이상 유효하지 않음(내부 `ArrayBuffer`가 전이(transfer)됨) → 반환된 `value`를 사용해야 함
 
 ```js
 // 반복적으로 BYOB 읽기
@@ -2515,7 +2576,7 @@ async function readWithBYOB(stream) {
 
 #### releaseLock()
 
-기본 리더와 동일하게 잠금을 해제한다.
+기본 리더와 동일하게 잠금을 해제
 
 ```js
 const reader = byteStream.getReader({ mode: 'byob' });
@@ -2525,7 +2586,7 @@ reader.releaseLock();
 
 #### cancel(reason?)
 
-바이트 스트림을 취소한다.
+바이트 스트림을 취소
 
 ```js
 const reader = byteStream.getReader({ mode: 'byob' });
@@ -2534,7 +2595,9 @@ await reader.cancel('파일 전송 중단');
 
 #### closed (속성)
 
-스트림 닫힘/오류를 감지하는 Promise이다. `ReadableStreamDefaultReader.closed`와 동일하게 동작한다.
+스트림 닫힘/오류를 감지하는 Promise
+
+- `ReadableStreamDefaultReader.closed`와 동일하게 동작
 
 #### BYOB vs Default Reader 비교
 
@@ -2563,11 +2626,13 @@ const { value: v2 } = await byobReader.read(buf);
 
 ### 6. ReadableByteStreamController
 
-`ReadableByteStreamController`는 바이트 스트림(`type: 'bytes'`)의 underlying source에 전달되는 컨트롤러이다.
+`ReadableByteStreamController`: 바이트 스트림(`type: 'bytes'`)의 underlying source에 전달되는 컨트롤러
 
 #### byobRequest (속성)
 
-현재 BYOB 리더의 읽기 요청을 나타내는 `ReadableStreamBYOBRequest` 객체이다. BYOB 리더가 `read(view)`를 호출했을 때만 존재하며, 그렇지 않으면 `null`이다.
+현재 BYOB 리더의 읽기 요청을 나타내는 `ReadableStreamBYOBRequest` 객체
+
+- BYOB 리더가 `read(view)`를 호출했을 때만 존재 · 그렇지 않으면 `null`
 
 ```js
 const stream = new ReadableStream({
@@ -2590,11 +2655,13 @@ const stream = new ReadableStream({
 
 ##### byobRequest.view
 
-소비자가 제공한 버퍼의 뷰(view). 이 뷰에 데이터를 직접 쓸 수 있다.
+소비자가 제공한 버퍼의 뷰(view)
+
+- 이 뷰에 데이터를 직접 쓸 수 있음
 
 ##### byobRequest.respond(bytesWritten)
 
-뷰에 `bytesWritten` 바이트만큼 데이터를 채웠음을 알린다.
+뷰에 `bytesWritten` 바이트만큼 데이터를 채웠음을 알림
 
 ```js
 async pull(controller) {
@@ -2611,11 +2678,15 @@ async pull(controller) {
 
 ##### byobRequest.respondWithNewView(view)
 
-완전히 새로운 뷰로 응답한다. 원본 버퍼와 다른 버퍼를 사용해야 할 때 유용하다.
+완전히 새로운 뷰로 응답
+
+- 원본 버퍼와 다른 버퍼를 사용해야 할 때 유용
 
 #### desiredSize (속성)
 
-내부 큐를 `highWaterMark`까지 채우는 데 필요한 크기이다. 배압 판단에 사용한다.
+내부 큐를 `highWaterMark`까지 채우는 데 필요한 크기
+
+- 배압 판단에 사용
 
 ```js
 pull(controller) {
@@ -2629,7 +2700,9 @@ pull(controller) {
 
 #### close()
 
-스트림을 닫는다. 큐에 남은 청크가 모두 소비된 후 스트림이 종료된다.
+스트림을 닫음
+
+- 큐에 남은 청크가 모두 소비된 후 스트림이 종료됨
 
 ```js
 pull(controller) {
@@ -2641,7 +2714,9 @@ pull(controller) {
 
 #### enqueue(chunk)
 
-`Uint8Array` 등의 `ArrayBufferView`를 큐에 추가한다. 바이트 스트림이므로 반드시 바이트 타입이어야 한다.
+`Uint8Array` 등의 `ArrayBufferView`를 큐에 추가
+
+- 바이트 스트림이므로 반드시 바이트 타입이어야 함
 
 ```js
 pull(controller) {
@@ -2653,7 +2728,9 @@ pull(controller) {
 
 #### error(reason)
 
-스트림을 오류 상태로 만든다. 이후 모든 읽기 시도는 거부된다.
+스트림을 오류 상태로 만듦
+
+- 이후 모든 읽기 시도는 거부됨
 
 ```js
 pull(controller) {
@@ -2670,7 +2747,7 @@ pull(controller) {
 
 ### 7. ReadableStreamDefaultController
 
-`ReadableStreamDefaultController`는 기본(비-바이트) 스트림의 컨트롤러이다.
+`ReadableStreamDefaultController`: 기본(비-바이트) 스트림의 컨트롤러
 
 #### desiredSize (속성)
 
@@ -2692,7 +2769,7 @@ const stream = new ReadableStream({
 
 #### close()
 
-스트림을 정상적으로 닫는다.
+스트림을 정상적으로 닫음
 
 ```js
 const stream = new ReadableStream({
@@ -2706,7 +2783,9 @@ const stream = new ReadableStream({
 
 #### enqueue(chunk)
 
-청크를 내부 큐에 추가한다. 어떤 타입의 값이든 가능하다.
+청크를 내부 큐에 추가
+
+- 어떤 타입의 값이든 가능
 
 ```js
 const stream = new ReadableStream({
@@ -2722,7 +2801,7 @@ const stream = new ReadableStream({
 
 #### error(reason)
 
-스트림을 오류 상태로 전환한다.
+스트림을 오류 상태로 전환
 
 ```js
 const stream = new ReadableStream({
@@ -2748,7 +2827,7 @@ try {
 
 ### 8. WritableStream
 
-`WritableStream`은 데이터를 쓸 수 있는 싱크(sink)를 나타낸다.
+`WritableStream`: 데이터를 쓸 수 있는 싱크(sink)
 
 #### 생성자
 
@@ -2758,12 +2837,10 @@ new WritableStream(underlyingSink?, queuingStrategy?)
 
 #### underlyingSink 객체
 
-| 속성 | 설명 |
-|------|------|
-| `start(controller)` | 스트림 생성 시 호출. 초기화 로직 |
-| `write(chunk, controller)` | 청크가 쓰일 때마다 호출 |
-| `close()` | 스트림이 닫힐 때 호출. 마무리 작업 |
-| `abort(reason)` | 스트림이 중단될 때 호출. 리소스 정리 |
+- `start(controller)`: 스트림 생성 시 호출 · 초기화 로직
+- `write(chunk, controller)`: 청크가 쓰일 때마다 호출
+- `close()`: 스트림이 닫힐 때 호출 · 마무리 작업
+- `abort(reason)`: 스트림이 중단될 때 호출 · 리소스 정리
 
 ##### start(controller)
 
@@ -2779,7 +2856,8 @@ const ws = new WritableStream({
 
 ##### write(chunk, controller)
 
-각 청크가 기록될 때 호출된다. Promise를 반환하면 해당 Promise가 이행될 때까지 다음 write가 대기한다. 이것이 WritableStream의 배압 메커니즘이다.
+- 각 청크가 기록될 때 호출
+- Promise 반환 시 해당 Promise가 이행될 때까지 다음 write 대기 → WritableStream의 배압 메커니즘
 
 ```js
 const ws = new WritableStream({
@@ -2793,7 +2871,7 @@ const ws = new WritableStream({
 
 ##### close()
 
-모든 쓰기가 완료된 후 스트림을 닫을 때 호출된다.
+모든 쓰기 완료 후 스트림을 닫을 때 호출
 
 ```js
 const ws = new WritableStream({
@@ -2813,7 +2891,8 @@ const ws = new WritableStream({
 
 ##### abort(reason)
 
-스트림이 비정상적으로 중단될 때 호출된다. `close()`와 달리 불완전한 상태에서의 정리를 위한 것이다.
+- 스트림이 비정상적으로 중단될 때 호출
+- `close()`와 달리 불완전한 상태에서의 정리 목적
 
 ```js
 const ws = new WritableStream({
@@ -2851,7 +2930,7 @@ const ws = new WritableStream(
 
 #### getWriter()
 
-스트림에 데이터를 쓰기 위한 Writer를 획득한다.
+스트림에 데이터를 쓰기 위한 Writer 획득
 
 ```js
 const writer = ws.getWriter();
@@ -2864,7 +2943,7 @@ await writer.close();
 
 #### locked (속성)
 
-Writer에 의해 잠겨 있는지 여부이다.
+Writer에 의해 잠겨 있는지 여부
 
 ```js
 console.log(ws.locked); // false
@@ -2876,7 +2955,7 @@ console.log(ws.locked); // false
 
 #### abort(reason?)
 
-스트림을 중단한다.
+스트림 중단
 
 ```js
 await ws.abort('사용자가 업로드 취소');
@@ -2884,7 +2963,7 @@ await ws.abort('사용자가 업로드 취소');
 
 #### close()
 
-스트림을 정상적으로 닫는다.
+스트림을 정상적으로 닫음
 
 ```js
 await ws.close();
@@ -2930,11 +3009,12 @@ await writer.close();
 
 ### 9. WritableStreamDefaultWriter
 
-`WritableStreamDefaultWriter`는 `WritableStream`에 데이터를 쓰기 위한 인터페이스이다.
+`WritableStreamDefaultWriter`: `WritableStream`에 데이터를 쓰기 위한 인터페이스
 
 #### write(chunk)
 
-스트림에 청크를 쓴다. 청크가 내부 큐에 성공적으로 추가되거나 underlying sink에 기록되면 이행되는 Promise를 반환한다.
+- 스트림에 청크를 씀
+- 청크가 내부 큐에 성공적으로 추가되거나 underlying sink에 기록되면 이행되는 Promise 반환
 
 ```js
 const writer = writableStream.getWriter();
@@ -2952,7 +3032,8 @@ await writer.close();
 
 #### close()
 
-스트림을 정상적으로 닫는다. 큐에 있는 모든 청크가 처리된 후 underlying sink의 `close()`가 호출된다.
+- 스트림을 정상적으로 닫음
+- 큐에 있는 모든 청크 처리 후 underlying sink의 `close()` 호출
 
 ```js
 const writer = writableStream.getWriter();
@@ -2963,7 +3044,8 @@ await writer.close();
 
 #### abort(reason?)
 
-스트림을 즉시 중단한다. 큐에 남은 청크는 버려지고 underlying sink의 `abort()`가 호출된다.
+- 스트림을 즉시 중단
+- 큐에 남은 청크는 버려지고 underlying sink의 `abort()` 호출
 
 ```js
 const writer = writableStream.getWriter();
@@ -2975,7 +3057,7 @@ await writer.abort('긴급 중단');
 
 #### releaseLock()
 
-Writer의 잠금을 해제한다.
+Writer의 잠금 해제
 
 ```js
 const writer = writableStream.getWriter();
@@ -2988,7 +3070,8 @@ const newWriter = writableStream.getWriter();
 
 #### ready (속성)
 
-배압이 해제되어 쓰기가 가능해지면 이행되는 Promise이다. 효율적인 배압 관리의 핵심이다.
+- 배압이 해제되어 쓰기가 가능해지면 이행되는 Promise
+- 효율적인 배압 관리의 핵심
 
 ```js
 const writer = writableStream.getWriter();
@@ -3004,11 +3087,12 @@ async function writeChunks(chunks) {
 }
 ```
 
-`ready`는 매우 중요한 패턴이다. `write()`를 `await`하지 않고 `ready`만 `await`함으로써, 배압을 존중하면서도 불필요한 대기를 줄일 수 있다.
+- `ready`는 중요한 패턴
+- `write()`를 await하지 않고 `ready`만 await → 배압을 존중하면서 불필요한 대기 축소
 
 #### closed (속성)
 
-스트림이 닫히거나 오류가 발생하면 이행/거부되는 Promise이다.
+스트림이 닫히거나 오류가 발생하면 이행/거부되는 Promise
 
 ```js
 const writer = writableStream.getWriter();
@@ -3020,7 +3104,7 @@ writer.closed
 
 #### desiredSize (속성)
 
-내부 큐를 `highWaterMark`까지 채우기 위해 필요한 크기이다.
+내부 큐를 `highWaterMark`까지 채우기 위해 필요한 크기
 
 ```js
 const writer = writableStream.getWriter();
@@ -3064,11 +3148,13 @@ async function writeWithBackpressure(writableStream, dataSource) {
 
 ### 10. WritableStreamDefaultController
 
-`WritableStreamDefaultController`는 underlying sink에 전달되는 컨트롤러이다. `ReadableStreamDefaultController`에 비해 단순하다.
+`WritableStreamDefaultController`: underlying sink에 전달되는 컨트롤러 · `ReadableStreamDefaultController`보다 단순
 
 #### signal (속성)
 
-`AbortSignal` 인스턴스이다. 스트림이 중단(abort)되면 이 signal이 발동된다. 비동기 쓰기 작업을 취소하는 데 사용할 수 있다.
+- `AbortSignal` 인스턴스
+- 스트림이 중단(abort)되면 이 signal 발동
+- 비동기 쓰기 작업을 취소하는 데 사용 가능
 
 ```js
 const ws = new WritableStream({
@@ -3111,7 +3197,8 @@ const ws = new WritableStream({
 
 #### error(reason)
 
-스트림을 오류 상태로 전환한다. 이후 모든 쓰기가 거부된다.
+- 스트림을 오류 상태로 전환
+- 이후 모든 쓰기 거부
 
 ```js
 const ws = new WritableStream({
@@ -3148,7 +3235,7 @@ const ws = new WritableStream({
 
 ### 11. TransformStream
 
-`TransformStream`은 데이터를 변환하는 중간 스트림이다. 읽기 가능 면(`readable`)과 쓰기 가능 면(`writable`)을 가진 듀플렉스(duplex) 스트림이다.
+`TransformStream`: 데이터를 변환하는 중간 스트림 · 읽기 가능 면(`readable`)과 쓰기 가능 면(`writable`)을 가진 듀플렉스(duplex) 스트림
 
 #### 생성자
 
@@ -3158,12 +3245,10 @@ new TransformStream(transformer?, writableStrategy?, readableStrategy?)
 
 #### transformer 객체
 
-| 속성 | 설명 |
-|------|------|
-| `start(controller)` | 초기화 시 호출 |
-| `transform(chunk, controller)` | 각 청크 변환 |
-| `flush(controller)` | 쓰기 면이 닫힐 때 호출. 잔여 데이터 처리 |
-| `cancel(reason)` | 읽기 면이 취소될 때 호출 |
+- `start(controller)`: 초기화 시 호출
+- `transform(chunk, controller)`: 각 청크 변환
+- `flush(controller)`: 쓰기 면이 닫힐 때 호출 · 잔여 데이터 처리
+- `cancel(reason)`: 읽기 면이 취소될 때 호출
 
 ##### start(controller)
 
@@ -3179,7 +3264,8 @@ const ts = new TransformStream({
 
 ##### transform(chunk, controller)
 
-입력 청크를 변환하여 출력 큐에 넣는 핵심 메서드이다. Promise를 반환할 수 있다.
+- 입력 청크를 변환하여 출력 큐에 넣는 핵심 메서드
+- Promise 반환 가능
 
 ```js
 // 문자열을 대문자로 변환
@@ -3214,7 +3300,8 @@ const filterTransform = new TransformStream({
 
 ##### flush(controller)
 
-쓰기 면에 대한 모든 쓰기가 완료되고 스트림이 닫힐 때 호출된다. 버퍼에 남은 데이터를 처리하는 데 사용한다.
+- 쓰기 면에 대한 모든 쓰기가 완료되고 스트림이 닫힐 때 호출
+- 버퍼에 남은 데이터 처리에 사용
 
 ```js
 // 줄 단위 파서 (불완전한 줄을 버퍼링)
@@ -3244,7 +3331,8 @@ const lineTransform = new TransformStream({
 
 ##### cancel(reason)
 
-읽기 면이 취소될 때 호출된다. 변환에 사용되는 리소스를 정리할 수 있다.
+- 읽기 면이 취소될 때 호출
+- 변환에 사용되는 리소스 정리 가능
 
 ```js
 const ts = new TransformStream({
@@ -3265,11 +3353,11 @@ const ts = new TransformStream({
 
 #### readable (속성)
 
-변환된 데이터를 읽을 수 있는 `ReadableStream`이다.
+변환된 데이터를 읽을 수 있는 `ReadableStream`
 
 #### writable (속성)
 
-변환할 데이터를 쓸 수 있는 `WritableStream`이다.
+변환할 데이터를 쓸 수 있는 `WritableStream`
 
 ```js
 const { readable, writable } = new TransformStream({
@@ -3347,7 +3435,8 @@ const batchedStream = inputStream
 
 #### identity TransformStream
 
-transformer를 전달하지 않으면 입력을 그대로 통과시키는 identity TransformStream이 생성된다. 이는 ReadableStream과 WritableStream을 연결하는 브릿지로 유용하다.
+- transformer 미전달 시 입력을 그대로 통과시키는 identity TransformStream 생성
+- ReadableStream과 WritableStream을 연결하는 브릿지로 유용
 
 ```js
 const { readable, writable } = new TransformStream();
@@ -3368,11 +3457,12 @@ for await (const chunk of readable) {
 
 ### 12. TransformStreamDefaultController
 
-`TransformStreamDefaultController`는 transformer 객체의 메서드에 전달되는 컨트롤러이다.
+`TransformStreamDefaultController`: transformer 객체의 메서드에 전달되는 컨트롤러
 
 #### desiredSize (속성)
 
-읽기 면(readable side)의 내부 큐에 대한 desiredSize이다. 변환 출력의 배압을 판단하는 데 사용할 수 있다.
+- 읽기 면(readable side)의 내부 큐에 대한 desiredSize
+- 변환 출력의 배압 판단에 사용 가능
 
 ```js
 const ts = new TransformStream({
@@ -3391,7 +3481,7 @@ const ts = new TransformStream({
 
 #### enqueue(chunk)
 
-변환된 청크를 읽기 면의 큐에 추가한다.
+변환된 청크를 읽기 면의 큐에 추가
 
 ```js
 const ts = new TransformStream({
@@ -3406,7 +3496,7 @@ const ts = new TransformStream({
 
 #### error(reason)
 
-읽기 면과 쓰기 면 모두를 오류 상태로 만든다.
+읽기 면과 쓰기 면 모두를 오류 상태로 전환
 
 ```js
 const ts = new TransformStream({
@@ -3422,7 +3512,8 @@ const ts = new TransformStream({
 
 #### terminate()
 
-읽기 면을 닫고 쓰기 면을 오류 상태로 만든다. 변환을 조기에 종료해야 할 때 사용한다.
+- 읽기 면을 닫고 쓰기 면을 오류 상태로 전환
+- 변환을 조기에 종료해야 할 때 사용
 
 ```js
 // 특정 조건에서 스트림 조기 종료
@@ -3462,11 +3553,12 @@ const first5 = inputStream.pipeThrough(createTakeTransform(5));
 
 ### 13. 큐잉 전략 (Queuing Strategies)
 
-큐잉 전략은 내부 큐의 배압 경계를 정의한다. 언제 생산자에게 "잠깐 멈춰라"라고 신호를 보낼지 결정한다.
+- 큐잉 전략: 내부 큐의 배압 경계 정의
+- 생산자에게 "잠깐 멈춰라" 신호를 보낼 시점 결정
 
 #### CountQueuingStrategy
 
-청크의 개수를 기준으로 큐 크기를 관리한다.
+청크의 개수를 기준으로 큐 크기 관리
 
 ```js
 const strategy = new CountQueuingStrategy({ highWaterMark: 10 });
@@ -3479,7 +3571,7 @@ const stream = new ReadableStream({
 }, strategy);
 ```
 
-내부적으로 `size()` 함수는 항상 `1`을 반환한다.
+내부적으로 `size()` 함수는 항상 `1` 반환
 
 ```js
 const strategy = new CountQueuingStrategy({ highWaterMark: 10 });
@@ -3489,7 +3581,8 @@ console.log(strategy.highWaterMark);   // 10
 
 #### ByteLengthQueuingStrategy
 
-청크의 바이트 크기를 기준으로 큐 크기를 관리한다. `byteLength` 속성이 있는 청크(ArrayBuffer, TypedArray, DataView 등)에 적합하다.
+- 청크의 바이트 크기를 기준으로 큐 크기 관리
+- `byteLength` 속성이 있는 청크(ArrayBuffer·TypedArray·DataView 등)에 적합
 
 ```js
 const strategy = new ByteLengthQueuingStrategy({ highWaterMark: 1024 * 16 }); // 16KB
@@ -3504,7 +3597,7 @@ const stream = new ReadableStream({
 }, strategy);
 ```
 
-내부적으로 `size(chunk)` 함수는 `chunk.byteLength`를 반환한다.
+내부적으로 `size(chunk)` 함수는 `chunk.byteLength` 반환
 
 ```js
 const strategy = new ByteLengthQueuingStrategy({ highWaterMark: 65536 });
@@ -3514,7 +3607,8 @@ console.log(strategy.size(new ArrayBuffer(4096))); // 4096
 
 #### 커스텀 큐잉 전략
 
-내장 전략으로 충분하지 않을 때 직접 전략을 정의할 수 있다. `highWaterMark`와 `size()` 함수를 직접 지정하면 된다.
+- 내장 전략이 부족할 때 직접 전략 정의 가능
+- `highWaterMark`와 `size()` 함수 직접 지정
 
 ```js
 // 문자열 길이 기반 큐잉 전략
@@ -3566,15 +3660,23 @@ const priorityStrategy = {
 
 #### 기본 큐잉 전략
 
-큐잉 전략을 명시하지 않으면 기본값이 적용된다.
+큐잉 전략 미명시 시 기본값 적용
 
-| 스트림 유형 | 기본 highWaterMark | 기본 size() |
-|-------------|-------------------|-------------|
-| ReadableStream (기본) | 1 | `() => 1` |
-| ReadableStream (바이트) | 0 | N/A (바이트 단위 관리) |
-| WritableStream | 1 | `() => 1` |
-| TransformStream readable | 0 | `() => 1` |
-| TransformStream writable | 1 | `() => 1` |
+- ReadableStream(기본)
+  - 기본 highWaterMark: 1
+  - 기본 size(): `() => 1`
+- ReadableStream(바이트)
+  - 기본 highWaterMark: 0
+  - 기본 size(): N/A(바이트 단위 관리)
+- WritableStream
+  - 기본 highWaterMark: 1
+  - 기본 size(): `() => 1`
+- TransformStream readable
+  - 기본 highWaterMark: 0
+  - 기본 size(): `() => 1`
+- TransformStream writable
+  - 기본 highWaterMark: 1
+  - 기본 size(): `() => 1`
 
 ---
 
@@ -3582,7 +3684,8 @@ const priorityStrategy = {
 
 #### 배압의 작동 원리
 
-배압은 스트림 시스템에서 자동으로 작동하는 흐름 제어 메커니즘이다. 핵심 구성 요소는 다음과 같다.
+- 배압: 스트림 시스템에서 자동으로 작동하는 흐름 제어 메커니즘
+- 핵심 구성 요소는 다음과 같음
 
 ```
                     highWaterMark = 3
@@ -3594,12 +3697,11 @@ const priorityStrategy = {
 desiredSize = highWaterMark - queueSize
 ```
 
-| desiredSize 값 | 의미 | 동작 |
-|----------------|------|------|
-| 양수 | 큐에 여유 있음 | 생산자에게 pull() 호출 |
-| 0 | 큐가 정확히 가득 참 | pull() 호출 중단 |
-| 음수 | 큐 오버플로우 | pull() 호출 중단 + 추가 배압 |
-| null | 스트림 닫힘/오류 | 더 이상 pull() 없음 |
+- desiredSize 값별 의미와 동작
+  - 양수: 큐에 여유 있음 → 생산자에게 pull() 호출
+  - 0: 큐가 정확히 가득 참 → pull() 호출 중단
+  - 음수: 큐 오버플로우 → pull() 호출 중단 + 추가 배압
+  - null: 스트림 닫힘/오류 → 더 이상 pull() 없음
 
 #### desiredSize를 이용한 배압
 
@@ -3619,7 +3721,7 @@ const readable = new ReadableStream({
 
 #### 파이프 체인에서의 배압 전파
 
-배압은 파이프 체인을 따라 하류(downstream)에서 상류(upstream)로 전파된다.
+배압은 파이프 체인을 따라 하류(downstream)에서 상류(upstream)로 전파
 
 ```
 ReadableStream → TransformStream → WritableStream
@@ -3660,7 +3762,7 @@ await source.pipeThrough(transform).pipeTo(sink);
 
 #### WritableStream에서의 배압
 
-`WritableStreamDefaultWriter`의 `ready` Promise와 `desiredSize`를 통해 배압을 확인할 수 있다.
+`WritableStreamDefaultWriter`의 `ready` Promise와 `desiredSize`로 배압 확인 가능
 
 ```js
 const ws = new WritableStream({
@@ -3686,7 +3788,7 @@ async function writeWithBackpressure(chunks) {
 
 #### 수동 배압 관리
 
-일부 시나리오에서는 배압을 수동으로 관리해야 할 수 있다.
+일부 시나리오에서는 배압을 수동으로 관리해야 함
 
 ```js
 // 외부 이벤트 소스를 ReadableStream으로 감쌀 때의 배압 관리
@@ -3735,7 +3837,9 @@ function fromEventSource(eventSource) {
 
 #### pipeTo()
 
-`ReadableStream`의 데이터를 `WritableStream`으로 전송한다. 모든 데이터 전송이 완료되면 이행되는 Promise를 반환한다.
+`ReadableStream`의 데이터를 `WritableStream`으로 전송하는 메서드
+
+- 모든 데이터 전송 완료 시 이행되는 Promise 반환
 
 ```js
 const readable = new ReadableStream({
@@ -3808,7 +3912,9 @@ await source2.pipeTo(writable);
 
 #### pipeThrough()
 
-`ReadableStream`의 데이터를 `TransformStream`에 통과시키고, 변환된 결과를 새 `ReadableStream`으로 반환한다.
+`ReadableStream`의 데이터를 `TransformStream`에 통과시켜 변환
+
+- 변환 결과를 새 `ReadableStream`으로 반환
 
 ```js
 const readable = new ReadableStream({
@@ -3834,7 +3940,7 @@ console.log(await reader.read()); // { value: undefined, done: true }
 
 #### 파이프 체인 구성
 
-여러 `pipeThrough()`를 연쇄하여 복잡한 변환 파이프라인을 구성할 수 있다.
+- 여러 `pipeThrough()`를 연쇄해 복잡한 변환 파이프라인 구성 가능
 
 ```js
 // 다단계 파이프라인: 바이트 → 텍스트 → 줄 분리 → 필터링 → JSON 파싱
@@ -3896,7 +4002,9 @@ function createJsonParseTransform() {
 
 #### 내장 TransformStream
 
-브라우저는 몇 가지 내장 TransformStream을 제공한다.
+브라우저 제공 내장 TransformStream
+
+- TextDecoderStream · TextEncoderStream · CompressionStream · DecompressionStream 등
 
 ```js
 // TextDecoderStream: 바이트 → 문자열
@@ -3918,13 +4026,17 @@ const decompressed = compressed.pipeThrough(new DecompressionStream('gzip'));
 
 #### ReadableStream.tee()
 
-`tee()`는 하나의 `ReadableStream`을 두 개의 동일한 스트림으로 복제한다. 같은 데이터를 두 가지 다른 방식으로 처리해야 할 때 유용하다.
+`tee()`: 하나의 `ReadableStream`을 두 개의 동일한 스트림으로 복제
+
+- 같은 데이터를 두 가지 다른 방식으로 처리해야 할 때 유용
 
 ```js
 const [stream1, stream2] = originalStream.tee();
 ```
 
-이름의 유래: 배관에서 사용하는 T자형 연결관(tee fitting)에서 온 이름이다. 하나의 파이프가 두 갈래로 나뉘는 것과 같다.
+이름의 유래: 배관에서 사용하는 T자형 연결관(tee fitting)
+
+- 하나의 파이프가 두 갈래로 나뉘는 것과 동일한 개념
 
 #### 기본 사용
 
@@ -3994,7 +4106,7 @@ processBranch
 
 ##### 여러 갈래로 분기
 
-`tee()`는 두 갈래만 지원하지만, 재귀적으로 사용하면 여러 갈래로 분기할 수 있다.
+- `tee()`는 두 갈래만 지원 → 재귀적으로 사용하면 여러 갈래로 분기 가능
 
 ```js
 function teeN(stream, n) {
@@ -4011,7 +4123,9 @@ const [s1, s2, s3, s4] = teeN(originalStream, 4);
 
 #### tee의 배압 특성
 
-`tee()`로 생성된 두 브랜치는 독립적인 배압을 가진다. 중요한 점은, 한 브랜치의 소비가 느리면 원본 스트림 전체가 느려진다는 것이다. 내부적으로 두 브랜치 모두에 데이터가 전달되어야 하므로, 가장 느린 브랜치가 전체 속도를 결정한다.
+- `tee()`로 생성된 두 브랜치는 독립적인 배압 보유
+- 한 브랜치의 소비가 느리면 원본 스트림 전체가 느려짐 (핵심 특징)
+- 내부적으로 두 브랜치 모두에 데이터가 전달되어야 함 → 가장 느린 브랜치가 전체 속도 결정
 
 ```js
 const [fast, slow] = dataStream.tee();
@@ -4032,7 +4146,8 @@ slow.pipeTo(new WritableStream({
 
 ### 17. 바이트 스트림 (Byte Streams)
 
-바이트 스트림은 바이너리 데이터를 효율적으로 처리하기 위한 특수한 `ReadableStream`이다. `type: 'bytes'`를 지정하여 생성한다.
+- 바이트 스트림: 바이너리 데이터를 효율적으로 처리하기 위한 특수한 `ReadableStream`
+- `type: 'bytes'`를 지정하여 생성
 
 #### Underlying Byte Source
 
@@ -4078,7 +4193,9 @@ const byteStream = new ReadableStream({
 
 #### BYOB Reader 상세
 
-BYOB(Bring Your Own Buffer) 리더는 소비자가 직접 버퍼를 제공하여 메모리 할당을 최소화하는 패턴이다.
+BYOB(Bring Your Own Buffer) 리더
+
+- 소비자가 직접 버퍼를 제공해 메모리 할당을 최소화하는 패턴
 
 ```js
 async function readFileWithBYOB(byteStream) {
@@ -4131,7 +4248,8 @@ function concatenateChunks(chunks, totalLength) {
 
 #### autoAllocateChunkSize
 
-`autoAllocateChunkSize`를 설정하면, 기본(default) 리더를 사용하더라도 내부적으로 BYOB 메커니즘을 활용한다. 자동으로 지정된 크기의 버퍼가 할당되어 `byobRequest`에 연결된다.
+- `autoAllocateChunkSize` 설정 시 기본(default) 리더 사용에도 내부적으로 BYOB 메커니즘 활용
+- 자동으로 지정된 크기의 버퍼가 할당되어 `byobRequest`에 연결됨
 
 ```js
 const stream = new ReadableStream({
@@ -4162,15 +4280,27 @@ const { value } = await reader.read(); // Uint8Array
 
 #### 바이트 스트림 vs 기본 스트림 비교
 
-| 특성 | 기본 스트림 | 바이트 스트림 |
-|------|------------|--------------|
-| 청크 타입 | 아무 JS 값 | ArrayBufferView만 |
-| 컨트롤러 | ReadableStreamDefaultController | ReadableByteStreamController |
-| BYOB 리더 | 사용 불가 | 사용 가능 |
-| byobRequest | 없음 | 있음 |
-| autoAllocateChunkSize | 없음 | 사용 가능 |
-| 주요 용도 | 범용 데이터 | 바이너리 데이터 |
-| 메모리 효율 | 보통 | 높음 (버퍼 재사용) |
+- 청크 타입
+  - 기본 스트림: 아무 JS 값
+  - 바이트 스트림: ArrayBufferView만
+- 컨트롤러
+  - 기본 스트림: ReadableStreamDefaultController
+  - 바이트 스트림: ReadableByteStreamController
+- BYOB 리더
+  - 기본 스트림: 사용 불가
+  - 바이트 스트림: 사용 가능
+- byobRequest
+  - 기본 스트림: 없음
+  - 바이트 스트림: 있음
+- autoAllocateChunkSize
+  - 기본 스트림: 없음
+  - 바이트 스트림: 사용 가능
+- 주요 용도
+  - 기본 스트림: 범용 데이터
+  - 바이트 스트림: 바이너리 데이터
+- 메모리 효율
+  - 기본 스트림: 보통
+  - 바이트 스트림: 높음(버퍼 재사용)
 
 #### 파일 읽기 바이트 스트림 예제
 
@@ -5166,35 +5296,63 @@ function createBatchTransform(size) {
 
 #### ReadableStream
 
-| 메서드/속성 | 반환 타입 | 설명 |
-|-------------|-----------|------|
-| `constructor(source?, strategy?)` | `ReadableStream` | 새 스트림 생성 |
-| `locked` | `boolean` | 잠금 상태 |
-| `cancel(reason?)` | `Promise<void>` | 스트림 취소 |
-| `getReader(options?)` | `Reader` | 리더 획득 |
-| `pipeThrough(transform, options?)` | `ReadableStream` | 변환 파이프 |
-| `pipeTo(destination, options?)` | `Promise<void>` | 싱크로 파이프 |
-| `tee()` | `[ReadableStream, ReadableStream]` | 두 갈래로 분기 |
-| `values(options?)` | `AsyncIterator` | 비동기 이터레이터 |
-| `ReadableStream.from(iterable)` | `ReadableStream` | 이터러블에서 생성 |
+- `constructor(source?, strategy?)`
+  - 반환 타입: `ReadableStream`
+  - 설명: 새 스트림 생성
+- `locked`
+  - 반환 타입: `boolean`
+  - 설명: 잠금 상태
+- `cancel(reason?)`
+  - 반환 타입: `Promise<void>`
+  - 설명: 스트림 취소
+- `getReader(options?)`
+  - 반환 타입: `Reader`
+  - 설명: 리더 획득
+- `pipeThrough(transform, options?)`
+  - 반환 타입: `ReadableStream`
+  - 설명: 변환 파이프
+- `pipeTo(destination, options?)`
+  - 반환 타입: `Promise<void>`
+  - 설명: 싱크로 파이프
+- `tee()`
+  - 반환 타입: `[ReadableStream, ReadableStream]`
+  - 설명: 두 갈래로 분기
+- `values(options?)`
+  - 반환 타입: `AsyncIterator`
+  - 설명: 비동기 이터레이터
+- `ReadableStream.from(iterable)`
+  - 반환 타입: `ReadableStream`
+  - 설명: 이터러블에서 생성
 
 #### WritableStream
 
-| 메서드/속성 | 반환 타입 | 설명 |
-|-------------|-----------|------|
-| `constructor(sink?, strategy?)` | `WritableStream` | 새 스트림 생성 |
-| `locked` | `boolean` | 잠금 상태 |
-| `abort(reason?)` | `Promise<void>` | 스트림 중단 |
-| `close()` | `Promise<void>` | 스트림 닫기 |
-| `getWriter()` | `WritableStreamDefaultWriter` | 라이터 획득 |
+- `constructor(sink?, strategy?)`
+  - 반환 타입: `WritableStream`
+  - 설명: 새 스트림 생성
+- `locked`
+  - 반환 타입: `boolean`
+  - 설명: 잠금 상태
+- `abort(reason?)`
+  - 반환 타입: `Promise<void>`
+  - 설명: 스트림 중단
+- `close()`
+  - 반환 타입: `Promise<void>`
+  - 설명: 스트림 닫기
+- `getWriter()`
+  - 반환 타입: `WritableStreamDefaultWriter`
+  - 설명: 라이터 획득
 
 #### TransformStream
 
-| 메서드/속성 | 반환 타입 | 설명 |
-|-------------|-----------|------|
-| `constructor(transformer?, wStrategy?, rStrategy?)` | `TransformStream` | 새 스트림 생성 |
-| `readable` | `ReadableStream` | 읽기 면 |
-| `writable` | `WritableStream` | 쓰기 면 |
+- `constructor(transformer?, wStrategy?, rStrategy?)`
+  - 반환 타입: `TransformStream`
+  - 설명: 새 스트림 생성
+- `readable`
+  - 반환 타입: `ReadableStream`
+  - 설명: 읽기 면
+- `writable`
+  - 반환 타입: `WritableStream`
+  - 설명: 쓰기 면
 
 ---
 
@@ -5205,4 +5363,3 @@ function createBatchTransform(size) {
 - [MDN - ReadableStream](https://developer.mozilla.org/en-US/docs/Web/API/ReadableStream)
 - [MDN - WritableStream](https://developer.mozilla.org/en-US/docs/Web/API/WritableStream)
 - [MDN - TransformStream](https://developer.mozilla.org/en-US/docs/Web/API/TransformStream)
-- [web.dev - Streams API Guide](https://web.dev/streams/)

@@ -18,14 +18,19 @@
 
 ## 저장 모드 선택
 
-`journald.conf` 의 `Storage=` 설정:
-
-| 값 | 위치 | 재부팅 시 |
-| --- | --- | --- |
-| `volatile` | `/run/log/journal/` (tmpfs) | 사라짐 |
-| `persistent` | `/var/log/journal/` | 유지 |
-| `auto` (기본) | 디렉터리 존재 시 disk, 없으면 RAM | 디렉터리 유지 시 |
-| `none` | 저장 안 함 | — |
+`journald.conf`의 `Storage=` 설정:
+- `volatile`
+  - 위치: `/run/log/journal/`(tmpfs)
+  - 재부팅 시: 사라짐
+- `persistent`
+  - 위치: `/var/log/journal/`
+  - 재부팅 시: 유지
+- `auto`(기본)
+  - 위치: 디렉터리 존재 시 disk, 없으면 RAM
+  - 재부팅 시: 디렉터리 유지 시에만 유지
+- `none`
+  - 위치: 저장 안 함
+  - 재부팅 시: 해당 없음
 
 대부분의 서버는 `persistent` 또는 `auto` + `/var/log/journal/` 생성.
 
@@ -41,7 +46,7 @@ sudo systemd-tmpfiles --create --prefix /var/log/journal
 sudo systemctl restart systemd-journald
 ```
 
-`systemd-tmpfiles` 가 적절한 권한(`2755`, `root:systemd-journal`)을 자동으로 설정합니다.
+`systemd-tmpfiles`가 적절한 권한(`2755`, `root:systemd-journal`)을 자동으로 설정함.
 
 ### 방법 2: 명시적 설정
 
@@ -57,7 +62,7 @@ sudo systemctl restart systemd-journald
 
 ### 권한
 
-- `/var/log/journal/` : `2755` (setgid, group=`systemd-journal`)
+- `/var/log/journal/`: `2755`(setgid, group=`systemd-journal`)
 - 안의 파일: `0640`, owner=root, group=`systemd-journal`
 - `adm` 그룹은 ACL로 추가 읽기 권한
 
@@ -91,7 +96,7 @@ other::r-x
 
 ### machine-id
 
-`/etc/machine-id` 에 저장된 32자리 hex 값으로, systemd 최초 부팅 시 생성됩니다. 같은 머신의 모든 journal은 이 ID로 묶입니다.
+`/etc/machine-id`에 저장된 32자리 hex 값으로, systemd 최초 부팅 시 생성됨. 같은 머신의 모든 journal은 이 ID로 묶임.
 
 ```bash
 cat /etc/machine-id
@@ -100,18 +105,16 @@ hostnamectl status
 
 ### 활성 vs Archived 파일
 
-| 종류 | 이름 | 동작 |
-| --- | --- | --- |
-| 활성 (active) | `system.journal` 등 | 현재 쓰기 중 |
-| Archived | `system@xxx.journal` 등 | 회전돼 더 이상 쓰지 않음, 읽기 전용 |
+- 활성(active): `system.journal` 등 → 현재 쓰기 중
+- Archived: `system@xxx.journal` 등 → 회전돼 더 이상 쓰지 않음, 읽기 전용
 
-`journalctl` 은 두 종류 모두 자동으로 읽습니다.
+`journalctl`은 두 종류 모두 자동으로 읽음.
 
 ---
 
 ## 로테이션이 일어나는 조건
 
-다음 중 하나라도 해당되면 활성 파일이 archived로 전환되고 새 활성 파일이 생성됩니다:
+다음 중 하나라도 해당되면 활성 파일이 archived로 전환되고 새 활성 파일이 생성됨:
 
 ### 1. 파일 크기
 
@@ -120,7 +123,7 @@ SystemMaxFileSize=128M
 RuntimeMaxFileSize=64M
 ```
 
-기본은 `SystemMaxUse` 의 1/8.
+기본은 `SystemMaxUse`의 1/8.
 
 ### 2. 시간
 
@@ -137,7 +140,7 @@ sudo journalctl --rotate
 
 ### 4. 시스템 재부팅
 
-새 부팅 ID에서는 보통 새 파일이 만들어집니다.
+새 부팅 ID에서는 보통 새 파일이 만들어짐.
 
 ### 5. 파일 손상 감지
 
@@ -151,7 +154,7 @@ journald가 손상을 감지하면 즉시 회전.
 
 ### 자동 vacuum
 
-한도를 초과하면 journald가 자동으로 가장 오래된 archived 파일부터 삭제합니다. 활성 파일은 삭제되지 않습니다.
+한도를 초과하면 journald가 자동으로 가장 오래된 archived 파일부터 삭제함. 활성 파일은 삭제되지 않음.
 
 한도:
 - `SystemMaxUse=`: 총 사용량
@@ -167,7 +170,7 @@ sudo journalctl --vacuum-time=2weeks   # 2주 넘은 것 삭제
 sudo journalctl --vacuum-files=10      # 최신 10개 파일만
 ```
 
-수동 vacuum은 활성 파일에 영향을 주지 않습니다. 즉시 효과를 보려면 먼저 회전을 수행합니다:
+수동 vacuum은 활성 파일에 영향을 주지 않음 → 즉시 효과를 보려면 먼저 회전 수행:
 
 ```bash
 sudo journalctl --rotate
@@ -180,8 +183,7 @@ sudo journalctl --vacuum-size=500M
 
 ### 기본값
 
-설정을 명시하지 않으면 systemd가 다음과 같이 자동으로 결정합니다:
-
+설정을 명시하지 않으면 systemd가 다음과 같이 자동으로 결정함:
 - `SystemMaxUse=` = `min(디스크 용량의 10%, 4G)`
 - `SystemKeepFree=` = `min(디스크 용량의 15%, 4G)`
 - `SystemMaxFileSize=` = `SystemMaxUse / 8`
@@ -202,7 +204,7 @@ du -sh /run/log/journal/
 
 ### 압축률 보기
 
-journal은 LZ4로 압축되며, 일반적으로 텍스트 크기의 1/3~1/5로 줄어듭니다. 반복성이 높은 syslog는 압축률이 더 좋습니다.
+journal은 LZ4로 압축되며, 일반적으로 텍스트 크기의 1/3~1/5로 줄어듦. 반복성이 높은 syslog는 압축률이 더 좋음.
 
 ### 권장 설정
 
@@ -248,7 +250,7 @@ journalctl --header | grep -A2 "File: "
 
 ### 마지막 vacuum 시각
 
-journald가 자체 로그로 남깁니다:
+journald가 자체 로그로 남김:
 
 ```bash
 journalctl _SYSTEMD_UNIT=systemd-journald.service -g "Vacuum"
@@ -300,18 +302,18 @@ sudo mv /var/log/journal/<machine-id>/system.journal /tmp/corrupt.journal
 sudo systemctl start systemd-journald
 ```
 
-손상된 파일은 백업해 두고 새 파일로 시작합니다.
+손상된 파일은 백업해 두고 새 파일로 시작.
 
 ### 디스크 풀
 
-journald는 `SystemKeepFree=` 에 지정된 공간을 항상 확보하려 하지만, 다른 프로세스가 디스크를 채우면 한계가 있습니다.
+journald는 `SystemKeepFree=`에 지정된 공간을 항상 확보하려 하지만, 다른 프로세스가 디스크를 채우면 한계 있음.
 
 ```bash
 sudo journalctl --vacuum-size=100M
 df -h /var/log
 ```
 
-근본적인 해결은 `SystemMaxUse=` 를 작게 설정하고 외부 수집기로 forward하는 방식을 사용합니다.
+근본적인 해결은 `SystemMaxUse=`를 작게 설정하고 외부 수집기로 forward하는 방식.
 
 ### 권한 거부
 
@@ -329,7 +331,7 @@ sudo usermod -aG systemd-journal $USER
 
 ### 너무 빨리 회전
 
-`SystemMaxFileSize` 가 너무 작아 매분 회전이 발생한다면 값을 늘립니다:
+`SystemMaxFileSize`가 너무 작아 매분 회전이 발생하면 값을 늘림:
 
 ```ini
 [Journal]
@@ -338,7 +340,7 @@ SystemMaxFileSize=256M
 
 ### archived 파일이 안 지워짐
 
-`SystemMaxUse=` 를 설정하지 않고 `SystemKeepFree=` 만 설정한 경우, 디스크 여유 공간이 충분하면 vacuum이 발생하지 않습니다. 명시적인 상한을 설정하세요.
+`SystemMaxUse=`를 설정하지 않고 `SystemKeepFree=`만 설정한 경우, 디스크 여유 공간이 충분하면 vacuum이 발생하지 않음 → 명시적인 상한 설정 필요.
 
 ---
 

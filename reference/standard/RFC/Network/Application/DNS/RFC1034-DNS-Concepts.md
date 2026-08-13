@@ -12,10 +12,10 @@
 
 ## 1. 개요
 
-### 1.1 DNS란?
+### 1.1 DNS란
 
-DNS(Domain Name System)는 인터넷의 계층적 분산 명명 시스템입니다.
- 사람이 읽을 수 있는 도메인 이름을 IP 주소로 변환합니다.
+DNS(Domain Name System): 인터넷의 계층적 분산 명명 시스템
+- 사람이 읽을 수 있는 도메인 이름 → IP 주소로 변환
 
 ```
 www.example.com  →  DNS  →  93.184.216.34
@@ -23,11 +23,9 @@ www.example.com  →  DNS  →  93.184.216.34
 
 ### 1.2 DNS의 세 가지 핵심 구성 요소
 
-| 구성 요소 | 설명 |
-|----------|------|
-| 도메인 네임 스페이스 | 트리 구조의 계층적 이름 체계 |
-| 네임 서버 | 도메인 정보를 저장하고 응답하는 서버 |
-| 리졸버 | 클라이언트의 질의를 처리하는 소프트웨어 |
+- 도메인 네임 스페이스: 트리 구조의 계층적 이름 체계
+- 네임 서버: 도메인 정보를 저장하고 응답하는 서버
+- 리졸버: 클라이언트의 질의를 처리하는 소프트웨어
 
 ### 1.3 DNS 설계 목표
 
@@ -43,7 +41,7 @@ www.example.com  →  DNS  →  93.184.216.34
 
 ### 2.1 트리 구조
 
-DNS는 트리 구조 로 구성되어 있습니다:
+DNS는 트리 구조로 구성됨.
 
 ```
                            (root)
@@ -62,11 +60,9 @@ DNS는 트리 구조 로 구성되어 있습니다:
 
 ### 2.2 레이블과 도메인 이름
 
-| 용어 | 설명 | 예시 |
-|------|------|------|
-| 레이블 (Label) | 각 노드의 이름 (0-63 옥텟) | "www", "google", "com" |
-| 도메인 이름 | 루트까지의 레이블 나열 | www.google.com. |
-| FQDN | Fully Qualified Domain Name (끝에 점 포함) | www.google.com. |
+- 레이블 (Label): 각 노드의 이름 (0-63 옥텟). 예: "www", "google", "com"
+- 도메인 이름: 루트까지의 레이블 나열. 예: www.google.com.
+- FQDN: Fully Qualified Domain Name, 끝에 점 포함. 예: www.google.com.
 
 ### 2.3 도메인 이름 규칙
 
@@ -81,10 +77,8 @@ DNS는 트리 구조 로 구성되어 있습니다:
 
 ### 2.4 특수 도메인
 
-| 도메인 | 용도 |
-|--------|------|
-| IN-ADDR.ARPA | IP → 도메인 역방향 조회 |
-| IP6.ARPA | IPv6 역방향 조회 |
+- IN-ADDR.ARPA: IP → 도메인 역방향 조회 용도
+- IP6.ARPA: IPv6 역방향 조회 용도
 
 #### 역방향 조회 예시
 
@@ -103,20 +97,17 @@ IP: 192.168.1.100
 
 ### 3.1 리소스 레코드 구조
 
-각 리소스 레코드(RR)는 다음 필드를 포함합니다:
-
-| 필드 | 설명 |
-|------|------|
-| Owner Name | 레코드 소유자 도메인 이름 |
-| Type | 레코드 유형 |
-| Class | 프로토콜 패밀리 (보통 IN = Internet) |
-| TTL | Time To Live (캐시 유효 시간, 초) |
-| RDATA | 타입에 따른 실제 데이터 |
+리소스 레코드(RR) 필드:
+- Owner Name: 레코드 소유자 도메인 이름
+- Type: 레코드 유형
+- Class: 프로토콜 패밀리 (보통 IN = Internet)
+- TTL: Time To Live (캐시 유효 시간, 초)
+- RDATA: 타입에 따른 실제 데이터
 
 ### 3.2 RRset (Resource Record Set)
 
-동일한 Owner Name, Type, Class를 가진 리소스 레코드들의 집합을 RRset 이라고 합니다.
- RRset이라는 용어 자체는 RFC 1034가 아니라 이후의 RFC 2181에서 공식적으로 정의되었습니다.
+- 동일한 Owner Name·Type·Class를 가진 리소스 레코드들의 집합 = RRset
+- RRset이라는 용어 자체는 RFC 1034가 아닌 이후의 RFC 2181에서 공식 정의됨
 
 ```
 예시: example.com의 A 레코드 RRset
@@ -126,12 +117,9 @@ example.com.    IN    A    93.184.216.36
 ```
 
 RRset 특징:
-
-| 특징 | 설명 |
-|------|------|
-| 동일한 TTL | 같은 RRset 내 모든 레코드는 동일한 TTL을 가져야 함 |
-| 원자적 처리 | RRset은 하나의 단위로 캐시되고 반환됨 |
-| 순서 무관 | RRset 내 레코드의 순서는 의미 없음 (라운드 로빈 가능) |
+- 동일한 TTL: 같은 RRset 내 모든 레코드는 동일한 TTL 필요
+- 원자적 처리: RRset은 하나의 단위로 캐시되고 반환됨
+- 순서 무관: RRset 내 레코드의 순서는 의미 없음 (라운드 로빈 가능)
 
 ```
 # 잘못된 예시 (TTL이 다름)
@@ -145,16 +133,14 @@ example.com.  3600  IN  A  93.184.216.35  ← 올바름
 
 ### 3.3 주요 레코드 타입
 
-| Type | 이름 | 설명 | RDATA 예시 |
-|------|------|------|------------|
-| A | Address | IPv4 주소 | 192.168.1.1 |
-| AAAA | IPv6 Address | IPv6 주소 | 2001:db8::1 |
-| CNAME | Canonical Name | 별칭 (다른 이름을 가리킴) | www → webserver.example.com |
-| MX | Mail Exchange | 메일 서버 | 10 mail.example.com |
-| NS | Name Server | 권한 있는 네임 서버 | ns1.example.com |
-| PTR | Pointer | 역방향 조회용 | server.example.com |
-| SOA | Start of Authority | 존 권한 정보 | (아래 설명) |
-| TXT | Text | 텍스트 정보 | "v=spf1 ..." |
+- A (Address): IPv4 주소. RDATA 예시: 192.168.1.1
+- AAAA (IPv6 Address): IPv6 주소. RDATA 예시: 2001:db8::1
+- CNAME (Canonical Name): 별칭, 다른 이름을 가리킴. 예시: www → webserver.example.com
+- MX (Mail Exchange): 메일 서버. 예시: 10 mail.example.com
+- NS (Name Server): 권한 있는 네임 서버. 예시: ns1.example.com
+- PTR (Pointer): 역방향 조회용. 예시: server.example.com
+- SOA (Start of Authority): 존 권한 정보 (3.8절 참고)
+- TXT (Text): 텍스트 정보. 예시: "v=spf1 ..."
 
 ### 3.4 A 레코드 (Address Record)
 
@@ -167,7 +153,7 @@ www.example.com.    IN    A    93.184.216.34
 
 ### 3.5 CNAME 레코드 (Canonical Name)
 
-CNAME은 별칭(alias)을 만듭니다:
+CNAME은 별칭(alias) 생성 용도.
 
 ```
 # blog.example.com은 www.example.com의 별칭
@@ -178,7 +164,7 @@ blog.example.com → CNAME → www.example.com → A → 93.184.216.34
 ```
 
 CNAME 규칙:
-- CNAME이 있는 노드에는 다른 레코드가 있으면 안 됨
+- CNAME이 있는 노드에는 다른 레코드 존재 금지
 - CNAME 체인을 따라가서 최종 A 레코드를 찾음
 
 ### 3.6 MX 레코드 (Mail Exchange)
@@ -200,7 +186,7 @@ example.com.    IN    NS    ns2.example.com.
 
 ### 3.8 SOA 레코드 (Start of Authority)
 
-존(Zone)의 권한 정보를 담습니다:
+존(Zone)의 권한 정보 저장.
 
 ```
 example.com.    IN    SOA    ns1.example.com. admin.example.com. (
@@ -212,23 +198,22 @@ example.com.    IN    SOA    ns1.example.com. admin.example.com. (
                             )
 ```
 
-| 필드 | 설명 |
-|------|------|
-| MNAME | 주 네임 서버 |
-| RNAME | 관리자 이메일 (@ → .) |
-| SERIAL | 존 버전 (변경 시 증가) |
-| REFRESH | 보조 서버가 주 서버 확인 주기 |
-| RETRY | REFRESH 실패 시 재시도 간격 |
-| EXPIRE | 보조 서버 데이터 만료 시간 |
-| MINIMUM | 부정 응답 캐시 TTL |
+SOA 필드:
+- MNAME: 주 네임 서버
+- RNAME: 관리자 이메일 (@ → .)
+- SERIAL: 존 버전 (변경 시 증가)
+- REFRESH: 보조 서버가 주 서버 확인 주기
+- RETRY: REFRESH 실패 시 재시도 간격
+- EXPIRE: 보조 서버 데이터 만료 시간
+- MINIMUM: 부정 응답 캐시 TTL
 
 ---
 
 ## 4. 존 (Zone)
 
-### 4.1 존이란?
+### 4.1 존이란
 
-존(Zone)은 네임 스페이스의 연속된 부분으로, 하나의 권한으로 관리됩니다.
+존(Zone): 네임 스페이스의 연속된 부분, 하나의 권한으로 관리됨.
 
 ```
 도메인 (Domain) ≠ 존 (Zone)
@@ -275,7 +260,7 @@ example.com 존 내용:
 
 ### 4.4 글루 레코드 (Glue Records)
 
-위임된 존의 네임 서버 IP를 제공합니다:
+위임된 존의 네임 서버 IP 제공 용도.
 
 ```
 # sub.example.com의 NS가 ns1.sub.example.com인 경우
@@ -293,12 +278,10 @@ ns1.sub.example.com.   A      198.51.100.1  ← 글루 레코드
 
 ### 5.1 네임 서버 유형
 
-| 유형 | 설명 |
-|------|------|
-| 권한 서버 (Authoritative) | 특정 존의 공식 데이터 보유 |
-| 주 서버 (Primary/Master) | 존 데이터의 원본 보유 |
-| 보조 서버 (Secondary/Slave) | 주 서버에서 복제한 데이터 보유 |
-| 캐싱 서버 | 다른 서버 응답을 캐시 |
+- 권한 서버 (Authoritative): 특정 존의 공식 데이터 보유
+- 주 서버 (Primary/Master): 존 데이터의 원본 보유
+- 보조 서버 (Secondary/Slave): 주 서버에서 복제한 데이터 보유
+- 캐싱 서버: 다른 서버 응답을 캐시
 
 ### 5.2 쿼리 처리 모드
 
@@ -328,7 +311,7 @@ ns1.sub.example.com.   A      198.51.100.1  ← 글루 레코드
 
 ### 5.3 RD (Recursion Desired) / RA (Recursion Available) 비트
 
-DNS 메시지 헤더에는 재귀 처리와 관련된 두 가지 중요한 플래그 비트가 있습니다:
+DNS 메시지 헤더에는 재귀 처리와 관련된 두 가지 중요한 플래그 비트 존재.
 
 #### RD (Recursion Desired) 비트
 
@@ -343,13 +326,12 @@ DNS 메시지 헤더에는 재귀 처리와 관련된 두 가지 중요한 플�
 └────────────────────────────────────────────────────────────────┘
 ```
 
-RFC 1035에서 Z는 항상 0으로 채워지는 3비트 예약 필드였습니다.
- 이후 DNSSEC(RFC 4035)이 이 필드를 쪼개 AD(Authentic Data), CD(Checking Disabled) 비트로 재정의했습니다.
+- RFC 1035에서 Z는 항상 0으로 채워지는 3비트 예약 필드
+- 이후 DNSSEC(RFC 4035)이 이 필드를 쪼개 AD(Authentic Data)·CD(Checking Disabled) 비트로 재정의
 
-| 값 | 의미 |
-|----|------|
-| RD = 1 | 재귀 질의 요청 (클라이언트가 재귀 해석을 원함) |
-| RD = 0 | 반복 질의 요청 (참조 응답만 받겠다는 의미) |
+RD 값:
+- RD = 1: 재귀 질의 요청 (클라이언트가 재귀 해석을 원함)
+- RD = 0: 반복 질의 요청 (참조 응답만 받겠다는 의미)
 
 ```
 RD = 1 설정 시:
@@ -361,19 +343,15 @@ RD = 0 설정 시:
 
 #### RA (Recursion Available) 비트
 
-| 값 | 의미 |
-|----|------|
-| RA = 1 | 서버가 재귀 질의를 지원함 |
-| RA = 0 | 서버가 재귀 질의를 지원하지 않음 (권한 서버 등) |
+- RA = 1: 서버가 재귀 질의를 지원함
+- RA = 0: 서버가 재귀 질의를 지원하지 않음 (권한 서버 등)
 
 #### RD/RA 비트 조합
 
-| RD | RA | 상황 | 결과 |
-|----|----|------|------|
-| 1 | 1 | 클라이언트가 재귀 요청, 서버 지원 | 재귀 해석 수행 |
-| 1 | 0 | 클라이언트가 재귀 요청, 서버 미지원 | 참조 응답만 반환 |
-| 0 | 1 | 클라이언트가 반복 요청, 서버 지원 | 참조 응답만 반환 |
-| 0 | 0 | 클라이언트가 반복 요청, 서버 미지원 | 참조 응답만 반환 |
+- RD=1, RA=1: 클라이언트가 재귀 요청, 서버 지원 → 재귀 해석 수행
+- RD=1, RA=0: 클라이언트가 재귀 요청, 서버 미지원 → 참조 응답만 반환
+- RD=0, RA=1: 클라이언트가 반복 요청, 서버 지원 → 참조 응답만 반환
+- RD=0, RA=0: 클라이언트가 반복 요청, 서버 미지원 → 참조 응답만 반환
 
 ```bash
 # dig 명령어로 RD 비트 확인
@@ -396,7 +374,7 @@ $ dig +norecurse www.example.com @a.root-servers.net
 
 ### 5.4 존 전송 (Zone Transfer)
 
-존 전송은 주 서버(Primary)에서 보조 서버(Secondary)로 존 데이터를 복제하는 메커니즘입니다.
+존 전송: 주 서버(Primary)에서 보조 서버(Secondary)로 존 데이터를 복제하는 메커니즘.
 
 #### 존 전송이 필요한 이유
 
@@ -444,10 +422,8 @@ $ dig +norecurse www.example.com @a.root-servers.net
 
 #### AXFR vs IXFR
 
-| 전송 유형 | 설명 | 장점 | 단점 |
-|----------|------|------|------|
-| AXFR | 전체 존 전송 | 구현 단순, 항상 일관성 보장 | 대역폭 소모 큼 |
-| IXFR | 증분 존 전송 (변경분만) | 대역폭 효율적 | 복잡, 히스토리 필요 |
+- AXFR: 전체 존 전송. 장점: 구현 단순·항상 일관성 보장. 단점: 대역폭 소모 큼
+- IXFR: 증분 존 전송 (변경분만). 장점: 대역폭 효율적. 단점: 복잡, 히스토리 필요
 
 ```bash
 # AXFR 존 전송 테스트 (dig 사용)
@@ -475,16 +451,15 @@ example.com.    IN    SOA    ns1.example.com. admin.example.com. (
                             )
 ```
 
-| SOA 필드 | 존 전송에서의 역할 |
-|----------|------------------|
-| SERIAL | 존 버전 식별, 변경 감지 기준 |
-| REFRESH | 보조 서버가 주 서버 확인하는 주기 |
-| RETRY | REFRESH 실패 시 재시도 간격 |
-| EXPIRE | 이 시간 동안 주 서버 연결 불가 시 존 데이터 폐기 |
+SOA 필드별 존 전송 역할:
+- SERIAL: 존 버전 식별, 변경 감지 기준
+- REFRESH: 보조 서버가 주 서버 확인하는 주기
+- RETRY: REFRESH 실패 시 재시도 간격
+- EXPIRE: 이 시간 동안 주 서버 연결 불가 시 존 데이터 폐기
 
 #### 존 전송 보안
 
-존 전송은 보안 위험이 있어 제한이 필요합니다:
+존 전송은 보안 위험이 있어 제한 필요.
 
 ```
 # BIND 설정 예시 - 특정 IP만 존 전송 허용
@@ -495,11 +470,10 @@ zone "example.com" {
 };
 ```
 
-| 보안 방법 | 설명 |
-|----------|------|
-| IP 제한 | 특정 IP에서만 AXFR 허용 |
-| TSIG | 공유 비밀 키로 서명/검증 |
-| TLS | DNS over TLS로 암호화 (최신)
+보안 방법:
+- IP 제한: 특정 IP에서만 AXFR 허용
+- TSIG: 공유 비밀 키로 서명/검증
+- TLS: DNS over TLS로 암호화 (최신)
 
 ---
 
@@ -507,7 +481,7 @@ zone "example.com" {
 
 ### 6.1 리졸버 역할
 
-리졸버는 사용자 프로그램과 네임 서버 사이의 인터페이스입니다:
+리졸버: 사용자 프로그램과 네임 서버 사이의 인터페이스.
 
 ```
 ┌─────────────┐     ┌──────────────┐     ┌─────────────┐
@@ -518,7 +492,7 @@ zone "example.com" {
 
 ### 6.2 Stub Resolver vs Full Resolver
 
-리졸버는 기능에 따라 두 가지 유형으로 구분됩니다:
+리졸버는 기능에 따라 두 가지 유형으로 구분됨.
 
 #### Stub Resolver (스텁 리졸버)
 
@@ -529,13 +503,12 @@ zone "example.com" {
 └─────────────┘     └──────────────┘     └─────────────────┘     └────────────┘
 ```
 
-| 특징 | 설명 |
-|------|------|
-| 위치 | 클라이언트 OS에 내장 |
-| 기능 | 최소한의 DNS 처리만 수행 |
-| 캐싱 | 없거나 매우 제한적 |
-| 재귀 질의 | 항상 재귀 DNS 서버에 의존 |
-| 설정 | /etc/resolv.conf (Linux), DNS 설정 (Windows) |
+Stub Resolver 특징:
+- 위치: 클라이언트 OS에 내장
+- 기능: 최소한의 DNS 처리만 수행
+- 캐싱: 없거나 매우 제한적
+- 재귀 질의: 항상 재귀 DNS 서버에 의존
+- 설정: /etc/resolv.conf (Linux), DNS 설정 (Windows)
 
 ```bash
 # Linux에서 Stub Resolver 설정 확인
@@ -558,31 +531,26 @@ nameserver 8.8.4.4
                      TLD 서버
 ```
 
-| 특징 | 설명 |
-|------|------|
-| 위치 | ISP, 기업, 공용 DNS 서버 (8.8.8.8, 1.1.1.1) |
-| 기능 | 완전한 이름 해석 수행 |
-| 캐싱 | 대규모 캐시 유지 |
-| 반복 질의 | 루트부터 권한 서버까지 직접 질의 |
-| 예시 | BIND, Unbound, PowerDNS Recursor |
+Full Resolver 특징:
+- 위치: ISP, 기업, 공용 DNS 서버 (8.8.8.8, 1.1.1.1)
+- 기능: 완전한 이름 해석 수행
+- 캐싱: 대규모 캐시 유지
+- 반복 질의: 루트부터 권한 서버까지 직접 질의
+- 예시: BIND, Unbound, PowerDNS Recursor
 
 #### 비교 요약
 
-| 항목 | Stub Resolver | Full Resolver |
-|------|--------------|---------------|
-| 복잡도 | 단순 | 복잡 |
-| 캐시 | 없음/제한적 | 대규모 |
-| 독립성 | 재귀 서버 의존 | 독립적 동작 |
-| RD 비트 | 항상 1로 설정 | 수신 후 반복 질의 수행 |
-| 사용 사례 | 일반 클라이언트 | DNS 서버 |
+- 복잡도: Stub = 단순 · Full = 복잡
+- 캐시: Stub = 없음/제한적 · Full = 대규모
+- 독립성: Stub = 재귀 서버 의존 · Full = 독립적 동작
+- RD 비트: Stub = 항상 1로 설정 · Full = 수신 후 반복 질의 수행
+- 사용 사례: Stub = 일반 클라이언트 · Full = DNS 서버
 
 ### 6.3 리졸버의 세 가지 기능
 
-| 기능 | 설명 |
-|------|------|
-| 호스트→주소 변환 | 도메인 이름 → IP 주소 (A 레코드) |
-| 주소→호스트 변환 | IP 주소 → 도메인 이름 (PTR 레코드) |
-| 일반 조회 | 임의의 RR 타입 조회 |
+- 호스트 → 주소 변환: 도메인 이름 → IP 주소 (A 레코드)
+- 주소 → 호스트 변환: IP 주소 → 도메인 이름 (PTR 레코드)
+- 일반 조회: 임의의 RR 타입 조회
 
 ### 6.4 리졸버 동작 과정
 
@@ -595,21 +563,20 @@ nameserver 8.8.4.4
 
 ### 6.5 이름 해석 실패 처리
 
-| 오류 유형 | 설명 |
-|----------|------|
-| NXDOMAIN | 도메인이 존재하지 않음 (영구적) |
-| SERVFAIL | 서버 오류 (일시적) |
-| TIMEOUT | 응답 없음 (일시적) |
+오류 유형:
+- NXDOMAIN: 도메인이 존재하지 않음 (영구적)
+- SERVFAIL: 서버 오류 (일시적)
+- TIMEOUT: 응답 없음 (일시적)
 
-리졸버는 일시적 오류와 영구적 오류를 구분하여 처리합니다.
+리졸버는 일시적 오류와 영구적 오류를 구분해 처리.
 
 ### 6.6 NXDOMAIN vs NODATA
 
-DNS 질의에서 "찾을 수 없음" 응답에는 두 가지 유형이 있습니다:
+DNS 질의에서 "찾을 수 없음" 응답에는 두 가지 유형 존재.
 
 #### NXDOMAIN (Non-Existent Domain)
 
-도메인 이름 자체가 존재하지 않는 경우입니다.
+도메인 이름 자체가 존재하지 않는 경우.
 
 ```
 질의: nonexistent.example.com A
@@ -621,7 +588,7 @@ DNS 질의에서 "찾을 수 없음" 응답에는 두 가지 유형이 있습니
 
 #### NODATA
 
-도메인은 존재하지만, 요청한 레코드 타입이 없는 경우입니다.
+도메인은 존재하지만 요청한 레코드 타입이 없는 경우.
 
 ```
 질의: example.com AAAA
@@ -632,15 +599,13 @@ DNS 질의에서 "찾을 수 없음" 응답에는 두 가지 유형이 있습니
   - 의미: "도메인은 있지만 AAAA 레코드는 없습니다"
 ```
 
-#### 비교 표
+#### 비교
 
-| 항목 | NXDOMAIN | NODATA |
-|------|----------|--------|
-| RCODE | 3 (NXDOMAIN) | 0 (NOERROR) |
-| 도메인 존재 | 존재하지 않음 | 존재함 |
-| 레코드 존재 | 해당 없음 | 요청한 타입 없음 |
-| Answer 섹션 | 비어 있음 | 비어 있음 |
-| 예시 | xyz.example.com A | example.com AAAA |
+- RCODE: NXDOMAIN = 3 (NXDOMAIN) · NODATA = 0 (NOERROR)
+- 도메인 존재: NXDOMAIN = 존재하지 않음 · NODATA = 존재함
+- 레코드 존재: NXDOMAIN = 해당 없음 · NODATA = 요청한 타입 없음
+- Answer 섹션: NXDOMAIN = 비어 있음 · NODATA = 비어 있음
+- 예시: NXDOMAIN = xyz.example.com A · NODATA = example.com AAAA
 
 ```
 예시 시나리오:
@@ -703,7 +668,7 @@ www.example.com 조회 과정:
 
 ### 8.1 와일드카드 레코드
 
-`*` 레이블을 사용하여 존재하지 않는 이름에 대해 레코드를 합성합니다:
+`*` 레이블을 사용해 존재하지 않는 이름에 대한 레코드를 합성.
 
 ```
 *.example.com.    IN    A    93.184.216.34
@@ -730,7 +695,7 @@ www.example.com 조회 과정:
 
 ### 9.1 TTL (Time To Live)
 
-각 레코드는 TTL 값을 가지며, 캐시 유효 시간을 지정합니다:
+각 레코드는 TTL 값을 가지며, 캐시 유효 시간을 지정.
 
 ```
 www.example.com.  3600  IN  A  93.184.216.34
@@ -741,14 +706,12 @@ www.example.com.  3600  IN  A  93.184.216.34
 
 ### 9.2 캐싱 전략
 
-| 캐싱 유형 | 설명 |
-|----------|------|
-| 긍정 캐싱 | 성공한 응답 캐시 |
-| 부정 캐싱 | NXDOMAIN 응답 캐시 |
+- 긍정 캐싱: 성공한 응답 캐시
+- 부정 캐싱: NXDOMAIN 응답 캐시
 
 ### 9.3 네거티브 캐싱 (Negative Caching)
 
-네거티브 캐싱은 부정적인 응답(NXDOMAIN, NODATA)을 캐시하는 메커니즘입니다.
+네거티브 캐싱: 부정적인 응답(NXDOMAIN, NODATA)을 캐시하는 메커니즘.
 
 #### 네거티브 캐싱이 필요한 이유
 
@@ -774,16 +737,14 @@ www.example.com.  3600  IN  A  93.184.216.34
 
 #### 네거티브 캐싱 대상
 
-| 응답 유형 | 캐시 여부 | TTL 결정 방법 |
-|----------|----------|--------------|
-| NXDOMAIN | 캐시됨 | SOA MINIMUM 필드 |
-| NODATA | 캐시됨 | SOA MINIMUM 필드 |
-| SERVFAIL | 일반적으로 캐시 안 함 | (일시적 오류) |
-| REFUSED | 캐시 안 함 | (정책적 거부) |
+- NXDOMAIN: 캐시됨. TTL 결정 = SOA MINIMUM 필드
+- NODATA: 캐시됨. TTL 결정 = SOA MINIMUM 필드
+- SERVFAIL: 일반적으로 캐시 안 함 (일시적 오류)
+- REFUSED: 캐시 안 함 (정책적 거부)
 
 #### 네거티브 캐싱 TTL
 
-네거티브 응답의 TTL은 SOA 레코드의 MINIMUM 필드에서 결정됩니다:
+네거티브 응답의 TTL은 SOA 레코드의 MINIMUM 필드에서 결정됨.
 
 ```
 example.com.    IN    SOA    ns1.example.com. admin.example.com. (
@@ -795,9 +756,9 @@ example.com.    IN    SOA    ns1.example.com. admin.example.com. (
                             )
 ```
 
-RFC 2308에 따르면:
+RFC 2308 기준:
 - 네거티브 캐싱 TTL = min(SOA의 TTL, SOA MINIMUM 필드)
-- 최대 3시간(10800초)으로 제한하는 것을 권장
+- 최대 3시간(10800초)으로 제한 권장
 
 #### 네거티브 캐싱 동작 예시
 
@@ -835,10 +796,8 @@ example.com.   3600   IN   SOA   ns1.example.com. admin.example.com. ...
 
 ### 9.4 TTL 설정 고려사항
 
-| TTL | 장점 | 단점 |
-|-----|------|------|
-| 짧음 | 변경 빠르게 전파 | DNS 트래픽 증가 |
-| 김 | DNS 트래픽 감소 | 변경 전파 느림 |
+- 짧은 TTL: 변경 빠르게 전파 · DNS 트래픽 증가
+- 긴 TTL: DNS 트래픽 감소 · 변경 전파 느림
 
 ---
 
@@ -885,46 +844,40 @@ $ nslookup www.example.com 8.8.8.8
 
 ### 11.1 루트 서버
 
-전 세계에 13개 루트 서버 클러스터가 있습니다 (A-M):
+전 세계에 13개 루트 서버 클러스터 존재 (A-M):
 
-| 서버 | 운영 기관 |
-|------|----------|
-| A | Verisign |
-| B | USC-ISI |
-| C | Cogent |
-| D | University of Maryland |
-| E | NASA |
-| F | Internet Systems Consortium |
-| G | US DoD NIC |
-| H | US Army |
-| I | Netnod |
-| J | Verisign |
-| K | RIPE NCC |
-| L | ICANN |
-| M | WIDE Project |
+- A: Verisign
+- B: USC-ISI
+- C: Cogent
+- D: University of Maryland
+- E: NASA
+- F: Internet Systems Consortium
+- G: US DoD NIC
+- H: US Army
+- I: Netnod
+- J: Verisign
+- K: RIPE NCC
+- L: ICANN
+- M: WIDE Project
 
 ### 11.2 TLD (Top-Level Domain)
 
-| 유형 | 예시 |
-|------|------|
-| gTLD (일반) | .com, .net, .org, .info |
-| ccTLD (국가) | .kr, .jp, .uk, .de |
-| 새 gTLD | .app, .dev, .blog |
-| 인프라 | .arpa |
+- gTLD (일반): .com, .net, .org, .info
+- ccTLD (국가): .kr, .jp, .uk, .de
+- 새 gTLD: .app, .dev, .blog
+- 인프라: .arpa
 
 ---
 
 ## 12. 요약
 
-| 항목 | 내용 |
-|------|------|
-| 목적 | 도메인 이름 ↔ IP 주소 변환 |
-| 구조 | 트리 형태의 계층적 분산 시스템 |
-| 핵심 구성요소 | 네임 스페이스, 네임 서버, 리졸버 |
-| 데이터 단위 | 리소스 레코드 (RR) |
-| 관리 단위 | 존 (Zone) |
-| 확장성 | 위임을 통한 분산 관리 |
-| 성능 | TTL 기반 캐싱 |
+- 목적: 도메인 이름 ↔ IP 주소 변환
+- 구조: 트리 형태의 계층적 분산 시스템
+- 핵심 구성요소: 네임 스페이스·네임 서버·리졸버
+- 데이터 단위: 리소스 레코드 (RR)
+- 관리 단위: 존 (Zone)
+- 확장성: 위임을 통한 분산 관리
+- 성능: TTL 기반 캐싱
 
 ---
 

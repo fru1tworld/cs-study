@@ -23,28 +23,24 @@
 
 #### 인덱스 스토어
 
-| 형식 | 상태 | 권장 |
-|------|------|------|
-| `tsdb` | 안정 | ✅ 권장 |
-| `boltdb-shipper` | Deprecated | ❌ 마이그레이션 권장 |
-| `boltdb` | 매우 오래됨 | ❌ |
-| `cassandra` | Deprecated | ❌ |
-| `bigtable` | Deprecated | ❌ |
-| `dynamodb` | Deprecated | ❌ |
-| `aws-dynamo` | Deprecated | ❌ |
+- `tsdb`: 상태 안정 → 권장(허용)
+- `boltdb-shipper`: 상태 Deprecated → 마이그레이션 권장(금지, 마이그레이션 필요)
+- `boltdb`: 상태 매우 오래됨 → 금지
+- `cassandra`: 상태 Deprecated → 금지
+- `bigtable`: 상태 Deprecated → 금지
+- `dynamodb`: 상태 Deprecated → 금지
+- `aws-dynamo`: 상태 Deprecated → 금지
 
 #### 청크 스토어 (Object Store)
 
-| 백엔드 | 권장 |
-|--------|------|
-| AWS S3 | ✅ |
-| GCS | ✅ |
-| Azure Blob | ✅ |
-| MinIO | ✅ (S3 호환) |
-| Filesystem | 개발/테스트만 |
-| Swift | ✅ |
-| Alibaba OSS | ✅ |
-| Baidu BOS | ✅ |
+- AWS S3: 허용
+- GCS: 허용
+- Azure Blob: 허용
+- MinIO: 허용(S3 호환)
+- Filesystem: 개발/테스트 용도만
+- Swift: 허용
+- Alibaba OSS: 허용
+- Baidu BOS: 허용
 
 ---
 
@@ -52,14 +48,14 @@
 
 #### 왜 TSDB인가?
 
-- **압축률 향상**: 일반적으로 20~30% 작은 인덱스
-- **쿼리 성능**: 라벨 매칭이 빠름
-- **샤딩 지원**: 쿼리 샤딩 자동 지원
-- **Bloom 필터 지원**: 신규 기능 활용 가능
+- 압축률 향상: 일반적으로 20~30% 작은 인덱스
+- 쿼리 성능: 라벨 매칭 속도 향상
+- 샤딩 지원: 쿼리 샤딩 자동 지원
+- Bloom 필터 지원: 신규 기능 활용 가능
 
 #### 마이그레이션 전략: 점진적 (Cutover Date)
 
-기존 데이터는 그대로 유지하고, **특정 날짜부터 새 스키마를 적용**합니다.
+기존 데이터는 그대로 유지 → 특정 날짜부터 새 스키마 적용.
 
 ```yaml
 schema_config:
@@ -74,7 +70,7 @@ schema_config:
         period: 24h
     
     # 새 TSDB 스키마 (미래 날짜)
-    - from: 2024-06-15        # ⚠️ 반드시 미래 날짜
+    - from: 2024-06-15        # 주의: 반드시 미래 날짜
       store: tsdb
       object_store: s3
       schema: v13
@@ -85,9 +81,9 @@ schema_config:
 
 #### 주의사항
 
-1. **`from` 날짜는 반드시 미래** — 과거 날짜를 사용하면 데이터 손실 위험
-2. **여유 시간 확보** — 최소 24시간 이후 날짜 권장 (모든 인스턴스가 새 설정을 수신할 시간 확보)
-3. **모든 컴포넌트 동시 업데이트** — Ingester, Querier, Compactor 전체 적용
+1. `from` 날짜는 반드시 미래 → 과거 날짜 사용 시 데이터 손실 위험
+2. 여유 시간 확보 필요 → 최소 24시간 이후 날짜 권장(모든 인스턴스가 새 설정을 수신할 시간 확보 목적)
+3. 모든 컴포넌트 동시 업데이트 필요 → Ingester·Querier·Compactor 전체 적용
 
 #### TSDB Shipper 구성
 
@@ -123,7 +119,7 @@ sum(rate(loki_index_request_duration_seconds_count[5m]))
 
 #### BoltDB 데이터 정리
 
-보존 기간이 지나면 BoltDB 데이터가 자동으로 만료됩니다. 모든 BoltDB 데이터가 만료된 후 schema_config에서 해당 항목을 제거할 수 있습니다.
+보존 기간이 지나면 BoltDB 데이터가 자동으로 만료됨 → 모든 BoltDB 데이터가 만료된 후 schema_config에서 해당 항목 제거 가능.
 
 ---
 
@@ -185,7 +181,7 @@ storage_config:
 
 #### 데이터 복사 (선택)
 
-기존 데이터를 새 백엔드로 복사하는 방법:
+기존 데이터를 새 백엔드로 복사하는 방법.
 
 ```bash
 # rclone 사용 예시
@@ -194,7 +190,7 @@ rclone sync s3:old-bucket gcs:new-bucket \
   --checkers 32
 ```
 
-복사 후 schema_config의 `from` 날짜를 과거로 변경할 수 있습니다. 단, 기존 prefix와 충돌하지 않도록 주의하세요.
+복사 후 schema_config의 `from` 날짜를 과거로 변경 가능 → 단, 기존 prefix와 충돌하지 않도록 주의 필요.
 
 ---
 
@@ -202,17 +198,15 @@ rclone sync s3:old-bucket gcs:new-bucket \
 
 #### 버전 변천
 
-| 버전 | 변경 사항 |
-|------|----------|
-| v9 | 기본 스키마 |
-| v10 | 인덱스 효율 개선 |
-| v11 | 더 나은 청크 매핑 |
-| v12 | BoltDB Shipper 표준 |
-| v13 | TSDB 표준, 현재 권장 |
+- v9: 기본 스키마
+- v10: 인덱스 효율 개선
+- v11: 더 나은 청크 매핑
+- v12: BoltDB Shipper 표준
+- v13: TSDB 표준, 현재 권장
 
 #### 적용 방법
 
-동일한 store 내에서 버전을 변경할 때도 새 항목으로 추가합니다.
+동일한 store 내에서 버전을 변경할 때도 새 항목으로 추가.
 
 ```yaml
 schema_config:
@@ -238,7 +232,7 @@ schema_config:
 
 ### Single Store에서 분리 모드로
 
-Loki 2.0 이전에는 인덱스와 청크를 별도의 스토어에 분리하여 저장했습니다. 현재는 인덱스와 청크 모두 오브젝트 스토리지를 사용하는 **Single Store** 방식이 표준입니다.
+Loki 2.0 이전에는 인덱스와 청크를 별도의 스토어에 분리하여 저장 → 현재는 인덱스와 청크 모두 오브젝트 스토리지를 사용하는 Single Store 방식이 표준.
 
 #### 마이그레이션 (드물게 필요)
 
@@ -272,7 +266,7 @@ storage_config:
     s3: s3://...
 ```
 
-기존 Cassandra 데이터는 보존 기간이 만료될 때까지 읽기 전용으로 유지됩니다.
+기존 Cassandra 데이터는 보존 기간이 만료될 때까지 읽기 전용으로 유지됨.
 
 ---
 
@@ -333,7 +327,7 @@ storage_config:
 - 일부 구성 옵션 제거
 - ingester WAL 형식 호환성 (재시작 시 비워질 수 있음)
 
-각 버전별 [업그레이드 가이드](https://grafana.com/docs/loki/latest/setup/upgrade/)를 반드시 참고하세요.
+각 버전별 [업그레이드 가이드](https://grafana.com/docs/loki/latest/setup/upgrade/) 반드시 참고 필요.
 
 ---
 
@@ -341,11 +335,11 @@ storage_config:
 
 #### 시나리오 1: 클러스터 분할
 
-하나의 클러스터를 두 클러스터로 분할합니다 (예: 테넌트별 분리).
+하나의 클러스터를 두 클러스터로 분할(예: 테넌트별 분리).
 
 ##### 단계
 
-1. 새 클러스터에서 일부 테넌트를 신규 시작 (실시간 데이터만)
+1. 새 클러스터에서 일부 테넌트를 신규 시작(실시간 데이터만)
 2. 과거 데이터는 기존 클러스터에서 계속 조회
 3. 특정 시점 이후 데이터는 새 클러스터에서 조회
 4. 보존 기간 경과 후 기존 클러스터 정리
@@ -388,7 +382,7 @@ for stream in data["data"]["result"]:
     )
 ```
 
-> 주의: 오래된 샘플 거부 제한(`reject_old_samples_max_age`)을 임시로 늘려야 합니다.
+> 주의: 오래된 샘플 거부 제한(`reject_old_samples_max_age`)을 임시로 늘려야 함.
 > ```yaml
 > limits_config:
 >   reject_old_samples: false
@@ -396,7 +390,7 @@ for stream in data["data"]["result"]:
 
 ##### Object Storage 직접 복사
 
-동일한 스키마를 사용하는 경우 가장 빠른 방법입니다.
+동일한 스키마를 사용하는 경우 가장 빠른 방법.
 
 ```bash
 # AWS CLI
@@ -409,7 +403,7 @@ rclone sync old:loki-bucket new:loki-bucket \
   --checkers 64
 ```
 
-복사 후 새 클러스터의 `storage_config`에서 새 버킷을 지정합니다.
+복사 후 새 클러스터의 `storage_config`에서 새 버킷 지정 필요.
 
 ---
 
@@ -419,9 +413,9 @@ rclone sync old:loki-bucket new:loki-bucket \
 
 ##### 오브젝트 스토리지 백업
 
-가장 중요한 부분으로, 다음 옵션을 활용할 수 있습니다.
+가장 중요한 부분 → 다음 옵션 활용 가능.
 
-**S3 Versioning + Cross-Region Replication**
+S3 Versioning + Cross-Region Replication
 
 ```json
 {
@@ -442,11 +436,11 @@ rclone sync old:loki-bucket new:loki-bucket \
 }
 ```
 
-**GCS Multi-Regional Buckets**
+GCS Multi-Regional Buckets
 
-기본적으로 여러 리전에 자동 복제됩니다.
+기본적으로 여러 리전에 자동 복제됨.
 
-**Azure GRS**
+Azure GRS
 
 Geo-Redundant Storage로 자동 복제.
 
@@ -457,7 +451,7 @@ Geo-Redundant Storage로 자동 복제.
 - 룰 파일들
 - Helm values
 
-모든 구성을 Git으로 관리하는 GitOps 방식을 권장합니다.
+모든 구성을 Git으로 관리하는 GitOps 방식 권장.
 
 #### 복구 절차
 
@@ -483,7 +477,7 @@ DR 사이트 운영:
 
 #### WAL 데이터
 
-WAL은 임시 데이터이므로 별도 백업이 필요하지 않습니다. Ingester 재시작 시 메모리 데이터 복구 용도로 사용됩니다.
+WAL은 임시 데이터 → 별도 백업 불필요. Ingester 재시작 시 메모리 데이터 복구 용도.
 
 WAL 디스크 손상 시:
 - 최근 1~2시간 데이터 손실 가능
@@ -513,12 +507,12 @@ WAL 디스크 손상 시:
 
 ### 개요
 
-Grafana는 Loki의 기본 시각화 도구입니다. 다음을 지원합니다.
+Grafana는 Loki의 기본 시각화 도구 → 다음을 지원.
 
-- **Explore**: 임시 쿼리 및 탐색
-- **Dashboards**: 패널과 변수로 구성된 대시보드
-- **Alerting**: LogQL 기반 알림
-- **Drilldown**: 메트릭 → 트레이스 → 로그 연결
+- Explore: 임시 쿼리 및 탐색
+- Dashboards: 패널과 변수로 구성된 대시보드
+- Alerting: LogQL 기반 알림
+- Drilldown: 메트릭 → 트레이스 → 로그 연결
 
 ---
 
@@ -610,16 +604,16 @@ secureJsonData:
 
 #### 쿼리 빌더
 
-UI에서 라벨·필터·파서·연산자를 클릭하여 쿼리를 작성할 수 있어 LogQL을 몰라도 사용 가능하다.
+UI에서 라벨·필터·파서·연산자를 클릭하여 쿼리 작성 가능 → LogQL을 몰라도 사용 가능.
 
 #### Logs 패널 기능
 
-- **Live tailing**: 실시간 로그 스트리밍 (WebSocket)
-- **Wrapping**: 긴 라인 줄바꿈
-- **Time order**: 오름차순/내림차순
-- **Show context**: 특정 라인 주변 로그
-- **Pretty Print JSON**: JSON 포맷팅
-- **Histogram**: 시간별 분포
+- Live tailing: 실시간 로그 스트리밍(WebSocket)
+- Wrapping: 긴 라인 줄바꿈
+- Time order: 오름차순/내림차순
+- Show context: 특정 라인 주변 로그
+- Pretty Print JSON: JSON 포맷팅
+- Histogram: 시간별 분포
 
 #### Logs to Metrics 변환
 
@@ -632,7 +626,7 @@ sum(rate({app="api"} [5m]))
 
 #### Split View
 
-화면을 분할하여 두 데이터소스를 동시에 비교할 수 있다 (예: 메트릭 + 로그).
+화면을 분할하여 두 데이터소스를 동시에 비교 가능(예: 메트릭 + 로그).
 
 ---
 
@@ -725,7 +719,7 @@ sum by (le) (
 
 #### Logs Volume
 
-Explore 상단에 자동으로 표시되는 로그 양 차트로, Volume API를 사용한다.
+Explore 상단에 자동으로 표시되는 로그 양 차트 → Volume API 사용.
 
 ---
 
@@ -750,7 +744,7 @@ jsonData:
       datasourceUid: tempo-uid
 ```
 
-로그에서 `trace_id`를 클릭하면 Tempo에서 해당 트레이스를 자동으로 조회한다.
+로그에서 `trace_id` 클릭 → Tempo에서 해당 트레이스 자동 조회됨.
 
 ##### Tempo → Loki (Trace to Logs)
 
@@ -780,7 +774,7 @@ sum(rate({app="api"} |= "error" [5m]))
 
 ##### Metrics to Logs (Exemplars)
 
-Prometheus 메트릭에 trace ID exemplar가 있으면 메트릭 → 트레이스 → 관련 로그로 연결된다.
+Prometheus 메트릭에 trace ID exemplar가 있는 경우 → 메트릭 → 트레이스 → 관련 로그로 연결됨.
 
 ---
 
@@ -804,7 +798,7 @@ Prometheus 메트릭에 trace ID exemplar가 있으면 메트릭 → 트레이�
 {{labels.app}} 배포 완료
 ```
 
-이렇게 설정하면 모든 패널에 배포 시점이 세로선으로 표시된다.
+이렇게 설정 → 모든 패널에 배포 시점이 세로선으로 표시됨.
 
 #### 활용 예
 
@@ -818,7 +812,7 @@ Prometheus 메트릭에 trace ID exemplar가 있으면 메트릭 → 트레이�
 
 #### 새로운 Unified Alerting (Grafana 8.0+)
 
-LogQL로 알림을 정의할 수 있다.
+LogQL로 알림 정의 가능.
 
 ##### 알림 룰 작성
 
@@ -837,13 +831,11 @@ WHEN last() OF query(A, 5m, now) IS ABOVE 10
 
 ##### Loki Ruler vs Grafana Alerting
 
-| 측면 | Loki Ruler | Grafana Alerting |
-|------|-----------|-----------------|
-| 평가 위치 | Loki 자체 | Grafana 외부 |
-| 룰 관리 | YAML 파일 / API | UI / Provisioning |
-| 백엔드 통합 | Alertmanager | Grafana Contact Points |
-| Recording | Mimir/Prometheus로 보냄 | 옵션 |
-| 권장 | 대규모/표준 | 소규모/시각적 관리 |
+- 평가 위치: Loki Ruler는 Loki 자체 · Grafana Alerting은 Grafana 외부
+- 룰 관리: Loki Ruler는 YAML 파일/API · Grafana Alerting은 UI/Provisioning
+- 백엔드 통합: Loki Ruler는 Alertmanager · Grafana Alerting은 Grafana Contact Points
+- Recording: Loki Ruler는 Mimir/Prometheus로 전송 · Grafana Alerting은 옵션
+- 권장 용도: Loki Ruler는 대규모/표준 환경 · Grafana Alerting은 소규모/시각적 관리 환경
 
 ---
 
@@ -859,13 +851,13 @@ jsonnet -J vendor mixin.libsonnet > dashboards.json
 ```
 
 포함:
-- **Loki / Operational**: 컴포넌트별 운영 메트릭
-- **Loki / Reads**: 쿼리 경로
-- **Loki / Writes**: 수집 경로
-- **Loki / Resources**: CPU/메모리/네트워크
-- **Loki / Chunks**: 청크 관련
-- **Loki / Object Store**: 스토리지 사용량
-- **Loki / Logs**: Loki 자체 로그
+- Loki / Operational: 컴포넌트별 운영 메트릭
+- Loki / Reads: 쿼리 경로
+- Loki / Writes: 수집 경로
+- Loki / Resources: CPU/메모리/네트워크
+- Loki / Chunks: 청크 관련
+- Loki / Object Store: 스토리지 사용량
+- Loki / Logs: Loki 자체 로그
 
 #### Grafana.com 대시보드
 

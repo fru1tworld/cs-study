@@ -21,11 +21,11 @@
 
 #### Go
 
-최근 두 메이저 릴리스 중 하나를 사용합니다. 설치는 Go 공식 문서를 참고합니다.
+최근 두 메이저 릴리스 중 하나 사용 → 설치는 Go 공식 문서 참고
 
 #### Protocol Buffer 컴파일러(protoc)
 
-`protoc` 버전 3을 설치합니다. macOS에서는 Homebrew로 간단히 설치할 수 있습니다.
+`protoc` 버전 3 설치 필요 → macOS에서는 Homebrew로 간단히 설치 가능
 
 ```bash
 brew install protobuf
@@ -34,14 +34,14 @@ protoc --version   # libprotoc 3.x 이상
 
 #### Go용 protoc 플러그인
 
-메시지 코드를 생성하는 `protoc-gen-go`와 서비스(스텁/인터페이스) 코드를 생성하는 `protoc-gen-go-grpc`를 설치합니다.
+메시지 코드를 생성하는 `protoc-gen-go`와 서비스(스텁/인터페이스) 코드를 생성하는 `protoc-gen-go-grpc` 설치
 
 ```bash
 go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
 go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
 ```
 
-`protoc`가 플러그인을 찾을 수 있도록 `$GOPATH/bin`을 PATH에 추가합니다.
+`protoc`가 플러그인을 찾을 수 있도록 `$GOPATH/bin`을 PATH에 추가
 
 ```bash
 export PATH="$PATH:$(go env GOPATH)/bin"
@@ -51,7 +51,7 @@ export PATH="$PATH:$(go env GOPATH)/bin"
 
 ### 예제 코드 받기
 
-grpc-go 저장소에서 helloworld 예제를 특정 태그(v1.81.1)로 받습니다.
+grpc-go 저장소에서 helloworld 예제를 특정 태그(v1.81.1)로 받음
 
 ```bash
 git clone -b v1.81.1 --depth 1 https://github.com/grpc/grpc-go
@@ -62,19 +62,19 @@ cd grpc-go/examples/helloworld
 
 ### 예제 실행
 
-서버를 먼저 실행합니다.
+서버 먼저 실행
 
 ```bash
 go run greeter_server/main.go
 ```
 
-다른 터미널에서 클라이언트를 실행합니다.
+다른 터미널에서 클라이언트 실행
 
 ```bash
 go run greeter_client/main.go
 ```
 
-다음과 같은 출력이 나오면 정상입니다.
+다음과 같은 출력이 나오면 정상
 
 ```
 Greeting: Hello world
@@ -84,7 +84,7 @@ Greeting: Hello world
 
 ### 서비스 확장
 
-`helloworld/helloworld.proto`에 새 RPC 메서드 `SayHelloAgain`을 추가합니다.
+`helloworld/helloworld.proto`에 새 RPC 메서드 `SayHelloAgain` 추가
 
 ```proto
 // 인사 서비스 정의
@@ -110,7 +110,7 @@ message HelloReply {
 
 ### 코드 재생성
 
-`.proto`를 수정했으면 `protoc`로 Go 코드를 다시 생성합니다. `helloworld` 예제 디렉터리에서 실행합니다.
+`.proto` 수정 시 `protoc`로 Go 코드 재생성 필요 → `helloworld` 예제 디렉터리에서 실행
 
 ```bash
 protoc --go_out=. --go_opt=paths=source_relative \
@@ -118,9 +118,9 @@ protoc --go_out=. --go_opt=paths=source_relative \
     helloworld/helloworld.proto
 ```
 
-- `--go_out` / `--go_opt`: 메시지 타입 코드(`*.pb.go`)를 생성합니다(`protoc-gen-go`).
-- `--go-grpc_out` / `--go-grpc_opt`: 서비스 스텁/인터페이스 코드(`*_grpc.pb.go`)를 생성합니다(`protoc-gen-go-grpc`).
-- `paths=source_relative`: 출력 파일을 `.proto` 위치 기준으로 배치합니다.
+- `--go_out` / `--go_opt`: 메시지 타입 코드(`*.pb.go`) 생성(`protoc-gen-go`)
+- `--go-grpc_out` / `--go-grpc_opt`: 서비스 스텁/인터페이스 코드(`*_grpc.pb.go`) 생성(`protoc-gen-go-grpc`)
+- `paths=source_relative`: 출력 파일을 `.proto` 위치 기준으로 배치
 
 ---
 
@@ -128,7 +128,7 @@ protoc --go_out=. --go_opt=paths=source_relative \
 
 #### 서버
 
-`greeter_server/main.go`에 새 메서드 구현을 추가합니다.
+`greeter_server/main.go`에 새 메서드 구현 추가
 
 ```go
 func (s *server) SayHelloAgain(ctx context.Context, in *pb.HelloRequest) (*pb.HelloReply, error) {
@@ -138,7 +138,7 @@ func (s *server) SayHelloAgain(ctx context.Context, in *pb.HelloRequest) (*pb.He
 
 #### 클라이언트
 
-`greeter_client/main.go`의 `main()`에서 새 메서드를 호출합니다.
+`greeter_client/main.go`의 `main()`에서 새 메서드 호출
 
 ```go
 r, err = c.SayHelloAgain(ctx, &pb.HelloRequest{Name: *name})
@@ -150,7 +150,7 @@ log.Printf("Greeting: %s", r.GetMessage())
 
 #### 실행
 
-서버를 다시 실행한 뒤, `--name` 플래그를 주고 클라이언트를 실행합니다.
+서버 재실행 후 `--name` 플래그를 주고 클라이언트 실행
 
 ```bash
 go run greeter_client/main.go --name=Alice
@@ -186,7 +186,7 @@ Greeting: Hello again Alice
 
 ### 서비스 정의
 
-`.proto` 파일에서 서비스와 메시지를 정의합니다. 아래는 공식 튜토리얼의 `RouteGuide` 서비스로, 네 가지 RPC 타입을 모두 포함합니다.
+`.proto` 파일에서 서비스와 메시지 정의 → 아래는 공식 튜토리얼의 `RouteGuide` 서비스로, 네 가지 RPC 타입 모두 포함
 
 ```proto
 syntax = "proto3";
@@ -217,7 +217,7 @@ message Point {
 
 ### 코드 생성
 
-`examples/route_guide` 디렉터리에서 `protoc`로 코드를 생성합니다.
+`examples/route_guide` 디렉터리에서 `protoc`로 코드 생성
 
 ```bash
 protoc --go_out=. --go_opt=paths=source_relative \
@@ -225,7 +225,7 @@ protoc --go_out=. --go_opt=paths=source_relative \
     routeguide/route_guide.proto
 ```
 
-생성되는 파일은 두 가지입니다.
+생성되는 파일은 두 가지
 
 - `route_guide.pb.go`: 메시지 타입(구조체, 직렬화 코드)
 - `route_guide_grpc.pb.go`: 클라이언트 스텁과 서버 인터페이스
@@ -234,7 +234,7 @@ protoc --go_out=. --go_opt=paths=source_relative \
 
 ### 서버 구현
 
-생성된 서버 인터페이스를 구현하는 구조체를 만듭니다. `pb.UnimplementedRouteGuideServer`를 임베드하면 향후 메서드가 추가되더라도 전방 호환성(forward compatibility)을 유지할 수 있습니다.
+생성된 서버 인터페이스를 구현하는 구조체 생성 → `pb.UnimplementedRouteGuideServer`를 임베드하면 향후 메서드가 추가되더라도 전방 호환성(forward compatibility) 유지 가능
 
 ```go
 type routeGuideServer struct {
@@ -246,7 +246,7 @@ type routeGuideServer struct {
 
 #### 단방향 RPC
 
-컨텍스트와 요청 메시지를 받아 응답 메시지와 에러를 반환합니다.
+컨텍스트와 요청 메시지를 받아 응답 메시지와 에러 반환
 
 ```go
 func (s *routeGuideServer) GetFeature(ctx context.Context, point *pb.Point) (*pb.Feature, error) {
@@ -262,7 +262,7 @@ func (s *routeGuideServer) GetFeature(ctx context.Context, point *pb.Point) (*pb
 
 #### 서버 스트리밍 RPC
 
-요청과 함께 전용 스트림 객체를 받습니다. `stream.Send`로 여러 응답을 전송한 뒤 `nil`을 반환하면 스트림이 종료됩니다.
+요청과 함께 전용 스트림 객체 수신 → `stream.Send`로 여러 응답 전송 후 `nil` 반환하면 스트림 종료
 
 ```go
 func (s *routeGuideServer) ListFeatures(rect *pb.Rectangle, stream pb.RouteGuide_ListFeaturesServer) error {
@@ -279,7 +279,7 @@ func (s *routeGuideServer) ListFeatures(rect *pb.Rectangle, stream pb.RouteGuide
 
 #### 클라이언트 스트리밍 RPC
 
-스트림에서 `Recv`로 요청을 반복해 읽고, `io.EOF`가 나오면 `SendAndClose`로 단일 응답을 보냅니다.
+스트림에서 `Recv`로 요청을 반복해 읽음 → `io.EOF`가 나오면 `SendAndClose`로 단일 응답 전송
 
 ```go
 func (s *routeGuideServer) RecordRoute(stream pb.RouteGuide_RecordRouteServer) error {
@@ -311,7 +311,7 @@ func (s *routeGuideServer) RecordRoute(stream pb.RouteGuide_RecordRouteServer) e
 
 #### 양방향 스트리밍 RPC
 
-`Recv`와 `Send`를 각자 독립적으로 사용합니다. 아래 예제는 받은 메모를 같은 위치의 모든 기존 메모와 함께 되돌려 보냅니다.
+`Recv`와 `Send`를 각자 독립적으로 사용 → 아래 예제는 받은 메모를 같은 위치의 모든 기존 메모와 함께 되돌려 보냄
 
 ```go
 func (s *routeGuideServer) RouteChat(stream pb.RouteGuide_RouteChatServer) error {
@@ -338,7 +338,7 @@ func (s *routeGuideServer) RouteChat(stream pb.RouteGuide_RouteChatServer) error
 
 ### 서버 시작
 
-리스너를 열고, `grpc.NewServer`로 서버를 생성한 뒤 `RegisterXxxServer`로 구현체를 등록하고, `Serve`를 호출해 요청을 처리합니다.
+리스너를 열고 → `grpc.NewServer`로 서버 생성 → `RegisterXxxServer`로 구현체 등록 → `Serve` 호출로 요청 처리
 
 ```go
 lis, err := net.Listen("tcp", fmt.Sprintf("localhost:%d", port))
@@ -350,15 +350,15 @@ pb.RegisterRouteGuideServer(grpcServer, newServer())
 grpcServer.Serve(lis)   // 블로킹: 종료될 때까지 요청을 처리
 ```
 
-서버 옵션(TLS, 인터셉터, keepalive 등)은 `grpc.NewServer(opts...)`에 전달합니다.
+서버 옵션(TLS, 인터셉터, keepalive 등)은 `grpc.NewServer(opts...)`에 전달
 
 ---
 
 ### 클라이언트 구현
 
-`grpc.NewClient`로 채널을 생성하고, 생성된 `NewXxxClient`로 스텁을 만든 뒤 메서드를 호출합니다.
+`grpc.NewClient`로 채널 생성 → 생성된 `NewXxxClient`로 스텁 생성 후 메서드 호출
 
-> 참고: 최신 gRPC-Go에서는 `grpc.Dial` 대신 `grpc.NewClient`를 권장합니다. `NewClient`는 즉시 연결하지 않고 지연 연결(lazy)하므로 별도의 블로킹 다이얼이 필요 없습니다. 암호화 없이 연결할 때는 트랜스포트 자격증명을 반드시 명시해야 합니다.
+> 참고: 최신 gRPC-Go에서는 `grpc.Dial` 대신 `grpc.NewClient` 권장 → `NewClient`는 즉시 연결하지 않고 지연 연결(lazy)하므로 별도의 블로킹 다이얼 불필요 → 암호화 없이 연결할 때는 트랜스포트 자격증명 반드시 명시 필요
 
 ```go
 conn, err := grpc.NewClient(*serverAddr,
@@ -384,7 +384,7 @@ log.Println(feature)
 
 #### 서버 스트리밍 호출
 
-스트림을 받아 `Recv`로 `io.EOF`까지 반복해 읽습니다.
+스트림을 받아 `Recv`로 `io.EOF`까지 반복해 읽음
 
 ```go
 stream, err := client.ListFeatures(context.Background(), rect)
@@ -405,7 +405,7 @@ for {
 
 #### 클라이언트 스트리밍 호출
 
-`Send`로 여러 메시지를 보낸 뒤 `CloseAndRecv`로 응답을 받습니다.
+`Send`로 여러 메시지를 보낸 뒤 `CloseAndRecv`로 응답 수신
 
 ```go
 stream, err := client.RecordRoute(context.Background())
@@ -426,7 +426,7 @@ log.Printf("Route summary: %v", reply)
 
 #### 양방향 스트리밍 호출
 
-읽기와 쓰기를 별도 고루틴에서 동시에 처리하는 것이 일반적입니다.
+읽기와 쓰기는 보통 별도 고루틴에서 동시 처리
 
 ```go
 stream, err := client.RouteChat(context.Background())
@@ -460,8 +460,8 @@ stream.CloseSend()
 
 ### 채널과 연결 주의사항
 
-- 채널 생성에는 비용이 따르므로, 가능하면 채널과 스텁을 재사용하고 RPC마다 새로 만들지 않습니다.
-- `grpc.NewClient`는 연결을 지연하며, 첫 RPC 시점에 실제 연결을 맺습니다.
-- 암호화 없이 연결할 때는 `grpc.WithTransportCredentials(insecure.NewCredentials())`를 명시해야 합니다(프로덕션에서는 TLS 사용 권장, `07_auth_security.md` 참조).
+- 채널 생성에는 비용이 따름 → 가능하면 채널과 스텁을 재사용하고 RPC마다 새로 만들지 않음
+- `grpc.NewClient`는 연결을 지연 → 첫 RPC 시점에 실제 연결
+- 암호화 없이 연결할 때는 `grpc.WithTransportCredentials(insecure.NewCredentials())` 명시 필요(프로덕션에서는 TLS 사용 권장, `07_auth_security.md` 참조)
 
 ---

@@ -20,7 +20,7 @@
 
 ### 개요
 
-**Loki Canary**는 Loki 클러스터의 가용성과 데이터 무결성을 지속적으로 검증하는 도구입니다.
+**Loki Canary**는 Loki 클러스터의 가용성과 데이터 무결성을 지속적으로 검증하는 도구.
 
 #### 목적
 
@@ -31,7 +31,7 @@
 
 #### 위치
 
-Loki 저장소의 [`cmd/loki-canary`](https://github.com/grafana/loki/tree/main/cmd/loki-canary)에 포함되어 있으며, 단독 바이너리 또는 컨테이너로 배포됩니다.
+Loki 저장소의 [`cmd/loki-canary`](https://github.com/grafana/loki/tree/main/cmd/loki-canary)에 포함 → 단독 바이너리 또는 컨테이너로 배포.
 
 ---
 
@@ -55,13 +55,11 @@ Loki 저장소의 [`cmd/loki-canary`](https://github.com/grafana/loki/tree/main/
 
 #### 검증 항목
 
-| 항목 | 메트릭 |
-|------|--------|
-| 생성된 라인 수 | `loki_canary_entries_total` |
-| 누락된 라인 수 | `loki_canary_missing_entries_total` |
-| 중복된 라인 수 | `loki_canary_duplicate_entries_total` |
-| 쿼리 실패 횟수 | `loki_canary_unexpected_entries_total` |
-| 종단간 지연 | `loki_canary_response_latency` |
+- 생성된 라인 수: `loki_canary_entries_total`
+- 누락된 라인 수: `loki_canary_missing_entries_total`
+- 중복된 라인 수: `loki_canary_duplicate_entries_total`
+- 쿼리 실패 횟수: `loki_canary_unexpected_entries_total`
+- 종단간 지연: `loki_canary_response_latency`
 
 ---
 
@@ -119,7 +117,7 @@ spec:
 
 #### Helm 서브차트
 
-`grafana/loki` Helm 차트에 포함:
+`grafana/loki` Helm 차트에 포함됨.
 
 ```yaml
 lokiCanary:
@@ -139,50 +137,42 @@ lokiCanary:
 
 #### 핵심 플래그
 
-| 플래그 | 기본값 | 설명 |
-|--------|--------|------|
-| `-addr` | `localhost:3100` | Loki 주소 |
-| `-labelname` | `name` | 라벨 이름 |
-| `-labelvalue` | `loki-canary` | 라벨 값 |
-| `-tls` | false | TLS 사용 |
-| `-cert-file` | "" | 클라이언트 인증서 |
-| `-key-file` | "" | 클라이언트 키 |
-| `-ca-file` | "" | CA 인증서 |
-| `-user` | "" | Basic Auth 사용자 |
-| `-pass` | "" | Basic Auth 비밀번호 |
-| `-tenant-id` | "" | X-Scope-OrgID |
+- `-addr` (기본값 `localhost:3100`): Loki 주소
+- `-labelname` (기본값 `name`): 라벨 이름
+- `-labelvalue` (기본값 `loki-canary`): 라벨 값
+- `-tls` (기본값 false): TLS 사용
+- `-cert-file` (기본값 ""): 클라이언트 인증서
+- `-key-file` (기본값 ""): 클라이언트 키
+- `-ca-file` (기본값 ""): CA 인증서
+- `-user` (기본값 ""): Basic Auth 사용자
+- `-pass` (기본값 ""): Basic Auth 비밀번호
+- `-tenant-id` (기본값 ""): X-Scope-OrgID
 
 #### 생성 옵션
 
-| 플래그 | 기본값 | 설명 |
-|--------|--------|------|
-| `-interval` | `1s` | 라인 생성 간격 |
-| `-size` | `100` | 라인 크기 (bytes) |
+- `-interval` (기본값 `1s`): 라인 생성 간격
+- `-size` (기본값 `100`): 라인 크기 (bytes)
 
 #### 검증 옵션
 
-| 플래그 | 기본값 | 설명 |
-|--------|--------|------|
-| `-wait` | `60s` | 라인 생성 후 쿼리 대기 시간 |
-| `-max-wait` | `5m` | 최대 대기 시간 |
-| `-pruneinterval` | `1m` | 메모리 정리 주기 |
-| `-buckets` | `10` | 히스토그램 버킷 수 |
-| `-spot-check-interval` | `15m` | 스팟 체크 간격 |
-| `-spot-check-max` | `4h` | 스팟 체크 최대 범위 |
-| `-spot-check-query-rate` | `1m` | 스팟 체크 쿼리 빈도 |
-| `-spot-check-initial-wait` | `10s` | 첫 스팟 체크 대기 |
-| `-metric-test-interval` | `1h` | 메트릭 테스트 간격 |
-| `-metric-test-range` | `24h` | 메트릭 테스트 범위 |
-| `-query-timeout` | `10s` | 쿼리 타임아웃 |
+- `-wait` (기본값 `60s`): 라인 생성 후 쿼리 대기 시간
+- `-max-wait` (기본값 `5m`): 최대 대기 시간
+- `-pruneinterval` (기본값 `1m`): 메모리 정리 주기
+- `-buckets` (기본값 `10`): 히스토그램 버킷 수
+- `-spot-check-interval` (기본값 `15m`): 스팟 체크 간격
+- `-spot-check-max` (기본값 `4h`): 스팟 체크 최대 범위
+- `-spot-check-query-rate` (기본값 `1m`): 스팟 체크 쿼리 빈도
+- `-spot-check-initial-wait` (기본값 `10s`): 첫 스팟 체크 대기
+- `-metric-test-interval` (기본값 `1h`): 메트릭 테스트 간격
+- `-metric-test-range` (기본값 `24h`): 메트릭 테스트 범위
+- `-query-timeout` (기본값 `10s`): 쿼리 타임아웃
 
 #### 메트릭 노출
 
-| 플래그 | 기본값 | 설명 |
-|--------|--------|------|
-| `-port` | `3500` | 메트릭 포트 |
-| `-out-of-order-min` | `30s` | 순서 어긋남 최소 되감기 시간 |
-| `-out-of-order-max` | `1m` | 순서 어긋남 최대 되감기 시간 |
-| `-out-of-order-percentage` | `10` | 순서 어긋남 비율 |
+- `-port` (기본값 `3500`): 메트릭 포트
+- `-out-of-order-min` (기본값 `30s`): 순서 어긋남 최소 되감기 시간
+- `-out-of-order-max` (기본값 `1m`): 순서 어긋남 최대 되감기 시간
+- `-out-of-order-percentage` (기본값 `10`): 순서 어긋남 비율
 
 ---
 
@@ -308,11 +298,11 @@ histogram_quantile(0.99,
 
 #### Spot Check (장기 데이터 검증)
 
-`-spot-check-*` 옵션으로 과거 데이터를 주기적으로 검증합니다. 보존 정책이나 Compactor 문제로 인한 손실을 감지할 수 있습니다.
+`-spot-check-*` 옵션으로 과거 데이터를 주기적으로 검증함 → 보존 정책이나 Compactor 문제로 인한 손실 감지 가능.
 
 #### Metric Test (메트릭 쿼리 검증)
 
-`-metric-test-*` 옵션으로 LogQL 메트릭 쿼리(`count_over_time` 등)가 정상 동작하는지 검증합니다.
+`-metric-test-*` 옵션으로 LogQL 메트릭 쿼리(`count_over_time` 등)의 정상 동작 여부 검증.
 
 ---
 
@@ -341,7 +331,7 @@ histogram_quantile(0.99,
 
 #### 개요
 
-Loki의 **Bloom 필터** 는 라벨 인덱스로 좁혀지지 않는 텍스트 검색의 성능을 향상시키는 실험적 기능입니다.
+Loki의 **Bloom 필터**는 라벨 인덱스로 좁혀지지 않는 텍스트 검색의 성능을 향상시키는 실험적 기능.
 
 #### 동작
 
@@ -379,11 +369,9 @@ limits_config:
 
 #### 모니터링
 
-| 메트릭 | 설명 |
-|--------|------|
-| `loki_bloom_builder_chunks_processed_total` | 처리된 청크 수 |
-| `loki_bloom_gateway_chunks_filtered_total` | Bloom으로 걸러진 청크 수 |
-| `loki_bloom_gateway_filter_ratio` | 필터 효율 |
+- `loki_bloom_builder_chunks_processed_total`: 처리된 청크 수
+- `loki_bloom_gateway_chunks_filtered_total`: Bloom으로 걸러진 청크 수
+- `loki_bloom_gateway_filter_ratio`: 필터 효율
 
 ---
 
@@ -391,7 +379,7 @@ limits_config:
 
 #### 개념
 
-테넌트의 데이터/쿼리를 모든 인스턴스가 아닌 **일부 인스턴스에만** 분배한다. 한 테넌트의 영향이 다른 테넌트로 전파되는 것을 방지한다.
+테넌트의 데이터/쿼리를 모든 인스턴스가 아닌 **일부 인스턴스에만** 분배 → 한 테넌트의 영향이 다른 테넌트로 전파되는 것을 방지.
 
 #### 활성화
 
@@ -441,7 +429,7 @@ limits_config:
 
 #### 문제
 
-단일 스트림이 너무 많은 데이터를 수신하면 특정 Ingester에 부하가 집중된다. Rate Limit 초과나 메모리 압박으로 이어질 수 있다.
+단일 스트림이 너무 많은 데이터를 수신하면 특정 Ingester에 부하 집중 → Rate Limit 초과나 메모리 압박으로 이어질 수 있음.
 
 #### 해결: 자동 샤딩
 
@@ -487,7 +475,7 @@ A{__stream_shard__="0"}, A{__stream_shard__="1"}, A{__stream_shard__="2"}, A{__s
 
 #### 문제
 
-Ingester는 stateful이며 Replication Factor 3으로 운영된다. 한 번에 너무 많이 재시작하면 데이터 손실 위험이 있다.
+Ingester는 stateful이며 Replication Factor 3으로 운영 → 한 번에 너무 많이 재시작하면 데이터 손실 위험.
 
 #### 해결: Zone Awareness
 
@@ -542,7 +530,7 @@ zone-a 모두 업그레이드 → 안정화 대기 → zone-b → 안정화 → 
 
 #### KEDA 기반 자동 스케일링
 
-Querier는 stateless이므로 부하에 따라 자동으로 확장/축소할 수 있다.
+Querier는 stateless → 부하에 따라 자동으로 확장/축소 가능.
 
 ```yaml
 apiVersion: keda.sh/v1alpha1
@@ -652,12 +640,10 @@ limits_config:
 
 #### 옵션
 
-| 필드 | 설명 |
-|------|------|
-| `pattern` | 쿼리 매칭 패턴 |
-| `regex` | true면 정규식 |
-| `types` | 차단할 쿼리 종류 (filter, limited, metric) |
-| `hash` | 특정 쿼리 해시 직접 차단 |
+- `pattern`: 쿼리 매칭 패턴
+- `regex`: true = 정규식
+- `types`: 차단할 쿼리 종류 (filter, limited, metric)
+- `hash`: 특정 쿼리 해시 직접 차단
 
 #### 활용
 
@@ -671,13 +657,11 @@ limits_config:
 
 #### 격리 수준
 
-| 레벨 | 격리 수단 |
-|------|----------|
-| 데이터 | 디렉토리/접두사 분리 |
-| 메모리 | 테넌트별 청크 분리 |
-| 쿼리 큐 | 테넌트별 큐 |
-| Rate | 테넌트별 한도 |
-| 인스턴스 | Shuffle Sharding |
+- 데이터: 디렉토리/접두사 분리
+- 메모리: 테넌트별 청크 분리
+- 쿼리 큐: 테넌트별 큐
+- Rate: 테넌트별 한도
+- 인스턴스: Shuffle Sharding
 
 #### 강한 격리: 별도 클러스터
 
@@ -704,7 +688,7 @@ X-Scope-OrgID: tenant-a|tenant-b|tenant-c
 
 #### 기본: 인증 없음
 
-Loki는 자체 인증을 제공하지 않으므로 운영 환경에서는 별도로 추가해야 한다.
+Loki는 자체 인증을 제공하지 않음 → 운영 환경에서는 별도 추가 필요.
 
 #### 옵션 1: 리버스 프록시
 
@@ -956,7 +940,7 @@ loki.process "reduce_cardinality" {
 
 ##### 서버 측 (구조화된 메타데이터로 이전)
 
-카디널리티가 높은 정보는 라벨 대신 **structured metadata**로 이전한다.
+카디널리티가 높은 정보는 라벨 대신 **structured metadata**로 이전.
 
 ```alloy
 loki.process "metadata" {
@@ -969,7 +953,7 @@ loki.process "metadata" {
 }
 ```
 
-라벨 인덱스에 영향을 주지 않으면서 쿼리에서 필터링·추출이 가능하다.
+라벨 인덱스에 영향을 주지 않으면서 쿼리에서 필터링·추출 가능.
 
 ---
 
@@ -1017,7 +1001,7 @@ schema_config:
 
 #### 효율적 쿼리 작성
 
-##### ✅ 좋은 예
+##### 좋은 예 (허용)
 
 ```logql
 # 스트림 선택자가 구체적
@@ -1030,7 +1014,7 @@ schema_config:
 {namespace="prod"}[5m]
 ```
 
-##### ❌ 나쁜 예
+##### 나쁜 예 (금지)
 
 ```logql
 # 너무 광범위한 선택자
@@ -1090,7 +1074,7 @@ loki.write "default" {
 
 #### 압축
 
-기본적으로 활성화되어 있으나 설정을 확인한다.
+기본적으로 활성화되어 있으나 설정 확인 필요.
 
 ```alloy
 loki.write "default" {
@@ -1103,11 +1087,11 @@ loki.write "default" {
 
 #### 라벨 정렬
 
-라벨은 알파벳 순으로 정렬되어야 캐싱이 일관되게 동작한다. 클라이언트가 자동으로 처리한다.
+라벨은 알파벳 순으로 정렬되어야 캐싱이 일관되게 동작 → 클라이언트가 자동으로 처리함.
 
 #### 시간 정렬
 
-같은 스트림의 로그는 시간 순서대로 전송해야 한다. 순서가 어긋난 로그는 거부되며, 허용하려면 별도 설정이 필요하다.
+같은 스트림의 로그는 시간 순서대로 전송 필요 → 순서가 어긋난 로그는 거부됨, 허용하려면 별도 설정 필요.
 
 ```yaml
 limits_config:
@@ -1119,7 +1103,7 @@ limits_config:
 
 #### Structured Metadata 활용
 
-라벨 카디널리티를 늘리지 않으면서 메타데이터를 추가할 수 있다.
+라벨 카디널리티를 늘리지 않으면서 메타데이터 추가 가능.
 
 ```alloy
 stage.structured_metadata {
@@ -1136,7 +1120,7 @@ stage.structured_metadata {
 
 #### S3 Lifecycle 정책
 
-오래된 청크를 자동으로 저렴한 스토리지 클래스로 전환한다.
+오래된 청크를 자동으로 저렴한 스토리지 클래스로 전환.
 
 ```json
 {
@@ -1164,7 +1148,7 @@ stage.structured_metadata {
 
 #### 동일 리전 권장
 
-오브젝트 스토리지와 Loki는 같은 리전에 배치하여 네트워크 비용과 지연을 최소화한다.
+오브젝트 스토리지와 Loki는 같은 리전에 배치 → 네트워크 비용과 지연 최소화.
 
 #### Versioning + Replication
 
@@ -1213,7 +1197,7 @@ overrides:
 
 #### 전체 한도 보호
 
-테넌트별 한도 외에도 전역 수준의 보호를 설정한다.
+테넌트별 한도 외에도 전역 수준의 보호 설정 필요.
 
 ```yaml
 ingester:
@@ -1230,7 +1214,7 @@ limits_config:
   ingestion_partitions_tenant_shard_size: 4
 ```
 
-대형 테넌트가 소형 테넌트에 영향을 주지 않도록 격리한다.
+대형 테넌트가 소형 테넌트에 영향을 주지 않도록 격리.
 
 ---
 
@@ -1252,11 +1236,11 @@ limits_config:
 
 #### 카나리 배포
 
-먼저 1~2개 인스턴스만 업그레이드하고 검증한 뒤 나머지를 진행한다.
+먼저 1~2개 인스턴스만 업그레이드하고 검증한 뒤 나머지 진행.
 
 #### 롤백 계획
 
-청크 형식이나 인덱스 형식이 변경된 경우 롤백이 어렵다. 신중하게 진행할 것.
+청크 형식이나 인덱스 형식이 변경된 경우 롤백 어려움 → 신중하게 진행 필요.
 
 ---
 
@@ -1350,12 +1334,10 @@ loki.write "self" {
 
 #### 핵심 SLI 추적
 
-| SLI | 목표 |
-|-----|------|
-| 수집 가용성 | > 99.9% |
-| 쿼리 가용성 | > 99.5% |
-| 수집 P99 지연 | < 1s |
-| 쿼리 P99 지연 | < 30s |
+- 수집 가용성: > 99.9%
+- 쿼리 가용성: > 99.5%
+- 수집 P99 지연: < 1s
+- 쿼리 P99 지연: < 30s
 
 #### Loki Mixin 사용
 
@@ -1364,7 +1346,7 @@ jb install github.com/grafana/loki/production/loki-mixin@main
 jsonnet -J vendor mixin.libsonnet > dashboards.json
 ```
 
-대시보드, Recording Rules, Alerting Rules를 일괄 제공한다.
+대시보드, Recording Rules, Alerting Rules를 일괄 제공.
 
 #### Loki Canary 배포
 

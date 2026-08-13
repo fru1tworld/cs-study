@@ -2,65 +2,64 @@
 
 ## RFC 6265: HTTP State Management Mechanism (HTTP 상태 관리 메커니즘)
 
-> HTTP 쿠키의 표준 명세 - Set-Cookie 및 Cookie 헤더 필드 정의
+> HTTP 쿠키의 표준 명세. Set-Cookie 및 Cookie 헤더 필드 정의
 
 ### 문서 정보
 
-| 항목 | 내용 |
-|------|------|
-| RFC 번호 | 6265 |
-| 분류 | Proposed Standard |
-| 작성자 | A. Barth (UC Berkeley) |
-| 발행일 | 2011년 4월 |
-| 상태 | 현행 표준 |
-| 폐기한 문서 | RFC 2965 |
+- RFC 번호: 6265
+- 분류: Proposed Standard
+- 작성자: A. Barth (UC Berkeley)
+- 발행일: 2011년 4월
+- 상태: 현행 표준
+- 폐기한 문서: RFC 2965
 
 ---
 
 ### 1. 개요 (Introduction)
 
-이 문서는 HTTP Cookie 및 Set-Cookie 헤더 필드를 정의합니다.
- Set-Cookie 헤더 필드를 사용하여 HTTP 서버는 이름/값 쌍과 관련 메타데이터(쿠키라고 함)를 사용자 에이전트에게 전달할 수 있습니다.
- 사용자 에이전트가 서버에 후속 요청을 보낼 때, 메타데이터와 기타 정보를 사용하여 Cookie 헤더에 이름/값 쌍을 반환할지 여부를 결정합니다.
+이 문서는 HTTP Cookie 및 Set-Cookie 헤더 필드 정의.
+
+- Set-Cookie 헤더 필드로 HTTP 서버가 이름/값 쌍과 관련 메타데이터(쿠키)를 사용자 에이전트에 전달 가능
+- 사용자 에이전트는 서버에 후속 요청을 보낼 때 메타데이터와 기타 정보로 Cookie 헤더에 이름/값 쌍을 반환할지 결정
 
 #### 1.1 쿠키의 복잡성
 
-표면적으로는 단순해 보이지만, 쿠키에는 여러 복잡성이 있습니다:
+표면적으로는 단순해 보이지만 여러 복잡성 존재:
 
-- 범위(Scope): 서버는 각 쿠키를 보낼 때 범위를 지정합니다.
- 이 범위는 사용자 에이전트가 쿠키를 반환해야 하는 최대 기간, 쿠키를 반환해야 하는 서버들, 쿠키가 적용되는 URI 스킴을 나타냅니다.
+- 범위(Scope): 서버는 각 쿠키를 보낼 때 범위 지정
+  - 사용자 에이전트가 쿠키를 반환해야 하는 최대 기간
+  - 쿠키를 반환해야 하는 서버들
+  - 쿠키가 적용되는 URI 스킴
 
 #### 1.2 보안 및 개인정보 문제
 
-역사적인 이유로 쿠키에는 여러 보안 및 개인정보 관련 결함이 있습니다:
+역사적인 이유로 쿠키에는 여러 보안·개인정보 관련 결함 존재:
 
-| 문제점 | 설명 |
-|--------|------|
-| Secure 속성 한계 | 서버가 쿠키가 "보안" 연결용임을 표시할 수 있지만, Secure 속성은 활성 네트워크 공격자에 대한 무결성을 제공하지 않습니다 |
-| 포트 격리 부재 | 특정 호스트의 쿠키는 해당 호스트의 모든 포트에서 공유됩니다. 이는 웹 브라우저가 다른 포트를 통해 검색된 콘텐츠를 격리하는 일반적인 "동일 출처 정책"과 다릅니다 |
+- Secure 속성 한계: 서버가 쿠키를 "보안" 연결용으로 표시 가능하나, Secure 속성은 활성 네트워크 공격자에 대한 무결성을 제공하지 않음
+- 포트 격리 부재: 특정 호스트의 쿠키는 해당 호스트의 모든 포트에서 공유됨 → 웹 브라우저가 다른 포트를 통해 검색된 콘텐츠를 격리하는 일반적인 "동일 출처 정책"과 다름
 
 #### 1.3 대상 독자
 
-이 명세의 대상 독자는 두 그룹입니다:
+이 명세의 대상 독자는 두 그룹:
 
-1. 쿠키 생성 서버 개발자: Section 4에 정의된 잘 동작하는(well-behaved) 프로파일을 따라야 합니다(SHOULD)
-2. 쿠키 소비 사용자 에이전트 개발자: Section 5에 정의된 더 관대한 처리 규칙을 구현해야 합니다(MUST)
+- 쿠키 생성 서버 개발자: Section 4에 정의된 잘 동작하는(well-behaved) 프로파일을 따라야 함(SHOULD)
+- 쿠키 소비 사용자 에이전트 개발자: Section 5에 정의된 더 관대한 처리 규칙을 구현해야 함(MUST)
 
 #### 1.4 이전 명세와의 관계
 
-이 문서 이전에 쿠키에 대한 최소 세 가지 설명이 있었습니다:
+이 문서 이전에 쿠키에 대한 최소 세 가지 설명 존재:
 - "Netscape 쿠키 명세"
 - RFC 2109
 - RFC 2965
 
-그러나 이 문서들 중 어느 것도 Cookie 및 Set-Cookie 헤더가 인터넷에서 실제로 사용되는 방식을 설명하지 않았습니다.
+이 문서들 중 어느 것도 Cookie 및 Set-Cookie 헤더가 인터넷에서 실제로 사용되는 방식을 설명하지 않음.
 
 이 문서의 조치사항:
-1. RFC 2109의 상태를 Historic으로 변경
-2. RFC 2965의 상태를 Historic으로 변경
-3. RFC 2965가 이 문서에 의해 폐기됨을 표시
+- RFC 2109의 상태를 Historic으로 변경
+- RFC 2965의 상태를 Historic으로 변경
+- RFC 2965가 이 문서에 의해 폐기됨을 표시
 
-특히, RFC 2965를 Historic으로 이동하고 폐기함에 따라 Cookie2 및 Set-Cookie2 헤더 필드의 사용이 더 이상 권장되지 않습니다(deprecated).
+RFC 2965를 Historic으로 이동하고 폐기 → Cookie2 및 Set-Cookie2 헤더 필드의 사용이 더 이상 권장되지 않음(deprecated).
 
 ---
 
@@ -68,16 +67,16 @@
 
 #### 2.1 준수 기준
 
-이 문서에서 사용된 키워드 "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", "OPTIONAL"은 RFC 2119에 기술된 대로 해석되어야 합니다.
+이 문서에서 사용된 키워드 "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", "OPTIONAL"은 RFC 2119에 기술된 대로 해석.
 
-명령형으로 표현된 알고리즘 요구사항(예: "선행 공백 문자 제거" 또는 "false를 반환하고 이 단계를 중단")은 해당 알고리즘을 도입하는 키워드("MUST", "SHOULD", "MAY" 등)의 의미로 해석되어야 합니다.
+명령형으로 표현된 알고리즘 요구사항(예: "선행 공백 문자 제거" 또는 "false를 반환하고 이 단계를 중단")은 해당 알고리즘을 도입하는 키워드("MUST", "SHOULD", "MAY" 등)의 의미로 해석.
 
-중요: 이 명세에 정의된 알고리즘은 이해하기 쉽게 의도된 것이며, 성능을 위해 의도된 것이 아닙니다.
- 준수하는 구현체는 동등한 결과를 달성하는 모든 접근 방식을 사용할 수 있습니다.
+중요: 이 명세에 정의된 알고리즘은 이해하기 쉽게 의도된 것이며, 성능을 위해 의도된 것이 아님.
+준수하는 구현체는 동등한 결과를 달성하는 모든 접근 방식 사용 가능.
 
 #### 2.2 구문 표기법
 
-이 명세는 RFC 5234의 ABNF(Augmented Backus-Naur Form) 표기법을 사용합니다.
+이 명세는 RFC 5234의 ABNF(Augmented Backus-Naur Form) 표기법 사용.
 
 사용되는 ABNF 핵심 규칙:
 - ALPHA (알파벳)
@@ -89,21 +88,19 @@
 
 #### 2.3 용어
 
-| 용어 | 정의 |
-|------|------|
-| 사용자 에이전트(User Agent) | "클라이언트" 역할을 수행하는 모든 HTTP 구현체 |
-| 클라이언트(Client) | 요청을 보내기 위해 연결을 설정하는 프로그램 |
-| 서버(Server) | 요청을 수신하기 위해 연결을 수락하는 애플리케이션 프로그램 |
-| 요청 호스트(request-host) | HTTP 요청에서 사용자 에이전트가 전송하는 Host 헤더의 호스트 |
-| 요청 URI(request-uri) | URI를 획득하기 위해 HTTP 요청이 전송된 URI |
+- 사용자 에이전트(User Agent): "클라이언트" 역할을 수행하는 모든 HTTP 구현체
+- 클라이언트(Client): 요청을 보내기 위해 연결을 설정하는 프로그램
+- 서버(Server): 요청을 수신하기 위해 연결을 수락하는 애플리케이션 프로그램
+- 요청 호스트(request-host): HTTP 요청에서 사용자 에이전트가 전송하는 Host 헤더의 호스트
+- 요청 URI(request-uri): URI를 획득하기 위해 HTTP 요청이 전송된 URI
 
-대소문자 무관 비교: 두 옥텟 시퀀스를 비교할 때, 0x41부터 0x5A까지의 범위(A-Z)의 옥텟을 0x61부터 0x7A까지(a-z)의 범위로 매핑한 후 옥텟 단위로 동일하면 대소문자 무관하게 일치합니다.
+대소문자 무관 비교: 두 옥텟 시퀀스를 비교할 때, 0x41부터 0x5A까지의 범위(A-Z)의 옥텟을 0x61부터 0x7A까지(a-z)의 범위로 매핑한 후 옥텟 단위로 동일하면 대소문자 무관하게 일치.
 
 ---
 
 ### 3. 개요 (Overview)
 
-이 섹션은 원본 서버가 사용자 에이전트에게 상태 정보를 보내고, 사용자 에이전트가 원본 서버에게 상태 정보를 반환하는 방법을 설명합니다.
+이 섹션은 원본 서버가 사용자 에이전트에게 상태 정보를 보내고, 사용자 에이전트가 원본 서버에게 상태 정보를 반환하는 방법 설명.
 
 #### 3.1 기본 메커니즘
 
@@ -119,16 +116,15 @@
 └─────────────┘                           └─────────────┘
 ```
 
-상태 저장: 원본 서버는 HTTP 응답에 Set-Cookie 헤더를 포함시켜 상태를 사용자 에이전트에 저장합니다.
-
-상태 반환: 후속 요청에서 사용자 에이전트는 이전에 수신한 Set-Cookie 헤더의 쿠키를 Cookie 요청 헤더에 포함시켜 반환합니다.
+- 상태 저장: 원본 서버는 HTTP 응답에 Set-Cookie 헤더를 포함시켜 상태를 사용자 에이전트에 저장
+- 상태 반환: 후속 요청에서 사용자 에이전트는 이전에 수신한 Set-Cookie 헤더의 쿠키를 Cookie 요청 헤더에 포함시켜 반환
 
 #### 3.2 기본 규칙
 
-- 원본 서버는 모든 응답에 Set-Cookie를 자유롭게 포함할 수 있습니다(MAY)
-- 사용자 에이전트는 100-레벨 상태 코드 응답의 Set-Cookie를 무시할 수 있지만(MAY), 다른 응답의 Set-Cookie는 반드시 처리해야 합니다(MUST)
-- 원본 서버는 단일 응답에 여러 Set-Cookie 헤더 필드를 포함할 수 있습니다(MAY)
-- 여러 Set-Cookie 필드를 단일 헤더 필드로 병합하지 않아야 합니다(MUST NOT) - 헤더 폴딩 방지
+- 원본 서버는 모든 응답에 Set-Cookie를 자유롭게 포함 가능(MAY)
+- 사용자 에이전트는 100-레벨 상태 코드 응답의 Set-Cookie를 무시 가능(MAY), 다른 응답의 Set-Cookie는 반드시 처리해야 함(MUST)
+- 원본 서버는 단일 응답에 여러 Set-Cookie 헤더 필드 포함 가능(MAY)
+- 여러 Set-Cookie 필드를 단일 헤더 필드로 병합 금지(MUST NOT) — 헤더 폴딩 방지
 
 #### 3.3 실제 예제
 
@@ -142,7 +138,7 @@ Set-Cookie: SID=31d4d96e407aad42
 Cookie: SID=31d4d96e407aad42
 ```
 
-서버가 세션 ID를 설정하고, 사용자 에이전트가 후속 요청에서 이를 반환합니다.
+서버가 세션 ID를 설정 → 사용자 에이전트가 후속 요청에서 반환.
 
 ##### 예제 2: Domain 및 Path 속성 사용
 
@@ -154,7 +150,7 @@ Set-Cookie: SID=31d4d96e407aad42; Path=/; Domain=example.com
 Cookie: SID=31d4d96e407aad42
 ```
 
-`Path=/`와 `Domain=example.com`으로 쿠키의 범위를 지정합니다.
+`Path=/`와 `Domain=example.com`으로 쿠키의 범위 지정.
 
 ##### 예제 3: 여러 쿠키 저장
 
@@ -167,7 +163,7 @@ Set-Cookie: lang=en-US; Path=/; Domain=example.com
 Cookie: SID=31d4d96e407aad42; lang=en-US
 ```
 
-서버가 두 개의 쿠키를 설정하고, 사용자 에이전트가 두 쿠키를 모두 반환합니다.
+서버가 두 개의 쿠키를 설정 → 사용자 에이전트가 두 쿠키 모두 반환.
 
 ##### 예제 4: 쿠키 만료 및 삭제
 
@@ -176,13 +172,13 @@ Cookie: SID=31d4d96e407aad42; lang=en-US
 Set-Cookie: lang=; Expires=Sun, 06 Nov 1994 08:49:37 GMT
 ```
 
-과거 날짜로 Expires를 설정하여 쿠키를 삭제합니다.
+과거 날짜로 Expires를 설정 → 쿠키 삭제.
 
 ---
 
 ### 4. 서버 요구사항 (Server Requirements)
 
-이 섹션은 Cookie 및 Set-Cookie 헤더의 구문과 의미에 대한 "잘 동작하는(well-behaved)" 프로파일을 설명합니다.
+이 섹션은 Cookie 및 Set-Cookie 헤더의 구문과 의미에 대한 "잘 동작하는(well-behaved)" 프로파일 설명.
 
 #### 4.1 Set-Cookie 헤더
 
@@ -221,16 +217,13 @@ extension-av      = <CTL 또는 ";"를 제외한 모든 CHAR>
 ```
 
 cookie-value 허용 문자:
+- `%x21`: !
+- `%x23-2B`: # $ % & ' ( ) * + 
+- `%x2D-3A`: - . / 0-9 :
+- `%x3C-5B`: < = > ? @ A-Z [
+- `%x5D-7E`: ] ^ _ \` a-z { \| } ~
 
-| 코드 범위 | 설명 |
-|-----------|------|
-| `%x21` | ! |
-| `%x23-2B` | # $ % & ' ( ) * + |
-| `%x2D-3A` | - . / 0-9 : |
-| `%x3C-5B` | < = > ? @ A-Z [ |
-| `%x5D-7E` | ] ^ _ ` a-z { \| } ~ |
-
-제외되는 문자: CTL(제어 문자), 공백, 큰따옴표("), 콤마(,), 세미콜론(;), 백슬래시(\\)
+제외되는 문자: CTL(제어 문자)·공백·큰따옴표(")·콤마(,)·세미콜론(;)·백슬래시(\\)
 
 ##### 4.1.2 의미 (Semantics) - 비종료
 
@@ -245,7 +238,7 @@ Set-Cookie: id=a3fWa; Expires=Wed, 09 Jun 2021 10:18:14 GMT
 동작:
 - 사용자 에이전트는 지정된 날짜/시간이 지나면 쿠키를 제거
 - Expires가 없고 Max-Age도 없으면 "세션 쿠키"가 됨 (브라우저 종료 시 삭제)
-- 서버는 명세와 다른 구문을 사용하는 것에 의존하지 않아야 합니다(SHOULD NOT)
+- 서버는 명세와 다른 구문을 사용하는 것에 의존하지 않아야 함(SHOULD NOT)
 
 ###### 4.1.2.2 Max-Age 속성
 
@@ -260,11 +253,11 @@ Set-Cookie: id=a3fWa; Max-Age=2592000
 - 0 또는 음수 값: 쿠키 즉시 삭제 (과거 만료 시간 설정)
 - Expires보다 우선: 두 속성이 모두 있으면 Max-Age가 우선
 
-참고: 일부 레거시 사용자 에이전트는 Max-Age를 지원하지 않습니다.
+참고: 일부 레거시 사용자 에이전트는 Max-Age 미지원.
 
 ###### 4.1.2.3 Domain 속성
 
-목적: 쿠키가 전송될 호스트를 지정
+목적: 쿠키가 전송될 호스트 지정
 
 ```http
 Set-Cookie: id=a3fWa; Domain=example.com
@@ -275,11 +268,8 @@ Set-Cookie: id=a3fWa; Domain=example.com
 - 지정 시: 지정된 도메인과 모든 하위 도메인에 쿠키 적용
 
 예시:
-
-| Domain 속성 | 쿠키 전송 대상 |
-|-------------|----------------|
-| 생략 | `example.com`만 |
-| `Domain=example.com` | `example.com`, `www.example.com`, `api.example.com` 등 |
+- 생략 → `example.com`만
+- `Domain=example.com` → `example.com`, `www.example.com`, `api.example.com` 등
 
 보안 고려사항:
 - 서버는 자신의 도메인 또는 상위 도메인만 지정 가능
@@ -298,15 +288,11 @@ Set-Cookie: id=a3fWa; Path=/docs
 - 기본값: Set-Cookie를 보낸 URL의 디렉토리 경로
 
 예시:
+- `Path=/` → 모든 경로
+- `Path=/docs` → `/docs`, `/docs/`, `/docs/Web/` 등에 전송
+- `Path=/docs` → `/` 또는 `/other/`에는 전송 안 됨
 
-| Path 속성 | 쿠키 전송 경로 |
-|-----------|----------------|
-| `Path=/` | 모든 경로 |
-| `Path=/docs` | `/docs`, `/docs/`, `/docs/Web/` 등 |
-| `Path=/docs` | `/` 또는 `/other/`에는 전송 안 됨 |
-
-주의: Path 속성은 보안 기능이 아닙니다.
- 동일 출처의 다른 경로에서 JavaScript로 쿠키에 접근할 수 있습니다.
+주의: Path 속성은 보안 기능이 아님 → 동일 출처의 다른 경로에서 JavaScript로 쿠키에 접근 가능.
 
 ###### 4.1.2.5 Secure 속성
 
@@ -322,7 +308,7 @@ Set-Cookie: id=a3fWa; Secure
 
 보안 고려사항:
 - Secure 속성만으로는 쿠키의 완전한 보안을 보장하지 않음
-- 네트워크 공격자가 HTTP를 통해 쿠키를 덮어쓸 수 있음 (Section 8.6 참조)
+- 네트워크 공격자가 HTTP를 통해 쿠키를 덮어쓸 수 있음 (8.6 참고)
 
 ###### 4.1.2.6 HttpOnly 속성
 
@@ -350,22 +336,22 @@ Set-Cookie: sessionId=abc123; HttpOnly; Secure; Path=/
 
 서버가 따라야 하는 권장사항:
 
-1. 동일한 속성명 중복 사용 금지
-   ```http
-   ❌ Set-Cookie: id=a; Path=/; Path=/docs
-   ✅ Set-Cookie: id=a; Path=/docs
-   ```
+- 동일한 속성명 중복 사용 금지
+  ```http
+  금지: Set-Cookie: id=a; Path=/; Path=/docs
+  권장: Set-Cookie: id=a; Path=/docs
+  ```
 
-2. 단일 응답에서 동일한 쿠키명 중복 사용 자제
-   ```http
-   ❌ Set-Cookie: id=first
-      Set-Cookie: id=second
-   ✅ Set-Cookie: id=final
-   ```
+- 단일 응답에서 동일한 쿠키명 중복 사용 자제
+  ```http
+  금지: Set-Cookie: id=first
+        Set-Cookie: id=second
+  권장: Set-Cookie: id=final
+  ```
 
 #### 4.2 Cookie 헤더
 
-사용자 에이전트는 저장된 쿠키를 Cookie 헤더에 포함시켜 서버로 전송합니다.
+사용자 에이전트는 저장된 쿠키를 Cookie 헤더에 포함시켜 서버로 전송.
 
 ABNF 문법:
 
@@ -389,7 +375,7 @@ Cookie: SID=31d4d96e407aad42; lang=en-US
 
 ### 5. 사용자 에이전트 요구사항 (User Agent Requirements)
 
-이 섹션은 사용자 에이전트가 Set-Cookie 헤더를 처리하고 Cookie 헤더를 생성하는 방법을 명시합니다.
+이 섹션은 사용자 에이전트가 Set-Cookie 헤더를 처리하고 Cookie 헤더를 생성하는 방법 명시.
 
 #### 5.1 하위 구성요소 알고리즘
 
@@ -397,8 +383,8 @@ Cookie: SID=31d4d96e407aad42; lang=en-US
 
 쿠키 날짜를 파싱하는 알고리즘:
 
-입력: cookie-date 문자열
-출력: 날짜 또는 실패
+- 입력: cookie-date 문자열
+- 출력: 날짜 또는 실패
 
 단계:
 
@@ -426,47 +412,35 @@ Cookie: SID=31d4d96e407aad42; lang=en-US
 
 ##### 5.1.2 정규화된 호스트 이름 (Canonicalized Host Names)
 
-호스트 이름을 소문자 ASCII 레이블의 시퀀스로 변환합니다.
+호스트 이름을 소문자 ASCII 레이블의 시퀀스로 변환.
 
 국제화 도메인 이름(IDN) 처리:
-- 사용자 에이전트는 IDNA2008 (RFC 5891)을 구현해야 합니다(SHOULD)
+- 사용자 에이전트는 IDNA2008 (RFC 5891)을 구현해야 함(SHOULD)
 - IDNA2008이 불가능한 경우 IDNA2003 구현
 
 ##### 5.1.3 도메인 매칭 (Domain Matching)
 
 정의: 문자열 A가 도메인 문자열 B와 "도메인 일치"하는 경우:
 
-```
-A와 B가 도메인 일치하려면:
-1. A와 B가 동일 (대소문자 무관), 또는
-2. 다음 모든 조건 충족:
-   - A가 B의 접미사
-   - A의 B와 일치하지 않는 마지막 문자가 "."
-   - A가 IP 주소가 아님
-```
+- A와 B가 동일 (대소문자 무관), 또는
+- 다음 모든 조건 충족:
+  - A가 B의 접미사
+  - A의 B와 일치하지 않는 마지막 문자가 "."
+  - A가 IP 주소가 아님
 
 예시:
-
-| A | B | 도메인 일치? |
-|---|---|-------------|
-| `www.example.com` | `example.com` | 예 |
-| `example.com` | `example.com` | 예 |
-| `www.example.com` | `www.example.com` | 예 |
-| `example.com` | `www.example.com` | 아니오 |
-| `192.168.1.1` | `168.1.1` | 아니오 (IP 주소) |
+- `www.example.com` / `example.com` → 도메인 일치
+- `example.com` / `example.com` → 도메인 일치
+- `www.example.com` / `www.example.com` → 도메인 일치
+- `example.com` / `www.example.com` → 불일치
+- `192.168.1.1` / `168.1.1` → 불일치 (IP 주소)
 
 ##### 5.1.4 경로 매칭 (Paths)
 
 기본 경로 결정 알고리즘:
-
-```
-1. uri-path가 비어있거나 "/"로 시작하지 않으면:
-   → 기본 경로 = "/"
-2. uri-path에 "/" 문자가 하나만 있으면:
-   → 기본 경로 = "/"
-3. 그 외:
-   → 기본 경로 = uri-path의 처음부터 마지막 "/"의 직전 문자까지
-```
+- uri-path가 비어있거나 "/"로 시작하지 않으면 → 기본 경로 = "/"
+- uri-path에 "/" 문자가 하나만 있으면 → 기본 경로 = "/"
+- 그 외 → 기본 경로 = uri-path의 처음부터 마지막 "/"의 직전 문자까지
 
 경로 매칭 규칙:
 
@@ -476,21 +450,17 @@ A와 B가 도메인 일치하려면:
 3. 쿠키 경로가 요청 경로의 접두사이고, 요청 경로에서 쿠키 경로 다음 문자가 "/"
 
 예시:
-
-| 쿠키 경로 | 요청 경로 | 일치? |
-|-----------|-----------|-------|
-| `/` | `/anything` | 예 |
-| `/docs` | `/docs` | 예 |
-| `/docs` | `/docs/` | 예 |
-| `/docs` | `/docs/Web` | 예 |
-| `/docs` | `/docsweb` | 아니오 |
+- 쿠키 경로 `/`, 요청 경로 `/anything` → 일치
+- 쿠키 경로 `/docs`, 요청 경로 `/docs` → 일치
+- 쿠키 경로 `/docs`, 요청 경로 `/docs/` → 일치
+- 쿠키 경로 `/docs`, 요청 경로 `/docs/Web` → 일치
+- 쿠키 경로 `/docs`, 요청 경로 `/docsweb` → 불일치
 
 #### 5.2 Set-Cookie 헤더 처리
 
-사용자 에이전트가 Set-Cookie 헤더를 처리하는 알고리즘:
+사용자 에이전트가 Set-Cookie 헤더를 처리하는 알고리즘.
 
-중요: 사용자 에이전트는 Set-Cookie 헤더를 완전히 무시할 수 있습니다(MAY).
- 예: 제3자 요청 차단 정책
+중요: 사용자 에이전트는 Set-Cookie 헤더를 완전히 무시 가능(MAY). 예: 제3자 요청 차단 정책
 
 ##### 5.2.1 파싱 알고리즘
 
@@ -561,21 +531,19 @@ HttpOnly 속성:
 
 #### 5.3 저장 모델 (Storage Model)
 
-사용자 에이전트는 각 쿠키에 대해 다음 필드를 유지합니다:
+사용자 에이전트는 각 쿠키에 대해 다음 필드를 유지:
 
-| 필드 | 설명 |
-|------|------|
-| name | 쿠키 이름 |
-| value | 쿠키 값 |
-| expiry-time | 만료 시간 |
-| domain | 적용 도메인 |
-| path | 적용 경로 |
-| creation-time | 생성 시간 |
-| last-access-time | 마지막 접근 시간 |
-| persistent-flag | 영속 여부 |
-| host-only-flag | 호스트 전용 여부 |
-| secure-only-flag | 보안 전용 여부 |
-| http-only-flag | HTTP 전용 여부 |
+- name: 쿠키 이름
+- value: 쿠키 값
+- expiry-time: 만료 시간
+- domain: 적용 도메인
+- path: 적용 경로
+- creation-time: 생성 시간
+- last-access-time: 마지막 접근 시간
+- persistent-flag: 영속 여부
+- host-only-flag: 호스트 전용 여부
+- secure-only-flag: 보안 전용 여부
+- http-only-flag: HTTP 전용 여부
 
 ##### 5.3.1 쿠키 저장 알고리즘 (12단계)
 
@@ -659,7 +627,7 @@ if 동일한 (name, domain, path)의 기존 쿠키 존재:
 
 만료된 쿠키 제거:
 ```
-사용자 에이전트는 언제든지(at any time) 만료된 쿠키를 제거해야 합니다(MUST):
+사용자 에이전트는 언제든지(at any time) 만료된 쿠키를 제거해야 함(MUST):
 - 만료 시간이 지난 쿠키가 존재하면 제거
 ```
 
@@ -681,9 +649,9 @@ persistent-flag == false인 모든 쿠키 제거
 
 #### 5.4 Cookie 헤더 생성
 
-사용자 에이전트가 HTTP 요청에 Cookie 헤더를 포함시키는 알고리즘:
+사용자 에이전트가 HTTP 요청에 Cookie 헤더를 포함시키는 알고리즘.
 
-원칙: 사용자 에이전트는 단일 Cookie 헤더 필드만 첨부해야 합니다(MUST)
+원칙: 사용자 에이전트는 단일 Cookie 헤더 필드만 첨부해야 함(MUST)
 
 ##### 5.4.1 Cookie-String 생성 알고리즘 (5단계)
 
@@ -740,9 +708,9 @@ if cookie-string이 비어있지 않음:
 
 ##### 5.4.2 중요 참고사항
 
-- 정렬 의존 금지: 서버는 쿠키 순서에 의존해서는 안 됩니다(SHOULD NOT)
-- 동일 이름 다중 쿠키: 동일한 name으로 여러 쿠키가 있을 수 있으며, 순서는 예측 불가능합니다
-- 비 ASCII 처리: cookie-string은 옥텟 시퀀스이며, 서버가 UTF-8로 디코딩할 수 있습니다
+- 정렬 의존 금지: 서버는 쿠키 순서에 의존하면 안 됨(SHOULD NOT)
+- 동일 이름 다중 쿠키: 동일한 name으로 여러 쿠키가 있을 수 있으며, 순서는 예측 불가능
+- 비 ASCII 처리: cookie-string은 옥텟 시퀀스, 서버가 UTF-8로 디코딩 가능
 
 ---
 
@@ -750,31 +718,29 @@ if cookie-string이 비어있지 않음:
 
 #### 6.1 한도 (Limits)
 
-일반 용도의 사용자 에이전트에 대한 최소 권장 사항:
+일반 용도의 사용자 에이전트에 대한 최소 권장사항:
 
-| 항목 | 최소 요구량 |
-|------|------------|
-| 쿠키당 크기 | 4096 바이트 (이름 + 값 + 속성의 합) |
-| 도메인당 쿠키 수 | 50개 |
-| 전체 쿠키 수 | 3000개 |
+- 쿠키당 크기: 4096 바이트 (이름 + 값 + 속성의 합)
+- 도메인당 쿠키 수: 50개
+- 전체 쿠키 수: 3000개
 
 서버 권장사항:
 
-- 쿠키 사용을 최소화하여 구현 한도에 도달하는 것을 방지
+- 쿠키 사용을 최소화하여 구현 한도 도달 방지
 - 쿠키가 모든 요청에 포함되므로 네트워크 대역폭 절약
 
 #### 6.2 애플리케이션 프로그래밍 인터페이스
 
-Cookie 및 Set-Cookie 헤더의 이상한 구문은 많은 플랫폼에서 문자열 기반 API를 사용하기 때문입니다.
- 이로 인해 프로그래머들이 구문을 직접 생성하고 파싱하게 되어 상호운용성 문제가 발생했습니다.
+Cookie 및 Set-Cookie 헤더의 이상한 구문 → 많은 플랫폼에서 문자열 기반 API를 사용하기 때문.
+프로그래머들이 구문을 직접 생성·파싱 → 상호운용성 문제 발생.
 
-권장사항: 플랫폼은 더 의미론적인 API를 제공해야 합니다
+권장사항: 플랫폼은 더 의미론적인 API를 제공해야 함
 
 ```
-❌ 잘못된 API:
+금지된 API:
    setCookie("Expires=Wed, 09 Jun 2021 10:18:14 GMT")
 
-✅ 권장 API:
+권장 API:
    setCookie({
        name: "id",
        value: "abc123",
@@ -786,12 +752,10 @@ Cookie 및 Set-Cookie 헤더의 이상한 구문은 많은 플랫폼에서 문�
 
 국제화 도메인 이름 처리를 위해:
 
-| 버전 | 권장 수준 |
-|------|----------|
-| IDNA2008 (RFC 5891) | SHOULD 구현 |
-| IDNA2003 | IDNA2008이 불가능한 경우 사용 |
+- IDNA2008 (RFC 5891): SHOULD 구현
+- IDNA2003: IDNA2008이 불가능한 경우 사용
 
-IDNA2003과 IDNA2008 간 전환 기간 동안 적절한 도메인 이름 처리를 위해 필요합니다.
+IDNA2003과 IDNA2008 간 전환 기간 동안 적절한 도메인 이름 처리를 위해 필요.
 
 ---
 
@@ -799,10 +763,10 @@ IDNA2003과 IDNA2008 간 전환 기간 동안 적절한 도메인 이름 처리�
 
 #### 7.1 제3자 쿠키 (Third-Party Cookies)
 
-쿠키는 서버가 사용자를 추적할 수 있게 해주어 자주 비판받습니다.
- 추적은 영속 쿠키가 세션 간에 호스트 간에 공유될 때 발생합니다.
+쿠키는 서버가 사용자를 추적할 수 있게 해주어 자주 비판받음.
+영속 쿠키가 세션 간에 호스트 간에 공유될 때 추적 발생.
 
-특히 우려되는 것은 "제3자" 쿠키입니다:
+특히 우려되는 것은 "제3자" 쿠키:
 
 ```
 사용자가 example.com 방문
@@ -821,38 +785,33 @@ IDNA2003과 IDNA2008 간 전환 기간 동안 적절한 도메인 이름 처리�
                                             │
                                             └── 이전에 설정한 쿠키 전송
                                                     │
-                                                    └── 추적 완료!
+                                                    └── 추적 완료
 ```
 
 사용자 에이전트의 대응:
 
-| 정책 | 설명 |
-|------|------|
-| 제3자 Cookie 헤더 차단 | 제3자 요청에 Cookie 헤더 미포함 |
-| 제3자 Set-Cookie 차단 | 제3자 응답의 Set-Cookie 헤더 무시 |
+- 제3자 Cookie 헤더 차단: 제3자 요청에 Cookie 헤더 미포함
+- 제3자 Set-Cookie 차단: 제3자 응답의 Set-Cookie 헤더 무시
 
-중요 한계: 제3자 쿠키 차단이 완벽한 방어책은 아닙니다.
+중요 한계: 제3자 쿠키 차단이 완벽한 방어책은 아님.
 
-> "두 개의 협력하는 서버는 쿠키를 전혀 사용하지 않고도 동적 URL에 식별 정보를 주입하여 사용자를 추적할 수 있습니다."
+> "두 개의 협력하는 서버는 쿠키를 전혀 사용하지 않고도 동적 URL에 식별 정보를 주입하여 사용자를 추적할 수 있다."
 
 #### 7.2 사용자 컨트롤 (User Controls)
 
-사용자 에이전트는 쿠키 관리 메커니즘을 제공해야 합니다(SHOULD):
+사용자 에이전트는 쿠키 관리 메커니즘을 제공해야 함(SHOULD).
 
 권장 기능:
-
-| 기능 | 설명 |
-|------|------|
-| 시간 기반 삭제 | 특정 기간에 생성된 쿠키 삭제 |
-| 도메인 기반 삭제 | 특정 도메인의 쿠키 삭제 |
-| 쿠키 비활성화 | 쿠키 기능 완전 끄기 |
-| 비공개 브라우징 | 모든 쿠키를 세션 전용으로 처리 |
+- 시간 기반 삭제: 특정 기간에 생성된 쿠키 삭제
+- 도메인 기반 삭제: 특정 도메인의 쿠키 삭제
+- 쿠키 비활성화: 쿠키 기능 완전 끄기
+- 비공개 브라우징: 모든 쿠키를 세션 전용으로 처리
 
 쿠키 비활성화 시:
 
 ```
 쿠키가 비활성화되면:
-- 사용자 에이전트는 Cookie 헤더를 포함하지 않아야 합니다(MUST NOT)
+- 사용자 에이전트는 Cookie 헤더를 포함하면 안 됨(MUST NOT)
 - 나가는 HTTP 요청에 Cookie 헤더 미포함
 ```
 
@@ -865,10 +824,10 @@ IDNA2003과 IDNA2008 간 전환 기간 동안 적절한 도메인 이름 처리�
 - 사용자 개인정보를 고려한 쿠키 설계
 
 ```
-❌ 나쁜 예:
+나쁜 예:
    Set-Cookie: track=abc; Expires=Tue, 19 Jan 2038 03:14:07 GMT
 
-✅ 좋은 예:
+좋은 예:
    Set-Cookie: session=abc; Max-Age=3600  // 1시간
    Set-Cookie: prefs=abc; Max-Age=2592000 // 30일
 ```
@@ -879,25 +838,23 @@ IDNA2003과 IDNA2008 간 전환 기간 동안 적절한 도메인 이름 처리�
 
 #### 8.1 개요
 
-쿠키에는 여러 고유한 보안 취약점이 있습니다:
+쿠키에는 여러 고유한 보안 취약점 존재:
 
-| 취약점 | 영향 |
-|--------|------|
-| Ambient Authority | 개발자가 인증을 위해 ambient authority에 의존하게 되어 CSRF 등의 공격에 취약 |
-| 세션 고정 | 세션 식별자를 쿠키에 저장할 때 세션 고정 취약점 발생 가능 |
-| 네트워크 공격 | HTTPS 사용에도 불구하고 쿠키 프로토콜의 취약점으로 인해 네트워크 공격자가 쿠키 획득 또는 변조 가능 |
+- Ambient Authority: 개발자가 인증을 위해 ambient authority에 의존 → CSRF 등의 공격에 취약
+- 세션 고정: 세션 식별자를 쿠키에 저장할 때 세션 고정 취약점 발생 가능
+- 네트워크 공격: HTTPS 사용에도 불구하고 쿠키 프로토콜의 취약점으로 인해 네트워크 공격자가 쿠키 획득·변조 가능
 
 #### 8.2 Ambient Authority
 
-쿠키 인증 방식은 ambient authority(환경 권한)에 해당합니다:
+쿠키 인증 방식은 ambient authority(환경 권한)에 해당:
 
 ```
 문제점:
 원격 당사자가 HTTP 리다이렉트나 HTML 폼을 통해
-사용자 에이전트에서 HTTP 요청을 발행할 수 있습니다.
+사용자 에이전트에서 HTTP 요청을 발행할 수 있음.
 
 사용자 에이전트는 쿠키 내용을 모르는 원격 당사자의 요청에도
-쿠키를 첨부하므로, 의도하지 않은 행동이 수행될 수 있습니다.
+쿠키를 첨부하므로, 의도하지 않은 행동이 수행될 수 있음.
 ```
 
 CSRF(Cross-Site Request Forgery) 예시:
@@ -911,7 +868,6 @@ CSRF(Cross-Site Request Forgery) 예시:
 ```
 
 완화 방법:
-
 - URL을 capability(능력)으로 취급하여 지정과 권한을 결합
 - 예측 불가능한 토큰을 URL이나 폼 필드에 포함
 
@@ -934,21 +890,17 @@ CSRF(Cross-Site Request Forgery) 예시:
 ```
 
 위험 요소:
-
-| 공격자 유형 | 가능한 공격 |
-|-------------|-------------|
-| 수동적 네트워크 공격자 | Cookie/Set-Cookie 헤더의 민감 정보 도청 |
-| 활성 중간자 공격자 | 헤더 내용 변조 |
-| 악성 클라이언트 | Cookie 헤더 전송 전 수정 |
+- 수동적 네트워크 공격자: Cookie/Set-Cookie 헤더의 민감 정보 도청
+- 활성 중간자 공격자: 헤더 내용 변조
+- 악성 클라이언트: Cookie 헤더 전송 전 수정
 
 권장 보안 조치:
-
 1. 쿠키 내용 암호화 및 서명
 2. HTTPS를 통해서만 쿠키 사용
 3. 모든 쿠키에 Secure 속성 설정
 
 ```http
-✅ 보안 권장:
+보안 권장:
 Set-Cookie: session=encrypted_value; Secure; HttpOnly
 ```
 
@@ -981,7 +933,7 @@ Set-Cookie: sessionId=abc123; Secure; HttpOnly
    (예: 악성 링크, XSS 등)
 3. 피해자가 해당 세션 ID로 서버에 로그인
 4. 공격자가 동일한 세션 ID로 서버에 접근
-5. 공격자가 피해자의 인증된 세션 사용 가능!
+5. 공격자가 피해자의 인증된 세션 사용 가능
 ```
 
 완화 방법:
@@ -990,7 +942,7 @@ Set-Cookie: sessionId=abc123; Secure; HttpOnly
 
 #### 8.5 약한 기밀성 (Weak Confidentiality)
 
-쿠키는 여러 측면에서 격리를 제공하지 않습니다:
+쿠키는 여러 측면에서 격리를 제공하지 않음.
 
 ##### 8.5.1 포트 격리 부재
 
@@ -1003,7 +955,7 @@ example.com:80  ◄──────────────► 쿠키 공유 �
 
 위험:
 - 한 포트의 서비스가 읽을 수 있는 쿠키는 다른 포트의 서비스도 읽을 수 있음
-- 권장사항: 서로 다르게 신뢰하는 서비스를 동일 호스트의 다른 포트에서 실행하면서 보안 민감 정보를 쿠키에 저장하지 않아야 합니다(SHOULD NOT)
+- 권장사항: 서로 다르게 신뢰하는 서비스를 동일 호스트의 다른 포트에서 실행하면서 보안 민감 정보를 쿠키에 저장하면 안 됨(SHOULD NOT)
 
 ##### 8.5.2 스킴 격리 부재
 
@@ -1023,7 +975,7 @@ http://example.com ◄──────────────► 쿠키 공�
     동일 출처이므로 JavaScript로 상호 접근 가능
 ```
 
-중요: Path 속성은 보안 기능이 아닙니다!
+중요: Path 속성은 보안 기능이 아님.
 
 #### 8.6 약한 무결성 (Weak Integrity)
 
@@ -1049,12 +1001,12 @@ Cookie: session=abc
 2. 공격자가 DNS/네트워크 조작으로 HTTP 트래픽 가로챔
 3. http://example.com 응답에 쿠키 설정:
    Set-Cookie: session=malicious; Domain=example.com
-4. 해당 쿠키가 https://secure.example.com에도 전송됨!
+4. 해당 쿠키가 https://secure.example.com에도 전송됨
 ```
 
 ##### 8.6.3 쿠키 재전송 방지 불가
 
-암호화와 서명으로도 쿠키 재전송(replay)을 방지할 수 없습니다:
+암호화와 서명으로도 쿠키 재전송(replay) 방지 불가:
 
 ```
 공격자가 과거에 캡처한 유효한 쿠키를 재전송 가능
@@ -1063,7 +1015,7 @@ Cookie: session=abc
 
 #### 8.7 DNS 의존성 (Reliance on DNS)
 
-쿠키는 DNS 보안에 의존합니다:
+쿠키는 DNS 보안에 의존:
 
 ```
 DNS가 손상되면:
@@ -1080,12 +1032,12 @@ DNS가 손상되면:
 
 ### 9. SameSite 속성 (추가 참고)
 
-> 참고: RFC 6265 원본에는 SameSite 속성이 포함되어 있지 않습니다.
-> SameSite는 RFC 6265bis (draft)에서 추가되었으며, 현대 브라우저에서 널리 지원됩니다.
+> 참고: RFC 6265 원본에는 SameSite 속성이 포함되어 있지 않음.
+> SameSite는 RFC 6265bis (draft)에서 추가되었으며, 현대 브라우저에서 널리 지원됨.
 
 #### 9.1 SameSite 속성 개요
 
-SameSite 속성은 쿠키가 교차 사이트 요청에 포함될지 여부를 제어합니다:
+SameSite 속성은 쿠키가 교차 사이트 요청에 포함될지 여부를 제어:
 
 ```http
 Set-Cookie: session=abc123; SameSite=Strict
@@ -1095,15 +1047,13 @@ Set-Cookie: session=abc123; SameSite=None; Secure
 
 #### 9.2 SameSite 값
 
-| 값 | 동작 |
-|------|------|
-| Strict | 동일 사이트 요청에서만 쿠키 전송 |
-| Lax | 동일 사이트 + 최상위 네비게이션 GET 요청에서 쿠키 전송 |
-| None | 모든 요청에 쿠키 전송 (Secure 필수) |
+- Strict: 동일 사이트 요청에서만 쿠키 전송
+- Lax: 동일 사이트 + 최상위 네비게이션 GET 요청에서 쿠키 전송
+- None: 모든 요청에 쿠키 전송 (Secure 필수)
 
 #### 9.3 CSRF 방어
 
-SameSite 속성은 CSRF 공격 완화에 효과적입니다:
+SameSite 속성은 CSRF 공격 완화에 효과적:
 
 ```
 Strict 모드:
@@ -1120,17 +1070,15 @@ Lax 모드 (권장):
 
 ### 10. 요약
 
-#### 10.1 쿠키 속성 요약표
+#### 10.1 쿠키 속성 요약
 
-| 속성 | 목적 | 예시 |
-|------|------|------|
-| Expires | 절대 만료 시간 | `Expires=Wed, 09 Jun 2021 10:18:14 GMT` |
-| Max-Age | 상대 만료 시간 (초) | `Max-Age=3600` |
-| Domain | 쿠키 전송 도메인 | `Domain=example.com` |
-| Path | 쿠키 전송 경로 | `Path=/docs` |
-| Secure | HTTPS 전용 | `Secure` |
-| HttpOnly | JavaScript 접근 차단 | `HttpOnly` |
-| SameSite | 교차 사이트 제한 | `SameSite=Lax` |
+- Expires: 절대 만료 시간 — `Expires=Wed, 09 Jun 2021 10:18:14 GMT`
+- Max-Age: 상대 만료 시간 (초) — `Max-Age=3600`
+- Domain: 쿠키 전송 도메인 — `Domain=example.com`
+- Path: 쿠키 전송 경로 — `Path=/docs`
+- Secure: HTTPS 전용 — `Secure`
+- HttpOnly: JavaScript 접근 차단 — `HttpOnly`
+- SameSite: 교차 사이트 제한 — `SameSite=Lax`
 
 #### 10.2 보안 권장 쿠키 설정
 
@@ -1138,30 +1086,28 @@ Lax 모드 (권장):
 Set-Cookie: session=abc123; Path=/; Secure; HttpOnly; SameSite=Lax; Max-Age=3600
 ```
 
-| 설정 | 이유 |
-|------|------|
-| `Secure` | HTTPS에서만 전송, 도청 방지 |
-| `HttpOnly` | XSS로 인한 세션 하이재킹 방지 |
-| `SameSite=Lax` | CSRF 공격 완화 |
-| `Max-Age=3600` | 합리적인 만료 시간 |
+- `Secure`: HTTPS에서만 전송, 도청 방지
+- `HttpOnly`: XSS로 인한 세션 하이재킹 방지
+- `SameSite=Lax`: CSRF 공격 완화
+- `Max-Age=3600`: 합리적인 만료 시간
 
 #### 10.3 서버 개발자 체크리스트
 
-- [ ] 모든 민감한 쿠키에 `Secure` 속성 설정
-- [ ] 세션 쿠키에 `HttpOnly` 속성 설정
-- [ ] `SameSite` 속성 사용 (최소 `Lax`)
-- [ ] 적절한 만료 시간 설정
-- [ ] 쿠키 크기 최소화 (4KB 이하)
-- [ ] 쿠키 개수 최소화
-- [ ] 민감한 데이터는 쿠키에 직접 저장하지 않고 서버에 저장
+- 모든 민감한 쿠키에 `Secure` 속성 설정
+- 세션 쿠키에 `HttpOnly` 속성 설정
+- `SameSite` 속성 사용 (최소 `Lax`)
+- 적절한 만료 시간 설정
+- 쿠키 크기 최소화 (4KB 이하)
+- 쿠키 개수 최소화
+- 민감한 데이터는 쿠키에 직접 저장하지 않고 서버에 저장
 
 #### 10.4 사용자 에이전트 개발자 체크리스트
 
-- [ ] Section 5의 처리 알고리즘 완전 구현
-- [ ] 최소 한도 지원 (4096바이트/쿠키, 50쿠키/도메인, 3000쿠키 전체)
-- [ ] 제3자 쿠키 제어 기능 제공
-- [ ] 쿠키 관리 UI 제공
-- [ ] 비공개 브라우징 모드 지원
+- Section 5의 처리 알고리즘 완전 구현
+- 최소 한도 지원 (4096바이트/쿠키, 50쿠키/도메인, 3000쿠키 전체)
+- 제3자 쿠키 제어 기능 제공
+- 쿠키 관리 UI 제공
+- 비공개 브라우징 모드 지원
 
 ---
 
@@ -1176,17 +1122,11 @@ Set-Cookie: session=abc123; Path=/; Secure; HttpOnly; SameSite=Lax; Max-Age=3600
 
 ### 관련 RFC
 
-| RFC | 제목 | 관계 |
-|-----|------|------|
-| RFC 2109 | HTTP State Management Mechanism | 폐기됨 (Historic) |
-| RFC 2965 | HTTP State Management Mechanism | 폐기됨 (Historic) |
-| RFC 6265bis | Cookies: HTTP State Management Mechanism | 후속 draft (SameSite 포함) |
-| RFC 7230 | HTTP/1.1 Message Syntax and Routing | 참조 |
-| RFC 5234 | ABNF for Syntax Specifications | ABNF 정의 |
-
----
-
-*이 문서는 RFC 6265의 한국어 번역 및 정리본입니다.*
+- RFC 2109: HTTP State Management Mechanism — 폐기됨 (Historic)
+- RFC 2965: HTTP State Management Mechanism — 폐기됨 (Historic)
+- RFC 6265bis: Cookies: HTTP State Management Mechanism — 후속 draft (SameSite 포함)
+- RFC 7230: HTTP/1.1 Message Syntax and Routing — 참조
+- RFC 5234: ABNF for Syntax Specifications — ABNF 정의
 
 ---
 
@@ -1197,28 +1137,29 @@ Set-Cookie: session=abc123; Path=/; Secure; HttpOnly; SameSite=Lax; Max-Age=3600
 
 ### 1. 개요
 
-`draft-ietf-httpbis-rfc6265bis`는 2011년 발행된 [RFC 6265 HTTP Cookies](./RFC6265-HTTP-Cookies.md)를 대체하기 위한 초안으로, 현재 대부분의 브라우저가 실제로 구현·강제하는 쿠키 동작(특히 `SameSite` 속성)을 표준 문서에 반영하는 것이 핵심이다.
- RFC 6265에는 `SameSite` 속성 자체가 없었고, 이후 브라우저 벤더들이 CSRF 방어를 위해 독자적으로 도입한 것을 이 초안이 표준화한다.
+`draft-ietf-httpbis-rfc6265bis`는 2011년 발행된 [RFC 6265 HTTP Cookies](./RFC6265-HTTP-Cookies.md)를 대체하기 위한 초안.
+현재 대부분의 브라우저가 실제로 구현·강제하는 쿠키 동작(특히 `SameSite` 속성)을 표준 문서에 반영하는 것이 핵심.
+RFC 6265에는 `SameSite` 속성 자체가 없었음 → 이후 브라우저 벤더들이 CSRF 방어를 위해 독자적으로 도입한 것을 이 초안이 표준화.
 
-| 구분 | RFC 6265 (2011) | 6265bis 초안 |
-|------|------------------|----------------|
-| `SameSite` 속성 | 없음 | 정의됨 (`Strict` / `Lax` / `None`) |
-| `SameSite` 기본값 | 없음(모든 요청에 전송) | `Lax` (미지정 시) |
-| `Secure` 요구사항 | `SameSite=None`과 무관 | `SameSite=None`은 `Secure` 필수 |
-| `__Host-` / `__Secure-` 접두사 | 없음 | 정의됨 |
-| 스킴 기반 매칭 | 도메인만 비교 | "schemeful same-site" 개념 도입 |
+RFC 6265(2011) vs 6265bis 초안 비교:
+- `SameSite` 속성: 없음 → 정의됨 (`Strict` / `Lax` / `None`)
+- `SameSite` 기본값: 없음(모든 요청에 전송) → `Lax` (미지정 시)
+- `Secure` 요구사항: `SameSite=None`과 무관 → `SameSite=None`은 `Secure` 필수
+- `__Host-` / `__Secure-` 접두사: 없음 → 정의됨
+- 스킴 기반 매칭: 도메인만 비교 → "schemeful same-site" 개념 도입
 
 ---
 
 ### 2. SameSite 속성
 
-쿠키가 크로스 사이트 요청에 함께 전송될지를 제어해 CSRF 공격 표면을 줄인다.
+쿠키가 크로스 사이트 요청에 함께 전송될지를 제어 → CSRF 공격 표면 축소.
 
-| 값 | 동작 | 사용 예 |
-|----|------|---------|
-| `Strict` | 같은 사이트에서 시작한 요청에만 전송. 다른 사이트에서 링크를 클릭해 이동해도 전송 안 함 | 은행 세션 쿠키처럼 최고 수준 보호가 필요한 경우 |
-| `Lax` (기본값) | 최상위 탐색(top-level navigation)이면서 안전한 메서드(GET 등)인 경우에는 전송, `<img>`/`<iframe>`/`fetch` 등 서브리소스 요청에는 전송 안 함 | 대부분의 로그인 세션 쿠키 |
-| `None` | 모든 크로스 사이트 요청에 전송 (반드시 `Secure`와 함께 사용) | 서드파티 임베드, 결제 위젯, SSO iframe |
+- `Strict`: 같은 사이트에서 시작한 요청에만 전송. 다른 사이트에서 링크를 클릭해 이동해도 전송 안 함
+  - 사용 예: 은행 세션 쿠키처럼 최고 수준 보호가 필요한 경우
+- `Lax` (기본값): 최상위 탐색(top-level navigation)이면서 안전한 메서드(GET 등)인 경우에는 전송, `<img>`/`<iframe>`/`fetch` 등 서브리소스 요청에는 전송 안 함
+  - 사용 예: 대부분의 로그인 세션 쿠키
+- `None`: 모든 크로스 사이트 요청에 전송 (반드시 `Secure`와 함께 사용)
+  - 사용 예: 서드파티 임베드, 결제 위젯, SSO iframe
 
 ```http
 Set-Cookie: session=abc123; SameSite=Lax; Secure; HttpOnly
@@ -1227,17 +1168,17 @@ Set-Cookie: sso_token=xyz789; SameSite=None; Secure
 
 #### 2.1 기본값 변경의 영향
 
-`SameSite`를 명시하지 않은 쿠키는 브라우저가 `Lax`로 취급한다.
- 이 때문에:
+`SameSite`를 명시하지 않은 쿠키는 브라우저가 `Lax`로 취급.
 
-- 크로스 사이트 POST 요청에 쿠키가 자동 전송되지 않아 CSRF 위험이 줄어듦
+이로 인해:
+- 크로스 사이트 POST 요청에 쿠키가 자동 전송되지 않아 CSRF 위험 감소
 - 서드파티 iframe에서 세션 쿠키가 필요한 서비스(예: 결제 위젯, SSO)는 `SameSite=None; Secure`를 명시해야 정상 동작
 
 ---
 
 ### 3. `Secure` 속성과의 결합 강제
 
-`SameSite=None`인 쿠키는 `Secure` 속성 없이는 브라우저가 거부한다.
+`SameSite=None`인 쿠키는 `Secure` 속성 없이는 브라우저가 거부.
 
 ```http
 # 거부됨 (Chrome 등 최신 브라우저)
@@ -1247,46 +1188,44 @@ Set-Cookie: token=abc; SameSite=None
 Set-Cookie: token=abc; SameSite=None; Secure
 ```
 
-HTTP(비TLS) 연결에서 `SameSite=None` 쿠키를 서드파티로 사용하려는 시도를 원천 차단해 평문 채널에서의 크로스 사이트 쿠키 탈취를 방지한다.
+HTTP(비TLS) 연결에서 `SameSite=None` 쿠키를 서드파티로 사용하려는 시도를 원천 차단 → 평문 채널에서의 크로스 사이트 쿠키 탈취 방지.
 
 ---
 
 ### 4. `__Host-` / `__Secure-` 쿠키 이름 접두사
 
-쿠키 이름 자체에 보안 속성을 강제하는 접두사를 도입했다.
+쿠키 이름 자체에 보안 속성을 강제하는 접두사 도입:
 
-| 접두사 | 강제 조건 |
-|--------|-----------|
-| `__Secure-` | `Secure` 속성 필수 |
-| `__Host-` | `Secure` 필수, `Path=/` 필수, `Domain` 속성 사용 불가(현재 호스트에만 귀속) |
+- `__Secure-`: `Secure` 속성 필수
+- `__Host-`: `Secure` 필수, `Path=/` 필수, `Domain` 속성 사용 불가(현재 호스트에만 귀속)
 
 ```http
 Set-Cookie: __Host-session=abc123; Secure; Path=/; SameSite=Strict
 ```
 
-`__Host-` 접두사는 서브도메인이 상위 도메인 쿠키를 오염시키는 공격(cookie tossing)을 막는 데 특히 유용하다.
+`__Host-` 접두사는 서브도메인이 상위 도메인 쿠키를 오염시키는 공격(cookie tossing)을 막는 데 특히 유용.
 
 ---
 
 ### 5. Schemeful Same-Site
 
-기존에는 `http://example.com`과 `https://example.com`을 "같은 사이트"로 취급했지만, 6265bis는 스킴(http/https)까지 일치해야 같은 사이트로 판단하는 개념을 도입한다.
+기존에는 `http://example.com`과 `https://example.com`을 "같은 사이트"로 취급.
+6265bis는 스킴(http/https)까지 일치해야 같은 사이트로 판단하는 개념 도입.
 
-| 비교 대상 | 기존(Registrable Domain만 비교) | Schemeful Same-Site |
-|-----------|-----------------------------------|----------------------|
-| `http://example.com` vs `https://example.com` | Same-Site | Cross-Site |
-| `https://a.example.com` vs `https://b.example.com` | Same-Site | Same-Site |
+비교 대상 - 기존(Registrable Domain만 비교) → Schemeful Same-Site:
+- `http://example.com` vs `https://example.com`: Same-Site → Cross-Site
+- `https://a.example.com` vs `https://b.example.com`: Same-Site → Same-Site
 
-이를 통해 HTTPS로 마이그레이션하는 과정에서 발생할 수 있는 다운그레이드 공격(HTTP 채널을 이용한 쿠키 탈취) 경로를 줄인다.
+이를 통해 HTTPS로 마이그레이션하는 과정에서 발생할 수 있는 다운그레이드 공격(HTTP 채널을 이용한 쿠키 탈취) 경로 축소.
 
 ---
 
 ### 6. 요약
 
-- 6265bis는 RFC 6265를 대체할 초안으로, 실제 브라우저가 구현한 `SameSite` 동작을 표준화한다.
-- `SameSite` 기본값은 `Lax`이며, `None`은 `Secure`와 함께여야 한다.
-- `__Host-`/`__Secure-` 접두사로 쿠키 속성을 이름 수준에서 강제할 수 있다.
-- Schemeful Same-Site 개념으로 HTTP/HTTPS를 다른 사이트로 취급해 보안을 강화한다.
+- 6265bis는 RFC 6265를 대체할 초안 → 실제 브라우저가 구현한 `SameSite` 동작을 표준화
+- `SameSite` 기본값은 `Lax` → `None`은 `Secure`와 함께 필요
+- `__Host-`/`__Secure-` 접두사로 쿠키 속성을 이름 수준에서 강제 가능
+- Schemeful Same-Site 개념으로 HTTP/HTTPS를 다른 사이트로 취급 → 보안 강화
 
 ---
 

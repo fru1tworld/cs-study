@@ -23,7 +23,7 @@
 
 ### 구성 언어 개요
 
-Alloy는 **자체 구성 언어(Alloy syntax)** 를 사용합니다 (이전 명칭: River). HCL과 유사한 문법 구조를 가집니다.
+Alloy는 자체 구성 언어(Alloy syntax)를 사용함 (이전 명칭: River). HCL과 유사한 문법 구조.
 
 #### 특징
 
@@ -64,7 +64,7 @@ prometheus.scrape "default" {
 ```
 
 - `prometheus.scrape`: 컴포넌트 종류
-- `"default"`: 사용자 정의 라벨 (같은 컴포넌트 종류 내에서 고유)
+- `"default"`: 사용자 정의 라벨 (같은 컴포넌트 종류 내에서 고유해야 함)
 
 #### 설정 블록 (라벨 없음)
 
@@ -142,7 +142,7 @@ targets = [
 
 #### 비밀(Secret) 타입
 
-비밀 값은 `secret` 타입으로 자동 처리되어 로그/UI에 마스킹됩니다.
+비밀 값은 `secret` 타입으로 자동 처리 → 로그/UI에 마스킹됨.
 
 ```alloy
 basic_auth {
@@ -231,21 +231,19 @@ all_targets = concat(
 
 ### 데이터 타입
 
-| 타입 | 예시 | 설명 |
-|------|------|------|
-| `number` | `42`, `3.14` | 숫자 |
-| `string` | `"hello"` | 문자열 |
-| `bool` | `true`, `false` | 불리언 |
-| `duration` | `"30s"`, `"1h"` | 기간 (문자열로 표현) |
-| `list` | `[1, 2, 3]` | 목록 |
-| `map` | `{a = 1}` | 키-값 |
-| `secret` | (자동) | 비밀 값 |
-| `capsule` | (특수) | 컴포넌트 간 전달 객체 (receiver 등) |
-| `null` | `null` | 빈 값 |
+- `number`: 숫자, 예 `42`, `3.14`
+- `string`: 문자열, 예 `"hello"`
+- `bool`: 불리언, 예 `true`, `false`
+- `duration`: 기간 (문자열로 표현), 예 `"30s"`, `"1h"`
+- `list`: 목록, 예 `[1, 2, 3]`
+- `map`: 키-값, 예 `{a = 1}`
+- `secret`: 비밀 값 (자동)
+- `capsule`: 컴포넌트 간 전달 객체 (receiver 등, 특수)
+- `null`: 빈 값, 예 `null`
 
 #### Capsule 타입
 
-컴포넌트 간 전달되는 특수 객체. 예: `receiver`, `targets`.
+컴포넌트 간 전달되는 특수 객체, 예: `receiver`, `targets`.
 
 ```alloy
 loki.process "extract" {
@@ -270,9 +268,9 @@ loki.process "extract" {
 
 #### 의존성 그래프
 
-Alloy는 참조를 분석해 **방향성 그래프(DAG)** 를 생성하고, 그래프 순서대로 평가·실행합니다.
+Alloy는 참조를 분석해 방향성 그래프(DAG)를 생성 → 그래프 순서대로 평가·실행함.
 
-순환 참조는 에러로 처리됩니다.
+순환 참조는 에러로 처리됨.
 
 #### 평가 순서
 
@@ -286,50 +284,38 @@ Alloy는 참조를 분석해 **방향성 그래프(DAG)** 를 생성하고, 그�
 
 #### `sys`
 
-| 함수 | 설명 |
-|------|------|
-| `sys.env(name)` | 환경 변수 읽기 |
+- `sys.env(name)`: 환경 변수 읽기
 
 #### `file`
 
-| 함수 | 설명 |
-|------|------|
-| `file.contents(path)` | 파일 내용 읽기 (파일 변경 시 자동 리로드) |
+- `file.contents(path)`: 파일 내용 읽기 (파일 변경 시 자동 리로드)
 
 #### `string`
 
-| 함수 | 설명 |
-|------|------|
-| `string.format(fmt, args...)` | 포맷팅 |
-| `string.join(list, sep)` | 결합 |
-| `string.split(s, sep)` | 분할 |
-| `string.to_lower(s)` / `to_upper(s)` | 대소문자 |
-| `string.trim(s, cutset)` | 트림 |
-| `string.replace(s, old, new)` | 치환 |
+- `string.format(fmt, args...)`: 포맷팅
+- `string.join(list, sep)`: 결합
+- `string.split(s, sep)`: 분할
+- `string.to_lower(s)` / `to_upper(s)`: 대소문자 변환
+- `string.trim(s, cutset)`: 트림
+- `string.replace(s, old, new)`: 치환
 
 #### `array`
 
-| 함수 | 설명 |
-|------|------|
-| `array.concat(...lists)` | 리스트 결합 |
-| `array.combine_maps(list1, list2, keys)` | 맵 결합 |
+- `array.concat(...lists)`: 리스트 결합
+- `array.combine_maps(list1, list2, keys)`: 맵 결합
 
 #### `encoding`
 
-| 함수 | 설명 |
-|------|------|
-| `encoding.from_json(s)` | JSON 디코드 |
-| `encoding.from_yaml(s)` | YAML 디코드 |
-| `encoding.from_base64(s)` | Base64 디코드 |
-| `encoding.to_json(v)` | JSON 인코드 |
+- `encoding.from_json(s)`: JSON 디코드
+- `encoding.from_yaml(s)`: YAML 디코드
+- `encoding.from_base64(s)`: Base64 디코드
+- `encoding.to_json(v)`: JSON 인코드
 
 #### `constants`
 
-| 상수 | 설명 |
-|------|------|
-| `constants.hostname` | 호스트 이름 |
-| `constants.os` | OS 이름 |
-| `constants.arch` | 아키텍처 |
+- `constants.hostname`: 호스트 이름
+- `constants.os`: OS 이름
+- `constants.arch`: 아키텍처
 
 #### 예시
 
@@ -494,17 +480,15 @@ prometheus.scrape "kubernetes" {
 
 #### Relabel Actions
 
-| Action | 설명 |
-|--------|------|
-| `replace` | 라벨 값 치환 |
-| `keep` | 매칭되는 것만 유지 |
-| `drop` | 매칭되는 것 제거 |
-| `keepequal` / `dropequal` | 두 라벨 비교 |
-| `hashmod` | 해시 기반 샤딩 |
-| `labelmap` | 라벨 이름 패턴 매핑 |
-| `labeldrop` | 라벨 제거 |
-| `labelkeep` | 라벨 유지 |
-| `lowercase` / `uppercase` | 대소문자 변환 |
+- `replace`: 라벨 값 치환
+- `keep`: 매칭되는 것만 유지
+- `drop`: 매칭되는 것 제거
+- `keepequal` / `dropequal`: 두 라벨 비교
+- `hashmod`: 해시 기반 샤딩
+- `labelmap`: 라벨 이름 패턴 매핑
+- `labeldrop`: 라벨 제거
+- `labelkeep`: 라벨 유지
+- `lowercase` / `uppercase`: 대소문자 변환
 
 ---
 
@@ -672,35 +656,36 @@ loki.write "default" {
 
 ### 개요
 
-구성 블록(Configuration Blocks)은 컴포넌트가 아닌 Alloy 자체의 동작을 제어합니다.
+구성 블록(Configuration Blocks)은 컴포넌트가 아닌 Alloy 자체의 동작을 제어함.
 
 #### 컴포넌트 vs 구성 블록
 
-| 구성 블록 | 컴포넌트 |
-|---------|---------|
-| 라벨 없음 | 라벨 있음 (`"name"`) |
-| Alloy 자체 설정 | 데이터 처리 |
-| 인스턴스 1개만 | 여러 개 가능 |
+- 구성 블록
+  - 라벨 없음
+  - Alloy 자체 설정
+  - 인스턴스 1개만
+- 컴포넌트
+  - 라벨 있음 (`"name"`)
+  - 데이터 처리
+  - 여러 개 가능
 
 #### 종류
 
-| 블록 | 용도 |
-|------|------|
-| `logging` | 로그 레벨/형식/대상 |
-| `tracing` | 자체 트레이싱 |
-| `livedebugging` | 라이브 디버그 |
-| `argument` | 모듈 입력 |
-| `export` | 모듈 출력 |
-| `declare` | 인라인 모듈 선언 |
-| `import.*` | 외부 모듈 임포트 |
-| `remotecfg` | 원격 구성 |
-| `http` | HTTP 클라이언트 기본값 |
+- `logging`: 로그 레벨/형식/대상
+- `tracing`: 자체 트레이싱
+- `livedebugging`: 라이브 디버그
+- `argument`: 모듈 입력
+- `export`: 모듈 출력
+- `declare`: 인라인 모듈 선언
+- `import.*`: 외부 모듈 임포트
+- `remotecfg`: 원격 구성
+- `http`: HTTP 클라이언트 기본값
 
 ---
 
 ### `logging`
 
-Alloy 프로세스 자체의 로그를 설정합니다.
+Alloy 프로세스 자체의 로그를 설정함.
 
 ```alloy
 logging {
@@ -714,11 +699,9 @@ logging {
 
 #### 옵션
 
-| 인자 | 기본값 | 설명 |
-|------|--------|------|
-| `level` | `info` | 로그 레벨 |
-| `format` | `logfmt` | 형식 |
-| `write_to` | `[]` | Loki receiver 목록 |
+- `level`: 로그 레벨, 기본값 `info`
+- `format`: 형식, 기본값 `logfmt`
+- `write_to`: Loki receiver 목록, 기본값 `[]`
 
 #### 활용: 자체 로그를 Loki로
 
@@ -744,7 +727,7 @@ loki.write "default" {
 
 ### `tracing`
 
-Alloy 프로세스 자체의 분산 트레이싱을 설정합니다.
+Alloy 프로세스 자체의 분산 트레이싱을 설정함.
 
 ```alloy
 tracing {
@@ -763,14 +746,12 @@ otelcol.exporter.otlp "tempo" {
 
 #### 옵션
 
-| 인자 | 기본값 | 설명 |
-|------|--------|------|
-| `sampling_fraction` | `0.1` | 샘플링 비율 (0.0-1.0) |
-| `write_to` | `[]` | OTel exporter input |
+- `sampling_fraction`: 샘플링 비율 (0.0-1.0), 기본값 `0.1`
+- `write_to`: OTel exporter input, 기본값 `[]`
 
 #### 활용
 
-Alloy 내부 동작 디버그:
+Alloy 내부 동작 디버그 용도:
 - 컴포넌트 평가 시간
 - 데이터 전달 경로
 - 외부 호출 추적
@@ -779,7 +760,7 @@ Alloy 내부 동작 디버그:
 
 ### `livedebugging`
 
-라이브 디버깅을 활성화합니다.
+라이브 디버깅을 활성화함.
 
 ```alloy
 livedebugging {
@@ -787,7 +768,7 @@ livedebugging {
 }
 ```
 
-Alloy UI에서 컴포넌트의 입출력을 실시간으로 확인할 수 있습니다.
+Alloy UI에서 컴포넌트의 입출력을 실시간으로 확인 가능.
 
 #### 활용
 
@@ -799,7 +780,7 @@ Alloy UI에서 컴포넌트의 입출력을 실시간으로 확인할 수 있습
 
 ### `argument`
 
-모듈의 입력 인자를 정의합니다.
+모듈의 입력 인자를 정의함.
 
 ```alloy
 argument "endpoint" {
@@ -821,11 +802,9 @@ argument "external_labels" {
 
 #### 옵션
 
-| 인자 | 기본값 | 설명 |
-|------|--------|------|
-| `optional` | false | 선택적 인자 여부 |
-| `default` | (없음) | 기본값 (optional=true 필요) |
-| `comment` | "" | 설명 (UI에 표시) |
+- `optional`: 선택적 인자 여부, 기본값 false
+- `default`: 기본값 (optional=true 필요), 기본값 없음
+- `comment`: 설명 (UI에 표시), 기본값 ""
 
 #### 사용
 
@@ -845,7 +824,7 @@ loki.write "default" {
 
 ### `export`
 
-모듈의 출력 값을 정의합니다.
+모듈의 출력 값을 정의함.
 
 ```alloy
 export "receiver" {
@@ -859,9 +838,7 @@ export "endpoint_url" {
 
 #### 옵션
 
-| 인자 | 설명 |
-|------|------|
-| `value` | 출력할 값 |
+- `value`: 출력할 값
 
 #### 사용
 
@@ -887,7 +864,7 @@ loki.source.file "app" {
 
 ### `declare`
 
-별도 파일 없이 인라인으로 모듈을 선언합니다.
+별도 파일 없이 인라인으로 모듈을 선언함.
 
 ```alloy
 declare "log_pipeline" {
@@ -929,7 +906,7 @@ loki.source.file "app" {
 
 ### `import.file`
 
-로컬 파일에서 모듈을 가져옵니다.
+로컬 파일에서 모듈을 가져옴.
 
 ```alloy
 import.file "modules" {
@@ -939,9 +916,7 @@ import.file "modules" {
 
 #### 옵션
 
-| 인자 | 기본값 | 설명 |
-|------|--------|------|
-| `filename` | (필수) | 파일 경로 |
+- `filename`: 파일 경로, 필수
 
 #### 디렉토리 가져오기
 
@@ -968,7 +943,7 @@ loki.pipeline "default" {
 
 ### `import.git`
 
-Git 저장소에서 모듈을 가져옵니다.
+Git 저장소에서 모듈을 가져옴.
 
 ```alloy
 import.git "modules" {
@@ -991,12 +966,10 @@ import.git "modules" {
 
 #### 옵션
 
-| 인자 | 기본값 | 설명 |
-|------|--------|------|
-| `repository` | (필수) | Git URL |
-| `revision` | `HEAD` | branch/tag/commit |
-| `path` | (필수) | 저장소 내 경로 |
-| `pull_frequency` | `60s` | 저장소를 풀하는 주기 |
+- `repository`: Git URL, 필수
+- `revision`: branch/tag/commit, 기본값 `HEAD`
+- `path`: 저장소 내 경로, 필수
+- `pull_frequency`: 저장소를 풀하는 주기, 기본값 `60s`
 
 #### 사용
 
@@ -1016,7 +989,7 @@ modules.kubernetes.logs.pods "default" {
 
 ### `import.http`
 
-HTTP 엔드포인트에서 모듈을 가져옵니다.
+HTTP 엔드포인트에서 모듈을 가져옴.
 
 ```alloy
 import.http "module" {
@@ -1038,12 +1011,10 @@ import.http "module" {
 
 #### 옵션
 
-| 인자 | 기본값 | 설명 |
-|------|--------|------|
-| `url` | (필수) | HTTP URL |
-| `headers` | `{}` | 추가 헤더 |
-| `poll_frequency` | `0s` | 폴링 주기 |
-| `poll_timeout` | `30s` | 타임아웃 |
+- `url`: HTTP URL, 필수
+- `headers`: 추가 헤더, 기본값 `{}`
+- `poll_frequency`: 폴링 주기, 기본값 `0s`
+- `poll_timeout`: 타임아웃, 기본값 `30s`
 
 #### 활용
 
@@ -1055,7 +1026,7 @@ import.http "module" {
 
 ### `import.string`
 
-인라인 문자열로 모듈을 정의합니다.
+인라인 문자열로 모듈을 정의함.
 
 ```alloy
 import.string "inline" {
@@ -1084,7 +1055,7 @@ inline "world" {
 
 ### `remotecfg`
 
-원격 구성 서버에서 Alloy 구성을 가져옵니다.
+원격 구성 서버에서 Alloy 구성을 가져옴.
 
 ```alloy
 remotecfg {
@@ -1110,12 +1081,10 @@ remotecfg {
 
 #### 옵션
 
-| 인자 | 설명 |
-|------|------|
-| `url` | 구성 서버 URL |
-| `id` | Alloy 인스턴스 ID |
-| `poll_frequency` | 폴링 주기 |
-| `metadata` | 서버에 보낼 메타데이터 |
+- `url`: 구성 서버 URL
+- `id`: Alloy 인스턴스 ID
+- `poll_frequency`: 폴링 주기
+- `metadata`: 서버에 보낼 메타데이터
 
 #### 활용
 
@@ -1127,7 +1096,7 @@ remotecfg {
 
 ### `http`
 
-전역 HTTP 클라이언트 기본값을 설정합니다.
+전역 HTTP 클라이언트 기본값을 설정함.
 
 ```alloy
 http {
@@ -1147,7 +1116,7 @@ http {
 }
 ```
 
-이 블록에서 설정한 값은 모든 HTTP 요청 컴포넌트의 기본값으로 적용되며, 각 컴포넌트에서 개별적으로 재정의할 수 있습니다.
+이 블록에서 설정한 값은 모든 HTTP 요청 컴포넌트의 기본값으로 적용 → 각 컴포넌트에서 개별적으로 재정의 가능.
 
 ---
 

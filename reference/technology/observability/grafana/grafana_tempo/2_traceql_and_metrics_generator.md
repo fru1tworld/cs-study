@@ -23,7 +23,7 @@
 
 ### TraceQL 개요
 
-**TraceQL**은 Tempo에서 트레이스를 선택하기 위한 쿼리 언어로, **PromQL/LogQL과 유사한 문법**을 사용합니다.
+TraceQL은 Tempo에서 트레이스를 선택하기 위한 쿼리 언어 → PromQL/LogQL과 유사한 문법 사용
 
 #### 기본 문법 구조
 
@@ -40,15 +40,15 @@
 
 #### 사용 방법
 
-- **Grafana Explore**: 쿼리 빌더 또는 직접 입력
-- **HTTP API**: `GET /api/search?q=<traceql>`
-- **CLI**: `tempo-cli` 또는 `traceql-search`
+- Grafana Explore: 쿼리 빌더 또는 직접 입력
+- HTTP API: `GET /api/search?q=<traceql>`
+- CLI: `tempo-cli` 또는 `traceql-search`
 
 ---
 
 ### Spanset 선택자
 
-`{}` 안의 조건으로 매칭되는 스팬 집합(spanset)을 선택합니다.
+`{}` 안의 조건으로 매칭되는 스팬 집합(spanset) 선택
 
 #### 빈 선택자
 
@@ -72,23 +72,21 @@
 
 ### Intrinsic 필드
 
-스팬의 내장 속성으로, 별도의 접두사 없이 사용합니다.
+스팬의 내장 속성 → 별도의 접두사 없이 사용
 
-| 필드 | 설명 |
-|------|------|
-| `name` | 스팬 이름 (operation name) |
-| `duration` | 스팬 지속 시간 |
-| `status` | 스팬 상태 (`ok`, `error`, `unset`) |
-| `statusMessage` | 상태 메시지 |
-| `kind` | 스팬 종류 (`server`, `client`, `producer`, `consumer`, `internal`) |
-| `traceDuration` | 전체 트레이스 지속 시간 |
-| `rootName` | 루트 스팬 이름 |
-| `rootServiceName` | 루트 스팬 서비스 이름 |
-| `parent` | 부모 스팬 |
-| `parent:id` | 부모 스팬 ID |
-| `event:name` | 이벤트 이름 |
-| `event:timeSinceStart` | 이벤트 발생까지의 시간 |
-| `link:traceID`, `link:spanID` | 링크된 스팬 |
+- `name`: 스팬 이름 (operation name)
+- `duration`: 스팬 지속 시간
+- `status`: 스팬 상태 (`ok`, `error`, `unset`)
+- `statusMessage`: 상태 메시지
+- `kind`: 스팬 종류 (`server`, `client`, `producer`, `consumer`, `internal`)
+- `traceDuration`: 전체 트레이스 지속 시간
+- `rootName`: 루트 스팬 이름
+- `rootServiceName`: 루트 스팬 서비스 이름
+- `parent`: 부모 스팬
+- `parent:id`: 부모 스팬 ID
+- `event:name`: 이벤트 이름
+- `event:timeSinceStart`: 이벤트 발생까지의 시간
+- `link:traceID`, `link:spanID`: 링크된 스팬
 
 #### 예시
 
@@ -104,14 +102,12 @@
 
 ### 속성(Attributes) 선택
 
-속성 스코프는 다음 네 가지입니다.
+속성 스코프는 다음 네 가지
 
-| 접두사 | 의미 |
-|--------|------|
-| `.` 또는 `span.` | 스팬 속성 |
-| `resource.` | 리소스 속성 |
-| `event.` | 이벤트 속성 |
-| `link.` | 링크 속성 |
+- `.` 또는 `span.`: 스팬 속성
+- `resource.`: 리소스 속성
+- `event.`: 이벤트 속성
+- `link.`: 링크 속성
 
 #### 예시
 
@@ -133,7 +129,7 @@
 
 #### 동적 타입
 
-속성 타입은 자동으로 추론됩니다.
+속성 타입은 자동으로 추론됨
 - 문자열: `"text"` 큰따옴표
 - 숫자: `200`, `1.5`
 - 불리언: `true`, `false`
@@ -144,16 +140,14 @@
 
 ### 비교 연산자
 
-| 연산자 | 의미 |
-|--------|------|
-| `=` | 같음 |
-| `!=` | 다름 |
-| `>` | 큼 |
-| `>=` | 크거나 같음 |
-| `<` | 작음 |
-| `<=` | 작거나 같음 |
-| `=~` | 정규식 일치 |
-| `!~` | 정규식 불일치 |
+- `=`: 같음
+- `!=`: 다름
+- `>`: 큼
+- `>=`: 크거나 같음
+- `<`: 작음
+- `<=`: 작거나 같음
+- `=~`: 정규식 일치
+- `!~`: 정규식 불일치
 
 #### 예시
 
@@ -168,10 +162,12 @@
 
 ### 논리 연산자
 
-| 연산자 | 의미 | 적용 |
-|--------|------|------|
-| `&&` | AND | spanset 내부 |
-| `\|\|` | OR | spanset 내부 |
+- `&&`
+  - 의미: AND
+  - 적용: spanset 내부
+- `||`
+  - 의미: OR
+  - 적용: spanset 내부
 
 #### 예시
 
@@ -187,17 +183,15 @@
 
 ### 구조적 연산자 (Structural)
 
-여러 spanset 간의 관계를 표현합니다.
+여러 spanset 간의 관계 표현
 
-| 연산자 | 의미 |
-|--------|------|
-| `>` | 자식 (Child) |
-| `>>` | 후손 (Descendant) |
-| `<` | 부모 (Parent) |
-| `<<` | 조상 (Ancestor) |
-| `~` | 형제 (Sibling) |
-| `&&` | 같은 트레이스에 둘 다 존재 |
-| `\|\|` | 둘 중 하나라도 존재 |
+- `>`: 자식 (Child)
+- `>>`: 후손 (Descendant)
+- `<`: 부모 (Parent)
+- `<<`: 조상 (Ancestor)
+- `~`: 형제 (Sibling)
+- `&&`: 같은 트레이스에 둘 다 존재
+- `||`: 둘 중 하나라도 존재
 
 #### 예시
 
@@ -216,11 +210,11 @@
 
 ### 집계자 (Aggregators)
 
-spanset에 대한 통계 함수입니다.
+spanset에 대한 통계 함수
 
 #### `count()`
 
-일치하는 스팬 수를 반환합니다.
+일치하는 스팬 수 반환
 
 ```traceql
 { resource.service.name = "frontend" } | count() > 5
@@ -235,7 +229,7 @@ spanset에 대한 통계 함수입니다.
 
 #### `by(<field>)`
 
-집계 결과를 그룹화합니다.
+집계 결과를 그룹화
 
 ```traceql
 { resource.service.name = "api" } | by(.http.method) | count() > 10
@@ -243,7 +237,7 @@ spanset에 대한 통계 함수입니다.
 
 #### `select()`
 
-결과에 추가로 표시할 필드를 지정합니다.
+결과에 추가로 표시할 필드 지정
 
 ```traceql
 { resource.service.name = "api" && status = error }
@@ -254,11 +248,11 @@ spanset에 대한 통계 함수입니다.
 
 ### TraceQL Metrics
 
-TraceQL을 사용해 트레이스 데이터에서 메트릭을 즉시 생성합니다.
+TraceQL을 사용해 트레이스 데이터에서 메트릭을 즉시 생성
 
 #### `rate()`
 
-초당 일치하는 스팬 수를 계산합니다.
+초당 일치하는 스팬 수 계산
 
 ```traceql
 { resource.service.name = "frontend" } | rate()
@@ -266,7 +260,7 @@ TraceQL을 사용해 트레이스 데이터에서 메트릭을 즉시 생성합�
 
 #### `count_over_time()`
 
-시간 간격당 일치하는 스팬 수를 계산합니다.
+시간 간격당 일치하는 스팬 수 계산
 
 ```traceql
 { status = error } | count_over_time()
@@ -274,7 +268,7 @@ TraceQL을 사용해 트레이스 데이터에서 메트릭을 즉시 생성합�
 
 #### `quantile_over_time()`
 
-지정한 분위수를 계산합니다.
+지정한 분위수 계산
 
 ```traceql
 { resource.service.name = "api" } | quantile_over_time(duration, 0.95, 0.99)
@@ -282,7 +276,7 @@ TraceQL을 사용해 트레이스 데이터에서 메트릭을 즉시 생성합�
 
 #### `histogram_over_time()`
 
-시간별 빈도 분포를 히스토그램으로 계산합니다.
+시간별 빈도 분포를 히스토그램으로 계산
 
 ```traceql
 { resource.service.name = "api" } | histogram_over_time(duration)
@@ -290,7 +284,7 @@ TraceQL을 사용해 트레이스 데이터에서 메트릭을 즉시 생성합�
 
 #### `compare()`
 
-두 spanset을 비교하여 차이를 강조합니다. 드릴다운 분석에 유용합니다.
+두 spanset을 비교해 차이를 강조 → 드릴다운 분석에 유용
 
 ```traceql
 { status = error } | compare({ status = ok })
@@ -375,7 +369,7 @@ by (resource.service.name)
 
 #### 시간 범위
 
-쿼리는 항상 시간 범위와 함께 실행합니다.
+쿼리는 항상 시간 범위와 함께 실행
 
 ```bash
 curl -G "http://tempo:3200/api/search" \
@@ -426,7 +420,7 @@ curl -G "http://tempo:3200/api/metrics/query_range" \
 
 ### 개요
 
-**Metrics-generator** 는 Tempo의 선택적 컴포넌트로, **수집된 트레이스에서 메트릭을 자동 생성** 합니다.
+Metrics-generator는 Tempo의 선택적 컴포넌트 → 수집된 트레이스에서 메트릭을 자동 생성
 
 #### 동작 방식
 
@@ -441,20 +435,24 @@ curl -G "http://tempo:3200/api/metrics/query_range" \
          [Prometheus / Mimir]   (Remote Write)
 ```
 
-Distributor는 수신한 스팬을 Ingester와 Metrics Generator **양쪽에 동시에 전달**합니다.
+Distributor는 수신한 스팬을 Ingester와 Metrics Generator 양쪽에 동시 전달
 
 #### 프로세서 종류
 
-| 프로세서 | 설명 | 출력 |
-|---------|------|------|
-| **Service Graph** | 서비스 간 호출 관계 분석 | 서비스 그래프 메트릭 |
-| **Span Metrics** | 스팬 단위 RED 메트릭 | 요청/에러/지연 메트릭 |
-| **Local Blocks** | 로컬에 메트릭 블록 저장 | TraceQL Metrics 백엔드 |
+- Service Graph
+  - 설명: 서비스 간 호출 관계 분석
+  - 출력: 서비스 그래프 메트릭
+- Span Metrics
+  - 설명: 스팬 단위 RED 메트릭
+  - 출력: 요청/에러/지연 메트릭
+- Local Blocks
+  - 설명: 로컬에 메트릭 블록 저장
+  - 출력: TraceQL Metrics 백엔드
 
 #### 주의사항
 
-- 메트릭 생성을 활성화하면 **활성 시계열(active series)이 증가**하므로 메트릭 백엔드(Mimir/Prometheus) 비용에 영향을 준다.
-- Grafana Cloud 사용 시 청구에 영향을 준다.
+- 메트릭 생성 활성화 → 활성 시계열(active series) 증가 → 메트릭 백엔드(Mimir/Prometheus) 비용에 영향
+- Grafana Cloud 사용 시 청구에 영향
 
 ---
 
@@ -510,18 +508,28 @@ overrides:
 
 #### 기능
 
-스팬을 분석해 **서비스 간 호출 관계(엣지)** 를 파악하고, 호출 횟수와 소요 시간을 메트릭으로 기록합니다.
+스팬을 분석해 서비스 간 호출 관계(엣지) 파악 → 호출 횟수와 소요 시간을 메트릭으로 기록
 
 #### 생성되는 메트릭
 
-| 메트릭 | 타입 | 설명 |
-|--------|------|------|
-| `traces_service_graph_request_total` | Counter | 서비스 간 요청 수 |
-| `traces_service_graph_request_failed_total` | Counter | 서비스 간 실패 요청 수 |
-| `traces_service_graph_request_server_seconds` | Histogram | 서버 측 응답 시간 |
-| `traces_service_graph_request_client_seconds` | Histogram | 클라이언트 측 응답 시간 |
-| `traces_service_graph_unpaired_spans_total` | Counter | 짝이 없는 스팬 수 |
-| `traces_service_graph_dropped_spans_total` | Counter | 드롭된 스팬 수 |
+- `traces_service_graph_request_total`
+  - 타입: Counter
+  - 설명: 서비스 간 요청 수
+- `traces_service_graph_request_failed_total`
+  - 타입: Counter
+  - 설명: 서비스 간 실패 요청 수
+- `traces_service_graph_request_server_seconds`
+  - 타입: Histogram
+  - 설명: 서버 측 응답 시간
+- `traces_service_graph_request_client_seconds`
+  - 타입: Histogram
+  - 설명: 클라이언트 측 응답 시간
+- `traces_service_graph_unpaired_spans_total`
+  - 타입: Counter
+  - 설명: 짝이 없는 스팬 수
+- `traces_service_graph_dropped_spans_total`
+  - 타입: Counter
+  - 설명: 드롭된 스팬 수
 
 #### 라벨
 
@@ -548,10 +556,10 @@ metrics_generator:
 
 #### 동작 원리
 
-1. `kind=client`인 스팬을 수신하면 메모리에 저장
+1. `kind=client`인 스팬 수신 → 메모리에 저장
 2. 동일 트레이스의 `kind=server` 스팬과 매칭
 3. 매칭 성공 시 client → server 엣지 생성
-4. 시간 윈도우 내에 매칭되지 않으면 unpaired로 처리
+4. 시간 윈도우 내 매칭 실패 시 unpaired로 처리
 
 ---
 
@@ -559,15 +567,19 @@ metrics_generator:
 
 #### 기능
 
-각 스팬에서 **RED 메트릭(Rate, Error, Duration)** 을 생성합니다.
+각 스팬에서 RED 메트릭(Rate, Error, Duration) 생성
 
 #### 생성되는 메트릭
 
-| 메트릭 | 타입 | 설명 |
-|--------|------|------|
-| `traces_spanmetrics_calls_total` | Counter | 스팬 호출 수 |
-| `traces_spanmetrics_latency` | Histogram | 스팬 지연 시간 |
-| `traces_spanmetrics_size_total` | Counter | 스팬 크기 (선택적) |
+- `traces_spanmetrics_calls_total`
+  - 타입: Counter
+  - 설명: 스팬 호출 수
+- `traces_spanmetrics_latency`
+  - 타입: Histogram
+  - 설명: 스팬 지연 시간
+- `traces_spanmetrics_size_total`
+  - 타입: Counter
+  - 설명: 스팬 크기 (선택적)
 
 #### 기본 라벨
 
@@ -621,7 +633,7 @@ histogram_quantile(0.95,
 
 #### 기능
 
-**TraceQL Metrics** 용 메트릭 데이터를 로컬에 블록 형태로 저장합니다.
+TraceQL Metrics용 메트릭 데이터를 로컬에 블록 형태로 저장
 
 #### 동작
 
@@ -653,7 +665,7 @@ metrics_generator:
 
 #### 개요
 
-TraceQL Metrics를 사용하면 **트레이스 데이터에서 즉석으로 메트릭을 계산**할 수 있습니다. (Local Blocks 프로세서 활성화 필요)
+TraceQL Metrics 사용 시 트레이스 데이터에서 즉석으로 메트릭 계산 가능 (Local Blocks 프로세서 활성화 필요)
 
 #### 메트릭 함수
 
@@ -745,7 +757,7 @@ metrics_generator:
 
 #### 데이터 소스 연결
 
-Grafana에서 Tempo 데이터 소스 설정:
+Grafana에서 Tempo 데이터 소스 설정
 
 ```yaml
 # Service Graph 활성화
@@ -769,13 +781,13 @@ tracesToMetrics:
 #### Service Graph 보기
 
 1. Grafana Explore에서 Tempo 선택
-2. **Service Graph** 탭 선택
+2. Service Graph 탭 선택
 3. 시간 범위 지정
 4. 자동 생성된 서비스 그래프 확인
 
 #### APM 대시보드
 
-Tempo와 함께 제공되는 [APM 대시보드](https://github.com/grafana/tempo/blob/main/example/docker-compose/grafana/grafana-tempo-mixin/dashboards/tempo-operational.json) 사용 가능.
+Tempo와 함께 제공되는 [APM 대시보드](https://github.com/grafana/tempo/blob/main/example/docker-compose/grafana/grafana-tempo-mixin/dashboards/tempo-operational.json) 사용 가능
 
 ---
 
@@ -783,13 +795,13 @@ Tempo와 함께 제공되는 [APM 대시보드](https://github.com/grafana/tempo
 
 #### 활성 시계열 추정
 
-Span Metrics에서 생성되는 시계열 수:
+Span Metrics에서 생성되는 시계열 수
 
 ```
 시계열 수 ≈ (서비스 수) × (스팬 이름 수) × (스팬 종류 수) × (status 수) × (추가 차원 카디널리티)
 ```
 
-예: 10개 서비스, 평균 50개 엔드포인트, 4개 종류, 3개 status, http_method 4종 = **24,000 시계열**
+예: 10개 서비스, 평균 50개 엔드포인트, 4개 종류, 3개 status, http_method 4종 = 24,000 시계열
 
 #### 권장 사항
 
@@ -811,4 +823,4 @@ metrics_generator:
       store: memberlist
 ```
 
-여러 인스턴스가 트레이스를 분산 처리한다.
+여러 인스턴스가 트레이스를 분산 처리

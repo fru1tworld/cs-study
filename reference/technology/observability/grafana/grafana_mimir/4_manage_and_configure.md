@@ -61,7 +61,7 @@ overrides:
 
 #### Shuffle Sharding
 
-테넌트별로 일부 인스턴스만 사용하여 격리한다.
+테넌트별로 일부 인스턴스만 사용 → 격리함.
 
 ```yaml
 limits:
@@ -81,16 +81,14 @@ limits:
 
 #### 활성 시계열 기준 사이징
 
-| 활성 시계열 | Ingester 수 | RAM/Ingester | Querier 수 | Store GW 수 |
-|------------|------------|--------------|-----------|------------|
-| 1M | 3 | 16GB | 2 | 2 |
-| 10M | 6 | 32GB | 4 | 3 |
-| 100M | 30 | 32GB | 16 | 10 |
-| 1B | 100 | 64GB | 50 | 30 |
+- 활성 시계열 1M: Ingester 3대 · RAM/Ingester 16GB · Querier 2대 · Store GW 2대
+- 활성 시계열 10M: Ingester 6대 · RAM/Ingester 32GB · Querier 4대 · Store GW 3대
+- 활성 시계열 100M: Ingester 30대 · RAM/Ingester 32GB · Querier 16대 · Store GW 10대
+- 활성 시계열 1B: Ingester 100대 · RAM/Ingester 64GB · Querier 50대 · Store GW 30대
 
 #### Ingester 시계열 추정
 
-활성 시계열 하나당 약 **8KB 메모리**를 사용한다 (압축 후).
+활성 시계열 하나당 약 8KB 메모리 사용(압축 후).
 
 ```
 Ingester RAM ≈ (시계열 수 × 8KB) × 1.5 (오버헤드)
@@ -98,7 +96,7 @@ Ingester RAM ≈ (시계열 수 × 8KB) × 1.5 (오버헤드)
 
 #### 오브젝트 스토리지
 
-압축률은 일반적으로 메모리 대비 **10:1 ~ 30:1** 수준이다.
+압축률은 일반적으로 메모리 대비 10:1 ~ 30:1 수준.
 
 ```
 일일 데이터 ≈ 활성 시계열 × 샘플/일 × 2 bytes (압축 후)
@@ -128,7 +126,7 @@ query_frontend:
   query_sharding_max_regexp_size_bytes: 4096
 ```
 
-병렬 처리로 대형 쿼리를 가속한다.
+병렬 처리로 대형 쿼리를 가속함.
 
 ##### Query Splitting
 
@@ -205,21 +203,17 @@ distributor:
 
 #### 4종 캐시
 
-| 캐시 | 대상 | 권장 용량 |
-|------|------|----------|
-| Results Cache | 쿼리 결과 | 시간 범위에 따라 |
-| Chunks Cache | 청크 데이터 | 활성 데이터의 50% |
-| Metadata Cache | 메타데이터 (블록 목록) | 작음 (1-10GB) |
-| Index Cache | 인덱스 | 카디널리티에 따라 |
+- Results Cache: 대상 쿼리 결과 · 권장 용량 시간 범위에 따라
+- Chunks Cache: 대상 청크 데이터 · 권장 용량 활성 데이터의 50%
+- Metadata Cache: 대상 메타데이터(블록 목록) · 권장 용량 작음(1-10GB)
+- Index Cache: 대상 인덱스 · 권장 용량 카디널리티에 따라
 
 #### Memcached 권장 사양
 
-| 캐시 | 노드 수 | RAM/노드 |
-|------|--------|---------|
-| Results | 3 | 4-16GB |
-| Chunks | 3-10 | 16-64GB |
-| Metadata | 3 | 1-4GB |
-| Index | 3-10 | 16-64GB |
+- Results: 노드 수 3 · RAM/노드 4-16GB
+- Chunks: 노드 수 3-10 · RAM/노드 16-64GB
+- Metadata: 노드 수 3 · RAM/노드 1-4GB
+- Index: 노드 수 3-10 · RAM/노드 16-64GB
 
 #### Redis 옵션
 
@@ -240,7 +234,7 @@ query_frontend:
 
 #### Ingester Sharding
 
-`shuffle-sharding` 사용을 권장한다:
+`shuffle-sharding` 사용 권장:
 
 ```yaml
 limits:
@@ -270,7 +264,7 @@ compactor:
     shard_per_tenant: true
 ```
 
-각 테넌트의 압축은 하나의 compactor가 전담한다.
+각 테넌트의 압축은 하나의 compactor가 전담.
 
 ---
 
@@ -307,12 +301,10 @@ compactor:
 
 #### 모니터링
 
-| 메트릭 | 설명 |
-|--------|------|
-| `cortex_compactor_runs_completed_total` | 완료된 압축 사이클 |
-| `cortex_compactor_runs_failed_total` | 실패한 사이클 |
-| `cortex_compactor_block_cleanup_duration_seconds` | 정리 시간 |
-| `cortex_compactor_blocks_cleaned_total` | 정리된 블록 수 |
+- `cortex_compactor_runs_completed_total`: 완료된 압축 사이클
+- `cortex_compactor_runs_failed_total`: 실패한 사이클
+- `cortex_compactor_block_cleanup_duration_seconds`: 정리 시간
+- `cortex_compactor_blocks_cleaned_total`: 정리된 블록 수
 
 ---
 
@@ -379,7 +371,7 @@ prometheus.relabel "drop_high_cardinality" {
 
 #### 자체 메트릭
 
-각 컴포넌트의 `/metrics` 엔드포인트를 통해 자체 메트릭을 수집한다.
+각 컴포넌트의 `/metrics` 엔드포인트를 통해 자체 메트릭을 수집.
 
 #### Mimir Mixin
 
@@ -390,27 +382,23 @@ jb install github.com/grafana/mimir/operations/mimir-mixin@main
 jsonnet -J vendor mixin.libsonnet > dashboards.json
 ```
 
-대시보드, Recording Rules, Alerting Rules를 일괄 제공한다.
+대시보드, Recording Rules, Alerting Rules를 일괄 제공.
 
 #### 권장 SLO
 
-| SLO | 목표 |
-|-----|------|
-| Write 가용성 | > 99.9% |
-| Read 가용성 | > 99.5% |
-| Write Latency P99 | < 1s |
-| Read Latency P99 | < 30s |
+- Write 가용성: 목표 > 99.9%
+- Read 가용성: 목표 > 99.5%
+- Write Latency P99: 목표 < 1s
+- Read Latency P99: 목표 < 30s
 
 #### 핵심 메트릭
 
-| 메트릭 | 모니터링 |
-|--------|---------|
-| `cortex_distributor_samples_in_total` | 수집 부하 |
-| `cortex_ingester_memory_series` | Ingester 메모리 사용 |
-| `cortex_ingester_active_series` | 테넌트별 활성 시계열 |
-| `cortex_request_duration_seconds` | 요청 지연 |
-| `cortex_querier_request_duration_seconds` | 쿼리 지연 |
-| `cortex_compactor_runs_completed_total` | 압축 진행 |
+- `cortex_distributor_samples_in_total`: 수집 부하 모니터링
+- `cortex_ingester_memory_series`: Ingester 메모리 사용 모니터링
+- `cortex_ingester_active_series`: 테넌트별 활성 시계열 모니터링
+- `cortex_request_duration_seconds`: 요청 지연 모니터링
+- `cortex_querier_request_duration_seconds`: 쿼리 지연 모니터링
+- `cortex_compactor_runs_completed_total`: 압축 진행 모니터링
 
 ---
 
@@ -442,7 +430,7 @@ jsonnet -J vendor mixin.libsonnet > dashboards.json
 
 #### Hash Ring 분할 (Split Brain)
 
-Memberlist gossip을 사용하면 자가 치유되며, 일시적 분할은 자동으로 해결된다.
+Memberlist gossip 사용 시 자가 치유 → 일시적 분할은 자동으로 해결됨.
 
 영구 분할 시:
 1. 한쪽 클러스터 종료
@@ -500,11 +488,11 @@ Mimir Mixin이 제공하는 [공식 Runbook](https://github.com/grafana/mimir/bl
 
 #### 오브젝트 스토리지 백업
 
-가장 중요한 백업 대상이다. 다음 방법을 권장한다:
+가장 중요한 백업 대상 → 다음 방법 권장:
 
-- **S3**: Cross-Region Replication, Versioning
-- **GCS**: Object Versioning, Multi-region buckets
-- **Azure**: Geo-Redundant Storage (GRS)
+- S3: Cross-Region Replication, Versioning
+- GCS: Object Versioning, Multi-region buckets
+- Azure: Geo-Redundant Storage(GRS)
 
 #### 구성 백업
 
@@ -549,11 +537,11 @@ Mimir Mixin이 제공하는 [공식 Runbook](https://github.com/grafana/mimir/bl
 
 #### 문제
 
-Prometheus를 HA 페어로 운영하면 동일 메트릭이 두 번 푸시되어 중복이 발생한다.
+Prometheus를 HA 페어로 운영 → 동일 메트릭이 두 번 푸시되어 중복 발생.
 
 #### 해결: HA Tracker
 
-각 클러스터에서 한 시점에 하나의 replica만 활성으로 인식한다.
+각 클러스터에서 한 시점에 하나의 replica만 활성으로 인식.
 
 #### Distributor 설정
 
@@ -601,11 +589,9 @@ global:
 
 #### KV Store 옵션
 
-| Store | 권장 |
-|-------|------|
-| `consul` | HA Tracker 표준 |
-| `etcd` | 대안 |
-| `memberlist` | 권장하지 않음 (deduplication에는 부적합) |
+- `consul`: HA Tracker 표준
+- `etcd`: 대안
+- `memberlist`: 비권장(deduplication에 부적합)
 
 #### 동작
 
@@ -778,7 +764,7 @@ alertmanager_storage:
 
 ### TSDB 블록 업로드
 
-Ingester가 블록을 오브젝트 스토리지에 직접 업로드하며, Compactor가 이후 압축을 담당한다.
+Ingester가 블록을 오브젝트 스토리지에 직접 업로드 → Compactor가 이후 압축을 담당.
 
 #### Ingester → Object Storage
 
@@ -832,7 +818,7 @@ mimirtool backfill \
 
 #### 기본 동작: 거부
 
-기본적으로 시간 순서가 어긋난 샘플은 거부된다.
+기본적으로 시간 순서가 어긋난 샘플은 거부됨.
 
 #### 활성화
 
@@ -856,7 +842,7 @@ ingester:
 
 - 메모리 사용량 소폭 증가
 - 쿼리 시 OOO 헤드 청크를 추가로 탐색
-- 일반적으로 활성화를 권장 (안전)
+- 일반적으로 활성화 권장(안전)
 
 #### 모니터링
 
@@ -893,9 +879,9 @@ ingester:
 
 #### 장점
 
-- **고해상도**: 적절한 버킷을 자동으로 결정 (Sparse Histograms)
-- **단일 시계열**: 클래식 히스토그램의 N개 시계열 대신 1개
-- **빠른 쿼리**: `histogram_quantile`을 직접 계산 가능
+- 고해상도: 적절한 버킷을 자동으로 결정(Sparse Histograms)
+- 단일 시계열: 클래식 히스토그램의 N개 시계열 대신 1개
+- 빠른 쿼리: `histogram_quantile`을 직접 계산 가능
 
 #### Prometheus 측 활성화
 
@@ -938,7 +924,7 @@ histogram_fraction(0, 100, rate(my_metric[5m]))
 
 #### 개요
 
-Distributor와 Ingester 사이에 Kafka를 두어 버퍼링 및 내구성을 향상시킨다.
+Distributor와 Ingester 사이에 Kafka를 두어 버퍼링 및 내구성을 향상시킴.
 
 ```
 [Distributor] → [Kafka] → [Ingester]
@@ -984,15 +970,15 @@ ingester:
 
 #### 장점
 
-- **내구성**: Kafka가 데이터 유실을 방지
-- **비동기**: Distributor와 Ingester를 디커플링
-- **재처리 가능**: 오프셋 리셋으로 재수집 가능
+- 내구성: Kafka가 데이터 유실을 방지
+- 비동기: Distributor와 Ingester를 디커플링
+- 재처리 가능: 오프셋 리셋으로 재수집 가능
 
 #### 단점
 
-- 운영 복잡도 증가 (Kafka 클러스터 추가)
+- 운영 복잡도 증가(Kafka 클러스터 추가)
 - 지연 소폭 증가
-- 실험적 기능으로 프로덕션 적용 시 주의 필요
+- 실험적 기능 → 프로덕션 적용 시 주의 필요
 
 ---
 
@@ -1014,7 +1000,7 @@ memberlist:
     - dns+mimir-gossip-ring.mimir.svc.cluster.local:7946
 ```
 
-`dns+` 접두사를 사용하면 DNS A/AAAA 레코드의 모든 IP를 자동으로 검색한다.
+`dns+` 접두사 사용 시 DNS A/AAAA 레코드의 모든 IP를 자동으로 검색.
 
 #### gRPC 클라이언트
 
@@ -1033,7 +1019,7 @@ ingester_client:
 
 #### 개요
 
-서버 부하에 반응하여 자동으로 한도를 조정하는 실험적 기능이다.
+서버 부하에 반응해 자동으로 한도를 조정하는 실험적 기능임.
 
 #### 활성화
 
@@ -1061,7 +1047,7 @@ distributor:
 
 #### Ingester 회로 차단기
 
-Ingester가 과부하 또는 장애 상태일 때 요청을 거부한다.
+Ingester가 과부하 또는 장애 상태일 때 요청을 거부함.
 
 ```yaml
 ingester:
@@ -1095,11 +1081,11 @@ ingester:
 
 #### 기존 방식
 
-각 Ingester가 무작위 토큰을 할당받아 데이터 분포 불균형이 발생할 수 있다.
+각 Ingester가 무작위 토큰을 할당받아 데이터 분포 불균형 발생 가능.
 
 #### Spread-Minimizing
 
-토큰을 결정론적으로 할당하여 균등하게 분포시킨다.
+토큰을 결정론적으로 할당 → 균등하게 분포시킴.
 
 ```yaml
 ingester:

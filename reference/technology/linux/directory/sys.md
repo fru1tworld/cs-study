@@ -3,7 +3,7 @@
 > "a pseudo-filesystem which provides an interface to kernel data structures" — `sysfs(5)`
 > "provides information about the kernel like /proc, but better structured" — `hier(7)`
 
-`/proc`이 "프로세스 중심 + 잡다한 커널 정보"라면, `/sys`는 **커널의 디바이스·서브시스템 모델**을 그대로 노출한다. 커널 내부의 **kobject**(kernel object) 트리가 곧 sysfs 구조다. 심볼릭 링크가 매우 적극적으로 쓰여서, **하나의 디바이스가 여러 관점(`bus`, `class`, `block`)에서 동시에 보인다**.
+`/proc`이 "프로세스 중심 + 잡다한 커널 정보"라면, `/sys`는 커널의 디바이스·서브시스템 모델을 그대로 노출함. 커널 내부의 kobject(kernel object) 트리가 곧 sysfs 구조 → 심볼릭 링크가 매우 적극적으로 쓰여서, 하나의 디바이스가 여러 관점(`bus`, `class`, `block`)에서 동시에 보임.
 
 ## 마운트
 
@@ -11,13 +11,13 @@
 mount -t sysfs sysfs /sys
 ```
 
-대부분 read-only지만, 일부 속성은 쓰기 가능 (스케줄러 변경, 디바이스 enable/disable 등).
+대부분 read-only지만, 일부 속성은 쓰기 가능(스케줄러 변경, 디바이스 enable/disable 등).
 
 ## 디렉터리 레이아웃
 
 ### `/sys/block`
 
-발견된 **블록 디바이스**마다 심볼릭 링크가 하나씩 — `/sys/devices/...`로 연결.
+발견된 블록 디바이스마다 심볼릭 링크가 하나씩 → `/sys/devices/...`로 연결.
 
 ```
 /sys/block/sda → ../devices/pci0000:00/0000:00:1f.2/ata1/host0/.../sda
@@ -30,7 +30,7 @@ mount -t sysfs sysfs /sys
 
 ### `/sys/bus`
 
-커널 **버스 타입**별 디렉터리 (pci, usb, scsi, i2c, virtio, platform, …).
+커널 버스 타입별 디렉터리(pci, usb, scsi, i2c, virtio, platform 등).
 
 ```
 /sys/bus/<bus>/
@@ -47,7 +47,7 @@ mount -t sysfs sysfs /sys
 
 ### `/sys/class`
 
-**기능별 분류** (블록 디바이스, 네트워크, 그래픽, 사운드, 입력, 배터리 등). 같은 디바이스가 `bus`에도 나타나지만 `class`에서는 "역할" 관점으로 묶인다.
+기능별 분류(블록 디바이스, 네트워크, 그래픽, 사운드, 입력, 배터리 등). 같은 디바이스가 `bus`에도 나타나지만 `class`에서는 "역할" 관점으로 묶임.
 
 ```
 /sys/class/
@@ -66,7 +66,7 @@ mount -t sysfs sysfs /sys
 └── backlight/  화면 밝기
 ```
 
-**중요**: `/sys/class/net`은 **네트워크 namespace별로 다르게 보인다** — 그 프로세스에서 보이는 인터페이스만 노출.
+중요: `/sys/class/net`은 네트워크 namespace별로 다르게 보임 → 그 프로세스에서 보이는 인터페이스만 노출.
 
 ### `/sys/dev`
 
@@ -84,7 +84,7 @@ major:minor로 디바이스 노드를 찾기 위한 인덱스.
 
 > "the kernel device tree, which is a hierarchy of device structures within the kernel" — `sysfs(5)`
 
-**진짜 디바이스 트리.** 다른 디렉터리들의 심링크가 모두 여기로 향한다. 물리적 토폴로지(PCI/USB 버스 계층)를 반영.
+진짜 디바이스 트리 → 다른 디렉터리들의 심링크가 모두 여기로 향함. 물리적 토폴로지(PCI/USB 버스 계층)를 반영.
 
 ```
 /sys/devices/
@@ -108,13 +108,13 @@ major:minor로 디바이스 노드를 찾기 위한 인덱스.
 
 > "interfaces for viewing and manipulating firmware-specific objects and attributes" — `sysfs(5)`
 
-- `/sys/firmware/efi/` — EFI 변수, EFI 시스템 테이블
-- `/sys/firmware/dmi/` — DMI/SMBIOS 정보 (`dmidecode` 출처)
-- `/sys/firmware/acpi/` — ACPI 테이블
+- `/sys/firmware/efi/`: EFI 변수, EFI 시스템 테이블
+- `/sys/firmware/dmi/`: DMI/SMBIOS 정보(`dmidecode` 출처)
+- `/sys/firmware/acpi/`: ACPI 테이블
 
 ### `/sys/fs`
 
-**파일시스템 자신이 노출하는 인터페이스.** 가장 중요한 것:
+파일시스템 자신이 노출하는 인터페이스 → 가장 중요한 것:
 
 ```
 /sys/fs/
@@ -130,11 +130,11 @@ major:minor로 디바이스 노드를 찾기 위한 인덱스.
 
 ### `/sys/hypervisor`
 
-하이퍼바이저(Xen 등)에서 가상 머신 정보. 보통 비어 있거나 Xen 게스트에서만.
+하이퍼바이저(Xen 등)에서 가상 머신 정보. 보통 비어 있거나 Xen 게스트에서만 채워짐.
 
 ### `/sys/kernel`
 
-**커널 자체의 다양한 설정/상태**.
+커널 자체의 다양한 설정/상태.
 
 ```
 /sys/kernel/
@@ -158,7 +158,7 @@ major:minor로 디바이스 노드를 찾기 위한 인덱스.
 
 ### `/sys/module`
 
-로드된 **커널 모듈**마다 디렉터리:
+로드된 커널 모듈마다 디렉터리:
 
 ```
 /sys/module/<modname>/
@@ -178,9 +178,9 @@ major:minor로 디바이스 노드를 찾기 위한 인덱스.
 ### `/sys/power`
 
 전원 관리.
-- `/sys/power/state` — 가능한 sleep 상태 (`freeze mem disk`) — 쓰면 진입
-- `/sys/power/disk` — hibernate 모드
-- `/sys/power/wakeup_count` — 깨우기 카운트
+- `/sys/power/state`: 가능한 sleep 상태(`freeze mem disk`) → 쓰면 진입
+- `/sys/power/disk`: hibernate 모드
+- `/sys/power/wakeup_count`: 깨우기 카운트
 
 ## 자주 쓰는 패턴
 
@@ -219,10 +219,15 @@ echo 1 > /sys/block/sda/device/rescan
 
 ## procfs와의 차이 한눈에
 
-| | `/proc` | `/sys` |
-|---|---|---|
-| 중심 | 프로세스, 잡다한 커널 상태 | 커널 객체 모델 (kobject) |
-| 구조 | 평면적, 역사적으로 누적 | 엄격한 계층 + 심링크 |
-| 마운트 타입 | `proc` | `sysfs` |
-| 등장 | 매우 오래됨 | 2.6에서 정착 |
-| 새 인터페이스 위치 | 더는 잘 안 추가됨 | 새 디바이스/서브시스템은 여기로 |
+- `/proc`
+  - 중심: 프로세스, 잡다한 커널 상태
+  - 구조: 평면적, 역사적으로 누적
+  - 마운트 타입: `proc`
+  - 등장: 매우 오래됨
+  - 새 인터페이스 위치: 더는 잘 안 추가됨
+- `/sys`
+  - 중심: 커널 객체 모델(kobject)
+  - 구조: 엄격한 계층 + 심링크
+  - 마운트 타입: `sysfs`
+  - 등장: 2.6에서 정착
+  - 새 인터페이스 위치: 새 디바이스/서브시스템은 여기로 추가됨

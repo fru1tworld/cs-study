@@ -23,7 +23,10 @@
 
 #### Infra Standard란
 
-Infra Standard는 WHATWG에서 관리하는 Living Standard로, 다른 모든 웹 표준 문서들이 공유하는 공통 기반 정의(common infrastructure)를 제공한다. 이 표준은 웹 API를 직접 정의하지 않지만, HTML Standard, DOM Standard, Fetch Standard, URL Standard 등 다른 표준들이 사용하는 기본 개념, 자료 구조, 알고리즘 표기법을 정의한다.
+Infra Standard: WHATWG에서 관리하는 Living Standard → 다른 모든 웹 표준 문서들이 공유하는 공통 기반 정의(common infrastructure) 제공.
+
+- 웹 API를 직접 정의하지 않음
+- HTML Standard·DOM Standard·Fetch Standard·URL Standard 등 다른 표준들이 사용하는 기본 개념·자료 구조·알고리즘 표기법을 정의
 
 ```
 [Infra Standard의 위치]
@@ -508,7 +511,7 @@ JavaScript 대응:
 
 #### 4.1 기본 구문
 
-Infra Standard는 다른 스펙에서 알고리즘을 기술할 때 사용하는 표준적인 구문을 정의한다.
+Infra Standard: 다른 스펙에서 알고리즘을 기술할 때 사용하는 표준적인 구문을 정의.
 
 ```
 [알고리즘 표기 구문]
@@ -1074,7 +1077,7 @@ JavaScript 대응:
 
 ### 7. 코드 포인트 분류
 
-Infra Standard는 코드 포인트를 여러 그룹으로 분류한다.
+Infra Standard: 코드 포인트를 여러 그룹으로 분류.
 
 #### 7.1 ASCII 관련 분류
 
@@ -1306,18 +1309,16 @@ console.log(CodePoint.isNoncharacter(0xFFFE));  // true
 
 ### 8. Namespaces
 
-Infra Standard는 웹에서 사용되는 주요 네임스페이스를 정의한다.
+Infra Standard: 웹에서 사용되는 주요 네임스페이스를 정의.
 
 #### 8.1 네임스페이스 정의
 
-| 이름 | 네임스페이스 URI |
-|------|----------------|
-| HTML | `http://www.w3.org/1999/xhtml` |
-| MathML | `http://www.w3.org/1998/Math/MathML` |
-| SVG | `http://www.w3.org/2000/svg` |
-| XLink | `http://www.w3.org/1999/xlink` |
-| XML | `http://www.w3.org/XML/1998/namespace` |
-| XMLNS | `http://www.w3.org/2000/xmlns/` |
+- HTML: `http://www.w3.org/1999/xhtml`
+- MathML: `http://www.w3.org/1998/Math/MathML`
+- SVG: `http://www.w3.org/2000/svg`
+- XLink: `http://www.w3.org/1999/xlink`
+- XML: `http://www.w3.org/XML/1998/namespace`
+- XMLNS: `http://www.w3.org/2000/xmlns/`
 
 #### 8.2 네임스페이스 활용
 
@@ -1396,7 +1397,10 @@ console.log(document.body.namespaceURI);  // "http://www.w3.org/1999/xhtml"
 
 #### 9.1 개념
 
-Forgiving-base64는 표준 Base64보다 더 관대한 디코딩 규칙을 사용한다. 입력에 포함된 ASCII 공백을 무시하고, 패딩(=)이 불완전해도 처리한다.
+Forgiving-base64: 표준 Base64보다 더 관대한 디코딩 규칙 사용.
+
+- 입력에 포함된 ASCII 공백 무시
+- 패딩(=)이 불완전해도 처리
 
 ```
 [표준 Base64 vs Forgiving-base64]
@@ -1525,7 +1529,7 @@ function base64ToBlob(base64, mimeType) {
 
 #### 10.1 다른 스펙을 읽을 때의 활용
 
-Infra Standard를 이해하면 다른 웹 표준 문서를 정확하게 읽을 수 있다.
+Infra Standard 이해 → 다른 웹 표준 문서를 정확하게 읽을 수 있음.
 
 ```
 [HTML Standard에서의 Infra 개념 사용 예시]
@@ -1713,11 +1717,15 @@ Fetch Standard가 Infra에서 사용하는 개념:
 
 ### 1. 개요
 
-Compatibility Standard는 WHATWG에서 관리하는 Living Standard 중 하나로, 웹 브라우저 간의 호환성을 보장하기 위해 비표준(non-standard) 기능들을 공식적으로 문서화한 표준이다.
+Compatibility Standard: WHATWG에서 관리하는 Living Standard 중 하나.
+
+- 웹 브라우저 간의 호환성을 보장하기 위해 비표준(non-standard) 기능들을 공식적으로 문서화한 표준
 
 #### 핵심 개념
 
-웹의 역사를 통해 특정 브라우저(특히 WebKit/Blink 기반 브라우저)에서만 지원하던 비표준 기능들이 널리 사용되면서, 다른 브라우저들도 이를 지원해야 하는 상황이 발생했다. Compatibility Standard는 이러한 기능들을 정리하고, 모든 브라우저가 일관되게 구현할 수 있도록 명세를 제공한다.
+특정 브라우저(특히 WebKit/Blink 기반 브라우저)에서만 지원하던 비표준 기능들이 널리 사용됨 → 다른 브라우저들도 이를 지원해야 하는 상황 발생.
+
+- Compatibility Standard: 이러한 기능들을 정리하고, 모든 브라우저가 일관되게 구현할 수 있도록 명세 제공
 
 ```
 [역사적 비표준 기능] → [광범위한 웹 사용] → [호환성 문제 발생] → [Compatibility Standard로 표준화]
@@ -1725,12 +1733,10 @@ Compatibility Standard는 WHATWG에서 관리하는 Living Standard 중 하나�
 
 #### 표준의 범위
 
-| 영역 | 설명 |
-|------|------|
-| CSS 호환성 | `-webkit-` 접두사 속성의 표준화 |
-| DOM/JS 호환성 | `window.orientation` 등 비표준 API |
-| 터치 이벤트 | WebKit 기반 터치 이벤트 |
-| 렌더링 호환성 | 특정 렌더링 동작의 표준화 |
+- CSS 호환성: `-webkit-` 접두사 속성의 표준화
+- DOM/JS 호환성: `window.orientation` 등 비표준 API
+- 터치 이벤트: WebKit 기반 터치 이벤트
+- 렌더링 호환성: 특정 렌더링 동작의 표준화
 
 ---
 
@@ -1738,7 +1744,7 @@ Compatibility Standard는 WHATWG에서 관리하는 Living Standard 중 하나�
 
 #### 레거시 웹과의 호환
 
-웹의 발전 과정에서 브라우저 제조사들은 경쟁적으로 새로운 기능을 도입했다. 특히 모바일 웹 초기에 WebKit(Safari, 초기 Chrome) 엔진이 시장을 지배하면서, 많은 웹사이트가 WebKit 전용 기능에 의존하게 되었다.
+웹의 발전 과정에서 브라우저 제조사들이 경쟁적으로 새로운 기능 도입 → 특히 모바일 웹 초기에 WebKit(Safari, 초기 Chrome) 엔진이 시장 지배 → 많은 웹사이트가 WebKit 전용 기능에 의존하게 됨.
 
 ```
 [2007-2013 모바일 웹 초기]
@@ -1764,16 +1770,16 @@ if ('onorientationchange' in window) {
 }
 ```
 
-이러한 코드가 WebKit/Blink 이외의 브라우저에서 동작하지 않아, 사용자 경험에 심각한 문제가 발생했다.
+이러한 코드가 WebKit/Blink 이외의 브라우저에서 동작하지 않음 → 사용자 경험에 심각한 문제 발생.
 
 #### 해결 방안으로서의 Compatibility Standard
 
-Mozilla(Firefox)와 다른 브라우저 제조사들은 두 가지 선택지에 직면했다:
+Mozilla(Firefox)와 다른 브라우저 제조사들이 직면한 두 가지 선택지:
 
 1. 비표준 기능을 무시 - 많은 웹사이트가 깨짐
 2. 비표준 기능을 구현 - 표준 없이 각자 구현하면 또 다른 호환성 문제 발생
 
-결국 WHATWG에서 이러한 비표준 기능들을 공식 표준으로 문서화하여, 모든 브라우저가 동일하게 구현할 수 있도록 하는 것이 최선의 해결책이 되었다.
+결국 WHATWG에서 이러한 비표준 기능들을 공식 표준으로 문서화 → 모든 브라우저가 동일하게 구현할 수 있도록 하는 것이 최선의 해결책.
 
 ---
 
@@ -1781,18 +1787,16 @@ Mozilla(Firefox)와 다른 브라우저 제조사들은 두 가지 선택지에 
 
 #### 3.1 -webkit- 접두사 속성 개요
 
-Compatibility Standard에서 가장 큰 비중을 차지하는 것이 CSS `-webkit-` 접두사 속성의 표준화다.
+Compatibility Standard에서 가장 큰 비중을 차지하는 것: CSS `-webkit-` 접두사 속성의 표준화.
 
 ##### Vendor Prefix 시스템
 
-| 접두사 | 브라우저/엔진 |
-|--------|--------------|
-| `-webkit-` | WebKit, Blink (Safari, Chrome, Edge) |
-| `-moz-` | Gecko (Firefox) |
-| `-ms-` | Trident (IE), EdgeHTML (구 Edge) |
-| `-o-` | Presto (구 Opera) |
+- `-webkit-`: WebKit, Blink (Safari, Chrome, Edge)
+- `-moz-`: Gecko (Firefox)
+- `-ms-`: Trident (IE), EdgeHTML (구 Edge)
+- `-o-`: Presto (구 Opera)
 
-원래 vendor prefix는 실험적 기능을 안전하게 노출하기 위한 메커니즘이었으나, 웹 개발자들이 `-webkit-` 접두사 속성을 프로덕션 코드에 광범위하게 사용하면서 사실상 표준처럼 되어버렸다.
+원래 vendor prefix: 실험적 기능을 안전하게 노출하기 위한 메커니즘 → 웹 개발자들이 `-webkit-` 접두사 속성을 프로덕션 코드에 광범위하게 사용 → 사실상 표준처럼 되어버림.
 
 #### 3.2 -webkit-transform 관련
 
@@ -1863,7 +1867,10 @@ Compatibility Standard에서 가장 큰 비중을 차지하는 것이 CSS `-webk
 
 #### 3.5 -webkit-appearance
 
-`-webkit-appearance`는 폼 요소의 네이티브 스타일링을 제어하는 속성이다. 다만 이 속성과 표준 `appearance`의 매핑은 현재 Compatibility Standard가 아니라 CSS Basic User Interface Module(CSS-UI)에서 정의한다. Compatibility Standard는 초기에 이 매핑을 다뤘지만 이후 해당 CSS 모듈로 이관되었다.
+`-webkit-appearance`: 폼 요소의 네이티브 스타일링을 제어하는 속성.
+
+- 이 속성과 표준 `appearance`의 매핑은 현재 Compatibility Standard가 아니라 CSS Basic User Interface Module(CSS-UI)에서 정의
+- Compatibility Standard는 초기에 이 매핑을 다뤘지만 이후 해당 CSS 모듈로 이관됨
 
 ```css
 /* 네이티브 스타일 제거 */
@@ -1913,7 +1920,7 @@ input, button, select, textarea {
 
 #### 3.7 Flexbox 관련 -webkit- 속성
 
-Flexbox는 구 사양(2009)과 신 사양(2012+)이 있어, 호환성이 특히 복잡하다.
+Flexbox: 구 사양(2009)과 신 사양(2012+)이 있음 → 호환성이 특히 복잡.
 
 ```css
 /* 구 Flexbox (-webkit- 접두사, 2009 사양) */
@@ -1954,7 +1961,7 @@ Flexbox는 구 사양(2009)과 신 사양(2012+)이 있어, 호환성이 특히 
 
 #### 3.8 -webkit-text-size-adjust
 
-모바일 브라우저에서 텍스트 크기 자동 조절을 제어한다.
+모바일 브라우저에서 텍스트 크기 자동 조절을 제어.
 
 ```css
 /* 텍스트 자동 크기 조절 비활성화 */
@@ -2013,27 +2020,32 @@ body {
 
 #### 3.10 -webkit- 접두사 속성 전체 매핑 표
 
-| -webkit- 속성 | 표준 속성 | 비고 |
-|---------------|----------|------|
-| `-webkit-transform` | `transform` | |
-| `-webkit-transform-origin` | `transform-origin` | |
-| `-webkit-transform-style` | `transform-style` | |
-| `-webkit-perspective` | `perspective` | |
-| `-webkit-perspective-origin` | `perspective-origin` | |
-| `-webkit-backface-visibility` | `backface-visibility` | |
-| `-webkit-transition` | `transition` | |
-| `-webkit-animation` | `animation` | |
-| `-webkit-filter` | `filter` | |
-| `-webkit-appearance` | `appearance` | CSS-UI 모듈에서 정의 (Compatibility Standard 범위 아님) |
-| `-webkit-background-clip` | `background-clip` | `text` 값 포함 |
-| `-webkit-opacity` | `opacity` | |
-| `-webkit-order` | `order` | |
-| `-webkit-flex` | `flex` | |
-| `display: -webkit-box` | `display: flex` | 구 Flexbox |
-| `display: -webkit-flex` | `display: flex` | 신 Flexbox |
-| `-webkit-box-orient` | `flex-direction` (부분) | 복합 매핑 |
-| `-webkit-box-pack` | `justify-content` | 값 매핑 필요 |
-| `-webkit-box-align` | `align-items` | 값 매핑 필요 |
+- `-webkit-transform` → `transform`
+- `-webkit-transform-origin` → `transform-origin`
+- `-webkit-transform-style` → `transform-style`
+- `-webkit-perspective` → `perspective`
+- `-webkit-perspective-origin` → `perspective-origin`
+- `-webkit-backface-visibility` → `backface-visibility`
+- `-webkit-transition` → `transition`
+- `-webkit-animation` → `animation`
+- `-webkit-filter` → `filter`
+- `-webkit-appearance` → `appearance`
+  - CSS-UI 모듈에서 정의 (Compatibility Standard 범위 아님)
+- `-webkit-background-clip` → `background-clip`
+  - `text` 값 포함
+- `-webkit-opacity` → `opacity`
+- `-webkit-order` → `order`
+- `-webkit-flex` → `flex`
+- `display: -webkit-box` → `display: flex`
+  - 구 Flexbox
+- `display: -webkit-flex` → `display: flex`
+  - 신 Flexbox
+- `-webkit-box-orient` → `flex-direction` (부분)
+  - 복합 매핑
+- `-webkit-box-pack` → `justify-content`
+  - 값 매핑 필요
+- `-webkit-box-align` → `align-items`
+  - 값 매핑 필요
 
 ---
 
@@ -2041,7 +2053,7 @@ body {
 
 #### 4.1 window.orientation
 
-`window.orientation` 속성은 Apple이 iOS Safari에서 처음 도입한 비표준 API로, 디바이스의 현재 화면 방향을 각도로 반환한다.
+`window.orientation` 속성: Apple이 iOS Safari에서 처음 도입한 비표준 API → 디바이스의 현재 화면 방향을 각도로 반환.
 
 ```javascript
 // window.orientation 값
@@ -2112,7 +2124,7 @@ window.onorientationchange = function() {
 
 #### 4.3 Screen Orientation API와의 관계
 
-`window.orientation`은 비표준이며, 표준 대안은 Screen Orientation API이다.
+`window.orientation`: 비표준 · 표준 대안은 Screen Orientation API.
 
 ```javascript
 // [비표준] window.orientation
@@ -2135,17 +2147,28 @@ screen.orientation.addEventListener('change', function() {
 
 ##### 비교 표
 
-| 기능 | `window.orientation` (비표준) | `screen.orientation` (표준) |
-|------|------------------------------|---------------------------|
-| 반환값 | 0, 90, -90, 180 | type 문자열 + angle 숫자 |
-| 이벤트 | `orientationchange` | `change` |
-| 이벤트 대상 | `window` | `screen.orientation` |
-| 잠금 기능 | 없음 | `lock()`, `unlock()` |
-| Compatibility Standard | 포함 | W3C Screen Orientation API |
+- 반환값
+  - `window.orientation`(비표준): 0, 90, -90, 180
+  - `screen.orientation`(표준): type 문자열 + angle 숫자
+- 이벤트
+  - `window.orientation`(비표준): `orientationchange`
+  - `screen.orientation`(표준): `change`
+- 이벤트 대상
+  - `window.orientation`(비표준): `window`
+  - `screen.orientation`(표준): `screen.orientation`
+- 잠금 기능
+  - `window.orientation`(비표준): 없음
+  - `screen.orientation`(표준): `lock()`, `unlock()`
+- Compatibility Standard 포함 여부
+  - `window.orientation`(비표준): 포함
+  - `screen.orientation`(표준): W3C Screen Orientation API
 
 #### 4.4 webkit 접두사 DOM API (참고: 현재 스펙 범위 밖)
 
-`webkitRequestAnimationFrame`, `webkitCancelAnimationFrame`, `webkitURL`, `video.webkitEnterFullscreen()` 등은 과거 여러 브라우저에서 흔히 쓰이던 webkit 접두사 API지만, 현재 Compatibility Standard 문서에는 이들을 표준화한다는 내용이 없다. 아래 코드는 실제로 브라우저에 남아 있는 레거시 API를 소개하는 것일 뿐, Compatibility Standard가 규정한 내용이 아니므로 참고용으로만 확인한다.
+`webkitRequestAnimationFrame`·`webkitCancelAnimationFrame`·`webkitURL`·`video.webkitEnterFullscreen()` 등: 과거 여러 브라우저에서 흔히 쓰이던 webkit 접두사 API.
+
+- 현재 Compatibility Standard 문서에는 이들을 표준화한다는 내용이 없음
+- 아래 코드는 실제로 브라우저에 남아 있는 레거시 API를 소개하는 것일 뿐 → Compatibility Standard가 규정한 내용이 아니므로 참고용으로만 확인
 
 ```javascript
 // webkitRequestAnimationFrame (레거시, 표준 아님)
@@ -2173,7 +2196,10 @@ video.webkitSupportsFullscreen;     // 읽기 전용 속성
 
 #### 5.1 터치 이벤트 모델
 
-터치 이벤트는 WebKit에서 처음 구현되어 이후 W3C Touch Events 사양으로 표준화된 것으로, 현재 Compatibility Standard 문서에는 터치 이벤트를 다루는 내용이 없다. 아래 내용은 실무에서 자주 마주치는 터치 이벤트 관련 호환성 이슈를 정리한 참고 자료다.
+터치 이벤트: WebKit에서 처음 구현되어 이후 W3C Touch Events 사양으로 표준화됨.
+
+- 현재 Compatibility Standard 문서에는 터치 이벤트를 다루는 내용이 없음
+- 아래 내용은 실무에서 자주 마주치는 터치 이벤트 관련 호환성 이슈를 정리한 참고 자료
 
 ```javascript
 // 기본 터치 이벤트
@@ -2198,7 +2224,7 @@ element.addEventListener('touchcancel', function(e) {
 
 #### 5.2 마우스 이벤트와의 호환성
 
-터치 디바이스에서 마우스 이벤트와의 호환성 순서가 중요하다.
+터치 디바이스: 마우스 이벤트와의 호환성 순서가 중요.
 
 ```
 터치 이벤트 시퀀스:
@@ -2246,7 +2272,7 @@ if (window.matchMedia('(hover: none)').matches) {
 }
 ```
 
-#### 5. 4 터치 이벤트와 관련된 호환성 문제
+#### 5.4 터치 이벤트와 관련된 호환성 문제
 
 ```javascript
 // preventDefault()의 호환성 동작
@@ -2285,7 +2311,7 @@ element.addEventListener('touchstart', function(e) {
 
 #### 6.1 -webkit- 접두사의 렌더링 영향
 
-Compatibility Standard는 특정 렌더링 동작의 호환성도 정의한다.
+Compatibility Standard: 특정 렌더링 동작의 호환성도 정의.
 
 ```css
 /* -webkit-text-size-adjust의 렌더링 영향 */
@@ -2301,7 +2327,10 @@ html {
 
 #### 6.2 -webkit-line-clamp (참고: 현재 스펙 범위 밖)
 
-여러 줄 텍스트 말줄임 처리를 위한 비표준 속성으로, 매우 널리 사용되어 왔다. 다만 이는 Compatibility Standard가 아니라 CSS Overflow Module 영역이며, 현재 스펙 문서에는 이 속성을 다루는 내용이 없다. 최근에는 대부분의 주요 브라우저가 접두사 없는 표준 `line-clamp` 속성도 지원하기 시작했다.
+여러 줄 텍스트 말줄임 처리를 위한 비표준 속성 → 매우 널리 사용되어 옴.
+
+- Compatibility Standard가 아니라 CSS Overflow Module 영역 → 현재 스펙 문서에는 이 속성을 다루는 내용이 없음
+- 최근에는 대부분의 주요 브라우저가 접두사 없는 표준 `line-clamp` 속성도 지원하기 시작
 
 ```css
 /* 3줄 말줄임 (레거시 방식) */
@@ -2321,7 +2350,7 @@ html {
 
 #### 6.3 -webkit-tap-highlight-color (참고: 현재 스펙 범위 밖)
 
-모바일에서 터치 시 나타나는 하이라이트 색상을 제어한다.
+모바일에서 터치 시 나타나는 하이라이트 색상을 제어.
 
 ```css
 /* 터치 하이라이트 제거 */
@@ -2338,7 +2367,7 @@ a, button {
 
 #### 6.4 -webkit-overflow-scrolling (참고: 현재 스펙 범위 밖)
 
-iOS에서 관성(momentum) 스크롤을 활성화하는 속성이다.
+iOS에서 관성(momentum) 스크롤을 활성화하는 속성.
 
 ```css
 .scrollable {
@@ -2354,7 +2383,7 @@ iOS에서 관성(momentum) 스크롤을 활성화하는 속성이다.
 
 #### 6.5 -webkit-user-select (참고: 현재 스펙 범위 밖)
 
-텍스트 선택 가능 여부를 제어한다.
+텍스트 선택 가능 여부를 제어.
 
 ```css
 /* 텍스트 선택 제어 */
@@ -2412,7 +2441,7 @@ iOS에서 관성(momentum) 스크롤을 활성화하는 속성이다.
 
 #### 7.2 Vendor Prefix 폐기 방향
 
-현대 웹 개발에서 vendor prefix의 필요성은 크게 감소했다.
+현대 웹 개발에서 vendor prefix의 필요성은 크게 감소.
 
 ```css
 /* [권장하지 않음] 과거 스타일 */
@@ -2430,7 +2459,7 @@ iOS에서 관성(momentum) 스크롤을 활성화하는 속성이다.
 
 #### 7.3 여전히 필요한 Vendor Prefix
 
-일부 속성은 아직 vendor prefix가 필요하다.
+일부 속성은 아직 vendor prefix가 필요.
 
 ```css
 /* 2024년 기준 여전히 -webkit- 필요한 경우 */
@@ -2462,20 +2491,22 @@ button {
 
 #### 8.1 Compatibility Standard 지원 현황
 
-Compatibility Standard(https://compat.spec.whatwg.org/)가 실제로 규정하는 항목은 `-webkit-text-fill-color`, `-webkit-text-stroke`(및 `-width`/`-color`), `window.orientation`/`orientationchange` 정도로 많지 않다. 나머지 `-webkit-` 속성들은 앞서 각 절에서 밝혔듯 CSS-UI, CSS Overflow Module 등 다른 스펙이 다루거나 아예 표준화되지 않은 채 관행적으로 구현된 것이다.
+Compatibility Standard(https://compat.spec.whatwg.org/)가 실제로 규정하는 항목: `-webkit-text-fill-color`·`-webkit-text-stroke`(및 `-width`/`-color`)·`window.orientation`/`orientationchange` 정도로 많지 않음.
 
-| 기능 | Chrome | Firefox | Safari | Edge | 근거 스펙 |
-|------|--------|---------|--------|------|-----------|
-| `-webkit-text-fill-color` | 지원 | 지원 | 지원 | 지원 | Compatibility Standard |
-| `-webkit-text-stroke` | 지원 | 지원 | 지원 | 지원 | Compatibility Standard |
-| `window.orientation` | 지원 | 지원 | 지원 | 지원 | Compatibility Standard |
-| `orientationchange` | 지원 | 지원 | 지원 | 지원 | Compatibility Standard |
-| `-webkit-appearance` | 지원 | 지원 | 지원 | 지원 | CSS Basic User Interface (CSS-UI) |
-| `-webkit-line-clamp` | 지원 | 지원 | 지원 | 지원 | CSS Overflow Module (범위 밖) |
-| `-webkit-transform`/`-transition`/`-animation`/`-filter`/`-flex` 등 | 지원 | 지원 | 지원 | 지원 | 각 CSS 모듈에 흡수, Compatibility Standard 범위 밖 |
-| `display: -webkit-box` | 지원 | 지원 | 지원 | 지원 | 표준화되지 않음 (레거시 Flexbox, 범위 밖) |
-| `-webkit-text-size-adjust` | 지원 | Firefox 46+ | 지원 | 지원 | 범위 밖 |
-| `-webkit-user-select` | 지원 | 지원 | 지원 | 지원 | 범위 밖 |
+- 나머지 `-webkit-` 속성들: 앞서 각 절에서 밝혔듯 CSS-UI, CSS Overflow Module 등 다른 스펙이 다루거나 아예 표준화되지 않은 채 관행적으로 구현된 것
+
+브라우저별 지원 현황(Chrome·Firefox·Safari·Edge 기준):
+
+- `-webkit-text-fill-color`: 전 브라우저 지원 · 근거 스펙 Compatibility Standard
+- `-webkit-text-stroke`: 전 브라우저 지원 · 근거 스펙 Compatibility Standard
+- `window.orientation`: 전 브라우저 지원 · 근거 스펙 Compatibility Standard
+- `orientationchange`: 전 브라우저 지원 · 근거 스펙 Compatibility Standard
+- `-webkit-appearance`: 전 브라우저 지원 · 근거 스펙 CSS Basic User Interface (CSS-UI)
+- `-webkit-line-clamp`: 전 브라우저 지원 · 근거 스펙 CSS Overflow Module (범위 밖)
+- `-webkit-transform`/`-transition`/`-animation`/`-filter`/`-flex` 등: 전 브라우저 지원 · 근거 스펙 각 CSS 모듈에 흡수, Compatibility Standard 범위 밖
+- `display: -webkit-box`: 전 브라우저 지원 · 근거 스펙 표준화되지 않음 (레거시 Flexbox, 범위 밖)
+- `-webkit-text-size-adjust`: Chrome·Safari·Edge 지원, Firefox 46+ · 근거 스펙 범위 밖
+- `-webkit-user-select`: 전 브라우저 지원 · 근거 스펙 범위 밖
 
 #### 8.2 Firefox의 -webkit- 접두사 지원 이력
 
@@ -2718,7 +2749,10 @@ if (raf) {
 
 #### 10.3 Compatibility Standard의 미래
 
-Compatibility Standard는 Living Standard로서 지속적으로 업데이트된다. 새로운 호환성 문제가 발생할 때마다 문서에 추가되며, 더 이상 필요하지 않은 항목은 제거된다.
+Compatibility Standard: Living Standard로서 지속적으로 업데이트.
+
+- 새로운 호환성 문제가 발생할 때마다 문서에 추가
+- 더 이상 필요하지 않은 항목은 제거
 
 ```
 [호환성 표준의 생명주기]
@@ -2735,7 +2769,7 @@ Compatibility Standard에 추가          ← 비표준 기능의 표준화
     ↓
 표준 CSS/DOM 속성으로 대체 진행
     ↓
-레거시 호환성 유지 (제거하지 않음)       ← 웹은 절대 깨뜨리지 않는다
+레거시 호환성 유지 (제거하지 않음)       ← 웹은 절대 깨뜨리지 않음
 ```
 
 ---
@@ -2772,9 +2806,11 @@ Compatibility Standard에 추가          ← 비표준 기능의 표준화
 
 #### 쿼크 모드란
 
-Quirks Mode Standard는 WHATWG에서 관리하는 Living Standard로, 웹 브라우저가 오래된 웹 페이지와의 호환성을 유지하기 위해 의도적으로 표준과 다르게 동작하는 렌더링 모드를 정의한다.
+Quirks Mode Standard: WHATWG에서 관리하는 Living Standard.
 
-1990년대 후반, 웹 표준이 확립되기 전에 만들어진 수많은 웹 페이지들은 당시 브라우저의 비표준 동작에 의존하고 있었다. 새로운 표준을 따르면 이러한 레거시 페이지들이 깨질 수 있었기 때문에, 브라우저들은 문서의 DOCTYPE 선언을 기준으로 표준 모드와 호환성 모드를 전환하는 메커니즘을 도입했다.
+- 웹 브라우저가 오래된 웹 페이지와의 호환성을 유지하기 위해 의도적으로 표준과 다르게 동작하는 렌더링 모드를 정의
+
+1990년대 후반, 웹 표준이 확립되기 전에 만들어진 수많은 웹 페이지들이 당시 브라우저의 비표준 동작에 의존 → 새로운 표준을 따르면 이러한 레거시 페이지들이 깨질 수 있음 → 브라우저들이 문서의 DOCTYPE 선언을 기준으로 표준 모드와 호환성 모드를 전환하는 메커니즘 도입.
 
 ```
 [핵심 원리: DOCTYPE 스위칭]
@@ -2790,43 +2826,40 @@ Quirks Mode Standard는 WHATWG에서 관리하는 Living Standard로, 웹 브라
 
 #### 왜 "Quirks"인가
 
-"Quirk"은 영어로 "기이한 특성" 또는 "별난 점"을 의미한다. 초기 브라우저들의 비표준 렌더링 동작들을 "quirks"라고 부르며, 이러한 quirks를 재현하는 모드가 "Quirks Mode"이다.
+"Quirk": 영어로 "기이한 특성" 또는 "별난 점"을 의미.
+
+- 초기 브라우저들의 비표준 렌더링 동작들을 "quirks"라고 부름
+- 이러한 quirks를 재현하는 모드가 "Quirks Mode"
 
 ---
 
 ### 2. 모드 종류
 
-웹 브라우저는 세 가지 렌더링 모드를 가진다.
+웹 브라우저: 세 가지 렌더링 모드를 가짐.
 
 #### 2.1 Quirks Mode (쿼크 모드)
 
-| 항목 | 설명 |
-|------|------|
-| 별칭 | 호환성 모드 (Compatibility Mode) |
-| 활성화 조건 | DOCTYPE이 없거나 특정 구형 DOCTYPE |
-| CSS 박스 모델 | `display: table-cell` 요소의 높이 계산에 한해 IE 박스 모델(border-box) 적용 |
-| 렌더링 | 1990년대 브라우저 동작 재현 |
-| `document.compatMode` | `"BackCompat"` |
+- 별칭: 호환성 모드 (Compatibility Mode)
+- 활성화 조건: DOCTYPE이 없거나 특정 구형 DOCTYPE
+- CSS 박스 모델: `display: table-cell` 요소의 높이 계산에 한해 IE 박스 모델(border-box) 적용
+- 렌더링: 1990년대 브라우저 동작 재현
+- `document.compatMode`: `"BackCompat"`
 
 #### 2.2 No-quirks Mode (표준 모드)
 
-| 항목 | 설명 |
-|------|------|
-| 별칭 | Standards Mode |
-| 활성화 조건 | `<!DOCTYPE html>` 또는 완전한 DOCTYPE |
-| CSS 박스 모델 | W3C 표준 박스 모델 (content-box) |
-| 렌더링 | 웹 표준에 따른 정확한 렌더링 |
-| `document.compatMode` | `"CSS1Compat"` |
+- 별칭: Standards Mode
+- 활성화 조건: `<!DOCTYPE html>` 또는 완전한 DOCTYPE
+- CSS 박스 모델: W3C 표준 박스 모델 (content-box)
+- 렌더링: 웹 표준에 따른 정확한 렌더링
+- `document.compatMode`: `"CSS1Compat"`
 
 #### 2.3 Limited-quirks Mode (거의 표준 모드)
 
-| 항목 | 설명 |
-|------|------|
-| 별칭 | Almost Standards Mode |
-| 활성화 조건 | Transitional/Frameset DOCTYPE |
-| CSS 박스 모델 | W3C 표준 박스 모델 (content-box) |
-| 렌더링 | 표준 모드와 거의 동일, 일부 quirks만 적용 |
-| `document.compatMode` | `"CSS1Compat"` |
+- 별칭: Almost Standards Mode
+- 활성화 조건: Transitional/Frameset DOCTYPE
+- CSS 박스 모델: W3C 표준 박스 모델 (content-box)
+- 렌더링: 표준 모드와 거의 동일, 일부 quirks만 적용
+- `document.compatMode`: `"CSS1Compat"`
 
 #### 2.4 세 모드의 비교
 
@@ -2850,8 +2883,8 @@ body 배경 전파           특수 규칙        표준             표준
 스크롤 요소              body             html             html
 ID 대소문자              무시             구분             구분
 
-(*) `display: table-cell` 요소의 height/min-height/max-height 계산에 한정된 quirk.
-    width 계산에는 영향을 주지 않는다.
+(*) `display: table-cell` 요소의 height/min-height/max-height 계산에 한정된 quirk
+    width 계산에는 영향을 주지 않음
 ```
 
 ---
@@ -2860,7 +2893,7 @@ ID 대소문자              무시             구분             구분
 
 #### 3.1 모드 선택 알고리즘 개요
 
-브라우저의 HTML 파서는 문서의 시작 부분에서 DOCTYPE 선언을 분석하여 렌더링 모드를 결정한다.
+브라우저의 HTML 파서: 문서의 시작 부분에서 DOCTYPE 선언을 분석하여 렌더링 모드를 결정.
 
 ```
 [모드 선택 플로우차트]
@@ -2961,24 +2994,22 @@ DOCTYPE 존재?
 
 #### 3.5 완전한 모드 선택 표
 
-| DOCTYPE 패턴 | 모드 |
-|-------------|------|
-| `<!DOCTYPE html>` | no-quirks |
-| `<!DOCTYPE html SYSTEM "...">` | no-quirks |
-| DOCTYPE 없음 | quirks |
-| `<!DOCTYPE html SYSTEM "http://www.ibm.com/...">` | quirks |
-| HTML 4.01 Strict (시스템 ID 있음) | no-quirks |
-| HTML 4.01 Strict (시스템 ID 없음) | no-quirks |
-| HTML 4.01 Transitional (시스템 ID 있음) | limited-quirks |
-| HTML 4.01 Transitional (시스템 ID 없음) | quirks |
-| HTML 4.01 Frameset (시스템 ID 있음) | limited-quirks |
-| HTML 4.01 Frameset (시스템 ID 없음) | quirks |
-| XHTML 1.0 Strict | no-quirks |
-| XHTML 1.0 Transitional | limited-quirks |
-| XHTML 1.0 Frameset | limited-quirks |
-| XHTML 1.1 | no-quirks |
-| HTML 3.2 | quirks |
-| HTML 2.0 | quirks |
+- `<!DOCTYPE html>` → no-quirks
+- `<!DOCTYPE html SYSTEM "...">` → no-quirks
+- DOCTYPE 없음 → quirks
+- `<!DOCTYPE html SYSTEM "http://www.ibm.com/...">` → quirks
+- HTML 4.01 Strict (시스템 ID 있음) → no-quirks
+- HTML 4.01 Strict (시스템 ID 없음) → no-quirks
+- HTML 4.01 Transitional (시스템 ID 있음) → limited-quirks
+- HTML 4.01 Transitional (시스템 ID 없음) → quirks
+- HTML 4.01 Frameset (시스템 ID 있음) → limited-quirks
+- HTML 4.01 Frameset (시스템 ID 없음) → quirks
+- XHTML 1.0 Strict → no-quirks
+- XHTML 1.0 Transitional → limited-quirks
+- XHTML 1.0 Frameset → limited-quirks
+- XHTML 1.1 → no-quirks
+- HTML 3.2 → quirks
+- HTML 2.0 → quirks
 
 ---
 
@@ -2986,7 +3017,9 @@ DOCTYPE 존재?
 
 #### 4.1 박스 모델 차이 (테이블 셀 높이 계산)
 
-쿼크 모드의 CSS 박스 모델 quirk는 전체 요소에 적용되는 것이 아니라, `display: table-cell`인 요소의 `height`/`min-height`/`max-height` 계산에만 한정된다. `width` 계산에는 영향을 주지 않는다.
+쿼크 모드의 CSS 박스 모델 quirk: 전체 요소에 적용되는 것이 아니라 `display: table-cell`인 요소의 `height`/`min-height`/`max-height` 계산에만 한정.
+
+- `width` 계산에는 영향을 주지 않음
 
 ```
 [표준 박스 모델 (No-quirks Mode)]
@@ -3068,8 +3101,8 @@ td {
 ```
 [Quirks Mode 전용 quirk]
 
-너비가 auto인 테이블 셀 안의 이미지는 줄바꿈(개행) 기회를 갖지 못한다.
-No-quirks Mode에서는 이런 제약이 없다.
+너비가 auto인 테이블 셀 안의 이미지: 줄바꿈(개행) 기회를 갖지 못함
+No-quirks Mode: 이런 제약 없음
 ```
 
 #### 4.3.1 nowrap 셀의 최소 너비
@@ -3077,8 +3110,8 @@ No-quirks Mode에서는 이런 제약이 없다.
 ```
 [Quirks Mode 전용 quirk]
 
-width와 nowrap 속성이 함께 지정된 테이블 셀은,
-지정된 width와 콘텐츠의 min-content 너비 중 더 큰 값을 사용한다.
+width와 nowrap 속성이 함께 지정된 테이블 셀:
+지정된 width와 콘텐츠의 min-content 너비 중 더 큰 값 사용
 ```
 
 #### 4.4 Percentage Height 계산
@@ -3136,7 +3169,7 @@ table {
 }
 ```
 
-빈 테이블(행 그룹이나 채워진 열 그룹이 없는 `<table>`)은 Quirks Mode에서 높이 0, `border-style: none`으로 축소된다.
+빈 테이블(행 그룹이나 채워진 열 그룹이 없는 `<table>`): Quirks Mode에서 높이 0, `border-style: none`으로 축소.
 
 #### 4.7 이미지 주변의 공백
 
@@ -3210,23 +3243,45 @@ body {
 /* 3. 잘못된 구문 처리가 더 관대함 */
 ```
 
-> 위 두 quirk(단위 없는 길이값, 잘못된 색상값 파싱)는 quirks mode뿐 아니라 limited-quirks mode에도 동일하게 적용된다.
+> 위 두 quirk(단위 없는 길이값, 잘못된 색상값 파싱): quirks mode뿐 아니라 limited-quirks mode에도 동일하게 적용됨.
 
 #### 4.10 전체 CSS 차이점 요약표
 
-| CSS 동작 | No-quirks Mode | Quirks Mode |
-|----------|---------------|-------------|
-| table-cell 높이 계산 | content-box | border-box |
-| % height (부모 height 없을 때) | auto로 처리 | 가장 가까운 높이 기준 |
-| 테이블의 color 상속 | 표준 상속 규칙 | quirk-inherit 규칙 |
-| 테이블 경계를 넘는 text-decoration | 전파됨 | 전파 안 됨 |
-| 빈 테이블(행 그룹 없음) | 일반 규칙대로 렌더링 | 높이 0, border-style: none으로 축소 |
-| 단위 없는 길이값 | 무효 (무시) | px로 해석 |
-| 잘못된 색상값 | 무효 (무시) | 16진수 파싱 시도 |
-| body 배경 전파 | 표준 규칙 | 특수 규칙 |
-| :active/:hover (단순 셀렉터) | 항상 매칭 | :any-link에 매칭되는 요소만 |
-| 테이블 셀 내 auto 너비 이미지 | 줄바꿈 가능 | 줄바꿈 불가 |
-| nowrap + width 지정 셀 | 지정된 width | max(지정된 width, min-content) |
+CSS 동작별 No-quirks Mode·Quirks Mode 비교:
+
+- table-cell 높이 계산
+  - No-quirks Mode: content-box
+  - Quirks Mode: border-box
+- % height (부모 height 없을 때)
+  - No-quirks Mode: auto로 처리
+  - Quirks Mode: 가장 가까운 높이 기준
+- 테이블의 color 상속
+  - No-quirks Mode: 표준 상속 규칙
+  - Quirks Mode: quirk-inherit 규칙
+- 테이블 경계를 넘는 text-decoration
+  - No-quirks Mode: 전파됨
+  - Quirks Mode: 전파 안 됨
+- 빈 테이블(행 그룹 없음)
+  - No-quirks Mode: 일반 규칙대로 렌더링
+  - Quirks Mode: 높이 0, border-style: none으로 축소
+- 단위 없는 길이값
+  - No-quirks Mode: 무효 (무시)
+  - Quirks Mode: px로 해석
+- 잘못된 색상값
+  - No-quirks Mode: 무효 (무시)
+  - Quirks Mode: 16진수 파싱 시도
+- body 배경 전파
+  - No-quirks Mode: 표준 규칙
+  - Quirks Mode: 특수 규칙
+- :active/:hover (단순 셀렉터)
+  - No-quirks Mode: 항상 매칭
+  - Quirks Mode: :any-link에 매칭되는 요소만
+- 테이블 셀 내 auto 너비 이미지
+  - No-quirks Mode: 줄바꿈 가능
+  - Quirks Mode: 줄바꿈 불가
+- nowrap + width 지정 셀
+  - No-quirks Mode: 지정된 width
+  - Quirks Mode: max(지정된 width, min-content)
 
 ---
 
@@ -3358,15 +3413,29 @@ document.all[0];     // 첫 번째 요소 (정상 동작)
 
 #### 5.6 DOM 차이점 요약표
 
-| DOM 동작 | No-quirks Mode | Quirks Mode |
-|----------|---------------|-------------|
-| `scrollTop` 소유자 | `documentElement` | `body` |
-| `scrollHeight` 소유자 | `documentElement` | `body` |
-| `clientHeight` 소유자 | `documentElement` | `body` |
-| `getElementById` 대소문자 | 구분함 | 구분하지 않을 수 있음 |
-| `getElementsByClassName` 대소문자 | 구분함 | 구분하지 않음 |
-| CSS ID/class 선택자 대소문자 | 구분함 | 구분하지 않음 |
-| `document.compatMode` | `"CSS1Compat"` | `"BackCompat"` |
+DOM 동작별 No-quirks Mode·Quirks Mode 비교:
+
+- `scrollTop` 소유자
+  - No-quirks Mode: `documentElement`
+  - Quirks Mode: `body`
+- `scrollHeight` 소유자
+  - No-quirks Mode: `documentElement`
+  - Quirks Mode: `body`
+- `clientHeight` 소유자
+  - No-quirks Mode: `documentElement`
+  - Quirks Mode: `body`
+- `getElementById` 대소문자
+  - No-quirks Mode: 구분함
+  - Quirks Mode: 구분하지 않을 수 있음
+- `getElementsByClassName` 대소문자
+  - No-quirks Mode: 구분함
+  - Quirks Mode: 구분하지 않음
+- CSS ID/class 선택자 대소문자
+  - No-quirks Mode: 구분함
+  - Quirks Mode: 구분하지 않음
+- `document.compatMode`
+  - No-quirks Mode: `"CSS1Compat"`
+  - Quirks Mode: `"BackCompat"`
 
 ---
 
@@ -3374,11 +3443,14 @@ document.all[0];     // 첫 번째 요소 (정상 동작)
 
 #### 6.1 개요
 
-Limited-quirks mode는 "Almost Standards Mode"라고도 불리며, 표준 모드와 거의 동일하지만 소수의 quirk를 포함한다. 대표적인 것이 테이블 셀 내 인라인 이미지의 기준선 처리이며, 이 외에 line-height 계산과 관련된 quirk도 두 가지 적용된다(quirks mode와 공유).
+Limited-quirks mode: "Almost Standards Mode"라고도 불림 → 표준 모드와 거의 동일하지만 소수의 quirk 포함.
+
+- 대표적인 것: 테이블 셀 내 인라인 이미지의 기준선 처리
+- 이 외에 line-height 계산과 관련된 quirk도 두 가지 적용(quirks mode와 공유)
 
 #### 6.2 인라인 이미지의 기준선 처리
 
-이것이 limited-quirks mode에서 가장 잘 알려진 핵심 quirk이다.
+이것: limited-quirks mode에서 가장 잘 알려진 핵심 quirk.
 
 ```css
 /* 테이블 셀 내에서의 인라인 이미지/요소 배치 */
@@ -3424,14 +3496,14 @@ Limited-quirks Mode:
 
 #### 6.2-1 line-height 관련 quirk (quirks mode와 공유)
 
-limited-quirks mode에는 line-height 계산과 관련된 quirk 두 가지가 추가로 적용된다(quirks mode에서도 동일하게 적용됨).
+limited-quirks mode: line-height 계산과 관련된 quirk 두 가지가 추가로 적용됨(quirks mode에서도 동일하게 적용).
 
 ```
 1. 테두리와 패딩이 없고 텍스트가 없거나 공백만 있는 인라인 박스는
-   line-height: 0으로 취급된다.
+   line-height: 0으로 취급
 
 2. 인라인 레벨 콘텐츠를 가진 블록 컨테이너는 줄 상자의 최소 높이("strut")를
-   계산할 때 line-height 속성을 무시한다.
+   계산할 때 line-height 속성을 무시
 ```
 
 #### 6.3 왜 Limited-quirks Mode가 필요한가
@@ -3946,28 +4018,28 @@ issues.forEach(issue => {
 
 #### 11.1 Quirks Mode 구현의 차이
 
-각 브라우저는 Quirks Mode를 약간 다르게 구현한다. Quirks Mode Standard는 가장 일반적인 동작을 표준화하려고 하지만, 모든 세부 사항이 동일하지는 않다.
+각 브라우저: Quirks Mode를 약간 다르게 구현.
 
-| Quirk | Chrome | Firefox | Safari | Edge |
-|-------|--------|---------|--------|------|
-| IE 박스 모델 | 구현 | 구현 | 구현 | 구현 |
-| 단위 없는 값 → px | 부분 | 구현 | 부분 | 부분 |
-| 대소문자 무시 (getElementById) | 미구현 | 구현 | 미구현 | 미구현 |
-| 대소문자 무시 (class 선택자) | 구현 | 구현 | 구현 | 구현 |
-| 잘못된 색상값 파싱 | 구현 | 구현 | 구현 | 구현 |
-| body 스크롤 | 구현 | 구현 | 구현 | 구현 |
-| 테이블 font 상속 | 구현 | 구현 | 구현 | 구현 |
-| 인라인 이미지 갭 제거 | 구현 | 구현 | 구현 | 구현 |
+- Quirks Mode Standard는 가장 일반적인 동작을 표준화하려고 하지만, 모든 세부 사항이 동일하지는 않음
+
+Quirk별 Chrome·Firefox·Safari·Edge 구현 현황:
+
+- IE 박스 모델: 전 브라우저 구현
+- 단위 없는 값 → px: Firefox 구현 · Chrome·Safari·Edge 부분 구현
+- 대소문자 무시 (getElementById): Firefox 구현 · Chrome·Safari·Edge 미구현
+- 대소문자 무시 (class 선택자): 전 브라우저 구현
+- 잘못된 색상값 파싱: 전 브라우저 구현
+- body 스크롤: 전 브라우저 구현
+- 테이블 font 상속: 전 브라우저 구현
+- 인라인 이미지 갭 제거: 전 브라우저 구현
 
 #### 11.2 document.compatMode 지원
 
-| 브라우저 | 지원 버전 | 비고 |
-|----------|----------|------|
-| Chrome | 모든 버전 | |
-| Firefox | 모든 버전 | |
-| Safari | 모든 버전 | |
-| Edge | 모든 버전 | |
-| IE | 6+ | |
+- Chrome: 모든 버전
+- Firefox: 모든 버전
+- Safari: 모든 버전
+- Edge: 모든 버전
+- IE: 6+
 
 ---
 

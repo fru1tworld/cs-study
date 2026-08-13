@@ -6,7 +6,7 @@
 
 ---
 
-새 글이 위에 오도록 (즉, 게시일 기준 내림차순으로) 정렬해 주시고, 중복이 없도록 해주세요.
+새 글이 위에 오도록 게시일 기준 내림차순 정렬 · 중복 항목 없어야 함.
 
 ### 2025
 
@@ -186,7 +186,7 @@
 
 ## Netty 관련 프로젝트 (Related Projects)
 
-> 이 문서는 Netty 공식 Wiki의 "Related projects" 페이지를 한국어로 번역한 것입니다.
+> 이 문서는 Netty 공식 Wiki의 "Related projects" 페이지를 한국어로 번역한 문서.
 > 원본: https://netty.io/wiki/related-projects.html
 
 ---

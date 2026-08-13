@@ -20,7 +20,7 @@
 
 ## 설정 파일 위치
 
-journald 설정은 다음 우선순위로 적용됩니다:
+- journald 설정은 다음 우선순위로 적용됨
 
 ```
 /etc/systemd/journald.conf
@@ -29,7 +29,7 @@ journald 설정은 다음 우선순위로 적용됩니다:
 /usr/lib/systemd/journald.conf.d/*.conf
 ```
 
-패키지 충돌을 방지하려면 `drop-in` 디렉터리(`journald.conf.d/`)에 별도 파일을 두는 것이 좋습니다.
+- 패키지 충돌 방지 목적 → drop-in 디렉터리(`journald.conf.d/`)에 별도 파일을 두는 방식 권장
 
 설정 변경 후:
 
@@ -52,12 +52,11 @@ systemd-analyze cat-config systemd/journald.conf
 Storage=auto
 ```
 
-| 값 | 동작 |
-| --- | --- |
-| `volatile` | 항상 RAM (`/run/log/journal/`) — 재부팅 시 사라짐 |
-| `persistent` | 항상 디스크 (`/var/log/journal/`) — 디렉터리 자동 생성 |
-| `auto` (기본) | `/var/log/journal/` 이 존재하면 디스크, 아니면 RAM |
-| `none` | 저장 안 함. forward만 (예: rsyslog가 받음) |
+- 값별 동작
+  - `volatile`: 항상 RAM (`/run/log/journal/`) — 재부팅 시 사라짐
+  - `persistent`: 항상 디스크 (`/var/log/journal/`) — 디렉터리 자동 생성
+  - `auto` (기본): `/var/log/journal/`이 존재하면 디스크, 아니면 RAM
+  - `none`: 저장 안 함. forward만 (예: rsyslog가 받음)
 
 영구 저장을 원하면:
 
@@ -77,7 +76,8 @@ sudo systemctl restart systemd-journald
 Compress=yes
 ```
 
-기본적으로 512바이트 이상의 데이터 객체는 자동으로 압축됩니다. 텍스트 로그는 일반적으로 70% 이상 압축률.
+- 기본적으로 512바이트 이상의 데이터 객체는 자동으로 압축됨
+- 텍스트 로그는 일반적으로 압축률 70% 이상
 
 크기 임계값 지정:
 ```ini
@@ -86,7 +86,7 @@ Compress=512    # 512바이트 이상 메시지만 압축
 
 ### Seal (FSS)
 
-**Forward Secure Sealing**. journal 파일을 암호학적으로 봉인해 사후 변조를 탐지할 수 있게 만드는 기능.
+- Forward Secure Sealing: journal 파일을 암호학적으로 봉인해 사후 변조를 탐지할 수 있게 만드는 기능
 
 ```ini
 Seal=yes
@@ -99,9 +99,9 @@ sudo journalctl --setup-keys
 sudo journalctl --setup-keys --interval=1h
 ```
 
-이 명령은:
+이 명령의 동작:
 1. seed key를 생성해 journal 디렉터리에 저장
-2. verification key를 출력 (사람이 읽거나 QR로 보관)
+2. verification key 출력 (사람이 읽거나 QR로 보관)
 
 검증:
 
@@ -115,9 +115,9 @@ sudo journalctl --verify-key=<verification-key>
 PASS: /var/log/journal/abc/system.journal
 ```
 
-또는 변조가 있으면 `FAIL` 로 어디부터 무결성이 깨졌는지 표시.
+- 변조가 있으면 `FAIL`로 어디부터 무결성이 깨졌는지 표시
 
-> Sealing은 디스크가 외부에 압류되거나 공격받았을 때 특정 시점 이후의 로그가 위조됐는지 탐지하는 데 쓰입니다. 실시간 보호는 아닙니다.
+- Sealing은 디스크가 외부에 압류되거나 공격받았을 때 특정 시점 이후의 로그가 위조됐는지 탐지하는 용도 → 실시간 보호는 아님
 
 ---
 
@@ -132,16 +132,15 @@ SystemMaxFileSize=128M
 SystemMaxFiles=100
 ```
 
-| 옵션 | 의미 |
-| --- | --- |
-| `SystemMaxUse=` | journal이 사용할 최대 용량 |
-| `SystemKeepFree=` | 디스크에 항상 비워둘 공간 |
-| `SystemMaxFileSize=` | 개별 journal 파일 최대 크기 (이 값 도달 시 회전) |
-| `SystemMaxFiles=` | 최대 파일 개수 |
+- 옵션별 의미
+  - `SystemMaxUse=`: journal이 사용할 최대 용량
+  - `SystemKeepFree=`: 디스크에 항상 비워둘 공간
+  - `SystemMaxFileSize=`: 개별 journal 파일 최대 크기 (이 값 도달 시 회전)
+  - `SystemMaxFiles=`: 최대 파일 개수
 
-기본값:
-- `SystemMaxUse=` 는 디스크 크기의 10%까지, 단 4G 이하
-- `SystemKeepFree=` 는 15% 또는 4G
+- 기본값
+  - `SystemMaxUse=`는 디스크 크기의 10%까지, 단 4G 이하
+  - `SystemKeepFree=`는 15% 또는 4G
 
 ### 휘발성 저장 (/run/log/journal)
 
@@ -152,7 +151,7 @@ RuntimeMaxFileSize=64M
 RuntimeMaxFiles=20
 ```
 
-RAM을 사용하므로 기본값이 더 작습니다.
+- RAM 사용 → 기본값이 더 작음
 
 ### 시간 기반 보존
 
@@ -164,7 +163,7 @@ MaxFileSec=1month
 - `MaxRetentionSec=`: 이 시간이 지난 항목은 자동 삭제
 - `MaxFileSec=`: 한 파일이 이 시간을 초과하면 회전
 
-크기 한도와 시간 한도가 함께 적용됩니다 (둘 중 더 빨리 도달하는 쪽).
+- 크기 한도와 시간 한도가 함께 적용됨 (둘 중 더 빨리 도달하는 쪽 기준)
 
 ### 즉시 적용
 
@@ -177,7 +176,7 @@ sudo journalctl --vacuum-time=1month
 
 ## Rate Limit
 
-로그 폭주로 디스크와 CPU가 점유되는 것을 방지하는 기능.
+- 로그 폭주로 디스크와 CPU가 점유되는 것을 방지하는 기능
 
 ```ini
 RateLimitIntervalSec=30s
@@ -201,13 +200,13 @@ LogRateLimitBurst=1000
 RateLimitBurst=0
 ```
 
-진단 용도로만 권장. 프로덕션에서는 적절한 값을 유지.
+- 진단 용도로만 권장, 프로덕션에서는 적절한 값 유지 필요
 
 ---
 
 ## Forward 옵션
 
-journald가 수신한 로그를 다른 채널로 전달할지 제어.
+- journald가 수신한 로그를 다른 채널로 전달할지 제어하는 옵션
 
 ```ini
 ForwardToSyslog=yes
@@ -226,23 +225,26 @@ TTYPath=/dev/console
 
 ### ForwardToSyslog
 
-`yes` 면 `/run/systemd/journal/syslog` 소켓을 통해 syslog 데몬(rsyslog/syslog-ng)에 전달. rsyslog가 `imjournal` 대신 이 소켓을 사용할 때 활용.
+- `yes`면 `/run/systemd/journal/syslog` 소켓을 통해 syslog 데몬(rsyslog/syslog-ng)에 전달
+- rsyslog가 `imjournal` 대신 이 소켓을 사용할 때 활용
 
 ### ForwardToKMsg
 
-커널 ring buffer로 보냄. 일반적으로 비권장 (커널 dmesg가 어플리케이션 로그로 오염됨).
+- 커널 ring buffer로 전달
+- 일반적으로 비권장 (커널 dmesg가 애플리케이션 로그로 오염됨)
 
 ### ForwardToConsole
 
-지정한 TTY에 출력. 디버깅용.
+- 지정한 TTY에 출력, 디버깅용
 
 ### ForwardToWall
 
-긴급 메시지를 모든 로그인 사용자의 터미널에 표시 (`wall(1)` 비슷). 기본 `yes`.
+- 긴급 메시지를 모든 로그인 사용자의 터미널에 표시 (`wall(1)` 유사), 기본값 yes
 
 ### MaxLevel*
 
-각 채널의 최대 레벨. 예: `MaxLevelKMsg=notice` 면 notice 이하만 kmsg로 전달.
+- 각 채널의 최대 레벨 지정
+- 예: `MaxLevelKMsg=notice`면 notice 이하만 kmsg로 전달
 
 ---
 
@@ -254,7 +256,8 @@ TTYPath=/dev/console
 LineMax=48K
 ```
 
-스트림 로그를 레코드 로그로 변환할 때 허용하는 최대 줄 길이. 이 길이를 초과하면 분할됩니다.
+- 스트림 로그를 레코드 로그로 변환할 때 허용하는 최대 줄 길이
+- 이 길이 초과 시 분할됨
 
 ### ReadKMsg
 
@@ -262,7 +265,8 @@ LineMax=48K
 ReadKMsg=yes
 ```
 
-`/dev/kmsg` 에서 커널 메시지를 읽을지. 컨테이너 안에서는 `no` 가 보통.
+- `/dev/kmsg`에서 커널 메시지를 읽을지 결정
+- 컨테이너 안에서는 보통 `no`
 
 ### Audit
 
@@ -270,7 +274,8 @@ ReadKMsg=yes
 Audit=yes
 ```
 
-커널 audit 메시지를 받을지. systemd 240+ 기본값 yes.
+- 커널 audit 메시지 수신 여부
+- systemd 240 이상 기본값 yes
 
 ### SplitMode
 
@@ -278,12 +283,11 @@ Audit=yes
 SplitMode=uid
 ```
 
-| 값 | 의미 |
-| --- | --- |
-| `uid` (기본) | 사용자별 별도 파일 (`user-1000.journal`) |
-| `none` | 모두 system.journal에 |
+- 값별 의미
+  - `uid` (기본): 사용자별 별도 파일 (`user-1000.journal`)
+  - `none`: 모두 system.journal에 기록
 
-`uid` 모드는 사용자별 권한 분리에 좋지만 파일 수가 많아짐.
+- `uid` 모드는 사용자별 권한 분리에 좋지만 파일 수가 많아짐
 
 ---
 
@@ -342,7 +346,7 @@ ForwardToSyslog=yes
 MaxLevelSyslog=info
 ```
 
-rsyslog 측에서:
+rsyslog 측 설정:
 
 ```
 # /etc/rsyslog.d/forward.conf

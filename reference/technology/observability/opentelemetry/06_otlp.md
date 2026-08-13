@@ -20,18 +20,18 @@
 
 ## OTLP란?
 
-**OpenTelemetry Protocol (OTLP)** 는 OpenTelemetry가 정의한 **벤더 중립 와이어 프로토콜** 입니다.
+OpenTelemetry Protocol (OTLP)는 OpenTelemetry가 정의한 벤더 중립 와이어 프로토콜.
 
 특징:
-- **Protobuf** 기반 데이터 모델 (`opentelemetry-proto` 리포에서 관리)
-- 두 가지 전송 변종: **gRPC** 와 **HTTP/protobuf**
+- Protobuf 기반 데이터 모델 (`opentelemetry-proto` 리포에서 관리)
+- 두 가지 전송 변종: gRPC · HTTP/protobuf
 - 모든 시그널(Trace/Metric/Log/Profile)을 하나의 프로토콜로 처리
 - 단방향 push 모델 (SDK·Collector가 푸시, 수신자는 ack만)
 
 용도:
-- **SDK → Collector** (가장 흔함)
-- **Collector → Collector** (Agent → Gateway)
-- **Collector → 백엔드** (Tempo, Mimir, Loki, Jaeger v2 등)
+- SDK → Collector (가장 흔함)
+- Collector → Collector (Agent → Gateway)
+- Collector → 백엔드 (Tempo, Mimir, Loki, Jaeger v2 등)
 
 ---
 
@@ -39,7 +39,7 @@
 
 ### OTLP/gRPC
 
-- 포트: **4317** (관습)
+- 포트: `4317` (관습)
 - HTTP/2 + Protobuf
 - 양방향 스트리밍은 사용하지 않음 — 단순 unary RPC
 - 메서드: `Export(ExportRequest) → ExportResponse`
@@ -54,9 +54,9 @@
 
 ### OTLP/HTTP
 
-- 포트: **4318** (관습)
+- 포트: `4318` (관습)
 - HTTP/1.1 또는 HTTP/2 모두 가능
-- Body: **Protobuf** (권장) 또는 **JSON** (옵션)
+- Body: Protobuf (권장) 또는 JSON (옵션)
 - POST 엔드포인트:
   - `/v1/traces`
   - `/v1/metrics`
@@ -73,9 +73,9 @@ Content-Type: application/x-protobuf
 
 ### 둘 중 무엇을 쓸까?
 
-- **Server-side 애플리케이션**: gRPC 권장 — 성능·기능
-- **브라우저/모바일**: HTTP/JSON — gRPC-Web이 아니면 직접 사용 불가
-- **방화벽/프록시 제약**: HTTP
+- Server-side 애플리케이션: gRPC 권장 — 성능·기능
+- 브라우저/모바일: HTTP/JSON — gRPC-Web이 아니면 직접 사용 불가
+- 방화벽/프록시 제약: HTTP
 
 대부분의 SDK는 둘 다 지원하며 environment variable로 선택:
 ```
@@ -86,7 +86,7 @@ OTEL_EXPORTER_OTLP_PROTOCOL=grpc | http/protobuf | http/json
 
 ## 데이터 모델
 
-OTLP의 메시지는 **Resource → InstrumentationScope → 시그널 데이터** 의 3단계 그룹화 구조입니다.
+OTLP의 메시지는 Resource → InstrumentationScope → 시그널 데이터의 3단계 그룹화 구조.
 
 ### Trace 예시 (의사 표현)
 
@@ -214,7 +214,7 @@ SDK              Collector
   │                  │
 ```
 
-응답은 보통 **거의 즉시** 반환됩니다. Collector가 데이터를 큐에 넣은 뒤 ack하기 때문입니다 → "response = 백엔드 도달"이 아니라 "response = 수신자가 받음"입니다.
+응답은 보통 거의 즉시 반환됨 → Collector가 데이터를 큐에 넣은 뒤 ack하기 때문 → "response = 백엔드 도달"이 아니라 "response = 수신자가 받음"을 의미함.
 
 ### 응답 객체
 
@@ -229,13 +229,13 @@ message ExportTracePartialSuccess {
 }
 ```
 
-`partial_success` 가 비어있으면 **전부 수락**, 채워져 있으면 일부 거부.
+`partial_success` 가 비어있으면 전부 수락, 채워져 있으면 일부 거부.
 
 ---
 
 ## 부분 성공 (Partial Success)
 
-OTLP는 **부분 성공** 을 명시적으로 지원합니다. 한 요청 안의 일부 데이터만 수락될 수 있음.
+OTLP는 부분 성공을 명시적으로 지원함. 한 요청 안의 일부 데이터만 수락될 수 있음.
 
 ```
 ExportResponse {
@@ -248,7 +248,7 @@ ExportResponse {
 
 이 경우 SDK는:
 - HTTP 상태 200 / gRPC OK 로 받음
-- 거부된 데이터를 **재시도하지 않음** (재시도해도 같은 결과일 가능성)
+- 거부된 데이터를 재시도하지 않음 (재시도해도 같은 결과일 가능성)
 - 에러 메시지를 로그로 남김
 
 비교 — 완전 실패는 별도 에러 코드로:
@@ -261,7 +261,7 @@ ExportResponse {
 
 ### 재시도 가능한 실패
 
-다음 응답은 **재시도 권장**:
+다음 응답은 재시도 권장:
 - gRPC: `UNAVAILABLE`, `CANCELLED`, `DEADLINE_EXCEEDED`, `RESOURCE_EXHAUSTED`(서버가 RetryInfo로 회복을 알린 경우), `OUT_OF_RANGE`, `ABORTED`, `DATA_LOSS`
 - HTTP: `408`, `429`, `502`, `503`, `504`
 
@@ -294,12 +294,12 @@ Retry-After: 30
 
 ### 배압 (Backpressure)
 
-큐가 가득 차면 SDK/Collector는 **새 데이터를 drop** 하거나 **계측 코드를 블로킹** 할 수 있음.
+큐가 가득 차면 SDK/Collector는 새 데이터를 drop하거나 계측 코드를 블로킹할 수 있음.
 
 - SDK 기본: 큐 가득 차면 drop, 메트릭으로 카운트
 - Collector `memory_limiter` processor: 메모리 임계 초과 시 receiver가 거부 → upstream에 압력 전달
 
-OTLP는 **느린 백엔드가 빠른 client를 늦추지 않게** 비동기 큐를 두는 게 표준입니다.
+OTLP는 느린 백엔드가 빠른 client를 늦추지 않게 비동기 큐를 두는 게 표준.
 
 ---
 
@@ -307,7 +307,7 @@ OTLP는 **느린 백엔드가 빠른 client를 늦추지 않게** 비동기 큐�
 
 ### TLS
 
-프로덕션은 **TLS 필수**. SDK·Collector·백엔드 모두 mTLS 또는 TLS+Bearer 토큰을 지원.
+프로덕션은 TLS 필수. SDK·Collector·백엔드 모두 mTLS 또는 TLS+Bearer 토큰을 지원.
 
 ```yaml
 # Collector exporter
@@ -344,7 +344,7 @@ OTLP 자체는 정화를 하지 않음 — Collector processor 단계에서 처�
 
 ### 환경 변수 표준
 
-대부분의 SDK가 다음 envvar를 지원합니다:
+대부분의 SDK가 다음 envvar를 지원함:
 
 ```
 OTEL_EXPORTER_OTLP_ENDPOINT       # 기본 엔드포인트 (모든 시그널 공유)
@@ -394,7 +394,7 @@ exporters:
 
 ### Cardinality
 
-OTLP 자체는 카디널리티 제한이 없음 — **수신 측 백엔드가 비용** 부담. SDK·Collector에서 미리 제어해야 함:
+OTLP 자체는 카디널리티 제한이 없음 — 수신 측 백엔드가 비용 부담. SDK·Collector에서 미리 제어해야 함:
 - Metric View로 attribute 줄이기
 - Resource attribute 일관성
 

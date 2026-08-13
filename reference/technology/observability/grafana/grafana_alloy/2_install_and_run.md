@@ -22,13 +22,11 @@
 
 ### 설치 방법 개요
 
-| 환경 | 권장 방법 |
-|------|----------|
-| Kubernetes | Helm |
-| Linux 서버 | apt/yum 패키지 |
-| macOS 개발 | Homebrew |
-| Windows | MSI 설치 프로그램 |
-| 컨테이너 | Docker 이미지 |
+- Kubernetes: Helm
+- Linux 서버: apt/yum 패키지
+- macOS 개발: Homebrew
+- Windows: MSI 설치 프로그램
+- 컨테이너: Docker 이미지
 
 ---
 
@@ -199,10 +197,8 @@ services:
 
 #### 차트 종류
 
-| 차트 | 용도 |
-|------|------|
-| `alloy` | DaemonSet (호스트별 1개) - 일반 |
-| `alloy-operator` | CRD 기반 관리 |
+- `alloy`: DaemonSet(호스트별 1개), 일반 용도
+- `alloy-operator`: CRD 기반 관리
 
 #### 기본 설치
 
@@ -470,30 +466,26 @@ alloy run \
 
 #### 명령어 목록
 
-| 명령 | 설명 |
-|------|------|
-| `alloy run` | Alloy 실행 |
-| `alloy validate` | 구성 파일 검증 |
-| `alloy fmt` | 구성 포맷 정리 |
-| `alloy convert` | 다른 포맷에서 변환 |
-| `alloy tools` | WAL 읽기 및 통계 분석 |
-| `alloy --version` | 버전 확인 |
+- `alloy run`: Alloy 실행
+- `alloy validate`: 구성 파일 검증
+- `alloy fmt`: 구성 포맷 정리
+- `alloy convert`: 다른 포맷에서 변환
+- `alloy tools`: WAL 읽기 및 통계 분석
+- `alloy --version`: 버전 확인
 
 #### `alloy run` 주요 플래그
 
-| 플래그 | 기본값 | 설명 |
-|--------|--------|------|
-| `--server.http.listen-addr` | `127.0.0.1:12345` | HTTP 서버 |
-| `--server.http.ui-path-prefix` | `/` | UI 경로 |
-| `--storage.path` | `data-alloy/` | WAL 등 저장 |
-| `--config.format` | `alloy` | 구성 형식 |
-| `--config.bypass-conversion-errors` | false | 변환 오류 무시 |
-| `--cluster.enabled` | false | 클러스터링 활성화 |
-| `--cluster.join-addresses` | "" | 가입할 노드들 |
-| `--cluster.advertise-address` | "" | 광고 주소 |
-| `--cluster.discover-peers` | "" | 피어 자동 발견 (DNS, K8s) |
-| `--disable-reporting` | false | Grafana로 사용 통계 보고 비활성 |
-| `--stability.level` | generally-available | 활성화할 안정성 레벨 (experimental, public-preview, generally-available) |
+- `--server.http.listen-addr`: 기본값 `127.0.0.1:12345`, HTTP 서버
+- `--server.http.ui-path-prefix`: 기본값 `/`, UI 경로
+- `--storage.path`: 기본값 `data-alloy/`, WAL 등 저장
+- `--config.format`: 기본값 `alloy`, 구성 형식
+- `--config.bypass-conversion-errors`: 기본값 false, 변환 오류 무시
+- `--cluster.enabled`: 기본값 false, 클러스터링 활성화
+- `--cluster.join-addresses`: 기본값 "", 가입할 노드들
+- `--cluster.advertise-address`: 기본값 "", 광고 주소
+- `--cluster.discover-peers`: 기본값 "", 피어 자동 발견(DNS, K8s)
+- `--disable-reporting`: 기본값 false, Grafana로 사용 통계 보고 비활성화
+- `--stability.level`: 기본값 generally-available, 활성화할 안정성 레벨(experimental, public-preview, generally-available)
 
 ---
 
@@ -562,7 +554,7 @@ Environment="CUSTOM_ARGS=--server.http.listen-addr=0.0.0.0:12345 --cluster.enabl
 
 ### 환경 변수
 
-Alloy 구성에서 `sys.env()`를 사용해 환경 변수를 참조할 수 있다.
+Alloy 구성에서 `sys.env()`를 사용해 환경 변수 참조 가능.
 
 #### 구성에서 사용
 
@@ -632,7 +624,7 @@ curl -X POST http://localhost:12345/-/reload
 
 #### Kubernetes ConfigReloader
 
-`configReloader.enabled: true`로 설정하면 ConfigMap 변경을 자동으로 감지한다.
+`configReloader.enabled: true` 설정 → ConfigMap 변경 자동 감지.
 
 ```yaml
 configReloader:
@@ -716,12 +708,10 @@ loki.write "self" {
 
 #### 주요 화면
 
-| 페이지 | 내용 |
-|--------|------|
-| **Components** | 모든 컴포넌트 그래프 |
-| **Component Detail** | 컴포넌트별 상태, 인자, 출력, 디버그 정보 |
-| **Cluster** | 클러스터링 활성화 시 노드 목록 |
-| **Targets** | 스크래핑 타겟 상태 |
+- Components: 모든 컴포넌트 그래프
+- Component Detail: 컴포넌트별 상태·인자·출력·디버그 정보
+- Cluster: 클러스터링 활성화 시 노드 목록
+- Targets: 스크래핑 타겟 상태
 
 #### URL 경로 예시
 
@@ -735,7 +725,7 @@ loki.write "self" {
 
 #### 보안 (인증)
 
-Alloy 자체는 인증을 제공하지 않으므로 리버스 프록시 사용을 권장한다:
+Alloy 자체는 인증 미제공 → 리버스 프록시 사용 권장:
 
 ```nginx
 server {
@@ -754,7 +744,7 @@ server {
 
 ### 메트릭 노출
 
-`/metrics` 엔드포인트를 통해 자체 메트릭을 노출한다.
+`/metrics` 엔드포인트로 자체 메트릭 노출.
 
 #### Prometheus로 수집
 
@@ -780,13 +770,11 @@ prometheus.scrape "self" {
 
 #### 핵심 메트릭
 
-| 메트릭 | 설명 |
-|--------|------|
-| `alloy_component_controller_running_components` | 실행 중인 컴포넌트 수 |
-| `alloy_component_evaluation_seconds` | 컴포넌트 평가 시간 |
-| `alloy_resources_process_*` | 프로세스 리소스 |
-| `prometheus_remote_write_*` | Remote Write 통계 |
-| `loki_write_*` | Loki Write 통계 |
+- `alloy_component_controller_running_components`: 실행 중인 컴포넌트 수
+- `alloy_component_evaluation_seconds`: 컴포넌트 평가 시간
+- `alloy_resources_process_*`: 프로세스 리소스
+- `prometheus_remote_write_*`: Remote Write 통계
+- `loki_write_*`: Loki Write 통계
 
 ---
 
@@ -802,7 +790,7 @@ logging {
 
 #### 컴포넌트별 디버그 정보
 
-UI 컴포넌트 상세 페이지의 **Debug Info** 섹션에서 실시간 정보를 확인할 수 있다.
+UI 컴포넌트 상세 페이지의 Debug Info 섹션에서 실시간 정보 확인 가능.
 
 예: `prometheus.scrape`의 디버그 정보
 - 마지막 스크래핑 시간
@@ -854,7 +842,7 @@ alloy validate config.alloy
 config.alloy is valid
 ```
 
-실패 시 오류 위치와 원인을 출력한다.
+실패 시 오류 위치와 원인 출력됨.
 
 #### 포맷 정리
 

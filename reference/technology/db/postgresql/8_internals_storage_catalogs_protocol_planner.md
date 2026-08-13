@@ -2,7 +2,7 @@
 
 ## Chapter 73: 데이터베이스 물리적 저장소 (Database Physical Storage)
 
-이 장에서는 PostgreSQL 데이터베이스에서 사용하는 물리적 저장소 형식에 대한 개요를 제공합니다.
+이 장에서는 PostgreSQL 데이터베이스에서 사용하는 물리적 저장소 형식의 개요를 다룸.
 
 ### 목차
 
@@ -18,53 +18,49 @@
 
 ### 1. 데이터베이스 파일 레이아웃 (Database File Layout)
 
-PostgreSQL은 데이터를 파일 시스템에 특정 구조로 저장합니다.
+PostgreSQL은 데이터를 파일 시스템에 특정 구조로 저장함.
 
 #### 1.1 클러스터 디렉토리 구조 (PGDATA)
 
-`PGDATA` 디렉토리는 메인 클러스터 데이터 디렉토리입니다 (일반적으로 `/var/lib/pgsql/data`). 이 디렉토리에는 다음과 같은 파일과 하위 디렉토리가 포함됩니다.
+`PGDATA` 디렉토리는 메인 클러스터 데이터 디렉토리(일반적으로 `/var/lib/pgsql/data`). 이 디렉토리에는 다음과 같은 파일과 하위 디렉토리가 포함됨.
 
 ##### 제어 파일 (Control Files)
 
-| 파일명 | 설명 |
-|--------|------|
-| `PG_VERSION` | PostgreSQL의 메이저 버전 번호 |
-| `postmaster.pid` | 현재 postmaster PID, 데이터 디렉토리 경로, 시작 타임스탬프, 포트, 소켓 디렉토리가 포함된 락 파일 |
-| `postmaster.opts` | 마지막 서버 시작 시 사용된 명령줄 옵션 |
-| `postgresql.auto.conf` | `ALTER SYSTEM`을 통해 설정된 구성 파라미터 |
-| `current_logfiles` | 현재 작성 중인 로그 파일 |
+- `PG_VERSION`: PostgreSQL의 메이저 버전 번호
+- `postmaster.pid`: 현재 postmaster PID, 데이터 디렉토리 경로, 시작 타임스탬프, 포트, 소켓 디렉토리가 포함된 락 파일
+- `postmaster.opts`: 마지막 서버 시작 시 사용된 명령줄 옵션
+- `postgresql.auto.conf`: `ALTER SYSTEM`을 통해 설정된 구성 파라미터
+- `current_logfiles`: 현재 작성 중인 로그 파일
 
 ##### 주요 하위 디렉토리
 
-| 디렉토리 | 목적 |
-|----------|------|
-| `base/` | 데이터베이스별 하위 디렉토리 |
-| `global/` | 클러스터 전체 테이블 (예: `pg_database`) |
-| `pg_wal/` | Write Ahead Log (WAL) 파일 |
-| `pg_xact/` | 트랜잭션 커밋 상태 데이터 |
-| `pg_commit_ts/` | 트랜잭션 커밋 타임스탬프 |
-| `pg_subtrans/` | 서브트랜잭션 상태 데이터 |
-| `pg_multixact/` | 멀티트랜잭션 상태 (공유 행 락) |
-| `pg_tblspc/` | 테이블스페이스에 대한 심볼릭 링크 |
-| `pg_logical/` | 논리적 디코딩 상태 |
-| `pg_replslot/` | 복제 슬롯 데이터 |
-| `pg_stat/` | 영구 통계 파일 |
-| `pg_stat_tmp/` | 임시 통계 파일 |
-| `pg_notify/` | LISTEN/NOTIFY 데이터 |
-| `pg_serial/` | 커밋된 직렬화 가능 트랜잭션 |
-| `pg_snapshots/` | 내보낸 스냅샷 |
-| `pg_twophase/` | 준비된 트랜잭션 상태 |
-| `pg_dynshmem/` | 동적 공유 메모리 파일 |
+- `base/`: 데이터베이스별 하위 디렉토리
+- `global/`: 클러스터 전체 테이블(예: `pg_database`)
+- `pg_wal/`: Write Ahead Log (WAL) 파일
+- `pg_xact/`: 트랜잭션 커밋 상태 데이터
+- `pg_commit_ts/`: 트랜잭션 커밋 타임스탬프
+- `pg_subtrans/`: 서브트랜잭션 상태 데이터
+- `pg_multixact/`: 멀티트랜잭션 상태(공유 행 락)
+- `pg_tblspc/`: 테이블스페이스에 대한 심볼릭 링크
+- `pg_logical/`: 논리적 디코딩 상태
+- `pg_replslot/`: 복제 슬롯 데이터
+- `pg_stat/`: 영구 통계 파일
+- `pg_stat_tmp/`: 임시 통계 파일
+- `pg_notify/`: LISTEN/NOTIFY 데이터
+- `pg_serial/`: 커밋된 직렬화 가능 트랜잭션
+- `pg_snapshots/`: 내보낸 스냅샷
+- `pg_twophase/`: 준비된 트랜잭션 상태
+- `pg_dynshmem/`: 동적 공유 메모리 파일
 
 #### 1.2 데이터베이스별 구조 (Per-Database Structure)
 
-각 데이터베이스는 `PGDATA/base/` 디렉토리 내에 OID(Object ID)를 이름으로 하는 하위 디렉토리를 가집니다:
+각 데이터베이스는 `PGDATA/base/` 디렉토리 내에 OID(Object ID)를 이름으로 하는 하위 디렉토리를 가짐:
 
 ```
 PGDATA/base/[DATABASE_OID]/
 ```
 
-이 디렉토리에는 다음이 저장됩니다:
+이 디렉토리에는 다음이 저장됨:
 - 시스템 카탈로그
 - 사용자 테이블 및 인덱스
 - 관련 메타데이터 파일
@@ -73,14 +69,12 @@ PGDATA/base/[DATABASE_OID]/
 
 ##### 표준 릴레이션
 
-파일은 filenode 번호(`pg_class.relfilenode`에서 찾을 수 있음)를 기반으로 명명됩니다:
+파일은 filenode 번호(`pg_class.relfilenode`에서 확인 가능)를 기반으로 명명됨:
 
-| 포크 유형 | 파일명 | 설명 |
-|-----------|--------|------|
-| 메인 포크 (Main fork) | `[filenode]` | 실제 테이블/인덱스 데이터 |
-| 프리 스페이스 맵 (Free Space Map) | `[filenode]_fsm` | 사용 가능한 빈 공간 추적 |
-| 가시성 맵 (Visibility Map) | `[filenode]_vm` | 죽은 튜플이 없는 페이지 추적 |
-| 초기화 포크 (Initialization fork) | `[filenode]_init` | 언로그 테이블/인덱스 전용 |
+- 메인 포크(Main fork): `[filenode]` — 실제 테이블/인덱스 데이터
+- 프리 스페이스 맵(Free Space Map): `[filenode]_fsm` — 사용 가능한 빈 공간 추적
+- 가시성 맵(Visibility Map): `[filenode]_vm` — 죽은 튜플이 없는 페이지 추적
+- 초기화 포크(Initialization fork): `[filenode]_init` — 언로그 테이블/인덱스 전용
 
 ##### 임시 릴레이션
 
@@ -90,19 +84,19 @@ PGDATA/base/[DATABASE_OID]/
 
 ##### 대용량 파일 (1 GB 초과)
 
-파일은 1 GB 청크로 분할됩니다 (`--with-segsize`로 구성 가능):
+파일은 1 GB 청크로 분할됨(`--with-segsize`로 구성 가능):
 - 첫 번째 세그먼트: `[filenode]`
 - 후속 세그먼트: `[filenode].1`, `[filenode].2` 등
 
 #### 1.4 중요 참고사항
 
-Filenode != OID: 테이블의 filenode가 종종 OID와 일치하지만, `TRUNCATE`, `REINDEX`, `CLUSTER`, `ALTER TABLE`과 같은 작업은 OID를 유지하면서 filenode를 변경할 수 있습니다.
+Filenode != OID: 테이블의 filenode가 종종 OID와 일치하지만, `TRUNCATE`, `REINDEX`, `CLUSTER`, `ALTER TABLE` 같은 작업은 OID를 유지하면서 filenode를 변경 가능.
 
-시스템 카탈로그의 실제 filenode를 얻으려면 `pg_relation_filenode()` 함수를 사용하세요.
+시스템 카탈로그의 실제 filenode를 얻으려면 `pg_relation_filenode()` 함수 사용.
 
 #### 1.5 테이블스페이스 (Tablespaces)
 
-사용자 정의 테이블스페이스는 `PGDATA/pg_tblspc/`에 심볼릭 링크를 사용합니다:
+사용자 정의 테이블스페이스는 `PGDATA/pg_tblspc/`에 심볼릭 링크를 사용함:
 
 ```
 PGDATA/pg_tblspc/[TABLESPACE_OID] → /path/to/physical/tablespace
@@ -117,7 +111,7 @@ PGDATA/pg_tblspc/[TABLESPACE_OID] → /path/to/physical/tablespace
 
 #### 1.6 임시 파일 (Temporary Files)
 
-`PGDATA/base/pgsql_tmp/` (또는 테이블스페이스별 `pgsql_tmp/`)에 생성됩니다:
+`PGDATA/base/pgsql_tmp/`(또는 테이블스페이스별 `pgsql_tmp/`)에 생성됨:
 
 형식: `pgsql_tmp_[PPP]_[NNN]`
 - `PPP` = 백엔드 프로세스 ID (PID)
@@ -151,31 +145,29 @@ SELECT oid, datname FROM pg_database;
 
 ### 2. TOAST (The Oversized-Attribute Storage Technique)
 
-TOAST는 PostgreSQL이 고정 페이지 크기(일반적으로 8 kB)를 초과하는 대용량 필드 값을 처리하는 기술입니다. PostgreSQL은 튜플이 여러 페이지에 걸쳐 저장되는 것을 허용하지 않으므로, 대용량 값은 투명하게 압축되거나 여러 물리적 행으로 분할됩니다.
+TOAST는 PostgreSQL이 고정 페이지 크기(일반적으로 8 kB)를 초과하는 대용량 필드 값을 처리하는 기술. PostgreSQL은 튜플이 여러 페이지에 걸쳐 저장되는 것을 허용하지 않음 → 대용량 값은 투명하게 압축되거나 여러 물리적 행으로 분할됨.
 
 #### 2.1 TOAST 작동 원리
 
 ##### 기본 메커니즘
 
-- 가변 길이(varlena) 표현을 가진 데이터 타입만 TOAST를 지원합니다
-- 처음 4바이트는 일반적으로 값의 전체 길이를 포함합니다
-- TOAST는 길이 워드의 2비트를 사용하여 특수 표현을 인코딩합니다
+- 가변 길이(varlena) 표현을 가진 데이터 타입만 TOAST 지원
+- 처음 4바이트는 일반적으로 값의 전체 길이를 포함
+- TOAST는 길이 워드의 2비트를 사용해 특수 표현을 인코딩
 - 최대 논리적 크기: 비트 할당으로 인해 1 GB (2^30 - 1 바이트)
 
 ##### 길이 워드 인코딩
 
-| 비트 상태 | 의미 |
-|-----------|------|
-| 두 비트 모두 0 | 일반적인 TOAST되지 않은 값 |
-| 상위/하위 비트 설정 | 단일 바이트 헤더 (127바이트 미만 값용) |
-| 인접 비트 설정 | 데이터가 압축됨, 사용 전 압축 해제 필요 |
-| 특수 케이스 (단일 바이트 헤더의 모든 비트 0) | 외부 저장 데이터에 대한 포인터 |
+- 두 비트 모두 0: 일반적인 TOAST되지 않은 값
+- 상위/하위 비트 설정: 단일 바이트 헤더 (127바이트 미만 값용)
+- 인접 비트 설정: 데이터가 압축됨, 사용 전 압축 해제 필요
+- 특수 케이스(단일 바이트 헤더의 모든 비트 0): 외부 저장 데이터에 대한 포인터
 
 #### 2.2 TOAST 활성화 조건
 
-TOAST 관리 코드는 다음 조건에서 작동합니다:
+TOAST 관리 코드는 다음 조건에서 작동함:
 - 행 값이 `TOAST_TUPLE_THRESHOLD`(기본값: 2 kB)를 초과할 때
-- 행이 `TOAST_TUPLE_TARGET`(기본값: 2 kB, 조정 가능)보다 작아질 때까지 압축 및/또는 외부 저장을 수행
+- 행이 `TOAST_TUPLE_TARGET`(기본값: 2 kB, 조정 가능)보다 작아질 때까지 압축 및/또는 외부 저장 수행
 
 ```sql
 -- 테이블의 TOAST 타겟 조정
@@ -184,12 +176,21 @@ ALTER TABLE 테이블명 SET (toast_tuple_target = N);
 
 #### 2.3 네 가지 TOAST 저장 전략
 
-| 전략 | 압축 | 외부 저장 | 사용 사례 |
-|------|------|-----------|-----------|
-| PLAIN | 불가 | 불가 | TOAST 불가능한 데이터 타입 전용 |
-| EXTENDED | 가능 | 가능 | 대부분의 TOAST 가능 타입의 기본값 |
-| EXTERNAL | 불가 | 가능 | `text`/`bytea`의 빠른 부분 문자열 연산 (저장 비용 증가) |
-| MAIN | 가능 | 불가* | *행이 여전히 너무 큰 경우에만 최후의 수단으로 사용 |
+- PLAIN
+  - 압축: 불가
+  - 외부 저장: 불가
+  - 사용 사례: TOAST 불가능한 데이터 타입 전용
+- EXTENDED
+  - 압축: 가능
+  - 외부 저장: 가능
+  - 사용 사례: 대부분의 TOAST 가능 타입의 기본값
+- EXTERNAL
+  - 압축: 불가
+  - 외부 저장: 가능
+  - 사용 사례: `text`/`bytea`의 빠른 부분 문자열 연산(저장 비용 증가)
+- MAIN
+  - 압축: 가능
+  - 외부 저장: 불가(행이 여전히 너무 큰 경우에만 최후의 수단으로 사용)
 
 ```sql
 -- 저장 전략 설정
@@ -213,9 +214,9 @@ SHOW default_toast_compression;
 
 ##### 구조
 
-- TOAST 가능 컬럼이 있는 각 테이블에는 연관된 TOAST 테이블이 생성됩니다
-- TOAST 테이블 OID는 `pg_class.reltoastrelid`에 저장됩니다
-- 외부 저장 값은 최대 `TOAST_MAX_CHUNK_SIZE`(기본값 약 2000바이트) 청크로 분할됩니다
+- TOAST 가능 컬럼이 있는 각 테이블에는 연관된 TOAST 테이블이 생성됨
+- TOAST 테이블 OID는 `pg_class.reltoastrelid`에 저장됨
+- 외부 저장 값은 최대 `TOAST_MAX_CHUNK_SIZE`(기본값 약 2000바이트) 청크로 분할됨
 
 ##### TOAST 테이블 컬럼
 
@@ -238,32 +239,32 @@ chunk_data   - 실제 데이터 청크
 
 ##### UPDATE 최적화
 
-- UPDATE 중 변경되지 않은 필드 값은 그대로 유지됩니다
-- 외부 저장 값이 변경되지 않으면 TOAST 오버헤드가 없습니다
+- UPDATE 중 변경되지 않은 필드 값은 그대로 유지됨
+- 외부 저장 값이 변경되지 않으면 TOAST 오버헤드 없음
 
 #### 2.6 메모리 상의 TOAST 저장소 (Out-of-Line, In-Memory)
 
 ##### 간접 TOAST 포인터 (Indirect TOAST Pointers)
 
-- 서버 프로세스 메모리의 비간접 varlena 값을 가리킵니다
-- 단기간만 사용 (디스크에 지속 불가)
-- 1 GB 물리적 튜플 제한을 피하기 위해 논리적 디코딩 중 사용됩니다
+- 서버 프로세스 메모리의 비간접 varlena 값을 가리킴
+- 단기간만 사용(디스크에 지속 불가)
+- 1 GB 물리적 튜플 제한을 피하기 위해 논리적 디코딩 중 사용됨
 - 생성자가 데이터 생존에 책임
 
 ##### 확장 TOAST 포인터 (Expanded TOAST Pointers)
 
 - 복잡한 데이터 타입(예: 배열)에 대한 최적화된 표현
-- 예: PostgreSQL 배열은 더 빠른 계산을 위해 인덱싱된 요소 위치로 분해됩니다
+- 예: PostgreSQL 배열은 더 빠른 계산을 위해 인덱싱된 요소 위치로 분해됨
 - 읽기-쓰기 vs 읽기 전용 변형:
   - 읽기-쓰기: 함수가 값을 제자리에서 수정 가능
   - 읽기 전용: 불필요한 복사를 피하기 위해 수정 전 복사 필요
 
 #### 2.7 TOAST의 주요 이점
 
-1. 더 작은 메인 테이블 - 메인 테이블에는 키 값만 포함; 대용량 값은 클라이언트로 전송할 때만 가져옴
-2. 더 나은 버퍼 캐시 활용 - 공유 버퍼 캐시에 더 많은 행이 들어감
-3. 효율적인 정렬 - 정렬 세트 축소; 더 많은 정렬이 완전히 메모리에서 수행됨
-4. 공간 효율성 - 실제 예: HTML 페이지 테이블이 원시 데이터 크기의 약 50%에 저장, 메인 테이블은 전체 데이터의 약 10%
+1. 더 작은 메인 테이블: 메인 테이블에는 키 값만 포함 · 대용량 값은 클라이언트로 전송할 때만 가져옴
+2. 더 나은 버퍼 캐시 활용: 공유 버퍼 캐시에 더 많은 행이 들어감
+3. 효율적인 정렬: 정렬 세트 축소 → 더 많은 정렬이 완전히 메모리에서 수행됨
+4. 공간 효율성: 실제 예로 HTML 페이지 테이블이 원시 데이터 크기의 약 50%에 저장, 메인 테이블은 전체 데이터의 약 10%
 
 #### 2.8 TOAST 예제
 
@@ -314,39 +315,39 @@ ALTER TABLE large_text_table ALTER COLUMN content SET STORAGE EXTERNAL;
 
 ### 3. 프리 스페이스 맵 (Free Space Map)
 
-프리 스페이스 맵(FSM)은 PostgreSQL이 힙(heap)과 인덱스 릴레이션(해시 인덱스 제외)에서 사용 가능한 공간을 추적하는 데 사용하는 데이터 구조입니다. 새 행을 삽입할 때 충분한 빈 공간이 있는 페이지를 효율적으로 찾을 수 있게 합니다.
+프리 스페이스 맵(FSM)은 PostgreSQL이 힙(heap)과 인덱스 릴레이션(해시 인덱스 제외)에서 사용 가능한 공간을 추적하는 데 사용하는 데이터 구조. 새 행을 삽입할 때 충분한 빈 공간이 있는 페이지를 효율적으로 찾을 수 있게 함.
 
 #### 3.1 저장 위치
 
-- 파일 명명 규칙: 릴레이션의 filenode 번호에 `_fsm` 접미사를 붙인 별도의 릴레이션 포크에 저장됩니다
-- 예: 릴레이션의 filenode가 `12345`면, FSM은 메인 릴레이션 파일과 같은 디렉토리의 `12345_fsm` 파일에 저장됩니다
+- 파일 명명 규칙: 릴레이션의 filenode 번호에 `_fsm` 접미사를 붙인 별도의 릴레이션 포크에 저장됨
+- 예: 릴레이션의 filenode가 `12345`면 FSM은 메인 릴레이션 파일과 같은 디렉토리의 `12345_fsm` 파일에 저장됨
 
 #### 3.2 구조
 
-FSM은 여러 레벨의 FSM 페이지 트리로 구성됩니다:
+FSM은 여러 레벨의 FSM 페이지 트리로 구성됨:
 
 ##### 리프 레벨 (Leaf Level)
 
-- 힙 또는 인덱스 페이지의 빈 공간 정보를 저장합니다
-- 페이지당 1바이트 를 사용하여 사용 가능한 공간을 나타냅니다
-- 실제 페이지 정보를 포함하는 최하위 레벨입니다
+- 힙 또는 인덱스 페이지의 빈 공간 정보를 저장
+- 페이지당 1바이트를 사용해 사용 가능한 공간을 표시
+- 실제 페이지 정보를 포함하는 최하위 레벨
 
 ##### 상위 레벨 (Upper Levels)
 
-- 하위 레벨의 정보를 집계합니다
-- 계층적 구조를 형성합니다
+- 하위 레벨의 정보를 집계
+- 계층적 구조를 형성
 
 #### 3.3 내부 구성
 
-- 각 FSM 페이지는 배열로 저장된 이진 트리 를 포함합니다
+- 각 FSM 페이지는 배열로 저장된 이진 트리를 포함
 - 노드당 1바이트
-- 리프 노드: 힙 페이지 또는 하위 레벨 FSM 페이지를 나타냅니다
-- 비리프 노드: 자식 노드 값 중 더 높은 값을 저장합니다
-- 루트 노드: 모든 리프 노드의 최대값을 포함합니다 (사용 가능한 가장 큰 빈 공간을 나타냄)
+- 리프 노드: 힙 페이지 또는 하위 레벨 FSM 페이지를 나타냄
+- 비리프 노드: 자식 노드 값 중 더 높은 값을 저장
+- 루트 노드: 모든 리프 노드의 최대값을 포함(사용 가능한 가장 큰 빈 공간을 나타냄)
 
 #### 3.4 주요 특징
 
-1. 효율적인 공간 추적: 페이지당 1바이트의 최소 저장소를 사용하여 빈 공간 표현
+1. 효율적인 공간 추적: 페이지당 1바이트의 최소 저장소로 빈 공간 표현
 2. 계층적 집계: 상위 레벨이 하위 레벨 정보를 효율적으로 요약
 3. 빠른 공간 조회: 루트의 최대값으로 사용 가능한 공간이 있는 페이지를 빠르게 식별
 
@@ -379,22 +380,22 @@ SELECT pg_size_pretty(pg_relation_size('테이블명', 'fsm')) AS fsm_크기;
 
 ### 4. 가시성 맵 (Visibility Map)
 
-가시성 맵(VM)은 PostgreSQL에서 어떤 힙 페이지가 모든 활성 트랜잭션에 보이는 튜플만 포함하고 있는지, 그리고 어떤 페이지가 동결된(frozen) 튜플만 포함하고 있는지를 추적하는 메커니즘입니다.
+가시성 맵(VM)은 PostgreSQL에서 어떤 힙 페이지가 모든 활성 트랜잭션에 보이는 튜플만 포함하는지, 그리고 어떤 페이지가 동결된(frozen) 튜플만 포함하는지를 추적하는 메커니즘.
 
 #### 4.1 저장 위치
 
-- 메인 릴레이션 데이터와 함께 별도의 릴레이션 포크로 저장됩니다
-- 릴레이션의 filenode 번호에 `_vm` 접미사를 붙여 명명됩니다
-- 예: filenode가 `12345`면, VM 파일은 같은 디렉토리의 `12345_vm`입니다
-- 참고: 인덱스는 가시성 맵이 없습니다
+- 메인 릴레이션 데이터와 함께 별도의 릴레이션 포크로 저장됨
+- 릴레이션의 filenode 번호에 `_vm` 접미사를 붙여 명명됨
+- 예: filenode가 `12345`면 VM 파일은 같은 디렉토리의 `12345_vm`
+- 참고: 인덱스는 가시성 맵 없음
 
 #### 4.2 비트 구조
 
-가시성 맵은 힙 페이지당 2비트 를 저장합니다:
+가시성 맵은 힙 페이지당 2비트를 저장함:
 
 ##### 비트 1: 모두 가시 플래그 (All-Visible Flag)
 
-- 설정 시: 페이지가 모두 가시 상태 (VACUUM이 필요한 튜플이 없음)
+- 설정 시: 페이지가 모두 가시 상태(VACUUM이 필요한 튜플이 없음)
 - 사용 사례: 힙에 접근하지 않고 인덱스 튜플만으로 쿼리에 응답하는 인덱스 전용 스캔(Index-Only Scan) 가능
 
 ##### 비트 2: 동결 플래그 (Frozen Flag)
@@ -404,16 +405,14 @@ SELECT pg_size_pretty(pg_relation_size('테이블명', 'fsm')) AS fsm_크기;
 
 #### 4.3 보수적 설계
 
-가시성 맵은 보수적으로 작동합니다:
+가시성 맵은 보수적으로 작동함:
 - 비트 설정됨: 조건이 참임을 보장
 - 비트 해제됨: 조건이 참일 수도 있고 아닐 수도 있음
 
 #### 4.4 연산
 
-| 연산 | 동작 | 상세 |
-|------|------|------|
-| VACUUM | 비트 설정 | VM 비트를 설정하는 유일한 연산 |
-| 데이터 수정 | 비트 해제 | INSERT, UPDATE, DELETE가 관련 비트를 해제 |
+- VACUUM: 비트 설정 → VM 비트를 설정하는 유일한 연산
+- 데이터 수정: 비트 해제 → INSERT, UPDATE, DELETE가 관련 비트를 해제
 
 #### 4.5 가시성 맵 확인 예제
 
@@ -452,23 +451,23 @@ SELECT id FROM 테이블명 WHERE id = 100;
 
 #### 5.1 개요
 
-각 언로그 테이블(unlogged table) 과 언로그 테이블의 인덱스 에는 초기화 포크가 있습니다.
+각 언로그 테이블(unlogged table)과 언로그 테이블의 인덱스에는 초기화 포크가 있음.
 
 #### 5.2 정의
 
-초기화 포크는 적절한 타입의 빈 테이블 또는 인덱스 입니다.
+초기화 포크는 적절한 타입의 빈 테이블 또는 인덱스.
 
 #### 5.3 목적과 동작
 
 크래시로 인해 언로그 테이블을 빈 상태로 재설정해야 할 때:
-1. 초기화 포크가 메인 포크 위에 복사 됩니다
-2. 다른 포크는 삭제 됩니다 (필요에 따라 자동으로 재생성됨)
+1. 초기화 포크가 메인 포크 위에 복사됨
+2. 다른 포크는 삭제됨(필요에 따라 자동으로 재생성)
 
 #### 5.4 핵심 포인트
 
-- 초기화 포크는 언로그 테이블의 템플릿/백업 역할을 합니다
-- 크래시 후 언로그 테이블을 깨끗한 상태로 자동 복구할 수 있게 합니다
-- 이 메커니즘은 수동 개입 없이 언로그 테이블을 안정적으로 재설정할 수 있게 보장합니다
+- 초기화 포크는 언로그 테이블의 템플릿/백업 역할
+- 크래시 후 언로그 테이블을 깨끗한 상태로 자동 복구 가능
+- 이 메커니즘은 수동 개입 없이 언로그 테이블을 안정적으로 재설정할 수 있도록 보장
 
 #### 5.5 언로그 테이블 예제
 
@@ -498,19 +497,17 @@ CREATE INDEX idx_session ON session_data(session_id);
 
 ### 6. 데이터베이스 페이지 레이아웃 (Database Page Layout)
 
-PostgreSQL은 모든 테이블과 인덱스 데이터를 고정 크기 페이지(일반적으로 8 kB)로 저장합니다.
+PostgreSQL은 모든 테이블과 인덱스 데이터를 고정 크기 페이지(일반적으로 8 kB)로 저장함.
 
 #### 6.1 전체 페이지 구조
 
-PostgreSQL 페이지는 다섯 부분으로 구성됩니다:
+PostgreSQL 페이지는 다섯 부분으로 구성됨:
 
-| 구성 요소 | 크기 | 설명 |
-|-----------|------|------|
-| PageHeaderData | 24 바이트 | 빈 공간 포인터를 포함한 일반 페이지 정보 |
-| ItemIdData | 항목당 4 바이트 | 아이템 식별자 배열 (오프셋, 길이 쌍) |
-| Free Space | 가변 | 할당되지 않은 공간; 아이템 ID는 시작부터, 아이템은 끝부터 할당 |
-| Items | 가변 | 실제 데이터 (테이블의 행, 인덱스의 항목) |
-| Special Space | 가변 | 인덱스 접근 방법별 데이터; 일반 테이블에서는 비어 있음 |
+- PageHeaderData: 24 바이트, 빈 공간 포인터를 포함한 일반 페이지 정보
+- ItemIdData: 항목당 4 바이트, 아이템 식별자 배열(오프셋, 길이 쌍)
+- Free Space: 가변, 할당되지 않은 공간(아이템 ID는 시작부터, 아이템은 끝부터 할당)
+- Items: 가변, 실제 데이터(테이블의 행, 인덱스의 항목)
+- Special Space: 가변, 인덱스 접근 방법별 데이터(일반 테이블에서는 비어 있음)
 
 ```
 +------------------+
@@ -533,16 +530,14 @@ PostgreSQL 페이지는 다섯 부분으로 구성됩니다:
 
 #### 6.2 PageHeaderData 레이아웃 (24 바이트)
 
-| 필드 | 타입 | 길이 | 설명 |
-|------|------|------|------|
-| `pd_lsn` | PageXLogRecPtr | 8 바이트 | LSN: 페이지에 대한 마지막 변경의 마지막 WAL 레코드 다음 바이트 |
-| `pd_checksum` | uint16 | 2 바이트 | 페이지 체크섬 (`-k` 플래그로 활성화된 경우) |
-| `pd_flags` | uint16 | 2 바이트 | 플래그 비트 |
-| `pd_lower` | LocationIndex | 2 바이트 | 빈 공간 시작 오프셋 |
-| `pd_upper` | LocationIndex | 2 바이트 | 빈 공간 끝 오프셋 |
-| `pd_special` | LocationIndex | 2 바이트 | 특수 공간 시작 오프셋 |
-| `pd_pagesize_version` | uint16 | 2 바이트 | 페이지 크기 및 레이아웃 버전 번호 |
-| `pd_prune_xid` | TransactionId | 4 바이트 | 페이지에서 가장 오래된 정리되지 않은 XMAX, 또는 0 |
+- `pd_lsn` (PageXLogRecPtr, 8 바이트): LSN — 페이지에 대한 마지막 변경의 마지막 WAL 레코드 다음 바이트
+- `pd_checksum` (uint16, 2 바이트): 페이지 체크섬(`-k` 플래그로 활성화된 경우)
+- `pd_flags` (uint16, 2 바이트): 플래그 비트
+- `pd_lower` (LocationIndex, 2 바이트): 빈 공간 시작 오프셋
+- `pd_upper` (LocationIndex, 2 바이트): 빈 공간 끝 오프셋
+- `pd_special` (LocationIndex, 2 바이트): 특수 공간 시작 오프셋
+- `pd_pagesize_version` (uint16, 2 바이트): 페이지 크기 및 레이아웃 버전 번호
+- `pd_prune_xid` (TransactionId, 4 바이트): 페이지에서 가장 오래된 정리되지 않은 XMAX, 또는 0
 
 현재 버전: 4 (PostgreSQL 8.3 이후)
 
@@ -558,20 +553,18 @@ PostgreSQL 페이지는 다섯 부분으로 구성됩니다:
 
 #### 6.4 테이블 행 레이아웃 (HeapTupleHeaderData)
 
-고정 헤더 구조 뒤에 선택적 널 비트맵, 선택적 객체 ID, 사용자 데이터가 위치합니다.
+고정 헤더 구조 뒤에 선택적 널 비트맵, 선택적 객체 ID, 사용자 데이터가 위치.
 
 ##### HeapTupleHeaderData 레이아웃 (대부분 플랫폼에서 23 바이트)
 
-| 필드 | 타입 | 길이 | 설명 |
-|------|------|------|------|
-| `t_xmin` | TransactionId | 4 바이트 | 삽입 XID 스탬프 |
-| `t_xmax` | TransactionId | 4 바이트 | 삭제 XID 스탬프 |
-| `t_cid` | CommandId | 4 바이트 | 삽입 및/또는 삭제 CID 스탬프 (`t_xvac`과 오버레이) |
-| `t_xvac` | TransactionId | 4 바이트 | 행 버전을 이동하는 VACUUM 연산의 XID |
-| `t_ctid` | ItemPointerData | 6 바이트 | 이 또는 새로운 행 버전의 현재 TID |
-| `t_infomask2` | uint16 | 2 바이트 | 속성 수 + 플래그 비트 |
-| `t_infomask` | uint16 | 2 바이트 | 다양한 플래그 비트 |
-| `t_hoff` | uint8 | 1 바이트 | 사용자 데이터에 대한 오프셋 (MAXALIGN 배수) |
+- `t_xmin` (TransactionId, 4 바이트): 삽입 XID 스탬프
+- `t_xmax` (TransactionId, 4 바이트): 삭제 XID 스탬프
+- `t_cid` (CommandId, 4 바이트): 삽입 및/또는 삭제 CID 스탬프(`t_xvac`과 오버레이)
+- `t_xvac` (TransactionId, 4 바이트): 행 버전을 이동하는 VACUUM 연산의 XID
+- `t_ctid` (ItemPointerData, 6 바이트): 이 또는 새로운 행 버전의 현재 TID
+- `t_infomask2` (uint16, 2 바이트): 속성 수 + 플래그 비트
+- `t_infomask` (uint16, 2 바이트): 다양한 플래그 비트
+- `t_hoff` (uint8, 1 바이트): 사용자 데이터에 대한 오프셋(MAXALIGN 배수)
 
 #### 6.5 선택적 구성 요소
 
@@ -596,11 +589,11 @@ PostgreSQL 페이지는 다섯 부분으로 구성됩니다:
 
 #### 6.6 가변 길이 데이터
 
-가변 길이 필드(`attlen = -1`인 경우)는 `struct varlena`라는 공통 헤더 구조를 공유합니다:
+가변 길이 필드(`attlen = -1`인 경우)는 `struct varlena`라는 공통 헤더 구조를 공유함:
 - 저장된 값의 전체 길이
 - 다음을 나타내는 플래그 비트:
   - 인라인 vs TOAST 테이블 저장
-  - 압축 상태 (섹션 2 참조)
+  - 압축 상태(2절 참고)
 
 #### 6.7 페이지 레이아웃 확인 예제
 
@@ -654,25 +647,25 @@ WHERE lp_len > 0;
 
 ### 7. 힙 전용 튜플 (Heap-Only Tuples, HOT)
 
-힙 전용 튜플(HOT)은 UPDATE 연산의 오버헤드를 줄이는 PostgreSQL 최적화 기법입니다. MVCC(다중 버전 동시성 제어)는 높은 동시성을 가능하게 하지만, 모든 행 업데이트마다 새 인덱스 항목을 생성해야 하므로 비용이 높을 수 있습니다. HOT은 이 문제를 완화합니다.
+힙 전용 튜플(HOT)은 UPDATE 연산의 오버헤드를 줄이는 PostgreSQL 최적화 기법. MVCC(다중 버전 동시성 제어)는 높은 동시성을 가능하게 하지만, 모든 행 업데이트마다 새 인덱스 항목을 생성해야 하므로 비용이 높을 수 있음. HOT은 이 문제를 완화함.
 
 #### 7.1 HOT 적격 조건
 
-HOT 최적화는 다음 두 조건이 모두 충족될 때 적용됩니다:
+HOT 최적화는 다음 두 조건이 모두 충족될 때 적용됨:
 
-1. 업데이트가 인덱싱된 컬럼을 수정하지 않음 (BRIN 요약 인덱스 제외)
+1. 업데이트가 인덱싱된 컬럼을 수정하지 않음(BRIN 요약 인덱스 제외)
 2. 이전 행이 포함된 페이지에 업데이트된 행을 위한 충분한 빈 공간이 존재
 
 #### 7.2 HOT이 제공하는 주요 최적화
 
 ##### 1. 새 인덱스 항목 불필요
 
-- 업데이트된 행은 일반 인덱스에 새 인덱스 항목이 필요하지 않음
+- 업데이트된 행은 일반 인덱스에 새 인덱스 항목 불필요
 - 요약 인덱스(BRIN 등)는 여전히 업데이트가 필요할 수 있음
 
 ##### 2. 효율적인 행 버전 정리
 
-- 행이 여러 번 업데이트될 때, 중간 버전은 일반 연산(`SELECT` 포함) 중에 완전히 제거 가능
+- 행이 여러 번 업데이트될 때 중간 버전은 일반 연산(`SELECT` 포함) 중에 완전히 제거 가능
 - 주기적 VACUUM 연산을 기다릴 필요 없음
 - 프로세스 세부 정보:
   - 인덱스는 계속 원래 행의 페이지 아이템 식별자를 가리킴
@@ -683,7 +676,7 @@ HOT 최적화는 다음 두 조건이 모두 충족될 때 적용됩니다:
 
 #### 7.3 HOT 체인 (HOT Chain)
 
-HOT 업데이트는 같은 페이지 내에서 튜플 버전들의 체인을 형성합니다:
+HOT 업데이트는 같은 페이지 내에서 튜플 버전들의 체인을 형성함:
 
 ```
 인덱스 → [원래 아이템 ID] → 튜플 v1 → 튜플 v2 → 튜플 v3 (최신)
@@ -694,7 +687,7 @@ HOT 업데이트는 같은 페이지 내에서 튜플 버전들의 체인을 형
 
 HOT 가능성 증가 방법:
 - 테이블의 `fillfactor` 파라미터를 낮춰 더 많은 빈 공간 예약
-- 이렇게 하면 업데이트된 행이 같은 페이지에 들어갈 확률이 증가
+- → 업데이트된 행이 같은 페이지에 들어갈 확률 증가
 
 ```sql
 -- fillfactor를 90%로 설정하여 10%의 빈 공간 예약
@@ -711,11 +704,11 @@ ALTER TABLE existing_table SET (fillfactor = 80);
 VACUUM FULL existing_table;
 ```
 
-참고: 새 행이 새 페이지로 옮겨지고 기존 페이지에 빈 공간이 축적되면 HOT 업데이트는 자연스럽게 발생합니다.
+참고: 새 행이 새 페이지로 옮겨지고 기존 페이지에 빈 공간이 축적되면 HOT 업데이트는 자연스럽게 발생함.
 
 #### 7.5 HOT 활동 모니터링
 
-시스템 뷰 `pg_stat_all_tables`를 사용하여 모니터링:
+시스템 뷰 `pg_stat_all_tables`로 모니터링:
 - HOT 업데이트 빈도
 - 비-HOT 업데이트 빈도
 
@@ -747,7 +740,7 @@ WHERE relname = '테이블명';
 
 #### 7.6 HOT 프루닝 (HOT Pruning)
 
-HOT 프루닝은 페이지 내에서 더 이상 필요하지 않은 튜플 버전을 정리하는 과정입니다.
+HOT 프루닝은 페이지 내에서 더 이상 필요하지 않은 튜플 버전을 정리하는 과정.
 
 ```sql
 -- pageinspect로 HOT 체인 확인
@@ -776,19 +769,17 @@ ORDER BY lp;
 
 ### 요약
 
-PostgreSQL의 물리적 저장소 구조를 이해하면 데이터베이스의 성능을 최적화하고 문제를 진단하는 데 도움이 됩니다:
+PostgreSQL의 물리적 저장소 구조를 이해하면 데이터베이스의 성능 최적화와 문제 진단에 도움:
 
-| 구성 요소 | 주요 목적 |
-|-----------|-----------|
-| 파일 레이아웃 | 데이터베이스 파일 구조와 위치 이해 |
-| TOAST | 대용량 데이터의 효율적 저장 |
-| FSM | 빈 공간 추적으로 효율적인 행 삽입 |
-| VM | 가시성 정보로 인덱스 전용 스캔 최적화 |
-| 초기화 포크 | 언로그 테이블의 크래시 복구 |
-| 페이지 레이아웃 | 행 데이터의 물리적 구조 |
-| HOT | 업데이트 성능 최적화 |
+- 파일 레이아웃: 데이터베이스 파일 구조와 위치 이해
+- TOAST: 대용량 데이터의 효율적 저장
+- FSM: 빈 공간 추적으로 효율적인 행 삽입
+- VM: 가시성 정보로 인덱스 전용 스캔 최적화
+- 초기화 포크: 언로그 테이블의 크래시 복구
+- 페이지 레이아웃: 행 데이터의 물리적 구조
+- HOT: 업데이트 성능 최적화
 
-이러한 내부 구조를 이해하면 `VACUUM`, `ANALYZE`, 인덱스 관리 등의 유지 관리 작업을 더 효과적으로 수행할 수 있습니다.
+이러한 내부 구조를 이해하면 `VACUUM`, `ANALYZE`, 인덱스 관리 등의 유지 관리 작업을 더 효과적으로 수행 가능.
 
 ---
 
@@ -812,17 +803,17 @@ PostgreSQL의 물리적 저장소 구조를 이해하면 데이터베이스의 �
 
 ### 개요
 
-시스템 카탈로그(System Catalogs)는 관계형 데이터베이스 관리 시스템이 스키마 메타데이터를 저장하는 장소입니다. 테이블과 컬럼에 대한 정보, 그리고 내부 관리 정보가 여기에 저장됩니다.
+시스템 카탈로그(System Catalogs)는 관계형 데이터베이스 관리 시스템이 스키마 메타데이터를 저장하는 장소. 테이블과 컬럼에 대한 정보, 그리고 내부 관리 정보가 여기에 저장됨.
 
 #### 핵심 특징
 
-PostgreSQL의 시스템 카탈로그는 일반 테이블입니다. 기술적으로는 삭제, 재생성, 수정이 가능하지만, 정상적인 상황에서는 직접 수정하지 않는 것이 좋습니다.
+PostgreSQL의 시스템 카탈로그는 일반 테이블. 기술적으로는 삭제·재생성·수정이 가능하지만, 정상적인 상황에서는 직접 수정하지 않는 것을 권장.
 
-> 주의사항: 시스템 카탈로그에 컬럼을 추가하거나, 값을 직접 삽입/수정하면 시스템에 심각한 문제가 발생할 수 있습니다.
+> 주의사항: 시스템 카탈로그에 컬럼을 추가하거나 값을 직접 삽입/수정하면 시스템에 심각한 문제가 발생할 수 있음.
 
 #### 권장 사항
 
-시스템 카탈로그를 직접 조작하는 대신, 표준 SQL 명령어를 사용해야 합니다:
+시스템 카탈로그를 직접 조작하는 대신 표준 SQL 명령어 사용 필요:
 
 ```sql
 -- 직접 카탈로그 조작 (권장하지 않음)
@@ -832,61 +823,59 @@ PostgreSQL의 시스템 카탈로그는 일반 테이블입니다. 기술적으�
 CREATE DATABASE mydb;
 ```
 
-예를 들어, `CREATE DATABASE` 명령은 내부적으로 `pg_database` 카탈로그에 행을 삽입하고 디스크에 데이터베이스를 생성합니다.
+예를 들어, `CREATE DATABASE` 명령은 내부적으로 `pg_database` 카탈로그에 행을 삽입하고 디스크에 데이터베이스를 생성함.
 
 ---
 
 ### 시스템 카탈로그 목록
 
-PostgreSQL은 50개 이상의 시스템 카탈로그를 제공합니다. 주요 카탈로그들의 목록은 다음과 같습니다:
+PostgreSQL은 50개 이상의 시스템 카탈로그를 제공. 주요 카탈로그 목록:
 
-| 카탈로그 | 설명 |
-|----------|------|
-| `pg_aggregate` | 집계 함수 (Aggregate functions) |
-| `pg_am` | 접근 방법 (Access methods) |
-| `pg_amop` | 접근 방법 연산자 (Access method operators) |
-| `pg_amproc` | 접근 방법 프로시저 (Access method procedures) |
-| `pg_attrdef` | 속성 기본값 (Attribute defaults) |
-| `pg_attribute` | 테이블 컬럼 (Table columns) |
-| `pg_authid` | 인증 식별자 (Authentication identifiers) |
-| `pg_auth_members` | 역할 멤버십 (Role membership) |
-| `pg_cast` | 타입 캐스트 (Type casts) |
-| `pg_class` | 테이블, 인덱스, 시퀀스 등 (Tables, indexes, sequences) |
-| `pg_collation` | 콜레이션 (Collations) |
-| `pg_constraint` | 제약 조건 (Constraints) |
-| `pg_conversion` | 인코딩 변환 (Encoding conversions) |
-| `pg_database` | 데이터베이스 (Databases) |
-| `pg_depend` | 의존성 정보 (Dependency information) |
-| `pg_description` | 객체 주석 (Object comments) |
-| `pg_enum` | 열거형 타입 (Enumeration types) |
-| `pg_event_trigger` | 이벤트 트리거 (Event triggers) |
-| `pg_extension` | 확장 (Extensions) |
-| `pg_foreign_data_wrapper` | 외부 데이터 래퍼 (Foreign data wrappers) |
-| `pg_foreign_server` | 외부 서버 (Foreign servers) |
-| `pg_foreign_table` | 외부 테이블 (Foreign tables) |
-| `pg_index` | 인덱스 (Indexes) |
-| `pg_inherits` | 테이블 상속 (Table inheritance) |
-| `pg_language` | 언어 (Languages) |
-| `pg_largeobject` | 대용량 객체 (Large objects) |
-| `pg_namespace` | 스키마 (Schemas/Namespaces) |
-| `pg_opclass` | 연산자 클래스 (Operator classes) |
-| `pg_operator` | 연산자 (Operators) |
-| `pg_opfamily` | 연산자 패밀리 (Operator families) |
-| `pg_partitioned_table` | 파티션 테이블 (Partitioned tables) |
-| `pg_policy` | 행 수준 보안 정책 (Row-level security policies) |
-| `pg_proc` | 함수 및 프로시저 (Functions and procedures) |
-| `pg_publication` | 논리적 복제 발행 (Logical replication publications) |
-| `pg_range` | 범위 타입 (Range types) |
-| `pg_rewrite` | 규칙 (Rules) |
-| `pg_sequence` | 시퀀스 (Sequences) |
-| `pg_statistic` | 통계 (Statistics) |
-| `pg_subscription` | 논리적 복제 구독 (Logical replication subscriptions) |
-| `pg_tablespace` | 테이블스페이스 (Tablespaces) |
-| `pg_trigger` | 트리거 (Triggers) |
-| `pg_ts_config` | 텍스트 검색 구성 (Text search configurations) |
-| `pg_ts_dict` | 텍스트 검색 사전 (Text search dictionaries) |
-| `pg_type` | 데이터 타입 (Data types) |
-| `pg_user_mapping` | 사용자 매핑 (User mappings) |
+- `pg_aggregate`: 집계 함수(Aggregate functions)
+- `pg_am`: 접근 방법(Access methods)
+- `pg_amop`: 접근 방법 연산자(Access method operators)
+- `pg_amproc`: 접근 방법 프로시저(Access method procedures)
+- `pg_attrdef`: 속성 기본값(Attribute defaults)
+- `pg_attribute`: 테이블 컬럼(Table columns)
+- `pg_authid`: 인증 식별자(Authentication identifiers)
+- `pg_auth_members`: 역할 멤버십(Role membership)
+- `pg_cast`: 타입 캐스트(Type casts)
+- `pg_class`: 테이블, 인덱스, 시퀀스 등(Tables, indexes, sequences)
+- `pg_collation`: 콜레이션(Collations)
+- `pg_constraint`: 제약 조건(Constraints)
+- `pg_conversion`: 인코딩 변환(Encoding conversions)
+- `pg_database`: 데이터베이스(Databases)
+- `pg_depend`: 의존성 정보(Dependency information)
+- `pg_description`: 객체 주석(Object comments)
+- `pg_enum`: 열거형 타입(Enumeration types)
+- `pg_event_trigger`: 이벤트 트리거(Event triggers)
+- `pg_extension`: 확장(Extensions)
+- `pg_foreign_data_wrapper`: 외부 데이터 래퍼(Foreign data wrappers)
+- `pg_foreign_server`: 외부 서버(Foreign servers)
+- `pg_foreign_table`: 외부 테이블(Foreign tables)
+- `pg_index`: 인덱스(Indexes)
+- `pg_inherits`: 테이블 상속(Table inheritance)
+- `pg_language`: 언어(Languages)
+- `pg_largeobject`: 대용량 객체(Large objects)
+- `pg_namespace`: 스키마(Schemas/Namespaces)
+- `pg_opclass`: 연산자 클래스(Operator classes)
+- `pg_operator`: 연산자(Operators)
+- `pg_opfamily`: 연산자 패밀리(Operator families)
+- `pg_partitioned_table`: 파티션 테이블(Partitioned tables)
+- `pg_policy`: 행 수준 보안 정책(Row-level security policies)
+- `pg_proc`: 함수 및 프로시저(Functions and procedures)
+- `pg_publication`: 논리적 복제 발행(Logical replication publications)
+- `pg_range`: 범위 타입(Range types)
+- `pg_rewrite`: 규칙(Rules)
+- `pg_sequence`: 시퀀스(Sequences)
+- `pg_statistic`: 통계(Statistics)
+- `pg_subscription`: 논리적 복제 구독(Logical replication subscriptions)
+- `pg_tablespace`: 테이블스페이스(Tablespaces)
+- `pg_trigger`: 트리거(Triggers)
+- `pg_ts_config`: 텍스트 검색 구성(Text search configurations)
+- `pg_ts_dict`: 텍스트 검색 사전(Text search dictionaries)
+- `pg_type`: 데이터 타입(Data types)
+- `pg_user_mapping`: 사용자 매핑(User mappings)
 
 ---
 
@@ -894,7 +883,7 @@ PostgreSQL은 50개 이상의 시스템 카탈로그를 제공합니다. 주요 
 
 #### pg_class
 
-`pg_class` 카탈로그는 테이블 및 테이블과 유사한 구조를 가진 객체들에 대한 정보를 저장합니다.
+`pg_class` 카탈로그는 테이블 및 테이블과 유사한 구조를 가진 객체들에 대한 정보를 저장함.
 
 ##### 저장되는 객체 유형
 - 테이블 (Tables)
@@ -907,266 +896,248 @@ PostgreSQL은 50개 이상의 시스템 카탈로그를 제공합니다. 주요 
 
 ##### 컬럼 정의
 
-| 컬럼 | 타입 | 설명 |
-|------|------|------|
-| `oid` | `oid` | 행 식별자 (Row identifier) |
-| `relname` | `name` | 테이블, 인덱스, 뷰 등의 이름 |
-| `relnamespace` | `oid` | 이 릴레이션을 포함하는 네임스페이스의 OID (`pg_namespace.oid` 참조) |
-| `reltype` | `oid` | 테이블의 행 타입에 해당하는 데이터 타입의 OID; 인덱스, 시퀀스, TOAST 테이블의 경우 0 (`pg_type.oid` 참조) |
-| `reloftype` | `oid` | 타입이 지정된 테이블의 경우 기본 복합 타입의 OID; 그 외의 경우 0 |
-| `relowner` | `oid` | 릴레이션 소유자 (`pg_authid.oid` 참조) |
-| `relam` | `oid` | 테이블이나 인덱스에 접근하는 데 사용되는 접근 방법 (`pg_am.oid` 참조) |
-| `relfilenode` | `oid` | 디스크 파일의 이름; 0은 "매핑된" 릴레이션을 의미 |
-| `reltablespace` | `oid` | 릴레이션이 저장된 테이블스페이스; 0은 기본 테이블스페이스를 의미 |
-| `relpages` | `int4` | 페이지(BLCKSZ) 단위의 디스크 표현 크기; VACUUM, ANALYZE, CREATE INDEX에 의해 갱신되는 추정값 |
-| `reltuples` | `float4` | 살아있는 행의 수; 플래너가 사용하는 추정값 (-1은 VACUUM/ANALYZE가 실행되지 않았음을 의미) |
-| `relallvisible` | `int4` | 가시성 맵에서 all-visible로 표시된 페이지 수 |
-| `relallfrozen` | `int4` | 가시성 맵에서 all-frozen으로 표시된 페이지 수 |
-| `reltoastrelid` | `oid` | 연결된 TOAST 테이블의 OID; 없으면 0 |
-| `relhasindex` | `bool` | 테이블에 인덱스가 있으면 true |
-| `relisshared` | `bool` | 클러스터 내 모든 데이터베이스에서 공유되는 테이블이면 true |
-| `relpersistence` | `char` | `p` = 영구(permanent), `u` = 비로그(unlogged), `t` = 임시(temporary) |
-| `relkind` | `char` | 릴레이션 종류 (아래 표 참조) |
-| `relnatts` | `int2` | 사용자 컬럼 수 (시스템 컬럼 제외) |
-| `relchecks` | `int2` | CHECK 제약 조건 수 |
-| `relhasrules` | `bool` | 테이블에 규칙이 있으면 true |
-| `relhastriggers` | `bool` | 테이블에 트리거가 있으면 true |
-| `relhassubclass` | `bool` | 테이블/인덱스에 상속 자식이나 파티션이 있으면 true |
-| `relrowsecurity` | `bool` | 행 수준 보안이 활성화되면 true |
-| `relforcerowsecurity` | `bool` | RLS가 테이블 소유자에게도 적용되면 true |
-| `relispopulated` | `bool` | 릴레이션이 채워져 있으면 true |
-| `relreplident` | `char` | 복제 아이덴티티: `d` = 기본(primary key), `n` = 없음, `f` = 모든 컬럼, `i` = 인덱스 |
-| `relispartition` | `bool` | 테이블이나 인덱스가 파티션이면 true |
-| `relrewrite` | `oid` | DDL 재작성 중 원본 릴레이션의 OID; 그 외에는 0 |
-| `relfrozenxid` | `xid` | 동결된 행의 트랜잭션 ID 임계값 |
-| `relminmxid` | `xid` | 동결된 멀티트랜잭션의 멀티트랜잭션 ID 임계값 |
-| `relacl` | `aclitem[]` | 접근 권한 |
-| `reloptions` | `text[]` | 접근 방법별 옵션 ("keyword=value" 형식의 문자열) |
-| `relpartbound` | `pg_node_tree` | 파티션인 경우 파티션 경계의 내부 표현 |
+- `oid` (`oid`): 행 식별자(Row identifier)
+- `relname` (`name`): 테이블, 인덱스, 뷰 등의 이름
+- `relnamespace` (`oid`): 이 릴레이션을 포함하는 네임스페이스의 OID(`pg_namespace.oid` 참조)
+- `reltype` (`oid`): 테이블의 행 타입에 해당하는 데이터 타입의 OID, 인덱스·시퀀스·TOAST 테이블의 경우 0(`pg_type.oid` 참조)
+- `reloftype` (`oid`): 타입이 지정된 테이블의 경우 기본 복합 타입의 OID, 그 외의 경우 0
+- `relowner` (`oid`): 릴레이션 소유자(`pg_authid.oid` 참조)
+- `relam` (`oid`): 테이블이나 인덱스에 접근하는 데 사용되는 접근 방법(`pg_am.oid` 참조)
+- `relfilenode` (`oid`): 디스크 파일의 이름, 0은 "매핑된" 릴레이션을 의미
+- `reltablespace` (`oid`): 릴레이션이 저장된 테이블스페이스, 0은 기본 테이블스페이스를 의미
+- `relpages` (`int4`): 페이지(BLCKSZ) 단위의 디스크 표현 크기, VACUUM·ANALYZE·CREATE INDEX에 의해 갱신되는 추정값
+- `reltuples` (`float4`): 살아있는 행의 수, 플래너가 사용하는 추정값(-1은 VACUUM/ANALYZE가 실행되지 않았음을 의미)
+- `relallvisible` (`int4`): 가시성 맵에서 all-visible로 표시된 페이지 수
+- `relallfrozen` (`int4`): 가시성 맵에서 all-frozen으로 표시된 페이지 수
+- `reltoastrelid` (`oid`): 연결된 TOAST 테이블의 OID, 없으면 0
+- `relhasindex` (`bool`): 테이블에 인덱스가 있으면 true
+- `relisshared` (`bool`): 클러스터 내 모든 데이터베이스에서 공유되는 테이블이면 true
+- `relpersistence` (`char`): `p` = 영구(permanent), `u` = 비로그(unlogged), `t` = 임시(temporary)
+- `relkind` (`char`): 릴레이션 종류(아래 목록 참고)
+- `relnatts` (`int2`): 사용자 컬럼 수(시스템 컬럼 제외)
+- `relchecks` (`int2`): CHECK 제약 조건 수
+- `relhasrules` (`bool`): 테이블에 규칙이 있으면 true
+- `relhastriggers` (`bool`): 테이블에 트리거가 있으면 true
+- `relhassubclass` (`bool`): 테이블/인덱스에 상속 자식이나 파티션이 있으면 true
+- `relrowsecurity` (`bool`): 행 수준 보안이 활성화되면 true
+- `relforcerowsecurity` (`bool`): RLS가 테이블 소유자에게도 적용되면 true
+- `relispopulated` (`bool`): 릴레이션이 채워져 있으면 true
+- `relreplident` (`char`): 복제 아이덴티티 — `d` = 기본(primary key), `n` = 없음, `f` = 모든 컬럼, `i` = 인덱스
+- `relispartition` (`bool`): 테이블이나 인덱스가 파티션이면 true
+- `relrewrite` (`oid`): DDL 재작성 중 원본 릴레이션의 OID, 그 외에는 0
+- `relfrozenxid` (`xid`): 동결된 행의 트랜잭션 ID 임계값
+- `relminmxid` (`xid`): 동결된 멀티트랜잭션의 멀티트랜잭션 ID 임계값
+- `relacl` (`aclitem[]`): 접근 권한
+- `reloptions` (`text[]`): 접근 방법별 옵션("keyword=value" 형식의 문자열)
+- `relpartbound` (`pg_node_tree`): 파티션인 경우 파티션 경계의 내부 표현
 
 ##### relkind 값
 
-| 값 | 설명 |
-|----|------|
-| `r` | 일반 테이블 (ordinary table) |
-| `i` | 인덱스 (index) |
-| `S` | 시퀀스 (sequence) |
-| `t` | TOAST 테이블 |
-| `v` | 뷰 (view) |
-| `m` | 구체화된 뷰 (materialized view) |
-| `c` | 복합 타입 (composite type) |
-| `f` | 외부 테이블 (foreign table) |
-| `p` | 파티션 테이블 (partitioned table) |
-| `I` | 파티션 인덱스 (partitioned index) |
+- `r`: 일반 테이블(ordinary table)
+- `i`: 인덱스(index)
+- `S`: 시퀀스(sequence)
+- `t`: TOAST 테이블
+- `v`: 뷰(view)
+- `m`: 구체화된 뷰(materialized view)
+- `c`: 복합 타입(composite type)
+- `f`: 외부 테이블(foreign table)
+- `p`: 파티션 테이블(partitioned table)
+- `I`: 파티션 인덱스(partitioned index)
 
 ---
 
 #### pg_attribute
 
-`pg_attribute` 카탈로그는 테이블 컬럼에 대한 정보를 저장합니다. 데이터베이스의 모든 테이블의 모든 컬럼에 대해 정확히 하나의 `pg_attribute` 행이 존재합니다.
+`pg_attribute` 카탈로그는 테이블 컬럼에 대한 정보를 저장함. 데이터베이스의 모든 테이블의 모든 컬럼에 대해 정확히 하나의 `pg_attribute` 행이 존재.
 
-> 참고: "속성(Attribute)"이라는 용어는 "컬럼(Column)"과 동일한 의미로, 역사적인 이유로 사용됩니다.
+> 참고: "속성(Attribute)"이라는 용어는 "컬럼(Column)"과 동일한 의미로, 역사적인 이유로 사용됨.
 
 ##### 컬럼 정의
 
-| 컬럼 | 타입 | 설명 |
-|------|------|------|
-| `attrelid` | `oid` | 이 컬럼이 속한 테이블 (`pg_class.oid` 참조) |
-| `attname` | `name` | 컬럼 이름 |
-| `atttypid` | `oid` | 데이터 타입 OID (`pg_type.oid` 참조); 삭제된 컬럼의 경우 0 |
-| `attlen` | `int2` | 이 컬럼 타입의 `pg_type.typlen` 복사본 |
-| `attnum` | `int2` | 컬럼 번호 (일반 컬럼: 1+, `ctid` 같은 시스템 컬럼: 음수) |
-| `atttypmod` | `int4` | 타입별 데이터 (예: varchar의 최대 길이); 불필요한 경우 -1 |
-| `attndims` | `int2` | 배열 차원 수; 배열이 아니면 0 |
-| `attbyval` | `bool` | `pg_type.typbyval` 복사본 |
-| `attalign` | `char` | `pg_type.typalign` 복사본 |
-| `attstorage` | `char` | `pg_type.typstorage` 복사본; TOAST 가능 타입의 경우 변경 가능 |
-| `attcompression` | `char` | 압축 방법: `'\0'` (기본값), `'p'` (pglz), `'l'` (LZ4) |
-| `attnotnull` | `bool` | NOT NULL 제약 조건 보유 여부 |
-| `atthasdef` | `bool` | 기본값이나 생성 표현식 보유 여부 (`pg_attrdef` 참조) |
-| `atthasmissing` | `bool` | 행에서 컬럼이 완전히 누락된 경우 사용되는 누락 값 보유 여부 |
-| `attidentity` | `char` | 아이덴티티 컬럼: `''` (없음), `'a'` (always), `'d'` (by default) |
-| `attgenerated` | `char` | 생성된 컬럼: `''` (없음), `'s'` (stored), `'v'` (virtual) |
-| `attisdropped` | `bool` | 삭제된 컬럼; 물리적으로 존재하지만 SQL로 접근 불가 |
-| `attislocal` | `bool` | 릴레이션에서 로컬로 정의됨 (상속도 가능) |
-| `attinhcount` | `int2` | 직접 조상의 수; 0이 아니면 삭제/이름 변경 방지 |
-| `attcollation` | `oid` | 콜레이션 OID (`pg_collation.oid` 참조); 콜레이션 불가 타입이면 0 |
-| `attstattarget` | `int2` | ANALYZE를 위한 통계 상세 수준 (0=없음, null=기본값, 양수=타입별) |
-| `attacl` | `aclitem[]` | 컬럼 수준 접근 권한 |
-| `attoptions` | `text[]` | 속성 옵션 ("keyword=value" 형식의 문자열) |
-| `attfdwoptions` | `text[]` | 외부 데이터 래퍼 옵션 |
-| `attmissingval` | `anyarray` | 누락 값이 있는 경우 하나의 요소를 가진 배열 |
+- `attrelid` (`oid`): 이 컬럼이 속한 테이블(`pg_class.oid` 참조)
+- `attname` (`name`): 컬럼 이름
+- `atttypid` (`oid`): 데이터 타입 OID(`pg_type.oid` 참조), 삭제된 컬럼의 경우 0
+- `attlen` (`int2`): 이 컬럼 타입의 `pg_type.typlen` 복사본
+- `attnum` (`int2`): 컬럼 번호(일반 컬럼: 1+, `ctid` 같은 시스템 컬럼: 음수)
+- `atttypmod` (`int4`): 타입별 데이터(예: varchar의 최대 길이), 불필요한 경우 -1
+- `attndims` (`int2`): 배열 차원 수, 배열이 아니면 0
+- `attbyval` (`bool`): `pg_type.typbyval` 복사본
+- `attalign` (`char`): `pg_type.typalign` 복사본
+- `attstorage` (`char`): `pg_type.typstorage` 복사본, TOAST 가능 타입의 경우 변경 가능
+- `attcompression` (`char`): 압축 방법 — `'\0'`(기본값), `'p'`(pglz), `'l'`(LZ4)
+- `attnotnull` (`bool`): NOT NULL 제약 조건 보유 여부
+- `atthasdef` (`bool`): 기본값이나 생성 표현식 보유 여부(`pg_attrdef` 참조)
+- `atthasmissing` (`bool`): 행에서 컬럼이 완전히 누락된 경우 사용되는 누락 값 보유 여부
+- `attidentity` (`char`): 아이덴티티 컬럼 — `''`(없음), `'a'`(always), `'d'`(by default)
+- `attgenerated` (`char`): 생성된 컬럼 — `''`(없음), `'s'`(stored), `'v'`(virtual)
+- `attisdropped` (`bool`): 삭제된 컬럼, 물리적으로 존재하지만 SQL로 접근 불가
+- `attislocal` (`bool`): 릴레이션에서 로컬로 정의됨(상속도 가능)
+- `attinhcount` (`int2`): 직접 조상의 수, 0이 아니면 삭제/이름 변경 방지
+- `attcollation` (`oid`): 콜레이션 OID(`pg_collation.oid` 참조), 콜레이션 불가 타입이면 0
+- `attstattarget` (`int2`): ANALYZE를 위한 통계 상세 수준(0=없음, null=기본값, 양수=타입별)
+- `attacl` (`aclitem[]`): 컬럼 수준 접근 권한
+- `attoptions` (`text[]`): 속성 옵션("keyword=value" 형식의 문자열)
+- `attfdwoptions` (`text[]`): 외부 데이터 래퍼 옵션
+- `attmissingval` (`anyarray`): 누락 값이 있는 경우 하나의 요소를 가진 배열
 
 ---
 
 #### pg_type
 
-`pg_type` 카탈로그는 PostgreSQL의 모든 데이터 타입에 대한 정보를 저장합니다. 기본 타입, 열거형 타입, 도메인, 복합 타입(각 테이블에 대해 자동 생성)이 포함됩니다.
+`pg_type` 카탈로그는 PostgreSQL의 모든 데이터 타입에 대한 정보를 저장함. 기본 타입, 열거형 타입, 도메인, 복합 타입(각 테이블에 대해 자동 생성)이 포함됨.
 
 ##### 컬럼 정의
 
-| 컬럼 | 타입 | 설명 |
-|------|------|------|
-| `oid` | `oid` | 행 식별자 |
-| `typname` | `name` | 데이터 타입 이름 |
-| `typnamespace` | `oid` | 이 타입을 포함하는 네임스페이스의 OID |
-| `typowner` | `oid` | 타입 소유자 |
-| `typlen` | `int2` | 고정 크기 타입의 바이트 크기; 가변 길이의 경우 음수 (-1: varlena, -2: C 문자열) |
-| `typbyval` | `bool` | 값이 값으로 전달되는지 참조로 전달되는지 여부 |
-| `typtype` | `char` | 타입 분류자: `b` (기본), `c` (복합), `d` (도메인), `e` (열거형), `p` (의사), `r` (범위), `m` (다중범위) |
-| `typcategory` | `char` | 암시적 캐스트 결정을 위한 타입 분류 |
-| `typispreferred` | `bool` | 카테고리 내에서 선호되는 캐스트 대상 |
-| `typisdefined` | `bool` | 타입이 정의되어 있으면 true |
-| `typdelim` | `char` | 배열 요소 구분 문자 |
-| `typrelid` | `oid` | 복합 타입의 경우 `pg_class` 참조 |
-| `typsubscript` | `regproc` | 첨자 처리기 함수 OID |
-| `typelem` | `oid` | 첨자를 위한 요소 타입 |
-| `typarray` | `oid` | 이것을 요소로 하는 "진정한" 배열 타입 |
-| `typinput` | `regproc` | 입력 변환 함수 (텍스트) |
-| `typoutput` | `regproc` | 출력 변환 함수 (텍스트) |
-| `typreceive` | `regproc` | 입력 변환 함수 (바이너리) |
-| `typsend` | `regproc` | 출력 변환 함수 (바이너리) |
-| `typmodin` | `regproc` | 타입 수정자 입력 함수 |
-| `typmodout` | `regproc` | 타입 수정자 출력 함수 |
-| `typanalyze` | `regproc` | 사용자 정의 ANALYZE 함수 |
-| `typalign` | `char` | 저장 정렬: `c` (char), `s` (short), `i` (int), `d` (double) |
-| `typstorage` | `char` | TOAST 전략: `p` (plain), `e` (external), `m` (main), `x` (extended) |
-| `typnotnull` | `bool` | NOT NULL 제약 조건 (도메인 전용) |
-| `typbasetype` | `oid` | 도메인의 기본 타입 |
-| `typtypmod` | `int4` | 도메인 기본 타입의 타입 수정자 |
-| `typndims` | `int4` | 배열에 대한 도메인의 배열 차원 |
-| `typcollation` | `oid` | 콜레이션 OID |
-| `typdefaultbin` | `pg_node_tree` | 기본 표현식의 바이너리 표현 |
-| `typdefault` | `text` | 사람이 읽을 수 있는 기본값 |
-| `typacl` | `aclitem[]` | 접근 권한 |
+- `oid` (`oid`): 행 식별자
+- `typname` (`name`): 데이터 타입 이름
+- `typnamespace` (`oid`): 이 타입을 포함하는 네임스페이스의 OID
+- `typowner` (`oid`): 타입 소유자
+- `typlen` (`int2`): 고정 크기 타입의 바이트 크기, 가변 길이의 경우 음수(-1: varlena, -2: C 문자열)
+- `typbyval` (`bool`): 값이 값으로 전달되는지 참조로 전달되는지 여부
+- `typtype` (`char`): 타입 분류자 — `b`(기본), `c`(복합), `d`(도메인), `e`(열거형), `p`(의사), `r`(범위), `m`(다중범위)
+- `typcategory` (`char`): 암시적 캐스트 결정을 위한 타입 분류
+- `typispreferred` (`bool`): 카테고리 내에서 선호되는 캐스트 대상
+- `typisdefined` (`bool`): 타입이 정의되어 있으면 true
+- `typdelim` (`char`): 배열 요소 구분 문자
+- `typrelid` (`oid`): 복합 타입의 경우 `pg_class` 참조
+- `typsubscript` (`regproc`): 첨자 처리기 함수 OID
+- `typelem` (`oid`): 첨자를 위한 요소 타입
+- `typarray` (`oid`): 이것을 요소로 하는 "진정한" 배열 타입
+- `typinput` (`regproc`): 입력 변환 함수(텍스트)
+- `typoutput` (`regproc`): 출력 변환 함수(텍스트)
+- `typreceive` (`regproc`): 입력 변환 함수(바이너리)
+- `typsend` (`regproc`): 출력 변환 함수(바이너리)
+- `typmodin` (`regproc`): 타입 수정자 입력 함수
+- `typmodout` (`regproc`): 타입 수정자 출력 함수
+- `typanalyze` (`regproc`): 사용자 정의 ANALYZE 함수
+- `typalign` (`char`): 저장 정렬 — `c`(char), `s`(short), `i`(int), `d`(double)
+- `typstorage` (`char`): TOAST 전략 — `p`(plain), `e`(external), `m`(main), `x`(extended)
+- `typnotnull` (`bool`): NOT NULL 제약 조건(도메인 전용)
+- `typbasetype` (`oid`): 도메인의 기본 타입
+- `typtypmod` (`int4`): 도메인 기본 타입의 타입 수정자
+- `typndims` (`int4`): 배열에 대한 도메인의 배열 차원
+- `typcollation` (`oid`): 콜레이션 OID
+- `typdefaultbin` (`pg_node_tree`): 기본 표현식의 바이너리 표현
+- `typdefault` (`text`): 사람이 읽을 수 있는 기본값
+- `typacl` (`aclitem[]`): 접근 권한
 
 ##### 타입 카테고리 (typcategory)
 
-| 코드 | 카테고리 |
-|------|----------|
-| `A` | 배열 타입 (Array types) |
-| `B` | 불리언 타입 (Boolean types) |
-| `C` | 복합 타입 (Composite types) |
-| `D` | 날짜/시간 타입 (Date/time types) |
-| `E` | 열거형 타입 (Enum types) |
-| `G` | 기하 타입 (Geometric types) |
-| `I` | 네트워크 주소 타입 (Network address types) |
-| `N` | 숫자 타입 (Numeric types) |
-| `P` | 의사 타입 (Pseudo-types) |
-| `R` | 범위 타입 (Range types) |
-| `S` | 문자열 타입 (String types) |
-| `T` | 시간 간격 타입 (Timespan types) |
-| `U` | 사용자 정의 타입 (User-defined types) |
-| `V` | 비트 문자열 타입 (Bit-string types) |
-| `X` | `unknown` 타입 |
-| `Z` | 내부 사용 타입 (Internal-use types) |
+- `A`: 배열 타입(Array types)
+- `B`: 불리언 타입(Boolean types)
+- `C`: 복합 타입(Composite types)
+- `D`: 날짜/시간 타입(Date/time types)
+- `E`: 열거형 타입(Enum types)
+- `G`: 기하 타입(Geometric types)
+- `I`: 네트워크 주소 타입(Network address types)
+- `N`: 숫자 타입(Numeric types)
+- `P`: 의사 타입(Pseudo-types)
+- `R`: 범위 타입(Range types)
+- `S`: 문자열 타입(String types)
+- `T`: 시간 간격 타입(Timespan types)
+- `U`: 사용자 정의 타입(User-defined types)
+- `V`: 비트 문자열 타입(Bit-string types)
+- `X`: `unknown` 타입
+- `Z`: 내부 사용 타입(Internal-use types)
 
 ---
 
 #### pg_proc
 
-`pg_proc` 시스템 카탈로그는 함수, 프로시저, 집계 함수, 윈도우 함수(통칭하여 루틴)에 대한 정보를 저장합니다.
+`pg_proc` 시스템 카탈로그는 함수, 프로시저, 집계 함수, 윈도우 함수(통칭하여 루틴)에 대한 정보를 저장함.
 
 ##### 컬럼 정의
 
-| 컬럼 | 타입 | 설명 |
-|------|------|------|
-| `oid` | `oid` | 행 식별자 |
-| `proname` | `name` | 함수 이름 |
-| `pronamespace` | `oid` | 이 함수를 포함하는 네임스페이스의 OID |
-| `proowner` | `oid` | 함수 소유자 |
-| `prolang` | `oid` | 구현 언어 또는 호출 인터페이스 |
-| `procost` | `float4` | 예상 실행 비용 (cpu_operator_cost 단위) |
-| `prorows` | `float4` | 예상 결과 행 수 |
-| `provariadic` | `oid` | 가변 인자 배열 매개변수 요소의 데이터 타입 (없으면 0) |
-| `prosupport` | `regproc` | 플래너 지원 함수 OID (없으면 0) |
-| `prokind` | `char` | 함수 유형: `f` (일반), `p` (프로시저), `a` (집계), `w` (윈도우) |
-| `prosecdef` | `bool` | 보안 정의자 함수 여부 (SECURITY DEFINER) |
-| `proleakproof` | `bool` | 인자 정보가 반환값 외의 경로로 노출되지 않는 함수 여부 (행 수준 보안과 함께 사용) |
-| `proisstrict` | `bool` | 인자가 NULL이면 NULL 반환 여부 |
-| `proretset` | `bool` | 함수가 집합(여러 값)을 반환하는지 여부 |
-| `provolatile` | `char` | 휘발성: `i` (immutable/불변), `s` (stable/안정), `v` (volatile/휘발) |
-| `proparallel` | `char` | 병렬 안전성: `s` (safe/안전), `r` (restricted/제한), `u` (unsafe/안전하지 않음) |
-| `pronargs` | `int2` | 입력 인자 수 |
-| `pronargdefaults` | `int2` | 기본값이 있는 인자 수 |
-| `prorettype` | `oid` | 반환 값의 데이터 타입 |
-| `proargtypes` | `oidvector` | 함수 인자의 데이터 타입 (호출 시그니처) |
-| `proallargtypes` | `oid[]` | 모든 인자의 데이터 타입 (OUT/INOUT 포함) |
-| `proargmodes` | `char[]` | 인자 모드: `i` (IN), `o` (OUT), `b` (INOUT), `v` (VARIADIC), `t` (TABLE) |
-| `proargnames` | `text[]` | 함수 인자의 이름 |
-| `proargdefaults` | `pg_node_tree` | 마지막 N개 입력 인자의 기본값 표현식 |
-| `protrftypes` | `oid[]` | TRANSFORM 절에 대한 인자/결과 타입 |
-| `prosrc` | `text` | 함수 호출 세부 정보 (언어에 따라 다름) |
-| `probin` | `text` | 추가 호출 정보 (동적 로드된 C 함수용) |
-| `prosqlbody` | `pg_node_tree` | 사전 파싱된 SQL 함수 본문 |
-| `proconfig` | `text[]` | 로컬 런타임 구성 설정 |
-| `proacl` | `aclitem[]` | 접근 권한 |
+- `oid` (`oid`): 행 식별자
+- `proname` (`name`): 함수 이름
+- `pronamespace` (`oid`): 이 함수를 포함하는 네임스페이스의 OID
+- `proowner` (`oid`): 함수 소유자
+- `prolang` (`oid`): 구현 언어 또는 호출 인터페이스
+- `procost` (`float4`): 예상 실행 비용(cpu_operator_cost 단위)
+- `prorows` (`float4`): 예상 결과 행 수
+- `provariadic` (`oid`): 가변 인자 배열 매개변수 요소의 데이터 타입(없으면 0)
+- `prosupport` (`regproc`): 플래너 지원 함수 OID(없으면 0)
+- `prokind` (`char`): 함수 유형 — `f`(일반), `p`(프로시저), `a`(집계), `w`(윈도우)
+- `prosecdef` (`bool`): 보안 정의자 함수 여부(SECURITY DEFINER)
+- `proleakproof` (`bool`): 인자 정보가 반환값 외의 경로로 노출되지 않는 함수 여부(행 수준 보안과 함께 사용)
+- `proisstrict` (`bool`): 인자가 NULL이면 NULL 반환 여부
+- `proretset` (`bool`): 함수가 집합(여러 값)을 반환하는지 여부
+- `provolatile` (`char`): 휘발성 — `i`(immutable/불변), `s`(stable/안정), `v`(volatile/휘발)
+- `proparallel` (`char`): 병렬 안전성 — `s`(safe/안전), `r`(restricted/제한), `u`(unsafe/안전하지 않음)
+- `pronargs` (`int2`): 입력 인자 수
+- `pronargdefaults` (`int2`): 기본값이 있는 인자 수
+- `prorettype` (`oid`): 반환 값의 데이터 타입
+- `proargtypes` (`oidvector`): 함수 인자의 데이터 타입(호출 시그니처)
+- `proallargtypes` (`oid[]`): 모든 인자의 데이터 타입(OUT/INOUT 포함)
+- `proargmodes` (`char[]`): 인자 모드 — `i`(IN), `o`(OUT), `b`(INOUT), `v`(VARIADIC), `t`(TABLE)
+- `proargnames` (`text[]`): 함수 인자의 이름
+- `proargdefaults` (`pg_node_tree`): 마지막 N개 입력 인자의 기본값 표현식
+- `protrftypes` (`oid[]`): TRANSFORM 절에 대한 인자/결과 타입
+- `prosrc` (`text`): 함수 호출 세부 정보(언어에 따라 다름)
+- `probin` (`text`): 추가 호출 정보(동적 로드된 C 함수용)
+- `prosqlbody` (`pg_node_tree`): 사전 파싱된 SQL 함수 본문
+- `proconfig` (`text[]`): 로컬 런타임 구성 설정
+- `proacl` (`aclitem[]`): 접근 권한
 
 ##### prokind 값
 
-| 값 | 설명 |
-|----|------|
-| `f` | 일반 함수 (normal function) |
-| `p` | 프로시저 (procedure) |
-| `a` | 집계 함수 (aggregate function) |
-| `w` | 윈도우 함수 (window function) |
+- `f`: 일반 함수(normal function)
+- `p`: 프로시저(procedure)
+- `a`: 집계 함수(aggregate function)
+- `w`: 윈도우 함수(window function)
 
 ---
 
 #### pg_namespace
 
-`pg_namespace` 카탈로그는 네임스페이스(Namespaces)를 저장합니다. 네임스페이스는 SQL 스키마의 기반이 되는 구조입니다.
+`pg_namespace` 카탈로그는 네임스페이스(Namespaces)를 저장함. 네임스페이스는 SQL 스키마의 기반이 되는 구조.
 
 ##### 핵심 개념
 
-각 네임스페이스는 이름 충돌 없이 릴레이션, 타입, 기타 객체를 별도 컬렉션으로 보유할 수 있습니다.
+각 네임스페이스는 이름 충돌 없이 릴레이션, 타입, 기타 객체를 별도 컬렉션으로 보유 가능.
 
 ##### 컬럼 정의
 
-| 컬럼 | 타입 | 설명 |
-|------|------|------|
-| `oid` | `oid` | 행 식별자 |
-| `nspname` | `name` | 네임스페이스 이름 |
-| `nspowner` | `oid` | 네임스페이스 소유자 (`pg_authid.oid` 참조) |
-| `nspacl` | `aclitem[]` | 접근 권한 |
+- `oid` (`oid`): 행 식별자
+- `nspname` (`name`): 네임스페이스 이름
+- `nspowner` (`oid`): 네임스페이스 소유자(`pg_authid.oid` 참조)
+- `nspacl` (`aclitem[]`): 접근 권한
 
 ---
 
 #### pg_index
 
-`pg_index` 카탈로그는 PostgreSQL의 인덱스에 대한 메타데이터를 포함합니다. 나머지 인덱스 정보는 `pg_class` 카탈로그에 저장됩니다.
+`pg_index` 카탈로그는 PostgreSQL의 인덱스에 대한 메타데이터를 포함함. 나머지 인덱스 정보는 `pg_class` 카탈로그에 저장됨.
 
 ##### 컬럼 정의
 
-| 컬럼 | 타입 | 설명 |
-|------|------|------|
-| `indexrelid` | `oid` | 이 인덱스의 `pg_class` 항목 OID |
-| `indrelid` | `oid` | 이 인덱스가 속한 테이블의 `pg_class` 항목 OID |
-| `indnatts` | `int2` | 인덱스의 총 컬럼 수 (키 + 포함 컬럼) |
-| `indnkeyatts` | `int2` | 키 컬럼만의 수 (포함 컬럼 제외) |
-| `indisunique` | `bool` | 유니크 인덱스이면 true |
-| `indnullsnotdistinct` | `bool` | 유니크 인덱스에서: true면 NULL은 동일하게 취급; false(기본)면 NULL은 구별됨 |
-| `indisprimary` | `bool` | 인덱스가 기본 키를 나타내면 true |
-| `indisexclusion` | `bool` | 인덱스가 배제 제약 조건을 지원하면 true |
-| `indimmediate` | `bool` | 삽입 시 유니크 검사가 즉시 수행되면 true |
-| `indisclustered` | `bool` | 테이블이 마지막으로 이 인덱스로 클러스터링되었으면 true |
-| `indisvalid` | `bool` | 인덱스가 쿼리에 유효하면 true; false면 불완전 |
-| `indcheckxmin` | `bool` | 쿼리가 `xmin`이 `TransactionXmin` 아래가 될 때까지 기다려야 하면 true |
-| `indisready` | `bool` | 인덱스가 삽입 준비가 되면 true |
-| `indislive` | `bool` | 인덱스가 삭제 중이면 false |
-| `indisreplident` | `bool` | 인덱스가 복제 아이덴티티로 선택되면 true |
-| `indkey` | `int2vector` | 인덱싱된 테이블 컬럼 번호의 배열; 0은 표현식을 나타냄 |
-| `indcollation` | `oidvector` | 각 키 컬럼의 콜레이션 OID |
-| `indclass` | `oidvector` | 각 키 컬럼의 연산자 클래스 OID |
-| `indoption` | `int2vector` | 컬럼별 플래그 비트 (접근 방법에 의해 의미가 정의됨) |
-| `indexprs` | `pg_node_tree` | 단순 컬럼 참조가 아닌 속성에 대한 표현식 트리 |
-| `indpred` | `pg_node_tree` | 부분 인덱스 술어에 대한 표현식 트리 (부분 인덱스가 아니면 NULL) |
+- `indexrelid` (`oid`): 이 인덱스의 `pg_class` 항목 OID
+- `indrelid` (`oid`): 이 인덱스가 속한 테이블의 `pg_class` 항목 OID
+- `indnatts` (`int2`): 인덱스의 총 컬럼 수(키 + 포함 컬럼)
+- `indnkeyatts` (`int2`): 키 컬럼만의 수(포함 컬럼 제외)
+- `indisunique` (`bool`): 유니크 인덱스이면 true
+- `indnullsnotdistinct` (`bool`): 유니크 인덱스에서 true면 NULL은 동일하게 취급, false(기본)면 NULL은 구별됨
+- `indisprimary` (`bool`): 인덱스가 기본 키를 나타내면 true
+- `indisexclusion` (`bool`): 인덱스가 배제 제약 조건을 지원하면 true
+- `indimmediate` (`bool`): 삽입 시 유니크 검사가 즉시 수행되면 true
+- `indisclustered` (`bool`): 테이블이 마지막으로 이 인덱스로 클러스터링되었으면 true
+- `indisvalid` (`bool`): 인덱스가 쿼리에 유효하면 true, false면 불완전
+- `indcheckxmin` (`bool`): 쿼리가 `xmin`이 `TransactionXmin` 아래가 될 때까지 기다려야 하면 true
+- `indisready` (`bool`): 인덱스가 삽입 준비가 되면 true
+- `indislive` (`bool`): 인덱스가 삭제 중이면 false
+- `indisreplident` (`bool`): 인덱스가 복제 아이덴티티로 선택되면 true
+- `indkey` (`int2vector`): 인덱싱된 테이블 컬럼 번호의 배열, 0은 표현식을 나타냄
+- `indcollation` (`oidvector`): 각 키 컬럼의 콜레이션 OID
+- `indclass` (`oidvector`): 각 키 컬럼의 연산자 클래스 OID
+- `indoption` (`int2vector`): 컬럼별 플래그 비트(접근 방법에 의해 의미가 정의됨)
+- `indexprs` (`pg_node_tree`): 단순 컬럼 참조가 아닌 속성에 대한 표현식 트리
+- `indpred` (`pg_node_tree`): 부분 인덱스 술어에 대한 표현식 트리(부분 인덱스가 아니면 NULL)
 
 ---
 
 #### pg_constraint
 
-`pg_constraint` 카탈로그는 PostgreSQL 테이블과 도메인에 대한 제약 조건 정의를 저장합니다.
+`pg_constraint` 카탈로그는 PostgreSQL 테이블과 도메인에 대한 제약 조건 정의를 저장함.
 
 ##### 저장되는 제약 조건 유형
 - CHECK 제약 조건
@@ -1180,87 +1151,79 @@ PostgreSQL은 50개 이상의 시스템 카탈로그를 제공합니다. 주요 
 
 ##### 컬럼 정의
 
-| 컬럼 | 타입 | 설명 |
-|------|------|------|
-| `oid` | `oid` | 행 식별자 |
-| `conname` | `name` | 제약 조건 이름 (반드시 유니크할 필요 없음) |
-| `connamespace` | `oid` | 이 제약 조건을 포함하는 네임스페이스의 OID |
-| `contype` | `char` | 제약 조건 유형 (아래 표 참조) |
-| `condeferrable` | `bool` | 제약 조건이 지연 가능한지 여부 |
-| `condeferred` | `bool` | 제약 조건이 기본적으로 지연되는지 여부 |
-| `conenforced` | `bool` | 제약 조건이 강제되는지 여부 |
-| `convalidated` | `bool` | 제약 조건이 검증되었는지 여부 |
-| `conrelid` | `oid` | 테이블 OID (테이블 제약 조건이 아니면 0) |
-| `contypid` | `oid` | 도메인 OID (도메인 제약 조건이 아니면 0) |
-| `conindid` | `oid` | 유니크/기본 키/외래 키/배제 제약 조건을 지원하는 인덱스 OID |
-| `conparentid` | `oid` | 부모 파티션 테이블 제약 조건 OID (파티션 제약 조건이 아니면 0) |
-| `confrelid` | `oid` | 외래 키의 참조 테이블 OID |
-| `confupdtype` | `char` | 외래 키 갱신 동작 |
-| `confdeltype` | `char` | 외래 키 삭제 동작 |
-| `confmatchtype` | `char` | 외래 키 매치 유형: `f` (full), `p` (partial), `s` (simple) |
-| `conislocal` | `bool` | 제약 조건이 로컬로 정의됨 (동시에 상속될 수 있음) |
-| `coninhcount` | `int2` | 직접 상속 조상의 수 |
-| `connoinherit` | `bool` | 상속 불가 제약 조건 |
-| `conperiod` | `bool` | `WITHOUT OVERLAPS` 또는 `PERIOD`로 정의된 제약 조건 |
-| `conkey` | `int2[]` | 제약된 컬럼 속성 번호 목록 |
-| `confkey` | `int2[]` | 참조된 컬럼 속성 번호 목록 (외래 키) |
-| `conpfeqop` | `oid[]` | PK = FK 비교를 위한 동등 연산자 |
-| `conppeqop` | `oid[]` | PK = PK 비교를 위한 동등 연산자 |
-| `conffeqop` | `oid[]` | FK = FK 비교를 위한 동등 연산자 |
-| `confdelsetcols` | `int2[]` | `SET NULL`/`SET DEFAULT` 삭제 동작에 의해 갱신되는 컬럼 |
-| `conexclop` | `oid[]` | 배제 제약 조건을 위한 컬럼별 배제 연산자 |
-| `conbin` | `pg_node_tree` | CHECK 제약 조건 표현식의 내부 표현 (`pg_get_constraintdef()` 사용하여 추출) |
+- `oid` (`oid`): 행 식별자
+- `conname` (`name`): 제약 조건 이름(반드시 유니크할 필요 없음)
+- `connamespace` (`oid`): 이 제약 조건을 포함하는 네임스페이스의 OID
+- `contype` (`char`): 제약 조건 유형(아래 목록 참고)
+- `condeferrable` (`bool`): 제약 조건이 지연 가능한지 여부
+- `condeferred` (`bool`): 제약 조건이 기본적으로 지연되는지 여부
+- `conenforced` (`bool`): 제약 조건이 강제되는지 여부
+- `convalidated` (`bool`): 제약 조건이 검증되었는지 여부
+- `conrelid` (`oid`): 테이블 OID(테이블 제약 조건이 아니면 0)
+- `contypid` (`oid`): 도메인 OID(도메인 제약 조건이 아니면 0)
+- `conindid` (`oid`): 유니크/기본 키/외래 키/배제 제약 조건을 지원하는 인덱스 OID
+- `conparentid` (`oid`): 부모 파티션 테이블 제약 조건 OID(파티션 제약 조건이 아니면 0)
+- `confrelid` (`oid`): 외래 키의 참조 테이블 OID
+- `confupdtype` (`char`): 외래 키 갱신 동작
+- `confdeltype` (`char`): 외래 키 삭제 동작
+- `confmatchtype` (`char`): 외래 키 매치 유형 — `f`(full), `p`(partial), `s`(simple)
+- `conislocal` (`bool`): 제약 조건이 로컬로 정의됨(동시에 상속될 수 있음)
+- `coninhcount` (`int2`): 직접 상속 조상의 수
+- `connoinherit` (`bool`): 상속 불가 제약 조건
+- `conperiod` (`bool`): `WITHOUT OVERLAPS` 또는 `PERIOD`로 정의된 제약 조건
+- `conkey` (`int2[]`): 제약된 컬럼 속성 번호 목록
+- `confkey` (`int2[]`): 참조된 컬럼 속성 번호 목록(외래 키)
+- `conpfeqop` (`oid[]`): PK = FK 비교를 위한 동등 연산자
+- `conppeqop` (`oid[]`): PK = PK 비교를 위한 동등 연산자
+- `conffeqop` (`oid[]`): FK = FK 비교를 위한 동등 연산자
+- `confdelsetcols` (`int2[]`): `SET NULL`/`SET DEFAULT` 삭제 동작에 의해 갱신되는 컬럼
+- `conexclop` (`oid[]`): 배제 제약 조건을 위한 컬럼별 배제 연산자
+- `conbin` (`pg_node_tree`): CHECK 제약 조건 표현식의 내부 표현(`pg_get_constraintdef()`로 추출)
 
 ##### contype 값
 
-| 값 | 설명 |
-|----|------|
-| `c` | CHECK 제약 조건 |
-| `f` | FOREIGN KEY (외래 키) 제약 조건 |
-| `n` | NOT NULL 제약 조건 |
-| `p` | PRIMARY KEY (기본 키) 제약 조건 |
-| `u` | UNIQUE (유니크) 제약 조건 |
-| `t` | 제약 조건 트리거 (Constraint trigger) |
-| `x` | EXCLUSION (배제) 제약 조건 |
+- `c`: CHECK 제약 조건
+- `f`: FOREIGN KEY (외래 키) 제약 조건
+- `n`: NOT NULL 제약 조건
+- `p`: PRIMARY KEY (기본 키) 제약 조건
+- `u`: UNIQUE (유니크) 제약 조건
+- `t`: 제약 조건 트리거(Constraint trigger)
+- `x`: EXCLUSION (배제) 제약 조건
 
 ##### 외래 키 동작 코드 (confupdtype, confdeltype)
 
-| 값 | 설명 |
-|----|------|
-| `a` | NO ACTION (아무 동작 없음) |
-| `r` | RESTRICT (제한) |
-| `c` | CASCADE (연쇄) |
-| `n` | SET NULL (NULL로 설정) |
-| `d` | SET DEFAULT (기본값으로 설정) |
+- `a`: NO ACTION (아무 동작 없음)
+- `r`: RESTRICT (제한)
+- `c`: CASCADE (연쇄)
+- `n`: SET NULL (NULL로 설정)
+- `d`: SET DEFAULT (기본값으로 설정)
 
 ---
 
 #### pg_database
 
-`pg_database` 카탈로그는 PostgreSQL 클러스터에서 사용 가능한 데이터베이스에 대한 정보를 저장합니다. 이것은 공유 카탈로그(Shared Catalog)입니다 - 데이터베이스마다 하나씩 존재하는 것이 아니라 클러스터당 하나의 복사본만 존재합니다.
+`pg_database` 카탈로그는 PostgreSQL 클러스터에서 사용 가능한 데이터베이스에 대한 정보를 저장함. 이것은 공유 카탈로그(Shared Catalog) — 데이터베이스마다 하나씩 존재하는 것이 아니라 클러스터당 하나의 복사본만 존재.
 
 ##### 컬럼 정의
 
-| 컬럼 | 타입 | 설명 |
-|------|------|------|
-| `oid` | `oid` | 행 식별자 |
-| `datname` | `name` | 데이터베이스 이름 |
-| `datdba` | `oid` | 데이터베이스 소유자 (`pg_authid.oid` 참조) |
-| `encoding` | `int4` | 문자 인코딩 (`pg_encoding_to_char()` 사용하여 변환) |
-| `datlocprovider` | `char` | 로케일 제공자: `b` = builtin, `c` = libc, `i` = icu |
-| `datistemplate` | `bool` | true이면 `CREATEDB` 권한을 가진 사용자가 복제 가능 |
-| `datallowconn` | `bool` | false이면 아무도 연결 불가 (`template0` 보호용) |
-| `dathasloginevt` | `bool` | 로그인 이벤트 트리거 존재 여부 (내부 사용 전용) |
-| `datconnlimit` | `int4` | 최대 동시 연결 수 (-1 = 제한 없음, -2 = 유효하지 않음) |
-| `datfrozenxid` | `xid` | VACUUM 추적을 위한 최소 동결 트랜잭션 ID |
-| `datminmxid` | `xid` | VACUUM 추적을 위한 최소 멀티트랜잭션 ID |
-| `dattablespace` | `oid` | 기본 테이블스페이스 (`pg_tablespace.oid` 참조) |
-| `datcollate` | `text` | LC_COLLATE 설정 |
-| `datctype` | `text` | LC_CTYPE 설정 |
-| `datlocale` | `text` | 콜레이션 제공자 로케일 이름 (libc 제공자의 경우 NULL) |
-| `daticurules` | `text` | ICU 콜레이션 규칙 |
-| `datcollversion` | `text` | 제공자별 콜레이션 버전 |
-| `datacl` | `aclitem[]` | 접근 권한 |
+- `oid` (`oid`): 행 식별자
+- `datname` (`name`): 데이터베이스 이름
+- `datdba` (`oid`): 데이터베이스 소유자(`pg_authid.oid` 참조)
+- `encoding` (`int4`): 문자 인코딩(`pg_encoding_to_char()`로 변환)
+- `datlocprovider` (`char`): 로케일 제공자 — `b` = builtin, `c` = libc, `i` = icu
+- `datistemplate` (`bool`): true이면 `CREATEDB` 권한을 가진 사용자가 복제 가능
+- `datallowconn` (`bool`): false이면 아무도 연결 불가(`template0` 보호용)
+- `dathasloginevt` (`bool`): 로그인 이벤트 트리거 존재 여부(내부 사용 전용)
+- `datconnlimit` (`int4`): 최대 동시 연결 수(-1 = 제한 없음, -2 = 유효하지 않음)
+- `datfrozenxid` (`xid`): VACUUM 추적을 위한 최소 동결 트랜잭션 ID
+- `datminmxid` (`xid`): VACUUM 추적을 위한 최소 멀티트랜잭션 ID
+- `dattablespace` (`oid`): 기본 테이블스페이스(`pg_tablespace.oid` 참조)
+- `datcollate` (`text`): LC_COLLATE 설정
+- `datctype` (`text`): LC_CTYPE 설정
+- `datlocale` (`text`): 콜레이션 제공자 로케일 이름(libc 제공자의 경우 NULL)
+- `daticurules` (`text`): ICU 콜레이션 규칙
+- `datcollversion` (`text`): 제공자별 콜레이션 버전
+- `datacl` (`aclitem[]`): 접근 권한
 
 ---
 
@@ -1468,15 +1431,11 @@ ORDER BY pg_database_size(datname) DESC;
 
 ### 주의사항
 
-1. 직접 수정 금지: 시스템 카탈로그를 직접 INSERT, UPDATE, DELETE하지 마세요. 대신 표준 DDL 명령어를 사용하세요.
-
-2. 지연된 플래그 갱신: `relhasindex`, `relhasrules`, `relhastriggers`, `relhassubclass` 같은 불리언 플래그는 지연되어 갱신됩니다. 조건이 충족되면 true로 설정되지만, 조건이 해제되어도 즉시 false로 재설정되지 않을 수 있습니다.
-
-3. 추정값 이해: `relpages`, `reltuples`, `relallvisible`, `relallfrozen`은 VACUUM, ANALYZE, 특정 DDL 명령에 의해 갱신되는 추정값입니다.
-
-4. 공유 카탈로그: `pg_database`, `pg_authid`, `pg_tablespace` 같은 일부 카탈로그는 클러스터 전체에서 공유됩니다.
-
-5. information_schema 활용: 시스템 카탈로그에 직접 접근하는 대신, SQL 표준인 `information_schema`를 사용하는 것이 이식성이 더 좋습니다.
+1. 직접 수정 금지: 시스템 카탈로그를 직접 INSERT, UPDATE, DELETE하지 말 것. 대신 표준 DDL 명령어 사용
+2. 지연된 플래그 갱신: `relhasindex`, `relhasrules`, `relhastriggers`, `relhassubclass` 같은 불리언 플래그는 지연되어 갱신됨. 조건이 충족되면 true로 설정되지만, 조건이 해제되어도 즉시 false로 재설정되지 않을 수 있음
+3. 추정값 이해: `relpages`, `reltuples`, `relallvisible`, `relallfrozen`은 VACUUM, ANALYZE, 특정 DDL 명령에 의해 갱신되는 추정값
+4. 공유 카탈로그: `pg_database`, `pg_authid`, `pg_tablespace` 같은 일부 카탈로그는 클러스터 전체에서 공유됨
+5. information_schema 활용: 시스템 카탈로그에 직접 접근하는 대신, SQL 표준인 `information_schema` 사용이 이식성 면에서 유리
 
 ---
 
@@ -1497,7 +1456,7 @@ ORDER BY pg_database_size(datname) DESC;
 >
 > 원문: https://www.postgresql.org/docs/current/views.html
 
-PostgreSQL은 시스템 카탈로그와 내부 서버 상태에 편리하게 접근할 수 있도록 내장 시스템 뷰(System Views)를 제공합니다. 이 장에서는 PostgreSQL이 제공하는 다양한 시스템 뷰의 개요와 주요 뷰들의 상세 정보를 설명합니다.
+PostgreSQL은 시스템 카탈로그와 내부 서버 상태에 편리하게 접근하도록 내장 시스템 뷰(System Views)를 제공함. 이 장에서는 PostgreSQL이 제공하는 다양한 시스템 뷰의 개요와 주요 뷰들의 상세 정보를 설명함.
 
 ---
 
@@ -1529,11 +1488,11 @@ PostgreSQL은 시스템 카탈로그와 내부 서버 상태에 편리하게 접
 
 ### 54.1 개요
 
-PostgreSQL 시스템 뷰는 두 가지 범주로 나눌 수 있습니다:
+PostgreSQL 시스템 뷰는 두 가지 범주로 나뉨.
 
 #### 1. 카탈로그 접근 뷰 (Catalog Access Views)
 
-시스템 카탈로그를 자주 사용하는 쿼리에 편리하게 접근할 수 있도록 합니다:
+시스템 카탈로그를 자주 사용하는 쿼리에 편리하게 접근하도록 함.
 
 - `pg_tables` - 테이블 정보
 - `pg_indexes` - 인덱스 정보
@@ -1544,7 +1503,7 @@ PostgreSQL 시스템 뷰는 두 가지 범주로 나눌 수 있습니다:
 
 #### 2. 서버 상태 뷰 (Server State Views)
 
-내부 서버 상태 정보에 대한 접근을 제공합니다:
+내부 서버 상태 정보 접근을 제공함.
 
 - `pg_stat_activity` - 현재 활동 중인 세션
 - `pg_locks` - 현재 잠금 상태
@@ -1554,53 +1513,51 @@ PostgreSQL 시스템 뷰는 두 가지 범주로 나눌 수 있습니다:
 
 #### 정보 스키마 (Information Schema)와의 비교
 
-PostgreSQL은 정보 스키마(Information Schema)도 제공합니다. 정보 스키마는 SQL 표준을 따르는 뷰를 제공하며, 필요한 정보를 모두 얻을 수 있는 경우에는 PostgreSQL 전용 시스템 뷰 대신 정보 스키마를 사용하는 것이 좋습니다. 다른 데이터베이스 시스템과의 이식성이 보장되기 때문입니다.
+PostgreSQL은 정보 스키마(Information Schema)도 제공함. 정보 스키마는 SQL 표준을 따르는 뷰를 제공 → 필요한 정보를 모두 얻을 수 있는 경우 PostgreSQL 전용 시스템 뷰 대신 정보 스키마 사용을 권장함. 다른 데이터베이스 시스템과의 이식성이 보장되기 때문.
 
 ---
 
 ### 54.2 시스템 뷰 목록
 
-PostgreSQL은 다음과 같은 시스템 뷰들을 제공합니다:
+PostgreSQL은 다음과 같은 시스템 뷰들을 제공함.
 
-| 뷰 이름 | 설명 |
-|---------|------|
-| `pg_aios` | 비동기 I/O 작업 (Asynchronous I/O operations) |
-| `pg_available_extensions` | 설치 가능한 확장 모듈 |
-| `pg_available_extension_versions` | 설치 가능한 확장 모듈 버전 |
-| `pg_backend_memory_contexts` | 백엔드 메모리 컨텍스트 |
-| `pg_config` | 설정 정보 |
-| `pg_cursors` | 현재 활성 커서 |
-| `pg_file_settings` | 파일 기반 설정 |
-| `pg_group` | 사용자 그룹 (호환성용) |
-| `pg_hba_file_rules` | HBA 파일 규칙 |
-| `pg_ident_file_mappings` | Ident 파일 매핑 |
-| `pg_indexes` | 인덱스 정보 |
-| `pg_locks` | 현재 잠금 상태 |
-| `pg_matviews` | 구체화된 뷰 |
-| `pg_policies` | 행 수준 보안 정책 |
-| `pg_prepared_statements` | 준비된 문장 |
-| `pg_prepared_xacts` | 준비된 트랜잭션 |
-| `pg_publication_tables` | 게시 테이블 |
-| `pg_replication_origin_status` | 복제 원본 상태 |
-| `pg_replication_slots` | 복제 슬롯 |
-| `pg_roles` | 데이터베이스 역할 |
-| `pg_rules` | 규칙 정의 |
-| `pg_seclabels` | 보안 레이블 |
-| `pg_sequences` | 시퀀스 정보 |
-| `pg_settings` | 서버 설정(GUC) |
-| `pg_shadow` | 사용자 비밀번호 정보 (구식) |
-| `pg_shmem_allocations` | 공유 메모리 할당 |
-| `pg_shmem_allocations_numa` | NUMA 공유 메모리 할당 |
-| `pg_stats` | 테이블 통계 |
-| `pg_stats_ext` | 확장 통계 |
-| `pg_stats_ext_exprs` | 확장 통계 표현식 |
-| `pg_tables` | 테이블 정보 |
-| `pg_timezone_abbrevs` | 시간대 약어 |
-| `pg_timezone_names` | 시간대 이름 |
-| `pg_user` | 데이터베이스 사용자 |
-| `pg_user_mappings` | 외부 서버 사용자 매핑 |
-| `pg_views` | 뷰 정의 |
-| `pg_wait_events` | 대기 이벤트 정보 |
+- `pg_aios`: 비동기 I/O 작업 (Asynchronous I/O operations)
+- `pg_available_extensions`: 설치 가능한 확장 모듈
+- `pg_available_extension_versions`: 설치 가능한 확장 모듈 버전
+- `pg_backend_memory_contexts`: 백엔드 메모리 컨텍스트
+- `pg_config`: 설정 정보
+- `pg_cursors`: 현재 활성 커서
+- `pg_file_settings`: 파일 기반 설정
+- `pg_group`: 사용자 그룹 (호환성용)
+- `pg_hba_file_rules`: HBA 파일 규칙
+- `pg_ident_file_mappings`: Ident 파일 매핑
+- `pg_indexes`: 인덱스 정보
+- `pg_locks`: 현재 잠금 상태
+- `pg_matviews`: 구체화된 뷰
+- `pg_policies`: 행 수준 보안 정책
+- `pg_prepared_statements`: 준비된 문장
+- `pg_prepared_xacts`: 준비된 트랜잭션
+- `pg_publication_tables`: 게시 테이블
+- `pg_replication_origin_status`: 복제 원본 상태
+- `pg_replication_slots`: 복제 슬롯
+- `pg_roles`: 데이터베이스 역할
+- `pg_rules`: 규칙 정의
+- `pg_seclabels`: 보안 레이블
+- `pg_sequences`: 시퀀스 정보
+- `pg_settings`: 서버 설정(GUC)
+- `pg_shadow`: 사용자 비밀번호 정보 (구식)
+- `pg_shmem_allocations`: 공유 메모리 할당
+- `pg_shmem_allocations_numa`: NUMA 공유 메모리 할당
+- `pg_stats`: 테이블 통계
+- `pg_stats_ext`: 확장 통계
+- `pg_stats_ext_exprs`: 확장 통계 표현식
+- `pg_tables`: 테이블 정보
+- `pg_timezone_abbrevs`: 시간대 약어
+- `pg_timezone_names`: 시간대 이름
+- `pg_user`: 데이터베이스 사용자
+- `pg_user_mappings`: 외부 서버 사용자 매핑
+- `pg_views`: 뷰 정의
+- `pg_wait_events`: 대기 이벤트 정보
 
 ---
 
@@ -1608,46 +1565,42 @@ PostgreSQL은 다음과 같은 시스템 뷰들을 제공합니다:
 
 #### 54.3.1 pg_stat_activity
 
-`pg_stat_activity` 뷰는 서버 프로세스와 현재 활동에 대한 실시간 정보를 제공합니다. 각 서버 프로세스당 하나의 행이 포함됩니다.
+`pg_stat_activity` 뷰는 서버 프로세스와 현재 활동에 대한 실시간 정보를 제공함. 각 서버 프로세스당 하나의 행이 포함됨.
 
 ##### 컬럼 정의
 
-| 컬럼 | 타입 | 설명 |
-|------|------|------|
-| `datid` | `oid` | 백엔드가 연결된 데이터베이스 OID |
-| `datname` | `name` | 백엔드가 연결된 데이터베이스 이름 |
-| `pid` | `integer` | 백엔드 프로세스 ID |
-| `leader_pid` | `integer` | 병렬 그룹 리더의 프로세스 ID |
-| `usesysid` | `oid` | 이 백엔드에 로그인한 사용자의 OID |
-| `usename` | `name` | 이 백엔드에 로그인한 사용자 이름 |
-| `application_name` | `text` | 연결된 애플리케이션 이름 |
-| `client_addr` | `inet` | 연결된 클라이언트의 IP 주소 |
-| `client_hostname` | `text` | 연결된 클라이언트의 호스트 이름 |
-| `client_port` | `integer` | 클라이언트가 사용하는 TCP 포트 번호 |
-| `backend_start` | `timestamptz` | 이 프로세스가 시작된 시간 |
-| `xact_start` | `timestamptz` | 현재 트랜잭션이 시작된 시간 |
-| `query_start` | `timestamptz` | 현재 활성 쿼리가 시작된 시간 |
-| `state_change` | `timestamptz` | 상태가 마지막으로 변경된 시간 |
-| `wait_event_type` | `text` | 백엔드가 대기 중인 이벤트 유형 |
-| `wait_event` | `text` | 대기 중인 특정 이벤트 이름 |
-| `state` | `text` | 현재 백엔드 상태 |
-| `backend_xid` | `xid` | 최상위 트랜잭션 식별자 |
-| `backend_xmin` | `xid` | 현재 백엔드의 xmin 호라이즌 |
-| `query_id` | `bigint` | 현재 쿼리의 식별자 |
-| `query` | `text` | 가장 최근에 실행된 쿼리 텍스트 |
-| `backend_type` | `text` | 백엔드 유형 |
+- `datid` (`oid`): 백엔드가 연결된 데이터베이스 OID
+- `datname` (`name`): 백엔드가 연결된 데이터베이스 이름
+- `pid` (`integer`): 백엔드 프로세스 ID
+- `leader_pid` (`integer`): 병렬 그룹 리더의 프로세스 ID
+- `usesysid` (`oid`): 이 백엔드에 로그인한 사용자의 OID
+- `usename` (`name`): 이 백엔드에 로그인한 사용자 이름
+- `application_name` (`text`): 연결된 애플리케이션 이름
+- `client_addr` (`inet`): 연결된 클라이언트의 IP 주소
+- `client_hostname` (`text`): 연결된 클라이언트의 호스트 이름
+- `client_port` (`integer`): 클라이언트가 사용하는 TCP 포트 번호
+- `backend_start` (`timestamptz`): 이 프로세스가 시작된 시간
+- `xact_start` (`timestamptz`): 현재 트랜잭션이 시작된 시간
+- `query_start` (`timestamptz`): 현재 활성 쿼리가 시작된 시간
+- `state_change` (`timestamptz`): 상태가 마지막으로 변경된 시간
+- `wait_event_type` (`text`): 백엔드가 대기 중인 이벤트 유형
+- `wait_event` (`text`): 대기 중인 특정 이벤트 이름
+- `state` (`text`): 현재 백엔드 상태
+- `backend_xid` (`xid`): 최상위 트랜잭션 식별자
+- `backend_xmin` (`xid`): 현재 백엔드의 xmin 호라이즌
+- `query_id` (`bigint`): 현재 쿼리의 식별자
+- `query` (`text`): 가장 최근에 실행된 쿼리 텍스트
+- `backend_type` (`text`): 백엔드 유형
 
 ##### state 컬럼 값
 
-| 값 | 설명 |
-|----|------|
-| `starting` | 초기 시작 중, 클라이언트 인증 진행 중 |
-| `active` | 백엔드가 쿼리를 실행 중 |
-| `idle` | 백엔드가 새 클라이언트 명령을 대기 중 |
-| `idle in transaction` | 트랜잭션 내에서 명령을 대기 중 |
-| `idle in transaction (aborted)` | 실패한 트랜잭션 내에서 대기 중 |
-| `fastpath function call` | 빠른 경로 함수를 실행 중 |
-| `disabled` | track_activities가 비활성화됨 |
+- `starting`: 초기 시작 중, 클라이언트 인증 진행 중
+- `active`: 백엔드가 쿼리를 실행 중
+- `idle`: 백엔드가 새 클라이언트 명령을 대기 중
+- `idle in transaction`: 트랜잭션 내에서 명령을 대기 중
+- `idle in transaction (aborted)`: 실패한 트랜잭션 내에서 대기 중
+- `fastpath function call`: 빠른 경로 함수를 실행 중
+- `disabled`: track_activities가 비활성화됨
 
 ##### 예제
 
@@ -1680,45 +1633,41 @@ GROUP BY datname;
 
 #### 54.3.2 pg_locks
 
-`pg_locks` 뷰는 PostgreSQL 데이터베이스 서버 내에서 활성 프로세스가 보유한 잠금에 대한 정보를 제공합니다.
+`pg_locks` 뷰는 PostgreSQL 데이터베이스 서버 내에서 활성 프로세스가 보유한 잠금에 대한 정보를 제공함.
 
 ##### 컬럼 정의
 
-| 컬럼 | 타입 | 설명 |
-|------|------|------|
-| `locktype` | `text` | 잠금 가능한 객체 유형 |
-| `database` | `oid` | 잠금 대상이 포함된 데이터베이스 OID |
-| `relation` | `oid` | 잠금 대상 릴레이션의 OID |
-| `page` | `int4` | 릴레이션 내 페이지 번호 |
-| `tuple` | `int2` | 페이지 내 튜플 번호 |
-| `virtualxid` | `text` | 잠금 대상 트랜잭션의 가상 ID |
-| `transactionid` | `xid` | 잠금 대상 트랜잭션 ID |
-| `classid` | `oid` | 잠금 대상이 포함된 시스템 카탈로그 OID |
-| `objid` | `oid` | 시스템 카탈로그 내 잠금 대상 OID |
-| `objsubid` | `int2` | 잠금 대상 컬럼 번호 |
-| `virtualtransaction` | `text` | 잠금을 보유/대기 중인 트랜잭션의 가상 ID |
-| `pid` | `int4` | 잠금을 보유/대기 중인 프로세스 ID |
-| `mode` | `text` | 보유 또는 요청 중인 잠금 모드 이름 |
-| `granted` | `bool` | 잠금 보유 여부 (true: 보유, false: 대기) |
-| `fastpath` | `bool` | 빠른 경로를 통해 획득한 잠금 여부 |
-| `waitstart` | `timestamptz` | 프로세스가 잠금 대기를 시작한 시간 |
+- `locktype` (`text`): 잠금 가능한 객체 유형
+- `database` (`oid`): 잠금 대상이 포함된 데이터베이스 OID
+- `relation` (`oid`): 잠금 대상 릴레이션의 OID
+- `page` (`int4`): 릴레이션 내 페이지 번호
+- `tuple` (`int2`): 페이지 내 튜플 번호
+- `virtualxid` (`text`): 잠금 대상 트랜잭션의 가상 ID
+- `transactionid` (`xid`): 잠금 대상 트랜잭션 ID
+- `classid` (`oid`): 잠금 대상이 포함된 시스템 카탈로그 OID
+- `objid` (`oid`): 시스템 카탈로그 내 잠금 대상 OID
+- `objsubid` (`int2`): 잠금 대상 컬럼 번호
+- `virtualtransaction` (`text`): 잠금을 보유/대기 중인 트랜잭션의 가상 ID
+- `pid` (`int4`): 잠금을 보유/대기 중인 프로세스 ID
+- `mode` (`text`): 보유 또는 요청 중인 잠금 모드 이름
+- `granted` (`bool`): 잠금 보유 여부 (true: 보유, false: 대기)
+- `fastpath` (`bool`): 빠른 경로를 통해 획득한 잠금 여부
+- `waitstart` (`timestamptz`): 프로세스가 잠금 대기를 시작한 시간
 
 ##### locktype 값
 
-| 값 | 설명 |
-|----|------|
-| `relation` | 테이블 전체에 대한 잠금 |
-| `extend` | 릴레이션 확장 권한 |
-| `frozenid` | pg_database.datfrozenxid 업데이트 권한 |
-| `page` | 릴레이션의 개별 페이지 |
-| `tuple` | 릴레이션의 개별 튜플 |
-| `transactionid` | 트랜잭션 ID |
-| `virtualxid` | 가상 트랜잭션 ID |
-| `spectoken` | 투기적 삽입 토큰 |
-| `object` | 일반 데이터베이스 객체 |
-| `userlock` | 사용자 정의 잠금 |
-| `advisory` | 자문 잠금 |
-| `applytransaction` | 트랜잭션 적용 |
+- `relation`: 테이블 전체에 대한 잠금
+- `extend`: 릴레이션 확장 권한
+- `frozenid`: pg_database.datfrozenxid 업데이트 권한
+- `page`: 릴레이션의 개별 페이지
+- `tuple`: 릴레이션의 개별 튜플
+- `transactionid`: 트랜잭션 ID
+- `virtualxid`: 가상 트랜잭션 ID
+- `spectoken`: 투기적 삽입 토큰
+- `object`: 일반 데이터베이스 객체
+- `userlock`: 사용자 정의 잠금
+- `advisory`: 자문 잠금
+- `applytransaction`: 트랜잭션 적용
 
 ##### 예제
 
@@ -1762,41 +1711,37 @@ WHERE cardinality(pg_blocking_pids(pid)) > 0;
 
 #### 54.3.3 pg_settings
 
-`pg_settings` 뷰는 서버의 런타임 설정 매개변수에 접근하는 인터페이스를 제공합니다. `SHOW`와 `SET` 명령의 대안으로, 추가적인 메타데이터를 함께 제공합니다.
+`pg_settings` 뷰는 서버의 런타임 설정 매개변수에 접근하는 인터페이스를 제공함. `SHOW`와 `SET` 명령의 대안으로, 추가적인 메타데이터를 함께 제공함.
 
 ##### 컬럼 정의
 
-| 컬럼 | 타입 | 설명 |
-|------|------|------|
-| `name` | `text` | 런타임 설정 매개변수 이름 |
-| `setting` | `text` | 매개변수의 현재 값 |
-| `unit` | `text` | 매개변수의 암묵적 단위 |
-| `category` | `text` | 매개변수의 논리적 그룹 |
-| `short_desc` | `text` | 매개변수에 대한 간략한 설명 |
-| `extra_desc` | `text` | 추가 상세 설명 |
-| `context` | `text` | 매개변수 설정에 필요한 컨텍스트 |
-| `vartype` | `text` | 매개변수 유형 |
-| `source` | `text` | 현재 매개변수 값의 출처 |
-| `min_val` | `text` | 최소 허용 값 |
-| `max_val` | `text` | 최대 허용 값 |
-| `enumvals` | `text[]` | enum 매개변수의 허용 값들 |
-| `boot_val` | `text` | 서버 시작 시 가정되는 값 |
-| `reset_val` | `text` | RESET이 재설정할 값 |
-| `sourcefile` | `text` | 값이 설정된 설정 파일 |
-| `sourceline` | `int4` | 설정 파일 내 줄 번호 |
-| `pending_restart` | `bool` | 변경되었지만 재시작이 필요한지 여부 |
+- `name` (`text`): 런타임 설정 매개변수 이름
+- `setting` (`text`): 매개변수의 현재 값
+- `unit` (`text`): 매개변수의 암묵적 단위
+- `category` (`text`): 매개변수의 논리적 그룹
+- `short_desc` (`text`): 매개변수에 대한 간략한 설명
+- `extra_desc` (`text`): 추가 상세 설명
+- `context` (`text`): 매개변수 설정에 필요한 컨텍스트
+- `vartype` (`text`): 매개변수 유형
+- `source` (`text`): 현재 매개변수 값의 출처
+- `min_val` (`text`): 최소 허용 값
+- `max_val` (`text`): 최대 허용 값
+- `enumvals` (`text[]`): enum 매개변수의 허용 값들
+- `boot_val` (`text`): 서버 시작 시 가정되는 값
+- `reset_val` (`text`): RESET이 재설정할 값
+- `sourcefile` (`text`): 값이 설정된 설정 파일
+- `sourceline` (`int4`): 설정 파일 내 줄 번호
+- `pending_restart` (`bool`): 변경되었지만 재시작이 필요한지 여부
 
 ##### context 컬럼 값 (변경 난이도 순)
 
-| 값 | 설명 |
-|----|------|
-| `internal` | 직접 변경 불가, 내부적으로 결정된 값 |
-| `postmaster` | 서버 시작 시에만 설정 가능, 재시작 필요 |
-| `sighup` | postgresql.conf에서 SIGHUP 신호로 변경 가능 |
-| `superuser-backend` | 슈퍼유저만 세션 시작 시 설정 가능 |
-| `backend` | 모든 사용자가 세션 시작 시 설정 가능 |
-| `superuser` | 슈퍼유저만 SET으로 변경 가능 |
-| `user` | 모든 사용자가 SET으로 변경 가능 |
+- `internal`: 직접 변경 불가, 내부적으로 결정된 값
+- `postmaster`: 서버 시작 시에만 설정 가능, 재시작 필요
+- `sighup`: postgresql.conf에서 SIGHUP 신호로 변경 가능
+- `superuser-backend`: 슈퍼유저만 세션 시작 시 설정 가능
+- `backend`: 모든 사용자가 세션 시작 시 설정 가능
+- `superuser`: 슈퍼유저만 SET으로 변경 가능
+- `user`: 모든 사용자가 SET으로 변경 가능
 
 ##### 예제
 
@@ -1836,20 +1781,18 @@ WHERE setting != boot_val;
 
 #### 54.3.4 pg_tables
 
-`pg_tables` 뷰는 데이터베이스의 각 테이블에 대한 유용한 정보를 제공합니다.
+`pg_tables` 뷰는 데이터베이스의 각 테이블에 대한 유용한 정보를 제공함.
 
 ##### 컬럼 정의
 
-| 컬럼 | 타입 | 설명 |
-|------|------|------|
-| `schemaname` | `name` | 테이블을 포함하는 스키마 이름 |
-| `tablename` | `name` | 테이블 이름 |
-| `tableowner` | `name` | 테이블 소유자 이름 |
-| `tablespace` | `name` | 테이블이 포함된 테이블스페이스 이름 (기본값인 경우 null) |
-| `hasindexes` | `bool` | 테이블에 인덱스가 있는지 여부 |
-| `hasrules` | `bool` | 테이블에 규칙이 있는지 여부 |
-| `hastriggers` | `bool` | 테이블에 트리거가 있는지 여부 |
-| `rowsecurity` | `bool` | 행 수준 보안이 활성화되어 있는지 여부 |
+- `schemaname` (`name`): 테이블을 포함하는 스키마 이름
+- `tablename` (`name`): 테이블 이름
+- `tableowner` (`name`): 테이블 소유자 이름
+- `tablespace` (`name`): 테이블이 포함된 테이블스페이스 이름 (기본값인 경우 null)
+- `hasindexes` (`bool`): 테이블에 인덱스가 있는지 여부
+- `hasrules` (`bool`): 테이블에 규칙이 있는지 여부
+- `hastriggers` (`bool`): 테이블에 트리거가 있는지 여부
+- `rowsecurity` (`bool`): 행 수준 보안이 활성화되어 있는지 여부
 
 ##### 예제
 
@@ -1881,17 +1824,15 @@ ORDER BY tablename;
 
 #### 54.3.5 pg_indexes
 
-`pg_indexes` 뷰는 데이터베이스의 각 인덱스에 대한 유용한 정보를 제공합니다.
+`pg_indexes` 뷰는 데이터베이스의 각 인덱스에 대한 유용한 정보를 제공함.
 
 ##### 컬럼 정의
 
-| 컬럼 | 타입 | 설명 |
-|------|------|------|
-| `schemaname` | `name` | 테이블과 인덱스를 포함하는 스키마 이름 |
-| `tablename` | `name` | 인덱스가 적용된 테이블 이름 |
-| `indexname` | `name` | 인덱스 이름 |
-| `tablespace` | `name` | 인덱스가 포함된 테이블스페이스 이름 |
-| `indexdef` | `text` | 인덱스 정의 (재구성된 CREATE INDEX 명령) |
+- `schemaname` (`name`): 테이블과 인덱스를 포함하는 스키마 이름
+- `tablename` (`name`): 인덱스가 적용된 테이블 이름
+- `indexname` (`name`): 인덱스 이름
+- `tablespace` (`name`): 인덱스가 포함된 테이블스페이스 이름
+- `indexdef` (`text`): 인덱스 정의 (재구성된 CREATE INDEX 명령)
 
 ##### 예제
 
@@ -1922,16 +1863,14 @@ WHERE indexdef LIKE '%btree%';
 
 #### 54.3.6 pg_views
 
-`pg_views` 뷰는 데이터베이스의 각 뷰에 대한 정보를 제공합니다.
+`pg_views` 뷰는 데이터베이스의 각 뷰에 대한 정보를 제공함.
 
 ##### 컬럼 정의
 
-| 컬럼 | 타입 | 설명 |
-|------|------|------|
-| `schemaname` | `name` | 뷰를 포함하는 스키마 이름 |
-| `viewname` | `name` | 뷰 이름 |
-| `viewowner` | `name` | 뷰 소유자 이름 |
-| `definition` | `text` | 뷰 정의 (재구성된 SELECT 쿼리) |
+- `schemaname` (`name`): 뷰를 포함하는 스키마 이름
+- `viewname` (`name`): 뷰 이름
+- `viewowner` (`name`): 뷰 소유자 이름
+- `definition` (`text`): 뷰 정의 (재구성된 SELECT 쿼리)
 
 ##### 예제
 
@@ -1956,25 +1895,23 @@ WHERE definition LIKE '%users%';
 
 #### 54.3.7 pg_roles
 
-`pg_roles` 뷰는 데이터베이스 역할에 대한 정보를 제공합니다. `pg_authid` 카탈로그 테이블을 누구나 읽을 수 있도록 공개한 뷰이며, 보안을 위해 비밀번호 필드는 숨겨져 있습니다.
+`pg_roles` 뷰는 데이터베이스 역할에 대한 정보를 제공함. `pg_authid` 카탈로그 테이블을 누구나 읽을 수 있도록 공개한 뷰이며, 보안을 위해 비밀번호 필드는 숨겨져 있음.
 
 ##### 컬럼 정의
 
-| 컬럼 | 타입 | 설명 |
-|------|------|------|
-| `rolname` | `name` | 역할 이름 |
-| `rolsuper` | `bool` | 슈퍼유저 권한 여부 |
-| `rolinherit` | `bool` | 멤버인 역할의 권한을 자동으로 상속하는지 여부 |
-| `rolcreaterole` | `bool` | 역할 생성 가능 여부 |
-| `rolcreatedb` | `bool` | 데이터베이스 생성 가능 여부 |
-| `rolcanlogin` | `bool` | 로그인 가능 여부 |
-| `rolreplication` | `bool` | 복제 역할 여부 |
-| `rolconnlimit` | `int4` | 최대 동시 연결 수 (-1은 제한 없음) |
-| `rolpassword` | `text` | 비밀번호 (항상 `********`로 표시) |
-| `rolvaliduntil` | `timestamptz` | 비밀번호 만료 시간 |
-| `rolbypassrls` | `bool` | 행 수준 보안 정책 우회 여부 |
-| `rolconfig` | `text[]` | 역할별 런타임 설정 기본값 |
-| `oid` | `oid` | 역할 ID |
+- `rolname` (`name`): 역할 이름
+- `rolsuper` (`bool`): 슈퍼유저 권한 여부
+- `rolinherit` (`bool`): 멤버인 역할의 권한을 자동으로 상속하는지 여부
+- `rolcreaterole` (`bool`): 역할 생성 가능 여부
+- `rolcreatedb` (`bool`): 데이터베이스 생성 가능 여부
+- `rolcanlogin` (`bool`): 로그인 가능 여부
+- `rolreplication` (`bool`): 복제 역할 여부
+- `rolconnlimit` (`int4`): 최대 동시 연결 수 (-1은 제한 없음)
+- `rolpassword` (`text`): 비밀번호 (항상 `********`로 표시)
+- `rolvaliduntil` (`timestamptz`): 비밀번호 만료 시간
+- `rolbypassrls` (`bool`): 행 수준 보안 정책 우회 여부
+- `rolconfig` (`text[]`): 역할별 런타임 설정 기본값
+- `oid` (`oid`): 역할 ID
 
 ##### 예제
 
@@ -2003,29 +1940,27 @@ WHERE rolconnlimit > 0;
 
 #### 54.3.8 pg_stats
 
-`pg_stats` 뷰는 `pg_statistic` 카탈로그에 저장된 정보를 더 읽기 쉬운 형태로 제공합니다. 사용자는 읽기 권한이 있는 테이블의 통계에만 접근할 수 있습니다.
+`pg_stats` 뷰는 `pg_statistic` 카탈로그에 저장된 정보를 더 읽기 쉬운 형태로 제공함. 사용자는 읽기 권한이 있는 테이블의 통계에만 접근 가능.
 
 ##### 컬럼 정의
 
-| 컬럼 | 타입 | 설명 |
-|------|------|------|
-| `schemaname` | `name` | 테이블을 포함하는 스키마 이름 |
-| `tablename` | `name` | 테이블 이름 |
-| `attname` | `name` | 컬럼 이름 |
-| `inherited` | `bool` | 자식 테이블의 값도 포함하는지 여부 |
-| `null_frac` | `float4` | null인 항목의 비율 |
-| `avg_width` | `int4` | 컬럼 항목의 평균 바이트 너비 |
-| `n_distinct` | `float4` | 고유 값의 추정 개수 |
-| `most_common_vals` | `anyarray` | 가장 흔한 값 목록 |
-| `most_common_freqs` | `float4[]` | 가장 흔한 값의 빈도 |
-| `histogram_bounds` | `anyarray` | 히스토그램 경계 값 |
-| `correlation` | `float4` | 물리적 행 순서와 논리적 순서 간의 상관관계 |
-| `most_common_elems` | `anyarray` | 가장 자주 나타나는 요소 값 (배열 유형) |
-| `most_common_elem_freqs` | `float4[]` | 가장 흔한 요소 값의 빈도 |
-| `elem_count_histogram` | `float4[]` | 고유 요소 개수 히스토그램 |
-| `range_length_histogram` | `anyarray` | 범위 값 길이 히스토그램 (range 타입) |
-| `range_empty_frac` | `float4` | 빈 범위 항목의 비율 (range 타입) |
-| `range_bounds_histogram` | `anyarray` | 범위 경계 히스토그램 (range 타입) |
+- `schemaname` (`name`): 테이블을 포함하는 스키마 이름
+- `tablename` (`name`): 테이블 이름
+- `attname` (`name`): 컬럼 이름
+- `inherited` (`bool`): 자식 테이블의 값도 포함하는지 여부
+- `null_frac` (`float4`): null인 항목의 비율
+- `avg_width` (`int4`): 컬럼 항목의 평균 바이트 너비
+- `n_distinct` (`float4`): 고유 값의 추정 개수
+- `most_common_vals` (`anyarray`): 가장 흔한 값 목록
+- `most_common_freqs` (`float4[]`): 가장 흔한 값의 빈도
+- `histogram_bounds` (`anyarray`): 히스토그램 경계 값
+- `correlation` (`float4`): 물리적 행 순서와 논리적 순서 간의 상관관계
+- `most_common_elems` (`anyarray`): 가장 자주 나타나는 요소 값 (배열 유형)
+- `most_common_elem_freqs` (`float4[]`): 가장 흔한 요소 값의 빈도
+- `elem_count_histogram` (`float4[]`): 고유 요소 개수 히스토그램
+- `range_length_histogram` (`anyarray`): 범위 값 길이 히스토그램 (range 타입)
+- `range_empty_frac` (`float4`): 빈 범위 항목의 비율 (range 타입)
+- `range_bounds_histogram` (`anyarray`): 범위 경계 히스토그램 (range 타입)
 
 ##### 예제
 
@@ -2052,18 +1987,16 @@ WHERE tablename = 'orders'
 
 #### 54.3.9 pg_cursors
 
-`pg_cursors` 뷰는 현재 사용 가능한 모든 커서를 나열합니다.
+`pg_cursors` 뷰는 현재 사용 가능한 모든 커서를 나열함.
 
 ##### 컬럼 정의
 
-| 컬럼 | 타입 | 설명 |
-|------|------|------|
-| `name` | `text` | 커서 이름 |
-| `statement` | `text` | 커서를 선언하기 위해 제출된 쿼리 문자열 |
-| `is_holdable` | `bool` | 트랜잭션 커밋 후에도 접근 가능한지 여부 |
-| `is_binary` | `bool` | BINARY로 선언되었는지 여부 |
-| `is_scrollable` | `bool` | 비순차적 행 검색이 가능한지 여부 |
-| `creation_time` | `timestamptz` | 커서가 선언된 시간 |
+- `name` (`text`): 커서 이름
+- `statement` (`text`): 커서를 선언하기 위해 제출된 쿼리 문자열
+- `is_holdable` (`bool`): 트랜잭션 커밋 후에도 접근 가능한지 여부
+- `is_binary` (`bool`): BINARY로 선언되었는지 여부
+- `is_scrollable` (`bool`): 비순차적 행 검색이 가능한지 여부
+- `creation_time` (`timestamptz`): 커서가 선언된 시간
 
 ##### 예제
 
@@ -2082,20 +2015,18 @@ WHERE is_holdable = true;
 
 #### 54.3.10 pg_prepared_statements
 
-`pg_prepared_statements` 뷰는 현재 세션에서 사용 가능한 모든 준비된 문장을 표시합니다.
+`pg_prepared_statements` 뷰는 현재 세션에서 사용 가능한 모든 준비된 문장을 표시함.
 
 ##### 컬럼 정의
 
-| 컬럼 | 타입 | 설명 |
-|------|------|------|
-| `name` | `text` | 준비된 문장의 식별자 |
-| `statement` | `text` | 클라이언트가 제출한 쿼리 문자열 |
-| `prepare_time` | `timestamptz` | 준비된 문장이 생성된 시간 |
-| `parameter_types` | `regtype[]` | 예상 매개변수 유형 배열 |
-| `result_types` | `regtype[]` | 반환되는 컬럼 유형 배열 |
-| `from_sql` | `bool` | SQL PREPARE 명령으로 생성되었는지 여부 |
-| `generic_plans` | `int8` | 제네릭 계획이 선택된 횟수 |
-| `custom_plans` | `int8` | 커스텀 계획이 선택된 횟수 |
+- `name` (`text`): 준비된 문장의 식별자
+- `statement` (`text`): 클라이언트가 제출한 쿼리 문자열
+- `prepare_time` (`timestamptz`): 준비된 문장이 생성된 시간
+- `parameter_types` (`regtype[]`): 예상 매개변수 유형 배열
+- `result_types` (`regtype[]`): 반환되는 컬럼 유형 배열
+- `from_sql` (`bool`): SQL PREPARE 명령으로 생성되었는지 여부
+- `generic_plans` (`int8`): 제네릭 계획이 선택된 횟수
+- `custom_plans` (`int8`): 커스텀 계획이 선택된 횟수
 
 ##### 예제
 
@@ -2117,33 +2048,31 @@ FROM pg_prepared_statements;
 
 #### 54.3.11 pg_replication_slots
 
-`pg_replication_slots` 뷰는 데이터베이스 클러스터에 현재 존재하는 모든 복제 슬롯과 상태 정보를 제공합니다.
+`pg_replication_slots` 뷰는 데이터베이스 클러스터에 현재 존재하는 모든 복제 슬롯과 상태 정보를 제공함.
 
 ##### 컬럼 정의
 
-| 컬럼 | 타입 | 설명 |
-|------|------|------|
-| `slot_name` | `name` | 복제 슬롯의 고유 식별자 |
-| `plugin` | `name` | 논리 슬롯이 사용하는 출력 플러그인 이름 |
-| `slot_type` | `text` | 슬롯 유형: `physical` 또는 `logical` |
-| `datoid` | `oid` | 연결된 데이터베이스 OID |
-| `database` | `name` | 연결된 데이터베이스 이름 |
-| `temporary` | `bool` | 임시 복제 슬롯 여부 |
-| `active` | `bool` | 현재 스트리밍 중인지 여부 |
-| `active_pid` | `int4` | 스트리밍 세션의 프로세스 ID |
-| `xmin` | `xid` | 유지해야 하는 가장 오래된 트랜잭션 |
-| `catalog_xmin` | `xid` | 시스템 카탈로그에 영향을 미치는 가장 오래된 트랜잭션 |
-| `restart_lsn` | `pg_lsn` | 필요할 수 있는 가장 오래된 WAL의 주소 |
-| `confirmed_flush_lsn` | `pg_lsn` | 수신 확인된 데이터까지의 주소 |
-| `wal_status` | `text` | WAL 파일 가용성 상태 |
-| `safe_wal_size` | `int8` | 안전하게 쓸 수 있는 WAL 바이트 수 |
-| `two_phase` | `bool` | 준비된 트랜잭션 디코딩 활성화 여부 |
-| `two_phase_at` | `pg_lsn` | 준비된 트랜잭션 디코딩이 활성화된 LSN |
-| `inactive_since` | `timestamptz` | 슬롯이 비활성화된 시간 |
-| `conflicting` | `bool` | 복구와 충돌하여 무효화되었는지 여부 |
-| `invalidation_reason` | `text` | 슬롯 무효화 이유 |
-| `failover` | `bool` | 장애 조치를 위해 스탠바이로 동기화 활성화 여부 |
-| `synced` | `bool` | 기본 서버에서 동기화되었는지 여부 |
+- `slot_name` (`name`): 복제 슬롯의 고유 식별자
+- `plugin` (`name`): 논리 슬롯이 사용하는 출력 플러그인 이름
+- `slot_type` (`text`): 슬롯 유형: `physical` 또는 `logical`
+- `datoid` (`oid`): 연결된 데이터베이스 OID
+- `database` (`name`): 연결된 데이터베이스 이름
+- `temporary` (`bool`): 임시 복제 슬롯 여부
+- `active` (`bool`): 현재 스트리밍 중인지 여부
+- `active_pid` (`int4`): 스트리밍 세션의 프로세스 ID
+- `xmin` (`xid`): 유지해야 하는 가장 오래된 트랜잭션
+- `catalog_xmin` (`xid`): 시스템 카탈로그에 영향을 미치는 가장 오래된 트랜잭션
+- `restart_lsn` (`pg_lsn`): 필요할 수 있는 가장 오래된 WAL의 주소
+- `confirmed_flush_lsn` (`pg_lsn`): 수신 확인된 데이터까지의 주소
+- `wal_status` (`text`): WAL 파일 가용성 상태
+- `safe_wal_size` (`int8`): 안전하게 쓸 수 있는 WAL 바이트 수
+- `two_phase` (`bool`): 준비된 트랜잭션 디코딩 활성화 여부
+- `two_phase_at` (`pg_lsn`): 준비된 트랜잭션 디코딩이 활성화된 LSN
+- `inactive_since` (`timestamptz`): 슬롯이 비활성화된 시간
+- `conflicting` (`bool`): 복구와 충돌하여 무효화되었는지 여부
+- `invalidation_reason` (`text`): 슬롯 무효화 이유
+- `failover` (`bool`): 장애 조치를 위해 스탠바이로 동기화 활성화 여부
+- `synced` (`bool`): 기본 서버에서 동기화되었는지 여부
 
 ##### 예제
 
@@ -2167,23 +2096,21 @@ WHERE active = false;
 
 #### 54.3.12 pg_sequences
 
-`pg_sequences` 뷰는 데이터베이스의 각 시퀀스에 대한 유용한 정보를 제공합니다.
+`pg_sequences` 뷰는 데이터베이스의 각 시퀀스에 대한 유용한 정보를 제공함.
 
 ##### 컬럼 정의
 
-| 컬럼 | 타입 | 설명 |
-|------|------|------|
-| `schemaname` | `name` | 시퀀스를 포함하는 스키마 이름 |
-| `sequencename` | `name` | 시퀀스 이름 |
-| `sequenceowner` | `name` | 시퀀스 소유자 이름 |
-| `data_type` | `regtype` | 시퀀스의 데이터 유형 |
-| `start_value` | `int8` | 시퀀스 시작 값 |
-| `min_value` | `int8` | 시퀀스 최소값 |
-| `max_value` | `int8` | 시퀀스 최대값 |
-| `increment_by` | `int8` | 시퀀스 증가값 |
-| `cycle` | `bool` | 시퀀스 순환 여부 |
-| `cache_size` | `int8` | 시퀀스 캐시 크기 |
-| `last_value` | `int8` | 디스크에 기록된 마지막 시퀀스 값 |
+- `schemaname` (`name`): 시퀀스를 포함하는 스키마 이름
+- `sequencename` (`name`): 시퀀스 이름
+- `sequenceowner` (`name`): 시퀀스 소유자 이름
+- `data_type` (`regtype`): 시퀀스의 데이터 유형
+- `start_value` (`int8`): 시퀀스 시작 값
+- `min_value` (`int8`): 시퀀스 최소값
+- `max_value` (`int8`): 시퀀스 최대값
+- `increment_by` (`int8`): 시퀀스 증가값
+- `cycle` (`bool`): 시퀀스 순환 여부
+- `cache_size` (`int8`): 시퀀스 캐시 크기
+- `last_value` (`int8`): 디스크에 기록된 마지막 시퀀스 값
 
 ##### 예제
 
@@ -2207,19 +2134,17 @@ WHERE cache_size > 1;
 
 #### 54.3.13 pg_matviews
 
-`pg_matviews` 뷰는 데이터베이스의 각 구체화된 뷰(Materialized View)에 대한 정보를 제공합니다.
+`pg_matviews` 뷰는 데이터베이스의 각 구체화된 뷰(Materialized View)에 대한 정보를 제공함.
 
 ##### 컬럼 정의
 
-| 컬럼 | 타입 | 설명 |
-|------|------|------|
-| `schemaname` | `name` | 구체화된 뷰를 포함하는 스키마 이름 |
-| `matviewname` | `name` | 구체화된 뷰 이름 |
-| `matviewowner` | `name` | 구체화된 뷰 소유자 이름 |
-| `tablespace` | `name` | 구체화된 뷰가 포함된 테이블스페이스 이름 |
-| `hasindexes` | `bool` | 인덱스가 있는지 여부 |
-| `ispopulated` | `bool` | 현재 데이터가 채워져 있는지 여부 |
-| `definition` | `text` | 구체화된 뷰 정의 (재구성된 SELECT 쿼리) |
+- `schemaname` (`name`): 구체화된 뷰를 포함하는 스키마 이름
+- `matviewname` (`name`): 구체화된 뷰 이름
+- `matviewowner` (`name`): 구체화된 뷰 소유자 이름
+- `tablespace` (`name`): 구체화된 뷰가 포함된 테이블스페이스 이름
+- `hasindexes` (`bool`): 인덱스가 있는지 여부
+- `ispopulated` (`bool`): 현재 데이터가 채워져 있는지 여부
+- `definition` (`text`): 구체화된 뷰 정의 (재구성된 SELECT 쿼리)
 
 ##### 예제
 
@@ -2243,20 +2168,18 @@ WHERE hasindexes = false;
 
 #### 54.3.14 pg_policies
 
-`pg_policies` 뷰는 데이터베이스의 각 행 수준 보안(Row Level Security, RLS) 정책에 대한 정보를 제공합니다.
+`pg_policies` 뷰는 데이터베이스의 각 행 수준 보안(Row Level Security, RLS) 정책에 대한 정보를 제공함.
 
 ##### 컬럼 정의
 
-| 컬럼 | 타입 | 설명 |
-|------|------|------|
-| `schemaname` | `name` | 정책이 적용된 테이블의 스키마 이름 |
-| `tablename` | `name` | 정책이 적용된 테이블 이름 |
-| `policyname` | `name` | 정책 이름 |
-| `permissive` | `text` | 정책이 허용적(permissive)인지 제한적(restrictive)인지 |
-| `roles` | `name[]` | 정책이 적용되는 역할 |
-| `cmd` | `text` | 정책이 적용되는 명령 유형 |
-| `qual` | `text` | 쿼리에 추가되는 보안 장벽 조건 표현식 |
-| `with_check` | `text` | 행 추가 시 WITH CHECK 조건 표현식 |
+- `schemaname` (`name`): 정책이 적용된 테이블의 스키마 이름
+- `tablename` (`name`): 정책이 적용된 테이블 이름
+- `policyname` (`name`): 정책 이름
+- `permissive` (`text`): 정책이 허용적(permissive)인지 제한적(restrictive)인지
+- `roles` (`name[]`): 정책이 적용되는 역할
+- `cmd` (`text`): 정책이 적용되는 명령 유형
+- `qual` (`text`): 쿼리에 추가되는 보안 장벽 조건 표현식
+- `with_check` (`text`): 행 추가 시 WITH CHECK 조건 표현식
 
 ##### 예제
 
@@ -2280,18 +2203,16 @@ WHERE permissive = 'RESTRICTIVE';
 
 #### 54.3.15 pg_rules
 
-`pg_rules` 뷰는 쿼리 재작성 규칙에 대한 정보를 제공합니다.
+`pg_rules` 뷰는 쿼리 재작성 규칙에 대한 정보를 제공함.
 
 ##### 컬럼 정의
 
-| 컬럼 | 타입 | 설명 |
-|------|------|------|
-| `schemaname` | `name` | 테이블을 포함하는 스키마 이름 |
-| `tablename` | `name` | 규칙이 적용된 테이블 이름 |
-| `rulename` | `name` | 규칙 이름 |
-| `definition` | `text` | 규칙 정의 (재구성된 생성 명령) |
+- `schemaname` (`name`): 테이블을 포함하는 스키마 이름
+- `tablename` (`name`): 규칙이 적용된 테이블 이름
+- `rulename` (`name`): 규칙 이름
+- `definition` (`text`): 규칙 정의 (재구성된 생성 명령)
 
-> 참고: `pg_rules` 뷰는 뷰와 구체화된 뷰의 `ON SELECT` 규칙을 제외합니다. 뷰의 `ON SELECT` 규칙은 `pg_views`에서, 구체화된 뷰의 것은 `pg_matviews`에서 확인할 수 있습니다.
+> 참고: `pg_rules` 뷰는 뷰와 구체화된 뷰의 `ON SELECT` 규칙을 제외함. 뷰의 `ON SELECT` 규칙은 `pg_views`에서, 구체화된 뷰의 것은 `pg_matviews`에서 확인 가능.
 
 ##### 예제
 
@@ -2310,16 +2231,14 @@ WHERE tablename = 'orders';
 
 #### 54.3.16 pg_available_extensions
 
-`pg_available_extensions` 뷰는 PostgreSQL에서 설치할 수 있는 확장 모듈을 나열합니다.
+`pg_available_extensions` 뷰는 PostgreSQL에서 설치할 수 있는 확장 모듈을 나열함.
 
 ##### 컬럼 정의
 
-| 컬럼 | 타입 | 설명 |
-|------|------|------|
-| `name` | `name` | 확장 모듈 이름 |
-| `default_version` | `text` | 기본 버전 이름 |
-| `installed_version` | `text` | 현재 설치된 버전 (설치되지 않은 경우 NULL) |
-| `comment` | `text` | 확장 모듈의 제어 파일에서 가져온 설명 |
+- `name` (`name`): 확장 모듈 이름
+- `default_version` (`text`): 기본 버전 이름
+- `installed_version` (`text`): 현재 설치된 버전 (설치되지 않은 경우 NULL)
+- `comment` (`text`): 확장 모듈의 제어 파일에서 가져온 설명
 
 ##### 예제
 
@@ -2344,41 +2263,39 @@ WHERE installed_version IS NULL;
 
 ### 54.4 통계 뷰
 
-PostgreSQL은 데이터베이스 활동을 모니터링하기 위한 다양한 통계 뷰를 제공합니다. 이 뷰들은 누적 통계 시스템(Cumulative Statistics System)의 일부입니다.
+PostgreSQL은 데이터베이스 활동을 모니터링하기 위한 다양한 통계 뷰를 제공함. 이 뷰들은 누적 통계 시스템(Cumulative Statistics System)의 일부임.
 
 #### 주요 통계 뷰 목록
 
-| 뷰 이름 | 설명 |
-|---------|------|
-| `pg_stat_activity` | 서버 프로세스당 하나의 행, 현재 활동 정보 |
-| `pg_stat_replication` | WAL 전송자 프로세스당 하나의 행 |
-| `pg_stat_replication_slots` | 복제 슬롯당 하나의 행 |
-| `pg_stat_wal_receiver` | WAL 수신자당 하나의 행 |
-| `pg_stat_subscription` | 구독당 하나의 행 |
-| `pg_stat_ssl` | SSL 연결 정보 |
-| `pg_stat_gssapi` | GSSAPI 인증 정보 |
-| `pg_stat_archiver` | 아카이버 프로세스 통계 |
-| `pg_stat_io` | I/O 통계 |
-| `pg_stat_bgwriter` | 백그라운드 작성자 통계 |
-| `pg_stat_checkpointer` | 체크포인터 통계 |
-| `pg_stat_wal` | WAL 활동 통계 |
-| `pg_stat_database` | 데이터베이스별 통계 |
-| `pg_stat_database_conflicts` | 데이터베이스 충돌 통계 |
-| `pg_stat_all_tables` | 모든 테이블 접근 통계 |
-| `pg_stat_sys_tables` | 시스템 테이블 접근 통계 |
-| `pg_stat_user_tables` | 사용자 테이블 접근 통계 |
-| `pg_stat_all_indexes` | 모든 인덱스 접근 통계 |
-| `pg_stat_sys_indexes` | 시스템 인덱스 접근 통계 |
-| `pg_stat_user_indexes` | 사용자 인덱스 접근 통계 |
-| `pg_statio_all_tables` | 모든 테이블 I/O 통계 |
-| `pg_statio_all_indexes` | 모든 인덱스 I/O 통계 |
-| `pg_statio_all_sequences` | 모든 시퀀스 I/O 통계 |
-| `pg_stat_user_functions` | 사용자 함수 통계 |
-| `pg_stat_slru` | SLRU 통계 |
+- `pg_stat_activity`: 서버 프로세스당 하나의 행, 현재 활동 정보
+- `pg_stat_replication`: WAL 전송자 프로세스당 하나의 행
+- `pg_stat_replication_slots`: 복제 슬롯당 하나의 행
+- `pg_stat_wal_receiver`: WAL 수신자당 하나의 행
+- `pg_stat_subscription`: 구독당 하나의 행
+- `pg_stat_ssl`: SSL 연결 정보
+- `pg_stat_gssapi`: GSSAPI 인증 정보
+- `pg_stat_archiver`: 아카이버 프로세스 통계
+- `pg_stat_io`: I/O 통계
+- `pg_stat_bgwriter`: 백그라운드 작성자 통계
+- `pg_stat_checkpointer`: 체크포인터 통계
+- `pg_stat_wal`: WAL 활동 통계
+- `pg_stat_database`: 데이터베이스별 통계
+- `pg_stat_database_conflicts`: 데이터베이스 충돌 통계
+- `pg_stat_all_tables`: 모든 테이블 접근 통계
+- `pg_stat_sys_tables`: 시스템 테이블 접근 통계
+- `pg_stat_user_tables`: 사용자 테이블 접근 통계
+- `pg_stat_all_indexes`: 모든 인덱스 접근 통계
+- `pg_stat_sys_indexes`: 시스템 인덱스 접근 통계
+- `pg_stat_user_indexes`: 사용자 인덱스 접근 통계
+- `pg_statio_all_tables`: 모든 테이블 I/O 통계
+- `pg_statio_all_indexes`: 모든 인덱스 I/O 통계
+- `pg_statio_all_sequences`: 모든 시퀀스 I/O 통계
+- `pg_stat_user_functions`: 사용자 함수 통계
+- `pg_stat_slru`: SLRU 통계
 
 #### 통계 수집 구성
 
-통계 수집을 활성화하려면 `postgresql.conf`에서 다음 매개변수를 설정합니다:
+통계 수집을 활성화하려면 `postgresql.conf`에서 다음 매개변수를 설정.
 
 ```sql
 -- 현재 명령 모니터링
@@ -2534,7 +2451,7 @@ ORDER BY name;
 
 ## Chapter 55: Frontend/Backend Protocol
 
-PostgreSQL은 클라이언트(Frontend)와 서버(Backend) 간의 통신을 위해 메시지 기반 프로토콜을 사용한다. 이 장에서는 프로토콜의 구조, 메시지 흐름, 형식 및 오류 처리에 대해 상세히 설명한다.
+PostgreSQL은 클라이언트(Frontend)와 서버(Backend) 간의 통신을 위해 메시지 기반 프로토콜을 사용함. 이 장에서는 프로토콜의 구조, 메시지 흐름, 형식, 오류 처리를 다룸.
 
 ### 목차
 
@@ -2553,10 +2470,10 @@ PostgreSQL은 클라이언트(Frontend)와 서버(Backend) 간의 통신을 위�
 
 #### 1.1 기본 구조
 
-PostgreSQL의 Frontend/Backend 프로토콜은 두 가지 주요 단계로 구성된다:
+PostgreSQL의 Frontend/Backend 프로토콜은 두 가지 주요 단계로 구성됨.
 
-1. 시작 단계 (Startup Phase): Frontend가 서버에 연결하고 인증을 수행
-2. 정상 운영 단계 (Normal Operation): 쿼리 실행 및 결과 반환
+1. 시작 단계 (Startup Phase): Frontend가 서버에 연결 → 인증 수행
+2. 정상 운영 단계 (Normal Operation): 쿼리 실행 → 결과 반환
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -2574,7 +2491,7 @@ PostgreSQL의 Frontend/Backend 프로토콜은 두 가지 주요 단계로 구�
 
 #### 1.2 메시징 개요 (Messaging Overview)
 
-모든 통신은 메시지 스트림으로 이루어진다. 각 메시지의 기본 구조:
+모든 통신은 메시지 스트림으로 이루어짐. 각 메시지의 기본 구조:
 
 ```
 ┌──────────────────┬────────────────────┬──────────────────────┐
@@ -2588,16 +2505,14 @@ PostgreSQL의 Frontend/Backend 프로토콜은 두 가지 주요 단계로 구�
 - 다음 4바이트: 메시지 길이 (길이 필드 자신 포함, 타입 바이트 제외)
 - 나머지: 메시지 내용
 
-> 참고: 초기 시작 메시지(StartupMessage)는 예외적으로 메시지 타입 바이트가 없다.
+> 참고: 초기 시작 메시지(StartupMessage)는 예외적으로 메시지 타입 바이트가 없음.
 
 #### 1.3 프로토콜 버전 (Protocol Versions)
 
-| 버전 | 지원 PostgreSQL | 설명 |
-|------|-----------------|------|
-| 3.2 | PostgreSQL 18+ | 최신 버전, 가변 길이 취소 키 지원 |
-| 3.1 | - | 예약됨 (pgbouncer 버그로 스킵) |
-| 3.0 | PostgreSQL 7.4+ | 표준 버전 |
-| 2.0 | PostgreSQL 13까지 | 레거시 (더 이상 권장하지 않음) |
+- 3.2: 지원 PostgreSQL 18+, 최신 버전 · 가변 길이 취소 키 지원
+- 3.1: 지원 대상 없음, 예약됨(pgbouncer 버그로 스킵)
+- 3.0: 지원 PostgreSQL 7.4+, 표준 버전
+- 2.0: 지원 PostgreSQL 13까지, 레거시(더 이상 권장하지 않음)
 
 버전 협상:
 ```
@@ -2610,12 +2525,10 @@ Backend 응답:
 
 #### 1.4 형식 코드 (Format Codes)
 
-PostgreSQL 프로토콜은 두 가지 데이터 형식을 지원한다:
+PostgreSQL 프로토콜은 두 가지 데이터 형식을 지원함.
 
-| 형식 | 코드 | 설명 |
-|------|------|------|
-| Text | 0 | 텍스트 표현 (기본값) |
-| Binary | 1 | 바이너리 표현 (네트워크 바이트 순서) |
+- Text: 코드 0, 텍스트 표현(기본값)
+- Binary: 코드 1, 바이너리 표현(네트워크 바이트 순서)
 
 ```c
 // Text 형식 예시
@@ -2631,7 +2544,7 @@ PostgreSQL 프로토콜은 두 가지 데이터 형식을 지원한다:
 
 #### 2.1 시작 단계 (Start-up)
 
-연결 초기화 프로세스:
+연결 초기화 과정:
 
 ```
 Frontend                              Backend
@@ -2654,13 +2567,11 @@ Frontend                              Backend
 
 인증 메시지 종류:
 
-| 메시지 | 설명 |
-|--------|------|
-| `AuthenticationOk` | 인증 성공 |
-| `AuthenticationCleartextPassword` | 평문 비밀번호 요청 |
-| `AuthenticationMD5Password` | MD5 암호화 비밀번호 요청 |
-| `AuthenticationSASL` | SASL 인증 시작 |
-| `AuthenticationGSS` | GSSAPI 인증 |
+- `AuthenticationOk`: 인증 성공
+- `AuthenticationCleartextPassword`: 평문 비밀번호 요청
+- `AuthenticationMD5Password`: MD5 암호화 비밀번호 요청
+- `AuthenticationSASL`: SASL 인증 시작
+- `AuthenticationGSS`: GSSAPI 인증
 
 MD5 비밀번호 계산:
 ```python
@@ -2677,7 +2588,7 @@ def md5_password(password, username, salt):
 
 #### 2.2 단순 쿼리 (Simple Query)
 
-가장 기본적인 쿼리 실행 방식:
+가장 기본적인 쿼리 실행 방식임.
 
 ```
 Frontend                              Backend
@@ -2698,14 +2609,12 @@ Frontend                              Backend
 
 응답 메시지 종류:
 
-| 메시지 | 설명 |
-|--------|------|
-| `RowDescription` | 반환될 열의 구조 설명 |
-| `DataRow` | 실제 행 데이터 |
-| `CommandComplete` | 명령 완료 (영향받은 행 수 포함) |
-| `EmptyQueryResponse` | 빈 쿼리 문자열 |
-| `ErrorResponse` | 오류 발생 |
-| `ReadyForQuery` | 다음 명령 준비 완료 |
+- `RowDescription`: 반환될 열의 구조 설명
+- `DataRow`: 실제 행 데이터
+- `CommandComplete`: 명령 완료(영향받은 행 수 포함)
+- `EmptyQueryResponse`: 빈 쿼리 문자열
+- `ErrorResponse`: 오류 발생
+- `ReadyForQuery`: 다음 명령 준비 완료
 
 예시: SELECT 쿼리 결과
 ```
@@ -2719,7 +2628,7 @@ Backend:  ReadyForQuery ('I')  // 'I' = Idle
 
 #### 2.3 다중 문장 처리
 
-단순 쿼리는 세미콜론으로 구분된 여러 SQL 문을 포함할 수 있다:
+단순 쿼리는 세미콜론으로 구분된 여러 SQL 문을 포함 가능.
 
 ```sql
 -- 암시적 트랜잭션 블록
@@ -2782,7 +2691,7 @@ NOTIFY my_channel, 'Hello!';
 
 #### 2.6 요청 취소 (Canceling Requests)
 
-실행 중인 쿼리를 취소하려면:
+실행 중인 쿼리 취소 절차:
 
 ```
 Frontend: 새 연결 생성
@@ -2793,7 +2702,7 @@ Backend: 기존 쿼리 취소 시도
 Backend: 새 연결 즉시 종료
 ```
 
-> 주의: 취소 성공 여부는 보장되지 않으며, Frontend는 원래 연결에서 계속 대기해야 한다.
+> 주의: 취소 성공 여부는 보장되지 않음 → Frontend는 원래 연결에서 계속 대기 필요.
 
 #### 2.7 연결 종료 (Termination)
 
@@ -2811,18 +2720,16 @@ Frontend: 연결 닫기
 
 ### 3. 메시지 데이터 타입 (Message Data Types)
 
-프로토콜에서 사용되는 기본 데이터 타입:
+프로토콜에서 사용되는 기본 데이터 타입.
 
 #### 3.1 정수형 (Integer)
 
-| 타입 | 설명 | 예시 |
-|------|------|------|
-| `Int8` | 8비트 부호 있는 정수 | |
-| `Int16` | 16비트 부호 있는 정수 | |
-| `Int32` | 32비트 부호 있는 정수 | |
-| `Int32(i)` | 특정 값 i를 가진 32비트 정수 | `Int32(0)` = 0 |
+- `Int8`: 8비트 부호 있는 정수
+- `Int16`: 16비트 부호 있는 정수
+- `Int32`: 32비트 부호 있는 정수
+- `Int32(i)`: 특정 값 i를 가진 32비트 정수, 예시 `Int32(0)` = 0
 
-바이트 순서: 네트워크 바이트 순서 (빅엔디안, 최상위 바이트 우선)
+바이트 순서: 네트워크 바이트 순서(빅엔디안, 최상위 바이트 우선)
 
 ```c
 // Int32를 네트워크 바이트 순서로 변환
@@ -2846,12 +2753,10 @@ String("user") = 'u' 's' 'e' 'r' '\0'
 
 #### 3.3 바이트 수열 (Byte Sequence)
 
-| 타입 | 설명 |
-|------|------|
-| `Byte1` | 단일 바이트 |
-| `Byte1('c')` | 특정 문자 c |
-| `Byten` | n바이트 수열 |
-| `Byte[n]` | n개 바이트 배열 |
+- `Byte1`: 단일 바이트
+- `Byte1('c')`: 특정 문자 c
+- `Byten`: n바이트 수열
+- `Byte[n]`: n개 바이트 배열
 
 ---
 
@@ -3187,38 +3092,34 @@ ErrorResponse와 동일한 구조이지만 메시지 타입이 'N':
 
 #### 5.3 필드 타입 코드
 
-| 코드 | 필드명 | 설명 | 항상 존재 |
-|------|--------|------|-----------|
-| `S` | Severity | 심각도 (ERROR, FATAL, PANIC, WARNING, NOTICE 등) - 지역화됨 | O |
-| `V` | Severity (Non-localized) | 심각도 - 지역화되지 않음 (9.6+) | |
-| `C` | Code | SQLSTATE 오류 코드 (5자리) | O |
-| `M` | Message | 주요 오류 메시지 | O |
-| `D` | Detail | 상세 정보 | |
-| `H` | Hint | 해결 방법 제안 | |
-| `P` | Position | 쿼리 문자열 내 오류 위치 (1부터 시작) | |
-| `p` | Internal Position | 내부 명령어 내 오류 위치 | |
-| `q` | Internal Query | 실패한 내부 명령어 | |
-| `W` | Where | 오류 발생 컨텍스트 (콜 스택) | |
-| `s` | Schema Name | 관련 스키마 이름 | |
-| `t` | Table Name | 관련 테이블 이름 | |
-| `c` | Column Name | 관련 열 이름 | |
-| `d` | Data Type Name | 관련 데이터 타입 이름 | |
-| `n` | Constraint Name | 관련 제약 조건 이름 | |
-| `F` | File | 소스 파일명 | |
-| `L` | Line | 소스 라인 번호 | |
-| `R` | Routine | 소스 함수명 | |
+- `S` (Severity): 심각도(ERROR, FATAL, PANIC, WARNING, NOTICE 등) - 지역화됨, 항상 존재
+- `V` (Severity, Non-localized): 심각도 - 지역화되지 않음(9.6+)
+- `C` (Code): SQLSTATE 오류 코드(5자리), 항상 존재
+- `M` (Message): 주요 오류 메시지, 항상 존재
+- `D` (Detail): 상세 정보
+- `H` (Hint): 해결 방법 제안
+- `P` (Position): 쿼리 문자열 내 오류 위치(1부터 시작)
+- `p` (Internal Position): 내부 명령어 내 오류 위치
+- `q` (Internal Query): 실패한 내부 명령어
+- `W` (Where): 오류 발생 컨텍스트(콜 스택)
+- `s` (Schema Name): 관련 스키마 이름
+- `t` (Table Name): 관련 테이블 이름
+- `c` (Column Name): 관련 열 이름
+- `d` (Data Type Name): 관련 데이터 타입 이름
+- `n` (Constraint Name): 관련 제약 조건 이름
+- `F` (File): 소스 파일명
+- `L` (Line): 소스 라인 번호
+- `R` (Routine): 소스 함수명
 
 #### 5.4 SQLSTATE 오류 코드 예시
 
-| 코드 | 설명 |
-|------|------|
-| `00000` | 성공 |
-| `23505` | unique_violation (고유 제약 조건 위반) |
-| `42601` | syntax_error (구문 오류) |
-| `42P01` | undefined_table (테이블 없음) |
-| `42703` | undefined_column (열 없음) |
-| `22012` | division_by_zero (0으로 나눔) |
-| `40001` | serialization_failure (직렬화 실패) |
+- `00000`: 성공
+- `23505`: unique_violation(고유 제약 조건 위반)
+- `42601`: syntax_error(구문 오류)
+- `42P01`: undefined_table(테이블 없음)
+- `42703`: undefined_column(열 없음)
+- `22012`: division_by_zero(0으로 나눔)
+- `40001`: serialization_failure(직렬화 실패)
 
 ```python
 # Python 예시: 오류 메시지 파싱
@@ -3254,7 +3155,7 @@ def parse_error_response(data):
 
 #### 6.1 개요
 
-확장 쿼리 프로토콜은 SQL 명령 실행을 여러 단계로 분리함으로써 더 세밀한 제어와 성능 향상을 제공한다.
+확장 쿼리 프로토콜은 SQL 명령 실행을 여러 단계로 분리 → 더 세밀한 제어와 성능 향상 제공.
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -3338,15 +3239,13 @@ cursor.execute("SELECT * FROM users WHERE id = %s", (42,))
 
 #### 6.5 명명된 vs 비명명 객체
 
-| 특성 | 명명된 (Named) | 비명명 (Unnamed) |
-|------|---------------|------------------|
-| 수명 | 세션 종료까지 | 다음 Parse/Bind까지 |
-| 용도 | 다중 사용 | 1회성 실행 |
-| 이름 | 비어있지 않은 문자열 | 빈 문자열 ("") |
+- 수명: 명명된(Named)은 세션 종료까지 · 비명명(Unnamed)은 다음 Parse/Bind까지
+- 용도: 명명된은 다중 사용 · 비명명은 1회성 실행
+- 이름: 명명된은 비어있지 않은 문자열 · 비명명은 빈 문자열("")
 
 #### 6.6 부분 실행 (Partial Execution)
 
-Execute 메시지의 `max_rows` 파라미터를 사용하여 부분적으로 결과를 가져올 수 있다:
+Execute 메시지의 `max_rows` 파라미터를 사용하여 부분적으로 결과 조회 가능:
 
 ```
 Frontend: Execute (max_rows = 10)
@@ -3849,13 +3748,11 @@ results = conn.extended_query(
 
 #### 11.1 일반적인 오류
 
-| SQLSTATE | 오류 | 원인 | 해결 방법 |
-|----------|------|------|-----------|
-| 28000 | invalid_authorization_specification | 인증 실패 | 사용자명/비밀번호 확인 |
-| 28P01 | invalid_password | 잘못된 비밀번호 | 비밀번호 확인 |
-| 3D000 | invalid_catalog_name | 데이터베이스 없음 | 데이터베이스 이름 확인 |
-| 08006 | connection_failure | 연결 실패 | 호스트/포트 확인 |
-| 57P03 | cannot_connect_now | 서버 시작 중 | 잠시 후 재시도 |
+- 28000 (invalid_authorization_specification): 인증 실패 → 사용자명/비밀번호 확인
+- 28P01 (invalid_password): 잘못된 비밀번호 → 비밀번호 확인
+- 3D000 (invalid_catalog_name): 데이터베이스 없음 → 데이터베이스 이름 확인
+- 08006 (connection_failure): 연결 실패 → 호스트/포트 확인
+- 57P03 (cannot_connect_now): 서버 시작 중 → 잠시 후 재시도
 
 #### 11.2 프로토콜 디버깅
 
@@ -3894,7 +3791,7 @@ PostgreSQL Frontend/Backend 프로토콜의 핵심 요소:
 5. 보안: MD5, SCRAM-SHA-256, SSL/TLS, GSSAPI 지원
 6. 확장성: 복제 프로토콜, COPY 작업, 비동기 알림
 
-프로토콜을 이해하면 PostgreSQL 클라이언트 라이브러리 개발, 성능 최적화, 장애 분석에 도움이 된다.
+프로토콜을 이해하면 PostgreSQL 클라이언트 라이브러리 개발, 성능 최적화, 장애 분석에 도움됨.
 
 ---
 
@@ -3902,7 +3799,7 @@ PostgreSQL Frontend/Backend 프로토콜의 핵심 요소:
 
 ### 개요
 
-PostgreSQL은 오픈 소스 관계형 데이터베이스 관리 시스템으로, 소스 코드 기반이 잘 구조화되어 있습니다.
+PostgreSQL은 오픈 소스 관계형 데이터베이스 관리 시스템 → 소스 코드 기반이 잘 구조화됨.
 
 ---
 
@@ -3910,62 +3807,58 @@ PostgreSQL은 오픈 소스 관계형 데이터베이스 관리 시스템으로,
 
 #### 1.1 최상위 `src` 디렉토리
 
-PostgreSQL 소스 코드의 핵심은 `src` 디렉토리에 있으며, 다음과 같은 주요 하위 디렉토리로 구성됩니다:
+PostgreSQL 소스 코드의 핵심은 `src` 디렉토리 → 다음과 같은 주요 하위 디렉토리로 구성:
 
-| 디렉토리 | 설명 |
-|---------|------|
-| `backend` | 핵심 데이터베이스 엔진 및 서버 기능 |
-| `bin` | 명령줄 유틸리티 및 실행 파일 |
-| `common` | 프론트엔드와 백엔드에서 공유하는 공통 코드 |
-| `fe_utils` | 클라이언트 애플리케이션용 프론트엔드 유틸리티 |
-| `include` | 헤더 파일 및 선언 |
-| `interfaces` | 데이터베이스 인터페이스 구현 (예: libpq) |
-| `pl` | 절차적 언어 지원 (PL/pgSQL, PL/Perl 등) |
-| `port` | 플랫폼 특화 이식성 코드 |
-| `test` | 테스트 유틸리티 및 테스트 코드 |
-| `timezone` | 시간대 처리 및 데이터 |
-| `tools` | 개발 및 유지보수 도구 |
-| `tutorial` | 교육 자료 및 예제 |
+- `backend`: 핵심 데이터베이스 엔진 및 서버 기능
+- `bin`: 명령줄 유틸리티 및 실행 파일
+- `common`: 프론트엔드와 백엔드에서 공유하는 공통 코드
+- `fe_utils`: 클라이언트 애플리케이션용 프론트엔드 유틸리티
+- `include`: 헤더 파일 및 선언
+- `interfaces`: 데이터베이스 인터페이스 구현 (예: libpq)
+- `pl`: 절차적 언어 지원 (PL/pgSQL, PL/Perl 등)
+- `port`: 플랫폼 특화 이식성 코드
+- `test`: 테스트 유틸리티 및 테스트 코드
+- `timezone`: 시간대 처리 및 데이터
+- `tools`: 개발 및 유지보수 도구
+- `tutorial`: 교육 자료 및 예제
 
 #### 1.2 `src/backend` 디렉토리 상세
 
-백엔드 디렉토리는 PostgreSQL 서버의 핵심을 구성하며, 25개 이상의 하위 디렉토리를 포함합니다:
+백엔드 디렉토리는 PostgreSQL 서버의 핵심을 구성 → 25개 이상의 하위 디렉토리를 포함:
 
-| 디렉토리 | 설명 |
-|---------|------|
-| `access` | 데이터베이스 액세스 방법 (힙, 인덱스 등) |
-| `archive` | 아카이브 기능 |
-| `backup` | 백업 작업 |
-| `bootstrap` | 데이터베이스 초기화 절차 |
-| `catalog` | 시스템 카탈로그 관리 |
-| `commands` | SQL 명령어 처리 |
-| `executor` | 쿼리 실행 엔진 |
-| `foreign` | 외부 데이터 래퍼(FDW) 지원 |
-| `jit` | JIT(Just-In-Time) 컴파일 |
-| `lib` | 라이브러리 유틸리티 |
-| `libpq` | PostgreSQL 클라이언트 라이브러리 |
-| `main` | 주 서버 기능 |
-| `nodes` | 파스 트리 노드 구조 |
-| `optimizer` | 쿼리 최적화 |
-| `parser` | SQL 파싱 |
-| `partitioning` | 테이블 파티셔닝 |
-| `port` | 플랫폼 특화 코드 |
-| `postmaster` | 서버 프로세스 관리 |
-| `regex` | 정규 표현식 지원 |
-| `replication` | 복제 기능 |
-| `rewrite` | 쿼리 재작성 규칙 |
-| `snowball` | Snowball 스테머 지원 |
-| `statistics` | 쿼리 통계 |
-| `storage` | 데이터 저장소 관리 |
-| `tcop` | 최상위 명령 처리 |
-| `tsearch` | 전문 검색(Full-Text Search) |
-| `utils` | 유틸리티 함수 |
+- `access`: 데이터베이스 액세스 방법 (힙, 인덱스 등)
+- `archive`: 아카이브 기능
+- `backup`: 백업 작업
+- `bootstrap`: 데이터베이스 초기화 절차
+- `catalog`: 시스템 카탈로그 관리
+- `commands`: SQL 명령어 처리
+- `executor`: 쿼리 실행 엔진
+- `foreign`: 외부 데이터 래퍼(FDW) 지원
+- `jit`: JIT(Just-In-Time) 컴파일
+- `lib`: 라이브러리 유틸리티
+- `libpq`: PostgreSQL 클라이언트 라이브러리
+- `main`: 주 서버 기능
+- `nodes`: 파스 트리 노드 구조
+- `optimizer`: 쿼리 최적화
+- `parser`: SQL 파싱
+- `partitioning`: 테이블 파티셔닝
+- `port`: 플랫폼 특화 코드
+- `postmaster`: 서버 프로세스 관리
+- `regex`: 정규 표현식 지원
+- `replication`: 복제 기능
+- `rewrite`: 쿼리 재작성 규칙
+- `snowball`: Snowball 스테머 지원
+- `statistics`: 쿼리 통계
+- `storage`: 데이터 저장소 관리
+- `tcop`: 최상위 명령 처리
+- `tsearch`: 전문 검색(Full-Text Search)
+- `utils`: 유틸리티 함수
 
 #### 1.3 프론트엔드와 백엔드 코드 분리
 
-PostgreSQL에서 프론트엔드와 백엔드 코드는 명확히 분리됩니다. 프론트엔드 변경사항은 주로 `src/bin` 또는 `src/fe_utils` 디렉토리에 위치합니다.
+PostgreSQL에서 프론트엔드와 백엔드 코드는 명확히 분리됨. 프론트엔드 변경사항은 주로 `src/bin` 또는 `src/fe_utils` 디렉토리에 위치.
 
-공유 코드의 경우 `#ifdef FRONTEND` 전처리기 지시문으로 프론트엔드와 백엔드 로직을 분리합니다:
+공유 코드의 경우 `#ifdef FRONTEND` 전처리기 지시문으로 프론트엔드와 백엔드 로직을 분리:
 
 ```c
 #ifndef FRONTEND
@@ -3985,7 +3878,7 @@ MemoryContextSwitchTo(MemoryContext context)
 
 #### 2.1 포맷팅 (Formatting)
 
-PostgreSQL은 BSD 스타일의 코드 포맷팅을 따릅니다:
+PostgreSQL은 BSD 스타일의 코드 포맷팅을 따름:
 
 - 탭 간격: 4열 탭 간격 사용 (탭을 공백으로 확장하지 않음)
 - 들여쓰기: 논리적 들여쓰기 수준마다 탭 스탑 하나씩 추가
@@ -4008,7 +3901,7 @@ else
 
 #### 2.2 주석 스타일 (Comment Style)
 
-C++ 스타일 주석(`//`)은 사용하지 않으며, `pgindent`가 이를 `/* ... */` 형태로 변환합니다.
+C++ 스타일 주석(`//`)은 사용하지 않음 → `pgindent`가 이를 `/* ... */` 형태로 변환함.
 
 단일 줄 주석:
 ```c
@@ -4034,7 +3927,7 @@ C++ 스타일 주석(`//`)은 사용하지 않으며, `pgindent`가 이를 `/* .
 
 #### 2.3 C 표준 (C Standard)
 
-PostgreSQL 코드는 C99 표준 기능만을 사용해야 합니다.
+PostgreSQL 코드는 C99 표준 기능만을 사용해야 함.
 
 금지된 C99 기능:
 - 가변 길이 배열 (Variable Length Arrays)
@@ -4067,13 +3960,13 @@ Max(int a, int b)
 
 #### 2.5 시그널 핸들러 (Signal Handlers)
 
-시그널 핸들러는 인터럽트 위험이 있으므로 매우 신중하게 작성해야 합니다:
+시그널 핸들러는 인터럽트 위험이 있으므로 매우 신중하게 작성해야 함:
 
 - async-signal-safe 함수만 호출 가능 (POSIX 정의)
 - `volatile sig_atomic_t` 변수에만 접근 가능
 - `SetLatch()`는 PostgreSQL에서 signal-safe로 간주됨
 
-권장 방식: 최소한의 작업만 수행 — 시그널 수신을 기록하고 래치로 외부 코드를 깨움:
+권장 방식: 최소한의 작업만 수행 → 시그널 수신을 기록하고 래치로 외부 코드를 깨움:
 
 ```c
 static void
@@ -4102,7 +3995,7 @@ paramInfo->paramFetch(paramInfo, paramId);
 
 #### 3.1 ereport 함수
 
-서버 코드 내 오류, 경고, 로그 메시지는 `ereport` 또는 레거시 함수인 `elog`를 사용해 생성합니다.
+서버 코드 내 오류, 경고, 로그 메시지는 `ereport` 또는 레거시 함수인 `elog`를 사용해 생성함.
 
 필수 요소:
 1. 심각도 레벨 (Severity Level): `DEBUG`부터 `PANIC`까지 (`src/include/utils/elog.h`에 정의)
@@ -4136,27 +4029,25 @@ ereport(ERROR,
 
 #### 3.4 보조 함수 (Auxiliary Functions)
 
-| 함수 | 목적 |
-|-----|------|
-| `errcode(sqlerrcode)` | SQLSTATE 오류 식별자 코드 지정 |
-| `errmsg(msg, ...)` | sprintf 스타일 형식 코드를 사용한 기본 오류 메시지; `%m`은 `strerror()` 지원 |
-| `errmsg_internal(msg, ...)` | 내부 오류용 비번역 메시지 |
-| `errmsg_plural(fmt_singular, fmt_plural, n, ...)` | 복수형 지원 메시지 |
-| `errdetail(msg, ...)` | 선택적 추가 세부 정보 |
-| `errdetail_internal(msg, ...)` | 비번역 세부 메시지 |
-| `errdetail_log(msg, ...)` | 서버 로그에만 전송되는 세부 정보 (클라이언트 제외) |
-| `errhint(msg, ...)` | 문제 해결을 위한 제안 |
-| `errcontext(msg, ...)` | 컨텍스트 정보 (콜백 함수에서 사용) |
-| `errposition(int)` | 쿼리 문자열에서 오류의 텍스트 위치 |
-| `errtable(Relation)` | 오류와 릴레이션 이름/스키마 연결 |
-| `errtablecol(Relation, attnum)` | 오류와 컬럼 연결 |
-| `errtableconstraint(Relation, conname)` | 오류와 제약조건 연결 |
-| `errdatatype(Oid)` | 오류와 데이터 타입 연결 |
-| `errdomainconstraint(Oid, conname)` | 오류와 도메인 제약조건 연결 |
-| `errcode_for_file_access()` | 파일 시스템 오류에 적합한 SQLSTATE 선택 |
-| `errcode_for_socket_access()` | 소켓 오류에 적합한 SQLSTATE 선택 |
-| `errhidestmt(bool)` | 로그에서 STATEMENT 부분 숨김 |
-| `errhidecontext(bool)` | 로그에서 CONTEXT 부분 숨김 |
+- `errcode(sqlerrcode)`: SQLSTATE 오류 식별자 코드 지정
+- `errmsg(msg, ...)`: sprintf 스타일 형식 코드를 사용한 기본 오류 메시지; `%m`은 `strerror()` 지원
+- `errmsg_internal(msg, ...)`: 내부 오류용 비번역 메시지
+- `errmsg_plural(fmt_singular, fmt_plural, n, ...)`: 복수형 지원 메시지
+- `errdetail(msg, ...)`: 선택적 추가 세부 정보
+- `errdetail_internal(msg, ...)`: 비번역 세부 메시지
+- `errdetail_log(msg, ...)`: 서버 로그에만 전송되는 세부 정보 (클라이언트 제외)
+- `errhint(msg, ...)`: 문제 해결을 위한 제안
+- `errcontext(msg, ...)`: 컨텍스트 정보 (콜백 함수에서 사용)
+- `errposition(int)`: 쿼리 문자열에서 오류의 텍스트 위치
+- `errtable(Relation)`: 오류와 릴레이션 이름/스키마 연결
+- `errtablecol(Relation, attnum)`: 오류와 컬럼 연결
+- `errtableconstraint(Relation, conname)`: 오류와 제약조건 연결
+- `errdatatype(Oid)`: 오류와 데이터 타입 연결
+- `errdomainconstraint(Oid, conname)`: 오류와 도메인 제약조건 연결
+- `errcode_for_file_access()`: 파일 시스템 오류에 적합한 SQLSTATE 선택
+- `errcode_for_socket_access()`: 소켓 오류에 적합한 SQLSTATE 선택
+- `errhidestmt(bool)`: 로그에서 STATEMENT 부분 숨김
+- `errhidecontext(bool)`: 로그에서 CONTEXT 부분 숨김
 
 #### 3.5 기본 SQLSTATE 코드
 
@@ -4180,7 +4071,7 @@ ereport(level, errmsg_internal("format string", ...));
 - SQLSTATE 코드는 항상 기본값 사용
 - 메시지를 번역하지 않음
 - 내부 오류 및 저수준 디버그 로깅에만 사용
-- 표기가 간결하여 "발생할 수 없는" 오류 체크에 주로 사용됨
+- 표기가 간결 → "발생할 수 없는" 오류 체크에 주로 사용됨
 
 ---
 
@@ -4188,11 +4079,9 @@ ereport(level, errmsg_internal("format string", ...));
 
 #### 4.1 메시지 구조
 
-| 메시지 유형 | 설명 |
-|------------|------|
-| Primary (기본) | 짧고, 사실적이며, 한 줄; 구현 세부사항 회피 |
-| Detail (세부) | 구현 세부사항, 시스템 호출, 기술 정보 |
-| Hint (힌트) | 문제 해결을 위한 제안 |
+- Primary (기본): 짧고, 사실적이며, 한 줄; 구현 세부사항 회피
+- Detail (세부): 구현 세부사항, 시스템 호출, 기술 정보
+- Hint (힌트): 문제 해결을 위한 제안
 
 예시:
 ```
@@ -4208,11 +4097,9 @@ Hint:       부록을 완전한 문장으로 작성.
 
 #### 4.2 문법 및 구두점
 
-| 메시지 유형 | 규칙 |
-|------------|------|
-| Primary | 대문자화 없음, 마침표 없음, 느낌표 없음 |
-| Detail/Hint | 완전한 문장, 대문자화, 끝에 마침표, 문장 사이 공백 두 개 |
-| Context | 대문자화 없음, 마침표 없음 |
+- Primary: 대문자화 없음, 마침표 없음, 느낌표 없음
+- Detail/Hint: 완전한 문장, 대문자화, 끝에 마침표, 문장 사이 공백 두 개
+- Context: 대문자화 없음, 마침표 없음
 
 #### 4.3 시제 사용
 
@@ -4226,14 +4113,12 @@ cannot open file "%s"            /* 불가능한 작업 */
 
 #### 4.4 피해야 할 단어
 
-| 단어 | 문제 | 대안 |
-|-----|------|------|
-| Unable | 수동태에 가까움 | "cannot" 또는 "could not" |
-| Bad | 모호함 | 이유 명시 (예: "invalid format") |
-| Illegal | 잘못된 법률 용어 | "invalid" + 설명 |
-| Unknown | 모호함 | "unrecognized" + 값 표시 |
-| Contractions | 비격식적 | "can't" 대신 "cannot" |
-| Non-negative | 모호함 | "greater than zero" 또는 "≥ zero" |
+- `Unable`: 수동태에 가까움 → "cannot" 또는 "could not"
+- `Bad`: 모호함 → 이유 명시 (예: "invalid format")
+- `Illegal`: 잘못된 법률 용어 → "invalid" + 설명
+- `Unknown`: 모호함 → "unrecognized" + 값 표시
+- `Contractions`: 비격식적 → "can't" 대신 "cannot"
+- `Non-negative`: 모호함 → "greater than zero" 또는 "≥ zero"
 
 ---
 
@@ -4241,7 +4126,7 @@ cannot open file "%s"            /* 불가능한 작업 */
 
 #### 5.1 Meson 빌드 시스템
 
-PostgreSQL 16 이상에서 Meson 빌드 시스템을 지원합니다. Meson은 Ninja를 기본 백엔드로 사용하는 현대적인 빌드 시스템입니다.
+PostgreSQL 16 이상에서 Meson 빌드 시스템을 지원함. Meson은 Ninja를 기본 백엔드로 사용하는 현대적인 빌드 시스템임.
 
 빠른 시작:
 ```bash
@@ -4326,43 +4211,37 @@ ninja clean        # 빌드 산출물 제거
 - `--localedir=DIRECTORY` - 로케일 데이터 (기본값: `DATADIR/locale`)
 
 ##### PostgreSQL 기능
-| 옵션 | 설명 |
-|-----|------|
-| `-Dnls={auto\|enabled\|disabled}` | 네이티브 언어 지원 |
-| `-Dplperl={auto\|enabled\|disabled}` | PL/Perl 언어 |
-| `-Dplpython={auto\|enabled\|disabled}` | PL/Python 언어 |
-| `-Dpltcl={auto\|enabled\|disabled}` | PL/Tcl 언어 |
-| `-Dicu={auto\|enabled\|disabled}` | ICU 콜레이션 지원 |
-| `-Dllvm={auto\|enabled\|disabled}` | LLVM JIT 컴파일 |
-| `-Dlz4={auto\|enabled\|disabled}` | LZ4 압축 |
-| `-Dzstd={auto\|enabled\|disabled}` | Zstandard 압축 |
-| `-Dssl={auto\|openssl}` | SSL/TLS 지원 |
-| `-Dgssapi={auto\|enabled\|disabled}` | GSSAPI 인증 |
-| `-Dldap={auto\|enabled\|disabled}` | LDAP 지원 |
-| `-Dpam={auto\|enabled\|disabled}` | PAM 인증 |
-| `-Dsystemd={auto\|enabled\|disabled}` | systemd 통합 |
-| `-Dbonjour={auto\|enabled\|disabled}` | Bonjour 검색 |
-| `-Duuid=LIBRARY` | UUID 지원 (`none\|bsd\|e2fs\|ossp`) |
-| `-Dlibxml={auto\|enabled\|disabled}` | XML 지원 |
-| `-Dlibxslt={auto\|enabled\|disabled}` | XSLT 변환 |
+- `-Dnls={auto|enabled|disabled}`: 네이티브 언어 지원
+- `-Dplperl={auto|enabled|disabled}`: PL/Perl 언어
+- `-Dplpython={auto|enabled|disabled}`: PL/Python 언어
+- `-Dpltcl={auto|enabled|disabled}`: PL/Tcl 언어
+- `-Dicu={auto|enabled|disabled}`: ICU 콜레이션 지원
+- `-Dllvm={auto|enabled|disabled}`: LLVM JIT 컴파일
+- `-Dlz4={auto|enabled|disabled}`: LZ4 압축
+- `-Dzstd={auto|enabled|disabled}`: Zstandard 압축
+- `-Dssl={auto|openssl}`: SSL/TLS 지원
+- `-Dgssapi={auto|enabled|disabled}`: GSSAPI 인증
+- `-Dldap={auto|enabled|disabled}`: LDAP 지원
+- `-Dpam={auto|enabled|disabled}`: PAM 인증
+- `-Dsystemd={auto|enabled|disabled}`: systemd 통합
+- `-Dbonjour={auto|enabled|disabled}`: Bonjour 검색
+- `-Duuid=LIBRARY`: UUID 지원 (`none|bsd|e2fs|ossp`)
+- `-Dlibxml={auto|enabled|disabled}`: XML 지원
+- `-Dlibxslt={auto|enabled|disabled}`: XSLT 변환
 
 ##### 서버 튜닝
-| 옵션 | 설명 |
-|-----|------|
-| `-Dpgport=NUMBER` | 기본 포트 (기본값: 5432) |
-| `-Dblocksize=BLOCKSIZE` | 블록 크기 KB (기본값: 8) |
-| `-Dwal_blocksize=BLOCKSIZE` | WAL 블록 크기 KB (기본값: 8) |
-| `-Dsegsize=SEGSIZE` | 세그먼트 크기 GB (기본값: 1) |
+- `-Dpgport=NUMBER`: 기본 포트 (기본값: 5432)
+- `-Dblocksize=BLOCKSIZE`: 블록 크기 KB (기본값: 8)
+- `-Dwal_blocksize=BLOCKSIZE`: WAL 블록 크기 KB (기본값: 8)
+- `-Dsegsize=SEGSIZE`: 세그먼트 크기 GB (기본값: 1)
 
 ##### 개발자 옵션
-| 옵션 | 설명 |
-|-----|------|
-| `--buildtype=BUILDTYPE` | 빌드 타입 (`plain\|debug\|debugoptimized\|release`) |
-| `--debug` | 디버깅 심볼 포함 |
-| `--optimization=LEVEL` | 최적화 레벨 (0,g,1,2,3,s) |
-| `-Dcassert={true\|false}` | 어서션 체크 |
-| `-Ddtrace={auto\|enabled\|disabled}` | DTrace 지원 |
-| `-Dtap_tests={auto\|enabled\|disabled}` | TAP 테스트 도구 |
+- `--buildtype=BUILDTYPE`: 빌드 타입 (`plain|debug|debugoptimized|release`)
+- `--debug`: 디버깅 심볼 포함
+- `--optimization=LEVEL`: 최적화 레벨 (0,g,1,2,3,s)
+- `-Dcassert={true|false}`: 어서션 체크
+- `-Ddtrace={auto|enabled|disabled}`: DTrace 지원
+- `-Dtap_tests={auto|enabled|disabled}`: TAP 테스트 도구
 
 #### 5.4 Meson 빌드 타겟
 
@@ -4401,7 +4280,7 @@ ninja world    # 문서 포함 모든 것
 
 #### 5.5 Autoconf 빌드 시스템 (레거시)
 
-PostgreSQL은 여전히 전통적인 GNU Autoconf 기반 빌드 시스템도 지원합니다:
+PostgreSQL은 여전히 전통적인 GNU Autoconf 기반 빌드 시스템도 지원함:
 
 ```bash
 # 구성
@@ -4429,7 +4308,7 @@ make install
 
 #### 6.1 pgindent
 
-`pgindent`는 PostgreSQL 코딩 표준에 맞게 코드를 자동으로 재포맷팅하는 도구입니다.
+`pgindent`는 PostgreSQL 코딩 표준에 맞게 코드를 자동으로 재포맷팅하는 도구임.
 
 위치: `src/tools/pgindent`
 
@@ -4440,24 +4319,22 @@ make install
 
 #### 6.2 에디터 설정
 
-`src/tools/editors` 디렉토리에는 PostgreSQL 코딩 표준을 준수하는 데 도움이 되는 샘플 에디터 설정이 있습니다:
+`src/tools/editors` 디렉토리에는 PostgreSQL 코딩 표준을 준수하는 데 도움이 되는 샘플 에디터 설정이 있음:
 - Emacs
 - XEmacs
 - Vim
 
 #### 6.3 기타 개발 도구
 
-| 도구 | 설명 |
-|-----|------|
-| `make_ctags` / `make_etags` | 태그 파일 생성 |
-| `pginclude` | 인클루드 파일 관리 스크립트 |
-| `find_static` | 정적 분석 도구 |
-| `find_typedef` | typedef 찾기 도구 |
-| `find_badmacros` | 잘못된 매크로 검출 |
+- `make_ctags` / `make_etags`: 태그 파일 생성
+- `pginclude`: 인클루드 파일 관리 스크립트
+- `find_static`: 정적 분석 도구
+- `find_typedef`: typedef 찾기 도구
+- `find_badmacros`: 잘못된 매크로 검출
 
 #### 6.4 OID 관리 도구
 
-`src/include/catalog` 디렉토리에는 OID 관리를 위한 도구가 있습니다:
+`src/include/catalog` 디렉토리에는 OID 관리를 위한 도구가 있음:
 - `unused_oids` - 사용 가능한 OID 할당 식별
 - `duplicate_oids` - OID 충돌 감지
 
@@ -4465,20 +4342,18 @@ make install
 
 ### 7. 파서 컴포넌트 (Parser Components)
 
-PostgreSQL 파서는 `src/backend/parser` 디렉토리에 위치합니다:
+PostgreSQL 파서는 `src/backend/parser` 디렉토리에 위치함:
 
-| 파일 | 설명 |
-|-----|------|
-| `scan.l` | SQL을 토큰화하는 렉서 |
-| `gram.y` | BNF 표기법의 문법 정의 |
+- `scan.l`: SQL을 토큰화하는 렉서
+- `gram.y`: BNF 표기법의 문법 정의
 
-이들은 flex와 bison 도구에 의해 생성됩니다.
+이들은 flex와 bison 도구에 의해 생성됨.
 
 ---
 
 ### 8. 회귀 테스트 (Regression Testing)
 
-PostgreSQL은 SQL 구현을 검증하고 시스템 발전에 따른 호환성을 보장하는 내장 회귀 테스트 프레임워크를 제공합니다.
+PostgreSQL은 SQL 구현을 검증하고 시스템 발전에 따른 호환성을 보장하는 내장 회귀 테스트 프레임워크를 제공함.
 
 ```bash
 # Meson으로 테스트 실행
@@ -4499,12 +4374,10 @@ make check PROVE_FLAGS=-j4
 
 PostgreSQL을 빌드하고 설치한 후의 디렉토리 구조:
 
-| 디렉토리 | 설명 |
-|---------|------|
-| `bin` | PostgreSQL 실행 파일 (psql, initdb, pg_ctl, 서버 바이너리) |
-| `include` | 확장이나 애플리케이션 컴파일에 필요한 C 헤더 파일 |
-| `lib` | PostgreSQL과 클라이언트 애플리케이션이 사용하는 공유 라이브러리 |
-| `share` | 시간대 데이터, 로케일 데이터, SQL 스크립트 등 |
+- `bin`: PostgreSQL 실행 파일 (psql, initdb, pg_ctl, 서버 바이너리)
+- `include`: 확장이나 애플리케이션 컴파일에 필요한 C 헤더 파일
+- `lib`: PostgreSQL과 클라이언트 애플리케이션이 사용하는 공유 라이브러리
+- `share`: 시간대 데이터, 로케일 데이터, SQL 스크립트 등
 
 ---
 
@@ -4640,7 +4513,7 @@ example_memory_usage(void)
 
 ### 요약
 
-PostgreSQL 소스 코드는 체계적으로 구성된 디렉토리 구조를 가지며, 명확한 코딩 규칙을 따릅니다. 주요 포인트:
+PostgreSQL 소스 코드는 체계적으로 구성된 디렉토리 구조를 가지며, 명확한 코딩 규칙을 따름. 주요 포인트:
 
 1. 디렉토리 구조: `src` 디렉토리 아래에 backend, bin, include 등의 핵심 디렉토리가 있음
 2. 코딩 규칙: BSD 스타일 포맷팅, C99 표준 준수, 특정 주석 스타일 사용
@@ -4667,9 +4540,9 @@ PostgreSQL 소스 코드는 체계적으로 구성된 디렉토리 구조를 가
 
 ### 개요
 
-PostgreSQL은 네이티브 언어 지원(Native Language Support, NLS) 을 통해 사용자에게 친숙한 언어로 메시지를 제공합니다. 이를 통해 오류 메시지, 경고, 정보 메시지 등이 사용자의 모국어로 표시될 수 있습니다.
+PostgreSQL은 네이티브 언어 지원(Native Language Support, NLS)을 통해 사용자에게 친숙한 언어로 메시지 제공 → 오류 메시지·경고·정보 메시지 등이 사용자의 모국어로 표시 가능.
 
-PostgreSQL의 NLS는 GNU gettext 라이브러리를 기반으로 구현되어 있으며, 이 표준화된 접근 방식을 통해 다양한 언어로의 번역이 가능합니다.
+PostgreSQL의 NLS는 GNU gettext 라이브러리 기반으로 구현 → 표준화된 접근 방식으로 다양한 언어로의 번역 가능.
 
 #### NLS의 주요 특징
 
@@ -4687,18 +4560,24 @@ PostgreSQL의 NLS는 GNU gettext 라이브러리를 기반으로 구현되어 �
 
 ##### 기본 요구사항
 
-| 도구 | 설명 | 필수 여부 |
-|------|------|-----------|
-| 텍스트 편집기 | PO 파일 편집용 | 필수 |
-| `msgfmt` | MO 파일 생성 | 필수 |
-| `libintl` | gettext 라이브러리 | 필수 |
+- 텍스트 편집기
+  - 설명: PO 파일 편집용
+  - 필수 여부: 필수
+- `msgfmt`
+  - 설명: MO 파일 생성
+  - 필수 여부: 필수
+- `libintl`
+  - 설명: gettext 라이브러리
+  - 필수 여부: 필수
 
 ##### 새로운 번역 시작 또는 병합 시 추가 요구사항
 
-| 도구 | 설명 | 버전 요구사항 |
-|------|------|---------------|
-| `xgettext` | 소스에서 메시지 추출 | GNU Gettext 0.10.36+ |
-| `msgmerge` | PO 파일 병합 | GNU Gettext 0.10.36+ |
+- `xgettext`
+  - 설명: 소스에서 메시지 추출
+  - 버전 요구사항: GNU Gettext 0.10.36+
+- `msgmerge`
+  - 설명: PO 파일 병합
+  - 버전 요구사항: GNU Gettext 0.10.36+
 
 ##### PostgreSQL 소스 빌드 요구사항
 
@@ -4712,12 +4591,16 @@ make
 
 ##### 메시지 카탈로그 파일 형식
 
-NLS는 두 가지 파일 형식을 사용합니다:
+NLS는 두 가지 파일 형식 사용:
 
-| 형식 | 확장자 | 용도 | 특징 |
-|------|--------|------|------|
-| PO (Portable Object) | `.po` | 원본-번역 쌍 저장 | 텍스트 형식, 번역자가 직접 편집 |
-| MO (Machine Object) | `.mo` | 런타임에 사용 | 바이너리 형식, 자동 생성 |
+- PO (Portable Object)
+  - 확장자: `.po`
+  - 용도: 원본-번역 쌍 저장
+  - 특징: 텍스트 형식·번역자가 직접 편집
+- MO (Machine Object)
+  - 확장자: `.mo`
+  - 용도: 런타임에 사용
+  - 특징: 바이너리 형식·자동 생성
 
 ##### 파일 명명 규칙
 
@@ -4741,7 +4624,7 @@ ko.po            # 한국어 PO 파일
 
 1단계: 프로그램 디렉토리 확인
 
-해당 프로그램 디렉토리에 `nls.mk` 파일이 있으면 번역을 지원하는 프로그램입니다.
+해당 프로그램 디렉토리에 `nls.mk` 파일이 있으면 번역을 지원하는 프로그램임.
 
 ```bash
 # 예: psql 디렉토리 확인
@@ -4755,7 +4638,7 @@ cd src/bin/psql
 make init-po
 ```
 
-`progname.pot` 템플릿 파일이 생성됩니다.
+`progname.pot` 템플릿 파일 생성됨.
 
 3단계: 언어별 PO 파일 생성
 
@@ -4766,7 +4649,7 @@ cp psql.pot ko.po
 
 4단계: 언어 등록
 
-`po/LINGUAS` 파일에 언어 코드를 추가합니다:
+`po/LINGUAS` 파일에 언어 코드 추가:
 
 ```
 # po/LINGUAS
@@ -4775,18 +4658,18 @@ de fr ja ko pt_BR zh_CN
 
 ##### 기존 번역 업데이트
 
-프로그램 소스가 변경되면 번역을 업데이트해야 합니다:
+프로그램 소스가 변경되면 번역 업데이트 필요:
 
 ```bash
 # 메시지 병합
 make update-po
 ```
 
-이 명령을 실행하면:
-1. 새 POT 파일을 생성합니다
-2. 기존 PO 파일과 병합합니다
-3. 불확실한 메시지를 "fuzzy"로 표시합니다
-4. 결과를 `.po.new` 확장자로 저장합니다
+이 명령 실행 시:
+1. 새 POT 파일 생성
+2. 기존 PO 파일과 병합
+3. 불확실한 메시지를 "fuzzy"로 표시
+4. 결과를 `.po.new` 확장자로 저장
 
 #### PO 파일 편집 (Editing the PO Files)
 
@@ -4811,12 +4694,18 @@ msgstr[0] "%d개 파일을 복사했습니다"
 
 ##### 주석 유형
 
-| 기호 | 의미 | 설명 |
-|------|------|------|
-| `#` | 번역자 주석 | 번역자가 작성하는 메모 |
-| `#.` | 자동 주석 | 소스 코드에서 자동 추출된 주석 |
-| `#:` | 위치 정보 | 메시지가 사용되는 소스 파일과 라인 번호 |
-| `#,` | 플래그 | 메시지 특성 (예: c-format, fuzzy) |
+- `#`
+  - 의미: 번역자 주석
+  - 설명: 번역자가 작성하는 메모
+- `#.`
+  - 의미: 자동 주석
+  - 설명: 소스 코드에서 자동 추출된 주석
+- `#:`
+  - 의미: 위치 정보
+  - 설명: 메시지가 사용되는 소스 파일과 라인 번호
+- `#,`
+  - 의미: 플래그
+  - 설명: 메시지 특성(예: c-format, fuzzy)
 
 ##### 플래그 설명
 
@@ -4828,7 +4717,7 @@ msgstr[0] "%d개 파일을 복사했습니다"
 
 1. 형식 지정자 보존
 
-원본의 형식 지정자(`%s`, `%d`, `%m` 등)를 반드시 보존해야 합니다:
+원본의 형식 지정자(`%s`, `%d`, `%m` 등) 반드시 보존 필요:
 
 ```po
 # 올바른 예
@@ -4838,7 +4727,7 @@ msgstr "파일 %s에 %d개의 줄이 있습니다"
 
 2. 순서 변경이 필요한 경우
 
-언어에 따라 인자 순서를 변경해야 할 때는 위치 지정자를 사용합니다:
+언어에 따라 인자 순서를 변경해야 할 때는 위치 지정자 사용:
 
 ```po
 msgid "File %s has %d characters."
@@ -4893,11 +4782,9 @@ textdomain("progname");
 
 함수 설명:
 
-| 함수 | 설명 |
-|------|------|
-| `setlocale(LC_ALL, "")` | 환경 변수에서 로케일 설정 로드 |
-| `bindtextdomain()` | 메시지 카탈로그 디렉토리 지정 |
-| `textdomain()` | 현재 텍스트 도메인(프로그램 이름) 설정 |
+- `setlocale(LC_ALL, "")`: 환경 변수에서 로케일 설정 로드
+- `bindtextdomain()`: 메시지 카탈로그 디렉토리 지정
+- `textdomain()`: 현재 텍스트 도메인(프로그램 이름) 설정
 
 ##### 2단계: 번역 대상 메시지에 gettext() 호출 추가
 
@@ -4924,7 +4811,7 @@ fprintf(stderr, _("panic level %d\n"), lvl);
 
 ##### 3단계: nls.mk 파일 작성
 
-프로그램 소스 디렉토리에 `nls.mk` 파일을 생성합니다:
+프로그램 소스 디렉토리에 `nls.mk` 파일 생성:
 
 ```makefile
 CATALOG_NAME = psql
@@ -4937,11 +4824,9 @@ GETTEXT_TRIGGERS = psql_error simple_prompt write_msg:2
 
 변수 설명:
 
-| 변수 | 설명 |
-|------|------|
-| `CATALOG_NAME` | `textdomain()` 호출에서 사용된 프로그램 이름 |
-| `GETTEXT_FILES` | 번역 가능한 문자열을 포함하는 소스 파일 목록 |
-| `GETTEXT_TRIGGERS` | 번역 문자열을 포함하는 함수/매크로 이름 |
+- `CATALOG_NAME`: `textdomain()` 호출에서 사용된 프로그램 이름
+- `GETTEXT_FILES`: 번역 가능한 문자열을 포함하는 소스 파일 목록
+- `GETTEXT_TRIGGERS`: 번역 문자열을 포함하는 함수·매크로 이름
 
 GETTEXT_TRIGGERS 형식:
 
@@ -4952,7 +4837,7 @@ GETTEXT_TRIGGERS 형식:
 
 ##### 4단계: po/LINGUAS 파일 생성
 
-지원할 번역 목록을 작성합니다. 초기에는 비워 둘 수 있습니다:
+지원할 번역 목록 작성. 초기에는 비워 둘 수 있음:
 
 ```
 # po/LINGUAS
@@ -4969,7 +4854,7 @@ de fr ja ko pt_BR zh_CN
 printf("Files were %s.\n", flag ? "copied" : "removed");
 ```
 
-문제점: 다른 언어에서는 어순이 다를 수 있어 번역이 불가능합니다.
+문제점: 다른 언어에서는 어순이 다를 수 있어 번역 불가능.
 
 올바른 예:
 
@@ -4997,7 +4882,7 @@ else
     printf("copied %d files", n);
 ```
 
-문제점: 많은 언어에서 복수형 규칙이 영어와 다릅니다 (예: 러시아어는 3가지 복수형).
+문제점: 많은 언어에서 복수형 규칙이 영어와 다름 (예: 러시아어는 3가지 복수형).
 
 권장 방법 1 - 복수형 회피:
 
@@ -5017,16 +4902,14 @@ ereport(INFO,
 
 errmsg_plural() 인자 설명:
 
-| 인자 | 설명 |
-|------|------|
-| 첫 번째 | 단수형 형식 문자열 (영어) |
-| 두 번째 | 복수형 형식 문자열 (영어) |
-| 세 번째 | 복수형 결정 제어값 (n) |
-| 네 번째 이후 | 형식 문자열에 따른 인자들 |
+- 첫 번째: 단수형 형식 문자열(영어)
+- 두 번째: 복수형 형식 문자열(영어)
+- 세 번째: 복수형 결정 제어값(n)
+- 네 번째 이후: 형식 문자열에 따른 인자들
 
 ngettext() 직접 사용:
 
-`ereport`/`errmsg` 외부에서는 `ngettext()`를 직접 사용합니다:
+`ereport`/`errmsg` 외부에서는 `ngettext()`를 직접 사용:
 
 ```c
 printf(ngettext("Processed %d row", "Processed %d rows", count), count);
@@ -5034,7 +4917,7 @@ printf(ngettext("Processed %d row", "Processed %d rows", count), count);
 
 ##### 3. 번역자를 위한 주석 추가
 
-복잡하거나 모호한 메시지에는 번역자를 위한 주석을 추가합니다:
+복잡하거나 모호한 메시지에는 번역자를 위한 주석 추가:
 
 ```c
 /* translator: %s is the name of a data type */
@@ -5044,11 +4927,11 @@ _("cannot cast to %s")
 _("lost connection")
 ```
 
-이 주석은 메시지 카탈로그 파일에 복사되어 번역자가 문맥을 파악하는 데 활용됩니다.
+이 주석은 메시지 카탈로그 파일에 복사되어 번역자가 문맥을 파악하는 데 활용됨.
 
 ##### 4. 플레이스홀더 설명
 
-플레이스홀더가 여러 개인 경우, 각각이 무엇을 나타내는지 설명합니다:
+플레이스홀더가 여러 개인 경우, 각각이 무엇을 나타내는지 설명:
 
 ```c
 /*
@@ -5061,7 +4944,7 @@ errmsg("column %s of table %s does not exist",
 
 ##### 5. 일관된 용어 사용
 
-동일한 개념에는 일관된 용어를 사용합니다:
+동일한 개념에는 일관된 용어 사용:
 
 ```c
 // 좋은 예 - 일관된 용어
@@ -5308,7 +5191,7 @@ msgstr ""
 
 ### 개요
 
-쿼리 플래너는 쿼리가 검색할 행의 수를 추정하여 최적의 실행 계획을 선택합니다. 이러한 통계 정보는 시스템 카탈로그에 저장되며, `VACUUM`, `ANALYZE`, 그리고 DDL 명령에 의해 업데이트됩니다.
+쿼리 플래너는 쿼리가 검색할 행의 수를 추정 → 최적의 실행 계획 선택. 이러한 통계 정보는 시스템 카탈로그에 저장되며, `VACUUM`, `ANALYZE`, 그리고 DDL 명령에 의해 업데이트됨.
 
 플래너가 사용하는 주요 통계 정보:
 - 행 수(Row Count): 테이블에 포함된 총 행의 수
@@ -5323,7 +5206,7 @@ msgstr ""
 
 #### 기본 통계 저장
 
-행 수와 디스크 블록 수는 `pg_class` 시스템 카탈로그의 `reltuples`와 `relpages` 컬럼에 저장됩니다.
+행 수와 디스크 블록 수는 `pg_class` 시스템 카탈로그의 `reltuples`와 `relpages` 컬럼에 저장됨.
 
 ```sql
 SELECT relname, relkind, reltuples, relpages
@@ -5340,15 +5223,15 @@ WHERE relname LIKE 'tenk1%';
 ```
 
 주요 사항:
-- `reltuples`와 `relpages`는 실시간으로 업데이트되지 않습니다
-- `VACUUM`, `ANALYZE`, DDL 명령에 의해 업데이트됩니다
-- 플래너는 현재 물리적 테이블 크기에 맞게 이 값들을 스케일링하여 더 나은 근사치를 얻습니다
+- `reltuples`와 `relpages`는 실시간으로 업데이트되지 않음
+- `VACUUM`, `ANALYZE`, DDL 명령에 의해 업데이트됨
+- 플래너는 현재 물리적 테이블 크기에 맞게 이 값들을 스케일링 → 더 나은 근사치 확보
 
 #### 선택도 통계 (Selectivity Statistics)
 
-플래너는 `pg_statistic` 시스템 카탈로그에 저장된 데이터를 사용하여 WHERE 조건과 일치하는 행의 비율인 선택도(Selectivity) 를 추정합니다. 이 데이터는 `ANALYZE`와 `VACUUM ANALYZE`에 의해 업데이트됩니다.
+플래너는 `pg_statistic` 시스템 카탈로그에 저장된 데이터를 사용하여 WHERE 조건과 일치하는 행의 비율인 선택도(Selectivity)를 추정함. 이 데이터는 `ANALYZE`와 `VACUUM ANALYZE`에 의해 업데이트됨.
 
-슈퍼유저 권한이 필요 없고 더 읽기 쉬운 `pg_stats` 뷰를 대신 사용할 수 있습니다.
+슈퍼유저 권한이 필요 없고 더 읽기 쉬운 `pg_stats` 뷰를 대신 사용 가능.
 
 ```sql
 SELECT attname, inherited, n_distinct,
@@ -5359,13 +5242,13 @@ WHERE tablename = 'road';
 
 #### 통계 구성
 
-컬럼별로 수집되는 통계의 양을 제어할 수 있습니다:
+컬럼별로 수집되는 통계의 양을 제어 가능:
 
 ```sql
 ALTER TABLE table_name ALTER COLUMN column_name SET STATISTICS value;
 ```
 
-또는 `default_statistics_target` 구성 변수를 통해 전역적으로 설정할 수 있습니다 (기본값: 100개 항목).
+또는 `default_statistics_target` 구성 변수를 통해 전역적으로 설정 가능 (기본값: 100개 항목).
 
 ---
 
@@ -5379,8 +5262,8 @@ EXPLAIN SELECT * FROM tenk1 WHERE unique1 < 1000;
 ```
 
 과정:
-1. 플래너가 `<` 연산자의 선택도 함수(`scalarltsel`)를 조회합니다
-2. `pg_stats`에서 히스토그램을 검색합니다:
+1. 플래너가 `<` 연산자의 선택도 함수(`scalarltsel`)를 조회함
+2. `pg_stats`에서 히스토그램을 검색함:
 
 ```sql
 SELECT histogram_bounds FROM pg_stats
@@ -5389,7 +5272,7 @@ WHERE tablename='tenk1' AND attname='unique1';
 -- 결과: {0,993,1997,3050,4040,5036,5957,7057,8029,9016,9995}
 ```
 
-3. 히스토그램 버킷 내에서 선형 분포를 사용하여 선택도를 계산합니다:
+3. 히스토그램 버킷 내에서 선형 분포를 사용하여 선택도를 계산함:
 
 ```
 선택도 = (1 + (1000 - 993)/(1997 - 993))/10
@@ -5406,7 +5289,7 @@ EXPLAIN SELECT * FROM tenk1 WHERE stringu1 = 'CRAAAA';
 ```
 
 과정:
-가장 빈번한 값(MCV)과 빈도를 사용합니다:
+가장 빈번한 값(MCV)과 빈도를 사용함:
 
 ```sql
 SELECT null_frac, n_distinct, most_common_vals, most_common_freqs
@@ -5431,7 +5314,7 @@ EXPLAIN SELECT * FROM tenk1 WHERE stringu1 = 'xxx';
 ```
 
 과정:
-값이 MCV 목록에 없으므로 다음 공식을 사용합니다:
+값이 MCV 목록에 없으므로 다음 공식을 사용함:
 
 ```
 선택도 = (1 - sum(mcv_freqs))/(num_distinct - num_mcv)
@@ -5449,7 +5332,7 @@ EXPLAIN SELECT * FROM tenk1 WHERE stringu1 < 'IAAAAA';
 ```
 
 과정:
-MCV와 히스토그램 추정을 결합합니다:
+MCV와 히스토그램 추정을 결합함:
 
 ```
 selectivity_mcv = 0.01833333 (일치하는 MCV 빈도의 합)
@@ -5468,7 +5351,7 @@ WHERE unique1 < 1000 AND stringu1 = 'xxx';
 ```
 
 과정:
-독립성을 가정하고 선택도를 곱합니다:
+독립성을 가정하고 선택도를 곱함:
 
 ```
 선택도 = 0.100697 * 0.0014559 = 0.0001466
@@ -5507,15 +5390,15 @@ WHERE tablename IN ('tenk1', 'tenk2') AND attname='unique2';
 
 ### 확장 통계
 
-확장 통계(Extended Statistics)는 단일 컬럼 통계로는 파악할 수 없는 컬럼 간 상관관계를 수집합니다. `CREATE STATISTICS` 명령으로 정의하며, 실제 데이터 수집은 `ANALYZE` 실행 시 이루어집니다.
+확장 통계(Extended Statistics)는 단일 컬럼 통계로는 파악할 수 없는 컬럼 간 상관관계를 수집함. `CREATE STATISTICS` 명령으로 정의하며, 실제 데이터 수집은 `ANALYZE` 실행 시 이루어짐.
 
 #### 1. 함수적 종속성 (Functional Dependencies)
 
-컬럼 `b`가 컬럼 `a`에 함수적으로 종속된 경우를 추적합니다 (`a` 값이 결정되면 `b` 값도 결정됨).
+컬럼 `b`가 컬럼 `a`에 함수적으로 종속된 경우를 추적함 (`a` 값이 결정되면 `b` 값도 결정됨).
 
 ##### 문제 상황
 
-확장 통계가 없으면 플래너는 컬럼 조건이 서로 독립적이라고 가정하므로, 상관관계가 있는 컬럼에 대해 행 수를 심각하게 과소 추정합니다.
+확장 통계가 없으면 플래너는 컬럼 조건이 서로 독립적이라고 가정하므로, 상관관계가 있는 컬럼에 대해 행 수를 심각하게 과소 추정함.
 
 예제 설정:
 ```sql
@@ -5533,7 +5416,7 @@ SELECT * FROM t WHERE a = 1 AND b = 1;
 -- 실제: 100행
 ```
 
-플래너는 컬럼 간 함수적 종속성을 인식하지 못하고 개별 선택도를 단순히 곱합니다 (1% × 1% = 0.01%).
+플래너는 컬럼 간 함수적 종속성을 인식하지 못하고 개별 선택도를 단순히 곱함 (1% × 1% = 0.01%).
 
 ##### 해결책
 
@@ -5561,16 +5444,16 @@ stxname | stxkeys |             stxddependencies
 stts    | 1 5     | {"1 => 5": 1.000000, "5 => 1": 0.423130}
 ```
 
-컬럼 1(ZIP 코드)이 컬럼 5(도시)를 계수 1.0으로 완전히 결정하고, 반대 방향(도시 → ZIP 코드)은 42.3% 수준임을 나타냅니다.
+컬럼 1(ZIP 코드)이 컬럼 5(도시)를 계수 1.0으로 완전히 결정하고, 반대 방향(도시 → ZIP 코드)은 42.3% 수준임을 나타냄.
 
 제한사항:
-- 컬럼과 상수를 비교하는 단순 등호 조건과 `IN` 절에만 적용됩니다
-- 컬럼 간 비교, 범위 절, `LIKE`, 기타 조건 유형에는 사용되지 않습니다
-- 실제로 호환되지 않는 조건을 감지할 수 없습니다 (예: `city='San Francisco' AND zip='90210'`)
+- 컬럼과 상수를 비교하는 단순 등호 조건과 `IN` 절에만 적용
+- 컬럼 간 비교, 범위 절, `LIKE`, 기타 조건 유형에는 미적용
+- 실제로 호환되지 않는 조건 감지 불가(예: `city='San Francisco' AND zip='90210'`)
 
 #### 2. 다변량 N-Distinct 수 (Multivariate N-Distinct Counts)
 
-컬럼 조합의 고유 값 수를 수집하여 여러 컬럼을 사용하는 GROUP BY 쿼리의 추정 정확도를 높입니다.
+컬럼 조합의 고유 값 수를 수집 → 여러 컬럼을 사용하는 GROUP BY 쿼리의 추정 정확도 향상.
 
 단일 컬럼 (정확):
 ```sql
@@ -5615,7 +5498,7 @@ WHERE stxname = 'stts';
 
 #### 3. 다변량 MCV 목록 (Multivariate MCV Lists)
 
-컬럼 조합의 가장 빈번한 값 목록을 수집하여 다중 컬럼 조건에 대한 추정 정확도를 크게 높입니다.
+컬럼 조합의 가장 빈번한 값 목록을 수집 → 다중 컬럼 조건에 대한 추정 정확도를 크게 향상.
 
 MCV 통계 생성:
 ```sql
@@ -5665,27 +5548,28 @@ SELECT * FROM t WHERE a <= 49 AND b > 49;
 
 #### 확장 통계 비교
 
-| 기능 | 함수적 종속성 (Functional Dependencies) | MCV 목록 (MCV Lists) |
-|------|----------------------------------------|---------------------|
-| 비용 | 매우 저렴 | 더 비쌈 |
-| 저장 공간 | 최소 | 더 큼 |
-| 절 유형 | 등호만 | 모든 유형 (범위, 부등호 등) |
-| 세분화 | 컬럼 수준만 | 개별 값 |
-| 호환되지 않는 값 | 감지 불가 | 감지 가능 |
+- 함수적 종속성(Functional Dependencies)
+  - 비용: 매우 저렴
+  - 저장 공간: 최소
+  - 절 유형: 등호만
+  - 세분화: 컬럼 수준만
+  - 호환되지 않는 값: 감지 불가
+- MCV 목록(MCV Lists)
+  - 비용: 더 비쌈
+  - 저장 공간: 더 큼
+  - 절 유형: 모든 유형(범위, 부등호 등)
+  - 세분화: 개별 값
+  - 호환되지 않는 값: 감지 가능
 
 ---
 
 ### 모범 사례
 
-1. 필요한 경우에만 확장 통계 생성: 쿼리에서 실제로 사용되는 컬럼 그룹에 대해서만 확장 통계를 생성하세요.
-
-2. 함수적 종속성 사용: 강하게 상관된 컬럼에 함수적 종속성을 사용하세요.
-
-3. N-Distinct 통계 적용: GROUP BY에서 사용되는 컬럼 조합에 ndistinct 통계를 적용하세요.
-
-4. MCV 통계 신중히 생성: 잘못된 추정이 나쁜 계획을 유발할 때만 MCV 통계를 생성하세요.
-
-5. 통계 타겟 조정: 불규칙한 데이터 분포를 가진 컬럼에 대해 통계 타겟을 증가시켜 더 나은 정확도를 얻으세요.
+1. 필요한 경우에만 확장 통계 생성: 쿼리에서 실제로 사용되는 컬럼 그룹에 대해서만 확장 통계 생성 권장
+2. 함수적 종속성 사용: 강하게 상관된 컬럼에 함수적 종속성 사용 권장
+3. N-Distinct 통계 적용: GROUP BY에서 사용되는 컬럼 조합에 ndistinct 통계 적용 권장
+4. MCV 통계 신중히 생성: 잘못된 추정이 나쁜 계획을 유발할 때만 MCV 통계 생성 권장
+5. 통계 타겟 조정: 불규칙한 데이터 분포를 가진 컬럼에 대해 통계 타겟을 증가 → 더 나은 정확도 확보
 
 ```sql
 -- 특정 컬럼의 통계 타겟 증가
@@ -5695,7 +5579,7 @@ ALTER TABLE my_table ALTER COLUMN my_column SET STATISTICS 500;
 ANALYZE my_table;
 ```
 
-6. 정기적인 ANALYZE 실행: 데이터 분포가 크게 변경된 후에는 `ANALYZE`를 실행하여 통계를 최신 상태로 유지하세요.
+6. 정기적인 ANALYZE 실행: 데이터 분포가 크게 변경된 후에는 `ANALYZE`를 실행 → 통계를 최신 상태로 유지 권장
 
 ```sql
 -- 특정 테이블 분석
@@ -5728,7 +5612,7 @@ ANALYZE my_table (column1, column2);
 
 ## Chapter 62. 유전 쿼리 최적화기 (Genetic Query Optimizer)
 
-PostgreSQL의 유전 쿼리 최적화기(GEQO, Genetic Query Optimizer)는 복잡한 조인 쿼리에 대한 효율적인 실행 계획을 탐색하기 위해 유전 알고리즘을 사용하는 쿼리 최적화 모듈입니다.
+PostgreSQL의 유전 쿼리 최적화기(GEQO, Genetic Query Optimizer)는 복잡한 조인 쿼리에 대한 효율적인 실행 계획을 탐색하기 위해 유전 알고리즘을 사용하는 쿼리 최적화 모듈.
 
 ---
 
@@ -5747,16 +5631,16 @@ PostgreSQL의 유전 쿼리 최적화기(GEQO, Genetic Query Optimizer)는 복�
 
 #### 1.1 조인 최적화의 어려움
 
-관계형 데이터베이스에서 처리와 최적화가 가장 어려운 연산자는 조인(Join)입니다. 조인 최적화가 복잡한 이유는 다음과 같습니다:
+관계형 데이터베이스에서 처리와 최적화가 가장 어려운 연산자는 조인(Join). 조인 최적화가 복잡한 이유:
 
-- 지수적 증가(Exponential Growth): 쿼리에 포함된 조인의 수가 증가할수록 가능한 쿼리 계획의 수는 기하급수적으로 증가합니다
-- 다양한 조인 방법: PostgreSQL은 중첩 루프 조인(Nested Loop Join), 해시 조인(Hash Join), 병합 조인(Merge Join)을 지원합니다
-- 다양한 인덱스 유형: B-tree, Hash, GiST, GIN 인덱스 등이 서로 다른 접근 경로를 제공합니다
-- 탐색 복잡도: 전통적인 쿼리 최적화는 모든 대안 전략에 대한 철저한 탐색이 필요합니다
+- 지수적 증가(Exponential Growth): 쿼리에 포함된 조인의 수가 증가할수록 가능한 쿼리 계획의 수는 기하급수적으로 증가
+- 다양한 조인 방법: PostgreSQL은 중첩 루프 조인(Nested Loop Join), 해시 조인(Hash Join), 병합 조인(Merge Join) 지원
+- 다양한 인덱스 유형: B-tree, Hash, GiST, GIN 인덱스 등이 서로 다른 접근 경로 제공
+- 탐색 복잡도: 전통적인 쿼리 최적화는 모든 대안 전략에 대한 철저한 탐색 필요
 
 #### 1.2 전통적인 PostgreSQL 쿼리 최적화기
 
-PostgreSQL의 표준 쿼리 최적화기는 대안 전략들에 대해 거의 완전한 탐색(Near-Exhaustive Search) 을 수행합니다:
+PostgreSQL의 표준 쿼리 최적화기는 대안 전략들에 대해 거의 완전한 탐색(Near-Exhaustive Search)을 수행함:
 
 - 기원: IBM의 System R 데이터베이스에서 처음 도입
 - 결과: 거의 최적에 가까운 조인 순서를 생성
@@ -5764,7 +5648,7 @@ PostgreSQL의 표준 쿼리 최적화기는 대안 전략들에 대해 거의 �
 
 #### 1.3 유전 알고리즘의 필요성
 
-전통적인 접근 방식은 다음과 같은 경우에 부적합합니다:
+전통적인 접근 방식은 다음과 같은 경우에 부적합:
 
 - 대규모 조인 쿼리 (많은 테이블 포함)
 - 복잡한 추론이 필요한 의사 결정 지원 시스템
@@ -5774,16 +5658,14 @@ PostgreSQL의 표준 쿼리 최적화기는 대안 전략들에 대해 거의 �
 
 조인 가능한 테이블 수에 따른 가능한 조인 순서의 수:
 
-| 테이블 수 | 가능한 조인 순서 |
-|-----------|------------------|
-| 2 | 2 |
-| 3 | 12 |
-| 4 | 120 |
-| 5 | 1,680 |
-| 6 | 30,240 |
-| 7 | 665,280 |
-| 10 | 17,643,225,600 |
-| 12 | 약 1.76 × 10^13 |
+- 2개 테이블: 2가지
+- 3개 테이블: 12가지
+- 4개 테이블: 120가지
+- 5개 테이블: 1,680가지
+- 6개 테이블: 30,240가지
+- 7개 테이블: 665,280가지
+- 10개 테이블: 17,643,225,600가지
+- 12개 테이블: 약 1.76 × 10^13가지
 
 ---
 
@@ -5791,24 +5673,24 @@ PostgreSQL의 표준 쿼리 최적화기는 대안 전략들에 대해 거의 �
 
 #### 2.1 개요
 
-유전 알고리즘(Genetic Algorithm, GA)은 무작위 탐색 기반의 휴리스틱 최적화 방법(Heuristic Optimization Method)입니다. PostgreSQL의 GEQO는 복잡한 쿼리 최적화 문제에서 최적 솔루션을 찾기 위해 이 알고리즘을 활용합니다.
+유전 알고리즘(Genetic Algorithm, GA)은 무작위 탐색 기반의 휴리스틱 최적화 방법(Heuristic Optimization Method). PostgreSQL의 GEQO는 복잡한 쿼리 최적화 문제에서 최적 솔루션을 찾기 위해 이 알고리즘을 활용함.
 
 #### 2.2 핵심 개념
 
 ##### 개체군과 적합도 (Population and Fitness)
 
-- 가능한 솔루션의 집합은 개체(Individual) 들의 개체군(Population) 으로 간주됩니다
-- 각 개체가 환경에 얼마나 잘 적응했는지는 적합도(Fitness) 로 지정됩니다
+- 가능한 솔루션의 집합은 개체(Individual)들의 개체군(Population)으로 간주됨
+- 각 개체가 환경에 얼마나 잘 적응했는지는 적합도(Fitness)로 지정됨
 
 ##### 유전적 구조 (Genetic Structure)
 
-- 염색체(Chromosome): 탐색 공간에서 개체의 좌표를 나타냅니다. 본질적으로 문자열의 집합입니다
-- 유전자(Gene): 최적화되는 단일 파라미터의 값을 인코딩하는 염색체의 하위 섹션입니다
+- 염색체(Chromosome): 탐색 공간에서 개체의 좌표를 나타냄, 본질적으로 문자열의 집합
+- 유전자(Gene): 최적화되는 단일 파라미터의 값을 인코딩하는 염색체의 하위 섹션
 - 일반적인 인코딩: 이진(Binary) 또는 정수(Integer) 표현
 
 #### 2.3 진화 연산 (Evolutionary Operations)
 
-알고리즘은 세 가지 주요 연산으로 새로운 세대의 탐색 지점을 생성합니다:
+알고리즘은 세 가지 주요 연산으로 새로운 세대의 탐색 지점을 생성함:
 
 1. 재조합(Recombination): 여러 개체의 유전 물질을 결합
 2. 돌연변이(Mutation): 유전 물질에 무작위 변화를 적용
@@ -5816,11 +5698,11 @@ PostgreSQL의 표준 쿼리 최적화기는 대안 전략들에 대해 거의 �
 
 #### 2.4 중요한 구분
 
-comp.ai.genetic FAQ에 따르면, GA는 순수한 무작위 탐색이 아닙니다:
+comp.ai.genetic FAQ에 따르면, GA는 순수한 무작위 탐색이 아님:
 
-> "GA는 확률적 과정을 사용하지만, 결과는 명백히 비무작위적입니다 (무작위보다 더 나음)."
+> "GA는 확률적 과정을 사용하지만, 결과는 명백히 비무작위적임(무작위보다 더 나음)."
 
-즉, 무작위성이 개입하지만 유전 알고리즘은 세대를 거듭할수록 단순 무작위 탐색보다 체계적으로 더 나은 솔루션을 생성합니다.
+즉, 무작위성이 개입하지만 유전 알고리즘은 세대를 거듭할수록 단순 무작위 탐색보다 체계적으로 더 나은 솔루션을 생성함.
 
 #### 2.5 유전 알고리즘의 흐름도
 
@@ -5874,11 +5756,11 @@ comp.ai.genetic FAQ에 따르면, GA는 순수한 무작위 탐색이 아닙니�
 
 #### 3.1 개요
 
-GEQO(Genetic Query Optimization)는 쿼리 최적화를 외판원 문제(Traveling Salesman Problem, TSP)로 접근하는 PostgreSQL 모듈입니다. 가능한 쿼리 계획을 조인 순서를 나타내는 정수 문자열로 인코딩합니다.
+GEQO(Genetic Query Optimization)는 쿼리 최적화를 외판원 문제(Traveling Salesman Problem, TSP)로 접근하는 PostgreSQL 모듈. 가능한 쿼리 계획을 조인 순서를 나타내는 정수 문자열로 인코딩함.
 
 #### 3.2 조인 순서 인코딩
 
-쿼리 계획은 각 숫자가 릴레이션 ID를 나타내는 정수 문자열로 표현됩니다:
+쿼리 계획은 각 숫자가 릴레이션 ID를 나타내는 정수 문자열로 표현됨:
 
 ```
 예제 조인 트리:
@@ -5893,47 +5775,40 @@ GEQO(Genetic Query Optimization)는 쿼리 최적화를 외판원 문제(Traveli
 
 #### 3.3 PostgreSQL GEQO의 주요 특성
 
-1. 정상 상태 GA (Steady State GA): 전체 세대를 교체하는 대신 적합도가 가장 낮은 개체만 교체하여 빠른 수렴을 달성합니다
-
-2. 에지 재조합 교차 (Edge Recombination Crossover): 최소한의 에지 손실로 TSP 솔루션에 특히 적합합니다
-
-3. 돌연변이 연산자 없음: 유효한 투어를 생성하기 위한 복구 메커니즘이 필요 없습니다
+1. 정상 상태 GA (Steady State GA): 전체 세대를 교체하는 대신 적합도가 가장 낮은 개체만 교체 → 빠른 수렴 달성
+2. 에지 재조합 교차 (Edge Recombination Crossover): 최소한의 에지 손실로 TSP 솔루션에 특히 적합함
+3. 돌연변이 연산자 없음: 유효한 투어를 생성하기 위한 복구 메커니즘 불필요
 
 #### 3.4 계획 생성 과정
 
-1. 표준 플래너 코드를 사용하여 개별 릴레이션 스캔을 생성합니다
-2. 초기 무작위 조인 순서를 생성합니다
-3. 각 순서에 대해 표준 플래너를 호출하여 실행 비용을 추정합니다
-4. 각 단계에서 세 가지 가능한 조인 전략을 모두 평가합니다
-5. 가장 적합도가 낮은 후보를 폐기합니다
-6. 저비용 순서의 일부를 결합하여 새로운 후보를 생성합니다
-7. 사전 설정된 수의 순서가 평가될 때까지 반복합니다
-8. 발견된 최적의 계획을 사용합니다
+1. 표준 플래너 코드를 사용하여 개별 릴레이션 스캔 생성
+2. 초기 무작위 조인 순서 생성
+3. 각 순서에 대해 표준 플래너를 호출하여 실행 비용 추정
+4. 각 단계에서 세 가지 가능한 조인 전략을 모두 평가
+5. 가장 적합도가 낮은 후보 폐기
+6. 저비용 순서의 일부를 결합하여 새로운 후보 생성
+7. 사전 설정된 수의 순서가 평가될 때까지 반복
+8. 발견된 최적의 계획 사용
 
 #### 3.5 GEQO 소스 코드 구조
 
-주요 루틴은 `src/backend/optimizer/geqo/` 디렉토리에 있습니다:
+주요 루틴은 `src/backend/optimizer/geqo/` 디렉토리에 위치:
 
-| 파일 | 설명 |
-|------|------|
-| `geqo_main.c` | GEQO 메인 루틴 |
-| `geqo_pool.c` | 개체군 풀 관리 |
-| `geqo_selection.c` | 선택 연산 |
-| `geqo_recombination.c` | 재조합 연산 |
-| `geqo_erx.c` | 에지 재조합 교차 |
-| `geqo_ox1.c`, `geqo_ox2.c` | 순서 교차 연산 |
-| `geqo_pmx.c` | 부분 매핑 교차 |
-| `geqo_random.c` | 난수 생성 |
+- `geqo_main.c`: GEQO 메인 루틴
+- `geqo_pool.c`: 개체군 풀 관리
+- `geqo_selection.c`: 선택 연산
+- `geqo_recombination.c`: 재조합 연산
+- `geqo_erx.c`: 에지 재조합 교차
+- `geqo_ox1.c`, `geqo_ox2.c`: 순서 교차 연산
+- `geqo_pmx.c`: 부분 매핑 교차
+- `geqo_random.c`: 난수 생성
 
 #### 3.6 알려진 제한 사항
 
-1. 비용 재계산: 각 후보마다 비용 추정을 다시 계산해야 하므로 반복 작업이 발생합니다
-
-2. 메모리 문제: 하위 조인의 비용 추정을 캐싱할 때 메모리 문제가 생길 수 있습니다
-
-3. TSP 적합성: TSP 알고리즘이 쿼리 최적화에 항상 이상적이지는 않습니다 (하위 시퀀스의 비용이 TSP와 달리 문맥에 의존적입니다)
-
-4. 에지 재조합 효과: 쿼리 최적화에서 에지 재조합 교차의 효과에 대해서는 의문이 제기됩니다
+1. 비용 재계산: 각 후보마다 비용 추정을 다시 계산해야 하므로 반복 작업 발생
+2. 메모리 문제: 하위 조인의 비용 추정을 캐싱할 때 메모리 문제 발생 가능
+3. TSP 적합성: TSP 알고리즘이 쿼리 최적화에 항상 이상적이지는 않음(하위 시퀀스의 비용이 TSP와 달리 문맥에 의존적)
+4. 에지 재조합 효과: 쿼리 최적화에서 에지 재조합 교차의 효과에 대해서는 의문 제기됨
 
 ---
 
@@ -5941,7 +5816,7 @@ GEQO(Genetic Query Optimization)는 쿼리 최적화를 외판원 문제(Traveli
 
 #### 4.1 geqo (boolean)
 
-유전 쿼리 최적화를 활성화하거나 비활성화합니다.
+유전 쿼리 최적화를 활성화하거나 비활성화.
 
 ```sql
 -- GEQO 비활성화
@@ -5952,11 +5827,11 @@ SET geqo = on;
 ```
 
 - 기본값: `on`
-- 참고: 프로덕션 환경에서는 일반적으로 비활성화하지 않는 편이 좋습니다. 더 세밀한 제어가 필요하다면 `geqo_threshold`를 활용하세요
+- 참고: 프로덕션 환경에서는 일반적으로 비활성화하지 않는 편이 좋음. 더 세밀한 제어가 필요하면 `geqo_threshold` 활용 권장
 
 #### 4.2 geqo_threshold (integer)
 
-이 수 이상의 FROM 항목이 포함된 쿼리에 대해 유전 쿼리 최적화를 사용합니다.
+이 수 이상의 FROM 항목이 포함된 쿼리에 대해 유전 쿼리 최적화 사용.
 
 ```sql
 -- 8개 이상의 테이블 조인에 GEQO 사용
@@ -5967,11 +5842,11 @@ SET geqo_threshold = 12;
 ```
 
 - 기본값: `12`
-- 참고: `FULL OUTER JOIN`은 FROM 항목 하나로 계산됩니다. 단순한 쿼리에는 일반적인 완전 탐색 플래너가 더 유리하며, 테이블이 많은 복잡한 쿼리에서는 GEQO가 과도한 계획 시간을 방지합니다
+- 참고: `FULL OUTER JOIN`은 FROM 항목 하나로 계산됨. 단순한 쿼리에는 일반적인 완전 탐색 플래너가 더 유리하며, 테이블이 많은 복잡한 쿼리에서는 GEQO가 과도한 계획 시간 방지
 
 #### 4.3 geqo_effort (integer)
 
-계획 시간과 쿼리 계획 품질 간의 균형을 제어합니다.
+계획 시간과 쿼리 계획 품질 간의 균형 제어.
 
 ```sql
 -- 최소 노력 (빠른 계획, 품질 저하 가능)
@@ -5986,11 +5861,11 @@ SET geqo_effort = 10;
 
 - 범위: 1 ~ 10
 - 기본값: `5`
-- 참고: 값이 클수록 계획 시간은 늘어나지만 효율적인 계획이 선택될 가능성도 높아집니다. 이 값은 다른 GEQO 변수의 기본값을 산출하는 데만 사용되며, 동작에 직접 영향을 주지는 않습니다
+- 참고: 값이 클수록 계획 시간은 늘어나지만 효율적인 계획이 선택될 가능성도 상승. 이 값은 다른 GEQO 변수의 기본값을 산출하는 데만 사용되며, 동작에 직접 영향을 주지는 않음
 
 #### 4.4 geqo_pool_size (integer)
 
-유전 개체군 크기 (개체 수)를 제어합니다.
+유전 개체군 크기(개체 수) 제어.
 
 ```sql
 -- 작은 풀 크기 (빠른 실행)
@@ -6009,7 +5884,7 @@ SET geqo_pool_size = 0;
 
 #### 4.5 geqo_generations (integer)
 
-알고리즘의 반복 횟수를 제어합니다.
+알고리즘의 반복 횟수 제어.
 
 ```sql
 -- 더 많은 세대 (더 나은 결과, 더 오래 걸림)
@@ -6025,7 +5900,7 @@ SET geqo_generations = 0;
 
 #### 4.6 geqo_selection_bias (floating point)
 
-개체군 내 선택 압력을 제어합니다.
+개체군 내 선택 압력 제어.
 
 ```sql
 -- 낮은 선택 압력
@@ -6040,7 +5915,7 @@ SET geqo_selection_bias = 2.0;
 
 #### 4.7 geqo_seed (floating point)
 
-조인 순서 탐색 공간을 통한 무작위 경로를 선택하는 데 사용되는 난수 생성기의 초기값입니다.
+조인 순서 탐색 공간을 통한 무작위 경로를 선택하는 데 사용되는 난수 생성기의 초기값.
 
 ```sql
 -- 특정 시드 설정 (재현 가능한 결과)
@@ -6052,7 +5927,7 @@ SET geqo_seed = 0;
 
 - 범위: 0 ~ 1
 - 기본값: `0`
-- 참고: 값을 바꾸면 탐색하는 조인 경로 집합이 달라져 더 나은 계획 또는 더 나쁜 계획으로 이어질 수 있습니다. 동일한 시드와 동일한 GEQO 파라미터를 사용하면 같은 쿼리에 대해 항상 동일한 계획이 생성됩니다
+- 참고: 값을 바꾸면 탐색하는 조인 경로 집합이 달라져 더 나은 계획 또는 더 나쁜 계획으로 이어질 수 있음. 동일한 시드와 동일한 GEQO 파라미터를 사용하면 같은 쿼리에 대해 항상 동일한 계획 생성됨
 
 #### 4.8 설정 예제
 
@@ -6227,22 +6102,20 @@ SET auto_explain.log_analyze = true;
 
 #### 6.3 GEQO 개발 이력
 
-GEQO 모듈은 Martin Utesch가 독일 프라이베르크 광업 기술 대학교(University of Mining and Technology in Freiberg, Germany) 자동 제어 연구소(Institute of Automatic Control)를 위해 개발했습니다.
+GEQO 모듈은 Martin Utesch가 독일 프라이베르크 광업 기술 대학교(University of Mining and Technology in Freiberg, Germany) 자동 제어 연구소(Institute of Automatic Control)를 위해 개발함.
 
 ---
 
 ### 요약
 
-| 항목 | 설명 |
-|------|------|
-| 목적 | 많은 테이블이 포함된 복잡한 조인 쿼리의 효율적인 계획 탐색 |
-| 알고리즘 | 유전 알고리즘 (Genetic Algorithm) |
-| 인코딩 | 조인 순서를 정수 문자열로 표현 |
-| 기본 임계값 | 12개 이상의 FROM 항목 |
-| 주요 장점 | 지수적 탐색 공간에서 합리적인 시간 내에 좋은 계획 발견 |
-| 주요 단점 | 최적 계획을 보장하지 않음, 일부 오버헤드 발생 |
+- 목적: 많은 테이블이 포함된 복잡한 조인 쿼리의 효율적인 계획 탐색
+- 알고리즘: 유전 알고리즘 (Genetic Algorithm)
+- 인코딩: 조인 순서를 정수 문자열로 표현
+- 기본 임계값: 12개 이상의 FROM 항목
+- 주요 장점: 지수적 탐색 공간에서 합리적인 시간 내에 좋은 계획 발견
+- 주요 단점: 최적 계획을 보장하지 않음, 일부 오버헤드 발생
 
-GEQO는 PostgreSQL이 매우 복잡한 쿼리를 처리할 수 있게 해주는 중요한 구성 요소입니다. 기본 설정은 대부분의 워크로드에 적합하지만, 특정 사용 사례에 맞게 파라미터를 조정하여 성능을 최적화할 수 있습니다.
+GEQO는 PostgreSQL이 매우 복잡한 쿼리를 처리할 수 있게 해주는 중요한 구성 요소. 기본 설정은 대부분의 워크로드에 적합하지만, 특정 사용 사례에 맞게 파라미터를 조정 → 성능 최적화 가능.
 
 ---
 
@@ -6265,7 +6138,7 @@ GEQO는 PostgreSQL이 매우 복잡한 쿼리를 처리할 수 있게 해주는 
 
 #### 1.1 테이블 접근 메서드란?
 
-테이블 접근 메서드(Table Access Method, TAM) 는 PostgreSQL이 테이블 데이터를 저장하고 접근하는 방식을 정의하는 인터페이스입니다. PostgreSQL 12부터 도입된 이 인터페이스를 통해:
+테이블 접근 메서드(Table Access Method, TAM)는 PostgreSQL이 테이블 데이터를 저장하고 접근하는 방식을 정의하는 인터페이스. PostgreSQL 12부터 도입된 이 인터페이스를 통해:
 
 - 커스텀 테이블 저장소 구현 가능
 - 기본 `heap` 방식 외의 다양한 저장 전략 사용 가능
@@ -6273,7 +6146,7 @@ GEQO는 PostgreSQL이 매우 복잡한 쿼리를 처리할 수 있게 해주는 
 
 #### 1.2 시스템 카탈로그 등록
 
-테이블 접근 메서드는 `pg_am` 시스템 카탈로그에 등록됩니다:
+테이블 접근 메서드는 `pg_am` 시스템 카탈로그에 등록됨:
 
 ```sql
 -- 테이블 접근 메서드 조회
@@ -6309,13 +6182,11 @@ CREATE TABLE my_table (
 
 #### 2.1 핸들러 함수 (Handler Function)
 
-테이블 접근 메서드의 핵심은 핸들러 함수(handler function) 입니다. 이 함수는 다음 요구사항을 충족해야 합니다:
+테이블 접근 메서드의 핵심은 핸들러 함수(handler function). 이 함수는 다음 요구사항을 충족해야 함:
 
-| 항목 | 요구사항 |
-|------|----------|
-| 입력 타입 | `internal` (SQL 직접 호출 방지용 더미 파라미터) |
-| 반환 타입 | `table_am_handler` (의사 타입) |
-| 반환 값 | `TableAmRoutine` 구조체에 대한 포인터 |
+- 입력 타입: `internal` (SQL 직접 호출 방지용 더미 파라미터)
+- 반환 타입: `table_am_handler` (의사 타입)
+- 반환 값: `TableAmRoutine` 구조체에 대한 포인터
 
 ##### 핸들러 함수 등록 예제
 
@@ -6372,7 +6243,7 @@ CREATE ACCESS METHOD myam TYPE TABLE HANDLER my_tableam_handler;
 
 #### 2.2 TableAmRoutine 구조체
 
-`TableAmRoutine` 구조체는 테이블 접근 메서드의 모든 동작을 정의하는 콜백 함수 포인터들을 포함합니다. 전체 정의는 `src/include/access/tableam.h`에서 확인할 수 있습니다.
+`TableAmRoutine` 구조체는 테이블 접근 메서드의 모든 동작을 정의하는 콜백 함수 포인터들을 포함. 전체 정의는 `src/include/access/tableam.h`에서 확인 가능.
 
 ```c
 typedef struct TableAmRoutine
@@ -6452,18 +6323,16 @@ typedef struct TableAmRoutine
 
 #### 3.1 콜백 함수 분류
 
-| 카테고리 | 설명 | 주요 콜백 |
-|----------|------|----------|
-| 슬롯 관리 | 튜플 테이블 슬롯 연산 | `slot_callbacks` |
-| 스캔 초기화/제어 | 테이블 스캔 시작/종료/재시작 | `scan_begin`, `scan_end`, `scan_rescan` |
-| 스캔 실행 | 실제 튜플 가져오기 | `scan_getnextslot`, `scan_getnextslot_tidrange` |
-| 병렬 스캔 | 병렬 쿼리 지원 | `parallelscan_estimate`, `parallelscan_initialize` |
-| 인덱스 패치 | 인덱스를 통한 튜플 접근 | `index_fetch_begin`, `index_fetch_tuple` |
-| 튜플 검색 | 특정 튜플 버전 검색 | `tuple_fetch_row_version`, `tuple_get_latest_tid` |
-| 튜플 수정 | INSERT/UPDATE/DELETE | `tuple_insert`, `tuple_update`, `tuple_delete` |
-| 튜플 잠금 | 행 수준 잠금 | `tuple_lock` |
-| 유지보수 | VACUUM, 크기 계산 등 | `relation_vacuum`, `relation_size` |
-| 분석/샘플링 | ANALYZE 지원 | `scan_analyze_next_block`, `scan_sample_next_tuple` |
+- 슬롯 관리: 튜플 테이블 슬롯 연산 — `slot_callbacks`
+- 스캔 초기화/제어: 테이블 스캔 시작/종료/재시작 — `scan_begin`, `scan_end`, `scan_rescan`
+- 스캔 실행: 실제 튜플 가져오기 — `scan_getnextslot`, `scan_getnextslot_tidrange`
+- 병렬 스캔: 병렬 쿼리 지원 — `parallelscan_estimate`, `parallelscan_initialize`
+- 인덱스 패치: 인덱스를 통한 튜플 접근 — `index_fetch_begin`, `index_fetch_tuple`
+- 튜플 검색: 특정 튜플 버전 검색 — `tuple_fetch_row_version`, `tuple_get_latest_tid`
+- 튜플 수정: INSERT/UPDATE/DELETE — `tuple_insert`, `tuple_update`, `tuple_delete`
+- 튜플 잠금: 행 수준 잠금 — `tuple_lock`
+- 유지보수: VACUUM, 크기 계산 등 — `relation_vacuum`, `relation_size`
+- 분석/샘플링: ANALYZE 지원 — `scan_analyze_next_block`, `scan_sample_next_tuple`
 
 #### 3.2 슬롯 관리 콜백
 
@@ -6476,7 +6345,7 @@ typedef struct TableAmRoutine
 const TupleTableSlotOps* (*slot_callbacks) (Relation rel);
 ```
 
-튜플 테이블 슬롯은 실행기(executor)가 튜플에 대한 참조를 유지하고 컬럼 접근 기능을 제공하는 데 사용됩니다. 커스텀 접근 메서드 개발자는 일반적으로 AM 전용 튜플 테이블 슬롯 타입을 별도로 구현해야 합니다.
+튜플 테이블 슬롯은 실행기(executor)가 튜플에 대한 참조를 유지하고 컬럼 접근 기능을 제공하는 데 사용됨. 커스텀 접근 메서드 개발자는 일반적으로 AM 전용 튜플 테이블 슬롯 타입을 별도로 구현해야 함.
 
 참조 파일: `src/include/executor/tuptable.h`
 
@@ -6497,7 +6366,7 @@ static TableScanDesc table_beginscan(
 );
 ```
 
-기본 옵션(전략 허용, 동기화 허용, 페이지 모드 허용)으로 순차 스캔을 시작합니다.
+기본 옵션(전략 허용, 동기화 허용, 페이지 모드 허용)으로 순차 스캔 시작.
 
 ##### table_beginscan_catalog
 
@@ -6509,7 +6378,7 @@ TableScanDesc table_beginscan_catalog(
 );
 ```
 
-시스템 카탈로그 테이블 스캔을 위한 전용 함수입니다. 스냅샷 등록 및 임시 스냅샷 처리를 자동으로 수행합니다.
+시스템 카탈로그 테이블 스캔을 위한 전용 함수. 스냅샷 등록 및 임시 스냅샷 처리를 자동으로 수행.
 
 ##### table_beginscan_strat
 
@@ -6524,7 +6393,7 @@ static TableScanDesc table_beginscan_strat(
 );
 ```
 
-접근 전략과 동기화 스캔 옵션을 직접 설정할 수 있습니다.
+접근 전략과 동기화 스캔 옵션 직접 설정 가능.
 
 #### 4.2 특수 스캔 함수
 
@@ -6539,7 +6408,7 @@ static TableScanDesc table_beginscan_bm(
 );
 ```
 
-비트맵 인덱스 스캔을 위한 테이블 스캔을 시작합니다.
+비트맵 인덱스 스캔을 위한 테이블 스캔 시작.
 
 ##### TID 범위 스캔
 
@@ -6552,7 +6421,7 @@ static TableScanDesc table_beginscan_tidrange(
 );
 ```
 
-특정 TID 범위 내의 튜플만 스캔합니다.
+특정 TID 범위 내의 튜플만 스캔.
 
 ##### 샘플링 스캔
 
@@ -6568,7 +6437,7 @@ static TableScanDesc table_beginscan_sampling(
 );
 ```
 
-TABLESAMPLE 절을 위한 샘플링 스캔을 시작합니다.
+TABLESAMPLE 절을 위한 샘플링 스캔 시작.
 
 #### 4.3 스캔 제어 함수
 
@@ -6578,7 +6447,7 @@ TABLESAMPLE 절을 위한 샘플링 스캔을 시작합니다.
 static void table_endscan(TableScanDesc scan);
 ```
 
-스캔을 종료하고 관련 리소스를 해제합니다.
+스캔을 종료하고 관련 리소스 해제.
 
 ##### table_rescan
 
@@ -6589,7 +6458,7 @@ static void table_rescan(
 );
 ```
 
-스캔을 처음부터 다시 시작합니다.
+스캔을 처음부터 다시 시작.
 
 ##### table_rescan_set_params
 
@@ -6603,7 +6472,7 @@ static void table_rescan_set_params(
 );
 ```
 
-파라미터를 재설정하면서 스캔을 재시작합니다.
+파라미터를 재설정하면서 스캔 재시작.
 
 #### 4.4 튜플 가져오기
 
@@ -6617,7 +6486,7 @@ static bool table_scan_getnextslot(
 );
 ```
 
-활성 스캔에서 다음 튜플을 가져와 슬롯에 저장합니다.
+활성 스캔에서 다음 튜플을 가져와 슬롯에 저장.
 
 스캔 방향 (ScanDirection):
 - `ForwardScanDirection`: 정방향 스캔
@@ -6683,15 +6552,13 @@ static void table_tuple_insert(
 );
 ```
 
-단일 튜플을 테이블에 삽입합니다.
+단일 튜플을 테이블에 삽입.
 
 삽입 옵션 플래그:
 
-| 플래그 | 설명 |
-|--------|------|
-| `TABLE_INSERT_SKIP_FSM` | Free Space Map 사용 건너뛰기 |
-| `TABLE_INSERT_FROZEN` | 튜플을 frozen 상태로 삽입 |
-| `TABLE_INSERT_NO_LOGICAL` | 논리적 디코딩 건너뛰기 |
+- `TABLE_INSERT_SKIP_FSM`: Free Space Map 사용 건너뛰기
+- `TABLE_INSERT_FROZEN`: 튜플을 frozen 상태로 삽입
+- `TABLE_INSERT_NO_LOGICAL`: 논리적 디코딩 건너뛰기
 
 ##### table_tuple_insert_speculative
 
@@ -6706,7 +6573,7 @@ static void table_tuple_insert_speculative(
 );
 ```
 
-추측적 삽입(speculative insert)을 수행합니다. 이는 `ON CONFLICT` 절을 지원하기 위해 사용됩니다.
+추측적 삽입(speculative insert) 수행. `ON CONFLICT` 절을 지원하기 위해 사용됨.
 
 ##### table_tuple_complete_speculative
 
@@ -6719,7 +6586,7 @@ static void table_tuple_complete_speculative(
 );
 ```
 
-추측적 삽입을 완료하거나 롤백합니다.
+추측적 삽입을 완료하거나 롤백.
 
 #### 5.2 대량 삽입 (Multi Insert)
 
@@ -6734,7 +6601,7 @@ static void table_multi_insert(
 );
 ```
 
-여러 튜플을 한 번에 삽입하여 성능을 최적화합니다. COPY 명령에서 주로 사용됩니다.
+여러 튜플을 한 번에 삽입 → 성능 최적화. COPY 명령에서 주로 사용됨.
 
 #### 5.3 튜플 업데이트 (Tuple Update)
 
@@ -6753,19 +6620,17 @@ static TM_Result table_tuple_update(
 );
 ```
 
-기존 튜플을 새로운 값으로 업데이트합니다.
+기존 튜플을 새로운 값으로 업데이트.
 
 반환 값 (TM_Result):
 
-| 값 | 설명 |
-|----|------|
-| `TM_Ok` | 성공 |
-| `TM_Invisible` | 튜플이 보이지 않음 |
-| `TM_SelfModified` | 현재 트랜잭션에서 이미 수정됨 |
-| `TM_Updated` | 다른 트랜잭션에서 업데이트됨 |
-| `TM_Deleted` | 다른 트랜잭션에서 삭제됨 |
-| `TM_BeingModified` | 현재 수정 중 |
-| `TM_WouldBlock` | 잠금 대기가 필요하지만 wait=false |
+- `TM_Ok`: 성공
+- `TM_Invisible`: 튜플이 보이지 않음
+- `TM_SelfModified`: 현재 트랜잭션에서 이미 수정됨
+- `TM_Updated`: 다른 트랜잭션에서 업데이트됨
+- `TM_Deleted`: 다른 트랜잭션에서 삭제됨
+- `TM_BeingModified`: 현재 수정 중
+- `TM_WouldBlock`: 잠금 대기가 필요하지만 wait=false
 
 #### 5.4 튜플 삭제 (Tuple Delete)
 
@@ -6782,7 +6647,7 @@ static TM_Result table_tuple_delete(
 );
 ```
 
-지정된 튜플을 삭제합니다.
+지정된 튜플을 삭제.
 
 #### 5.5 튜플 잠금 (Tuple Lock)
 
@@ -6800,24 +6665,20 @@ static TM_Result table_tuple_lock(
 );
 ```
 
-튜플에 대한 잠금을 획득합니다.
+튜플에 대한 잠금 획득.
 
 잠금 모드 (LockTupleMode):
 
-| 모드 | 설명 |
-|------|------|
-| `LockTupleKeyShare` | 키에 대한 공유 잠금 |
-| `LockTupleShare` | 공유 잠금 |
-| `LockTupleNoKeyExclusive` | 키 외 배타적 잠금 |
-| `LockTupleExclusive` | 배타적 잠금 |
+- `LockTupleKeyShare`: 키에 대한 공유 잠금
+- `LockTupleShare`: 공유 잠금
+- `LockTupleNoKeyExclusive`: 키 외 배타적 잠금
+- `LockTupleExclusive`: 배타적 잠금
 
 대기 정책 (LockWaitPolicy):
 
-| 정책 | 설명 |
-|------|------|
-| `LockWaitBlock` | 잠금 획득까지 대기 |
-| `LockWaitSkip` | 잠금 불가 시 건너뛰기 |
-| `LockWaitError` | 잠금 불가 시 에러 |
+- `LockWaitBlock`: 잠금 획득까지 대기
+- `LockWaitSkip`: 잠금 불가 시 건너뛰기
+- `LockWaitError`: 잠금 불가 시 에러
 
 #### 5.6 수정 API 사용 예제
 
@@ -6895,7 +6756,7 @@ simple_delete_example(Relation rel, ItemPointer tid)
 
 #### 6.1 인덱스 패치 콜백
 
-인덱스를 통해 테이블 튜플에 접근하기 위한 콜백들입니다.
+인덱스를 통해 테이블 튜플에 접근하기 위한 콜백들.
 
 ```c
 /* 인덱스 패치 시작 */
@@ -6959,7 +6820,7 @@ TransactionId (*index_delete_tuples) (
 );
 ```
 
-인덱스 VACUUM 시 죽은 튜플을 처리합니다.
+인덱스 VACUUM 시 죽은 튜플 처리.
 
 #### 6.4 인덱스 빌드 지원
 
@@ -7003,7 +6864,7 @@ void (*relation_vacuum) (
 );
 ```
 
-테이블에 대한 VACUUM 연산을 수행합니다. 죽은 튜플 정리, 통계 갱신 등을 처리합니다.
+테이블에 대한 VACUUM 연산 수행. 죽은 튜플 정리, 통계 갱신 등을 처리.
 
 #### 7.2 릴레이션 크기
 
@@ -7014,16 +6875,14 @@ uint64 (*relation_size) (
 );
 ```
 
-릴레이션의 크기를 바이트 단위로 반환합니다.
+릴레이션의 크기를 바이트 단위로 반환.
 
 포크 종류 (ForkNumber):
 
-| 포크 | 설명 |
-|------|------|
-| `MAIN_FORKNUM` | 메인 데이터 포크 |
-| `FSM_FORKNUM` | Free Space Map |
-| `VISIBILITYMAP_FORKNUM` | Visibility Map |
-| `INIT_FORKNUM` | 초기화 포크 |
+- `MAIN_FORKNUM`: 메인 데이터 포크
+- `FSM_FORKNUM`: Free Space Map
+- `VISIBILITYMAP_FORKNUM`: Visibility Map
+- `INIT_FORKNUM`: 초기화 포크
 
 #### 7.3 크기 추정
 
@@ -7037,7 +6896,7 @@ void (*relation_estimate_size) (
 );
 ```
 
-플래너를 위한 릴레이션 크기 추정 정보를 제공합니다.
+플래너를 위한 릴레이션 크기 추정 정보 제공.
 
 #### 7.4 TOAST 지원
 
@@ -7059,7 +6918,7 @@ void (*relation_fetch_toast_slice) (
 );
 ```
 
-TOAST(The Oversized-Attribute Storage Technique)를 통한 대형 값 처리를 지원합니다.
+TOAST(The Oversized-Attribute Storage Technique)를 통한 대형 값 처리 지원.
 
 #### 7.5 파일 위치 변경
 
@@ -7073,7 +6932,7 @@ void (*relation_set_new_filelocator) (
 );
 ```
 
-TRUNCATE, CLUSTER 등의 연산 시 새로운 파일 위치를 설정합니다.
+TRUNCATE, CLUSTER 등의 연산 시 새로운 파일 위치 설정.
 
 #### 7.6 비트랜잭션 TRUNCATE
 
@@ -7081,7 +6940,7 @@ TRUNCATE, CLUSTER 등의 연산 시 새로운 파일 위치를 설정합니다.
 void (*relation_nontransactional_truncate) (Relation rel);
 ```
 
-트랜잭션 로깅 없이 릴레이션을 잘라냅니다. 주로 초기화 목적으로 사용됩니다.
+트랜잭션 로깅 없이 릴레이션을 잘라냄. 주로 초기화 목적으로 사용됨.
 
 #### 7.7 데이터 복사
 
@@ -7113,7 +6972,7 @@ void (*relation_copy_for_cluster) (
 
 #### 8.1 TID 요구사항
 
-테이블 접근 메서드가 수정 또는 인덱스를 지원하려면, 각 튜플이 튜플 식별자(TID, Tuple Identifier) 를 가져야 합니다.
+테이블 접근 메서드가 수정 또는 인덱스를 지원하려면, 각 튜플이 튜플 식별자(TID, Tuple Identifier)를 가져야 함.
 
 TID 구성:
 - 블록 번호(Block Number): 튜플이 저장된 페이지 번호
@@ -7131,11 +6990,11 @@ typedef ItemPointerData *ItemPointer;
 
 #### 8.2 비트맵 스캔 지원
 
-비트맵 스캔을 지원하려면 블록 번호가 지역성(locality) 을 제공해야 합니다. 즉, 인접한 블록 번호는 물리적으로 인접한 저장 위치를 나타내야 합니다.
+비트맵 스캔을 지원하려면 블록 번호가 지역성(locality)을 제공해야 함. 즉, 인접한 블록 번호는 물리적으로 인접한 저장 위치를 나타내야 함.
 
 #### 8.3 튜플 테이블 슬롯
 
-커스텀 접근 메서드 개발자는 일반적으로 AM 전용 튜플 테이블 슬롯 타입을 별도로 구현해야 합니다.
+커스텀 접근 메서드 개발자는 일반적으로 AM 전용 튜플 테이블 슬롯 타입을 별도로 구현해야 함.
 
 참조 파일: `src/include/executor/tuptable.h`
 
@@ -7165,17 +7024,15 @@ typedef struct TupleTableSlotOps
 
 #### 8.4 저장소 유연성
 
-테이블 접근 메서드는 저장소 구현을 유연하게 가져갈 수 있습니다:
+테이블 접근 메서드는 저장소 구현을 유연하게 가져갈 수 있음:
 
-| 항목 | 필수 여부 | 설명 |
-|------|-----------|------|
-| 공유 버퍼 캐시 | 선택 | PostgreSQL의 공유 버퍼 캐시 사용 가능하지만 필수 아님 |
-| 표준 페이지 레이아웃 | 선택 | `src/include/storage/bufpage.h`의 레이아웃 사용 가능 |
-| 커스텀 저장소 | 허용 | 완전히 다른 저장 방식 구현 가능 |
+- 공유 버퍼 캐시(선택): PostgreSQL의 공유 버퍼 캐시 사용 가능하지만 필수 아님
+- 표준 페이지 레이아웃(선택): `src/include/storage/bufpage.h`의 레이아웃 사용 가능
+- 커스텀 저장소(허용): 완전히 다른 저장 방식 구현 가능
 
 #### 8.5 충돌 안전성 (Crash Safety)
 
-테이블 접근 메서드는 충돌 안전성을 보장하기 위해 다음 중 하나를 사용할 수 있습니다:
+테이블 접근 메서드는 충돌 안전성을 보장하기 위해 다음 중 하나를 사용 가능:
 
 ##### 방법 1: PostgreSQL WAL 사용
 
@@ -7230,15 +7087,15 @@ _PG_init(void)
 
 ##### 방법 3: 완전 커스텀 구현
 
-자체적인 충돌 복구 메커니즘을 구현할 수도 있습니다.
+자체적인 충돌 복구 메커니즘 구현도 가능.
 
 #### 8.6 트랜잭션 지원
 
-단일 트랜잭션 내에서 여러 접근 메서드 간의 크로스-AM 트랜잭션을 지원하려면 `src/backend/access/transam/xlog.c`의 메커니즘과 긴밀하게 통합해야 합니다.
+단일 트랜잭션 내에서 여러 접근 메서드 간의 크로스-AM 트랜잭션을 지원하려면 `src/backend/access/transam/xlog.c`의 메커니즘과 긴밀하게 통합 필요.
 
 #### 8.7 참조 구현
 
-새로운 테이블 접근 메서드를 개발할 때는 기존 `heap` 구현을 참고하는 것이 좋습니다.
+새로운 테이블 접근 메서드를 개발할 때는 기존 `heap` 구현 참고 권장.
 
 참조 파일: `src/backend/access/heap/heapam_handler.c`
 
@@ -7312,7 +7169,7 @@ const TableAmRoutine heapam_methods = {
 
 ### 개요
 
-WAL은 PostgreSQL의 데이터 무결성과 복구 메커니즘의 핵심이다.
+WAL은 PostgreSQL의 데이터 무결성과 복구 메커니즘의 핵심.
 
 ---
 
@@ -7320,11 +7177,11 @@ WAL은 PostgreSQL의 데이터 무결성과 복구 메커니즘의 핵심이다.
 
 #### 1.1 Write-Ahead Logging 개념
 
-WAL의 핵심 원칙은 다음과 같다:
+WAL의 핵심 원칙:
 
-> 데이터 파일(테이블과 인덱스가 저장되는 곳)에 대한 변경은 해당 변경을 설명하는 WAL 레코드가 영구 저장소에 플러시된 후에만 기록되어야 한다.
+> 데이터 파일(테이블과 인덱스가 저장되는 곳)에 대한 변경은 해당 변경을 설명하는 WAL 레코드가 영구 저장소에 플러시된 후에만 기록 가능.
 
-이 원칙을 통해 다음과 같은 이점을 얻는다:
+이 원칙을 통해 다음과 같은 이점을 얻음:
 
 - 트랜잭션 커밋 시 데이터 페이지를 플러시할 필요가 없음: WAL 레코드가 먼저 기록되므로 데이터 페이지를 즉시 플러시하지 않아도 됨
 - 충돌 복구(Crash Recovery): 충돌 시 WAL 레코드를 재생하여 미적용 변경사항을 복구 (roll-forward recovery 또는 REDO)
@@ -7351,7 +7208,7 @@ WAL의 핵심 원칙은 다음과 같다:
 
 #### 2.1 WAL 세그먼트 파일
 
-WAL 파일은 데이터 디렉토리 아래 `pg_wal` 디렉토리에 저장된다.
+WAL 파일은 데이터 디렉토리 아래 `pg_wal` 디렉토리에 저장됨.
 
 ```
 $PGDATA/pg_wal/
@@ -7368,7 +7225,7 @@ $PGDATA/pg_wal/
 
 #### 2.2 WAL 페이지 구조
 
-각 세그먼트 파일은 페이지로 나뉜다:
+각 세그먼트 파일은 페이지로 나뉨:
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -7414,7 +7271,7 @@ typedef struct XLogPageHeaderData
 
 #### 3.1 LSN 개념
 
-LSN은 WAL의 바이트 오프셋을 나타내는 단조 증가하는 값이다.
+LSN은 WAL의 바이트 오프셋을 나타내는 단조 증가하는 값.
 
 ```c
 typedef uint64 XLogRecPtr;  /* LSN을 나타내는 타입 */
@@ -7427,7 +7284,7 @@ LSN 용도:
 
 #### 3.2 LSN 데이터 타입
 
-PostgreSQL에서 LSN은 `pg_lsn` 데이터 타입으로 표현된다:
+PostgreSQL에서 LSN은 `pg_lsn` 데이터 타입으로 표현됨:
 
 ```sql
 -- 현재 WAL 위치 확인
@@ -7446,7 +7303,7 @@ SELECT lsn FROM page_header(get_raw_page('mytable', 0));
 
 #### 4.1 전체 레코드 레이아웃
 
-XLOG 레코드의 전체 구조는 `access/xlogrecord.h`에 정의되어 있다:
+XLOG 레코드의 전체 구조는 `access/xlogrecord.h`에 정의됨:
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -7483,14 +7340,12 @@ typedef struct XLogRecord
 
 필드 설명:
 
-| 필드 | 설명 |
-|------|------|
-| `xl_tot_len` | 레코드 전체 길이 (헤더 + 데이터) |
-| `xl_xid` | 레코드를 생성한 트랜잭션 ID |
-| `xl_prev` | 이전 WAL 레코드의 위치 (연결 리스트 형태) |
-| `xl_info` | 작업 유형을 나타내는 플래그 비트 |
-| `xl_rmid` | 리소스 관리자 식별자 |
-| `xl_crc` | 데이터 무결성을 위한 CRC-32C 체크섬 |
+- `xl_tot_len`: 레코드 전체 길이(헤더 + 데이터)
+- `xl_xid`: 레코드를 생성한 트랜잭션 ID
+- `xl_prev`: 이전 WAL 레코드의 위치(연결 리스트 형태)
+- `xl_info`: 작업 유형을 나타내는 플래그 비트
+- `xl_rmid`: 리소스 관리자 식별자
+- `xl_crc`: 데이터 무결성을 위한 CRC-32C 체크섬
 
 #### 4.3 XLogRecordBlockHeader 구조체
 
@@ -7584,36 +7439,34 @@ typedef struct XLogRecordDataHeaderLong
 
 #### 5.1 리소스 관리자 개념
 
-리소스 관리자(Resource Manager, rmgr)는 WAL 기능과 관련된 작업 집합이다. 각 리소스 관리자는 특정 유형의 WAL 레코드 작성과 재생을 담당한다.
+리소스 관리자(Resource Manager, rmgr)는 WAL 기능과 관련된 작업 집합. 각 리소스 관리자는 특정 유형의 WAL 레코드 작성과 재생을 담당.
 
 #### 5.2 내장 리소스 관리자
 
 PostgreSQL에 포함된 주요 리소스 관리자:
 
-| 리소스 관리자 | 설명 |
-|--------------|------|
-| `RM_XLOG` | XLOG 자체 관리 (체크포인트 등) |
-| `RM_XACT` | 트랜잭션 관리 |
-| `RM_SMGR` | 스토리지 관리자 |
-| `RM_CLOG` | 커밋 로그 |
-| `RM_DBASE` | 데이터베이스 작업 |
-| `RM_TBLSPC` | 테이블스페이스 |
-| `RM_MULTIXACT` | 다중 트랜잭션 |
-| `RM_RELMAP` | 릴레이션 맵 |
-| `RM_STANDBY` | 스탠바이 관련 |
-| `RM_HEAP` | 힙 테이블 작업 (INSERT, UPDATE, DELETE) |
-| `RM_HEAP2` | 힙 테이블 추가 작업 (VACUUM 등) |
-| `RM_BTREE` | B-tree 인덱스 |
-| `RM_HASH` | 해시 인덱스 |
-| `RM_GIN` | GIN 인덱스 |
-| `RM_GIST` | GiST 인덱스 |
-| `RM_SEQ` | 시퀀스 |
-| `RM_SPGIST` | SP-GiST 인덱스 |
-| `RM_BRIN` | BRIN 인덱스 |
+- `RM_XLOG`: XLOG 자체 관리(체크포인트 등)
+- `RM_XACT`: 트랜잭션 관리
+- `RM_SMGR`: 스토리지 관리자
+- `RM_CLOG`: 커밋 로그
+- `RM_DBASE`: 데이터베이스 작업
+- `RM_TBLSPC`: 테이블스페이스
+- `RM_MULTIXACT`: 다중 트랜잭션
+- `RM_RELMAP`: 릴레이션 맵
+- `RM_STANDBY`: 스탠바이 관련
+- `RM_HEAP`: 힙 테이블 작업(INSERT, UPDATE, DELETE)
+- `RM_HEAP2`: 힙 테이블 추가 작업(VACUUM 등)
+- `RM_BTREE`: B-tree 인덱스
+- `RM_HASH`: 해시 인덱스
+- `RM_GIN`: GIN 인덱스
+- `RM_GIST`: GiST 인덱스
+- `RM_SEQ`: 시퀀스
+- `RM_SPGIST`: SP-GiST 인덱스
+- `RM_BRIN`: BRIN 인덱스
 
 #### 5.3 RmgrData 구조체
 
-각 리소스 관리자는 `RmgrData` 구조체로 정의된다:
+각 리소스 관리자는 `RmgrData` 구조체로 정의됨:
 
 ```c
 typedef struct RmgrData
@@ -7634,19 +7487,17 @@ typedef struct RmgrData
 
 주요 콜백 함수:
 
-| 콜백 | 역할 |
-|------|------|
-| `rm_redo` | 복구 시 WAL 레코드 적용 |
-| `rm_desc` | 레코드에 대한 추가 세부 정보 제공 |
-| `rm_identify` | xl_info 기반으로 레코드 이름 반환 |
-| `rm_startup` | 시작 시 초기화 |
-| `rm_cleanup` | 정리 작업 |
-| `rm_mask` | `wal_consistency_checking`에서 플래그 제외할 비트 마스킹 |
-| `rm_decode` | 사용자 정의 WAL 레코드의 논리적 디코딩 처리 |
+- `rm_redo`: 복구 시 WAL 레코드 적용
+- `rm_desc`: 레코드에 대한 추가 세부 정보 제공
+- `rm_identify`: xl_info 기반으로 레코드 이름 반환
+- `rm_startup`: 시작 시 초기화
+- `rm_cleanup`: 정리 작업
+- `rm_mask`: `wal_consistency_checking`에서 플래그 제외할 비트 마스킹
+- `rm_decode`: 사용자 정의 WAL 레코드의 논리적 디코딩 처리
 
 #### 5.4 사용자 정의 리소스 관리자
 
-PostgreSQL 15부터 확장은 자체 사용자 정의 리소스 관리자를 등록할 수 있다:
+PostgreSQL 15부터 확장은 자체 사용자 정의 리소스 관리자 등록 가능:
 
 ```c
 /* 사용자 정의 리소스 관리자 등록 */
@@ -7731,7 +7582,7 @@ WAL 레코드 작성 과정:
 
 #### 6.2 WAL 버퍼
 
-WAL 레코드는 먼저 공유 메모리의 WAL 버퍼에 기록된다:
+WAL 레코드는 먼저 공유 메모리의 WAL 버퍼에 기록됨:
 
 ```c
 /* WAL 버퍼 크기 설정 */
@@ -7752,13 +7603,11 @@ wal_sync_method = fdatasync  /* 기본값 */
 
 지원되는 동기화 메소드:
 
-| 메소드 | 설명 |
-|--------|------|
-| `open_datasync` | O_DSYNC로 WAL 파일 열기 |
-| `fdatasync` | 커밋마다 fdatasync() 호출 |
-| `fsync` | 커밋마다 fsync() 호출 |
-| `fsync_writethrough` | 커밋마다 fsync() 호출 (디스크 캐시 우회) |
-| `open_sync` | O_SYNC로 WAL 파일 열기 |
+- `open_datasync`: O_DSYNC로 WAL 파일 열기
+- `fdatasync`: 커밋마다 fdatasync() 호출
+- `fsync`: 커밋마다 fsync() 호출
+- `fsync_writethrough`: 커밋마다 fsync() 호출(디스크 캐시 우회)
+- `open_sync`: O_SYNC로 WAL 파일 열기
 
 #### 6.4 INSERT 예제 흐름
 
@@ -7792,7 +7641,7 @@ wal_sync_method = fdatasync  /* 기본값 */
 
 #### 7.1 개념
 
-전체 페이지 쓰기(Full Page Writes, FPW)는 체크포인트 이후 페이지가 처음 변경될 때 전체 페이지 이미지를 WAL에 기록하는 기능이다.
+전체 페이지 쓰기(Full Page Writes, FPW)는 체크포인트 이후 페이지가 처음 변경될 때 전체 페이지 이미지를 WAL에 기록하는 기능.
 
 ```c
 /* 전체 페이지 쓰기 활성화 (기본값: on) */
@@ -7801,7 +7650,7 @@ full_page_writes = on
 
 #### 7.2 부분 페이지 쓰기 문제
 
-PostgreSQL은 일반적으로 8KB(16개의 512바이트 섹터) 페이지를 한 번에 쓴다. 전원 손실 시:
+PostgreSQL은 일반적으로 8KB(16개의 512바이트 섹터) 페이지를 한 번에 씀. 전원 손실 시:
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -7893,7 +7742,7 @@ typedef struct CheckPoint
 
 #### 8.4 pg_control 파일
 
-`pg_control` 파일은 데이터베이스 복구에 필수적인 정보를 담고 있다:
+`pg_control` 파일은 데이터베이스 복구에 필수적인 정보를 담고 있음:
 
 ```bash
 # pg_controldata로 확인
@@ -7915,7 +7764,7 @@ Latest checkpoint's TimeLineID:       1
 
 #### 9.1 복구 프로세스 개요
 
-PostgreSQL은 REDO 로그 기반 복구를 사용한다:
+PostgreSQL은 REDO 로그 기반 복구를 사용함:
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -7990,9 +7839,9 @@ WAL 레코드들:
 
 #### 10.1 개념
 
-Generic WAL은 확장이 페이지 변경을 WAL에 기록할 수 있도록 PostgreSQL이 제공하는 내장 메커니즘이다. `access/generic_xlog.h`에 정의되어 있다.
+Generic WAL은 확장이 페이지 변경을 WAL에 기록할 수 있도록 PostgreSQL이 제공하는 내장 메커니즘. `access/generic_xlog.h`에 정의됨.
 
-제한사항: Generic WAL 레코드는 논리적 디코딩(Logical Decoding) 중에 무시된다.
+제한사항: Generic WAL 레코드는 논리적 디코딩(Logical Decoding) 중에 무시됨.
 
 #### 10.2 API 함수
 
@@ -8056,13 +7905,11 @@ my_extension_insert(Relation rel, ItemPointer tid, Datum value)
 
 #### 10.5 주요 제약사항
 
-| 측면 | 세부사항 |
-|------|----------|
-| 버퍼 수정 | `GenericXLogRegisterBuffer()`에서 반환된 복사본만 수정 |
-| 잠금 | 등록부터 `GenericXLogFinish()` 이후까지 배타적 잠금 유지 |
-| 최대 버퍼 | `MAX_GENERIC_XLOG_PAGES` 제한 |
-| 페이지 레이아웃 | `pd_lower`와 `pd_upper` 사이에 유용한 데이터가 없다고 가정 |
-| 더티 마킹 | `GenericXLogFinish()`가 자동으로 버퍼를 더티로 표시 |
+- 버퍼 수정: `GenericXLogRegisterBuffer()`에서 반환된 복사본만 수정
+- 잠금: 등록부터 `GenericXLogFinish()` 이후까지 배타적 잠금 유지
+- 최대 버퍼: `MAX_GENERIC_XLOG_PAGES` 제한
+- 페이지 레이아웃: `pd_lower`와 `pd_upper` 사이에 유용한 데이터가 없다고 가정
+- 더티 마킹: `GenericXLogFinish()`가 자동으로 버퍼를 더티로 표시
 
 ---
 
@@ -8129,14 +7976,12 @@ wal_level = replica
 
 #### 12.1 체크섬
 
-PostgreSQL은 여러 체크섬 메커니즘으로 데이터 무결성을 보호한다:
+PostgreSQL은 여러 체크섬 메커니즘으로 데이터 무결성을 보호함:
 
-| 구성요소 | 보호 방식 |
-|---------|----------|
-| WAL 레코드 | CRC-32C (32비트) 체크 |
-| 데이터 페이지 | 기본적으로 체크섬 적용 |
-| 전체 페이지 이미지 | WAL 레코드에서 항상 체크섬 보호 |
-| 2단계 파일 | `pg_twophase`의 상태 파일에 CRC-32C 적용 |
+- WAL 레코드: CRC-32C (32비트) 체크
+- 데이터 페이지: 기본적으로 체크섬 적용
+- 전체 페이지 이미지: WAL 레코드에서 항상 체크섬 보호
+- 2단계 파일: `pg_twophase`의 상태 파일에 CRC-32C 적용
 
 #### 12.2 스토리지 하드웨어 고려사항
 
@@ -8255,7 +8100,7 @@ wal_consistency_checking = all  # 또는 특정 리소스 관리자 지정
 
 ### 요약
 
-PostgreSQL의 WAL 시스템은 데이터 무결성과 복구를 보장하는 핵심 메커니즘이다:
+PostgreSQL의 WAL 시스템은 데이터 무결성과 복구를 보장하는 핵심 메커니즘:
 
 1. WAL 원칙: 데이터 변경 전에 WAL 레코드를 먼저 기록
 2. LSN: 모든 WAL 레코드의 고유 위치 식별자
@@ -8264,7 +8109,7 @@ PostgreSQL의 WAL 시스템은 데이터 무결성과 복구를 보장하는 핵
 5. 복구: REDO 포인트부터 WAL 레코드를 순차적으로 재생하여 일관된 상태 복원
 6. 전체 페이지 쓰기: 부분 페이지 쓰기 문제 해결
 
-이러한 구성요소들이 함께 작동하여 PostgreSQL의 신뢰성 있는 트랜잭션 처리와 충돌 복구를 가능하게 한다.
+이러한 구성요소들이 함께 작동 → PostgreSQL의 신뢰성 있는 트랜잭션 처리와 충돌 복구를 가능하게 함.
 
 ---
 
@@ -8285,27 +8130,27 @@ PostgreSQL 18 공식 문서 번역
 
 ### 67.1. 소개 (Introduction)
 
-PostgreSQL은 표준 B-tree(다중 경로 균형 트리, multi-way balanced tree) 인덱스 구현을 포함합니다. 명확한 선형 순서로 정렬 가능한 모든 데이터 타입을 B-tree로 인덱싱할 수 있습니다.
+PostgreSQL은 표준 B-tree(다중 경로 균형 트리, multi-way balanced tree) 인덱스 구현을 포함함. 명확한 선형 순서로 정렬 가능한 모든 데이터 타입을 B-tree로 인덱싱 가능.
 
 #### B-tree 인덱스의 기본 특성
 
 - 정렬 가능한 모든 데이터 타입에 대해 인덱스 생성 가능
-- PostgreSQL의 기본 인덱스 유형으로, `CREATE INDEX` 시 별도 지정이 없으면 B-tree가 생성됨
-- 제한사항: 인덱스 엔트리는 페이지의 약 1/3을 초과할 수 없음 (TOAST 압축 후 기준)
+- PostgreSQL의 기본 인덱스 유형 → `CREATE INDEX` 시 별도 지정이 없으면 B-tree가 생성됨
+- 제한사항: 인덱스 엔트리는 페이지의 약 1/3을 초과할 수 없음(TOAST 압축 후 기준)
 
 #### B-tree의 역할
 
-B-tree 연산자 클래스는 단순한 인덱싱을 넘어 PostgreSQL 시스템 전반에서 정렬 의미론(sorting semantics)을 표현하는 데 사용됩니다.
+B-tree 연산자 클래스는 단순한 인덱싱을 넘어 PostgreSQL 시스템 전반에서 정렬 의미론(sorting semantics)을 표현하는 데 사용됨.
 
 #### 지원 연산자
 
-B-tree 인덱스는 다음 연산자를 사용하는 비교에서 활용됩니다:
+B-tree 인덱스는 다음 연산자를 사용하는 비교에서 활용됨:
 
 ```
 <     <=     =     >=     >
 ```
 
-또한 다음 구성에서도 사용될 수 있습니다:
+또한 다음 구성에서도 사용 가능:
 
 - `BETWEEN`
 - `IN`
@@ -8334,25 +8179,23 @@ CREATE UNIQUE INDEX idx_unique ON table_name (column_name);
 
 ### 67.2. B-Tree 연산자 클래스의 동작 (Behavior of B-Tree Operator Classes)
 
-B-tree 인덱스가 올바르게 작동하려면 연산자 클래스가 특정 규칙과 동작을 따라야 합니다.
+B-tree 연산자 클래스가 올바르게 작동하려면 특정 규칙과 동작을 따라야 함.
 
 #### 필수 연산자 (5개)
 
-B-tree 연산자 클래스는 다음 5개의 비교 연산자를 제공해야 합니다:
+B-tree 연산자 클래스는 다음 5개의 비교 연산자를 제공해야 함:
 
-| 연산자 | 전략 번호 | 설명 |
-|--------|-----------|------|
-| `<` | 1 | 미만 (Less Than) |
-| `<=` | 2 | 이하 (Less Than or Equal) |
-| `=` | 3 | 동등 (Equal) |
-| `>=` | 4 | 이상 (Greater Than or Equal) |
-| `>` | 5 | 초과 (Greater Than) |
+- `<` (전략 번호 1): 미만 (Less Than)
+- `<=` (전략 번호 2): 이하 (Less Than or Equal)
+- `=` (전략 번호 3): 동등 (Equal)
+- `>=` (전략 번호 4): 이상 (Greater Than or Equal)
+- `>` (전략 번호 5): 초과 (Greater Than)
 
-> 참고: `<>` (부등호) 연산자는 포함되지 않습니다. B-tree 인덱스 검색에서 유용하지 않기 때문입니다.
+참고: `<>` (부등호) 연산자는 포함되지 않음. B-tree 인덱스 검색에서 유용하지 않기 때문.
 
 #### 연산자 패밀리 (Operator Families)
 
-유사한 정렬 의미론을 가진 여러 데이터 타입은 연산자 패밀리(Operator Family)로 그룹화됩니다:
+유사한 정렬 의미론을 가진 여러 데이터 타입은 연산자 패밀리(Operator Family)로 그룹화됨:
 
 - 단일 타입 연산자: 각 연산자 클래스에 포함
 - 교차 타입 연산자(Cross-type Operators): 패밀리 전체에서 느슨하게 포함
@@ -8360,7 +8203,7 @@ B-tree 연산자 클래스는 다음 5개의 비교 연산자를 제공해야 �
 
 #### 필수 수학적 원칙
 
-B-tree 연산자 클래스가 올바르게 작동하려면 다음 수학적 원칙을 만족해야 합니다:
+B-tree 연산자 클래스가 올바르게 작동하려면 다음 수학적 원칙을 만족해야 함:
 
 ##### 동등 연산자 `=` (동치 관계, Equivalence Relation)
 
@@ -8380,13 +8223,13 @@ B-tree 연산자 클래스가 올바르게 작동하려면 다음 수학적 원�
 
 #### 다중 데이터 타입 패밀리의 제약사항
 
-다중 데이터 타입을 포함하는 연산자 패밀리에서는 데이터 타입 간 암시적/이진 강제 변환(coercion)이 정렬 순서를 바꾸어서는 안 됩니다.
+다중 데이터 타입을 포함하는 연산자 패밀리에서는 데이터 타입 간 암시적/이진 강제 변환(coercion)이 정렬 순서를 바꾸면 금지.
 
 반례 - float8과 numeric:
 
-`float8`과 `numeric`은 같은 연산자 패밀리에 포함될 수 없습니다:
+`float8`과 `numeric`은 같은 연산자 패밀리에 포함 불가:
 - `float8`의 제한된 정확도로 인해 서로 다른 `numeric` 값이 같은 `float8` 값과 비교될 수 있음
-- 이는 이행성 법칙을 위반합니다
+- 이행성 법칙 위반
 
 ```sql
 -- 예시: 이행성 위반
@@ -8396,7 +8239,7 @@ B-tree 연산자 클래스가 올바르게 작동하려면 다음 수학적 원�
 
 #### 다른 연산자들과의 관계
 
-5개의 기본 연산자로부터 다음 관계가 유도됩니다:
+5개의 기본 연산자로부터 다음 관계가 유도됨:
 
 ```sql
 A <= B  ==  A < B OR A = B
@@ -8408,18 +8251,16 @@ A > B   ==  B < A
 
 ### 67.3. B-Tree 지원 함수 (B-Tree Support Functions)
 
-B-tree 연산자 클래스는 여러 지원 함수를 제공할 수 있습니다. 일부는 필수이고 일부는 선택적입니다.
+B-tree 연산자 클래스는 여러 지원 함수를 제공 가능. 일부는 필수, 일부는 선택.
 
 #### 지원 함수 요약
 
-| 번호 | 함수명 | 필수 | 용도 |
-|------|--------|------|------|
-| 1 | `order` | 필수 | 값 비교 (-1/0/+1 반환) |
-| 2 | `sortsupport` | 선택 | 정렬 최적화 |
-| 3 | `in_range` | 선택 | 윈도우 함수 RANGE OFFSET 지원 |
-| 4 | `equalimage` | 선택 | 중복 제거(Deduplication) 안전성 판단 |
-| 5 | `options` | 선택 | 사용자 정의 파라미터 |
-| 6 | `skipsupport` | 선택 | Skip scan 최적화 |
+- 1번 `order`: 필수, 값 비교(-1/0/+1 반환)
+- 2번 `sortsupport`: 선택, 정렬 최적화
+- 3번 `in_range`: 선택, 윈도우 함수 RANGE OFFSET 지원
+- 4번 `equalimage`: 선택, 중복 제거(Deduplication) 안전성 판단
+- 5번 `options`: 선택, 사용자 정의 파라미터
+- 6번 `skipsupport`: 선택, Skip scan 최적화
 
 #### 67.3.1. order 함수 (Support Function #1) - 필수
 
@@ -8490,12 +8331,10 @@ bool in_range(val type1, base type1, offset type2, sub bool, less bool)
 
 의미론:
 
-| sub | less | 의미 |
-|-----|------|------|
-| false | false | val >= (base + offset) |
-| false | true | val <= (base + offset) |
-| true | false | val >= (base - offset) |
-| true | true | val <= (base - offset) |
+- sub=false, less=false: val >= (base + offset)
+- sub=false, less=true: val <= (base + offset)
+- sub=true, less=false: val >= (base - offset)
+- sub=true, less=true: val <= (base - offset)
 
 예시 쿼리:
 
@@ -8536,13 +8375,11 @@ datum_image_eq() C 함수와 order() 함수의 결과가 항상 일치하면 tru
 
 데이터 타입별 지원 현황:
 
-| 타입 | 함수 | 중복 제거 안전 여부 |
-|------|------|---------------------|
-| 대부분 기본 타입 | `btequalimage()` | 안전 |
-| `text`, `varchar`, `char` | `btvarstrequalimage()` | 결정적(deterministic) collation만 안전 |
-| `numeric` | - | 불안전 (표시 스케일 보존 필요) |
-| `jsonb` | - | 불안전 (내부적으로 numeric 사용) |
-| `float4`, `float8` | - | 불안전 (`-0`과 `0` 구별 필요) |
+- 대부분 기본 타입: `btequalimage()` 사용, 안전
+- `text`, `varchar`, `char`: `btvarstrequalimage()` 사용, 결정적(deterministic) collation만 안전
+- `numeric`: 전용 함수 없음, 불안전(표시 스케일 보존 필요)
+- `jsonb`: 전용 함수 없음, 불안전(내부적으로 numeric 사용)
+- `float4`, `float8`: 전용 함수 없음, 불안전(`-0`과 `0` 구별 필요)
 
 #### 67.3.5. options 함수 (Support Function #5) - 선택
 
@@ -8579,7 +8416,7 @@ SELECT * FROM table WHERE y = 100;
 
 #### 67.4.1. B-Tree 구조
 
-B-tree 인덱스는 계층적 구조로 구성됩니다:
+B-tree 인덱스는 계층적 구조로 구성됨:
 
 ```
 메타페이지 (Meta Page)
@@ -8604,7 +8441,7 @@ B-tree 인덱스는 계층적 구조로 구성됩니다:
 
 #### 페이지 분할 (Page Split)
 
-인덱스 항목 삽입 시 페이지가 가득 차면 분할이 발생합니다:
+인덱스 항목 삽입 시 페이지가 가득 차면 분할이 발생함:
 
 ```sql
 -- 페이지 분할 과정
@@ -8633,12 +8470,16 @@ B-tree 인덱스는 계층적 구조로 구성됩니다:
 
 Simple Index Deletion과의 비교:
 
-| 특성 | Bottom-up Deletion | Simple Deletion |
-|------|-------------------|-----------------|
-| 동작 | version churn 튜플 대상 | LP_DEAD 비트가 설정된 튜플 삭제 |
-| 트리거 | 페이지 분할 예상 시 | 페이지 분할 예상 시 |
-| 기반 | 정성적 판단 | LP_DEAD 비트 설정 |
-| 도입 | PostgreSQL 14+ | 14 이전 |
+- Bottom-up Deletion
+  - 동작: version churn 튜플 대상
+  - 트리거: 페이지 분할 예상 시
+  - 기반: 정성적 판단
+  - 도입: PostgreSQL 14+
+- Simple Deletion
+  - 동작: LP_DEAD 비트가 설정된 튜플 삭제
+  - 트리거: 페이지 분할 예상 시
+  - 기반: LP_DEAD 비트 설정
+  - 도입: 14 이전
 
 #### 67.4.3. 중복 제거 (Deduplication)
 
@@ -8688,19 +8529,15 @@ CREATE INDEX idx_name ON table_name (col)
 
 의미론적 차이로 인한 제한:
 
-| 타입 | 이유 |
-|------|------|
-| `text`, `varchar`, `char` | 비결정적(nondeterministic) collation 사용 시 대소문자/악센트 차이 보존 필요 |
-| `numeric` | 표시 스케일(display scale) 보존 필요 |
-| `jsonb` | 내부적으로 numeric 사용 |
-| `float4`, `float8` | `-0`과 `0`의 구분 필요 (동일하지만 다른 표현) |
+- `text`, `varchar`, `char`: 비결정적(nondeterministic) collation 사용 시 대소문자·악센트 차이 보존 필요
+- `numeric`: 표시 스케일(display scale) 보존 필요
+- `jsonb`: 내부적으로 numeric 사용
+- `float4`, `float8`: `-0`과 `0`의 구분 필요(동일하지만 다른 표현)
 
 구현 제한:
 
-| 타입 | 이유 | 향후 |
-|------|------|------|
-| 컨테이너 타입 (복합, 배열, 범위) | 구현 복잡성 | 개선 가능성 있음 |
-| INCLUDE 인덱스 | 설계상 제한 | 영구적 제한 |
+- 컨테이너 타입(복합, 배열, 범위): 구현 복잡성 → 개선 가능성 있음
+- INCLUDE 인덱스: 설계상 제한 → 영구적 제한
 
 ---
 

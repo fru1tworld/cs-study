@@ -22,15 +22,23 @@
 
 ### 개요
 
-Mimir는 다양한 프로토콜로 메트릭을 받습니다.
+Mimir는 다양한 프로토콜로 메트릭을 받음.
 
-| 프로토콜 | 엔드포인트 | 인증 헤더 |
-|---------|----------|----------|
-| Prometheus Remote Write | `/api/v1/push` | `X-Scope-OrgID` |
-| OpenTelemetry OTLP/HTTP | `/otlp/v1/metrics` | `X-Scope-OrgID` |
-| Influx Line Protocol | `/api/v1/push/influx/write` | `X-Scope-OrgID` |
-| Datadog Agent | `/api/v1/push/datadog` | `X-Scope-OrgID` |
-| Graphite | `/api/v1/push/graphite` | `X-Scope-OrgID` |
+- Prometheus Remote Write
+  - 엔드포인트: `/api/v1/push`
+  - 인증 헤더: `X-Scope-OrgID`
+- OpenTelemetry OTLP/HTTP
+  - 엔드포인트: `/otlp/v1/metrics`
+  - 인증 헤더: `X-Scope-OrgID`
+- Influx Line Protocol
+  - 엔드포인트: `/api/v1/push/influx/write`
+  - 인증 헤더: `X-Scope-OrgID`
+- Datadog Agent
+  - 엔드포인트: `/api/v1/push/datadog`
+  - 인증 헤더: `X-Scope-OrgID`
+- Graphite
+  - 엔드포인트: `/api/v1/push/graphite`
+  - 인증 헤더: `X-Scope-OrgID`
 
 #### 멀티 테넌시
 
@@ -86,11 +94,9 @@ remote_write:
 
 #### 권장 큐 설정
 
-| 환경 | capacity | max_shards | max_samples_per_send |
-|------|---------|-----------|---------------------|
-| 소규모 | 2500 | 10 | 500 |
-| 중규모 | 10000 | 30 | 2000 |
-| 대규모 | 100000 | 200 | 5000 |
+- 소규모: capacity 2500 · max_shards 10 · max_samples_per_send 500
+- 중규모: capacity 10000 · max_shards 30 · max_samples_per_send 2000
+- 대규모: capacity 100000 · max_shards 200 · max_samples_per_send 5000
 
 ---
 
@@ -253,7 +259,7 @@ service:
 
 #### OTel 메트릭 → Prometheus 변환
 
-Mimir는 OTel 메트릭을 수신 시 자동으로 Prometheus 형식으로 변환합니다.
+Mimir는 OTel 메트릭을 수신 시 자동으로 Prometheus 형식으로 변환함.
 
 - 점(`.`)은 언더스코어(`_`)로 변환
 - 단위 접미사 자동 추가 (선택적)
@@ -393,13 +399,11 @@ httpReq.Header.Set("X-Scope-OrgID", "tenant-1")
 
 #### 응답 코드
 
-| 코드 | 의미 |
-|------|------|
-| 200 | 성공 |
-| 400 | 잘못된 요청 (라벨 포맷 등) |
-| 401 | 인증 실패 |
-| 429 | Rate Limit 초과 |
-| 500 | 서버 에러 |
+- 200: 성공
+- 400: 잘못된 요청(라벨 포맷 등)
+- 401: 인증 실패
+- 429: Rate Limit 초과
+- 500: 서버 에러
 
 ---
 
@@ -415,7 +419,7 @@ Mimir의 HA Tracker가 한 시점에 한 페어만 활성으로 인식.
 
 #### Prometheus 설정
 
-각 페어는 동일한 `cluster` 라벨을 공유하되, `__replica__` 라벨은 서로 다르게 설정합니다.
+각 페어는 동일한 `cluster` 라벨을 공유하되, `__replica__` 라벨은 서로 다르게 설정.
 
 ```yaml
 # prometheus-1.yml
@@ -496,16 +500,14 @@ limits:
 
 ### PromQL 개요
 
-PromQL(Prometheus Query Language)은 Mimir와 Prometheus의 표준 쿼리 언어입니다.
+PromQL(Prometheus Query Language)은 Mimir와 Prometheus의 표준 쿼리 언어임.
 
 #### 4가지 쿼리 타입
 
-| 타입 | 예시 |
-|------|------|
-| **Instant Vector** | `up` |
-| **Range Vector** | `up[5m]` |
-| **Scalar** | `42` |
-| **String** | `"hello"` (드물게 사용) |
+- Instant Vector: `up`
+- Range Vector: `up[5m]`
+- Scalar: `42`
+- String: `"hello"`(드물게 사용)
 
 ---
 
@@ -541,12 +543,10 @@ http_requests_total[5m]
 
 #### Label 매칭 연산자
 
-| 연산자 | 의미 |
-|--------|------|
-| `=` | 정확 일치 |
-| `!=` | 일치하지 않음 |
-| `=~` | 정규식 일치 |
-| `!~` | 정규식 불일치 |
+- `=`: 정확 일치
+- `!=`: 일치하지 않음
+- `=~`: 정규식 일치
+- `!~`: 정규식 불일치
 
 ```promql
 http_requests_total{method="GET"}
@@ -609,13 +609,13 @@ node_memory_MemFree_bytes / node_memory_MemTotal_bytes
 ==, !=, >, <, >=, <=
 ```
 
-기본 동작은 필터링으로, 조건을 만족하는 시계열만 반환합니다.
+기본 동작은 필터링 → 조건을 만족하는 시계열만 반환.
 
 ```promql
 node_memory_MemFree_bytes < 1000000000
 ```
 
-`bool` 수식어를 사용하면 0/1 값을 반환합니다.
+`bool` 수식어 사용 시 0/1 값 반환.
 
 ```promql
 node_memory_MemFree_bytes < bool 1000000000
@@ -623,11 +623,9 @@ node_memory_MemFree_bytes < bool 1000000000
 
 #### 논리/집합 연산
 
-| 연산자 | 의미 |
-|--------|------|
-| `and` | 두 셋의 교집합 |
-| `or` | 합집합 |
-| `unless` | 차집합 |
+- `and`: 두 셋의 교집합
+- `or`: 합집합
+- `unless`: 차집합
 
 ```promql
 metric_a and metric_b
@@ -658,20 +656,18 @@ small_metric * on(instance) group_right sum_metric
 
 ### 집계 함수
 
-| 함수 | 설명 |
-|------|------|
-| `sum` | 합계 |
-| `avg` | 평균 |
-| `min` | 최소 |
-| `max` | 최대 |
-| `count` | 개수 |
-| `count_values` | 고유 값별 개수 |
-| `stddev` | 표준편차 |
-| `stdvar` | 분산 |
-| `topk` | 상위 K |
-| `bottomk` | 하위 K |
-| `quantile` | 분위수 |
-| `group` | 그룹화만 |
+- `sum`: 합계
+- `avg`: 평균
+- `min`: 최소
+- `max`: 최대
+- `count`: 개수
+- `count_values`: 고유 값별 개수
+- `stddev`: 표준편차
+- `stdvar`: 분산
+- `topk`: 상위 K
+- `bottomk`: 하위 K
+- `quantile`: 분위수
+- `group`: 그룹화만
 
 #### 그룹화
 
@@ -695,32 +691,28 @@ quantile by (job) (0.95, http_request_duration_seconds_bucket)
 
 #### 시계열 함수
 
-| 함수 | 설명 |
-|------|------|
-| `rate(v[d])` | 평균 초당 증가율 (Counter) |
-| `irate(v[d])` | 마지막 두 데이터로 즉시 비율 |
-| `increase(v[d])` | 시간 윈도우 내 증가량 |
-| `delta(v[d])` | Gauge의 변화량 |
-| `idelta(v[d])` | Gauge의 마지막 변화량 |
-| `deriv(v[d])` | Gauge의 도함수 |
-| `predict_linear(v[d], t)` | t초 후 예측값 |
-| `resets(v[d])` | Counter 재시작 횟수 |
-| `changes(v[d])` | Gauge 변경 횟수 |
+- `rate(v[d])`: 평균 초당 증가율(Counter)
+- `irate(v[d])`: 마지막 두 데이터로 즉시 비율
+- `increase(v[d])`: 시간 윈도우 내 증가량
+- `delta(v[d])`: Gauge의 변화량
+- `idelta(v[d])`: Gauge의 마지막 변화량
+- `deriv(v[d])`: Gauge의 도함수
+- `predict_linear(v[d], t)`: t초 후 예측값
+- `resets(v[d])`: Counter 재시작 횟수
+- `changes(v[d])`: Gauge 변경 횟수
 
 #### 시간 윈도우 집계
 
-| 함수 | 설명 |
-|------|------|
-| `avg_over_time(v[d])` | 평균 |
-| `min_over_time(v[d])` | 최소 |
-| `max_over_time(v[d])` | 최대 |
-| `sum_over_time(v[d])` | 합계 |
-| `count_over_time(v[d])` | 개수 |
-| `quantile_over_time(q, v[d])` | 분위수 |
-| `stddev_over_time(v[d])` | 표준편차 |
-| `last_over_time(v[d])` | 마지막 값 |
-| `present_over_time(v[d])` | 존재 여부 (1) |
-| `absent_over_time(v[d])` | 부재 여부 |
+- `avg_over_time(v[d])`: 평균
+- `min_over_time(v[d])`: 최소
+- `max_over_time(v[d])`: 최대
+- `sum_over_time(v[d])`: 합계
+- `count_over_time(v[d])`: 개수
+- `quantile_over_time(q, v[d])`: 분위수
+- `stddev_over_time(v[d])`: 표준편차
+- `last_over_time(v[d])`: 마지막 값
+- `present_over_time(v[d])`: 존재 여부(1)
+- `absent_over_time(v[d])`: 부재 여부
 
 #### 히스토그램 함수
 
@@ -785,7 +777,7 @@ clamp_max(v, max)
 
 ### Recording Rules
 
-자주 사용하는 쿼리를 미리 계산해 새 메트릭으로 저장합니다.
+자주 사용하는 쿼리를 미리 계산 → 새 메트릭으로 저장.
 
 #### 룰 파일
 
@@ -816,7 +808,7 @@ mimirtool rules load --address=http://mimir:9009 \
 
 ### Mimir HTTP API
 
-Prometheus HTTP API와 호환됩니다.
+Prometheus HTTP API와 호환.
 
 #### Instant Query
 
@@ -870,7 +862,7 @@ curl "http://mimir:9009/prometheus/api/v1/metadata" \
 #### Cardinality 분석
 
 ```bash
-# 레이블 카디널리티
+# 라벨 카디널리티
 curl -G "http://mimir:9009/prometheus/api/v1/cardinality/label_names" \
   -H "X-Scope-OrgID: tenant-1"
 
@@ -884,7 +876,7 @@ curl -G "http://mimir:9009/prometheus/api/v1/cardinality/active_series" \
 
 ### Native Histograms
 
-Prometheus 2.40+에서 도입되었으며 Mimir에서 완전히 지원합니다.
+Prometheus 2.40+에서 도입 → Mimir에서 완전히 지원.
 
 #### 장점
 
@@ -916,7 +908,7 @@ histogram_fraction(0, 100, rate(my_metric[5m]))
 
 ### Exemplars
 
-메트릭 데이터 포인트와 트레이스를 연결합니다.
+메트릭 데이터 포인트와 트레이스를 연결.
 
 #### 활성화
 
@@ -930,7 +922,7 @@ ingester:
 
 #### Prometheus에서 생성
 
-OpenMetrics 형식 메트릭에 `# {trace_id="abc"} value`를 추가합니다.
+OpenMetrics 형식 메트릭에 `# {trace_id="abc"} value`를 추가.
 
 #### 쿼리
 
@@ -946,4 +938,4 @@ curl -G "http://mimir:9009/prometheus/api/v1/query_exemplars" \
 
 #### Grafana 통합
 
-Prometheus/Mimir 데이터 소스에서 **Exemplars**를 활성화하고 Tempo 데이터 소스를 연결하면, 클릭 시 해당 트레이스로 이동할 수 있습니다.
+Prometheus/Mimir 데이터 소스에서 Exemplars를 활성화하고 Tempo 데이터 소스를 연결 → 클릭 시 해당 트레이스로 이동 가능.

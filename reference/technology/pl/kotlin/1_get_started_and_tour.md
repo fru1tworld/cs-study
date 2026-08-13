@@ -4,23 +4,23 @@
 
 ## Kotlin 시작하기
 
-> **원문:** https://kotlinlang.org/docs/getting-started.html
+> 원문: https://kotlinlang.org/docs/getting-started.html
 
 ### 개요
 
-Kotlin은 다음과 같은 특징을 가진 현대적인 언어입니다:
+Kotlin의 특징:
 - 간결함
 - 멀티플랫폼
 - Java 및 다른 언어들과의 상호 운용성
 
-**시작하기**: 신규 사용자는 브라우저에서 직접 기본 사항을 배울 수 있는 인터랙티브 투어를 이용할 수 있습니다.
+시작하기: 신규 사용자는 브라우저에서 직접 기본 사항을 배울 수 있는 인터랙티브 투어 이용 가능.
 
 ---
 
 ### Kotlin 설치
 
-- Kotlin은 **IntelliJ IDEA**와 **Android Studio**에 포함되어 있습니다
-- 두 IDE 중 하나를 다운로드하고 설치하여 Kotlin 사용을 시작하세요
+- Kotlin은 IntelliJ IDEA와 Android Studio에 포함됨
+- 두 IDE 중 하나를 다운로드·설치 → Kotlin 사용 시작
 
 ---
 
@@ -31,49 +31,48 @@ Kotlin은 다음과 같은 특징을 가진 현대적인 언어입니다:
 2. 첫 번째 단위 테스트 작성하기
 
 #### 백엔드 개발
-기존 Java 프로젝트에 Kotlin 도입하기:
-- Kotlin과 함께 작동하도록 Java 프로젝트 구성하기
-- Java Maven 프로젝트에 Kotlin 테스트 추가하기
+기존 Java 프로젝트에 Kotlin 도입:
+- Kotlin과 함께 작동하도록 Java 프로젝트 구성
+- Java Maven 프로젝트에 Kotlin 테스트 추가
 
 처음부터 백엔드 앱 만들기:
 - Spring Boot로 RESTful 웹 서비스 만들기
 - Ktor로 HTTP API 만들기
 
 #### 크로스 플랫폼 개발 (Kotlin Multiplatform)
-1. 크로스 플랫폼 개발 환경 설정하기
-2. iOS 및 Android 애플리케이션 만들기:
+1. 크로스 플랫폼 개발 환경 설정
+2. iOS 및 Android 애플리케이션 만들기
    - 네이티브 UI와 비즈니스 로직 공유
    - 비즈니스 로직과 UI 공유
    - 기존 Android 앱을 iOS로 마이그레이션
-   - Ktor와 SQLdelight로 빌드하기
-3. 샘플 프로젝트 탐색하기
+   - Ktor와 SQLdelight로 빌드
+3. 샘플 프로젝트 탐색
 
 #### Android 개발
-Android에서 Kotlin 시작에 대한 [Google의 권장 사항](https://developer.android.com/kotlin/get-started)을 따르세요
+Android에서 Kotlin 시작 관련 [Google의 권장 사항](https://developer.android.com/kotlin/get-started) 참고.
 
 #### 데이터 분석 및 머신 러닝
-1. Kotlin Notebook으로 IDE에서 노트북 생성 및 편집하기
-2. 다음 도구로 데이터 탐색:
-   - **DataFrame** - 데이터 분석 및 조작 라이브러리
-   - **Kandy** - 데이터 시각화 플로팅 도구
-
+1. Kotlin Notebook으로 IDE에서 노트북 생성 및 편집
+2. 데이터 탐색 도구
+   - DataFrame: 데이터 분석 및 조작 라이브러리
+   - Kandy: 데이터 시각화 플로팅 도구
 
 ---
 
 ### 지원 받기
-- **Slack**: [초대 받기](https://surveys.jetbrains.com/s3/kotlin-slack-sign-up)
-- **이슈 트래커**: [JetBrains YouTrack](https://youtrack.jetbrains.com/issues/KT)
-- **피드백**: [피드백 공유하기](https://surveys.hotjar.com/d82e82b0-00d9-44a7-b793-0611bf6189df)
+- Slack: [초대 받기](https://surveys.jetbrains.com/s3/kotlin-slack-sign-up)
+- 이슈 트래커: [JetBrains YouTrack](https://youtrack.jetbrains.com/issues/KT)
+- 피드백: [피드백 공유하기](https://surveys.hotjar.com/d82e82b0-00d9-44a7-b793-0611bf6189df)
 
 ---
 
 ## Kotlin 기본 문법
 
-> **원문:** https://kotlinlang.org/docs/basic-syntax.html
+> 원문: https://kotlinlang.org/docs/basic-syntax.html
 
 ### 패키지 정의와 임포트
 
-패키지 명세는 소스 파일 상단에 위치해야 합니다:
+패키지 명세는 소스 파일 상단에 위치:
 
 ```kotlin
 package my.demo
@@ -81,7 +80,7 @@ import kotlin.text.*
 // ...
 ```
 
-소스 파일은 디렉토리 구조와 일치시키지 않고 파일 시스템의 임의 위치에 배치할 수 있습니다.
+소스 파일은 디렉토리 구조와 일치시키지 않고 파일 시스템의 임의 위치에 배치 가능.
 
 ---
 
@@ -128,7 +127,7 @@ print(yourWord)
 
 ### 함수
 
-**명시적 반환 타입 사용:**
+명시적 반환 타입 사용:
 
 ```kotlin
 fun sum(a: Int, b: Int): Int {
@@ -136,13 +135,13 @@ fun sum(a: Int, b: Int): Int {
 }
 ```
 
-**추론된 반환 타입 (표현식 본문):**
+추론된 반환 타입 (표현식 본문):
 
 ```kotlin
 fun sum(a: Int, b: Int) = a + b
 ```
 
-**Unit 반환 (의미 있는 값 없음):**
+Unit 반환 (의미 있는 값 없음):
 
 ```kotlin
 fun printSum(a: Int, b: Int) {
@@ -154,28 +153,28 @@ fun printSum(a: Int, b: Int) {
 
 ### 변수
 
-**불변 (읽기 전용) 변수 - `val`:**
+불변 (읽기 전용) 변수 - `val`:
 
 ```kotlin
 val x: Int = 5  // 명시적 타입
 val x = 5       // 타입 추론
 ```
 
-**가변 변수 - `var`:**
+가변 변수 - `var`:
 
 ```kotlin
 var x: Int = 5
 x += 1  // 재할당 가능
 ```
 
-**지연 초기화:**
+지연 초기화:
 
 ```kotlin
 val c: Int      // 타입 필수
 c = 3           // 나중에 초기화
 ```
 
-**최상위 변수:**
+최상위 변수:
 
 ```kotlin
 val PI = 3.14
@@ -187,7 +186,7 @@ fun incrementX() { x += 1 }
 
 ### 클래스와 인스턴스 생성
 
-**기본 클래스 정의:**
+기본 클래스 정의:
 
 ```kotlin
 class Shape
@@ -197,14 +196,14 @@ class Rectangle(val height: Double, val length: Double) {
 }
 ```
 
-**인스턴스 생성:**
+인스턴스 생성:
 
 ```kotlin
 val rectangle = Rectangle(5.0, 2.0)
 println("The perimeter is ${rectangle.perimeter}")
 ```
 
-**상속:**
+상속:
 
 ```kotlin
 open class Shape
@@ -217,13 +216,13 @@ class Rectangle(val height: Double, val length: Double): Shape() {
 
 ### 주석
 
-**한 줄 주석:**
+한 줄 주석:
 
 ```kotlin
 // 이것은 줄 끝 주석입니다
 ```
 
-**블록 주석 (중첩 가능):**
+블록 주석 (중첩 가능):
 
 ```kotlin
 /* 이것은 여러 줄에 걸친
@@ -250,7 +249,7 @@ val s2 = "${s1.replace("is", "was")}, but now is $a"  // 표현식
 
 ### 조건부 표현식
 
-**if 문:**
+if 문:
 
 ```kotlin
 fun maxOf(a: Int, b: Int): Int {
@@ -262,7 +261,7 @@ fun maxOf(a: Int, b: Int): Int {
 }
 ```
 
-**표현식으로서의 if:**
+표현식으로서의 if:
 
 ```kotlin
 fun maxOf(a: Int, b: Int) = if (a > b) a else b
@@ -272,7 +271,7 @@ fun maxOf(a: Int, b: Int) = if (a > b) a else b
 
 ### for 루프
 
-**컬렉션 순회:**
+컬렉션 순회:
 
 ```kotlin
 val items = listOf("apple", "banana", "kiwifruit")
@@ -281,7 +280,7 @@ for (item in items) {
 }
 ```
 
-**인덱스와 함께 순회:**
+인덱스와 함께 순회:
 
 ```kotlin
 for (index in items.indices) {
@@ -320,7 +319,7 @@ fun describe(obj: Any): String = when (obj) {
 
 ### 범위
 
-**범위 내 확인:**
+범위 내 확인:
 
 ```kotlin
 val x = 10
@@ -329,7 +328,7 @@ if (x in 1..y+1) {
 }
 ```
 
-**범위 외 확인:**
+범위 외 확인:
 
 ```kotlin
 if (-1 !in 0..list.lastIndex) {
@@ -337,7 +336,7 @@ if (-1 !in 0..list.lastIndex) {
 }
 ```
 
-**범위 순회:**
+범위 순회:
 
 ```kotlin
 for (x in 1..5) {
@@ -345,7 +344,7 @@ for (x in 1..5) {
 }
 ```
 
-**스텝과 함께 순회:**
+스텝과 함께 순회:
 
 ```kotlin
 for (x in 1..10 step 2) {
@@ -360,7 +359,7 @@ for (x in 9 downTo 0 step 3) {
 
 ### 컬렉션
 
-**컬렉션 순회:**
+컬렉션 순회:
 
 ```kotlin
 val items = listOf("apple", "banana", "kiwifruit")
@@ -369,7 +368,7 @@ for (item in items) {
 }
 ```
 
-**`in`으로 멤버십 확인:**
+`in`으로 멤버십 확인:
 
 ```kotlin
 val items = setOf("apple", "banana", "kiwifruit")
@@ -379,7 +378,7 @@ when {
 }
 ```
 
-**필터, 정렬, 맵, forEach:**
+필터, 정렬, 맵, forEach:
 
 ```kotlin
 val fruits = listOf("banana", "avocado", "apple", "kiwifruit")
@@ -394,7 +393,7 @@ fruits
 
 ### Nullable 값과 null 검사
 
-**Nullable 타입 선언:**
+Nullable 타입 선언:
 
 ```kotlin
 fun parseInt(str: String): Int? {
@@ -402,7 +401,7 @@ fun parseInt(str: String): Int? {
 }
 ```
 
-**&&로 null 검사:**
+&&로 null 검사:
 
 ```kotlin
 fun printProduct(arg1: String, arg2: String) {
@@ -416,7 +415,7 @@ fun printProduct(arg1: String, arg2: String) {
 }
 ```
 
-**null일 때 조기 반환:**
+null일 때 조기 반환:
 
 ```kotlin
 if (x == null) {
@@ -430,7 +429,7 @@ println(x * y)  // 여기서 x는 non-nullable
 
 ### 타입 검사와 자동 캐스트
 
-**`is` 연산자 사용:**
+`is` 연산자 사용:
 
 ```kotlin
 fun getStringLength(obj: Any): Int? {
@@ -441,14 +440,14 @@ fun getStringLength(obj: Any): Int? {
 }
 ```
 
-**`!is` 연산자 사용:**
+`!is` 연산자 사용:
 
 ```kotlin
 if (obj !is String) return null
 return obj.length  // 여기서 obj는 String
 ```
 
-**논리 표현식에서의 스마트 캐스트:**
+논리 표현식에서의 스마트 캐스트:
 
 ```kotlin
 if (obj is String && obj.length >= 0) {
@@ -460,11 +459,11 @@ if (obj is String && obj.length >= 0) {
 
 ## Kotlin 패키지와 임포트
 
-> **원문:** https://kotlinlang.org/docs/packages.html
+> 원문: https://kotlinlang.org/docs/packages.html
 
 ### 개요
 
-소스 파일은 코드를 네임스페이스로 구성하기 위해 패키지 선언으로 시작할 수 있습니다.
+소스 파일은 코드를 네임스페이스로 구성 → 패키지 선언으로 시작 가능.
 
 ### 패키지 선언
 
@@ -475,17 +474,17 @@ fun printMessage() { /*...*/ }
 class Message { /*...*/ }
 ```
 
-소스 파일의 모든 내용(클래스, 함수 등)은 선언된 패키지에 속합니다. 위 예제에서:
+소스 파일의 모든 내용(클래스, 함수 등)은 선언된 패키지에 속함. 위 예제:
 - `printMessage()`의 전체 이름: `org.example.printMessage`
 - `Message`의 전체 이름: `org.example.Message`
 
-패키지가 지정되지 않으면 내용은 이름이 없는 기본 패키지에 속합니다.
+패키지 미지정 시 → 내용은 이름 없는 기본 패키지에 속함.
 
 ---
 
 ### 기본 임포트
 
-다음 패키지들은 모든 Kotlin 파일에 자동으로 임포트됩니다:
+다음 패키지들은 모든 Kotlin 파일에 자동으로 임포트됨:
 
 - `kotlin.*`
 - `kotlin.annotation.*`
@@ -498,12 +497,11 @@ class Message { /*...*/ }
 
 #### 플랫폼별 임포트
 
-**JVM:**
-- `java.lang.*`
-- `kotlin.jvm.*`
-
-**JS:**
-- `kotlin.js.*`
+- JVM
+  - `java.lang.*`
+  - `kotlin.jvm.*`
+- JS
+  - `kotlin.js.*`
 
 ---
 
@@ -538,32 +536,32 @@ import org.test.Message as TestMessage  // TestMessage는 'org.test.Message'를 
 
 ### 최상위 선언의 가시성
 
-최상위 선언이 `private`으로 표시되면 해당 선언은 선언된 파일 내에서만 private입니다. (자세한 내용은 가시성 수정자를 참조하세요.)
+최상위 선언이 `private`으로 표시되면 → 해당 선언은 선언된 파일 내에서만 private (자세한 내용은 가시성 수정자 참조).
 
 ---
 
 ## Kotlin 투어에 오신 것을 환영합니다
 
-> **원문:** https://kotlinlang.org/docs/kotlin-tour-welcome.html
+> 원문: https://kotlinlang.org/docs/kotlin-tour-welcome.html
 
 ### 개요
 
-이것은 공식 Kotlin 문서 투어의 메인 랜딩 페이지입니다. 브라우저 기반 인터랙티브 튜토리얼을 통해 Kotlin을 배울 수 있는 소개를 제공합니다.
+공식 Kotlin 문서 투어의 메인 랜딩 페이지. 브라우저 기반 인터랙티브 튜토리얼을 통해 Kotlin을 배울 수 있는 소개 제공.
 
-**주요 목표:** 설치 없이 브라우저에서 Kotlin을 초급부터 중급 수준까지 배웁니다.
+주요 목표: 설치 없이 브라우저에서 Kotlin을 초급부터 중급 수준까지 학습.
 
 #### 각 챕터의 구조
 
-각 챕터에는 다음이 포함됩니다:
-- **이론** - 예제와 함께 핵심 언어 개념
-- **실습** - 이해도를 테스트하는 연습문제
-- **해답** - 참고 솔루션
+각 챕터 구성:
+- 이론: 예제와 함께 핵심 언어 개념
+- 실습: 이해도를 테스트하는 연습문제
+- 해답: 참고 솔루션
 
 ---
 
 ### 초급 투어
 
-**다루는 주제:**
+다루는 주제:
 1. 변수
 2. 기본 타입
 3. 컬렉션
@@ -572,13 +570,13 @@ import org.test.Message as TestMessage  // TestMessage는 'org.test.Message'를 
 6. 클래스
 7. null 안전성
 
-**시작점:** [kotlin-tour-hello-world.html](kotlin-tour-hello-world.html)
+시작점: [kotlin-tour-hello-world.html](kotlin-tour-hello-world.html)
 
 ---
 
 ### 중급 투어
 
-**다루는 주제:**
+다루는 주제:
 1. 확장 함수
 2. 스코프 함수
 3. 수신자가 있는 람다 표현식
@@ -589,7 +587,7 @@ import org.test.Message as TestMessage  // TestMessage는 'org.test.Message'를 
 8. null 안전성 (고급)
 9. 라이브러리와 API
 
-**시작점:** [kotlin-tour-intermediate-extension-functions.html](kotlin-tour-intermediate-extension-functions.html)
+시작점: [kotlin-tour-intermediate-extension-functions.html](kotlin-tour-intermediate-extension-functions.html)
 
 ---
 
@@ -604,11 +602,11 @@ import org.test.Message as TestMessage  // TestMessage는 'org.test.Message'를 
 
 ## Kotlin 투어: Hello World
 
-> **원문:** https://kotlinlang.org/docs/kotlin-tour-hello-world.html
+> 원문: https://kotlinlang.org/docs/kotlin-tour-hello-world.html
 
 ### 개요
 
-이것은 기본 문법, 변수, 문자열 템플릿을 다루는 Kotlin 초보자 가이드입니다.
+기본 문법, 변수, 문자열 템플릿을 다루는 Kotlin 초보자 가이드.
 
 ---
 
@@ -622,18 +620,18 @@ fun main() {
 }
 ```
 
-**핵심 사항:**
-- `fun`은 함수를 선언합니다
-- `main()`은 프로그램 진입점입니다
-- 함수 본문은 중괄호 `{}`로 묶습니다
-- `println()`은 줄 바꿈과 함께 출력합니다
-- `print()`는 줄 바꿈 없이 출력합니다
+핵심 사항:
+- `fun`은 함수를 선언함
+- `main()`은 프로그램 진입점
+- 함수 본문은 중괄호 `{}`로 묶음
+- `println()`은 줄 바꿈과 함께 출력
+- `print()`는 줄 바꿈 없이 출력
 
 ---
 
 ### 변수
 
-Kotlin은 두 가지 유형의 변수를 지원합니다:
+Kotlin이 지원하는 두 가지 유형의 변수:
 
 #### 읽기 전용 변수 (`val`)
 
@@ -648,13 +646,13 @@ var customers = 10
 customers = 8  // 재할당 가능
 ```
 
-**모범 사례:** 기본적으로 모든 변수를 `val`로 선언하세요. 필요한 경우에만 `var`를 사용하세요.
+모범 사례: 기본적으로 모든 변수를 `val`로 선언 → 필요한 경우에만 `var` 사용.
 
 ---
 
 ### 문자열 템플릿
 
-문자열 템플릿을 사용하면 `$`를 사용하여 변수와 표현식을 문자열에 포함할 수 있습니다:
+문자열 템플릿 → `$`를 사용해 변수와 표현식을 문자열에 포함 가능.
 
 #### 단순 변수 접근
 
@@ -676,9 +674,9 @@ println("There are ${customers + 1} customers")
 
 ### 연습 문제
 
-**과제:** 코드를 완성하여 "Mary is 20 years old"를 출력하세요
+과제: 코드를 완성하여 "Mary is 20 years old"를 출력.
 
-**해답:**
+해답:
 
 ```kotlin
 fun main() {
@@ -692,23 +690,23 @@ fun main() {
 
 ### 추가 참고사항
 
-- Kotlin은 **타입 추론**을 사용합니다 - 타입을 명시적으로 선언할 필요가 없습니다
-- 위 예제에서 `age`는 `Int` 타입으로 추론됩니다
+- Kotlin은 타입 추론 사용 → 타입을 명시적으로 선언할 필요 없음
+- 위 예제에서 `age`는 `Int` 타입으로 추론됨
 - 다음 주제: [기본 타입](kotlin-tour-basic-types.html)
 
 ---
 
 ## Kotlin 투어: 기본 타입
 
-> **원문:** https://kotlinlang.org/docs/kotlin-tour-basic-types.html
+> 원문: https://kotlinlang.org/docs/kotlin-tour-basic-types.html
 
 ### 개요
 
-Kotlin의 모든 변수와 데이터 구조는 타입을 가집니다. 타입은 컴파일러에게 해당 변수나 데이터 구조에서 어떤 연산이 허용되는지 알려줍니다. 즉, 어떤 함수와 프로퍼티가 있는지를 나타냅니다.
+Kotlin의 모든 변수와 데이터 구조는 타입을 가짐 → 타입은 컴파일러에게 해당 변수·데이터 구조에서 어떤 연산이 허용되는지, 즉 어떤 함수와 프로퍼티가 있는지 알려줌.
 
 ### 타입 추론
 
-Kotlin은 **타입 추론**을 사용하여 할당된 값을 기반으로 변수의 타입을 자동으로 결정합니다. 예를 들어:
+Kotlin은 타입 추론을 사용 → 할당된 값을 기반으로 변수의 타입을 자동으로 결정. 예:
 
 ```kotlin
 var customers = 10  // Kotlin이 타입을 Int로 추론
@@ -729,22 +727,26 @@ fun main() {
 }
 ```
 
-**복합 대입 연산자:** `+=`, `-=`, `*=`, `/=`, `%=`
+복합 대입 연산자: `+=`, `-=`, `*=`, `/=`, `%=`
 
 ### Kotlin의 기본 타입
 
-| 범주 | 타입 | 예제 |
-|------|------|------|
-| **정수** | `Byte`, `Short`, `Int`, `Long` | `val year: Int = 2020` |
-| **부호 없는 정수** | `UByte`, `UShort`, `UInt`, `ULong` | `val score: UInt = 100u` |
-| **부동 소수점** | `Float`, `Double` | `val temp: Float = 24.5f`, `val price: Double = 19.99` |
-| **불리언** | `Boolean` | `val isEnabled: Boolean = true` |
-| **문자** | `Char` | `val separator: Char = ','` |
-| **문자열** | `String` | `val message: String = "Hello, world!"` |
+- 정수: `Byte`·`Short`·`Int`·`Long`
+  - 예: `val year: Int = 2020`
+- 부호 없는 정수: `UByte`·`UShort`·`UInt`·`ULong`
+  - 예: `val score: UInt = 100u`
+- 부동 소수점: `Float`·`Double`
+  - 예: `val temp: Float = 24.5f`, `val price: Double = 19.99`
+- 불리언: `Boolean`
+  - 예: `val isEnabled: Boolean = true`
+- 문자: `Char`
+  - 예: `val separator: Char = ','`
+- 문자열: `String`
+  - 예: `val message: String = "Hello, world!"`
 
 ### 초기화 없이 변수 선언
 
-변수는 즉시 초기화하지 않고 선언할 수 있지만, 첫 번째 사용 전에 반드시 초기화해야 합니다:
+변수는 즉시 초기화하지 않고 선언 가능 → 단 첫 번째 사용 전에 반드시 초기화해야 함:
 
 ```kotlin
 fun main() {
@@ -758,7 +760,7 @@ fun main() {
 
 ### 중요한 규칙
 
-초기화되지 않은 변수를 읽으면 컴파일러 오류가 발생합니다:
+초기화되지 않은 변수를 읽으면 → 컴파일러 오류 발생:
 
 ```kotlin
 val d: Int
@@ -767,7 +769,7 @@ println(d)  // 오류: 변수 'd'가 초기화되어야 합니다
 
 ### 연습 문제
 
-**과제:** 각 변수에 올바른 타입을 명시적으로 선언하세요:
+과제: 각 변수에 올바른 타입을 명시적으로 선언.
 
 ```kotlin
 fun main() {
@@ -788,11 +790,11 @@ fun main() {
 
 ## Kotlin 투어: 제어 흐름
 
-> **원문:** https://kotlinlang.org/docs/kotlin-tour-control-flow.html
+> 원문: https://kotlinlang.org/docs/kotlin-tour-control-flow.html
 
 ### 개요
 
-Kotlin은 조건부 표현식에 기반한 결정을 내리고 루프를 생성하고 순회하는 메커니즘을 제공합니다. 이 페이지는 `if`/`when` 표현식, 범위, `for`/`while` 루프를 다룹니다.
+Kotlin은 조건부 표현식에 기반한 결정을 내리고 루프를 생성·순회하는 메커니즘을 제공. 이 페이지는 `if`/`when` 표현식, 범위, `for`/`while` 루프를 다룸.
 
 ---
 
@@ -823,9 +825,9 @@ println(if (a > b) a else b) // 2
 
 #### when 표현식
 
-**권장 사항:** 더 나은 가독성과 적은 실수를 위해 `if` 대신 `when`을 사용하세요.
+권장 사항: 더 나은 가독성과 적은 실수를 위해 `if` 대신 `when` 사용.
 
-**문으로서:**
+문으로서:
 
 ```kotlin
 val obj = "Hello"
@@ -837,7 +839,7 @@ when (obj) {
 // 출력: Greeting
 ```
 
-**표현식으로 (값 반환):**
+표현식으로 (값 반환):
 
 ```kotlin
 val obj = "Hello"
@@ -849,7 +851,7 @@ val result = when (obj) {
 println(result) // Greeting
 ```
 
-**주제 없이 (불리언 표현식):**
+주제 없이 (불리언 표현식):
 
 ```kotlin
 val trafficLightState = "Red"
@@ -865,14 +867,20 @@ val trafficAction = when {
 
 ### 범위
 
-| 연산자 | 예제 | 동등한 값 |
-|-------|------|----------|
-| `..` | `1..4` | `1, 2, 3, 4` |
-| `..<` | `1..<4` | `1, 2, 3` |
-| `downTo` | `4 downTo 1` | `4, 3, 2, 1` |
-| `step` | `1..5 step 2` | `1, 3, 5` |
+- `..`
+  - 예: `1..4`
+  - 동등한 값: `1, 2, 3, 4`
+- `..<`
+  - 예: `1..<4`
+  - 동등한 값: `1, 2, 3`
+- `downTo`
+  - 예: `4 downTo 1`
+  - 동등한 값: `4, 3, 2, 1`
+- `step`
+  - 예: `1..5 step 2`
+  - 동등한 값: `1, 3, 5`
 
-**문자 범위:**
+문자 범위:
 
 ```kotlin
 'a'..'d'           // 'a', 'b', 'c', 'd'
@@ -903,7 +911,7 @@ for (cake in cakes) {
 
 #### while 루프
 
-**표준 while:**
+표준 while:
 
 ```kotlin
 var cakesEaten = 0
@@ -913,7 +921,7 @@ while (cakesEaten < 3) {
 }
 ```
 
-**do-while (먼저 실행, 그 다음 검사):**
+do-while (먼저 실행, 그 다음 검사):
 
 ```kotlin
 var cakesBaked = 0
@@ -1007,9 +1015,9 @@ fun main() {
 
 ### 핵심 요점
 
-- 여러 조건에는 **`when`이 선호됨**
-- **범위**는 `..`, `..<`, `downTo`, `step` 같은 연산자로 루프 순회를 단순화
-- **`for` 루프**는 범위와 컬렉션 순회에 이상적
+- 여러 조건에는 `when`이 선호됨
+- 범위는 `..`, `..<`, `downTo`, `step` 같은 연산자로 루프 순회를 단순화
+- `for` 루프는 범위와 컬렉션 순회에 이상적
 - `while`과 `do-while`은 조건 기반 반복에 유용
 - 모든 조건부 구조는 값을 반환하는 표현식으로 사용 가능
 
@@ -1017,22 +1025,22 @@ fun main() {
 
 ## Kotlin 투어: 함수
 
-> **원문:** https://kotlinlang.org/docs/kotlin-tour-functions.html
+> 원문: https://kotlinlang.org/docs/kotlin-tour-functions.html
 
 ### 개요
 
-Kotlin에서 함수는 `fun` 키워드를 사용하여 선언합니다. 이 페이지는 함수 선언, 매개변수, 반환 타입, 그리고 람다 표현식 같은 고급 개념을 다룹니다.
+Kotlin에서 함수는 `fun` 키워드를 사용하여 선언. 이 페이지는 함수 선언, 매개변수, 반환 타입, 그리고 람다 표현식 같은 고급 개념을 다룸.
 
 ### 기본 함수 문법
 
-**핵심 규칙:**
+핵심 규칙:
 - 함수 매개변수는 괄호 `()` 안에 위치
 - 각 매개변수에는 쉼표로 구분된 타입이 필요
 - 반환 타입은 `()` 뒤에 콜론 `:`과 함께 작성
 - 함수 본문은 중괄호 `{}` 안에 위치
 - 함수를 종료/반환하려면 `return` 키워드 사용
 
-**예제:**
+예제:
 
 ```kotlin
 fun sum(x: Int, y: Int): Int {
@@ -1046,7 +1054,7 @@ fun main() {
 
 ### 명명된 인수
 
-매개변수는 이름으로 호출할 수 있어 어떤 순서도 가능하고 가독성이 향상됩니다:
+매개변수는 이름으로 호출 가능 → 어떤 순서도 가능하고 가독성 향상:
 
 ```kotlin
 fun printMessageWithPrefix(message: String, prefix: String) {
@@ -1076,7 +1084,7 @@ fun main() {
 
 ### 반환 없는 함수
 
-함수가 유용한 값을 반환하지 않으면 반환 타입은 `Unit`입니다. `return` 키워드와 반환 타입은 선택사항입니다:
+함수가 유용한 값을 반환하지 않으면 → 반환 타입은 `Unit`. `return` 키워드와 반환 타입은 선택사항:
 
 ```kotlin
 fun printMessage(message: String) {
@@ -1168,9 +1176,9 @@ fun main() {
 
 ### 람다 표현식
 
-람다 표현식은 간결한 함수 작성을 가능하게 합니다. 문법: `{ 매개변수 -> 본문 }`
+람다 표현식은 간결한 함수 작성 가능. 문법: `{ 매개변수 -> 본문 }`
 
-**예제:**
+예제:
 
 ```kotlin
 val upperCaseString = { text: String -> text.uppercase() }
@@ -1182,7 +1190,7 @@ fun main() {
 
 #### 다른 함수에 람다 전달
 
-**`.filter()` 사용:**
+`.filter()` 사용:
 
 ```kotlin
 fun main() {
@@ -1196,7 +1204,7 @@ fun main() {
 }
 ```
 
-**`.map()` 사용:**
+`.map()` 사용:
 
 ```kotlin
 fun main() {
@@ -1252,7 +1260,7 @@ fun main() {
 
 #### 후행 람다
 
-람다가 마지막 매개변수인 경우 함수 괄호 밖에 작성:
+람다가 마지막 매개변수인 경우 → 함수 괄호 밖에 작성:
 
 ```kotlin
 fun main() {
@@ -1304,13 +1312,13 @@ fun main() {
 
 ## Kotlin 투어: 클래스
 
-> **원문:** https://kotlinlang.org/docs/kotlin-tour-classes.html
+> 원문: https://kotlinlang.org/docs/kotlin-tour-classes.html
 
 ### 개요
 
-Kotlin은 클래스와 객체를 사용한 객체 지향 프로그래밍을 지원합니다. 클래스를 사용하면 객체의 특성 집합을 선언하여 반복적인 선언을 피함으로써 시간과 노력을 절약할 수 있습니다.
+Kotlin은 클래스와 객체를 사용한 객체 지향 프로그래밍 지원. 클래스를 사용하면 객체의 특성 집합을 선언 → 반복적인 선언을 피해 시간과 노력 절약.
 
-**기본 클래스 선언:**
+기본 클래스 선언:
 
 ```kotlin
 class Customer
@@ -1320,15 +1328,15 @@ class Customer
 
 ### 프로퍼티
 
-프로퍼티는 클래스 객체의 특성을 선언합니다. 다음과 같이 선언할 수 있습니다:
+프로퍼티는 클래스 객체의 특성을 선언. 선언 방법:
 
-1. **클래스 이름 뒤 괄호 안에 (클래스 헤더):**
+1. 클래스 이름 뒤 괄호 안에 (클래스 헤더)
 
    ```kotlin
    class Contact(val id: Int, var email: String)
    ```
 
-2. **클래스 본문 내에 (중괄호):**
+2. 클래스 본문 내에 (중괄호)
 
    ```kotlin
    class Contact(val id: Int, var email: String) {
@@ -1336,12 +1344,12 @@ class Customer
    }
    ```
 
-**모범 사례:**
+모범 사례:
 - 인스턴스 생성 후 수정이 필요하지 않으면 읽기 전용 프로퍼티(`val`) 사용
 - `val`/`var` 없이 괄호 안에 있는 프로퍼티는 인스턴스 생성 후 접근 불가
 - 프로퍼티는 기본값을 가질 수 있음
 
-**기본값이 있는 예제:**
+기본값이 있는 예제:
 
 ```kotlin
 class Contact(val id: Int, var email: String = "example@gmail.com") {
@@ -1353,7 +1361,7 @@ class Contact(val id: Int, var email: String = "example@gmail.com") {
 
 ### 인스턴스 생성
 
-객체는 생성자를 사용하여 생성됩니다. Kotlin은 클래스 헤더 매개변수로 기본 생성자를 자동 생성합니다.
+객체는 생성자를 사용하여 생성. Kotlin은 클래스 헤더 매개변수로 기본 생성자를 자동 생성.
 
 ```kotlin
 class Contact(val id: Int, var email: String)
@@ -1384,7 +1392,7 @@ fun main() {
 }
 ```
 
-**문자열 템플릿:**
+문자열 템플릿:
 
 ```kotlin
 println("Their email address is: ${contact.email}")
@@ -1413,9 +1421,9 @@ fun main() {
 
 ### 데이터 클래스
 
-데이터 클래스는 데이터 저장에 최적화되어 있으며 자동 생성된 유틸리티 함수가 함께 제공됩니다.
+데이터 클래스는 데이터 저장에 최적화 → 자동 생성된 유틸리티 함수가 함께 제공됨.
 
-**선언:**
+선언:
 
 ```kotlin
 data class User(val name: String, val id: Int)
@@ -1423,11 +1431,9 @@ data class User(val name: String, val id: Int)
 
 #### 미리 정의된 멤버 함수
 
-| 함수 | 설명 |
-|------|------|
-| `toString()` | 인스턴스와 프로퍼티의 읽기 쉬운 문자열 출력 |
-| `equals()` 또는 `==` | 인스턴스 비교 |
-| `copy()` | 선택적으로 다른 프로퍼티로 복사본 생성 |
+- `toString()`: 인스턴스와 프로퍼티의 읽기 쉬운 문자열 출력
+- `equals()` 또는 `==`: 인스턴스 비교
+- `copy()`: 선택적으로 다른 프로퍼티로 복사본 생성
 
 #### 문자열로 출력
 
@@ -1545,11 +1551,11 @@ fun main() {
 
 ## Kotlin 투어: null 안전성
 
-> **원문:** https://kotlinlang.org/docs/kotlin-tour-null-safety.html
+> 원문: https://kotlinlang.org/docs/kotlin-tour-null-safety.html
 
 ### 개요
 
-Kotlin은 런타임이 아닌 컴파일 시점에 잠재적인 `null` 값 문제를 감지하는 내장 null 안전성 기능이 있습니다. 이는 일반적인 null 참조 오류를 방지합니다.
+Kotlin은 런타임이 아닌 컴파일 시점에 잠재적인 `null` 값 문제를 감지하는 내장 null 안전성 기능을 갖춤 → 일반적인 null 참조 오류 방지.
 
 ### null 안전성의 주요 기능
 
@@ -1562,7 +1568,7 @@ Kotlin은 런타임이 아닌 컴파일 시점에 잠재적인 `null` 값 문제
 
 ### Nullable 타입
 
-기본적으로 타입은 `null` 값을 보유할 수 없습니다. `null`을 허용하려면 타입 뒤에 `?`를 추가하세요:
+기본적으로 타입은 `null` 값을 보유할 수 없음. `null`을 허용하려면 타입 뒤에 `?`를 추가:
 
 ```kotlin
 fun main() {
@@ -1609,7 +1615,7 @@ fun main() {
 
 ### 안전 호출 연산자 (`?.`)
 
-객체나 접근된 프로퍼티가 `null`이면 `null`을 반환합니다. 잠재적으로 null인 값에 접근할 때 오류를 방지합니다:
+객체나 접근된 프로퍼티가 `null`이면 `null`을 반환 → 잠재적으로 null인 값에 접근할 때 오류 방지:
 
 ```kotlin
 fun lengthString(maybeString: String?): Int? = maybeString?.length
@@ -1639,7 +1645,7 @@ fun main() {
 
 ### 엘비스 연산자 (`?:`)
 
-왼쪽이 `null`인 경우 기본값을 제공합니다:
+왼쪽이 `null`인 경우 기본값을 제공:
 
 ```kotlin
 fun main() {
@@ -1648,13 +1654,13 @@ fun main() {
 }
 ```
 
-**문법:** `표현식 ?: 기본값`
+문법: `표현식 ?: 기본값`
 
 ---
 
 ### 연습 문제
 
-**과제:** 직원의 급여를 반환하거나 찾지 못하면 `0`을 반환하는 함수를 작성하세요.
+과제: 직원의 급여를 반환하거나 찾지 못하면 `0`을 반환하는 함수를 작성.
 
 ```kotlin
 data class Employee(val name: String, var salary: Int)
@@ -1678,52 +1684,48 @@ fun main() {
 
 ### 요약
 
-| 기능 | 목적 |
-|------|------|
-| `타입?` | nullable 타입 선언 |
-| `!= null` | 조건문에서 null 확인 |
-| `?.` | 안전 호출 연산자 |
-| `?:` | 엘비스 연산자 (기본값 제공) |
+- `타입?`: nullable 타입 선언
+- `!= null`: 조건문에서 null 확인
+- `?.`: 안전 호출 연산자
+- `?:`: 엘비스 연산자 (기본값 제공)
 
 ---
 
 ## Kotlin 투어: 컬렉션
 
-> **원문:** https://kotlinlang.org/docs/kotlin-tour-collections.html
+> 원문: https://kotlinlang.org/docs/kotlin-tour-collections.html
 
 ### 개요
 
-컬렉션은 나중에 처리하기 위해 데이터를 그룹화하는 데 사용되는 구조입니다. Kotlin은 세 가지 주요 컬렉션 타입을 제공합니다: **List**, **Set**, **Map**. 각각은 가변 또는 읽기 전용일 수 있습니다.
+컬렉션은 나중에 처리하기 위해 데이터를 그룹화하는 데 사용되는 구조. Kotlin이 제공하는 세 가지 주요 컬렉션 타입: List·Set·Map. 각각 가변 또는 읽기 전용 가능.
 
-| 컬렉션 타입 | 설명 |
-|------------|------|
-| **List** | 순서가 있는 항목 컬렉션 |
-| **Set** | 고유한 비정렬 항목 컬렉션 |
-| **Map** | 키가 고유한 키-값 쌍의 집합 |
+- List: 순서가 있는 항목 컬렉션
+- Set: 고유한 비정렬 항목 컬렉션
+- Map: 키가 고유한 키-값 쌍의 집합
 
 ---
 
 ### List
 
-**목적:** 순서대로 항목을 저장하고 중복을 허용합니다.
+목적: 순서대로 항목을 저장하고 중복을 허용.
 
 #### 리스트 생성
 
-**읽기 전용 리스트** `listOf()` 사용:
+읽기 전용 리스트: `listOf()` 사용
 
 ```kotlin
 val readOnlyShapes = listOf("triangle", "square", "circle")
 println(readOnlyShapes) // [triangle, square, circle]
 ```
 
-**가변 리스트** 명시적 타입과 함께 `mutableListOf()` 사용:
+가변 리스트: 명시적 타입과 함께 `mutableListOf()` 사용
 
 ```kotlin
 val shapes: MutableList<String> = mutableListOf("triangle", "square", "circle")
 println(shapes) // [triangle, square, circle]
 ```
 
-**가변 리스트의 읽기 전용 뷰:**
+가변 리스트의 읽기 전용 뷰:
 
 ```kotlin
 val shapes: MutableList<String> = mutableListOf("triangle", "square", "circle")
@@ -1732,7 +1734,7 @@ val shapesLocked: List<String> = shapes
 
 #### 리스트 항목 접근
 
-**인덱스 접근 연산자 `[]` 사용:**
+인덱스 접근 연산자 `[]` 사용:
 
 ```kotlin
 val readOnlyShapes = listOf("triangle", "square", "circle")
@@ -1740,7 +1742,7 @@ println("The first item in the list is: ${readOnlyShapes[0]}")
 // The first item in the list is: triangle
 ```
 
-**`.first()`와 `.last()` 함수 사용:**
+`.first()`와 `.last()` 함수 사용:
 
 ```kotlin
 val readOnlyShapes = listOf("triangle", "square", "circle")
@@ -1750,21 +1752,21 @@ println("The first item in the list is: ${readOnlyShapes.first()}")
 
 #### 리스트 연산
 
-**개수 얻기:**
+개수 얻기:
 
 ```kotlin
 val readOnlyShapes = listOf("triangle", "square", "circle")
 println("This list has ${readOnlyShapes.count()} items") // This list has 3 items
 ```
 
-**`in` 연산자로 항목 존재 확인:**
+`in` 연산자로 항목 존재 확인:
 
 ```kotlin
 val readOnlyShapes = listOf("triangle", "square", "circle")
 println("circle" in readOnlyShapes) // true
 ```
 
-**가변 리스트에서 항목 추가/제거:**
+가변 리스트에서 항목 추가/제거:
 
 ```kotlin
 val shapes: MutableList<String> = mutableListOf("triangle", "square", "circle")
@@ -1778,11 +1780,11 @@ println(shapes) // [triangle, square, circle]
 
 ### Set
 
-**목적:** 고유하고 비정렬된 항목을 저장합니다.
+목적: 고유하고 비정렬된 항목을 저장.
 
 #### 세트 생성
 
-**읽기 전용 세트** `setOf()` 사용:
+읽기 전용 세트: `setOf()` 사용
 
 ```kotlin
 val readOnlyFruit = setOf("apple", "banana", "cherry", "cherry")
@@ -1790,14 +1792,14 @@ val readOnlyFruit = setOf("apple", "banana", "cherry", "cherry")
 println(readOnlyFruit) // [apple, banana, cherry]
 ```
 
-**명시적 타입을 가진 가변 세트:**
+명시적 타입을 가진 가변 세트:
 
 ```kotlin
 val fruit: MutableSet<String> = mutableSetOf("apple", "banana", "cherry", "cherry")
 println(fruit) // [apple, banana, cherry]
 ```
 
-**가변 세트의 읽기 전용 뷰:**
+가변 세트의 읽기 전용 뷰:
 
 ```kotlin
 val fruit: MutableSet<String> = mutableSetOf("apple", "banana", "cherry", "cherry")
@@ -1806,21 +1808,21 @@ val fruitLocked: Set<String> = fruit
 
 #### 세트 연산
 
-**개수 얻기:**
+개수 얻기:
 
 ```kotlin
 val readOnlyFruit = setOf("apple", "banana", "cherry", "cherry")
 println("This set has ${readOnlyFruit.count()} items") // This set has 3 items
 ```
 
-**항목 존재 확인:**
+항목 존재 확인:
 
 ```kotlin
 val readOnlyFruit = setOf("apple", "banana", "cherry", "cherry")
 println("banana" in readOnlyFruit) // true
 ```
 
-**가변 세트에서 항목 추가/제거:**
+가변 세트에서 항목 추가/제거:
 
 ```kotlin
 val fruit: MutableSet<String> = mutableSetOf("apple", "banana", "cherry", "cherry")
@@ -1834,30 +1836,30 @@ println(fruit) // [apple, banana, cherry]
 
 ### Map
 
-**목적:** 각 키가 고유하고 정확히 하나의 값에 매핑되는 키-값 쌍을 저장합니다.
+목적: 각 키가 고유하고 정확히 하나의 값에 매핑되는 키-값 쌍을 저장.
 
-**주요 특성:**
+주요 특성:
 - 모든 키는 고유해야 함
 - 중복 값은 허용됨
 - 키를 참조하여 값에 접근
 
 #### 맵 생성
 
-**읽기 전용 맵** `mapOf()` 사용:
+읽기 전용 맵: `mapOf()` 사용
 
 ```kotlin
 val readOnlyJuiceMenu = mapOf("apple" to 100, "kiwi" to 190, "orange" to 100)
 println(readOnlyJuiceMenu) // {apple=100, kiwi=190, orange=100}
 ```
 
-**명시적 타입 선언을 가진 가변 맵:**
+명시적 타입 선언을 가진 가변 맵:
 
 ```kotlin
 val juiceMenu: MutableMap<String, Int> = mutableMapOf("apple" to 100, "kiwi" to 190, "orange" to 100)
 println(juiceMenu) // {apple=100, kiwi=190, orange=100}
 ```
 
-**가변 맵의 읽기 전용 뷰:**
+가변 맵의 읽기 전용 뷰:
 
 ```kotlin
 val juiceMenu: MutableMap<String, Int> = mutableMapOf("apple" to 100, "kiwi" to 190, "orange" to 100)
@@ -1866,7 +1868,7 @@ val juiceMenuLocked: Map<String, Int> = juiceMenu
 
 #### 맵 값 접근
 
-**키와 함께 인덱스 접근 연산자 사용:**
+키와 함께 인덱스 접근 연산자 사용:
 
 ```kotlin
 val readOnlyJuiceMenu = mapOf("apple" to 100, "kiwi" to 190, "orange" to 100)
@@ -1874,7 +1876,7 @@ println("The value of apple juice is: ${readOnlyJuiceMenu["apple"]}")
 // The value of apple juice is: 100
 ```
 
-**존재하지 않는 키에 접근하면 `null` 반환:**
+존재하지 않는 키에 접근하면 `null` 반환:
 
 ```kotlin
 val readOnlyJuiceMenu = mapOf("apple" to 100, "kiwi" to 190, "orange" to 100)
@@ -1884,7 +1886,7 @@ println("The value of pineapple juice is: ${readOnlyJuiceMenu["pineapple"]}")
 
 #### 맵 연산
 
-**인덱스 접근 연산자로 항목 추가:**
+인덱스 접근 연산자로 항목 추가:
 
 ```kotlin
 val juiceMenu: MutableMap<String, Int> = mutableMapOf("apple" to 100, "kiwi" to 190, "orange" to 100)
@@ -1892,7 +1894,7 @@ juiceMenu["coconut"] = 150
 println(juiceMenu) // {apple=100, kiwi=190, orange=100, coconut=150}
 ```
 
-**항목 제거:**
+항목 제거:
 
 ```kotlin
 val juiceMenu: MutableMap<String, Int> = mutableMapOf("apple" to 100, "kiwi" to 190, "orange" to 100)
@@ -1900,21 +1902,21 @@ juiceMenu.remove("orange")
 println(juiceMenu) // {apple=100, kiwi=190}
 ```
 
-**개수 얻기:**
+개수 얻기:
 
 ```kotlin
 val readOnlyJuiceMenu = mapOf("apple" to 100, "kiwi" to 190, "orange" to 100)
 println("This map has ${readOnlyJuiceMenu.count()} key-value pairs") // This map has 3 key-value pairs
 ```
 
-**`.containsKey()`로 키 존재 확인:**
+`.containsKey()`로 키 존재 확인:
 
 ```kotlin
 val readOnlyJuiceMenu = mapOf("apple" to 100, "kiwi" to 190, "orange" to 100)
 println(readOnlyJuiceMenu.containsKey("kiwi")) // true
 ```
 
-**키와 값 프로퍼티 얻기:**
+키와 값 프로퍼티 얻기:
 
 ```kotlin
 val readOnlyJuiceMenu = mapOf("apple" to 100, "kiwi" to 190, "orange" to 100)
@@ -1922,7 +1924,7 @@ println(readOnlyJuiceMenu.keys) // [apple, kiwi, orange]
 println(readOnlyJuiceMenu.values) // [100, 190, 100]
 ```
 
-**`in` 연산자로 키 또는 값 존재 확인:**
+`in` 연산자로 키 또는 값 존재 확인:
 
 ```kotlin
 val readOnlyJuiceMenu = mapOf("apple" to 100, "kiwi" to 190, "orange" to 100)
@@ -1937,7 +1939,7 @@ println(200 in readOnlyJuiceMenu.values) // false
 
 #### 연습 1: 총 숫자 세기
 
-**과제:** 두 리스트의 총 숫자를 세세요.
+과제: 두 리스트의 총 숫자를 세기.
 
 ```kotlin
 // 해답
@@ -1951,7 +1953,7 @@ fun main() {
 
 #### 연습 2: 프로토콜 지원 확인
 
-**과제:** 요청된 프로토콜이 지원되는지 확인하세요 (대소문자 무시).
+과제: 요청된 프로토콜이 지원되는지 확인 (대소문자 무시).
 
 ```kotlin
 // 해답
@@ -1963,11 +1965,11 @@ fun main() {
 }
 ```
 
-**힌트:** 확인 전에 `.uppercase()` 함수를 사용하여 대문자로 변환하세요.
+힌트: 확인 전에 `.uppercase()` 함수를 사용하여 대문자로 변환.
 
 #### 연습 3: 숫자를 단어로 매핑
 
-**과제:** 숫자 1-3을 그 철자에 연관시키는 맵을 정의하세요.
+과제: 숫자 1-3을 그 철자에 연관시키는 맵을 정의.
 
 ```kotlin
 // 해답
@@ -1982,10 +1984,10 @@ fun main() {
 
 ### 핵심 개념
 
-- **확장 함수:** 점 표기법을 사용하여 객체에서 호출되는 함수 (예: `.first()`, `.count()`)
-- **프로퍼티:** 점 표기법을 사용하여 객체에서 접근되는 데이터 (예: `.keys`, `.values`)
-- **타입 추론:** Kotlin이 컬렉션 요소 타입을 자동으로 추론
-- **null 안전성:** 맵에서 존재하지 않는 키에 접근하면 `null` 반환
+- 확장 함수: 점 표기법을 사용하여 객체에서 호출되는 함수 (예: `.first()`, `.count()`)
+- 프로퍼티: 점 표기법을 사용하여 객체에서 접근되는 데이터 (예: `.keys`, `.values`)
+- 타입 추론: Kotlin이 컬렉션 요소 타입을 자동으로 추론
+- null 안전성: 맵에서 존재하지 않는 키에 접근하면 `null` 반환
 
 ---
 
@@ -1997,33 +1999,33 @@ fun main() {
 
 ## 콘솔 앱 만들기 - Kotlin 튜토리얼
 
-> **원문:** https://kotlinlang.org/docs/jvm-get-started.html
+> 원문: https://kotlinlang.org/docs/jvm-get-started.html
 
-이 튜토리얼은 IntelliJ IDEA와 Kotlin을 사용하여 콘솔 애플리케이션을 만드는 방법을 안내합니다.
+IntelliJ IDEA와 Kotlin을 사용하여 콘솔 애플리케이션을 만드는 방법을 안내하는 튜토리얼.
 
 ### 사전 준비
 
-- 최신 버전의 [IntelliJ IDEA](https://www.jetbrains.com/idea/download/index.html)를 다운로드하고 설치하세요
+- 최신 버전의 [IntelliJ IDEA](https://www.jetbrains.com/idea/download/index.html)를 다운로드하고 설치
 
 ### 프로젝트 생성
 
-1. **새 프로젝트 대화상자 열기**: File | New | Project
-2. 왼쪽 목록에서 **Kotlin** 선택
-3. **프로젝트 설정 구성**:
+1. 새 프로젝트 대화상자 열기: File | New | Project
+2. 왼쪽 목록에서 Kotlin 선택
+3. 프로젝트 설정 구성
    - 프로젝트 이름 지정 및 위치 설정
    - 버전 관리를 위해 선택적으로 "Create Git repository" 선택
-4. **빌드 시스템 선택**:
-   - **IntelliJ** (네이티브, 추가 다운로드 불필요)
-   - **Maven 또는 Gradle** (복잡한 프로젝트용)
+4. 빌드 시스템 선택
+   - IntelliJ (네이티브, 추가 다운로드 불필요)
+   - Maven 또는 Gradle (복잡한 프로젝트용)
    - Gradle의 경우: 빌드 스크립트 언어로 Kotlin 또는 Groovy 선택
-5. **JDK 선택**:
+5. JDK 선택
    - 설치된 JDK 목록에서 선택
    - 또는 "Add JDK"를 선택하여 경로 지정
    - 또는 설치되어 있지 않은 경우 "Download JDK" 선택
-6. **샘플 코드 활성화** (선택 사항):
+6. 샘플 코드 활성화 (선택 사항)
    - "Add sample code"는 "Hello World!" 예제를 생성
    - "Generate code with onboarding tips"는 유용한 주석을 추가
-7. **Create 클릭**
+7. Create 클릭
 
 #### Gradle 구성 (선택한 경우)
 
@@ -2036,7 +2038,7 @@ plugins {
 
 ### 애플리케이션 생성
 
-`src/main/kotlin`에서 `Main.kt`를 열고 사용자 입력을 요청하도록 수정합니다:
+`src/main/kotlin`에서 `Main.kt`를 열고 사용자 입력을 요청하도록 수정:
 
 ```kotlin
 fun main() {
@@ -2046,19 +2048,19 @@ fun main() {
 }
 ```
 
-**핵심 개념**:
-- `readln()` 함수는 사용자 입력을 읽습니다
-- 문자열 템플릿은 보간을 위해 `$variableName` 구문을 사용합니다
+핵심 개념:
+- `readln()` 함수는 사용자 입력을 읽음
+- 문자열 템플릿은 보간을 위해 `$variableName` 구문을 사용함
 
 ### 애플리케이션 실행
 
-1. 거터에서 녹색 **Run** 아이콘을 클릭합니다
-2. **Run 'MainKt'** 항목을 선택합니다
-3. Run 도구 창에서 출력을 확인합니다
-4. 프롬프트가 표시되면 이름을 입력합니다
+1. 거터에서 녹색 Run 아이콘을 클릭
+2. Run 'MainKt' 항목을 선택
+3. Run 도구 창에서 출력을 확인
+4. 프롬프트가 표시되면 이름을 입력
 
 ### 다음 단계
 
-Kotlin 학습을 계속하세요:
+Kotlin 학습을 계속:
 - [Kotlin 투어](kotlin-tour-welcome.html) 참여하기
 - [JetBrains Academy 플러그인](https://plugins.jetbrains.com/plugin/10081-jetbrains-academy)을 설치하고 [Kotlin Koans 과정](https://plugins.jetbrains.com/plugin/10081-jetbrains-academy/docs/learner-start-guide.html?section=Kotlin%20Koans) 완료하기

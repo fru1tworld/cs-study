@@ -23,11 +23,11 @@
 
 #### 목적
 
-여러 Alloy 인스턴스를 클러스터로 묶어:
+여러 Alloy 인스턴스를 클러스터로 묶어 아래 기능 확보.
 
-- **자동 워크로드 분산**: 스크래핑 타겟 자동 분배
-- **고가용성**: 인스턴스 장애 시 다른 인스턴스가 처리
-- **수평 확장**: 인스턴스 추가로 처리량 증가
+- 자동 워크로드 분산: 스크래핑 타겟 자동 분배
+- 고가용성: 인스턴스 장애 시 다른 인스턴스가 처리
+- 수평 확장: 인스턴스 추가로 처리량 증가
 
 #### 작동 원리
 
@@ -38,13 +38,13 @@
 
 #### 적합한 컴포넌트
 
-- 스크래핑 컴포넌트 (`prometheus.scrape`, `pyroscope.scrape` 등)
+- 스크래핑 컴포넌트(`prometheus.scrape`, `pyroscope.scrape` 등)
 - 디스커버리 결과 분배가 의미 있는 워크로드
 
 #### 부적합한 컴포넌트
 
-- Receiver 컴포넌트 (모든 노드가 받아야 함)
-- File 기반 (각 노드의 파일은 다름)
+- Receiver 컴포넌트 → 모든 노드가 받아야 함
+- File 기반 → 각 노드의 파일이 다름
 
 ---
 
@@ -72,17 +72,15 @@ CUSTOM_ARGS="--cluster.enabled=true \
 
 #### 주요 플래그
 
-| 플래그 | 설명 |
-|--------|------|
-| `--cluster.enabled` | 클러스터링 활성화 |
-| `--cluster.name` | 클러스터 이름 (다른 클러스터와 격리) |
-| `--cluster.join-addresses` | 가입할 노드 주소들 |
-| `--cluster.advertise-address` | 다른 노드에 알릴 주소 |
-| `--cluster.advertise-interfaces` | 자동으로 광고 주소 결정할 NIC |
-| `--cluster.discover-peers` | 자동 피어 디스커버리 |
-| `--cluster.rejoin-interval` | 재가입 시도 주기 |
-| `--cluster.max-join-peers` | 한 번에 가입 시도할 피어 수 |
-| `--cluster.tls-*` | gossip TLS |
+- `--cluster.enabled`: 클러스터링 활성화
+- `--cluster.name`: 클러스터 이름, 다른 클러스터와 격리 용도
+- `--cluster.join-addresses`: 가입할 노드 주소들
+- `--cluster.advertise-address`: 다른 노드에 알릴 주소
+- `--cluster.advertise-interfaces`: 자동으로 광고 주소 결정할 NIC
+- `--cluster.discover-peers`: 자동 피어 디스커버리
+- `--cluster.rejoin-interval`: 재가입 시도 주기
+- `--cluster.max-join-peers`: 한 번에 가입 시도할 피어 수
+- `--cluster.tls-*`: gossip TLS
 
 ---
 
@@ -112,7 +110,7 @@ controller:
   replicas: 3
 ```
 
-Helm 차트가 Headless Service 생성과 피어 발견 설정을 자동으로 처리한다.
+Helm 차트가 Headless Service 생성과 피어 발견 설정을 자동으로 처리함.
 
 #### DNS
 
@@ -120,7 +118,7 @@ Helm 차트가 Headless Service 생성과 피어 발견 설정을 자동으로 �
 --cluster.discover-peers="provider=dns,name=alloy.example.com,port=12345"
 ```
 
-DNS A 레코드의 모든 IP를 피어로 등록한다.
+DNS A 레코드의 모든 IP를 피어로 등록함.
 
 #### 다중 디스커버리
 
@@ -145,7 +143,7 @@ prometheus.scrape "kubernetes" {
 }
 ```
 
-각 타겟이 일관된 해싱으로 단일 노드에만 할당된다. N개 노드 기준으로 각 노드가 전체 타겟의 ~1/N을 처리한다.
+각 타겟이 일관된 해싱으로 단일 노드에만 할당됨. N개 노드 기준으로 각 노드가 전체 타겟의 ~1/N을 처리함.
 
 #### pyroscope.scrape
 
@@ -284,7 +282,7 @@ sum by (instance) (prometheus_sd_discovered_targets)
 
 #### 모듈이란?
 
-재사용 가능한 Alloy 구성 단위로, 매개변수와 출력을 정의해 라이브러리처럼 활용한다.
+재사용 가능한 Alloy 구성 단위 → 매개변수와 출력을 정의해 라이브러리처럼 활용함.
 
 #### 모듈 구조
 
@@ -394,7 +392,7 @@ loki.source.file "app" {
 
 #### `declare` 블록 사용
 
-같은 파일 안에서 모듈을 정의할 수 있다:
+같은 파일 안에서 모듈을 정의할 수 있음.
 
 ```alloy
 declare "log_to_loki" {
@@ -430,13 +428,11 @@ loki.source.file "app" {
 
 [grafana/alloy-modules](https://github.com/grafana/alloy-modules) 에서 다양한 공식 모듈 제공.
 
-| 모듈 | 용도 |
-|------|------|
-| `kubernetes/logs` | K8s Pod 로그 수집 표준 파이프라인 |
-| `kubernetes/metrics` | K8s 메트릭 수집 |
-| `kubernetes/events` | K8s 이벤트 수집 |
-| `node-exporter` | Node Exporter 통합 |
-| `cadvisor` | cAdvisor 통합 |
+- `kubernetes/logs`: K8s Pod 로그 수집 표준 파이프라인
+- `kubernetes/metrics`: K8s 메트릭 수집
+- `kubernetes/events`: K8s 이벤트 수집
+- `node-exporter`: Node Exporter 통합
+- `cadvisor`: cAdvisor 통합
 
 #### Git 임포트로 사용
 
@@ -455,7 +451,7 @@ modules.kubernetes.logs.pods "default" {
 
 #### 디렉토리 임포트
 
-여러 모듈을 한 번에 임포트한다:
+여러 모듈을 한 번에 임포트함.
 
 ```alloy
 import.git "k8s_modules" {
@@ -511,10 +507,10 @@ prometheus.remote_write "mimir" {
 }
 ```
 
-이 조합으로:
-- **모듈로 코드 재사용**
-- **클러스터링으로 워크로드 분산**
-- **간결한 메인 구성 파일**
+이 조합으로 다음 확보.
+- 모듈로 코드 재사용
+- 클러스터링으로 워크로드 분산
+- 간결한 메인 구성 파일
 
 ---
 
@@ -539,16 +535,26 @@ prometheus.remote_write "mimir" {
 
 ### 개요
 
-Grafana는 다음 도구들에서 Alloy로의 마이그레이션을 권장합니다.
+Grafana는 다음 도구들에서 Alloy로의 마이그레이션을 권장함.
 
-| 원본 | 마이그레이션 대상 | 자동 변환 도구 |
-|------|----------------|--------------|
-| Promtail | Loki 로그 수집 | `alloy convert --source-format=promtail` |
-| Prometheus | 메트릭 수집 | `alloy convert --source-format=prometheus` |
-| Grafana Agent Static | 통합 수집 (Deprecated) | `alloy convert --source-format=static` |
-| Grafana Agent Flow | 통합 수집 (Deprecated) | 수동 마이그레이션 (구문 호환) |
-| Grafana Agent Operator | K8s CR 기반 | 수동 마이그레이션 |
-| OpenTelemetry Collector | OTel 표준 | `alloy convert --source-format=otelcol` |
+- Promtail
+  - 마이그레이션 대상: Loki 로그 수집
+  - 자동 변환 도구: `alloy convert --source-format=promtail`
+- Prometheus
+  - 마이그레이션 대상: 메트릭 수집
+  - 자동 변환 도구: `alloy convert --source-format=prometheus`
+- Grafana Agent Static
+  - 마이그레이션 대상: 통합 수집(Deprecated)
+  - 자동 변환 도구: `alloy convert --source-format=static`
+- Grafana Agent Flow
+  - 마이그레이션 대상: 통합 수집(Deprecated)
+  - 자동 변환 도구: 수동 마이그레이션(구문 호환)
+- Grafana Agent Operator
+  - 마이그레이션 대상: K8s CR 기반
+  - 자동 변환 도구: 수동 마이그레이션
+- OpenTelemetry Collector
+  - 마이그레이션 대상: OTel 표준
+  - 자동 변환 도구: `alloy convert --source-format=otelcol`
 
 #### 자동 변환 명령어 기본 형식
 
@@ -746,8 +752,8 @@ prometheus.remote_write "default" {
 
 #### 주의사항
 
-- Service Discovery(`kubernetes_sd_configs`, `consul_sd_configs` 등)는 `discovery.kubernetes`, `discovery.consul` 등으로 자동 변환됩니다.
-- Recording Rules / Alerting Rules는 별도로 처리해야 합니다(Mimir Ruler에 등록).
+- Service Discovery(`kubernetes_sd_configs`, `consul_sd_configs` 등) → `discovery.kubernetes`, `discovery.consul` 등으로 자동 변환됨.
+- Recording Rules / Alerting Rules는 별도 처리 필요(Mimir Ruler에 등록).
 
 ---
 
@@ -804,7 +810,7 @@ alloy convert \
 
 #### 결과
 
-`metrics`, `logs`, `integrations` 섹션이 각각 Alloy 컴포넌트로 변환됩니다.
+`metrics`, `logs`, `integrations` 섹션이 각각 Alloy 컴포넌트로 변환됨.
 
 ---
 
@@ -812,7 +818,7 @@ alloy convert \
 
 #### Flow는 Alloy의 전신
 
-Grafana Agent Flow의 River 구문은 Alloy 구문과 거의 동일합니다.
+Grafana Agent Flow의 River 구문은 Alloy 구문과 거의 동일함.
 
 #### Flow 구성 예시 (River)
 
@@ -831,7 +837,7 @@ prometheus.remote_write "mimir" {
 
 #### 마이그레이션 방법
 
-Flow → Alloy는 자동 변환 도구(`alloy convert`)를 지원하지 않습니다. 공식 가이드는 수동 마이그레이션을 권장하며, 구체적인 절차는 다음과 같습니다.
+Flow → Alloy는 자동 변환 도구(`alloy convert`) 미지원. 공식 가이드는 수동 마이그레이션을 권장하며, 구체적인 절차는 다음과 같음.
 
 1. 지원이 중단된 컴포넌트를 대체 컴포넌트로 교체
 2. 기본 구성으로 Alloy 배포
@@ -856,7 +862,7 @@ Flow → Alloy는 자동 변환 도구(`alloy convert`)를 지원하지 않습�
   }
 ```
 
-코드 자체는 대부분 그대로 동작합니다.
+코드 자체는 대부분 그대로 동작함.
 
 ---
 
@@ -873,7 +879,7 @@ Kubernetes Custom Resources를 사용:
 
 #### 마이그레이션 방법
 
-공식 권장 방식은 `grafana/alloy` Helm Chart를 사용한 직접 배포입니다. Alloy Operator는 별도로 제공되지 않습니다.
+공식 권장 방식은 `grafana/alloy` Helm Chart를 사용한 직접 배포. Alloy Operator는 별도로 제공되지 않음.
 
 ```bash
 helm install alloy grafana/alloy \
@@ -881,17 +887,15 @@ helm install alloy grafana/alloy \
   --values values.yaml
 ```
 
-`values.yaml` 또는 ConfigMap에 Alloy 구성을 작성합니다.
+`values.yaml` 또는 ConfigMap에 Alloy 구성을 작성함.
 
 #### CR → Alloy 매핑
 
-| Operator CR | Alloy 컴포넌트 |
-|------------|---------------|
-| `GrafanaAgent` (메트릭) | `prometheus.scrape` + `prometheus.remote_write` |
-| `MetricsInstance` | `prometheus.scrape` 인스턴스 |
-| `LogsInstance` | `loki.source.*` + `loki.write` |
-| `PodMonitor` / `ServiceMonitor` | `discovery.kubernetes` + `discovery.relabel` |
-| `Probe` (Blackbox) | `prometheus.exporter.blackbox` |
+- `GrafanaAgent`(메트릭) → `prometheus.scrape` + `prometheus.remote_write`
+- `MetricsInstance` → `prometheus.scrape` 인스턴스
+- `LogsInstance` → `loki.source.*` + `loki.write`
+- `PodMonitor` / `ServiceMonitor` → `discovery.kubernetes` + `discovery.relabel`
+- `Probe`(Blackbox) → `prometheus.exporter.blackbox`
 
 ---
 
@@ -968,20 +972,18 @@ otelcol.exporter.otlp "default" {
 
 #### 매핑 규칙
 
-| OTel YAML | Alloy |
-|-----------|-------|
-| `receivers.<type>` | `otelcol.receiver.<type>` |
-| `processors.<type>` | `otelcol.processor.<type>` |
-| `exporters.<type>` | `otelcol.exporter.<type>` |
-| `extensions.<type>` | `otelcol.extension.<type>` |
-| `connectors.<type>` | `otelcol.connector.<type>` |
-| `service.pipelines` | 컴포넌트 간 `output` / `input` 연결 |
+- `receivers.<type>` → `otelcol.receiver.<type>`
+- `processors.<type>` → `otelcol.processor.<type>`
+- `exporters.<type>` → `otelcol.exporter.<type>`
+- `extensions.<type>` → `otelcol.extension.<type>`
+- `connectors.<type>` → `otelcol.connector.<type>`
+- `service.pipelines` → 컴포넌트 간 `output` / `input` 연결
 
 #### 주의사항
 
-- 일부 OTel 컴포넌트는 Alloy에서 다른 이름을 사용합니다.
-- 변환 후 반드시 검증해야 합니다.
-- 커스텀 프로세서는 수동으로 변환해야 합니다.
+- 일부 OTel 컴포넌트는 Alloy에서 다른 이름 사용.
+- 변환 후 반드시 검증 필요.
+- 커스텀 프로세서는 수동 변환 필요.
 
 ---
 
@@ -1011,7 +1013,7 @@ alloy convert \
   prometheus.yml
 ```
 
-`conversion-report.txt`에서 변환되지 않은 항목이나 주의사항을 확인합니다.
+`conversion-report.txt`에서 변환되지 않은 항목이나 주의사항을 확인함.
 
 #### 3. 검증
 
@@ -1028,7 +1030,7 @@ alloy run --server.http.listen-addr=:0 alloy-config.alloy
 
 #### 4. 메트릭/로그 비교
 
-마이그레이션 전후에 동일한 메트릭/로그가 수집되는지 확인합니다.
+마이그레이션 전후에 동일한 메트릭/로그가 수집되는지 확인함.
 
 ```promql
 # 메트릭 누락 확인
@@ -1040,11 +1042,11 @@ group(metric_name) by (instance, job) == group(metric_name) by (instance, job)
 
 #### 5. Helm Chart 사용
 
-새로 시작하는 경우, 공식 Helm Chart의 `values.yaml` 예시를 참고하여 처음부터 Alloy 모범 사례를 적용할 수 있습니다.
+새로 시작하는 경우, 공식 Helm Chart의 `values.yaml` 예시를 참고하여 처음부터 Alloy 모범 사례 적용 가능.
 
 #### 6. 모듈 활용
 
-[grafana/alloy-modules](https://github.com/grafana/alloy-modules)의 표준 모듈을 활용하면 구성을 단순화할 수 있습니다.
+[grafana/alloy-modules](https://github.com/grafana/alloy-modules)의 표준 모듈을 활용하면 구성 단순화 가능.
 
 ```alloy
 import.git "modules" {

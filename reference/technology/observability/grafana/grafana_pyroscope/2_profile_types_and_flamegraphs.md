@@ -19,22 +19,22 @@
 
 ### 프로파일이란
 
-**프로파일**(Profile)은 짧은 시간 동안 애플리케이션이 어디서 어떻게 자원을 사용했는지를 **콜 스택(call stack)** 의 집합으로 표현한 데이터입니다.
+프로파일(Profile)은 짧은 시간 동안 애플리케이션이 어디서 어떻게 자원을 사용했는지를 콜 스택(call stack)의 집합으로 표현한 데이터임.
 
-기본 단위는 다음과 같습니다.
+기본 단위는 다음과 같음.
 
 - **샘플(Sample)**: 어떤 시점에 캡처된 콜 스택 + 그 시점의 측정 값(예: CPU 시간, 할당된 바이트)
 - **스택 트레이스(Stack Trace)**: `func1 -> func2 -> func3` 형태의 호출 체인
 - **위치(Location)**: 함수 ID, 라인 번호, 인라인 정보
 - **함수(Function)**: 함수 이름, 파일명, 시작 라인
 
-샘플들의 집합을 시각화한 것이 **플레임 그래프(Flame Graph)** 입니다.
+샘플들의 집합을 시각화한 것이 플레임 그래프(Flame Graph)임.
 
 ---
 
 ### pprof 표준 형식
 
-Pyroscope는 [Google pprof](https://github.com/google/pprof) 의 protobuf 기반 형식을 표준으로 채택했습니다.
+Pyroscope는 [Google pprof](https://github.com/google/pprof)의 protobuf 기반 형식을 표준으로 채택함.
 
 #### 핵심 메시지 구조
 
@@ -61,7 +61,7 @@ Profile {
 
 #### 라벨 (Labels)
 
-Pyroscope는 pprof의 표준 필드에 추가로 **외부 라벨**(external labels)을 사용해 시리즈를 구분합니다.
+Pyroscope는 pprof의 표준 필드에 추가로 외부 라벨(external labels)을 사용해 시리즈를 구분함.
 
 ```
 service_name="checkout"
@@ -70,7 +70,7 @@ cluster="us-east-1"
 host="checkout-7d8f-abc"
 ```
 
-이 라벨은 LabelSelector로 쿼리에 사용됩니다.
+이 라벨은 LabelSelector로 쿼리에 사용됨.
 
 ---
 
@@ -94,7 +94,7 @@ function: 27.3% CPU
 
 #### Memory 프로파일 (Heap)
 
-Go의 분류로 4가지가 있고, 다른 언어도 유사합니다.
+Go의 분류로 4가지가 있고, 다른 언어도 유사함.
 
 ##### inuse_space
 
@@ -141,14 +141,12 @@ Go의 분류로 4가지가 있고, 다른 언어도 유사합니다.
 
 #### 기타
 
-| 타입 | 설명 |
-|------|------|
-| `process_cpu` | OS 관점 프로세스 CPU 사용 (eBPF 등) |
-| `goroutine` | Go 활성 고루틴 |
-| `thread_create` | 스레드 생성 위치 (Go) |
-| `exception_samples` | 예외 발생 위치 (.NET 등) |
-| `lock` | Java JVM 락 컨텐션 |
-| `live` | 살아있는 객체 (Java JFR 등) |
+- `process_cpu`: OS 관점 프로세스 CPU 사용(eBPF 등)
+- `goroutine`: Go 활성 고루틴
+- `thread_create`: 스레드 생성 위치(Go)
+- `exception_samples`: 예외 발생 위치(.NET 등)
+- `lock`: Java JVM 락 컨텐션
+- `live`: 살아있는 객체(Java JFR 등)
 
 ---
 
@@ -170,22 +168,20 @@ Go의 분류로 4가지가 있고, 다른 언어도 유사합니다.
 
 #### Pyroscope의 선택
 
-Pyroscope는 **샘플링 기반 프로파일러를 권장** 합니다. 모든 공식 SDK와 eBPF 통합은 샘플링 방식입니다. 이는 "항상 켜둘 수 있는" 연속 프로파일링 철학과 일치합니다.
+Pyroscope는 샘플링 기반 프로파일러를 권장함. 모든 공식 SDK와 eBPF 통합은 샘플링 방식임. 이는 "항상 켜둘 수 있는" 연속 프로파일링 철학과 일치함.
 
 ---
 
 ### 언어별 지원 매트릭스
 
-| 언어 | CPU | Heap | Goroutines | Mutex/Block | Wall | 비고 |
-|------|-----|------|------------|-------------|------|------|
-| Go | ✅ | ✅ | ✅ | ✅ | - | 표준 `runtime/pprof` 사용 |
-| Java | ✅ | ✅ (alloc/inuse) | - | ✅ (lock) | ✅ | async-profiler 기반 |
-| Python | ✅ | - | - | - | ✅ | py-spy / pyroscope SDK |
-| Ruby | ✅ | - | - | - | - | rbspy 기반 |
-| Node.js | ✅ | ✅ | - | - | ✅ | V8 inspector |
-| .NET | ✅ | ✅ | - | ✅ | ✅ | dotnet diagnostics |
-| Rust | ✅ | - | - | - | - | pprof-rs |
-| eBPF | ✅ (process_cpu) | - | - | - | - | 무계측, 커널 레벨 |
+- Go: CPU 지원 · Heap 지원 · Goroutines 지원 · Mutex/Block 지원 · Wall 미지원 · 비고 표준 `runtime/pprof` 사용
+- Java: CPU 지원 · Heap 지원(alloc/inuse) · Goroutines 미지원 · Mutex/Block 지원(lock) · Wall 지원 · 비고 async-profiler 기반
+- Python: CPU 지원 · Heap 미지원 · Goroutines 미지원 · Mutex/Block 미지원 · Wall 지원 · 비고 py-spy / pyroscope SDK
+- Ruby: CPU 지원 · Heap 미지원 · Goroutines 미지원 · Mutex/Block 미지원 · Wall 미지원 · 비고 rbspy 기반
+- Node.js: CPU 지원 · Heap 지원 · Goroutines 미지원 · Mutex/Block 미지원 · Wall 지원 · 비고 V8 inspector
+- .NET: CPU 지원 · Heap 지원 · Goroutines 미지원 · Mutex/Block 지원 · Wall 지원 · 비고 dotnet diagnostics
+- Rust: CPU 지원 · Heap 미지원 · Goroutines 미지원 · Mutex/Block 미지원 · Wall 미지원 · 비고 pprof-rs
+- eBPF: CPU 지원(process_cpu) · Heap 미지원 · Goroutines 미지원 · Mutex/Block 미지원 · Wall 미지원 · 비고 무계측, 커널 레벨
 
 ---
 
@@ -251,7 +247,7 @@ Pyroscope는 **샘플링 기반 프로파일러를 권장** 합니다. 모든 �
 
 ### Flame Graph란
 
-**Flame Graph**는 Brendan Gregg이 2011년에 제안한 시각화 기법으로, 프로파일에 포함된 **수많은 콜 스택의 집합**을 한눈에 보여줍니다.
+Flame Graph는 Brendan Gregg이 2011년에 제안한 시각화 기법으로, 프로파일에 포함된 수많은 콜 스택의 집합을 한눈에 보여줌.
 
 ```
 [━━━━━━━━━━━━━━━━━━ root ━━━━━━━━━━━━━━━━━━]
@@ -264,7 +260,7 @@ Pyroscope는 **샘플링 기반 프로파일러를 권장** 합니다. 모든 �
 - **높이(세로)**: 콜 스택 깊이
 - **색깔**: 정보 없음 (대비를 위한 시각적 구분만)
 
-너비가 넓은 함수가 **비싼 함수**입니다.
+너비가 넓은 함수가 비싼 함수임.
 
 ---
 
@@ -288,28 +284,26 @@ Pyroscope는 **샘플링 기반 프로파일러를 권장** 합니다. 모든 �
 
 #### 줌(Zoom)
 
-박스를 클릭하면 그 박스 기준으로 100%로 확대됩니다. 깊은 스택을 탐색할 때 유용합니다.
+박스를 클릭하면 그 박스 기준으로 100%로 확대됨. 깊은 스택을 탐색할 때 유용함.
 
 #### 검색(Search)
 
-함수명/파일명으로 검색하면 매칭되는 박스가 강조됩니다. 특정 모듈의 비용 비중을 빠르게 파악할 수 있습니다.
+함수명/파일명으로 검색하면 매칭되는 박스가 강조됨. 특정 모듈의 비용 비중을 빠르게 파악 가능.
 
 ---
 
 ### 표현 방향: Flame vs Icicle
 
-| 모드 | 방향 | 특징 |
-|------|------|------|
-| **Flame** | 위로 자라는 형태 (root 위) | 전통적인 표현, 잎(leaf)이 위 |
-| **Icicle** | 아래로 자라는 형태 (root 아래) | 가독성 ↑, 깊은 스택에 유리 |
+- Flame: 방향 위로 자라는 형태(root 위) · 특징 전통적인 표현, 잎(leaf)이 위
+- Icicle: 방향 아래로 자라는 형태(root 아래) · 특징 가독성 향상, 깊은 스택에 유리
 
-Pyroscope UI는 두 모드 모두 지원하며, Icicle이 기본인 경우가 많습니다.
+Pyroscope UI는 두 모드 모두 지원하며, Icicle이 기본인 경우가 많음.
 
 ---
 
 ### Diff 뷰 (비교)
 
-**두 프로파일을 색상으로 비교**하여 어디서 비용이 늘었고 줄었는지 보여줍니다.
+두 프로파일을 색상으로 비교해 어디서 비용이 늘었고 줄었는지 보여줌.
 
 #### 사용 시나리오
 
@@ -344,7 +338,7 @@ service_name="checkout", deployment="v1.1"
 
 ### Sandwich 뷰
 
-특정 함수에 집중하여 **호출자**(callers)와 **피호출자**(callees)를 한 화면에 보여줍니다.
+특정 함수에 집중해 호출자(callers)와 피호출자(callees)를 한 화면에 보여줌.
 
 ```
 ┌──────── 호출자(Callers) - Reverse ────────┐
@@ -376,24 +370,22 @@ service_name="checkout", deployment="v1.1"
 
 #### Table 뷰
 
-행은 함수, 열은 Self/Total로 구성된 정렬 가능한 표.
+행은 함수, 열은 Self/Total로 구성된 정렬 가능한 목록.
 
-| 함수 | Self | Total | Self % | Total % |
-|------|------|-------|--------|---------|
-| `regexp.compile` | 4.2s | 4.2s | 22% | 22% |
-| `json.Unmarshal` | 1.1s | 3.8s | 6% | 19% |
-| `runtime.mallocgc` | 2.3s | 2.3s | 12% | 12% |
+- `regexp.compile`: Self 4.2s · Total 4.2s · Self % 22% · Total % 22%
+- `json.Unmarshal`: Self 1.1s · Total 3.8s · Self % 6% · Total % 19%
+- `runtime.mallocgc`: Self 2.3s · Total 2.3s · Self % 12% · Total % 12%
 
 - **Self 정렬**: 진짜 비싼 leaf 함수 발견
 - **Total 정렬**: 큰 그림(전체 비용 분배) 파악
 
 #### Tree 뷰
 
-콜 스택을 트리(외곽선) 형태로 표현. 각 노드 옆에 비중이 표시되어 깊이별 분포를 따라가기 좋습니다.
+콜 스택을 트리(외곽선) 형태로 표현. 각 노드 옆에 비중이 표시되어 깊이별 분포를 따라가기 좋음.
 
 #### Top 뷰
 
-가장 비싼 함수 상위 N개 리스트. 빠른 핫스팟 식별에 유용합니다.
+가장 비싼 함수 상위 N개 리스트. 빠른 핫스팟 식별에 유용함.
 
 ---
 

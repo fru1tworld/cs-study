@@ -2,17 +2,17 @@
 
 ## Gradle 중급 튜토리얼 1편: 프로젝트 초기화와 애플리케이션 실행
 
-> **원문:** https://docs.gradle.org/current/userguide/part1_gradle_init_project.html
+> 원문: https://docs.gradle.org/current/userguide/part1_gradle_init_project.html
 
 ### 개요
 
-초급 튜토리얼에서 다룬 `gradle init`과 디렉터리 구조를 한 단계 더 깊이 파고들어, 생성된 코드를 실제로 실행·테스트·패키징까지 해보는 편입니다. 이 문서를 마치면 다음을 할 수 있게 됩니다.
+초급 튜토리얼에서 다룬 `gradle init`과 디렉터리 구조를 한 단계 더 깊이 파고들어, 생성된 코드를 실제로 실행·테스트·패키징까지 해보는 편임. 이 문서를 마치면 다음이 가능해짐.
 
-- Java 애플리케이션 프로젝트를 초기화
-- 생성된 디렉터리 구조와 소스 코드를 읽어내기
-- `./gradlew run`으로 애플리케이션을 실행
+- Java 애플리케이션 프로젝트 초기화
+- 생성된 디렉터리 구조와 소스 코드 읽어내기
+- `./gradlew run`으로 애플리케이션 실행
 - `--scan` 옵션으로 Build Scan을 생성해 빌드 내역을 시각적으로 확인
-- `./gradlew build`로 실행 가능한 배포 아카이브(zip/tar)를 만들기
+- `./gradlew build`로 실행 가능한 배포 아카이브(zip/tar) 생성
 
 ### 사전 준비물
 
@@ -28,7 +28,7 @@ $ gradle init --type java-application --dsl kotlin
 ```
 
 - `--dsl kotlin` 대신 `--dsl groovy`를 쓰면 Groovy DSL로 생성됨
-- 이어지는 대화형 질문은 기본값을 그대로 선택해도 무방
+- 이어지는 대화형 질문은 기본값을 그대로 선택해도 됨
 
 ### 2) 생성된 디렉터리 구조
 
@@ -51,14 +51,14 @@ authoring-tutorial/
 
 ### 3) 설정 파일 다시 보기
 
-`settings.gradle.kts`는 빌드 이름과 서브프로젝트 목록만 선언하는 최소 구성입니다.
+`settings.gradle.kts`는 빌드 이름과 서브프로젝트 목록만 선언하는 최소 구성임.
 
 ```kotlin
 rootProject.name = "authoring-tutorial"
 include("app")
 ```
 
-`app/build.gradle.kts`는 실제 빌드 동작을 정의합니다.
+`app/build.gradle.kts`는 실제 빌드 동작을 정의함.
 
 ```kotlin
 plugins { id("application") }
@@ -90,13 +90,13 @@ application {
 $ ./gradlew run
 ```
 
-`application` 플러그인이 추가한 `run` 태스크가 `application.mainClass`로 지정된 클래스의 `main()`을 호출합니다. 콘솔에는 실행된 태스크 목록과 함께 `Hello World!` 같은 출력, 이어서 `BUILD SUCCESSFUL` 메시지가 나타납니다.
+`application` 플러그인이 추가한 `run` 태스크가 `application.mainClass`로 지정된 클래스의 `main()`을 호출함. 콘솔에는 실행된 태스크 목록과 함께 `Hello World!` 같은 출력, 이어서 `BUILD SUCCESSFUL` 메시지가 나타남.
 
 ### 핵심 포인트: `build`가 실제로 하는 일
 
-- `./gradlew build`를 실행하면 컴파일 → 테스트 → 아카이브 생성까지 한 번에 이어지는 태스크 체인이 동작합니다.
-- 대표적으로 `compileJava → classes → jar → startScripts → distZip/distTar → assemble`, `compileTestJava → test → check` 흐름을 거쳐 최종적으로 `build`가 완료됩니다.
-- 즉 `build`는 단일 동작이 아니라, 의존 관계로 연결된 여러 태스크가 순서대로 실행된 결과입니다.
+- `./gradlew build`를 실행하면 컴파일 → 테스트 → 아카이브 생성까지 한 번에 이어지는 태스크 체인이 동작함
+- 대표적으로 `compileJava → classes → jar → startScripts → distZip/distTar → assemble`, `compileTestJava → test → check` 흐름을 거쳐 최종적으로 `build`가 완료됨
+- 즉 `build`는 단일 동작이 아니라, 의존 관계로 연결된 여러 태스크가 순서대로 실행된 결과임
 
 ### 6) 배포 아카이브 만들기
 
@@ -104,7 +104,7 @@ $ ./gradlew run
 $ ./gradlew build
 ```
 
-빌드가 끝나면 `app/build/distributions/` 아래에 `app.zip`, `app.tar` 두 종류의 아카이브가 생성됩니다. 각 아카이브에는 애플리케이션 실행 스크립트와 필요한 의존성 JAR이 함께 담겨 있어, 압축을 풀기만 하면 다른 환경에서도 바로 실행할 수 있습니다.
+빌드가 끝나면 `app/build/distributions/` 아래에 `app.zip`, `app.tar` 두 종류의 아카이브가 생성됨. 각 아카이브에는 애플리케이션 실행 스크립트와 필요한 의존성 JAR이 함께 담겨 있어, 압축을 풀기만 하면 다른 환경에서도 바로 실행 가능.
 
 ### 7) Build Scan으로 빌드 들여다보기
 
@@ -112,22 +112,22 @@ $ ./gradlew build
 $ ./gradlew build --scan
 ```
 
-- 최초 실행 시 Gradle 이용 약관 동의를 물어보며, 동의하면 `scans.gradle.com`에 업로드된 리포트 링크가 출력됩니다.
-- 리포트에는 실행된 태스크 목록, 다운로드된 의존성, 각 단계별 소요 시간 등 빌드 전반의 성능·구성 정보가 시각화되어 있어, 로컬 로그만으로 파악하기 어려운 병목이나 캐시 적중 여부를 확인하는 데 유용합니다.
+- 최초 실행 시 Gradle 이용 약관 동의를 물어보며, 동의하면 `scans.gradle.com`에 업로드된 리포트 링크가 출력됨
+- 리포트에는 실행된 태스크 목록, 다운로드된 의존성, 각 단계별 소요 시간 등 빌드 전반의 성능·구성 정보가 시각화되어 있어, 로컬 로그만으로 파악하기 어려운 병목이나 캐시 적중 여부를 확인하는 데 유용함
 
 ### 다음 단계
 
-이 편에서는 초기화된 프로젝트를 실제로 실행·테스트·패키징하고 Build Scan으로 결과를 들여다보는 과정을 다뤘습니다. 다음 편에서는 "빌드 라이프사이클(The Build Lifecycle)"을 통해 `build` 같은 명령이 내부적으로 어떤 단계(초기화·설정·실행)를 거치는지 살펴봅니다.
+이 편에서는 초기화된 프로젝트를 실제로 실행·테스트·패키징하고 Build Scan으로 결과를 들여다보는 과정을 다룸. 다음 편에서는 "빌드 라이프사이클(The Build Lifecycle)"을 통해 `build` 같은 명령이 내부적으로 어떤 단계(초기화·설정·실행)를 거치는지 살펴봄.
 
 ---
 
 ## Gradle 중급 튜토리얼 2편: 빌드 생명주기 이해하기
 
-> **원문:** https://docs.gradle.org/current/userguide/part2_build_lifecycle.html
+> 원문: https://docs.gradle.org/current/userguide/part2_build_lifecycle.html
 
 ### 개요
 
-1편에서 초기화한 Java 프로젝트를 그대로 이용해, `./gradlew task1` 한 번을 실행했을 때 Gradle 내부에서 초기화·구성·실행이라는 세 단계가 실제로 어떤 순서와 시점에 동작하는지 로그로 직접 확인해 보는 실습 편입니다.
+1편에서 초기화한 Java 프로젝트를 그대로 이용해, `./gradlew task1` 한 번을 실행했을 때 Gradle 내부에서 초기화·구성·실행이라는 세 단계가 실제로 어떤 순서와 시점에 동작하는지 로그로 직접 확인해 보는 실습 편임.
 
 ### 사전 준비물
 
@@ -135,24 +135,24 @@ $ ./gradlew build --scan
 
 ### 세 단계 복습
 
-- **초기화(Initialization)**: 이 빌드에 어떤 프로젝트가 참여하는지 결정하고, 프로젝트마다 `Project` 인스턴스를 생성
-- **구성(Configuration)**: 참여하는 모든 프로젝트의 빌드 스크립트를 평가해 `Project` 객체를 채우고, 실행할 태스크 집합을 결정
-- **실행(Execution)**: 앞서 결정된 태스크들을 실제로 실행
+- 초기화(Initialization): 이 빌드에 어떤 프로젝트가 참여하는지 결정하고, 프로젝트마다 `Project` 인스턴스를 생성
+- 구성(Configuration): 참여하는 모든 프로젝트의 빌드 스크립트를 평가해 `Project` 객체를 채우고, 실행할 태스크 집합을 결정
+- 실행(Execution): 앞서 결정된 태스크들을 실제로 실행
 
 ### 실습 1: settings 파일에 로그 찍기
 
-`settings.gradle(.kts)` 맨 위에 `println`을 한 줄 추가합니다.
+`settings.gradle(.kts)` 맨 위에 `println`을 한 줄 추가함.
 
 ```kotlin
 // settings.gradle.kts
 println("SETTINGS FILE: This is executed during the initialization phase")
 ```
 
-- 이 파일은 항상 **초기화 단계**에서 평가되므로, 여기 적힌 코드는 다른 무엇보다 먼저 출력됨
+- 이 파일은 항상 초기화 단계에서 평가되므로, 여기 적힌 코드는 다른 무엇보다 먼저 출력됨
 
 ### 실습 2: 빌드 스크립트에 태스크 두 개 등록하기
 
-`app/build.gradle.kts` 맨 아래에 `task1`, `task2`를 각각 `register`로 선언하고 `named`로 다시 참조해 `doFirst`/`doLast`를 붙입니다.
+`app/build.gradle.kts` 맨 아래에 `task1`, `task2`를 각각 `register`로 선언하고 `named`로 다시 참조해 `doFirst`/`doLast`를 붙임.
 
 ```kotlin
 println("BUILD SCRIPT: This is executed during the configuration phase")
@@ -172,7 +172,7 @@ tasks.named("task1") {
 // task2도 동일한 패턴으로 named + doFirst/doLast 구성
 ```
 
-- `register { ... }`, `named { ... }` 블록 **본문 자체**는 구성 단계에서 즉시 실행됨
+- `register { ... }`, `named { ... }` 블록 본문 자체는 구성 단계에서 즉시 실행됨
 - `doFirst`/`doLast`로 감싼 코드만 실행 단계로 지연됨
 
 ### 실습 3: `task1` 실행 결과로 확인하는 생명주기
@@ -192,61 +192,59 @@ TASK1 doLast: ...                  ← ③ 실행
 BUILD SUCCESSFUL in 25s
 ```
 
-| 구간 | 단계 | 이 시점에 Gradle이 하는 일 |
-|---|---|---|
-| ① | 초기화 | `settings.gradle(.kts)`를 실행해 참여 프로젝트를 정하고 `Project` 객체를 만듦 |
-| ② | 구성 | `build.gradle(.kts)`를 실행해 각 프로젝트를 채우고, 의존성을 해석하며 태스크 그래프를 만듦 |
-| ③ | 실행 | 커맨드라인에서 요청한 태스크와 그 선행 태스크를 실제로 실행 |
+- ① 초기화: `settings.gradle(.kts)`를 실행해 참여 프로젝트를 정하고 `Project` 객체를 만듦
+- ② 구성: `build.gradle(.kts)`를 실행해 각 프로젝트를 채우고, 의존성을 해석하며 태스크 그래프를 만듦
+- ③ 실행: 커맨드라인에서 요청한 태스크와 그 선행 태스크를 실제로 실행
 
 ### 핵심 포인트: 태스크 구성 회피(Task Configuration Avoidance)
 
 - 위 로그를 보면 `task1`의 등록·명명 블록만 출력되고, `task2`와 관련된 `REGISTER TASK2`/`NAMED TASK2` 로그는 전혀 나타나지 않음
 - `task1`이 `task2`에 의존하지 않으므로, Gradle은 커맨드라인에서 요청받지 않은 `task2`를 애초에 구성하지 않고 건너뜀
-- 이렇게 필요한 태스크만 골라 구성하는 최적화를 **태스크 구성 회피**라고 부르며, 태스크 수가 많은 대형 멀티 프로젝트일수록 구성 단계 시간을 크게 줄여줌
+- 이렇게 필요한 태스크만 골라 구성하는 최적화를 태스크 구성 회피라고 부름 → 태스크 수가 많은 대형 멀티 프로젝트일수록 구성 단계 시간을 크게 줄여줌
 
 ### 정리
 
 - 빌드 스크립트의 코드는 크게 "구성 단계에서 즉시 도는 코드"와 "`doFirst`/`doLast`로 감싸 실행 단계로 미룬 코드"로 나뉜다는 점을 로그로 직접 확인함
-- Gradle은 실행 대상으로 지정된 태스크와 그 의존 태스크만 구성하며, 나머지는 구성 자체를 건너뛴다(태스크 구성 회피)
-- 이 실습에서 살펴본 초기화 → 구성 → 실행 흐름은 이후 멀티 프로젝트 빌드, 커스텀 태스크 작성에서도 그대로 적용되는 기본 골격
+- Gradle은 실행 대상으로 지정된 태스크와 그 의존 태스크만 구성하며, 나머지는 구성 자체를 건너뜀(태스크 구성 회피)
+- 이 실습에서 살펴본 초기화 → 구성 → 실행 흐름은 이후 멀티 프로젝트 빌드, 커스텀 태스크 작성에서도 그대로 적용되는 기본 골격임
 
 ### 다음 단계
 
-다음 편에서는 하나의 빌드에 여러 서브프로젝트를 두는 "멀티 프로젝트 빌드(Multi-Project Builds)"를 다루며, 이번 편에서 익힌 초기화·구성·실행 단계가 서브프로젝트가 여러 개일 때 어떻게 확장되는지 살펴봅니다.
+다음 편에서는 하나의 빌드에 여러 서브프로젝트를 두는 "멀티 프로젝트 빌드(Multi-Project Builds)"를 다룸. 이번 편에서 익힌 초기화·구성·실행 단계가 서브프로젝트가 여러 개일 때 어떻게 확장되는지 살펴봄.
 
 ---
 
 ## Gradle 튜토리얼 Part 3: 멀티 프로젝트 빌드
 
-> **원문:** https://docs.gradle.org/current/userguide/part3_multi_project_builds.html
+> 원문: https://docs.gradle.org/current/userguide/part3_multi_project_builds.html
 
 ### 개요
 
-Part 1(프로젝트 초기화)과 Part 2(빌드 생명주기)를 마쳤다면, 이제 프로젝트가 하나의 모듈로 끝나지 않고 여러 서브프로젝트로 쪼개지는 경우를 다룰 차례다. 이 파트에서는 기존 `authoring-tutorial` 예제(루트 프로젝트 + `app` 서브프로젝트)에 새 서브프로젝트를 추가하고, 더 나아가 별도의 Gradle 빌드를 통째로 끌어와 결합하는 컴포짓 빌드까지 다룬다.
+Part 1(프로젝트 초기화)과 Part 2(빌드 생명주기)를 마쳤다면, 이제 프로젝트가 하나의 모듈로 끝나지 않고 여러 서브프로젝트로 쪼개지는 경우를 다룰 차례임. 이 파트에서는 기존 `authoring-tutorial` 예제(루트 프로젝트 + `app` 서브프로젝트)에 새 서브프로젝트를 추가하고, 더 나아가 별도의 Gradle 빌드를 통째로 끌어와 결합하는 컴포짓 빌드까지 다룸.
 
 ### 멀티 프로젝트 빌드의 기본 골격
 
-멀티 프로젝트 빌드는 세 가지 요소로 이루어진다.
+멀티 프로젝트 빌드는 세 가지 요소로 이루어짐.
 
-- 루트 `settings.gradle(.kts)` — 어떤 서브프로젝트들이 이 빌드에 속하는지 선언하는 진입점.
-- 서브프로젝트별 `build.gradle(.kts)` — 각 모듈이 자신만의 플러그인·의존성·태스크를 독립적으로 정의.
-- 서브프로젝트별 소스 디렉터리 — 모듈 간 코드가 물리적으로도 분리된다.
+- 루트 `settings.gradle(.kts)`: 어떤 서브프로젝트들이 이 빌드에 속하는지 선언하는 진입점
+- 서브프로젝트별 `build.gradle(.kts)`: 각 모듈이 자신만의 플러그인·의존성·태스크를 독립적으로 정의
+- 서브프로젝트별 소스 디렉터리: 모듈 간 코드가 물리적으로도 분리됨
 
-예제에서는 이미 `app`이라는 서브프로젝트가 존재하는 상태에서 시작한다.
+예제에서는 이미 `app`이라는 서브프로젝트가 존재하는 상태에서 시작함.
 
 ### 서브프로젝트 추가하기: `lib`
 
-새 서브프로젝트를 추가하는 과정은 다음 순서로 진행된다.
+새 서브프로젝트를 추가하는 과정은 다음 순서로 진행됨.
 
-1. 루트에 `lib` 디렉터리를 만들고 `build.gradle.kts`를 작성해 Java 플러그인, 테스트 의존성(JUnit Jupiter), 외부 의존성(Guava) 등을 선언한다.
-2. `lib/src/main/java/...` 아래에 실제 소스 코드(`CustomLib` 클래스 등)를 작성한다.
-3. 루트 `settings.gradle(.kts)`에 `lib`을 추가한다.
+1. 루트에 `lib` 디렉터리를 만들고 `build.gradle.kts`를 작성해 Java 플러그인, 테스트 의존성(JUnit Jupiter), 외부 의존성(Guava) 등을 선언
+2. `lib/src/main/java/...` 아래에 실제 소스 코드(`CustomLib` 클래스 등)를 작성
+3. 루트 `settings.gradle(.kts)`에 `lib`을 추가
 
    ```kotlin
    include("app", "lib")
    ```
 
-4. `app/build.gradle.kts`에서 `lib`을 프로젝트 의존성으로 선언한다.
+4. `app/build.gradle.kts`에서 `lib`을 프로젝트 의존성으로 선언
 
    ```kotlin
    dependencies {
@@ -254,37 +252,37 @@ Part 1(프로젝트 초기화)과 Part 2(빌드 생명주기)를 마쳤다면, �
    }
    ```
 
-5. `App.java`에서 `CustomLib`을 import해 사용하도록 코드를 수정한 뒤 `./gradlew run`으로 확인한다.
+5. `App.java`에서 `CustomLib`을 import해 사용하도록 코드를 수정한 뒤 `./gradlew run`으로 확인
 
-이 과정을 마치면 Gradle이 `app`을 빌드하기 전에 의존 관계에 따라 `lib`을 먼저 빌드하고, 두 모듈이 각각 독립적으로도 빌드될 수 있음을 확인할 수 있다.
+이 과정을 마치면 Gradle이 `app`을 빌드하기 전에 의존 관계에 따라 `lib`을 먼저 빌드하고, 두 모듈이 각각 독립적으로도 빌드될 수 있음을 확인 가능.
 
-### 핵심 포인트: 프로젝트 의존성과 외부 의존성은 선언 방식만 다르다
+### 핵심 포인트: 프로젝트 의존성과 외부 의존성은 선언 방식만 다름
 
-- `implementation(project(":lib"))`처럼 콜론 경로를 쓰면 "같은 빌드 안의 다른 서브프로젝트"를 가리키는 프로젝트 의존성이 되고, `implementation("com.google.guava:guava:33.3.1-jre")`처럼 GAV 좌표를 쓰면 외부 리포지토리에서 내려받는 의존성이 된다.
-- 두 방식 모두 같은 `dependencies {}` 블록 안에서 나란히 선언할 수 있어, 서브프로젝트를 늘려 가는 것과 외부 라이브러리를 추가하는 것이 개발자 입장에서는 동일한 절차로 느껴진다.
+- `implementation(project(":lib"))`처럼 콜론 경로를 쓰면 "같은 빌드 안의 다른 서브프로젝트"를 가리키는 프로젝트 의존성이 되고, `implementation("com.google.guava:guava:33.3.1-jre")`처럼 GAV 좌표를 쓰면 외부 리포지토리에서 내려받는 의존성이 됨
+- 두 방식 모두 같은 `dependencies {}` 블록 안에서 나란히 선언 가능 → 서브프로젝트를 늘려 가는 것과 외부 라이브러리를 추가하는 것이 개발자 입장에서는 동일한 절차로 느껴짐
 
 ### 컴포짓 빌드란 무엇인가
 
-컴포짓 빌드(Composite Build)는 "빌드가 다른 빌드를 포함하는" 구조다. 서브프로젝트가 하나의 빌드 안에서 모듈을 나누는 것과 달리, 컴포짓 빌드는 완전히 독립된 별개의 Gradle 빌드를 통째로 끌어와 결합한다. 원문이 제시하는 활용 목적은 다음과 같다.
+컴포짓 빌드(Composite Build)는 "빌드가 다른 빌드를 포함하는" 구조임. 서브프로젝트가 하나의 빌드 안에서 모듈을 나누는 것과 달리, 컴포짓 빌드는 완전히 독립된 별개의 Gradle 빌드를 통째로 끌어와 결합함. 원문이 제시하는 활용 목적은 다음과 같음.
 
-- 프로젝트 빌드 로직 자체를 별도로 분리해 재사용하기.
-- 독립적으로 개발된 여러 빌드(예: 플러그인과 그 플러그인을 쓰는 애플리케이션)를 하나로 묶기.
-- 지나치게 커진 하나의 빌드를 여러 개의 격리된 작은 빌드로 쪼개기.
+- 프로젝트 빌드 로직 자체를 별도로 분리해 재사용
+- 독립적으로 개발된 여러 빌드(예: 플러그인과 그 플러그인을 쓰는 애플리케이션)를 하나로 묶기
+- 지나치게 커진 하나의 빌드를 여러 개의 격리된 작은 빌드로 쪼개기
 
 ### 빌드에 빌드 추가하기: `license-plugin`
 
-컴포짓 빌드를 실습하기 위해 별도의 Gradle 플러그인 프로젝트를 만들어 메인 빌드에 포함시킨다.
+컴포짓 빌드를 실습하기 위해 별도의 Gradle 플러그인 프로젝트를 만들어 메인 빌드에 포함시킴.
 
-1. `gradle/license-plugin` 디렉터리에서 `gradle init --type kotlin-gradle-plugin`(또는 Groovy 버전)을 실행해 플러그인 전용 빌드를 새로 생성한다. 이 빌드는 자신만의 `settings.gradle(.kts)`, 소스, 테스트, Gradle Wrapper를 갖춘 완전히 독립된 프로젝트다.
-2. 루트 `settings.gradle(.kts)`에 다음을 추가해 이 빌드를 포함시킨다.
+1. `gradle/license-plugin` 디렉터리에서 `gradle init --type kotlin-gradle-plugin`(또는 Groovy 버전)을 실행해 플러그인 전용 빌드를 새로 생성. 이 빌드는 자신만의 `settings.gradle(.kts)`, 소스, 테스트, Gradle Wrapper를 갖춘 완전히 독립된 프로젝트임
+2. 루트 `settings.gradle(.kts)`에 다음을 추가해 이 빌드를 포함
 
    ```kotlin
    includeBuild("gradle/license-plugin")
    ```
 
-3. `./gradlew projects`를 실행하면 루트 프로젝트 아래 서브프로젝트(`app`, `lib`) 목록과 별도로, 포함된 빌드(included builds) 섹션에 `license-plugin`이 표시된다.
+3. `./gradlew projects`를 실행하면 루트 프로젝트 아래 서브프로젝트(`app`, `lib`) 목록과 별도로, 포함된 빌드(included builds) 섹션에 `license-plugin`이 표시됨
 
-이후 태스크를 실행할 때 대상 범위가 뚜렷하게 구분된다.
+이후 태스크를 실행할 때 대상 범위가 뚜렷하게 구분됨.
 
 ```bash
 ./gradlew build                          # app, lib 등 서브프로젝트 전체 빌드
@@ -292,51 +290,51 @@ Part 1(프로젝트 초기화)과 Part 2(빌드 생명주기)를 마쳤다면, �
 ./gradlew :license-plugin:plugin:build   # 포함된 빌드 내부의 플러그인만 빌드
 ```
 
-### 핵심 포인트: 서브프로젝트와 포함된 빌드는 격리 수준이 다르다
+### 핵심 포인트: 서브프로젝트와 포함된 빌드는 격리 수준이 다름
 
-- 서브프로젝트(`include()`)는 같은 빌드에 속하므로 설정·버전·의존성 해석 규칙을 공유하고, 하나의 `settings.gradle(.kts)`가 전체를 조율한다.
-- 포함된 빌드(`includeBuild()`)는 자기만의 `settings.gradle(.kts)`를 갖는 별개의 빌드이며, 메인 빌드는 그 결과물(플러그인, 라이브러리 등)만 가져다 쓴다. 즉 "설정을 공유하는 확장"이 아니라 "완성된 산출물을 결합하는 조립"에 가깝다.
-- 이 격리 덕분에 `license-plugin` 같은 빌드 로직은 별도 팀이 독립적으로 개발·테스트하거나, 여러 저장소에서 재사용하기 쉬워진다.
+- 서브프로젝트(`include()`)는 같은 빌드에 속하므로 설정·버전·의존성 해석 규칙을 공유하고, 하나의 `settings.gradle(.kts)`가 전체를 조율함
+- 포함된 빌드(`includeBuild()`)는 자기만의 `settings.gradle(.kts)`를 갖는 별개의 빌드이며, 메인 빌드는 그 결과물(플러그인, 라이브러리 등)만 가져다 씀. 즉 "설정을 공유하는 확장"이 아니라 "완성된 산출물을 결합하는 조립"에 가까움
+- 이 격리 덕분에 `license-plugin` 같은 빌드 로직은 별도 팀이 독립적으로 개발·테스트하거나, 여러 저장소에서 재사용하기 쉬워짐
 
 ### 언제 무엇을 쓸까
 
-- 모듈 수가 늘어나고 서로 의존 관계가 있는 애플리케이션(모바일 앱, 웹 앱, API, 라이브러리, 문서 모듈 등)을 한 저장소에서 관리한다면 멀티 프로젝트 빌드(서브프로젝트)가 기본 선택지다.
-- 빌드 로직 자체(컨벤션 플러그인)를 분리해 재사용하거나, 라이브러리를 패치해서 테스트하는 등 "빌드와 빌드 사이"의 결합이 필요하다면 컴포짓 빌드(`includeBuild`)가 더 적합하다.
+- 모듈 수가 늘어나고 서로 의존 관계가 있는 애플리케이션(모바일 앱, 웹 앱, API, 라이브러리, 문서 모듈 등)을 한 저장소에서 관리한다면 멀티 프로젝트 빌드(서브프로젝트)가 기본 선택지
+- 빌드 로직 자체(컨벤션 플러그인)를 분리해 재사용하거나, 라이브러리를 패치해서 테스트하는 등 "빌드와 빌드 사이"의 결합이 필요하다면 컴포짓 빌드(`includeBuild`)가 더 적합
 
 ### 정리
 
-- 멀티 프로젝트 빌드는 루트 `settings.gradle(.kts)`가 `include()`로 서브프로젝트를 선언하고, 각 서브프로젝트는 자체 `build.gradle(.kts)`와 소스를 갖는 구조다.
-- 서브프로젝트 간 참조는 `implementation(project(":모듈이름"))`으로 선언하며, Gradle이 의존 순서에 따라 빌드 순서를 자동으로 정리한다.
-- 컴포짓 빌드는 `includeBuild()`로 완전히 독립된 별개의 Gradle 빌드를 메인 빌드에 결합하는 방식으로, 서브프로젝트보다 더 강한 격리를 제공한다.
-- `./gradlew projects`로 서브프로젝트와 포함된 빌드 목록을 함께 확인할 수 있고, `:app:build`처럼 정규화된 경로로 특정 모듈만 골라 빌드할 수 있다.
-- 모듈이 늘어나는 상황에는 서브프로젝트, 빌드 로직·플러그인을 독립적으로 재사용해야 하는 상황에는 컴포짓 빌드를 쓰는 것이 원문이 제시하는 기준이다.
+- 멀티 프로젝트 빌드는 루트 `settings.gradle(.kts)`가 `include()`로 서브프로젝트를 선언하고, 각 서브프로젝트는 자체 `build.gradle(.kts)`와 소스를 갖는 구조임
+- 서브프로젝트 간 참조는 `implementation(project(":모듈이름"))`으로 선언 → Gradle이 의존 순서에 따라 빌드 순서를 자동으로 정리함
+- 컴포짓 빌드는 `includeBuild()`로 완전히 독립된 별개의 Gradle 빌드를 메인 빌드에 결합하는 방식으로, 서브프로젝트보다 더 강한 격리를 제공함
+- `./gradlew projects`로 서브프로젝트와 포함된 빌드 목록을 함께 확인 가능하고, `:app:build`처럼 정규화된 경로로 특정 모듈만 골라 빌드 가능
+- 모듈이 늘어나는 상황에는 서브프로젝트, 빌드 로직·플러그인을 독립적으로 재사용해야 하는 상황에는 컴포짓 빌드를 쓰는 것이 원문이 제시하는 기준
 
 ---
 
 ## Part 4. Settings 파일 작성하기 (Writing the Settings File)
 
-> **원문:** https://docs.gradle.org/current/userguide/part4_settings_file.html
+> 원문: https://docs.gradle.org/current/userguide/part4_settings_file.html
 
 ### 개요
-Intermediate Tutorial의 4번째 파트로, `settings.gradle(.kts)` 파일이 왜 모든 Gradle 빌드의 진입점(entry point)인지, 그리고 그 안에서 어떤 API와 DSL 요소들을 사용할 수 있는지를 다룹니다. Part 1(자바 앱 초기화), Part 2(빌드 라이프사이클), Part 3(서브프로젝트와 별도 빌드 추가)을 이해했다는 전제 위에서 진행됩니다.
+Intermediate Tutorial의 4번째 파트로, `settings.gradle(.kts)` 파일이 왜 모든 Gradle 빌드의 진입점(entry point)인지, 그리고 그 안에서 어떤 API와 DSL 요소들을 사용할 수 있는지를 다룸. Part 1(자바 앱 초기화), Part 2(빌드 라이프사이클), Part 3(서브프로젝트와 별도 빌드 추가)을 이해했다는 전제 위에서 진행됨.
 
 ### 빌드 스크립트도 결국 "코드"다
-- `settings.gradle(.kts)`와 `build.gradle(.kts)`는 모두 Kotlin 또는 Groovy로 작성된 코드입니다. 즉 일반 프로그램처럼 API 호출, 변수, 조건문 등을 그대로 사용할 수 있습니다.
-- 스크립트 안에서 호출 가능한 요소는 세 가지 범주로 나뉩니다.
-  - **Gradle API**: 예) `Settings` 인터페이스의 `getRootProject()`
-  - **DSL 블록**: 예) `plugins { }` 블록
-  - **플러그인이 제공하는 확장(extension)**: 예) `java` 플러그인이 제공하는 `implementation()`, `api()`
+- `settings.gradle(.kts)`와 `build.gradle(.kts)`는 모두 Kotlin 또는 Groovy로 작성된 코드임. 즉 일반 프로그램처럼 API 호출, 변수, 조건문 등을 그대로 사용 가능
+- 스크립트 안에서 호출 가능한 요소는 세 가지 범주로 나뉨
+  - Gradle API: 예) `Settings` 인터페이스의 `getRootProject()`
+  - DSL 블록: 예) `plugins { }` 블록
+  - 플러그인이 제공하는 확장(extension): 예) `java` 플러그인이 제공하는 `implementation()`, `api()`
 
 ### Settings 객체란
-- Gradle은 초기화(initialization) 단계에서 프로젝트 루트의 settings 파일을 찾아 `Settings` 객체를 생성합니다.
-- 이 객체의 핵심 역할 중 하나는 **빌드에 포함될 프로젝트 목록을 선언**하는 것입니다.
-- `Settings` 인터페이스가 제공하는 메서드/속성은 settings 파일 안에서 별도의 delegation 없이 바로 호출할 수 있습니다. 대표적으로 다음이 있습니다.
-  - `include()` — 서브프로젝트를 빌드에 포함
-  - `includeBuild()` — 별도의 복합 빌드(composite build)를 포함
-  - `rootProject.name` — 루트 프로젝트 이름 지정
+- Gradle은 초기화(initialization) 단계에서 프로젝트 루트의 settings 파일을 찾아 `Settings` 객체를 생성함
+- 이 객체의 핵심 역할 중 하나는 빌드에 포함될 프로젝트 목록을 선언하는 것
+- `Settings` 인터페이스가 제공하는 메서드/속성은 settings 파일 안에서 별도의 delegation 없이 바로 호출 가능. 대표적으로 다음이 있음
+  - `include()`: 서브프로젝트를 빌드에 포함
+  - `includeBuild()`: 별도의 복합 빌드(composite build)를 포함
+  - `rootProject.name`: 루트 프로젝트 이름 지정
 
 ### 예제로 보는 settings 파일 구성 요소
-공식 튜토리얼은 아래와 같은 하나의 settings 파일 예시를 통해 각 구성 요소가 어떤 API/DSL에서 온 것인지 설명합니다.
+공식 튜토리얼은 아래와 같은 하나의 settings 파일 예시를 통해 각 구성 요소가 어떤 API/DSL에서 온 것인지 설명함.
 
 ```kotlin
 plugins {
@@ -351,27 +349,26 @@ include("lib")
 includeBuild("gradle/license-plugin")
 ```
 
-각 줄이 어디서 유래하는지 정리하면 다음과 같습니다.
+각 줄이 어디서 유래하는지 정리하면 다음과 같음.
 
-| 코드 | 출처 |
-|---|---|
-| `plugins { }` | `PluginDependenciesSpec` API의 블록 |
-| `id(...)` | `PluginDependenciesSpec` API의 메서드 |
-| `rootProject.name = ...` | `Settings` API의 `getRootProject()` |
-| `include(...)` | `Settings` API의 메서드 |
-| `includeBuild(...)` | `Settings` API의 메서드 |
+- `plugins { }`: `PluginDependenciesSpec` API의 블록
+- `id(...)`: `PluginDependenciesSpec` API의 메서드
+- `rootProject.name = ...`: `Settings` API의 `getRootProject()`
+- `include(...)`: `Settings` API의 메서드
+- `includeBuild(...)`: `Settings` API의 메서드
 
-### 핵심 포인트: settings 파일은 "선언"과 "구성"이 뒤섞인 코드다
-- 이 파일 하나에서 플러그인 해석 방식(`plugins{}`), 프로젝트 구조(`rootProject.name`, `include()`), 그리고 외부 빌드와의 관계(`includeBuild()`)를 동시에 다룹니다.
-- 이 요소들이 한 파일에 모이는 이유는 앞서 다른 노트에서 정리했듯, settings 스크립트가 **모든 build 스크립트보다 먼저 평가**되기 때문입니다. 따라서 빌드 전역에 영향을 주는 설정(플러그인 관리, 복합 빌드 포함 등)을 여기서 처리하는 것이 자연스럽습니다.
-- `include()`와 `includeBuild()`는 이름이 비슷하지만 역할이 다릅니다. `include()`는 같은 빌드 안의 서브프로젝트를, `includeBuild()`는 별도의 독립된 빌드를 가져와 조합하는 것입니다.
+### 핵심 포인트: settings 파일은 "선언"과 "구성"이 뒤섞인 코드
+
+- 이 파일 하나에서 플러그인 해석 방식(`plugins{}`), 프로젝트 구조(`rootProject.name`, `include()`), 그리고 외부 빌드와의 관계(`includeBuild()`)를 동시에 다룸
+- 이 요소들이 한 파일에 모이는 이유는 앞서 다른 노트에서 정리했듯, settings 스크립트가 모든 build 스크립트보다 먼저 평가되기 때문 → 빌드 전역에 영향을 주는 설정(플러그인 관리, 복합 빌드 포함 등)을 여기서 처리하는 것이 자연스러움
+- `include()`와 `includeBuild()`는 이름이 비슷하지만 역할이 다름. `include()`는 같은 빌드 안의 서브프로젝트를, `includeBuild()`는 별도의 독립된 빌드를 가져와 조합함
 
 ### 요약
-- settings 파일도 build 파일과 마찬가지로 Kotlin/Groovy로 작성되는 "코드"이며, Gradle API·DSL 블록·플러그인 확장을 자유롭게 조합해서 쓸 수 있다.
-- Gradle은 초기화 단계에서 settings 파일을 읽어 `Settings` 객체를 만들고, 이 객체를 통해 프로젝트 구조(루트 이름, 서브프로젝트, 포함된 빌드)를 결정한다.
-- 하나의 예시 파일 안에 `plugins{}`, `rootProject.name`, `include()`, `includeBuild()`가 함께 등장하는 것은 우연이 아니라, settings 파일이 빌드 전역 설정을 담당하는 위치이기 때문이다.
+- settings 파일도 build 파일과 마찬가지로 Kotlin/Groovy로 작성되는 "코드"이며, Gradle API·DSL 블록·플러그인 확장을 자유롭게 조합해서 쓸 수 있음
+- Gradle은 초기화 단계에서 settings 파일을 읽어 `Settings` 객체를 만들고, 이 객체를 통해 프로젝트 구조(루트 이름, 서브프로젝트, 포함된 빌드)를 결정함
+- 하나의 예시 파일 안에 `plugins{}`, `rootProject.name`, `include()`, `includeBuild()`가 함께 등장하는 것은 우연이 아니라, settings 파일이 빌드 전역 설정을 담당하는 위치이기 때문임
 
-다음 단계는 Build 스크립트 작성하기(Writing a Build Script)로 이어집니다.
+다음 단계는 Build 스크립트 작성하기(Writing a Build Script)로 이어짐.
 
 ---
 
@@ -380,15 +377,15 @@ includeBuild("gradle/license-plugin")
 > **원문:** https://docs.gradle.org/current/userguide/part5_build_scripts.html
 
 ### 개요
-Intermediate Tutorial의 5번째 파트로, `build.gradle(.kts)` 파일을 실제로 뜯어보면서 각 블록이 어떤 API에서 왔는지, 그리고 커스텀 플러그인을 만들 때 build 스크립트를 어떻게 고쳐 나가는지를 다룹니다. Part 1(프로젝트 초기화), Part 2(빌드 라이프사이클), Part 3(서브프로젝트 구성), Part 4(settings 파일)를 이해했다는 전제 위에서 진행되며, 예제는 Gradle plugin 프로젝트(`java-gradle-plugin` 적용)를 기준으로 합니다.
+Intermediate Tutorial의 5번째 파트로, `build.gradle(.kts)` 파일을 실제로 뜯어보면서 각 블록이 어떤 API에서 왔는지, 그리고 커스텀 플러그인을 만들 때 build 스크립트를 어떻게 고쳐 나가는지를 다룸. Part 1(프로젝트 초기화), Part 2(빌드 라이프사이클), Part 3(서브프로젝트 구성), Part 4(settings 파일)를 이해했다는 전제 위에서 진행되며, 예제는 Gradle plugin 프로젝트(`java-gradle-plugin` 적용)를 기준으로 함.
 
 ### Project 객체와 build 스크립트의 관계
-- 구성(configuration) 단계에서 Gradle은 루트와 서브프로젝트 디렉터리에서 build 스크립트를 찾고, 이를 발견하면 `Project` 객체를 하나 만들어 붙입니다.
-- `Project` 객체의 역할은 크게 세 가지입니다.
+- 구성(configuration) 단계에서 Gradle은 루트와 서브프로젝트 디렉터리에서 build 스크립트를 찾고, 이를 발견하면 `Project` 객체를 하나 만들어 붙임
+- `Project` 객체의 역할은 크게 세 가지
   - 태스크(Task) 모음 생성
   - 플러그인 적용
   - 의존성 조회/해석
-- `Project` 인터페이스가 제공하는 메서드·속성은 build 스크립트 안에서 한정자 없이 바로 호출할 수 있습니다.
+- `Project` 인터페이스가 제공하는 메서드·속성은 build 스크립트 안에서 한정자 없이 바로 호출 가능
 
 ```kotlin
 defaultTasks("some-task")      // Project.defaultTasks()로 위임
@@ -396,7 +393,7 @@ reportsDir = file("reports")   // Project.file() + Java 플러그인의 확장 �
 ```
 
 ### 핵심 포인트: build 스크립트를 구성하는 블록의 출처
-공식 튜토리얼이 예로 드는 Gradle 플러그인 프로젝트의 build 스크립트는 아래 요소들로 구성됩니다.
+공식 튜토리얼이 예로 드는 Gradle 플러그인 프로젝트의 build 스크립트는 아래 요소들로 구성됨.
 
 ```kotlin
 plugins {
@@ -420,25 +417,28 @@ gradlePlugin {
 }
 ```
 
-각 블록이 어디서 온 것인지 정리하면 다음과 같습니다.
+각 블록이 어디서 온 것인지 정리하면 다음과 같음.
 
-| 블록 | 역할 | 출처 |
-|---|---|---|
-| `plugins { }` | 코어 플러그인(`java-gradle-plugin`)과 언어 플러그인(Kotlin/Groovy) 적용 | `PluginDependenciesSpec` |
-| `repositories { }` | 의존성을 받아올 저장소 지정(`mavenCentral()`) | `Project.repositories()` |
-| `dependencies { }` | 컴파일/런타임에 필요한 라이브러리 선언 | `Project.dependencies()` |
-| `gradlePlugin { }` | 개발 중인 플러그인의 id·구현 클래스 정의 | Java Gradle Plugin 플러그인이 추가한 확장 |
-| `tasks.register(...)` / `tasks.named(...)` | 새 태스크 등록 / 기존 태스크 설정 | `TaskContainer` |
+- `plugins { }`: 코어 플러그인(`java-gradle-plugin`)과 언어 플러그인(Kotlin/Groovy) 적용
+  - 출처: `PluginDependenciesSpec`
+- `repositories { }`: 의존성을 받아올 저장소 지정(`mavenCentral()`)
+  - 출처: `Project.repositories()`
+- `dependencies { }`: 컴파일/런타임에 필요한 라이브러리 선언
+  - 출처: `Project.dependencies()`
+- `gradlePlugin { }`: 개발 중인 플러그인의 id·구현 클래스 정의
+  - 출처: Java Gradle Plugin 플러그인이 추가한 확장
+- `tasks.register(...)` / `tasks.named(...)`: 새 태스크 등록 / 기존 태스크 설정
+  - 출처: `TaskContainer`
 
-- `plugins { }`는 코어 플러그인(버전 불필요)과 커뮤니티 플러그인(버전 필요)을 함께 선언할 수 있습니다.
-- `dependencies { }`에서 `implementation(...)`으로 선언한 의존성은 **컨피규레이션(configuration)** 이라는 스코프에 귀속되며, 컴파일 타임/런타임/둘 다 중 어디에 필요한지를 결정합니다. `implementation`은 보통 런타임 클래스패스에만 필요한 경우에 씁니다.
-- `gradlePlugin { }` 같은 블록은 "dependency configuration"과는 별개의 개념으로, 적용된 플러그인을 설정(configure)하는 블록입니다. `java-gradle-plugin`을 적용하면 개발 중인 플러그인의 정보를 반드시 `gradlePlugin { }`으로 채워야 합니다.
-- 태스크는 `tasks.register()`로 새로 만들거나 `tasks.named()`로 이미 존재하는 태스크(예: 플러그인이 만들어 둔 `test`)를 찾아 설정합니다.
+- `plugins { }`는 코어 플러그인(버전 불필요)과 커뮤니티 플러그인(버전 필요)을 함께 선언 가능
+- `dependencies { }`에서 `implementation(...)`으로 선언한 의존성은 컨피규레이션(configuration)이라는 스코프에 귀속되며, 컴파일 타임/런타임/둘 다 중 어디에 필요한지를 결정함. `implementation`은 보통 런타임 클래스패스에만 필요한 경우에 씀
+- `gradlePlugin { }` 같은 블록은 "dependency configuration"과는 별개의 개념으로, 적용된 플러그인을 설정(configure)하는 블록임. `java-gradle-plugin`을 적용하면 개발 중인 플러그인의 정보를 반드시 `gradlePlugin { }`으로 채워야 함
+- 태스크는 `tasks.register()`로 새로 만들거나 `tasks.named()`로 이미 존재하는 태스크(예: 플러그인이 만들어 둔 `test`)를 찾아 설정함
 
 ### 실습: greeting 플러그인을 license 플러그인으로 바꾸기
-튜토리얼은 `gradle init`이 생성한 예제 플러그인(`greeting`)을 개조해서, 소스 파일에 라이선스 헤더를 자동으로 붙이는 `license` 플러그인으로 만들어 가는 과정을 보여줍니다.
+튜토리얼은 `gradle init`이 생성한 예제 플러그인(`greeting`)을 개조해서, 소스 파일에 라이선스 헤더를 자동으로 붙이는 `license` 플러그인으로 만들어 가는 과정을 보여줌.
 
-1. **build 스크립트 수정** — `gradlePlugin { }` 블록의 플러그인 이름·id를 바꿉니다.
+1. build 스크립트 수정: `gradlePlugin { }` 블록의 플러그인 이름·id를 변경
 
 ```kotlin
 gradlePlugin {
@@ -449,7 +449,7 @@ gradlePlugin {
 }
 ```
 
-2. **서브프로젝트에 플러그인 적용** — `app` 서브프로젝트의 build 스크립트에서 `id(...)`로 방금 정의한 플러그인을 적용합니다.
+2. 서브프로젝트에 플러그인 적용: `app` 서브프로젝트의 build 스크립트에서 `id(...)`로 방금 정의한 플러그인을 적용
 
 ```kotlin
 plugins {
@@ -458,7 +458,7 @@ plugins {
 }
 ```
 
-3. **플러그인이 노출하는 태스크 확인** — `LicensePlugin`은 아직 실제 라이선스 로직 없이, `apply()` 안에서 `greeting`이라는 태스크 하나만 등록합니다.
+3. 플러그인이 노출하는 태스크 확인: `LicensePlugin`은 아직 실제 라이선스 로직 없이, `apply()` 안에서 `greeting`이라는 태스크 하나만 등록
 
 ```kotlin
 class LicensePlugin : Plugin<Project> {
@@ -470,20 +470,20 @@ class LicensePlugin : Plugin<Project> {
 }
 ```
 
-4. **태스크 목록/실행으로 검증** — `./gradlew tasks --all`을 실행하면 `app` 프로젝트 아래 `app:greeting` 태스크가 새로 보이고, `./gradlew :app:greeting`으로 실행하면 `Hello from plugin 'com.tutorial.greeting'`이 출력됩니다.
+4. 태스크 목록/실행으로 검증: `./gradlew tasks --all`을 실행하면 `app` 프로젝트 아래 `app:greeting` 태스크가 새로 보이고, `./gradlew :app:greeting`으로 실행하면 `Hello from plugin 'com.tutorial.greeting'`이 출력됨
 
 ### 핵심 포인트: 플러그인 적용 = build 스크립트에 새 어휘가 늘어나는 것
-- 플러그인을 적용하기 전에는 `application`, `gradlePlugin { }` 같은 이름을 build 스크립트에서 쓸 수 없습니다. 플러그인이 적용되는 순간 `Project`의 확장(extension)으로 새 블록/속성이 추가되고, 그때부터 한정자 없이 쓸 수 있게 됩니다.
-- 따라서 낯선 블록을 만났을 때는 "이게 어느 플러그인이 추가한 확장인가?"를 먼저 확인하는 것이 build 스크립트를 읽는 기본 태도입니다.
-- 서브프로젝트별로 다른 플러그인을 적용할 수 있으므로(`app`에만 `license` 적용), 같은 저장소(멀티 프로젝트)라도 프로젝트마다 사용 가능한 블록/태스크 목록이 다를 수 있습니다.
+- 플러그인을 적용하기 전에는 `application`, `gradlePlugin { }` 같은 이름을 build 스크립트에서 쓸 수 없음. 플러그인이 적용되는 순간 `Project`의 확장(extension)으로 새 블록/속성이 추가되고, 그때부터 한정자 없이 쓸 수 있게 됨
+- 따라서 낯선 블록을 만났을 때는 "이게 어느 플러그인이 추가한 확장인가?"를 먼저 확인하는 것이 build 스크립트를 읽는 기본 태도
+- 서브프로젝트별로 다른 플러그인을 적용 가능하므로(`app`에만 `license` 적용), 같은 저장소(멀티 프로젝트)라도 프로젝트마다 사용 가능한 블록/태스크 목록이 다를 수 있음
 
 ### 정리
-- build 스크립트는 구성 단계에서 생성되는 `Project` 객체를 대상으로 실행되는 코드이며, 한정자 없는 메서드/속성 호출은 모두 이 `Project`(또는 그 확장)로 위임된다.
-- `plugins { }` → 플러그인 적용, `repositories { }` → 의존성 출처, `dependencies { }` → 의존성 선언, `gradlePlugin { }` 같은 확장 블록 → 플러그인별 세부 설정, `tasks.register()`/`tasks.named()` → 태스크 등록/설정이라는 역할 분담을 갖는다.
-- 새 플러그인을 개발할 때는 `gradlePlugin { }`에서 id·구현 클래스를 정의하고, 이를 적용할 서브프로젝트의 `plugins { }`에 `id(...)`로 등록하는 흐름을 따른다.
-- 플러그인이 적용되면 해당 프로젝트에서 쓸 수 있는 태스크·블록이 늘어나며, `./gradlew tasks --all`로 이를 직접 확인할 수 있다.
+- build 스크립트는 구성 단계에서 생성되는 `Project` 객체를 대상으로 실행되는 코드이며, 한정자 없는 메서드/속성 호출은 모두 이 `Project`(또는 그 확장)로 위임됨
+- `plugins { }` → 플러그인 적용, `repositories { }` → 의존성 출처, `dependencies { }` → 의존성 선언, `gradlePlugin { }` 같은 확장 블록 → 플러그인별 세부 설정, `tasks.register()`/`tasks.named()` → 태스크 등록/설정이라는 역할 분담을 가짐
+- 새 플러그인을 개발할 때는 `gradlePlugin { }`에서 id·구현 클래스를 정의하고, 이를 적용할 서브프로젝트의 `plugins { }`에 `id(...)`로 등록하는 흐름을 따름
+- 플러그인이 적용되면 해당 프로젝트에서 쓸 수 있는 태스크·블록이 늘어나며, `./gradlew tasks --all`로 이를 직접 확인 가능
 
-다음 단계는 태스크 작성하기(Writing Tasks)로 이어집니다.
+다음 단계는 태스크 작성하기(Writing Tasks)로 이어짐.
 
 ---
 

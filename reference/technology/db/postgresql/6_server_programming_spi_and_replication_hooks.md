@@ -19,19 +19,17 @@
 
 ### 개요
 
-서버 프로그래밍 인터페이스(Server Programming Interface, SPI) 는 C 언어로 작성된 사용자 정의 함수가 PostgreSQL 서버 내부에서 SQL 명령을 실행할 수 있도록 해주는 인터페이스입니다.
+서버 프로그래밍 인터페이스(Server Programming Interface, SPI)는 C 언어로 작성된 사용자 정의 함수가 PostgreSQL 서버 내부에서 SQL 명령을 실행할 수 있도록 해주는 인터페이스임.
 
 #### SPI의 주요 목적
 
-| 목적 | 설명 |
-|------|------|
-| SQL 실행 | C 함수 내에서 SQL 명령을 실행 |
-| 파서/플래너/실행기 접근 | Parser, Planner, Executor에 대한 간편한 접근 제공 |
-| 메모리 관리 | 메모리 할당 및 해제의 단순화 |
+- SQL 실행: C 함수 내에서 SQL 명령을 실행
+- 파서·플래너·실행기 접근: Parser, Planner, Executor에 대한 간편한 접근 제공
+- 메모리 관리: 메모리 할당 및 해제의 단순화
 
 #### 사용을 위한 필수 조건
 
-SPI를 사용하려면 다음 헤더 파일을 포함해야 합니다:
+SPI 사용 시 다음 헤더 파일 포함 필요:
 
 ```c
 #include "executor/spi.h"
@@ -39,14 +37,14 @@ SPI를 사용하려면 다음 헤더 파일을 포함해야 합니다:
 
 #### 반환값 규칙
 
-SPI 함수들은 다음과 같은 반환값 규칙을 따릅니다:
+SPI 함수들은 다음과 같은 반환값 규칙을 따름.
 
-- 성공: 음이 아닌 값 (non-negative value)
-- 실패: 음수 값 (negative value) 또는 NULL
+- 성공: 음이 아닌 값(non-negative value)
+- 실패: 음수 값(negative value) 또는 NULL
 
 #### 중요한 특징
 
-> 주의사항: SPI를 통해 호출된 명령이 실패하면, C 함수로 제어가 반환되지 않습니다. C 함수가 실행 중인 트랜잭션 또는 서브트랜잭션이 롤백됩니다. 오류에서 복구하려면 자신의 서브트랜잭션을 직접 설정해야 합니다.
+> 주의사항: SPI를 통해 호출된 명령이 실패하면 C 함수로 제어가 반환되지 않음. C 함수가 실행 중인 트랜잭션 또는 서브트랜잭션이 롤백됨. 오류에서 복구하려면 자신의 서브트랜잭션을 직접 설정 필요.
 
 ---
 
@@ -54,11 +52,11 @@ SPI 함수들은 다음과 같은 반환값 규칙을 따릅니다:
 
 #### 연결 관리
 
-SPI를 사용하기 전에 먼저 SPI 관리자에 연결해야 하며, 작업이 끝나면 연결을 해제해야 합니다.
+SPI 사용 전 SPI 관리자에 먼저 연결 필요, 작업 종료 후 연결 해제 필요.
 
 ##### SPI_connect / SPI_connect_ext
 
-C 함수를 SPI 관리자에 연결합니다.
+C 함수를 SPI 관리자에 연결함.
 
 ```c
 int SPI_connect(void)
@@ -66,20 +64,14 @@ int SPI_connect_ext(int options)
 ```
 
 설명:
-- `SPI_connect()`는 `SPI_connect_ext(0)`과 동일합니다.
-- SPI를 통해 명령어를 실행하려면 반드시 호출해야 합니다.
+- `SPI_connect()`는 `SPI_connect_ext(0)`과 동일함.
+- SPI를 통해 명령어를 실행하려면 반드시 호출 필요.
 
 옵션:
-
-| 옵션 | 설명 |
-|------|------|
-| `SPI_OPT_NONATOMIC` | 비원자적(nonatomic) 연결 설정. `SPI_commit`, `SPI_rollback` 등 트랜잭션 제어 함수 호출 허용 |
+- `SPI_OPT_NONATOMIC`: 비원자적(nonatomic) 연결 설정 → `SPI_commit`, `SPI_rollback` 등 트랜잭션 제어 함수 호출 허용
 
 반환값:
-
-| 반환값 | 의미 |
-|--------|------|
-| `SPI_OK_CONNECT` | 연결 성공 |
+- `SPI_OK_CONNECT`: 연결 성공
 
 예제:
 
@@ -95,22 +87,19 @@ if (SPI_connect_ext(SPI_OPT_NONATOMIC) != SPI_OK_CONNECT)
 
 ##### SPI_finish
 
-C 함수를 SPI 관리자에서 연결 해제합니다.
+C 함수를 SPI 관리자에서 연결 해제함.
 
 ```c
 int SPI_finish(void)
 ```
 
 설명:
-- SPI 작업을 완료한 후 반드시 호출해야 합니다.
-- `elog(ERROR)`로 트랜잭션을 중단하는 경우에는 SPI가 자동으로 정리되므로 별도 호출이 필요 없습니다.
+- SPI 작업 완료 후 반드시 호출 필요.
+- `elog(ERROR)`로 트랜잭션을 중단하는 경우 SPI가 자동으로 정리 → 별도 호출 불필요.
 
 반환값:
-
-| 반환값 | 의미 |
-|--------|------|
-| `SPI_OK_FINISH` | 정상적으로 연결 해제됨 |
-| `SPI_ERROR_UNCONNECTED` | 연결되지 않은 C 함수에서 호출됨 |
+- `SPI_OK_FINISH`: 정상적으로 연결 해제됨
+- `SPI_ERROR_UNCONNECTED`: 연결되지 않은 C 함수에서 호출됨
 
 ---
 
@@ -118,53 +107,41 @@ int SPI_finish(void)
 
 ##### SPI_execute
 
-지정된 SQL 명령을 실행합니다.
+지정된 SQL 명령을 실행함.
 
 ```c
 int SPI_execute(const char *command, bool read_only, long count)
 ```
 
 매개변수:
-
-| 매개변수 | 타입 | 설명 |
-|---------|------|------|
-| `command` | `const char *` | 실행할 SQL 명령 문자열 |
-| `read_only` | `bool` | `true`면 읽기 전용 실행 |
-| `count` | `long` | 반환할 최대 행 수, 제한 없으면 0 |
+- `command`(`const char *`): 실행할 SQL 명령 문자열
+- `read_only`(`bool`): `true`면 읽기 전용 실행
+- `count`(`long`): 반환할 최대 행 수, 제한 없으면 0
 
 read_only 매개변수 동작:
-
-| 값 | 동작 |
-|----|------|
-| `false` | 명령 카운터를 증가시키고 새 스냅샷을 계산하며, 데이터베이스 수정 가능 |
-| `true` | 스냅샷과 명령 카운터를 갱신하지 않음, SELECT 명령만 허용, 실행 속도 향상 |
+- `false`: 명령 카운터를 증가시키고 새 스냅샷을 계산, 데이터베이스 수정 가능
+- `true`: 스냅샷과 명령 카운터를 갱신하지 않음, SELECT 명령만 허용, 실행 속도 향상
 
 성공 반환값:
-
-| 반환값 | 설명 |
-|--------|------|
-| `SPI_OK_SELECT` | SELECT 실행 성공 |
-| `SPI_OK_SELINTO` | SELECT INTO 실행 성공 |
-| `SPI_OK_INSERT` | INSERT 실행 성공 |
-| `SPI_OK_DELETE` | DELETE 실행 성공 |
-| `SPI_OK_UPDATE` | UPDATE 실행 성공 |
-| `SPI_OK_MERGE` | MERGE 실행 성공 |
-| `SPI_OK_INSERT_RETURNING` | INSERT RETURNING 실행 성공 |
-| `SPI_OK_DELETE_RETURNING` | DELETE RETURNING 실행 성공 |
-| `SPI_OK_UPDATE_RETURNING` | UPDATE RETURNING 실행 성공 |
-| `SPI_OK_MERGE_RETURNING` | MERGE RETURNING 실행 성공 |
-| `SPI_OK_UTILITY` | 유틸리티 명령(CREATE TABLE 등) 실행 성공 |
-| `SPI_OK_REWRITTEN` | 규칙에 의해 재작성된 명령 |
+- `SPI_OK_SELECT`: SELECT 실행 성공
+- `SPI_OK_SELINTO`: SELECT INTO 실행 성공
+- `SPI_OK_INSERT`: INSERT 실행 성공
+- `SPI_OK_DELETE`: DELETE 실행 성공
+- `SPI_OK_UPDATE`: UPDATE 실행 성공
+- `SPI_OK_MERGE`: MERGE 실행 성공
+- `SPI_OK_INSERT_RETURNING`: INSERT RETURNING 실행 성공
+- `SPI_OK_DELETE_RETURNING`: DELETE RETURNING 실행 성공
+- `SPI_OK_UPDATE_RETURNING`: UPDATE RETURNING 실행 성공
+- `SPI_OK_MERGE_RETURNING`: MERGE RETURNING 실행 성공
+- `SPI_OK_UTILITY`: 유틸리티 명령(CREATE TABLE 등) 실행 성공
+- `SPI_OK_REWRITTEN`: 규칙에 의해 재작성된 명령
 
 오류 반환값:
-
-| 반환값 | 설명 |
-|--------|------|
-| `SPI_ERROR_ARGUMENT` | command가 NULL이거나 count < 0 |
-| `SPI_ERROR_COPY` | COPY TO stdout/FROM stdin 시도 |
-| `SPI_ERROR_TRANSACTION` | 트랜잭션 조작 명령 시도 |
-| `SPI_ERROR_OPUNKNOWN` | 알 수 없는 명령 타입 |
-| `SPI_ERROR_UNCONNECTED` | 미연결 C 함수에서 호출 |
+- `SPI_ERROR_ARGUMENT`: command가 NULL이거나 count < 0
+- `SPI_ERROR_COPY`: COPY TO stdout/FROM stdin 시도
+- `SPI_ERROR_TRANSACTION`: 트랜잭션 조작 명령 시도
+- `SPI_ERROR_OPUNKNOWN`: 알 수 없는 명령 타입
+- `SPI_ERROR_UNCONNECTED`: 미연결 C 함수에서 호출
 
 결과 접근:
 
@@ -205,44 +182,38 @@ typedef struct SPITupleTable
 
 ##### SPI_exec
 
-읽기/쓰기 명령을 실행합니다. `SPI_execute`의 단순화된 버전입니다.
+읽기/쓰기 명령을 실행함. `SPI_execute`의 단순화된 버전.
 
 ```c
 int SPI_exec(const char *command, long count)
 ```
 
 설명:
-- `SPI_execute(command, false, count)`와 동일합니다.
-- `read_only` 매개변수가 항상 `false`로 설정됩니다.
+- `SPI_execute(command, false, count)`와 동일함.
+- `read_only` 매개변수가 항상 `false`로 설정됨.
 
 매개변수:
-
-| 매개변수 | 타입 | 설명 |
-|---------|------|------|
-| `command` | `const char *` | 실행할 명령 문자열 |
-| `count` | `long` | 반환할 최대 행 수, 0이면 제한 없음 |
+- `command`(`const char *`): 실행할 명령 문자열
+- `count`(`long`): 반환할 최대 행 수, 0이면 제한 없음
 
 ---
 
 #### 준비된 구문
 
-동일하거나 유사한 명령을 반복 실행할 때 파싱과 분석을 한 번만 수행하고 실행 계획을 재사용할 수 있습니다.
+동일하거나 유사한 명령을 반복 실행할 때 파싱과 분석을 한 번만 수행 → 실행 계획 재사용 가능.
 
 ##### SPI_prepare
 
-SQL 명령을 준비하되 실행하지 않습니다.
+SQL 명령을 준비하되 실행하지 않음.
 
 ```c
 SPIPlanPtr SPI_prepare(const char *command, int nargs, Oid *argtypes)
 ```
 
 매개변수:
-
-| 매개변수 | 설명 |
-|---------|------|
-| `command` | SQL 명령 문자열 (매개변수는 `$1`, `$2` 등으로 표시) |
-| `nargs` | 입력 매개변수 개수 |
-| `argtypes` | 매개변수의 데이터 타입 OID 배열 포인터 |
+- `command`: SQL 명령 문자열 (매개변수는 `$1`, `$2` 등으로 표시)
+- `nargs`: 입력 매개변수 개수
+- `argtypes`: 매개변수의 데이터 타입 OID 배열 포인터
 
 반환값:
 - 성공: `SPIPlanPtr` 구조체에 대한 포인터
@@ -261,11 +232,8 @@ if (plan == NULL)
 ```
 
 실행 계획 최적화:
-
-| 상황 | 동작 |
-|------|------|
-| 매개변수 없음 | 첫 사용 시 일반(generic) 계획 생성, 이후 계속 사용 |
-| 매개변수 있음 | 초기에는 커스텀 계획 생성, 충분한 사용 후 일반 계획으로 전환 |
+- 매개변수 없음: 첫 사용 시 일반(generic) 계획 생성 → 이후 계속 사용
+- 매개변수 있음: 초기에는 커스텀 계획 생성 → 충분한 사용 후 일반 계획으로 전환
 
 주의사항:
 - `SPI_finish` 호출 시 메모리 해제됨
@@ -274,7 +242,7 @@ if (plan == NULL)
 
 ##### SPI_execute_plan
 
-`SPI_prepare`로 준비된 SQL 문을 실행합니다.
+`SPI_prepare`로 준비된 SQL 문을 실행함.
 
 ```c
 int SPI_execute_plan(SPIPlanPtr plan, Datum *values, const char *nulls,
@@ -282,21 +250,15 @@ int SPI_execute_plan(SPIPlanPtr plan, Datum *values, const char *nulls,
 ```
 
 매개변수:
-
-| 매개변수 | 설명 |
-|---------|------|
-| `plan` | `SPI_prepare`로 반환된 준비된 SQL 문 |
-| `values` | 실제 매개변수 값의 배열 |
-| `nulls` | NULL 매개변수를 설명하는 배열: `' '`(non-null) 또는 `'n'`(null), NULL이면 모든 매개변수가 non-null |
-| `read_only` | `true`면 읽기 전용 실행 |
-| `count` | 반환할 최대 행 수 (0: 무제한) |
+- `plan`: `SPI_prepare`로 반환된 준비된 SQL 문
+- `values`: 실제 매개변수 값의 배열
+- `nulls`: NULL 매개변수를 설명하는 배열, `' '`(non-null) 또는 `'n'`(null), NULL이면 모든 매개변수가 non-null
+- `read_only`: `true`면 읽기 전용 실행
+- `count`: 반환할 최대 행 수 (0: 무제한)
 
 오류 반환값:
-
-| 반환값 | 설명 |
-|--------|------|
-| `SPI_ERROR_ARGUMENT` | `plan`이 NULL이거나 유효하지 않음, 또는 `count < 0` |
-| `SPI_ERROR_PARAM` | `values`가 NULL이고 `plan`에 매개변수가 있음 |
+- `SPI_ERROR_ARGUMENT`: `plan`이 NULL이거나 유효하지 않음, 또는 `count < 0`
+- `SPI_ERROR_PARAM`: `values`가 NULL이고 `plan`에 매개변수가 있음
 
 예제:
 
@@ -318,7 +280,7 @@ if (ret > 0 && SPI_tuptable != NULL)
 
 ##### SPI_keepplan / SPI_saveplan
 
-준비된 구문을 저장하여 `SPI_finish` 후에도 사용할 수 있게 합니다.
+준비된 구문을 저장 → `SPI_finish` 후에도 사용 가능.
 
 ```c
 int SPI_keepplan(SPIPlanPtr plan)
@@ -329,11 +291,11 @@ SPIPlanPtr SPI_saveplan(SPIPlanPtr plan)
 
 #### 커서 관리
 
-커서를 사용하면 대량의 결과 집합을 메모리 효율적으로 처리할 수 있습니다.
+커서 사용 시 대량의 결과 집합을 메모리 효율적으로 처리 가능.
 
 ##### SPI_cursor_open
 
-`SPI_prepare`로 생성된 명령문을 사용하여 커서를 설정합니다.
+`SPI_prepare`로 생성된 명령문을 사용해 커서를 설정함.
 
 ```c
 Portal SPI_cursor_open(const char *name, SPIPlanPtr plan,
@@ -342,47 +304,38 @@ Portal SPI_cursor_open(const char *name, SPIPlanPtr plan,
 ```
 
 매개변수:
-
-| 매개변수 | 설명 |
-|---------|------|
-| `name` | 포탈 이름 (NULL이면 시스템이 자동 선택) |
-| `plan` | `SPI_prepare`에서 반환된 준비된 명령문 |
-| `values` | 실제 매개변수 값 배열 |
-| `nulls` | NULL 매개변수 설명 배열 |
-| `read_only` | 읽기 전용 실행 여부 |
+- `name`: 포탈 이름 (NULL이면 시스템이 자동 선택)
+- `plan`: `SPI_prepare`에서 반환된 준비된 명령문
+- `values`: 실제 매개변수 값 배열
+- `nulls`: NULL 매개변수 설명 배열
+- `read_only`: 읽기 전용 실행 여부
 
 반환값:
 - 커서를 포함하는 포탈에 대한 포인터
 - 오류 시 `elog`를 통해 보고됨
 
 커서 사용의 이점:
-
-| 이점 | 설명 |
-|------|------|
-| 메모리 효율성 | 결과 행을 한 번에 몇 개씩 검색하여 메모리 오버런 방지 |
-| 생명주기 연장 | 포탈은 현재 트랜잭션이 끝날 때까지 존재 가능 |
+- 메모리 효율성: 결과 행을 한 번에 몇 개씩 검색 → 메모리 오버런 방지
+- 생명주기 연장: 포탈은 현재 트랜잭션이 끝날 때까지 존재 가능
 
 ##### SPI_cursor_fetch
 
-커서에서 여러 행을 가져옵니다.
+커서에서 여러 행을 가져옴.
 
 ```c
 void SPI_cursor_fetch(Portal portal, bool forward, long count)
 ```
 
 매개변수:
-
-| 매개변수 | 설명 |
-|---------|------|
-| `portal` | 커서를 포함하는 포탈 |
-| `forward` | `true`: 앞으로 페치, `false`: 뒤로 페치 |
-| `count` | 페치할 최대 행 수 |
+- `portal`: 커서를 포함하는 포탈
+- `forward`: `true`면 앞으로 페치, `false`면 뒤로 페치
+- `count`: 페치할 최대 행 수
 
 결과:
 - `SPI_processed`: 처리된 행 수
 - `SPI_tuptable`: 결과 튜플 테이블
 
-> 주의: 뒤로 페치(backward fetch)는 커서의 플랜이 `CURSOR_OPT_SCROLL` 옵션으로 생성되지 않았다면 실패할 수 있습니다.
+> 주의: 뒤로 페치(backward fetch)는 커서의 플랜이 `CURSOR_OPT_SCROLL` 옵션으로 생성되지 않았다면 실패 가능.
 
 ##### SPI_cursor_move
 
@@ -394,15 +347,15 @@ void SPI_cursor_move(Portal portal, bool forward, long count)
 
 ##### SPI_cursor_close
 
-커서를 닫고 포탈 저장소를 해제합니다.
+커서를 닫고 포탈 저장소를 해제함.
 
 ```c
 void SPI_cursor_close(Portal portal)
 ```
 
 설명:
-- 트랜잭션이 종료되면 열린 모든 커서가 자동으로 닫힙니다.
-- 리소스를 더 일찍 해제하려는 경우에만 명시적으로 호출합니다.
+- 트랜잭션이 종료되면 열린 모든 커서가 자동으로 닫힘.
+- 리소스를 더 일찍 해제하려는 경우에만 명시적으로 호출함.
 
 예제: 커서를 사용한 대량 데이터 처리:
 
@@ -440,37 +393,32 @@ SPI_finish();
 
 ### 인터페이스 지원 함수
 
-`SPI_execute` 등의 함수에서 반환한 결과 집합에서 정보를 추출하기 위한 함수들입니다.
+`SPI_execute` 등의 함수에서 반환한 결과 집합에서 정보를 추출하기 위한 함수들.
 
 #### 함수 목록
 
-| 함수 | 설명 |
-|------|------|
-| `SPI_fname` | 지정된 열 번호에 대한 열 이름 반환 |
-| `SPI_fnumber` | 지정된 열 이름에 대한 열 번호 반환 |
-| `SPI_getvalue` | 지정된 열의 문자열 값 반환 |
-| `SPI_getbinval` | 지정된 열의 이진 값 반환 |
-| `SPI_gettype` | 지정된 열의 데이터 타입 이름 반환 |
-| `SPI_gettypeid` | 지정된 열의 데이터 타입 OID 반환 |
-| `SPI_getrelname` | 지정된 관계(relation)의 이름 반환 |
-| `SPI_getnspname` | 지정된 관계의 네임스페이스 반환 |
-| `SPI_result_code_string` | 오류 코드를 문자열로 반환 |
+- `SPI_fname`: 지정된 열 번호에 대한 열 이름 반환
+- `SPI_fnumber`: 지정된 열 이름에 대한 열 번호 반환
+- `SPI_getvalue`: 지정된 열의 문자열 값 반환
+- `SPI_getbinval`: 지정된 열의 이진 값 반환
+- `SPI_gettype`: 지정된 열의 데이터 타입 이름 반환
+- `SPI_gettypeid`: 지정된 열의 데이터 타입 OID 반환
+- `SPI_getrelname`: 지정된 관계(relation)의 이름 반환
+- `SPI_getnspname`: 지정된 관계의 네임스페이스 반환
+- `SPI_result_code_string`: 오류 코드를 문자열로 반환
 
 #### SPI_getvalue
 
-지정된 열의 값을 문자열 표현으로 반환합니다.
+지정된 열의 값을 문자열 표현으로 반환함.
 
 ```c
 char *SPI_getvalue(HeapTuple row, TupleDesc rowdesc, int colnumber)
 ```
 
 매개변수:
-
-| 매개변수 | 타입 | 설명 |
-|---------|------|------|
-| `row` | `HeapTuple` | 검사할 입력 행 |
-| `rowdesc` | `TupleDesc` | 입력 행 설명 |
-| `colnumber` | `int` | 열 번호 (1부터 시작) |
+- `row`(`HeapTuple`): 검사할 입력 행
+- `rowdesc`(`TupleDesc`): 입력 행 설명
+- `colnumber`(`int`): 열 번호 (1부터 시작)
 
 반환값:
 - 성공: 열 값의 문자열 표현
@@ -490,26 +438,23 @@ elog(INFO, "name: %s, value: %s", name, value);
 
 #### SPI_getbinval
 
-지정된 열의 이진 값을 반환합니다.
+지정된 열의 이진 값을 반환함.
 
 ```c
 Datum SPI_getbinval(HeapTuple row, TupleDesc rowdesc, int colnumber, bool *isnull)
 ```
 
 매개변수:
-
-| 매개변수 | 설명 |
-|---------|------|
-| `row` | 검사할 입력 행 |
-| `rowdesc` | 입력 행 설명 |
-| `colnumber` | 열 번호 (1부터 시작) |
-| `isnull` | 열이 null인지 여부를 반환하는 포인터 |
+- `row`: 검사할 입력 행
+- `rowdesc`: 입력 행 설명
+- `colnumber`: 열 번호 (1부터 시작)
+- `isnull`: 열이 null인지 여부를 반환하는 포인터
 
 ---
 
 ### 메모리 관리
 
-PostgreSQL은 메모리 컨텍스트(Memory Context) 내에서 메모리를 할당합니다. 이는 서로 다른 수명을 가진 할당들을 효율적으로 관리하는 방법을 제공합니다.
+PostgreSQL은 메모리 컨텍스트(Memory Context) 내에서 메모리를 할당함. 서로 다른 수명을 가진 할당들을 효율적으로 관리하는 방법을 제공.
 
 #### 메모리 컨텍스트 개념
 
@@ -528,29 +473,27 @@ C 함수 컨텍스트의 모든 메모리 해제
 
 #### 메모리 관리 함수
 
-| 함수 | 설명 |
-|------|------|
-| `SPI_palloc` | 상위 실행자 컨텍스트에서 메모리 할당 |
-| `SPI_repalloc` | 상위 실행자 컨텍스트에서 메모리 재할당 |
-| `SPI_pfree` | 상위 실행자 컨텍스트에서 메모리 해제 |
-| `SPI_copytuple` | 상위 실행자 컨텍스트에서 행의 복사본 생성 |
-| `SPI_returntuple` | Datum으로 반환할 튜플 준비 |
-| `SPI_modifytuple` | 선택된 필드를 대체하여 행 생성 |
-| `SPI_freetuple` | 상위 실행자 컨텍스트에서 할당된 행 해제 |
-| `SPI_freetuptable` | `SPI_execute` 등으로 생성된 행 집합 해제 |
-| `SPI_freeplan` | 이전에 저장된 준비된 명령문 해제 |
+- `SPI_palloc`: 상위 실행자 컨텍스트에서 메모리 할당
+- `SPI_repalloc`: 상위 실행자 컨텍스트에서 메모리 재할당
+- `SPI_pfree`: 상위 실행자 컨텍스트에서 메모리 해제
+- `SPI_copytuple`: 상위 실행자 컨텍스트에서 행의 복사본 생성
+- `SPI_returntuple`: Datum으로 반환할 튜플 준비
+- `SPI_modifytuple`: 선택된 필드를 대체하여 행 생성
+- `SPI_freetuple`: 상위 실행자 컨텍스트에서 할당된 행 해제
+- `SPI_freetuptable`: `SPI_execute` 등으로 생성된 행 집합 해제
+- `SPI_freeplan`: 이전에 저장된 준비된 명령문 해제
 
 #### SPI_palloc
 
-상위 실행자 컨텍스트에서 메모리를 할당합니다.
+상위 실행자 컨텍스트에서 메모리를 할당함.
 
 ```c
 void *SPI_palloc(Size size)
 ```
 
 설명:
-- C 함수가 메모리에 할당된 객체를 반환해야 할 때, `palloc`으로 할당하면 `SPI_finish` 시 해제됩니다.
-- `SPI_palloc`을 사용하면 "상위 실행자 컨텍스트"에서 메모리가 할당되어 C 함수가 반환된 후에도 유지됩니다.
+- C 함수가 메모리에 할당된 객체를 반환해야 할 때, `palloc`으로 할당하면 `SPI_finish` 시 해제됨.
+- `SPI_palloc` 사용 시 "상위 실행자 컨텍스트"에서 메모리가 할당되어 C 함수가 반환된 후에도 유지됨.
 
 예제:
 
@@ -564,7 +507,7 @@ char *result = SPI_palloc(100);
 
 #### SPI_freetuptable
 
-`SPI_execute` 등으로 생성된 행 집합을 해제합니다.
+`SPI_execute` 등으로 생성된 행 집합을 해제함.
 
 ```c
 void SPI_freetuptable(SPITupleTable *tuptable)
@@ -585,17 +528,17 @@ SPI_freetuptable(SPI_tuptable);
 
 ### 트랜잭션 관리
 
-SPI를 통한 트랜잭션 관리 함수들입니다.
+SPI를 통한 트랜잭션 관리 함수들.
 
 #### 제한사항
 
-- `COMMIT`, `ROLLBACK` 같은 트랜잭션 제어 명령어는 `SPI_execute`를 통해 직접 실행할 수 없습니다.
-- 대신 별도의 인터페이스 함수를 사용해야 합니다.
-- 트랜잭션 관리 함수를 사용하려면 `SPI_connect_ext(SPI_OPT_NONATOMIC)`으로 연결해야 합니다.
+- `COMMIT`, `ROLLBACK` 같은 트랜잭션 제어 명령어는 `SPI_execute`를 통해 직접 실행 불가.
+- 대신 별도의 인터페이스 함수 사용 필요.
+- 트랜잭션 관리 함수를 사용하려면 `SPI_connect_ext(SPI_OPT_NONATOMIC)`으로 연결 필요.
 
 #### SPI_commit
 
-현재 트랜잭션을 커밋합니다.
+현재 트랜잭션을 커밋함.
 
 ```c
 void SPI_commit(void)
@@ -603,13 +546,13 @@ void SPI_commit_and_chain(void)
 ```
 
 설명:
-- SQL 명령어 `COMMIT`을 실행하는 것과 동일합니다.
-- 트랜잭션 커밋 후, 기본 트랜잭션 특성을 사용하여 새로운 트랜잭션이 자동으로 시작됩니다.
-- `SPI_commit_and_chain`은 `COMMIT AND CHAIN`처럼 이전 트랜잭션과 동일한 특성으로 새 트랜잭션을 시작합니다.
+- SQL 명령어 `COMMIT`을 실행하는 것과 동일함.
+- 트랜잭션 커밋 후, 기본 트랜잭션 특성을 사용해 새로운 트랜잭션이 자동으로 시작됨.
+- `SPI_commit_and_chain`은 `COMMIT AND CHAIN`처럼 이전 트랜잭션과 동일한 특성으로 새 트랜잭션을 시작함.
 
 #### SPI_rollback
 
-현재 트랜잭션을 롤백합니다.
+현재 트랜잭션을 롤백함.
 
 ```c
 void SPI_rollback(void)
@@ -617,12 +560,12 @@ void SPI_rollback_and_chain(void)
 ```
 
 설명:
-- SQL 명령어 `ROLLBACK`을 실행하는 것과 동일합니다.
-- 트랜잭션 롤백 후, 새로운 트랜잭션이 자동으로 시작됩니다.
+- SQL 명령어 `ROLLBACK`을 실행하는 것과 동일함.
+- 트랜잭션 롤백 후, 새로운 트랜잭션이 자동으로 시작됨.
 
 #### 사용 시 주의사항
 
-> 경고: 임의의 사용자 정의 SQL 호출 함수에서 트랜잭션을 시작/종료하는 것은 일반적으로 안전하지 않고 권장되지 않습니다. 복잡한 SQL 표현식 중간에 트랜잭션 경계가 생기면 내부 오류나 크래시가 발생할 수 있습니다.
+> 경고: 임의의 사용자 정의 SQL 호출 함수에서 트랜잭션을 시작/종료하는 것은 일반적으로 안전하지 않아 권장하지 않음. 복잡한 SQL 표현식 중간에 트랜잭션 경계가 생기면 내부 오류나 크래시 발생 가능.
 
 주요 사용 목적:
 - 주로 절차형 언어(procedural language) 구현에서 사용
@@ -632,41 +575,37 @@ void SPI_rollback_and_chain(void)
 
 ### 데이터 변경의 가시성
 
-SPI를 사용하는 함수에서 데이터 변경의 가시성을 관리하는 규칙입니다.
+SPI를 사용하는 함수에서 데이터 변경의 가시성을 관리하는 규칙.
 
 #### 핵심 규칙
 
 ##### 규칙 1: 명령 실행 중 변경의 불가시성
 
-SQL 명령 실행 중, 해당 명령이 만든 데이터 변경은 그 명령 자신에게는 보이지 않습니다.
+SQL 명령 실행 중, 해당 명령이 만든 데이터 변경은 그 명령 자신에게는 보이지 않음.
 
 ```sql
 INSERT INTO a SELECT * FROM a;
 ```
-- `SELECT` 부분은 새로 삽입된 행들을 볼 수 없습니다.
+- `SELECT` 부분은 새로 삽입된 행들을 볼 수 없음.
 
 ##### 규칙 2: 이후 명령에 대한 가시성
 
-명령 C에 의한 변경사항은 C 이후에 시작된 모든 명령에 보입니다.
+명령 C에 의한 변경사항은 C 이후에 시작된 모든 명령에 보임.
 
 #### SPI 읽기/쓰기 플래그에 따른 가시성
 
-| 모드 | 동작 | 적용 규칙 |
-|------|------|----------|
-| 읽기 전용 (Read-only) | 호출 명령의 변경을 볼 수 없음 | 규칙 1 적용 |
-| 읽기-쓰기 (Read-write) | 지금까지의 모든 변경을 볼 수 있음 | 규칙 2 적용 |
+- 읽기 전용 (Read-only): 호출 명령의 변경을 볼 수 없음 → 규칙 1 적용
+- 읽기-쓰기 (Read-write): 지금까지의 모든 변경을 볼 수 있음 → 규칙 2 적용
 
 #### 함수 휘발성(Volatility)에 따른 동작
 
-표준 절차형 언어는 함수의 휘발성 속성에 따라 SPI 모드를 결정합니다:
+표준 절차형 언어는 함수의 휘발성 속성에 따라 SPI 모드를 결정함.
 
-| 휘발성 | 모드 | 설명 |
-|--------|------|------|
-| `STABLE` | 읽기 전용 | 같은 입력에 대해 같은 결과 반환 |
-| `IMMUTABLE` | 읽기 전용 | 항상 같은 결과 반환 |
-| `VOLATILE` | 읽기-쓰기 | 실행할 때마다 다른 결과 가능 |
+- `STABLE`: 읽기 전용, 같은 입력에 대해 같은 결과 반환
+- `IMMUTABLE`: 읽기 전용, 항상 같은 결과 반환
+- `VOLATILE`: 읽기-쓰기, 실행할 때마다 다른 결과 가능
 
-> 주의: C 함수 작성자는 이 규칙을 어길 수 있지만, 일반적으로 권장하지 않습니다.
+> 주의: C 함수 작성자는 이 규칙을 어길 수 있지만, 일반적으로 권장하지 않음.
 
 ---
 
@@ -674,7 +613,7 @@ INSERT INTO a SELECT * FROM a;
 
 #### 기본 예제: execq 함수
 
-SQL 명령을 첫 번째 인수로, 행 개수를 두 번째 인수로 받아 실행하는 C 함수입니다.
+SQL 명령을 첫 번째 인수로, 행 개수를 두 번째 인수로 받아 실행하는 C 함수.
 
 ```c
 #include "postgres.h"
@@ -917,15 +856,13 @@ get_user_by_id(PG_FUNCTION_ARGS)
 
 #### 주요 전역 변수
 
-| 변수 | 타입 | 설명 |
-|------|------|------|
-| `SPI_processed` | `uint64` | 마지막 명령으로 처리된 행 수 |
-| `SPI_tuptable` | `SPITupleTable *` | 마지막 명령의 결과 튜플 테이블 |
-| `SPI_result` | `int` | 일부 함수의 오류 코드 |
+- `SPI_processed`(`uint64`): 마지막 명령으로 처리된 행 수
+- `SPI_tuptable`(`SPITupleTable *`): 마지막 명령의 결과 튜플 테이블
+- `SPI_result`(`int`): 일부 함수의 오류 코드
 
 #### 참고 자료
 
-더 복잡한 예제는 PostgreSQL 소스 코드의 다음 경로에서 찾을 수 있습니다:
+더 복잡한 예제는 PostgreSQL 소스 코드의 다음 경로에서 찾을 수 있음:
 - `src/test/regress/regress.c`
 - `contrib/spi` 모듈
 
@@ -953,7 +890,7 @@ get_user_by_id(PG_FUNCTION_ARGS)
 
 ### 개요
 
-PostgreSQL은 사용자가 제공한 코드를 별도의 프로세스에서 실행하는 방식으로 확장할 수 있습니다. 이러한 프로세스를 백그라운드 워커(Background Worker)라고 합니다.
+PostgreSQL은 사용자가 제공한 코드를 별도의 프로세스에서 실행하는 방식으로 확장 가능. 이러한 프로세스를 백그라운드 워커(Background Worker)라고 함.
 
 백그라운드 워커의 특징:
 
@@ -975,23 +912,23 @@ PostgreSQL은 사용자가 제공한 코드를 별도의 프로세스에서 실�
 
 ### 보안 경고
 
-> 주의: 백그라운드 워커 프로세스는 C 언어를 통해 데이터에 무제한으로 접근할 수 있기 때문에 상당한 견고성(robustness) 및 보안 위험을 초래합니다. 신중하게 감사(audit)된 모듈만 백그라운드 워커 프로세스를 실행하도록 허용해야 합니다.
+> 주의: 백그라운드 워커 프로세스는 C 언어를 통해 데이터에 무제한으로 접근 가능하므로 상당한 견고성(robustness) 및 보안 위험 초래. 신중하게 감사(audit)된 모듈만 백그라운드 워커 프로세스 실행을 허용해야 함.
 
 ---
 
 ### 백그라운드 워커 등록
 
-백그라운드 워커를 등록하는 방법은 두 가지가 있습니다.
+백그라운드 워커를 등록하는 방법은 두 가지.
 
 #### 정적 등록 (Static Registration)
 
-서버 시작 시 `shared_preload_libraries` 설정에 모듈 이름을 포함시켜 등록합니다.
+서버 시작 시 `shared_preload_libraries` 설정에 모듈 이름을 포함시켜 등록.
 
 ```c
 void RegisterBackgroundWorker(BackgroundWorker *worker)
 ```
 
-이 함수는 모듈의 `_PG_init()` 함수에서 호출해야 합니다.
+이 함수는 모듈의 `_PG_init()` 함수에서 호출 필요.
 
 ```c
 void _PG_init(void)
@@ -1017,14 +954,14 @@ void _PG_init(void)
 
 #### 동적 등록 (Dynamic Registration)
 
-시스템 시작 후에 백그라운드 워커를 등록합니다.
+시스템 시작 후에 백그라운드 워커를 등록.
 
 ```c
 bool RegisterDynamicBackgroundWorker(BackgroundWorker *worker,
                                      BackgroundWorkerHandle **handle)
 ```
 
-동적 등록은 일반 백엔드(regular backend) 또는 다른 백그라운드 워커에서 호출해야 합니다. postmaster에서 직접 호출하는 것은 불가능합니다.
+동적 등록은 일반 백엔드(regular backend) 또는 다른 백그라운드 워커에서 호출해야 함. postmaster에서 직접 호출하는 것은 불가.
 
 ```c
 BackgroundWorker worker;
@@ -1050,7 +987,7 @@ if (!RegisterDynamicBackgroundWorker(&worker, &handle))
 
 ### BackgroundWorker 구조체
 
-백그라운드 워커는 `BackgroundWorker` 구조체를 통해 정의됩니다.
+백그라운드 워커는 `BackgroundWorker` 구조체를 통해 정의됨.
 
 ```c
 typedef void (*bgworker_main_type)(Datum main_arg);
@@ -1072,24 +1009,22 @@ typedef struct BackgroundWorker
 
 #### 필드 설명
 
-| 필드 | 설명 |
-|------|------|
-| `bgw_name` | 로그 메시지와 프로세스 목록에 표시되는 문자열. 프로세스별 고유 정보를 포함해야 함 |
-| `bgw_type` | 로그 메시지에 표시되는 문자열. 같은 유형의 모든 워커는 동일한 값을 사용하여 그룹화 |
-| `bgw_flags` | 비트 OR 연산으로 결합된 기능 마스크 |
-| `bgw_start_time` | 프로세스가 시작되어야 하는 서버 상태 |
-| `bgw_restart_time` | 크래시 후 재시작까지 대기 시간(초). 양수 값 또는 `BGW_NEVER_RESTART` |
-| `bgw_library_name` | 진입점을 포함하는 라이브러리 이름. 코어 코드인 경우 `"postgres"` 사용 |
-| `bgw_function_name` | 초기 진입점 함수 이름. 동적 라이브러리인 경우 `PGDLLEXPORT`로 표시 필요 |
-| `bgw_main_arg` | 워커의 메인 함수에 전달되는 `Datum` 인자 |
-| `bgw_extra` | `MyBgworkerEntry`를 통해 접근 가능한 추가 데이터 (함수 인자로 전달되지 않음) |
-| `bgw_notify_pid` | 시작/종료 시 `SIGUSR1` 알림을 받을 PID. 시작 시 등록된 워커는 0 |
+- `bgw_name`: 로그 메시지와 프로세스 목록에 표시되는 문자열, 프로세스별 고유 정보 포함 필요
+- `bgw_type`: 로그 메시지에 표시되는 문자열, 같은 유형의 모든 워커는 동일한 값을 사용하여 그룹화
+- `bgw_flags`: 비트 OR 연산으로 결합된 기능 마스크
+- `bgw_start_time`: 프로세스가 시작되어야 하는 서버 상태
+- `bgw_restart_time`: 크래시 후 재시작까지 대기 시간(초), 양수 값 또는 `BGW_NEVER_RESTART`
+- `bgw_library_name`: 진입점을 포함하는 라이브러리 이름, 코어 코드인 경우 `"postgres"` 사용
+- `bgw_function_name`: 초기 진입점 함수 이름, 동적 라이브러리인 경우 `PGDLLEXPORT`로 표시 필요
+- `bgw_main_arg`: 워커의 메인 함수에 전달되는 `Datum` 인자
+- `bgw_extra`: `MyBgworkerEntry`를 통해 접근 가능한 추가 데이터(함수 인자로 전달되지 않음)
+- `bgw_notify_pid`: 시작/종료 시 `SIGUSR1` 알림을 받을 PID, 시작 시 등록된 워커는 0
 
 ---
 
 ### 플래그 옵션 (bgw_flags)
 
-`bgw_flags` 필드는 백그라운드 워커가 요청하는 기능을 지정합니다.
+`bgw_flags` 필드는 백그라운드 워커가 요청하는 기능을 지정.
 
 ```c
 /* 공유 메모리 접근 요청 - 필수 */
@@ -1101,32 +1036,28 @@ BGWORKER_BACKEND_DATABASE_CONNECTION
 
 #### 플래그 조합 규칙
 
-| 플래그 조합 | 설명 |
-|------------|------|
-| `BGWORKER_SHMEM_ACCESS` | 공유 메모리에만 접근 (필수) |
-| `BGWORKER_SHMEM_ACCESS \| BGWORKER_BACKEND_DATABASE_CONNECTION` | 공유 메모리 접근 + 데이터베이스 연결 |
+- `BGWORKER_SHMEM_ACCESS`: 공유 메모리에만 접근(필수)
+- `BGWORKER_SHMEM_ACCESS` + `BGWORKER_BACKEND_DATABASE_CONNECTION`: 공유 메모리 접근 + 데이터베이스 연결
 
-> 중요: `BGWORKER_BACKEND_DATABASE_CONNECTION`을 사용하려면 반드시 `BGWORKER_SHMEM_ACCESS`도 함께 설정해야 합니다. 그렇지 않으면 시작이 실패합니다.
+> 중요: `BGWORKER_BACKEND_DATABASE_CONNECTION`을 사용하려면 반드시 `BGWORKER_SHMEM_ACCESS`도 함께 설정 필요. 그렇지 않으면 시작 실패.
 
 ---
 
 ### 시작 시점 옵션 (bgw_start_time)
 
-`bgw_start_time`은 백그라운드 워커가 시작되어야 하는 서버 상태를 지정합니다.
+`bgw_start_time`은 백그라운드 워커가 시작되어야 하는 서버 상태를 지정.
 
-| 옵션 | 설명 |
-|------|------|
-| `BgWorkerStart_PostmasterStart` | `postgres` 초기화 직후 시작. 데이터베이스 연결 불가 |
-| `BgWorkerStart_ConsistentState` | 핫 스탠바이(hot standby)에서 일관된 상태 도달 후 시작. 읽기 전용 쿼리 가능 |
-| `BgWorkerStart_RecoveryFinished` | 정상적인 읽기-쓰기 상태에서 시작 |
+- `BgWorkerStart_PostmasterStart`: `postgres` 초기화 직후 시작, 데이터베이스 연결 불가
+- `BgWorkerStart_ConsistentState`: 핫 스탠바이(hot standby)에서 일관된 상태 도달 후 시작, 읽기 전용 쿼리 가능
+- `BgWorkerStart_RecoveryFinished`: 정상적인 읽기-쓰기 상태에서 시작
 
-> 참고: 핫 스탠바이가 아닌 서버에서는 `BgWorkerStart_ConsistentState`와 `BgWorkerStart_RecoveryFinished`가 동일하게 동작합니다.
+> 참고: 핫 스탠바이가 아닌 서버에서는 `BgWorkerStart_ConsistentState`와 `BgWorkerStart_RecoveryFinished`가 동일하게 동작함.
 
 ---
 
 ### 데이터베이스 연결
 
-백그라운드 워커가 데이터베이스에 연결하려면 다음 함수 중 하나를 사용합니다.
+백그라운드 워커가 데이터베이스에 연결하려면 다음 함수 중 하나를 사용.
 
 #### 이름으로 연결
 
@@ -1146,17 +1077,15 @@ void BackgroundWorkerInitializeConnectionByOid(Oid dboid,
 
 #### 연결 매개변수
 
-| 매개변수 | NULL/InvalidOid 사용 시 |
-|----------|------------------------|
-| `dbname` / `dboid` | 특정 데이터베이스에 연결하지 않음 (공유 카탈로그만 접근 가능) |
-| `username` / `useroid` | `initdb` 시 생성된 슈퍼유저로 실행 |
+NULL/InvalidOid 사용 시 동작:
+
+- `dbname` / `dboid`: 특정 데이터베이스에 연결하지 않음(공유 카탈로그만 접근 가능)
+- `username` / `useroid`: `initdb` 시 생성된 슈퍼유저로 실행
 
 #### 연결 플래그
 
-| 플래그 | 설명 |
-|--------|------|
-| `BGWORKER_BYPASS_ALLOWCONN` | 데이터베이스의 `allowconn` 제한 우회 |
-| `BGWORKER_BYPASS_ROLELOGINCHECK` | 역할(role)의 로그인 검사 우회 |
+- `BGWORKER_BYPASS_ALLOWCONN`: 데이터베이스의 `allowconn` 제한 우회
+- `BGWORKER_BYPASS_ROLELOGINCHECK`: 역할(role)의 로그인 검사 우회
 
 #### 연결 예제
 
@@ -1183,13 +1112,13 @@ void my_worker_main(Datum main_arg)
 }
 ```
 
-> 제한사항: 연결 함수는 한 번만 호출할 수 있으며, 데이터베이스 전환은 허용되지 않습니다.
+> 제한사항: 연결 함수는 한 번만 호출 가능하며, 데이터베이스 전환은 금지.
 
 ---
 
 ### 시그널 처리 (Signal Handling)
 
-백그라운드 워커에서 시그널은 초기에 차단되어 있습니다. 명시적으로 차단을 해제해야 합니다.
+백그라운드 워커에서 시그널은 초기에 차단되어 있음. 명시적으로 차단 해제 필요.
 
 ```c
 /* 시그널 차단 해제 */
@@ -1271,7 +1200,7 @@ void my_worker_main(Datum main_arg)
 
 #### 자동 등록 해제 조건
 
-백그라운드 워커는 다음 조건에서 자동으로 등록 해제됩니다:
+백그라운드 워커는 다음 조건에서 자동으로 등록 해제됨:
 
 1. `bgw_restart_time`이 `BGW_NEVER_RESTART`로 설정됨
 2. 종료 코드가 0
@@ -1279,12 +1208,12 @@ void my_worker_main(Datum main_arg)
 
 #### 자동 재시작
 
-- 워커가 크래시되면 `bgw_restart_time` 초 후에 자동으로 재시작됩니다
-- postmaster가 재초기화되면 즉시 재시작됩니다
+- 워커가 크래시되면 `bgw_restart_time` 초 후에 자동으로 재시작됨
+- postmaster가 재초기화되면 즉시 재시작됨
 
 #### 일시 중지
 
-워커를 일시적으로 중지하려면 `WaitLatch()`에 `WL_POSTMASTER_DEATH` 플래그를 사용합니다.
+워커를 일시적으로 중지하려면 `WaitLatch()`에 `WL_POSTMASTER_DEATH` 플래그를 사용.
 
 ```c
 int rc = WaitLatch(MyLatch,
@@ -1303,7 +1232,7 @@ if (rc & WL_POSTMASTER_DEATH)
 
 ### 동적 워커 관리 함수
 
-동적으로 등록된 백그라운드 워커를 관리하기 위한 함수들입니다.
+동적으로 등록된 백그라운드 워커를 관리하기 위한 함수들.
 
 #### 워커 상태 조회
 
@@ -1314,11 +1243,9 @@ BgwHandleStatus GetBackgroundWorkerPid(BackgroundWorkerHandle *handle,
 
 반환 값:
 
-| 상태 | 설명 |
-|------|------|
-| `BGWH_NOT_YET_STARTED` | 아직 시작되지 않음 |
-| `BGWH_STOPPED` | 시작되었지만 더 이상 실행 중이지 않음 |
-| `BGWH_STARTED` | 현재 실행 중 (두 번째 인자를 통해 PID 반환) |
+- `BGWH_NOT_YET_STARTED`: 아직 시작되지 않음
+- `BGWH_STOPPED`: 시작되었지만 더 이상 실행 중이지 않음
+- `BGWH_STARTED`: 현재 실행 중(두 번째 인자를 통해 PID 반환)
 
 #### 워커 종료
 
@@ -1326,8 +1253,8 @@ BgwHandleStatus GetBackgroundWorkerPid(BackgroundWorkerHandle *handle,
 void TerminateBackgroundWorker(BackgroundWorkerHandle *handle)
 ```
 
-- 워커가 실행 중이면 `SIGTERM`을 전송합니다.
-- 실행 중이지 않으면 등록을 해제합니다.
+- 워커가 실행 중이면 `SIGTERM`을 전송함
+- 실행 중이지 않으면 등록을 해제함
 
 #### 시작 대기
 
@@ -1336,15 +1263,13 @@ BgwHandleStatus WaitForBackgroundWorkerStartup(BackgroundWorkerHandle *handle,
                                                pid_t *pidp)
 ```
 
-postmaster가 워커를 시작하거나 postmaster가 종료될 때까지 호출을 차단합니다.
+postmaster가 워커를 시작하거나 postmaster가 종료될 때까지 호출을 차단함.
 
 반환 값:
 
-| 상태 | 설명 |
-|------|------|
-| `BGWH_STARTED` | 워커 실행 중 (PID가 주소에 기록됨) |
-| `BGWH_STOPPED` | 시작되지 않음 |
-| `BGWH_POSTMASTER_DIED` | postmaster가 종료됨 |
+- `BGWH_STARTED`: 워커 실행 중(PID가 주소에 기록됨)
+- `BGWH_STOPPED`: 시작되지 않음
+- `BGWH_POSTMASTER_DIED`: postmaster가 종료됨
 
 #### 종료 대기
 
@@ -1352,14 +1277,12 @@ postmaster가 워커를 시작하거나 postmaster가 종료될 때까지 호출
 BgwHandleStatus WaitForBackgroundWorkerShutdown(BackgroundWorkerHandle *handle)
 ```
 
-백그라운드 워커가 종료되거나 postmaster가 종료될 때까지 호출을 차단합니다.
+백그라운드 워커가 종료되거나 postmaster가 종료될 때까지 호출을 차단함.
 
 반환 값:
 
-| 상태 | 설명 |
-|------|------|
-| `BGWH_STOPPED` | 워커가 종료됨 |
-| `BGWH_POSTMASTER_DIED` | postmaster가 종료됨 |
+- `BGWH_STOPPED`: 워커가 종료됨
+- `BGWH_POSTMASTER_DIED`: postmaster가 종료됨
 
 #### 사용 예제
 
@@ -1404,7 +1327,7 @@ else if (status == BGWH_POSTMASTER_DIED)
 
 ### 비동기 알림 (Asynchronous Notifications)
 
-백그라운드 워커에서 알림을 전송하는 방법은 다음과 같습니다:
+백그라운드 워커에서 알림을 전송하는 방법은 다음과 같음:
 
 #### SPI를 통한 NOTIFY
 
@@ -1422,13 +1345,13 @@ SPI_finish();
 Async_Notify("my_channel", "payload");
 ```
 
-> 제한사항: 백그라운드 워커는 `LISTEN` 명령을 사용해서는 안 됩니다. 알림을 소비하기 위한 인프라가 없습니다.
+> 제한사항: 백그라운드 워커는 `LISTEN` 명령 사용 금지. 알림을 소비하기 위한 인프라가 없음.
 
 ---
 
 ### 공유 메모리 접근
 
-백그라운드 워커가 공유 메모리에 접근하려면 `bgw_flags`에 `BGWORKER_SHMEM_ACCESS`를 설정해야 합니다.
+백그라운드 워커가 공유 메모리에 접근하려면 `bgw_flags`에 `BGWORKER_SHMEM_ACCESS` 설정 필요.
 
 #### 공유 메모리 구조체 정의
 
@@ -1551,7 +1474,7 @@ void my_worker_main(Datum main_arg)
 
 #### 완전한 백그라운드 워커 예제
 
-주기적으로 테이블의 레코드 수를 로그에 기록하는 백그라운드 워커 예제입니다.
+주기적으로 테이블의 레코드 수를 로그에 기록하는 백그라운드 워커 예제.
 
 ```c
 /* my_worker.c */
@@ -1795,11 +1718,11 @@ pg_ctl restart
 
 #### 최대 워커 수 제한
 
-- `max_worker_processes` 설정 매개변수로 최대 백그라운드 워커 수가 제한됩니다
+- `max_worker_processes` 설정 매개변수로 최대 백그라운드 워커 수가 제한됨
 
 #### Windows/EXEC_BACKEND 주의사항
 
-Windows 및 `EXEC_BACKEND` 환경에서는 `Datum`을 참조(reference)로 전달하는 것이 안전하지 않습니다. 값(value)으로만 전달해야 합니다.
+Windows 및 `EXEC_BACKEND` 환경에서는 `Datum`을 참조(reference)로 전달하는 것이 안전하지 않음. 값(value)으로만 전달 필요.
 
 - `int32` 또는 작은 값 사용
 - 또는 공유 메모리 배열의 인덱스 사용
@@ -1814,7 +1737,7 @@ worker.bgw_main_arg = Int32GetDatum(shared_array_index);
 
 #### 참고 예제
 
-PostgreSQL 소스 코드의 `src/test/modules/worker_spi`에서 유용한 기법을 보여주는 작동 예제를 확인할 수 있습니다.
+PostgreSQL 소스 코드의 `src/test/modules/worker_spi`에서 유용한 기법을 보여주는 작동 예제 확인 가능.
 
 ---
 
@@ -1865,25 +1788,23 @@ PostgreSQL 소스 코드의 `src/test/modules/worker_spi`에서 유용한 기법
 
 ### 개요
 
-논리적 디코딩(Logical Decoding) 은 PostgreSQL이 SQL을 통해 수행된 데이터베이스 수정 사항을 외부 소비자에게 스트리밍할 수 있게 해주는 인프라입니다. 이 기능은 다음을 지원합니다:
+논리적 디코딩(Logical Decoding)은 PostgreSQL이 SQL을 통해 수행된 데이터베이스 수정 사항을 외부 소비자에게 스트리밍할 수 있게 해주는 인프라. 다음을 지원:
 
 - 복제 솔루션: 데이터베이스 간 동기화
 - 감사(Auditing): 변경 사항 추적
 - 커스텀 데이터 통합 파이프라인: ETL 프로세스 등
 
-변경 사항은 논리적 복제 슬롯(Logical Replication Slots) 으로 식별되는 스트림으로 전송됩니다.
+변경 사항은 논리적 복제 슬롯(Logical Replication Slots)으로 식별되는 스트림으로 전송됨.
 
 #### 핵심 구성 요소
 
-| 구성 요소 | 설명 |
-|-----------|------|
-| 복제 슬롯 (Replication Slot) | 변경 사항 스트림을 식별하고 소비자가 처리한 수정 사항을 추적 |
-| 출력 플러그인 (Output Plugin) | 변경 사항이 스트리밍되는 형식을 결정 |
-| 변경 소비 방법 | 스트리밍 복제 프로토콜, SQL 인터페이스, 커스텀 출력 라이터 |
+- 복제 슬롯(Replication Slot): 변경 사항 스트림을 식별하고 소비자가 처리한 수정 사항을 추적
+- 출력 플러그인(Output Plugin): 변경 사항이 스트리밍되는 형식을 결정
+- 변경 소비 방법: 스트리밍 복제 프로토콜·SQL 인터페이스·커스텀 출력 라이터
 
 #### 출력 플러그인 접근 가능 데이터
 
-모든 출력 플러그인은 다음에 접근할 수 있습니다:
+모든 출력 플러그인이 접근 가능한 데이터:
 
 - `INSERT`로 생성된 새 행
 - `UPDATE`로 생성된 새 행 버전
@@ -1893,11 +1814,11 @@ PostgreSQL 소스 코드의 `src/test/modules/worker_spi`에서 유용한 기법
 
 ### 49.1. 논리적 디코딩 예제
 
-이 섹션에서는 SQL 인터페이스와 스트리밍 복제 프로토콜을 사용하여 논리적 디코딩을 제어하는 방법을 보여줍니다.
+이 섹션은 SQL 인터페이스와 스트리밍 복제 프로토콜을 사용해 논리적 디코딩을 제어하는 방법을 설명.
 
 #### 사전 요구 사항
 
-논리적 디코딩을 사용하기 전에 다음 설정이 필요합니다:
+논리적 디코딩 사용 전 다음 설정 필요:
 
 ```sql
 -- postgresql.conf 설정
@@ -1908,7 +1829,7 @@ max_replication_slots = 1  -- 최소 1 이상
 max_prepared_transactions = 1  -- 최소 1 이상
 ```
 
-> 참고: 슈퍼유저 권한으로 연결해야 합니다.
+> 참고: 슈퍼유저 권한으로 연결 필요.
 
 #### 49.1.1. SQL 인터페이스 예제
 
@@ -1987,7 +1908,7 @@ SELECT pg_drop_replication_slot('regression_slot');
 
 #### 49.1.2. 스트리밍 복제 프로토콜 예제
 
-`pg_recvlogical` 유틸리티를 사용한 예제입니다:
+`pg_recvlogical` 유틸리티를 사용한 예제:
 
 ```bash
 # 슬롯 생성
@@ -2070,7 +1991,7 @@ SELECT * FROM pg_logical_slot_get_changes('regression_slot', NULL, NULL);
 -- 결과: ROLLBACK PREPARED 정보 출력
 ```
 
-> 중요: `pg_logical_slot_get_changes()`로 읽은 변경 사항은 소비되어 후속 호출에서 나타나지 않습니다. 더 이상 사용하지 않는 슬롯은 삭제하여 서버 리소스를 확보하세요.
+> 중요: `pg_logical_slot_get_changes()`로 읽은 변경 사항은 소비되어 후속 호출에서 나타나지 않음. 더 이상 사용하지 않는 슬롯은 삭제하여 서버 리소스 확보 필요.
 
 ---
 
@@ -2078,7 +1999,7 @@ SELECT * FROM pg_logical_slot_get_changes('regression_slot', NULL, NULL);
 
 #### 49.2.1. 논리적 디코딩
 
-논리적 디코딩(Logical Decoding) 은 데이터베이스 테이블에 대한 모든 영구적 변경 사항을, 데이터베이스 내부 상태에 대한 세부 지식 없이도 해석 가능한 일관된 형식으로 추출하는 과정입니다.
+논리적 디코딩(Logical Decoding)은 데이터베이스 테이블에 대한 모든 영구적 변경 사항을, 데이터베이스 내부 상태에 대한 세부 지식 없이도 해석 가능한 일관된 형식으로 추출하는 과정.
 
 PostgreSQL은 저장소 수준에서 변경 사항을 기술하는 WAL(Write-Ahead Log) 내용을 디코딩하여 다음과 같은 애플리케이션별 형식으로 변환합니다:
 
@@ -2087,36 +2008,34 @@ PostgreSQL은 저장소 수준에서 변경 사항을 기술하는 WAL(Write-Ahe
 
 #### 49.2.2. 복제 슬롯 (Replication Slots)
 
-복제 슬롯(Replication Slot) 은 원본 서버에서 생성된 순서대로 클라이언트에 재생할 수 있는 변경 사항 스트림을 나타냅니다. 각 슬롯은 단일 데이터베이스의 변경 사항 시퀀스를 스트리밍합니다.
+복제 슬롯(Replication Slot)은 원본 서버에서 생성된 순서대로 클라이언트에 재생할 수 있는 변경 사항 스트림을 나타냄. 각 슬롯은 단일 데이터베이스의 변경 사항 시퀀스를 스트리밍.
 
 ##### 주요 특성
 
-| 특성 | 설명 |
-|------|------|
-| 고유 식별자 | PostgreSQL 클러스터 내 모든 데이터베이스에서 고유 |
-| 영속성 | 연결과 독립적으로 유지되며 충돌에 안전 |
-| 정확히 한 번 전송 | 정상 운영 시 각 변경 사항을 정확히 한 번만 전송 |
-| 위치 저장 | 현재 위치는 체크포인트 시에만 저장됨 |
+- 고유 식별자: PostgreSQL 클러스터 내 모든 데이터베이스에서 고유
+- 영속성: 연결과 독립적으로 유지되며 충돌에 안전
+- 정확히 한 번 전송: 정상 운영 시 각 변경 사항을 정확히 한 번만 전송
+- 위치 저장: 현재 위치는 체크포인트 시에만 저장됨
 
 ##### 중요 고려 사항
 
-- 다중 슬롯: 단일 데이터베이스에 대해 각각 고유한 상태를 가진 여러 독립 슬롯이 존재할 수 있음
-- 단일 소비자: 주어진 시점에 하나의 수신자만 슬롯의 변경 사항을 소비할 수 있음
-- Hot Standby 지원: Hot Standby에서 논리적 복제 슬롯을 생성할 수 있지만 추가 구성 필요
+- 다중 슬롯: 단일 데이터베이스에 대해 각각 고유한 상태를 가진 여러 독립 슬롯 존재 가능
+- 단일 소비자: 주어진 시점에 하나의 수신자만 슬롯의 변경 사항 소비 가능
+- Hot Standby 지원: Hot Standby에서 논리적 복제 슬롯 생성 가능하나 추가 구성 필요
 
 ##### Hot Standby 요구 사항
 
-Hot Standby에서 논리적 슬롯을 사용하려면:
+Hot Standby에서 논리적 슬롯 사용 시 필요 사항:
 
 - 스탠바이에서 `hot_standby_feedback` 활성화
 - 프라이머리와 스탠바이 간 물리적 슬롯 권장
 - 프라이머리에서 `wal_level`을 `logical`로 설정
 
-> 주의: 복제 슬롯은 필요한 WAL과 시스템 카탈로그 행의 제거를 방지합니다. 이로 인해 상당한 저장 공간이 소비될 수 있으며, 극단적인 경우 트랜잭션 ID 랩어라운드를 방지하기 위해 데이터베이스가 종료될 수 있습니다. 더 이상 필요하지 않은 슬롯은 반드시 삭제하세요.
+> 주의: 복제 슬롯은 필요한 WAL과 시스템 카탈로그 행의 제거를 방지함. 이로 인해 상당한 저장 공간이 소비될 수 있으며, 극단적인 경우 트랜잭션 ID 랩어라운드 방지를 위해 데이터베이스가 종료될 수 있음. 더 이상 필요하지 않은 슬롯은 반드시 삭제 필요.
 
 #### 49.2.3. 복제 슬롯 동기화
 
-프라이머리의 논리적 복제 슬롯을 Hot Standby에 동기화하여 장애 조치 기능을 제공할 수 있습니다.
+프라이머리의 논리적 복제 슬롯을 Hot Standby에 동기화하여 장애 조치 기능 제공 가능.
 
 ##### 구성 요구 사항
 
@@ -2131,16 +2050,14 @@ CREATE SUBSCRIPTION my_sub CONNECTION '...' PUBLICATION my_pub WITH (failover = 
 스탠바이에서 필요한 설정:
 
 - `sync_replication_slots` 활성화
-- `primary_slot_name` 구성 (물리적 복제 슬롯)
+- `primary_slot_name` 구성(물리적 복제 슬롯)
 - `hot_standby_feedback` 활성화
 - `primary_conninfo`에 유효한 `dbname` 지정
 
 ##### 동기화 방법
 
-| 방법 | 설명 |
-|------|------|
-| 자동 (권장) | `sync_replication_slots`를 통해 slotsync worker가 주기적으로 업데이트 |
-| 수동 | `pg_sync_replication_slots()` 함수 사용 (테스트/디버깅용) |
+- 자동(권장): `sync_replication_slots`를 통해 slotsync worker가 주기적으로 업데이트
+- 수동: `pg_sync_replication_slots()` 함수 사용(테스트·디버깅용)
 
 ##### 장애 조치 후 재개
 
@@ -2149,17 +2066,17 @@ CREATE SUBSCRIPTION my_sub CONNECTION '...' PUBLICATION my_pub WITH (failover = 
 ALTER SUBSCRIPTION my_sub CONNECTION 'host=new_primary ...';
 ```
 
-> 주의: 스탠바이를 승격하기 전에 구독을 비활성화하세요. 그렇지 않으면 논리적 구독자가 이전 프라이머리에서 계속 데이터를 받아 데이터 불일치가 발생할 수 있습니다.
+> 주의: 스탠바이 승격 전 구독 비활성화 필요. 그렇지 않으면 논리적 구독자가 이전 프라이머리에서 계속 데이터를 받아 데이터 불일치 발생 가능.
 
 #### 49.2.4. 출력 플러그인 (Output Plugins)
 
-출력 플러그인(Output Plugin) 은 WAL의 내부 표현을 복제 슬롯 소비자가 원하는 형식으로 변환합니다.
+출력 플러그인(Output Plugin)은 WAL의 내부 표현을 복제 슬롯 소비자가 원하는 형식으로 변환.
 
-출력 플러그인은 공유 라이브러리로 구현되며, 코어 코드를 수정하지 않고도 확장 가능합니다. 예제 플러그인은 `contrib/test_decoding`에서 확인할 수 있습니다.
+출력 플러그인은 공유 라이브러리로 구현되며, 코어 코드를 수정하지 않고도 확장 가능. 예제 플러그인은 `contrib/test_decoding`에서 확인 가능.
 
 #### 49.2.5. 내보낸 스냅샷 (Exported Snapshots)
 
-스트리밍 복제 인터페이스를 사용하여 새 복제 슬롯을 생성하면, 이후의 모든 변경 사항이 포함되는 시점의 정확한 데이터베이스 상태를 보여주는 스냅샷이 내보내집니다.
+스트리밍 복제 인터페이스를 사용해 새 복제 슬롯을 생성하면, 이후의 모든 변경 사항이 포함되는 시점의 정확한 데이터베이스 상태를 보여주는 스냅샷이 내보내짐.
 
 ##### 사용법
 
@@ -2168,7 +2085,7 @@ ALTER SUBSCRIPTION my_sub CONNECTION 'host=new_primary ...';
 SET TRANSACTION SNAPSHOT 'exported_snapshot_id';
 ```
 
-이를 통해 다음이 가능합니다:
+이를 통해 가능한 작업:
 
 - 해당 시점의 데이터베이스 상태 덤프
 - 변경 사항 손실 없이 슬롯 내용을 사용한 상태 업데이트
@@ -2185,7 +2102,7 @@ SNAPSHOT 'nothing'
 
 ### 49.3. 스트리밍 복제 프로토콜 인터페이스
 
-스트리밍 복제 프로토콜 인터페이스는 복제 연결을 통해서만 사용할 수 있는 논리적 디코딩 관리 명령을 제공합니다. 이 명령들은 표준 SQL로는 사용할 수 없습니다.
+스트리밍 복제 프로토콜 인터페이스는 복제 연결을 통해서만 사용 가능한 논리적 디코딩 관리 명령을 제공. 이 명령들은 표준 SQL로는 사용 불가.
 
 #### 핵심 명령어
 
@@ -2195,7 +2112,7 @@ SNAPSHOT 'nothing'
 CREATE_REPLICATION_SLOT slot_name LOGICAL output_plugin
 ```
 
-논리적 디코딩을 위한 새 복제 슬롯을 생성합니다. 변경 사항을 디코딩할 출력 플러그인을 지정해야 합니다.
+논리적 디코딩을 위한 새 복제 슬롯 생성. 변경 사항을 디코딩할 출력 플러그인 지정 필요.
 
 ##### DROP_REPLICATION_SLOT
 
@@ -2203,7 +2120,7 @@ CREATE_REPLICATION_SLOT slot_name LOGICAL output_plugin
 DROP_REPLICATION_SLOT slot_name [WAIT]
 ```
 
-기존 복제 슬롯을 제거합니다. 선택적 `WAIT` 절로 블로킹 여부를 제어할 수 있습니다.
+기존 복제 슬롯 제거. 선택적 `WAIT` 절로 블로킹 여부 제어 가능.
 
 ##### START_REPLICATION
 
@@ -2211,11 +2128,11 @@ DROP_REPLICATION_SLOT slot_name [WAIT]
 START_REPLICATION SLOT slot_name LOGICAL ...
 ```
 
-복제 슬롯에서 변경 사항 스트리밍을 시작합니다. 디코딩된 논리적 변경 사항을 클라이언트로 스트리밍합니다.
+복제 슬롯에서 변경 사항 스트리밍 시작. 디코딩된 논리적 변경 사항을 클라이언트로 스트리밍.
 
 #### pg_recvlogical 유틸리티
 
-`pg_recvlogical`은 스트리밍 복제 연결을 통해 논리적 디코딩을 제어하는 주요 명령줄 유틸리티입니다. 위 명령을 내부적으로 사용하여 복제 슬롯을 관리하고 변경 사항을 수신합니다.
+`pg_recvlogical`은 스트리밍 복제 연결을 통해 논리적 디코딩을 제어하는 주요 명령줄 유틸리티. 위 명령을 내부적으로 사용하여 복제 슬롯을 관리하고 변경 사항을 수신.
 
 ```bash
 # 주요 옵션
@@ -2228,37 +2145,33 @@ pg_recvlogical -d database --slot=slot_name --drop-slot
 
 ### 49.4. SQL 인터페이스
 
-PostgreSQL은 논리적 디코딩과 상호작용하기 위한 SQL 수준 API를 제공합니다. 자세한 함수 정보는 섹션 9.28.6 "복제 관리 함수"를 참조하세요.
+PostgreSQL은 논리적 디코딩과 상호작용하기 위한 SQL 수준 API 제공. 자세한 함수 정보는 9.28.6 "복제 관리 함수" 참고.
 
 #### 주요 함수
 
-| 함수 | 설명 |
-|------|------|
-| `pg_create_logical_replication_slot()` | 논리적 복제 슬롯 생성 |
-| `pg_drop_replication_slot()` | 복제 슬롯 삭제 |
-| `pg_logical_slot_get_changes()` | 변경 사항 가져오기 (소비) |
-| `pg_logical_slot_peek_changes()` | 변경 사항 미리보기 (비소비) |
-| `pg_logical_slot_get_binary_changes()` | 바이너리 형식으로 변경 사항 가져오기 |
-| `pg_logical_slot_peek_binary_changes()` | 바이너리 형식으로 변경 사항 미리보기 |
-| `pg_replication_slot_advance()` | 슬롯 위치 전진 |
+- `pg_create_logical_replication_slot()`: 논리적 복제 슬롯 생성
+- `pg_drop_replication_slot()`: 복제 슬롯 삭제
+- `pg_logical_slot_get_changes()`: 변경 사항 가져오기(소비)
+- `pg_logical_slot_peek_changes()`: 변경 사항 미리보기(비소비)
+- `pg_logical_slot_get_binary_changes()`: 바이너리 형식으로 변경 사항 가져오기
+- `pg_logical_slot_peek_binary_changes()`: 바이너리 형식으로 변경 사항 미리보기
+- `pg_replication_slot_advance()`: 슬롯 위치 전진
 
 #### 제한 사항
 
-> 중요: 동기식 복제(섹션 26.2.8 참조)는 스트리밍 복제 인터페이스를 통해 사용되는 복제 슬롯에서만 지원됩니다. 함수 인터페이스 및 추가 비코어 인터페이스는 동기식 복제를 지원하지 않습니다.
+> 중요: 동기식 복제(26.2.8 참고)는 스트리밍 복제 인터페이스를 통해 사용되는 복제 슬롯에서만 지원. 함수 인터페이스 및 추가 비코어 인터페이스는 동기식 복제를 지원하지 않음.
 
 ---
 
 ### 49.5. 시스템 카탈로그
 
-논리적 디코딩에 관련된 정보를 제공하는 시스템 카탈로그와 뷰입니다.
+논리적 디코딩에 관련된 정보를 제공하는 시스템 카탈로그와 뷰.
 
 #### 주요 뷰
 
-| 뷰 | 설명 |
-|----|------|
-| `pg_replication_slots` | 복제 슬롯의 현재 상태 표시 (물리적 및 논리적) |
-| `pg_stat_replication` | 스트리밍 복제 연결 정보 표시 |
-| `pg_stat_replication_slots` | 논리적 복제 슬롯의 통계 정보 제공 |
+- `pg_replication_slots`: 복제 슬롯의 현재 상태 표시(물리적·논리적)
+- `pg_stat_replication`: 스트리밍 복제 연결 정보 표시
+- `pg_stat_replication_slots`: 논리적 복제 슬롯의 통계 정보 제공
 
 #### 예제 쿼리
 
@@ -2303,11 +2216,11 @@ FROM pg_stat_replication_slots;
 
 ### 49.6. 출력 플러그인
 
-출력 플러그인은 데이터베이스 변경 사항을 임의의 형식으로 디코딩할 수 있게 해주는 공유 라이브러리입니다.
+출력 플러그인은 데이터베이스 변경 사항을 임의의 형식으로 디코딩할 수 있게 해주는 공유 라이브러리.
 
 #### 49.6.1. 초기화 함수
 
-출력 플러그인은 `_PG_output_plugin_init()` 함수를 제공해야 하며, 이 함수는 `OutputPluginCallbacks` 구조체를 채웁니다:
+출력 플러그인은 `_PG_output_plugin_init()` 함수 제공 필요, 이 함수는 `OutputPluginCallbacks` 구조체를 채움:
 
 ```c
 typedef struct OutputPluginCallbacks {
@@ -2343,21 +2256,17 @@ typedef struct OutputPluginCallbacks {
 
 ##### 필수 콜백
 
-| 콜백 | 설명 |
-|------|------|
-| `begin_cb` | 트랜잭션 시작 시 호출 |
-| `change_cb` | 행 수정 시 호출 |
-| `commit_cb` | 트랜잭션 종료 시 호출 |
+- `begin_cb`: 트랜잭션 시작 시 호출
+- `change_cb`: 행 수정 시 호출
+- `commit_cb`: 트랜잭션 종료 시 호출
 
 ##### 선택적 콜백
 
-| 콜백 | 설명 |
-|------|------|
-| `startup_cb` | 복제 슬롯 생성 또는 스트리밍 시작 시 호출 |
-| `shutdown_cb` | 종료 시 호출 |
-| `truncate_cb` | TRUNCATE 시 호출 |
-| `message_cb` | 논리적 디코딩 메시지 수신 시 호출 |
-| `filter_by_origin_cb` | 원본 기반 필터링 |
+- `startup_cb`: 복제 슬롯 생성 또는 스트리밍 시작 시 호출
+- `shutdown_cb`: 종료 시 호출
+- `truncate_cb`: TRUNCATE 시 호출
+- `message_cb`: 논리적 디코딩 메시지 수신 시 호출
+- `filter_by_origin_cb`: 원본 기반 필터링
 
 ##### 스트리밍 지원 콜백 (활성화 시 필수)
 
@@ -2409,7 +2318,7 @@ typedef void (*LogicalDecodeTruncateCB) (
 
 #### 49.6.3. 출력 모드
 
-플러그인은 `OutputPluginOptions`를 통해 출력 형식을 선언합니다:
+플러그인은 `OutputPluginOptions`를 통해 출력 형식을 선언:
 
 ```c
 typedef struct OutputPluginOptions {
@@ -2418,12 +2327,10 @@ typedef struct OutputPluginOptions {
 } OutputPluginOptions;
 ```
 
-| 출력 유형 | 설명 |
-|-----------|------|
-| `OUTPUT_PLUGIN_TEXTUAL_OUTPUT` | 서버 인코딩의 텍스트 데이터 |
-| `OUTPUT_PLUGIN_BINARY_OUTPUT` | 바이너리 데이터 |
+- `OUTPUT_PLUGIN_TEXTUAL_OUTPUT`: 서버 인코딩의 텍스트 데이터
+- `OUTPUT_PLUGIN_BINARY_OUTPUT`: 바이너리 데이터
 
-`receive_rewrites`가 true이면 DDL 중 힙 재작성으로 인한 변경 사항을 수신합니다.
+`receive_rewrites`가 true이면 DDL 중 힙 재작성으로 인한 변경 사항을 수신.
 
 #### 49.6.4. 출력 생성 함수
 
@@ -2436,17 +2343,17 @@ appendStringInfo(ctx->out, "BEGIN %u", txn->xid);
 OutputPluginWrite(ctx, last_write);
 ```
 
-`last_write` 매개변수는 이것이 콜백의 마지막 쓰기인지 나타냅니다.
+`last_write` 매개변수는 이것이 콜백의 마지막 쓰기인지 나타냄.
 
 #### 플러그인 기능 및 제한
 
-##### 허용됨
+##### 허용
 
 - 백엔드 출력 함수 호출
 - `pg_catalog` 테이블 및 사용자 정의 카탈로그 테이블에 대한 읽기 전용 접근
 - `systable_*` API를 통한 카탈로그 테이블 접근
 
-##### 금지됨
+##### 금지
 
 - 트랜잭션 ID 할당
 - 테이블에 쓰기
@@ -2458,66 +2365,64 @@ OutputPluginWrite(ctx, last_write);
 - 동시 트랜잭션은 커밋 순서로 디코딩됨
 - 중단된 트랜잭션은 디코딩되지 않음
 - 세이브포인트는 부모 트랜잭션에 통합됨
-- 디스크에 플러시된 트랜잭션만 디코딩됨 (`synchronous_commit`의 영향을 받음)
+- 디스크에 플러시된 트랜잭션만 디코딩됨(`synchronous_commit`의 영향을 받음)
 
 ---
 
 ### 49.7. 출력 라이터 (Output Writers)
 
-출력 라이터를 사용하면 논리적 디코딩에 추가 출력 방법을 구현할 수 있습니다.
+출력 라이터를 사용하면 논리적 디코딩에 추가 출력 방법 구현 가능.
 
 #### 필요한 함수
 
-커스텀 출력 라이터를 구현하려면 세 가지 함수가 필요합니다:
+커스텀 출력 라이터 구현에 필요한 세 가지 함수:
 
-1. WAL 읽기 함수 - Write-Ahead Log에서 읽기
-2. 출력 준비 함수 - 출력 형식 준비
-3. 출력 쓰기 함수 - 실제로 디코딩된 변경 사항 쓰기
+1. WAL 읽기 함수: Write-Ahead Log에서 읽기
+2. 출력 준비 함수: 출력 형식 준비
+3. 출력 쓰기 함수: 실제로 디코딩된 변경 사항 쓰기
 
-구현 세부 사항은 `src/backend/replication/logical/logicalfuncs.c`를 참조하세요.
+구현 세부 사항은 `src/backend/replication/logical/logicalfuncs.c` 참고.
 
 ---
 
 ### 49.8. 동기식 복제 지원
 
-논리적 디코딩을 활용하면 스트리밍 복제와 동일한 사용자 인터페이스로 동기식 복제 솔루션을 구축할 수 있습니다.
+논리적 디코딩을 활용하면 스트리밍 복제와 동일한 사용자 인터페이스로 동기식 복제 솔루션 구축 가능.
 
 #### 구현 요구 사항
 
-1. 데이터를 스트리밍하기 위해 스트리밍 복제 인터페이스 (섹션 49.3)를 사용해야 합니다
-2. 클라이언트는 스트리밍 복제 클라이언트와 마찬가지로 `Standby status update (F)` 메시지(섹션 54.4)를 보내야 합니다
+1. 데이터 스트리밍을 위해 스트리밍 복제 인터페이스(49.3 참고) 사용 필요
+2. 클라이언트는 스트리밍 복제 클라이언트와 마찬가지로 `Standby status update (F)` 메시지(54.4 참고)를 보내야 함
 
 #### 중요 제한 사항
 
-논리적 디코딩을 통해 변경 사항을 수신하는 동기식 복제본은 단일 데이터베이스 범위 내에서만 동작합니다. `synchronous_standby_names`는 서버 전체 설정이므로, 둘 이상의 데이터베이스를 활발하게 사용하는 환경에서는 이 방식이 올바르게 동작하지 않습니다.
+논리적 디코딩을 통해 변경 사항을 수신하는 동기식 복제본은 단일 데이터베이스 범위 내에서만 동작. `synchronous_standby_names`는 서버 전체 설정이므로, 둘 이상의 데이터베이스를 활발하게 사용하는 환경에서는 이 방식이 올바르게 동작하지 않음.
 
 #### 주의 사항: 카탈로그 테이블 데드락
 
-동기식 복제 설정에서 트랜잭션이 사용자 카탈로그 테이블을 배타적으로 잠글 때 데드락이 발생할 수 있습니다.
+동기식 복제 설정에서 트랜잭션이 사용자 카탈로그 테이블을 배타적으로 잠글 때 데드락 발생 가능.
 
 ##### 피해야 할 작업
 
-데드락을 방지하려면 다음을 통해 사용자 카탈로그 테이블에 배타적 잠금을 설정하지 마세요:
+데드락 방지를 위해 다음을 통해 사용자 카탈로그 테이블에 배타적 잠금 설정 금지:
 
-| 작업 | 설명 |
-|------|------|
-| `LOCK` | 트랜잭션에서 `pg_class`에 대한 `LOCK` 발행 |
-| `CLUSTER` | 트랜잭션에서 `pg_class`에 대한 `CLUSTER` 수행 |
-| 2단계 커밋 | 2단계 트랜잭션 논리적 디코딩이 활성화된 상태에서 `pg_class`에 대한 `LOCK` 후 `PREPARE TRANSACTION` |
-| 트리거 | 발행된 테이블에 트리거가 있는 경우 `pg_trigger`에 대한 `CLUSTER` 후 `PREPARE TRANSACTION` |
-| `TRUNCATE` | 트랜잭션에서 사용자 카탈로그 테이블에 대한 `TRUNCATE` 실행 |
+- `LOCK`: 트랜잭션에서 `pg_class`에 대한 `LOCK` 발행
+- `CLUSTER`: 트랜잭션에서 `pg_class`에 대한 `CLUSTER` 수행
+- 2단계 커밋: 2단계 트랜잭션 논리적 디코딩이 활성화된 상태에서 `pg_class`에 대한 `LOCK` 후 `PREPARE TRANSACTION`
+- 트리거: 발행된 테이블에 트리거가 있는 경우 `pg_trigger`에 대한 `CLUSTER` 후 `PREPARE TRANSACTION`
+- `TRUNCATE`: 트랜잭션에서 사용자 카탈로그 테이블에 대한 `TRUNCATE` 실행
 
-> 참고: 이러한 명령은 나열된 시스템 카탈로그 테이블뿐만 아니라 다른 카탈로그 테이블에서도 데드락을 유발할 수 있습니다.
+> 참고: 이러한 명령은 나열된 시스템 카탈로그 테이블뿐만 아니라 다른 카탈로그 테이블에서도 데드락을 유발할 수 있음.
 
 ---
 
 ### 49.9. 대규모 트랜잭션 스트리밍
 
-PostgreSQL의 논리적 디코딩은 적용 지연을 줄이기 위해 대규모 트랜잭션의 스트리밍을 지원합니다.
+PostgreSQL의 논리적 디코딩은 적용 지연을 줄이기 위해 대규모 트랜잭션의 스트리밍을 지원.
 
 #### 기본 동작 vs 스트리밍
 
-스트리밍 없이는 트랜잭션의 모든 디코딩된 변경 사항이 커밋 시점에만 전송되므로, 대규모 트랜잭션 복제에 상당한 지연이 발생할 수 있습니다.
+스트리밍 없이는 트랜잭션의 모든 디코딩된 변경 사항이 커밋 시점에만 전송되므로, 대규모 트랜잭션 복제에 상당한 지연 발생 가능.
 
 ##### 기본 콜백 (커밋 시에만 호출)
 
@@ -2541,7 +2446,7 @@ PostgreSQL의 논리적 디코딩은 적용 지연을 줄이기 위해 대규모
 
 #### 스트리밍 작동 방식
 
-변경 사항은 `stream_start_cb`와 `stream_stop_cb` 콜백으로 구분된 블록 단위로 스트리밍됩니다:
+변경 사항은 `stream_start_cb`와 `stream_stop_cb` 콜백으로 구분된 블록 단위로 스트리밍됨:
 
 ```
 stream_start_cb(...);         // 첫 번째 블록 시작
@@ -2565,9 +2470,9 @@ commit_prepared_cb(...);      // 2단계 커밋 완료
 
 #### 스트리밍 트리거 조건
 
-WAL에서 디코딩된 변경 사항의 총량(모든 진행 중인 트랜잭션 합산)이 `logical_decoding_work_mem` 제한을 초과하면 스트리밍이 자동으로 시작됩니다. 이때 가장 큰 최상위 트랜잭션이 스트리밍 대상으로 선택됩니다.
+WAL에서 디코딩된 변경 사항의 총량(모든 진행 중인 트랜잭션 합산)이 `logical_decoding_work_mem` 제한을 초과하면 스트리밍이 자동으로 시작됨. 이때 가장 큰 최상위 트랜잭션이 스트리밍 대상으로 선택됨.
 
-> 참고: 스트리밍이 활성화되어 있어도 불완전한 튜플(예: 해당 메인 테이블 삽입 없이 TOAST 테이블 삽입)이 발생하면 디스크로의 스필이 여전히 발생할 수 있습니다.
+> 참고: 스트리밍이 활성화되어 있어도 불완전한 튜플(예: 해당 메인 테이블 삽입 없이 TOAST 테이블 삽입)이 발생하면 디스크로의 스필이 여전히 발생할 수 있음.
 
 #### 주요 보장 사항
 
@@ -2578,7 +2483,7 @@ WAL에서 디코딩된 변경 사항의 총량(모든 진행 중인 트랜잭션
 
 ### 49.10. 2단계 커밋 지원
 
-PostgreSQL의 논리적 디코딩은 추가 출력 플러그인 콜백을 통해 2단계 커밋 명령(`PREPARE TRANSACTION`, `COMMIT PREPARED`, `ROLLBACK PREPARED`)을 지원합니다.
+PostgreSQL의 논리적 디코딩은 추가 출력 플러그인 콜백을 통해 2단계 커밋 명령(`PREPARE TRANSACTION`, `COMMIT PREPARED`, `ROLLBACK PREPARED`)을 지원.
 
 #### 기본 vs 2단계 디코딩
 
@@ -2595,27 +2500,23 @@ PostgreSQL의 논리적 디코딩은 추가 출력 플러그인 콜백을 통해
 
 #### 필수 콜백
 
-2단계 커밋 디코딩을 지원하려면 출력 플러그인이 다음 콜백을 제공해야 합니다:
+2단계 커밋 디코딩 지원을 위해 출력 플러그인이 제공해야 하는 콜백:
 
-| 콜백 | 설명 |
-|------|------|
-| `begin_prepare_cb` | 준비된 트랜잭션 시작 표시 |
-| `prepare_cb` | 트랜잭션이 준비될 때 호출 |
-| `commit_prepared_cb` | 준비된 트랜잭션이 커밋될 때 호출 |
-| `rollback_prepared_cb` | 준비된 트랜잭션이 롤백될 때 호출 |
-| `stream_prepare_cb` | 스트리밍되는 준비된 트랜잭션용 |
+- `begin_prepare_cb`: 준비된 트랜잭션 시작 표시
+- `prepare_cb`: 트랜잭션이 준비될 때 호출
+- `commit_prepared_cb`: 준비된 트랜잭션이 커밋될 때 호출
+- `rollback_prepared_cb`: 준비된 트랜잭션이 롤백될 때 호출
+- `stream_prepare_cb`: 스트리밍되는 준비된 트랜잭션용
 
 #### 선택적 콜백
 
-| 콜백 | 설명 |
-|------|------|
-| `filter_prepare_cb` | `gid`(전역 ID) 패턴 매칭 또는 `xid`(트랜잭션 ID) 조회를 통해 특정 트랜잭션의 2단계 디코딩을 필터링 |
+- `filter_prepare_cb`: `gid`(전역 ID) 패턴 매칭 또는 `xid`(트랜잭션 ID) 조회를 통해 특정 트랜잭션의 2단계 디코딩을 필터링
 
 #### 중요 주의 사항
 
-1. 블로킹 위험: 준비된 트랜잭션이 카탈로그 테이블을 배타적으로 잠근 경우, 주 트랜잭션이 커밋될 때까지 디코딩 준비 작업이 차단될 수 있습니다.
+1. 블로킹 위험: 준비된 트랜잭션이 카탈로그 테이블을 배타적으로 잠근 경우, 주 트랜잭션이 커밋될 때까지 디코딩 준비 작업이 차단될 수 있음.
 
-2. 데드락 위험: 이 기능을 기반으로 구축된 분산 2단계 커밋 솔루션은 준비된 트랜잭션이 카탈로그 테이블을 잠그면 데드락이 발생할 수 있습니다. 사용자는 이러한 트랜잭션에서 카탈로그 테이블에 대한 명시적 `LOCK` 명령을 피해야 합니다.
+2. 데드락 위험: 이 기능을 기반으로 구축된 분산 2단계 커밋 솔루션은 준비된 트랜잭션이 카탈로그 테이블을 잠그면 데드락 발생 가능. 이러한 트랜잭션에서 카탈로그 테이블에 대한 명시적 `LOCK` 명령은 피해야 함.
 
 ---
 
@@ -2623,12 +2524,10 @@ PostgreSQL의 논리적 디코딩은 추가 출력 플러그인 콜백을 통해
 
 #### 구성 매개변수
 
-| 매개변수 | 설명 | 기본값 |
-|----------|------|--------|
-| `wal_level` | WAL 기록 수준 (논리적 디코딩에는 `logical` 필요) | `replica` |
-| `max_replication_slots` | 최대 복제 슬롯 수 | `10` |
-| `max_prepared_transactions` | 최대 준비된 트랜잭션 수 (2단계 커밋용) | `0` |
-| `logical_decoding_work_mem` | 논리적 디코딩 작업 메모리 | `64MB` |
+- `wal_level`: WAL 기록 수준(논리적 디코딩에는 `logical` 필요), 기본값 `replica`
+- `max_replication_slots`: 최대 복제 슬롯 수, 기본값 `10`
+- `max_prepared_transactions`: 최대 준비된 트랜잭션 수(2단계 커밋용), 기본값 `0`
+- `logical_decoding_work_mem`: 논리적 디코딩 작업 메모리, 기본값 `64MB`
 
 #### 주요 SQL 함수
 
@@ -2694,27 +2593,27 @@ pg_replication_slot_advance(slot_name, upto_lsn)
 
 ### 개요
 
-복제 원본(Replication Origins)은 논리적 디코딩(Logical Decoding)을 기반으로 구축된 논리적 복제 솔루션을 용이하게 하기 위해 설계된 인프라 구성 요소입니다. 복제 원본은 다음 두 가지 주요 과제를 해결합니다.
+복제 원본(Replication Origins)은 논리적 디코딩(Logical Decoding)을 기반으로 구축된 논리적 복제 솔루션을 용이하게 하기 위해 설계된 인프라 구성 요소임. 복제 원본은 다음 두 가지 주요 과제를 해결함.
 
 #### 주요 해결 과제
 
 1. 복제 진행 상태의 안전한 추적
-   - 복제 솔루션을 구축할 때 가장 어려운 부분 중 하나는 재생(replay) 진행 상태를 안전하게 추적하는 것입니다.
-   - 적용 프로세스(applying process)나 전체 클러스터가 중단될 경우, 데이터가 어디까지 성공적으로 복제되었는지 파악할 수 있어야 합니다.
-   - 단순한 해결책(예: 복제된 각 트랜잭션마다 테이블의 행을 업데이트하는 방식)은 런타임 오버헤드와 데이터베이스 비대화(bloat) 문제를 야기합니다.
+   - 복제 솔루션을 구축할 때 가장 어려운 부분 중 하나는 재생(replay) 진행 상태를 안전하게 추적하는 것임.
+   - 적용 프로세스(applying process)나 전체 클러스터가 중단될 경우 → 데이터가 어디까지 성공적으로 복제되었는지 파악 가능해야 함.
+   - 단순한 해결책(예: 복제된 각 트랜잭션마다 테이블의 행을 업데이트하는 방식)은 런타임 오버헤드와 데이터베이스 비대화(bloat) 문제 야기.
 
 2. 복제된 행의 재복제 방지
-   - 단일 시스템에서 다른 단일 시스템으로의 복제보다 복잡한 복제 토폴로지에서는 이미 복제된 행이 다시 복제되는 것을 방지하기 어렵습니다.
-   - 이로 인해 복제 사이클과 비효율성이 발생할 수 있습니다.
-   - 복제 원본은 이를 인식하고 방지하는 선택적 메커니즘을 제공합니다.
+   - 단일 시스템에서 다른 단일 시스템으로의 복제보다 복잡한 복제 토폴로지에서는 이미 복제된 행이 다시 복제되는 것을 방지하기 어려움.
+   - 이로 인해 복제 사이클과 비효율성 발생 가능.
+   - 복제 원본은 이를 인식하고 방지하는 선택적 메커니즘 제공.
 
 #### 복제 원본 인프라의 장점
 
 복제 원본 인프라를 사용하면:
 
-- 충돌 안전한 진행 추적: 복제 진행 상태가 충돌에 안전한 방식으로 지속됩니다.
-- 오버헤드 최소화: 단순한 솔루션(각 트랜잭션마다 행을 업데이트하는 방식)의 런타임 오버헤드와 데이터베이스 비대화 문제를 제거합니다.
-- 복구 용이성: 적용 프로세스 또는 클러스터 장애 시 복구 지점을 쉽게 결정할 수 있습니다.
+- 충돌 안전한 진행 추적: 복제 진행 상태가 충돌에 안전한 방식으로 지속됨.
+- 오버헤드 최소화: 단순한 솔루션(각 트랜잭션마다 행을 업데이트하는 방식)의 런타임 오버헤드와 데이터베이스 비대화 문제 제거.
+- 복구 용이성: 적용 프로세스 또는 클러스터 장애 시 복구 지점을 쉽게 결정 가능.
 
 ---
 
@@ -2722,18 +2621,16 @@ pg_replication_slot_advance(slot_name, upto_lsn)
 
 #### 복제 원본의 속성
 
-각 복제 원본에는 두 가지 속성이 있습니다.
+각 복제 원본에는 두 가지 속성이 있음.
 
-| 속성 | 설명 |
-|------|------|
-| 이름(Name) | 시스템 간에 사용되는 자유 형식 텍스트 식별자입니다. 충돌을 피하기 위해 복제 솔루션 이름을 접두사로 사용해야 합니다. |
-| ID | 공간 효율적인 저장을 위한 숫자 식별자입니다. 시스템 간에 공유되지 않습니다. |
+- 이름(Name): 시스템 간에 사용되는 자유 형식 텍스트 식별자. 충돌을 피하기 위해 복제 솔루션 이름을 접두사로 사용해야 함.
+- ID: 공간 효율적인 저장을 위한 숫자 식별자. 시스템 간에 공유되지 않음.
 
 #### 복제 원본의 역할
 
-1. 진행 상태 추적: 원격 노드에서 재생 중임을 표시하고 진행 상태를 추적합니다.
-2. 원본 태깅: 변경 사항에 생성 세션의 복제 원본을 태그하여 원본에 따라 다르게 처리할 수 있습니다.
-3. 필터링 지원: `filter_by_origin_cb` 콜백을 통해 논리적 디코딩 변경 스트림을 원본별로 효율적으로 필터링합니다.
+1. 진행 상태 추적: 원격 노드에서 재생 중임을 표시하고 진행 상태를 추적함.
+2. 원본 태깅: 변경 사항에 생성 세션의 복제 원본을 태그하여 원본에 따라 다르게 처리 가능.
+3. 필터링 지원: `filter_by_origin_cb` 콜백을 통해 논리적 디코딩 변경 스트림을 원본별로 효율적으로 필터링.
 
 ---
 
@@ -2745,7 +2642,7 @@ pg_replication_slot_advance(slot_name, upto_lsn)
 pg_replication_origin_create(node_name text) → oid
 ```
 
-복제 원본을 생성하고 내부 ID를 반환합니다.
+복제 원본을 생성하고 내부 ID를 반환함.
 
 매개변수:
 - `node_name`: 외부 이름 (최대 512바이트)
@@ -2770,7 +2667,7 @@ SELECT pg_replication_origin_create('pg_cluster_node2');
 pg_replication_origin_drop(node_name text) → void
 ```
 
-이전에 생성된 복제 원본과 관련된 모든 재생 진행 상태를 삭제합니다.
+이전에 생성된 복제 원본과 관련된 모든 재생 진행 상태를 삭제함.
 
 권한: 기본적으로 슈퍼유저만 사용 가능
 
@@ -2787,7 +2684,7 @@ SELECT pg_replication_origin_drop('pg_cluster_node1');
 pg_replication_origin_oid(node_name text) → oid
 ```
 
-복제 원본 이름으로 내부 ID를 조회합니다. 원본이 없으면 `NULL`을 반환합니다.
+복제 원본 이름으로 내부 ID를 조회함. 원본이 없으면 `NULL` 반환.
 
 예제:
 
@@ -2807,7 +2704,7 @@ SELECT pg_replication_origin_oid('pg_cluster_node1');
 pg_replication_origin_progress(node_name text, flush boolean) → pg_lsn
 ```
 
-지정된 복제 원본의 재생 위치를 반환합니다.
+지정된 복제 원본의 재생 위치를 반환함.
 
 매개변수:
 - `node_name`: 복제 원본 이름
@@ -2831,9 +2728,9 @@ SELECT pg_replication_origin_progress('pg_cluster_node1', false);
 pg_replication_origin_advance(node_name text, lsn pg_lsn) → void
 ```
 
-지정된 노드의 복제 진행 상태를 지정된 위치로 설정합니다. 주로 초기 위치 설정이나 구성 변경 후 새 위치 설정에 사용됩니다.
+지정된 노드의 복제 진행 상태를 지정된 위치로 설정함. 주로 초기 위치 설정이나 구성 변경 후 새 위치 설정에 사용.
 
-주의: 부주의한 사용은 일관성 없이 복제된 데이터를 초래할 수 있습니다.
+주의: 부주의한 사용은 일관성 없이 복제된 데이터 초래 가능.
 
 권한: 기본적으로 슈퍼유저만 사용 가능
 
@@ -2857,7 +2754,7 @@ SELECT pg_replication_origin_advance('pg_cluster_node1', '0/2B5C9D1');
 pg_replication_origin_session_setup(node_name text) → void
 ```
 
-현재 세션을 지정된 원본에서 재생 중으로 표시하여 재생 진행 상태를 추적할 수 있게 합니다. 이미 원본이 선택된 경우에는 사용할 수 없습니다.
+현재 세션을 지정된 원본에서 재생 중으로 표시하여 재생 진행 상태를 추적 가능하게 함. 이미 원본이 선택된 경우에는 사용 불가.
 
 권한: 기본적으로 슈퍼유저만 사용 가능
 
@@ -2874,7 +2771,7 @@ SELECT pg_replication_origin_session_setup('pg_cluster_node1');
 pg_replication_origin_session_reset() → void
 ```
 
-`pg_replication_origin_session_setup()`의 효과를 취소합니다.
+`pg_replication_origin_session_setup()`의 효과를 취소함.
 
 예제:
 
@@ -2889,7 +2786,7 @@ SELECT pg_replication_origin_session_reset();
 pg_replication_origin_session_is_setup() → boolean
 ```
 
-현재 세션에 복제 원본이 선택되어 있으면 `true`를 반환합니다.
+현재 세션에 복제 원본이 선택되어 있으면 `true` 반환.
 
 예제:
 
@@ -2905,7 +2802,7 @@ SELECT pg_replication_origin_session_is_setup();
 pg_replication_origin_session_progress(flush boolean) → pg_lsn
 ```
 
-현재 세션에서 선택된 복제 원본의 재생 위치를 반환합니다.
+현재 세션에서 선택된 복제 원본의 재생 위치를 반환함.
 
 매개변수:
 - `flush`: 해당 로컬 트랜잭션이 디스크에 플러시되었음을 보장할지 여부
@@ -2924,7 +2821,7 @@ SELECT pg_replication_origin_session_progress(true);
 pg_replication_origin_xact_setup(origin_lsn pg_lsn, origin_timestamp timestamp with time zone) → void
 ```
 
-현재 트랜잭션을 지정된 LSN과 타임스탬프에서 커밋된 트랜잭션을 재생 중으로 표시합니다. `pg_replication_origin_session_setup()`으로 복제 원본이 선택된 경우에만 호출할 수 있습니다.
+현재 트랜잭션을 지정된 LSN과 타임스탬프에서 커밋된 트랜잭션을 재생 중으로 표시함. `pg_replication_origin_session_setup()`으로 복제 원본이 선택된 경우에만 호출 가능.
 
 매개변수:
 - `origin_lsn`: 원본에서 트랜잭션이 커밋된 LSN
@@ -2948,7 +2845,7 @@ COMMIT;
 pg_replication_origin_xact_reset() → void
 ```
 
-`pg_replication_origin_xact_setup()`의 효과를 취소합니다.
+`pg_replication_origin_xact_setup()`의 효과를 취소함.
 
 예제:
 
@@ -2963,12 +2860,10 @@ SELECT pg_replication_origin_xact_reset();
 
 #### pg_replication_origin 시스템 카탈로그
 
-`pg_replication_origin` 카탈로그는 클러스터에 생성된 모든 복제 원본을 포함합니다. 이것은 공유 시스템 카탈로그로, 대부분의 다른 시스템 카탈로그와 달리 데이터베이스별이 아닌 클러스터 전체에 하나만 존재합니다.
+`pg_replication_origin` 카탈로그는 클러스터에 생성된 모든 복제 원본을 포함함. 이것은 공유 시스템 카탈로그로, 대부분의 다른 시스템 카탈로그와 달리 데이터베이스별이 아닌 클러스터 전체에 하나만 존재함.
 
-| 열(Column) | 타입(Type) | 설명 |
-|------------|-----------|------|
-| `roident` | `oid` | 복제 원본의 고유한 클러스터 전체 식별자입니다. 시스템 외부로 노출되지 않아야 합니다. |
-| `roname` | `text` | 복제 원본의 외부 사용자 정의 이름입니다. |
+- `roident` (`oid`): 복제 원본의 고유한 클러스터 전체 식별자. 시스템 외부로 노출되지 않아야 함.
+- `roname` (`text`): 복제 원본의 외부 사용자 정의 이름.
 
 조회 예제:
 
@@ -2985,14 +2880,12 @@ SELECT roident, roname FROM pg_replication_origin;
 
 #### pg_replication_origin_status 뷰
 
-`pg_replication_origin_status` 뷰는 모든 복제 원본의 재생 진행 상태를 표시합니다.
+`pg_replication_origin_status` 뷰는 모든 복제 원본의 재생 진행 상태를 표시함.
 
-| 열(Column) | 타입(Type) | 설명 |
-|------------|-----------|------|
-| `local_id` | `oid` | 내부 노드 식별자 (`pg_replication_origin.roident` 참조) |
-| `external_id` | `text` | 외부 노드 식별자 (`pg_replication_origin.roname` 참조) |
-| `remote_lsn` | `pg_lsn` | 데이터가 복제된 원본 노드의 LSN |
-| `local_lsn` | `pg_lsn` | `remote_lsn`이 복제된 이 노드의 LSN. 비동기 커밋 사용 시 데이터를 디스크에 저장하기 전에 커밋 레코드를 플러시하는 데 사용됩니다. |
+- `local_id` (`oid`): 내부 노드 식별자 (`pg_replication_origin.roident` 참조)
+- `external_id` (`text`): 외부 노드 식별자 (`pg_replication_origin.roname` 참조)
+- `remote_lsn` (`pg_lsn`): 데이터가 복제된 원본 노드의 LSN
+- `local_lsn` (`pg_lsn`): `remote_lsn`이 복제된 이 노드의 LSN. 비동기 커밋 사용 시 데이터를 디스크에 저장하기 전에 커밋 레코드를 플러시하는 데 사용.
 
 조회 예제:
 
@@ -3113,11 +3006,11 @@ SELECT pg_replication_origin_session_reset();
 
 #### 복잡한 복제 토폴로지에서의 원본 필터링
 
-복잡한 복제 시나리오에서 변경 사항은 생성 세션의 복제 원본으로 태그됩니다. 이를 통해:
+복잡한 복제 시나리오에서 변경 사항은 생성 세션의 복제 원본으로 태그됨. 이를 통해:
 
-1. 출력 플러그인이 원본에 따라 변경 사항을 다르게 처리할 수 있습니다.
-2. `filter_by_origin_cb` 콜백을 통해 논리적 디코딩 변경 스트림을 원본별로 효율적으로 필터링할 수 있습니다.
-3. 출력 플러그인 내에서 직접 필터링하는 것보다 더 효율적입니다.
+1. 출력 플러그인이 원본에 따라 변경 사항을 다르게 처리 가능.
+2. `filter_by_origin_cb` 콜백을 통해 논리적 디코딩 변경 스트림을 원본별로 효율적으로 필터링 가능.
+3. 출력 플러그인 내에서 직접 필터링하는 것보다 더 효율적.
 
 #### 충돌 안전한 진행 추적 구현
 
@@ -3190,19 +3083,28 @@ SELECT * FROM replication_origin_summary;
 
 ### 함수 요약 표
 
-| 함수 | 설명 | 권한 |
-|------|------|------|
-| `pg_replication_origin_create(text)` | 복제 원본 생성 | 슈퍼유저 |
-| `pg_replication_origin_drop(text)` | 복제 원본 삭제 | 슈퍼유저 |
-| `pg_replication_origin_oid(text)` | 복제 원본 OID 조회 | 모든 사용자 |
-| `pg_replication_origin_session_setup(text)` | 세션에 복제 원본 설정 | 슈퍼유저 |
-| `pg_replication_origin_session_reset()` | 세션 복제 원본 해제 | 슈퍼유저 |
-| `pg_replication_origin_session_is_setup()` | 세션 설정 여부 확인 | 슈퍼유저 |
-| `pg_replication_origin_session_progress(boolean)` | 세션 진행 상태 조회 | 슈퍼유저 |
-| `pg_replication_origin_xact_setup(pg_lsn, timestamptz)` | 트랜잭션 원본 정보 설정 | 슈퍼유저 |
-| `pg_replication_origin_xact_reset()` | 트랜잭션 원본 정보 해제 | 슈퍼유저 |
-| `pg_replication_origin_advance(text, pg_lsn)` | 진행 상태 수동 설정 | 슈퍼유저 |
-| `pg_replication_origin_progress(text, boolean)` | 특정 원본 진행 상태 조회 | 슈퍼유저 |
+- `pg_replication_origin_create(text)`: 복제 원본 생성
+  - 권한: 슈퍼유저
+- `pg_replication_origin_drop(text)`: 복제 원본 삭제
+  - 권한: 슈퍼유저
+- `pg_replication_origin_oid(text)`: 복제 원본 OID 조회
+  - 권한: 모든 사용자
+- `pg_replication_origin_session_setup(text)`: 세션에 복제 원본 설정
+  - 권한: 슈퍼유저
+- `pg_replication_origin_session_reset()`: 세션 복제 원본 해제
+  - 권한: 슈퍼유저
+- `pg_replication_origin_session_is_setup()`: 세션 설정 여부 확인
+  - 권한: 슈퍼유저
+- `pg_replication_origin_session_progress(boolean)`: 세션 진행 상태 조회
+  - 권한: 슈퍼유저
+- `pg_replication_origin_xact_setup(pg_lsn, timestamptz)`: 트랜잭션 원본 정보 설정
+  - 권한: 슈퍼유저
+- `pg_replication_origin_xact_reset()`: 트랜잭션 원본 정보 해제
+  - 권한: 슈퍼유저
+- `pg_replication_origin_advance(text, pg_lsn)`: 진행 상태 수동 설정
+  - 권한: 슈퍼유저
+- `pg_replication_origin_progress(text, boolean)`: 특정 원본 진행 상태 조회
+  - 권한: 슈퍼유저
 
 ---
 
@@ -3225,29 +3127,35 @@ SELECT * FROM replication_origin_summary;
 
 ## Chapter 51. 아카이브 모듈 (Archive Modules)
 
-PostgreSQL은 연속 아카이빙(Continuous Archiving)을 위한 커스텀 모듈을 생성할 수 있는 인프라를 제공합니다. 아카이브 모듈은 셸 명령 기반 아카이빙(`archive_command` 사용)보다 더 강력하고 성능이 뛰어난 대안을 제공합니다.
+PostgreSQL은 연속 아카이빙(Continuous Archiving)을 위한 커스텀 모듈을 생성할 수 있는 인프라를 제공함. 아카이브 모듈은 셸 명령 기반 아카이빙(`archive_command` 사용)보다 더 강력하고 성능이 뛰어난 대안.
 
 ### 51.1. 아카이브 모듈 개요 (Overview)
 
-커스텀 `archive_library`가 구성되면, PostgreSQL은 완료된 WAL(Write-Ahead Log) 파일을 모듈에 제출합니다. 서버는 모듈이 아카이빙 성공을 확인할 때까지 WAL 파일을 재사용하거나 삭제하지 않습니다. 모듈은 각 WAL 파일에 대해 무엇을 할지 유연하게 결정할 수 있습니다.
+커스텀 `archive_library`가 구성되면 → PostgreSQL은 완료된 WAL(Write-Ahead Log) 파일을 모듈에 제출. 서버는 모듈이 아카이빙 성공을 확인할 때까지 WAL 파일을 재사용하거나 삭제하지 않음. 모듈은 각 WAL 파일에 대해 무엇을 할지 유연하게 결정 가능.
 
 #### 아카이브 모듈의 장점
 
-| 특징 | archive_command | archive_library |
-|------|-----------------|-----------------|
-| 성능 | 매 파일마다 셸 프로세스 생성 | 로드된 라이브러리 직접 호출 |
-| 유연성 | 셸 명령으로 제한 | C 코드로 완전한 제어 |
-| 오류 처리 | 종료 코드 기반 | 상세한 오류 보고 가능 |
-| 상태 관리 | 파일/외부 저장소 필요 | 메모리 내 상태 유지 가능 |
+- 성능
+  - `archive_command`: 매 파일마다 셸 프로세스 생성
+  - `archive_library`: 로드된 라이브러리 직접 호출
+- 유연성
+  - `archive_command`: 셸 명령으로 제한
+  - `archive_library`: C 코드로 완전한 제어
+- 오류 처리
+  - `archive_command`: 종료 코드 기반
+  - `archive_library`: 상세한 오류 보고 가능
+- 상태 관리
+  - `archive_command`: 파일/외부 저장소 필요
+  - `archive_library`: 메모리 내 상태 유지 가능
 
 #### 아카이브 모듈 구성 요소
 
-아카이브 모듈은 다음 구성 요소를 포함해야 합니다:
+아카이브 모듈은 다음 구성 요소를 포함해야 함.
 
 1. 초기화 함수 (Initialization Function) - 모듈의 필수 진입점
 2. 콜백 함수들 (Callbacks) - 다양한 아카이빙 단계를 처리하는 함수들
 
-또한 아카이브 모듈은 다음과 같은 추가 기능을 수행할 수 있습니다:
+또한 아카이브 모듈은 다음과 같은 추가 기능을 수행 가능.
 - 커스텀 GUC(Grand Unified Configuration) 매개변수 선언
 - 백그라운드 워커 등록
 - 기본 아카이빙 이상의 커스텀 로직 구현
@@ -3256,7 +3164,7 @@ PostgreSQL은 연속 아카이빙(Continuous Archiving)을 위한 커스텀 모�
 
 ### 51.2. 초기화 함수 (Initialization Functions)
 
-아카이브 라이브러리는 `archive_library` 구성 매개변수를 사용하여 공유 라이브러리를 동적으로 로드함으로써 로드됩니다. 라이브러리는 자신이 유효한 아카이브 모듈임을 나타내는 특정 초기화 함수를 제공해야 합니다.
+아카이브 라이브러리는 `archive_library` 구성 매개변수를 사용하여 공유 라이브러리를 동적으로 로드함으로써 로드됨. 라이브러리는 자신이 유효한 아카이브 모듈임을 나타내는 특정 초기화 함수를 제공해야 함.
 
 #### 필수 초기화 함수
 
@@ -3266,7 +3174,7 @@ typedef const ArchiveModuleCallbacks *(*ArchiveModuleInit) (void);
 
 함수 이름: `_PG_archive_module_init`
 
-이 초기화 함수는 다음 조건을 충족해야 합니다:
+이 초기화 함수는 다음 조건을 충족해야 함.
 
 - 매개변수를 받지 않음
 - `ArchiveModuleCallbacks` 구조체에 대한 포인터를 반환
@@ -3286,12 +3194,10 @@ typedef struct ArchiveModuleCallbacks
 
 #### 콜백 요구사항
 
-| 콜백 | 필수 여부 | 설명 |
-|------|----------|------|
-| `startup_cb` | 선택 | 모듈 초기화 |
-| `check_configured_cb` | 선택 | 구성 유효성 확인 |
-| `archive_file_cb` | 필수 | WAL 파일 아카이빙 |
-| `shutdown_cb` | 선택 | 정리 및 종료 |
+- `startup_cb`: 선택 - 모듈 초기화
+- `check_configured_cb`: 선택 - 구성 유효성 확인
+- `archive_file_cb`: 필수 - WAL 파일 아카이빙
+- `shutdown_cb`: 선택 - 정리 및 종료
 
 #### 초기화 함수 예제
 
@@ -3334,7 +3240,7 @@ _PG_archive_module_init(void)
 
 ### 51.3. 아카이브 모듈 콜백 (Archive Module Callbacks)
 
-아카이브 모듈 콜백은 모듈의 실제 아카이빙 동작을 정의합니다. 서버는 각 개별 WAL 파일을 처리하기 위해 필요에 따라 이들을 호출합니다.
+아카이브 모듈 콜백은 모듈의 실제 아카이빙 동작을 정의함. 서버는 각 개별 WAL 파일을 처리하기 위해 필요에 따라 이들을 호출.
 
 #### 51.3.1. 시작 콜백 (Startup Callback)
 
@@ -3342,7 +3248,7 @@ _PG_archive_module_init(void)
 typedef void (*ArchiveStartupCB) (ArchiveModuleState *state);
 ```
 
-`startup_cb` 콜백은 모듈이 로드된 직후에 호출됩니다. 이 콜백은 필요한 추가 초기화를 수행하는 데 사용할 수 있습니다. 아카이브 모듈에 상태가 있는 경우 `state->private_data`를 사용하여 저장할 수 있습니다.
+`startup_cb` 콜백은 모듈이 로드된 직후에 호출됨. 이 콜백은 필요한 추가 초기화를 수행하는 데 사용 가능. 아카이브 모듈에 상태가 있는 경우 `state->private_data`를 사용하여 저장 가능.
 
 ##### 시작 콜백 예제
 
@@ -3391,18 +3297,16 @@ my_archive_startup(ArchiveModuleState *state)
 typedef bool (*ArchiveCheckConfiguredCB) (ArchiveModuleState *state);
 ```
 
-`check_configured_cb` 콜백은 모듈이 완전히 구성되어 WAL 파일을 받아들일 준비가 되었는지 판단합니다 (예: 구성 매개변수가 유효한 값으로 설정되어 있는지 확인).
+`check_configured_cb` 콜백은 모듈이 완전히 구성되어 WAL 파일을 받아들일 준비가 되었는지 판단 (예: 구성 매개변수가 유효한 값으로 설정되어 있는지 확인).
 
 ##### 반환 값
 
-| 반환 값 | 동작 |
-|---------|------|
-| `true` | 서버가 `archive_file_cb`를 호출하여 아카이빙 진행 |
-| `false` | 아카이빙 진행하지 않음; 서버가 경고를 발생시키고 주기적으로 재시도 |
+- `true`: 서버가 `archive_file_cb`를 호출하여 아카이빙 진행
+- `false`: 아카이빙 진행하지 않음 → 서버가 경고를 발생시키고 주기적으로 재시도
 
-`check_configured_cb`가 정의되지 않은 경우, 서버는 모듈이 항상 구성된 것으로 간주합니다.
+`check_configured_cb`가 정의되지 않은 경우 → 서버는 모듈이 항상 구성된 것으로 간주.
 
-> 참고: `false`를 반환하기 전에 `arch_module_check_errdetail` 매크로를 사용하여 경고 메시지에 상세 정보를 추가할 수 있습니다.
+> 참고: `false`를 반환하기 전에 `arch_module_check_errdetail` 매크로를 사용하여 경고 메시지에 상세 정보를 추가 가능.
 
 ##### 구성 확인 콜백 예제
 
@@ -3441,24 +3345,20 @@ typedef bool (*ArchiveFileCB) (ArchiveModuleState *state,
                                const char *path);
 ```
 
-`archive_file_cb` 콜백은 단일 WAL 파일을 아카이브합니다. 이것은 필수 콜백입니다.
+`archive_file_cb` 콜백은 단일 WAL 파일을 아카이브. 이것은 필수 콜백.
 
 ##### 매개변수
 
-| 매개변수 | 설명 |
-|----------|------|
-| `state` | 아카이브 모듈 상태 |
-| `file` | 아카이브할 WAL 파일의 파일 이름만 (예: `000000010000000000000001`) |
-| `path` | WAL 파일의 전체 경로 (파일 이름 포함, 예: `/var/lib/postgresql/data/pg_wal/000000010000000000000001`) |
+- `state`: 아카이브 모듈 상태
+- `file`: 아카이브할 WAL 파일의 파일 이름만 (예: `000000010000000000000001`)
+- `path`: WAL 파일의 전체 경로 (파일 이름 포함, 예: `/var/lib/postgresql/data/pg_wal/000000010000000000000001`)
 
 ##### 반환 값
 
-| 반환 값 | 동작 |
-|---------|------|
-| `true` | 파일이 성공적으로 아카이브됨; 서버가 원본 WAL 파일을 재사용하거나 제거할 수 있음 |
-| `false` 또는 오류 발생 | 서버가 원본 WAL 파일을 유지하고 나중에 재시도 |
+- `true`: 파일이 성공적으로 아카이브됨 → 서버가 원본 WAL 파일을 재사용하거나 제거 가능
+- `false` 또는 오류 발생: 서버가 원본 WAL 파일을 유지하고 나중에 재시도
 
-> 참고: 이 콜백은 호출마다 재설정되는 단기 메모리 컨텍스트에서 실행됩니다. 수명이 긴 저장소가 필요한 경우 `startup_cb` 콜백에서 별도의 메모리 컨텍스트를 생성하세요.
+> 참고: 이 콜백은 호출마다 재설정되는 단기 메모리 컨텍스트에서 실행됨. 수명이 긴 저장소가 필요한 경우 `startup_cb` 콜백에서 별도의 메모리 컨텍스트를 생성할 것.
 
 ##### 아카이브 콜백 예제
 
@@ -3527,9 +3427,9 @@ my_archive_file(ArchiveModuleState *state,
 typedef void (*ArchiveShutdownCB) (ArchiveModuleState *state);
 ```
 
-`shutdown_cb` 콜백은 아카이버 프로세스가 종료될 때 (예: 오류 발생 후) 또는 `archive_library` 값이 변경될 때 호출됩니다.
+`shutdown_cb` 콜백은 아카이버 프로세스가 종료될 때 (예: 오류 발생 후) 또는 `archive_library` 값이 변경될 때 호출됨.
 
-`shutdown_cb`가 정의되지 않으면 특별한 동작이 수행되지 않습니다. 아카이브 모듈에 상태가 있는 경우, 메모리 누수를 방지하기 위해 이 콜백에서 해당 상태를 해제해야 합니다.
+`shutdown_cb`가 정의되지 않으면 특별한 동작이 수행되지 않음. 아카이브 모듈에 상태가 있는 경우 → 메모리 누수를 방지하기 위해 이 콜백에서 해당 상태를 해제해야 함.
 
 ##### 종료 콜백 예제
 
@@ -3559,7 +3459,7 @@ my_archive_shutdown(ArchiveModuleState *state)
 
 ### 51.4. 완전한 아카이브 모듈 예제
 
-다음은 WAL 파일을 지정된 디렉토리에 복사하는 간단하지만 완전한 아카이브 모듈의 예제입니다.
+다음은 WAL 파일을 지정된 디렉토리에 복사하는 간단하지만 완전한 아카이브 모듈의 예제.
 
 ```c
 /*
@@ -3851,7 +3751,7 @@ simple_archive_shutdown(ArchiveModuleState *state)
 
 ### 51.5. 아카이브 모듈 구성 (Configuration)
 
-아카이브 모듈을 사용하려면 `postgresql.conf`에서 다음과 같이 구성합니다:
+아카이브 모듈을 사용하려면 `postgresql.conf`에서 다음과 같이 구성.
 
 ```ini
 # 아카이브 모드 활성화
@@ -3866,17 +3766,15 @@ simple_archive.directory = '/var/lib/postgresql/archive'
 
 #### 구성 매개변수
 
-| 매개변수 | 설명 |
-|----------|------|
-| `archive_mode` | `on`으로 설정하여 아카이빙 활성화 |
-| `archive_library` | 사용할 아카이브 모듈 라이브러리 이름 |
-| `archive_command` | `archive_library`가 설정되면 무시됨 |
+- `archive_mode`: `on`으로 설정하여 아카이빙 활성화
+- `archive_library`: 사용할 아카이브 모듈 라이브러리 이름
+- `archive_command`: `archive_library`가 설정되면 무시됨
 
-> 참고: `archive_library`와 `archive_command`를 동시에 설정하면 `archive_library`가 우선합니다.
+> 참고: `archive_library`와 `archive_command`를 동시에 설정하면 `archive_library`가 우선.
 
 #### 라이브러리 검색 경로
 
-PostgreSQL은 다음 순서로 아카이브 라이브러리를 검색합니다:
+PostgreSQL은 다음 순서로 아카이브 라이브러리를 검색.
 
 1. `dynamic_library_path`에 지정된 디렉토리
 2. PostgreSQL 설치 디렉토리의 `lib` 하위 디렉토리
@@ -3885,7 +3783,7 @@ PostgreSQL은 다음 순서로 아카이브 라이브러리를 검색합니다:
 
 ### 51.6. 기본 제공 예제: basic_archive
 
-PostgreSQL 소스 코드의 `contrib/basic_archive` 모듈은 유용한 구현 기술을 보여주는 작동하는 예제를 제공합니다.
+PostgreSQL 소스 코드의 `contrib/basic_archive` 모듈은 유용한 구현 기술을 보여주는 작동하는 예제를 제공.
 
 #### basic_archive 설치
 
@@ -3911,7 +3809,7 @@ basic_archive.archive_directory = '/path/to/archive'
 
 #### 멱등성 (Idempotency)
 
-아카이브 콜백은 멱등적이어야 합니다. 동일한 WAL 파일에 대해 여러 번 호출되더라도 올바르게 동작해야 합니다.
+아카이브 콜백은 멱등적이어야 함. 동일한 WAL 파일에 대해 여러 번 호출되더라도 올바르게 동작해야 함.
 
 ```c
 /* 이미 아카이브된 파일 확인 */
@@ -3921,7 +3819,7 @@ if (file_already_archived(destination, source_size))
 
 #### 원자적 쓰기 (Atomic Writes)
 
-임시 파일에 쓴 후 이름 변경을 사용하여 원자적 쓰기를 보장합니다.
+임시 파일에 쓴 후 이름 변경을 사용하여 원자적 쓰기를 보장.
 
 ```c
 /* 임시 파일에 쓰기 */
@@ -3936,7 +3834,7 @@ rename(temp_path, final_path);
 
 #### 오류 처리
 
-적절한 오류 보고로 문제 진단을 쉽게 합니다.
+적절한 오류 보고로 문제 진단을 용이하게 함.
 
 ```c
 ereport(WARNING,
@@ -3947,21 +3845,19 @@ ereport(WARNING,
 
 #### 메모리 관리
 
-장기 상태는 `startup_cb`에서 생성한 별도의 메모리 컨텍스트에 저장하고, `shutdown_cb`에서 적절히 해제합니다.
+장기 상태는 `startup_cb`에서 생성한 별도의 메모리 컨텍스트에 저장하고 → `shutdown_cb`에서 적절히 해제.
 
 ---
 
 ### 51.8. 요약
 
-| 구성 요소 | 설명 |
-|-----------|------|
-| `_PG_archive_module_init` | 필수 초기화 함수, 콜백 구조체 반환 |
-| `startup_cb` | 모듈 로드 시 초기화 (선택) |
-| `check_configured_cb` | 구성 유효성 확인 (선택) |
-| `archive_file_cb` | WAL 파일 아카이빙 (필수) |
-| `shutdown_cb` | 종료 시 정리 (선택) |
+- `_PG_archive_module_init`: 필수 초기화 함수, 콜백 구조체 반환
+- `startup_cb`: 모듈 로드 시 초기화 (선택)
+- `check_configured_cb`: 구성 유효성 확인 (선택)
+- `archive_file_cb`: WAL 파일 아카이빙 (필수)
+- `shutdown_cb`: 종료 시 정리 (선택)
 
-아카이브 모듈은 `archive_command`보다 더 강력하고 효율적인 WAL 아카이빙 방법을 제공합니다. 상태 관리, 상세한 오류 보고, 그리고 더 나은 성능을 통해 프로덕션 환경에서 안정적인 연속 아카이빙을 구현할 수 있습니다.
+아카이브 모듈은 `archive_command`보다 더 강력하고 효율적인 WAL 아카이빙 방법을 제공. 상태 관리·상세한 오류 보고·더 나은 성능을 통해 프로덕션 환경에서 안정적인 연속 아카이빙을 구현 가능.
 
 ---
 

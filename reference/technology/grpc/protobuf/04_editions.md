@@ -18,65 +18,65 @@
 
 ## Editions란
 
-Protobuf Editions는 그동안 분리되어 있던 **proto2와 proto3 문법을 하나로 통합**한 현대적 방식입니다. 두 문법 버전 중 하나를 고르는 대신, **edition**(현재 2023, 2024)을 선택하고 필요한 **features**를 설정합니다.
+Protobuf Editions는 그동안 분리되어 있던 proto2와 proto3 문법을 하나로 통합한 현대적 방식. 두 문법 버전 중 하나를 고르는 대신, edition(현재 2023, 2024)을 선택하고 필요한 features를 설정하는 구조.
 
-이 방식 덕분에 Protocol Buffers는 새로운 병렬 문법을 추가하지 않고도 언어를 유연하게 발전시킬 수 있습니다. feature 시스템을 통해 레거시 동작과 최신 모범 사례를 하나의 일관된 틀 안에서 표현할 수 있습니다.
+이 방식 덕분에 Protocol Buffers는 새로운 병렬 문법을 추가하지 않고도 언어를 유연하게 발전시킬 수 있음. feature 시스템을 통해 레거시 동작과 최신 모범 사례를 하나의 일관된 틀 안에서 표현 가능.
 
 ---
 
 ## edition 선언
 
-editions를 사용하는 `.proto` 파일은 첫 번째 비주석 비공백 줄에 edition을 선언해야 합니다.
+editions를 사용하는 `.proto` 파일은 첫 번째 비주석 비공백 줄에 edition을 선언해야 함.
 
 ```proto
 edition = "2023";
 ```
 
-`edition`도 `syntax`도 지정하지 않으면 컴파일러는 proto2 의미론(semantics)을 기본으로 적용합니다.
+`edition`도 `syntax`도 지정하지 않으면 컴파일러는 proto2 의미론(semantics)을 기본으로 적용함.
 
 ---
 
 ## 기능 기반(feature) 모델
 
-proto2와 proto3는 동작이 문법에 하드코딩되어 있었습니다. editions는 이를 **설정 가능한 features**로 분리합니다. features는 다음 세 가지 수준에서 설정할 수 있습니다.
+proto2와 proto3는 동작이 문법에 하드코딩되어 있었음. editions는 이를 설정 가능한 features로 분리함. features는 다음 세 가지 수준에서 설정 가능.
 
-- **파일 수준**: 파일 내 모든 메시지에 적용
-- **메시지 수준**: 특정 메시지와 그 필드에 적용
-- **필드 수준**: 개별 필드에 적용
+- 파일 수준: 파일 내 모든 메시지에 적용
+- 메시지 수준: 특정 메시지와 그 필드에 적용
+- 필드 수준: 개별 필드에 적용
 
-좁은 범위의 설정이 넓은 범위의 설정을 재정의(override)합니다.
+좁은 범위의 설정이 넓은 범위의 설정을 재정의(override)함.
 
 ---
 
 ## 주요 features
 
 ### field_presence
-단일 필드의 "명시적 설정 여부" 추적을 제어합니다.
+단일 필드의 "명시적 설정 여부" 추적을 제어함.
 
 - `EXPLICIT`: presence 추적함(proto2 `optional`과 유사)
-- `IMPLICIT`: presence 추적 안 함, 미설정 시 기본값 반환(proto3 동작)
+- `IMPLICIT`: presence 추적 안 함 → 미설정 시 기본값 반환(proto3 동작)
 - `LEGACY_REQUIRED`: required 강제(proto2 `required`를 마이그레이션한 형태)
 
 ### enum_type
-enum 동작을 결정합니다.
+enum 동작을 결정함.
 
 - `OPEN`: 알 수 없는 값을 허용(proto3 스타일)
 - `CLOSED`: 알 수 없는 값을 거부(proto2 스타일)
 
 ### repeated_field_encoding
-repeated 스칼라 필드의 직렬화 방식을 제어합니다.
+repeated 스칼라 필드의 직렬화 방식을 제어함.
 
 - `PACKED`: 압축 와이어 포맷(editions 기본값)
 - `EXPANDED`: 전통적 방식, 요소마다 태그-값 쌍
 
 ### utf8_validation
-string 필드가 파싱 시 유효한 UTF-8인지 검증합니다.
+string 필드가 파싱 시 유효한 UTF-8인지 검증함.
 
 ### message_encoding
-메시지 직렬화 형식을 지정합니다(주로 proto2/proto3 호환).
+메시지 직렬화 형식을 지정함(주로 proto2/proto3 호환 용도).
 
 ### json_format
-메시지의 JSON 직렬화 동작을 제어합니다.
+메시지의 JSON 직렬화 동작을 제어함.
 
 ---
 
@@ -118,13 +118,13 @@ message MyMessage {
 - `enum_type = OPEN` (알 수 없는 enum 값 허용)
 - `repeated_field_encoding = PACKED` (압축 인코딩)
 
-**Edition 2024**는 위 기본값을 다듬고 field presence 의미론 개선 및 추가 feature 제어를 도입합니다.
+**Edition 2024**는 위 기본값을 다듬고 field presence 의미론 개선 및 추가 feature 제어를 도입함.
 
 ---
 
 ## proto2 / proto3에서 마이그레이션
 
-proto2/proto3 메시지 타입을 editions 메시지에서 import해 사용할 수 있으며, 반대 방향도 가능합니다. 마이그레이션은 보통 다음 순서로 진행합니다.
+proto2/proto3 메시지 타입을 editions 메시지에서 import해 사용 가능하며, 반대 방향도 가능함. 마이그레이션은 보통 다음 순서로 진행함.
 
 1. `syntax = "proto2";` 또는 `syntax = "proto3";`를 `edition = "2023";`으로 변경
 2. 기존 동작을 보존하도록 features 설정
@@ -133,4 +133,4 @@ proto2/proto3 메시지 타입을 editions 메시지에서 import해 사용할 �
    - proto3 암시적 필드 → `field_presence = IMPLICIT`
 3. proto2 호환이 필요하면 enum에 `enum_type = CLOSED` 적용
 
-> 공식 도구 `protoc`의 `--edition_defaults`나 `prototiller` 같은 마이그레이션 도구가 변환을 돕습니다. editions의 핵심 장점은 하위 호환을 유지하면서, 병렬 문법 없이 언어를 진화시킬 수 있다는 점입니다.
+> 공식 도구 `protoc`의 `--edition_defaults`나 `prototiller` 같은 마이그레이션 도구가 변환을 도움. editions의 핵심 장점은 하위 호환을 유지하면서, 병렬 문법 없이 언어를 진화시킬 수 있다는 점.

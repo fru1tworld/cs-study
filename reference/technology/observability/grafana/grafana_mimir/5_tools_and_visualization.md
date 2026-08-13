@@ -20,13 +20,11 @@
 
 ### 도구 개요
 
-| 도구 | 용도 |
-|------|------|
-| `mimirtool` | 종합 CLI (룰, Alertmanager, 분석, 변환) |
-| `Mimir Continuous Test` | 운영 중 데이터 무결성 지속 검증 |
-| `query-tee` | 두 백엔드에 동일 쿼리를 전송하여 응답 비교 |
-| `trafficdump` | 트래픽 캡처 및 분석 |
-| `bucket-tool` | 오브젝트 스토리지의 Mimir 데이터 직접 조작 |
+- `mimirtool`: 종합 CLI(룰, Alertmanager, 분석, 변환) 용도
+- `Mimir Continuous Test`: 운영 중 데이터 무결성 지속 검증 용도
+- `query-tee`: 두 백엔드에 동일 쿼리를 전송해 응답 비교 용도
+- `trafficdump`: 트래픽 캡처 및 분석 용도
+- `bucket-tool`: 오브젝트 스토리지의 Mimir 데이터 직접 조작 용도
 
 ---
 
@@ -227,7 +225,7 @@ mimirtool analyze grafana \
   --key=$GRAFANA_API_KEY
 ```
 
-대시보드에서 사용된 메트릭을 추출한다.
+대시보드에서 사용된 메트릭을 추출.
 
 ##### Prometheus → Mimir 분석
 
@@ -238,7 +236,7 @@ mimirtool analyze prometheus \
   --ruler-metrics-file=metrics-in-ruler.json
 ```
 
-실제로 사용되는 메트릭과 수집되는 메트릭을 비교하여 불필요한 메트릭을 식별한다.
+실제로 사용되는 메트릭과 수집되는 메트릭을 비교 → 불필요한 메트릭을 식별.
 
 ##### 룰 파일 분석
 
@@ -256,7 +254,7 @@ mimirtool analyze dashboard dashboard.json
 
 #### `mimirtool backfill`
 
-TSDB 블록을 Mimir에 직접 업로드한다 (마이그레이션, 복원 등에 활용).
+TSDB 블록을 Mimir에 직접 업로드(마이그레이션, 복원 등에 활용).
 
 ```bash
 mimirtool backfill \
@@ -274,7 +272,7 @@ mimirtool backfill \
 
 #### `mimirtool bucket-validation`
 
-오브젝트 스토리지 동작을 검증한다.
+오브젝트 스토리지 동작을 검증.
 
 ```bash
 mimirtool bucket-validation \
@@ -297,7 +295,7 @@ mimirtool bucket-validation \
 
 #### `mimirtool config`
 
-설정 파일을 변환한다 (Cortex → Mimir, 구버전 → 신버전).
+설정 파일을 변환(Cortex → Mimir, 구버전 → 신버전).
 
 ```bash
 # Cortex → Mimir
@@ -316,7 +314,7 @@ mimirtool config convert \
 
 #### `mimirtool remote-read`
 
-Remote Read 엔드포인트를 직접 호출한다.
+Remote Read 엔드포인트를 직접 호출.
 
 ```bash
 mimirtool remote-read dump \
@@ -333,7 +331,7 @@ mimirtool remote-read dump \
 
 #### 개요
 
-Mimir 클러스터의 정상성을 지속적으로 검증한다.
+Mimir 클러스터의 정상성을 지속적으로 검증.
 
 #### 동작
 
@@ -393,7 +391,7 @@ mimir_continuous_test_query_result_checks_failed_total
 
 #### 개요
 
-두 Mimir/Cortex/Prometheus 백엔드에 동일한 쿼리를 전송하고 응답을 비교한다.
+두 Mimir/Cortex/Prometheus 백엔드에 동일한 쿼리를 전송 → 응답을 비교.
 
 #### 활용
 
@@ -449,7 +447,7 @@ cortex_querytee_responses_compared_total
 
 #### 개요
 
-Mimir 트래픽을 캡처하여 분석하거나 리플레이할 수 있다.
+Mimir 트래픽을 캡처해 분석하거나 리플레이 가능.
 
 #### 캡처
 
@@ -490,7 +488,7 @@ trafficdump replay \
 
 #### 개요
 
-오브젝트 스토리지의 Mimir 데이터를 직접 조작한다.
+오브젝트 스토리지의 Mimir 데이터를 직접 조작.
 
 #### 명령
 
@@ -538,7 +536,7 @@ bucket-tool blocks check \
 
 #### 개요
 
-현재 Mimir 클러스터 구성을 다이어그램으로 시각화한다.
+현재 Mimir 클러스터 구성을 다이어그램으로 시각화.
 
 #### 사용
 
@@ -643,7 +641,7 @@ mimirtool analyze prometheus \
 
 ### 개요
 
-Mimir는 Prometheus HTTP API와 호환되므로, Prometheus 데이터소스로 등록 가능합니다.
+Mimir는 Prometheus HTTP API와 호환됨 → Prometheus 데이터소스로 등록 가능.
 
 추가 기능:
 - Native Histograms 시각화
@@ -734,7 +732,7 @@ rate(http_requests_total[5m])
 
 #### Builder 모드
 
-메트릭/라벨/연산을 클릭해 쿼리를 작성하는 UI 모드. PromQL을 모르는 사용자도 사용할 수 있다.
+메트릭/라벨/연산을 클릭해 쿼리를 작성하는 UI 모드 → PromQL을 모르는 사용자도 사용 가능.
 
 #### Code 모드
 
@@ -774,7 +772,7 @@ sum by (le) (
 
 #### Native Histogram 자동 감지
 
-Native Histogram인 경우 Grafana가 자동으로 적절한 시각화를 제공한다.
+Native Histogram인 경우 Grafana가 자동으로 적절한 시각화를 제공.
 
 ```promql
 # Native Histogram
@@ -831,7 +829,7 @@ exemplarTraceIdDestinations:
 
 #### 시각화
 
-차트에서 점으로 Exemplar가 표시된다:
+차트에서 점으로 Exemplar가 표시됨:
 
 ```
 시계열 그래프
@@ -841,7 +839,7 @@ exemplarTraceIdDestinations:
    │ ╱╲ │
 ```
 
-점을 클릭하면 Tempo에서 해당 트레이스를 조회할 수 있다.
+점을 클릭하면 Tempo에서 해당 트레이스 조회 가능.
 
 #### PromQL Range Query
 
@@ -977,7 +975,7 @@ thresholds:
 
 ##### Exemplar 활용
 
-차트의 점을 클릭하면 Tempo에서 trace_id를 조회하고, 같은 trace_id로 Loki에서 로그를 확인할 수 있다.
+차트의 점을 클릭하면 Tempo에서 trace_id를 조회 → 같은 trace_id로 Loki에서 로그 확인 가능.
 
 ##### 데이터 링크 (Data Links)
 
@@ -1037,7 +1035,7 @@ jsonnet -J vendor mixin.libsonnet > dashboards.json
 
 #### Grafana Cloud
 
-Grafana Cloud Mimir는 모든 Mixin 대시보드를 자동으로 사전 설치한다.
+Grafana Cloud Mimir는 모든 Mixin 대시보드를 자동으로 사전 설치.
 
 #### Import
 
@@ -1095,7 +1093,7 @@ groups:
 cluster:api_latency:p95:5m{cluster="$cluster"}
 ```
 
-이를 통해 대시보드 로딩 속도를 높일 수 있다.
+이를 통해 대시보드 로딩 속도 향상 가능.
 
 #### 명명 규칙
 

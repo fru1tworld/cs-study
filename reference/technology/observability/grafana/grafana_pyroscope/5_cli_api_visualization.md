@@ -20,14 +20,14 @@
 
 ### profilecli란
 
-`profilecli` 는 Pyroscope 서버와 상호작용하기 위한 공식 CLI 도구입니다.
+`profilecli`는 Pyroscope 서버와 상호작용하기 위한 공식 CLI 도구임.
 
 - 로컬 pprof 파일을 서버로 업로드
 - 서버에서 프로파일 다운로드/조회
 - 오브젝트 스토리지 버킷 검사
 - 운영 점검
 
-서버 설정·디버깅 보조 도구이며, 일반 클라이언트 계측에는 SDK나 Alloy를 사용합니다.
+서버 설정·디버깅 보조 도구이며, 일반 클라이언트 계측에는 SDK나 Alloy를 사용함.
 
 ---
 
@@ -70,7 +70,7 @@ go build -o profilecli ./cmd/profilecli
 --verbose                 상세 로깅
 ```
 
-환경 변수로도 설정 가능합니다.
+환경 변수로도 설정 가능.
 
 ```bash
 export PROFILECLI_URL=http://pyroscope:4040
@@ -96,14 +96,12 @@ profilecli upload \
 
 옵션:
 
-| 플래그 | 설명 |
-|--------|------|
-| `--extra-labels` | 추가할 라벨 (반복 가능) |
-| `--from`, `--to` | 시간 범위(겹쳐 쓸 때) |
+- `--extra-labels`: 추가할 라벨(반복 가능)
+- `--from`, `--to`: 시간 범위(겹쳐 쓸 때)
 
 #### query — 프로파일 조회
 
-라벨 매처와 시간 범위로 프로파일을 가져옵니다. 결과는 표준 pprof 형식으로 출력되므로 `go tool pprof` 등으로 분석할 수 있습니다.
+라벨 매처와 시간 범위로 프로파일을 가져옴. 결과는 표준 pprof 형식으로 출력됨 → `go tool pprof` 등으로 분석 가능.
 
 ```bash
 profilecli query \
@@ -124,7 +122,7 @@ profilecli query series \
 
 #### query labels / query label-values
 
-라벨 키/값을 탐색.
+라벨 키/값을 탐색함.
 
 ```bash
 profilecli query labels --from=now-1h --to=now
@@ -170,7 +168,7 @@ profilecli bucket inspect-block \
 
 ### admin 명령
 
-운영자용 관리 엔드포인트 래퍼 명령입니다.
+운영자용 관리 엔드포인트 래퍼 명령임.
 
 #### admin tenant-stats
 
@@ -186,7 +184,7 @@ profilecli admin tenant-stats --tenant-id=team-a
 
 #### admin flush
 
-Ingester의 헤드 블록을 즉시 플러시합니다. 점검 또는 종료 전에 사용합니다.
+Ingester의 헤드 블록을 즉시 플러시함. 점검 또는 종료 전에 사용함.
 
 ---
 
@@ -266,12 +264,12 @@ profilecli bucket inspect-block --block-id=01HF...XYZ \
 
 ### API 개요
 
-Pyroscope는 두 종류 API를 제공합니다.
+Pyroscope는 두 종류 API를 제공함.
 
-- **Pyroscope OG API** (HTTP/JSON 기반): `/ingest`, `/render`, `/labels`, `/label-values` 등
-- **Phlare/Connect API** (HTTP/protobuf, gRPC 호환): `/push.v1.PusherService/Push`, `/querier.v1.QuerierService/...`
+- Pyroscope OG API(HTTP/JSON 기반): `/ingest`, `/render`, `/labels`, `/label-values` 등
+- Phlare/Connect API(HTTP/protobuf, gRPC 호환): `/push.v1.PusherService/Push`, `/querier.v1.QuerierService/...`
 
-신규 SDK와 Alloy는 Connect API를 우선 사용하며, 하위 호환성을 위해 OG API도 유지됩니다.
+신규 SDK와 Alloy는 Connect API를 우선 사용하며, 하위 호환성을 위해 OG API도 유지됨.
 
 ---
 
@@ -283,11 +281,11 @@ Pyroscope는 두 종류 API를 제공합니다.
 X-Scope-OrgID: team-a
 ```
 
-`multitenancy_enabled: true` 일 때 모든 요청에 필수.
+`multitenancy_enabled: true`일 때 모든 요청에 필수.
 
 #### 인증
 
-서버 자체는 인증을 처리하지 않으며, 앞단 게이트웨이에서 담당합니다. Grafana Cloud는 Basic Auth 토큰 사용.
+서버 자체는 인증을 처리하지 않으며, 앞단 게이트웨이에서 담당함. Grafana Cloud는 Basic Auth 토큰 사용.
 
 ```
 Authorization: Basic <base64(user:token)>
@@ -299,20 +297,18 @@ Authorization: Basic <base64(user:token)>
 { "code": 400, "message": "max label name length exceeded: ..." }
 ```
 
-| 코드 | 의미 |
-|------|------|
-| 400 | 검증 실패 (라벨, 페이로드) |
-| 401 | 인증 실패 |
-| 403 | 권한 부족 |
-| 422 | 쿼리 파싱/실행 오류 |
-| 429 | 인제스트/쿼리 한도 초과 |
-| 500 | 서버 오류 |
+- 400: 검증 실패(라벨, 페이로드)
+- 401: 인증 실패
+- 403: 권한 부족
+- 422: 쿼리 파싱/실행 오류
+- 429: 인제스트/쿼리 한도 초과
+- 500: 서버 오류
 
 ---
 
 ### Ingest API
 
-레거시 호환을 위한 단순 ingest 엔드포인트.
+레거시 호환을 위한 단순 ingest 엔드포인트임.
 
 ```
 POST /ingest
@@ -320,15 +316,13 @@ POST /ingest
 
 #### 쿼리 파라미터
 
-| 파라미터 | 설명 |
-|---------|------|
-| `name` | 애플리케이션 이름 + 라벨 (예: `checkout{env=prod}`) |
-| `from` | 시작 시간(unix sec) |
-| `until` | 종료 시간(unix sec) |
-| `format` | `pprof` (권장), `jfr`, `folded` |
-| `sampleRate` | 샘플링 레이트 (Hz) |
-| `spyName` | SDK/agent 식별자 |
-| `units` | `samples`, `bytes`, `objects` |
+- `name`: 애플리케이션 이름 + 라벨(예: `checkout{env=prod}`)
+- `from`: 시작 시간(unix sec)
+- `until`: 종료 시간(unix sec)
+- `format`: `pprof`(권장), `jfr`, `folded`
+- `sampleRate`: 샘플링 레이트(Hz)
+- `spyName`: SDK/agent 식별자
+- `units`: `samples`, `bytes`, `objects`
 
 #### 예시
 
@@ -348,7 +342,7 @@ POST /push.v1.PusherService/Push
 Content-Type: application/proto
 ```
 
-요청 본문은 protobuf 메시지 `PushRequest`이며, 신규 SDK가 사용하는 표준 경로입니다.
+요청 본문은 protobuf 메시지 `PushRequest`이며, 신규 SDK가 사용하는 표준 경로임.
 
 #### 요청 메시지
 
@@ -419,7 +413,7 @@ POST /querier.v1.QuerierService/SelectMergeStacktraces
 POST /querier.v1.QuerierService/SelectSeries
 ```
 
-특정 라벨로 그룹화하여 시간별 합계를 반환합니다.
+특정 라벨로 그룹화해 시간별 합계를 반환함.
 
 ---
 
@@ -431,7 +425,7 @@ Pyroscope 내장 UI가 사용하는 렌더링 엔드포인트.
 GET /render?query=<labels>&from=<ms>&until=<ms>&format=json
 ```
 
-`format=json` 이면 flame graph 트리 JSON, `format=pprof` 이면 pprof 바이트.
+`format=json`이면 flame graph 트리 JSON, `format=pprof`이면 pprof 바이트.
 
 ```bash
 curl "http://pyroscope:4040/render?query={service_name=\"checkout\"}&from=now-1h&until=now&format=json"
@@ -488,18 +482,16 @@ GET /api/v1/status/buildinfo
 
 ### Status / Ready / Health
 
-| 엔드포인트 | 설명 |
-|-----------|------|
-| `GET /ready` | 트래픽 수신 준비 완료 (K8s readinessProbe) |
-| `GET /-/healthy` | 프로세스 살아있음 (K8s livenessProbe) |
-| `GET /api/v1/status/config` | 현재 적용 중인 설정 |
-| `GET /memberlist` | gossip 멤버십 상태 |
-| `GET /distributor/ring` | distributor ring 상태 |
-| `GET /ingester/ring` | ingester ring 상태 |
-| `GET /compactor/ring` | compactor ring 상태 |
-| `GET /store-gateway/ring` | store-gateway ring 상태 |
+- `GET /ready`: 트래픽 수신 준비 완료(K8s readinessProbe)
+- `GET /-/healthy`: 프로세스 살아있음(K8s livenessProbe)
+- `GET /api/v1/status/config`: 현재 적용 중인 설정
+- `GET /memberlist`: gossip 멤버십 상태
+- `GET /distributor/ring`: distributor ring 상태
+- `GET /ingester/ring`: ingester ring 상태
+- `GET /compactor/ring`: compactor ring 상태
+- `GET /store-gateway/ring`: store-gateway ring 상태
 
-ring 페이지는 HTML로도 표시되므로 어떤 노드가 healthy/unhealthy 상태인지 직관적으로 확인할 수 있습니다.
+ring 페이지는 HTML로도 표시되므로 어떤 노드가 healthy/unhealthy 상태인지 직관적으로 확인 가능.
 
 ---
 
@@ -589,16 +581,14 @@ Grafana → Connections → Data sources → "Grafana Pyroscope".
 
 #### 주요 설정
 
-| 항목 | 값 |
-|------|----|
-| **URL** | `http://pyroscope:4040` (자체 호스팅) 또는 Grafana Cloud Profiles URL |
-| **Auth** | Basic Auth (Cloud는 user=stack id, password=토큰) |
-| **Custom HTTP Headers** | `X-Scope-OrgID: team-a` (멀티테넌트 시) |
-| **Minimal step** | 시계열의 최소 step (예: `15s`) |
+- URL: `http://pyroscope:4040`(자체 호스팅) 또는 Grafana Cloud Profiles URL
+- Auth: Basic Auth(Cloud는 user=stack id, password=토큰)
+- Custom HTTP Headers: `X-Scope-OrgID: team-a`(멀티테넌트 시)
+- Minimal step: 시계열의 최소 step(예: `15s`)
 
 #### 멀티 테넌트 라우팅
 
-테넌트마다 다른 데이터 소스를 등록하거나, 한 데이터 소스에 변수 기반 헤더를 사용할 수 있습니다.
+테넌트마다 다른 데이터 소스를 등록하거나, 한 데이터 소스에 변수 기반 헤더 사용 가능.
 
 #### Provisioning
 
@@ -619,7 +609,7 @@ datasources:
 
 ### Explore 뷰
 
-Grafana Explore에서 Pyroscope 데이터 소스를 선택하면 다음을 사용할 수 있습니다.
+Grafana Explore에서 Pyroscope 데이터 소스를 선택하면 다음 사용 가능.
 
 #### 쿼리 빌더
 
@@ -629,11 +619,9 @@ Grafana Explore에서 Pyroscope 데이터 소스를 선택하면 다음을 사�
 
 #### Display modes
 
-| 모드 | 설명 |
-|------|------|
-| **Profile** | 단일 시점 / 시간 범위의 머지된 flame graph |
-| **Time series** | 시간에 따른 합계 시계열 (선택 라벨로 그룹) |
-| **Both** | 위 두 가지 동시 |
+- Profile: 단일 시점 / 시간 범위의 머지된 flame graph
+- Time series: 시간에 따른 합계 시계열(선택 라벨로 그룹)
+- Both: 위 두 가지 동시
 
 #### Comparison Mode (Diff)
 
@@ -643,7 +631,7 @@ Grafana Explore에서 Pyroscope 데이터 소스를 선택하면 다음을 사�
 
 ### Explore Profiles 앱
 
-`grafana-pyroscope-app` 플러그인은 Explore 보다 풍부한 분석 UI를 제공합니다.
+`grafana-pyroscope-app` 플러그인은 Explore보다 풍부한 분석 UI를 제공함.
 
 #### 설치
 
@@ -663,7 +651,7 @@ grafana-cli plugins install grafana-pyroscope-app
 
 #### 데이터 소스 선택
 
-Explore Profiles는 등록된 Pyroscope 데이터 소스 중 하나를 사용합니다. 멀티 테넌트 환경이라면 상단에서 데이터 소스를 변경합니다.
+Explore Profiles는 등록된 Pyroscope 데이터 소스 중 하나를 사용함. 멀티 테넌트 환경이라면 상단에서 데이터 소스를 변경함.
 
 ---
 
@@ -694,13 +682,13 @@ service_name = label_values(service_name)
 env          = label_values(env)
 ```
 
-대시보드 변수로 다양한 서비스/환경 전환.
+대시보드 변수로 다양한 서비스/환경을 전환함.
 
 ---
 
 ### Trace ↔ Profile 연동 (Span Profiles)
 
-트레이스의 특정 스팬에서 해당 시간/인스턴스의 프로파일로 이동하는 기능으로, **Span Profiles**라고 합니다.
+트레이스의 특정 스팬에서 해당 시간/인스턴스의 프로파일로 이동하는 기능으로, Span Profiles라고 함.
 
 #### 동작 원리
 
@@ -727,7 +715,7 @@ profiler, _ := pyroscope.Start(pyroscope.Config{
 
 #### Tempo 데이터 소스 설정
 
-Tempo 데이터 소스의 "Profiles" 탭에서 Pyroscope를 연결 대상으로 추가하면 스팬 상세 화면에서 자동으로 링크가 표시됩니다.
+Tempo 데이터 소스의 "Profiles" 탭에서 Pyroscope를 연결 대상으로 추가하면 스팬 상세 화면에서 자동으로 링크가 표시됨.
 
 ---
 
@@ -746,11 +734,11 @@ URL: <Pyroscope explore URL>
 Datasource: Pyroscope
 ```
 
-또는 `service_name` 라벨을 공유하여 Pyroscope에 자동으로 매칭할 수도 있습니다.
+또는 `service_name` 라벨을 공유해 Pyroscope에 자동으로 매칭할 수도 있음.
 
 #### 단순 통합
 
-Loki의 로그 라벨 `service_name`, `env`, `cluster`가 Pyroscope와 동일하다면 Explore에서 "Open in Pyroscope" 버튼이 자동으로 활성화됩니다.
+Loki의 로그 라벨 `service_name`, `env`, `cluster`가 Pyroscope와 동일하다면 Explore에서 "Open in Pyroscope" 버튼이 자동으로 활성화됨.
 
 ---
 
@@ -787,7 +775,7 @@ URL: /a/grafana-pyroscope-app/.../service/${__field.labels.service_name}?from=${
 5. **Diff**: 어제 같은 시간대와 비교 → 회귀 함수 식별
 6. **Loki**: 그 함수의 로그 패턴 확인 → 가설 검증
 
-이 모든 과정이 같은 Grafana UI 안에서 1~2분 내에 가능.
+이 모든 과정이 같은 Grafana UI 안에서 1~2분 내에 가능함.
 
 ---
 
@@ -795,16 +783,14 @@ URL: /a/grafana-pyroscope-app/.../service/${__field.labels.service_name}?from=${
 
 여러 신호 간 자연스러운 점프를 위한 권장 라벨:
 
-| 라벨 | 예시 값 | 용도 |
-|------|--------|------|
-| `service_name` | `checkout` | 서비스 식별 (필수) |
-| `service_namespace` | `payments` | 서비스 그룹 |
-| `env` | `prod`, `staging`, `dev` | 환경 |
-| `cluster` | `us-east-1` | 클러스터 |
-| `version` | `v1.2.3` | 배포 버전 (Diff에 핵심) |
-| `instance` | `host123` | 인스턴스 (고카디널리티 주의) |
+- `service_name`: 예시 값 `checkout` · 용도 서비스 식별(필수)
+- `service_namespace`: 예시 값 `payments` · 용도 서비스 그룹
+- `env`: 예시 값 `prod`, `staging`, `dev` · 용도 환경
+- `cluster`: 예시 값 `us-east-1` · 용도 클러스터
+- `version`: 예시 값 `v1.2.3` · 용도 배포 버전(Diff에 핵심)
+- `instance`: 예시 값 `host123` · 용도 인스턴스(고카디널리티 주의)
 
-OTel Resource Attribute 표준(`service.name` 등)에 맞추는 것을 권장합니다. 라벨 변환 시 `.`은 `_`으로 사용합니다.
+OTel Resource Attribute 표준(`service.name` 등)에 맞추는 것을 권장함. 라벨 변환 시 `.`은 `_`으로 사용함.
 
 ---
 

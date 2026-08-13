@@ -20,16 +20,15 @@
 
 ### Mount unit
 
-`.mount` unit은 파일시스템 마운트를 표현합니다. unit 이름은 마운트 지점을 이스케이프한 형태로, 슬래시는 `-`로, 그 외 특수 문자는 `\xNN` 형식으로 변환됩니다.
+`.mount` unit은 파일시스템 마운트를 표현함. unit 이름은 마운트 지점을 이스케이프한 형태로, 슬래시는 `-`로, 그 외 특수 문자는 `\xNN` 형식으로 변환됨.
 
-| 마운트 지점 | unit 이름 |
-| --- | --- |
-| `/` | `-.mount` |
-| `/home` | `home.mount` |
-| `/var/lib/docker` | `var-lib-docker.mount` |
-| `/mnt/data 1` | `mnt-data\x201.mount` |
+마운트 지점 → unit 이름 매핑:
+- `/` → `-.mount`
+- `/home` → `home.mount`
+- `/var/lib/docker` → `var-lib-docker.mount`
+- `/mnt/data 1` → `mnt-data\x201.mount`
 
-이스케이프는 손으로 하기 어려우니 `systemd-escape` 를 씁니다:
+이스케이프는 손으로 하기 어려우니 `systemd-escape` 사용:
 
 ```bash
 $ systemd-escape --path /var/lib/docker
@@ -42,7 +41,7 @@ var-lib-docker.mount
 
 ### fstab과의 관계
 
-systemd는 부팅 시 `/etc/fstab` 을 읽어 **자동으로 mount unit을 생성**합니다. 즉 대부분의 경우 `.mount` 파일을 직접 작성할 필요는 없고 fstab만 쓰면 됩니다.
+systemd는 부팅 시 `/etc/fstab` 을 읽어 자동으로 mount unit을 생성함. 즉 대부분의 경우 `.mount` 파일을 직접 작성할 필요 없이 fstab만 쓰면 됨.
 
 ```fstab
 # <device>      <mountpoint>    <fstype>  <options>                          <dump> <pass>
@@ -52,26 +51,24 @@ UUID=abc-123    /data           xfs       defaults,nofail,x-systemd.device-timeo
 
 #### x-systemd.* 옵션
 
-fstab의 옵션 필드에 systemd 전용 옵션을 넣을 수 있습니다.
+fstab의 옵션 필드에 systemd 전용 옵션을 넣을 수 있음.
 
-| 옵션 | 의미 |
-| --- | --- |
-| `x-systemd.device-timeout=30` | 디바이스 대기 타임아웃 |
-| `x-systemd.requires=foo.service` | 이 mount의 Requires= |
-| `x-systemd.before=bar.service` | 이 mount Before= |
-| `x-systemd.after=baz.service` | 이 mount After= |
-| `x-systemd.automount` | 자동으로 automount unit 생성 |
-| `x-systemd.idle-timeout=600` | automount idle timeout |
-| `x-systemd.mount-timeout=10` | mount() 타임아웃 |
-| `_netdev` | 네트워크 마운트 (네트워크 이후) |
-| `nofail` | 실패해도 부팅 계속 |
-| `noauto` | 부팅 시 자동 마운트 안 함 |
+- `x-systemd.device-timeout=30`: 디바이스 대기 타임아웃
+- `x-systemd.requires=foo.service`: 이 mount의 Requires=
+- `x-systemd.before=bar.service`: 이 mount Before=
+- `x-systemd.after=baz.service`: 이 mount After=
+- `x-systemd.automount`: 자동으로 automount unit 생성
+- `x-systemd.idle-timeout=600`: automount idle timeout
+- `x-systemd.mount-timeout=10`: mount() 타임아웃
+- `_netdev`: 네트워크 마운트 (네트워크 이후)
+- `nofail`: 실패해도 부팅 계속
+- `noauto`: 부팅 시 자동 마운트 안 함
 
 `fstab` 변경 후 즉시 반영하려면:
 
 ```bash
 sudo systemctl daemon-reload
-sudo systemctl restart local-fs.target   # 주의: 마운트 재배치가 발생
+sudo systemctl restart local-fs.target   # 주의: 마운트 재배치 발생
 ```
 
 ---
@@ -112,7 +109,7 @@ WantedBy=multi-user.target
 
 #### 의존성 자동 추가
 
-systemd는 다음을 자동으로 추가합니다:
+systemd는 다음을 자동으로 추가함:
 - `Before=local-fs.target` (또는 네트워크 마운트는 `remote-fs.target`)
 - `After=` 디바이스가 등장한 시점
 - `Requires=` 디바이스 unit
@@ -121,7 +118,7 @@ systemd는 다음을 자동으로 추가합니다:
 
 ### Automount unit
 
-`.automount` unit은 마운트 지점에 **접근하는 순간** 마운트를 트리거합니다. 사용하지 않는 동안에는 마운트가 해제되므로, NFS나 CIFS처럼 사용 빈도가 낮은 마운트에 유용합니다.
+`.automount` unit은 마운트 지점에 접근하는 순간 마운트를 트리거함. 사용하지 않는 동안에는 마운트가 해제되므로, NFS나 CIFS처럼 사용 빈도가 낮은 마운트에 유용.
 
 작동 방식:
 - automount unit만 부팅 시 활성화
@@ -143,9 +140,9 @@ TimeoutIdleSec=600
 WantedBy=multi-user.target
 ```
 
-이 automount는 같은 이름의 `srv-data.mount` 와 짝이 됩니다.
+이 automount는 같은 이름의 `srv-data.mount` 와 짝이 됨.
 
-> 주의: automount unit만 enable하면 됩니다. mount unit은 enable하지 마세요.
+> 주의: automount unit만 enable하면 됨. mount unit은 enable하지 않음.
 
 ---
 
@@ -155,9 +152,9 @@ WantedBy=multi-user.target
 TimeoutIdleSec=10min
 ```
 
-마지막 접근 후 이 시간이 지나면 자동으로 unmount합니다. `0`으로 설정하면 idle timeout을 비활성화합니다(수동 unmount만 가능).
+마지막 접근 후 이 시간이 지나면 자동으로 unmount됨. `0`으로 설정하면 idle timeout 비활성화(수동 unmount만 가능).
 
-NFS 마운트가 많은 서버에서 idle timeout을 짧게 두면 메모리/소켓 부담이 줄어듭니다.
+NFS 마운트가 많은 서버에서 idle timeout을 짧게 두면 메모리/소켓 부담이 줄어듦.
 
 ---
 
@@ -169,7 +166,7 @@ NFS 마운트가 많은 서버에서 idle timeout을 짧게 두면 메모리/소
 nfsserver:/data  /mnt/data  nfs  _netdev,x-systemd.automount,x-systemd.idle-timeout=300  0  0
 ```
 
-이 한 줄로 systemd가 mount + automount 두 unit을 자동 생성합니다.
+이 한 줄로 systemd가 mount + automount 두 unit을 자동 생성함.
 
 #### 2. tmpfs 마운트
 
@@ -277,13 +274,13 @@ sudo mount -a   # fstab 기반 마운트만
 
 ### Target이란?
 
-`.target` unit은 다른 unit들의 **그룹화·동기화 지점** 입니다. 그 자체로는 아무것도 실행하지 않지만, 의존성 그래프의 노드 역할을 합니다.
+`.target` unit은 다른 unit들의 그룹화·동기화 지점. 그 자체로는 아무것도 실행하지 않지만, 의존성 그래프의 노드 역할을 함.
 
-SysV init의 **런레벨(runlevel)** 과 유사한 개념을 일반화한 것입니다:
+SysV init의 런레벨(runlevel)과 유사한 개념을 일반화한 것:
 - 런레벨 3 (multi-user) → `multi-user.target`
 - 런레벨 5 (graphical) → `graphical.target`
 
-target은 보통 다음과 같이 사용됩니다:
+target은 보통 다음과 같이 사용됨:
 - "X가 준비된 상태"를 의미하는 마커 (`network-online.target`)
 - 부팅 단계를 표현 (`basic.target`, `multi-user.target`)
 - 사용자 지정 그룹화 (`my-app-stack.target`)
@@ -292,36 +289,34 @@ target은 보통 다음과 같이 사용됩니다:
 
 ### 표준 target
 
-| Target | 의미 |
-| --- | --- |
-| `default.target` | 부팅의 최종 목적지 (보통 multi-user나 graphical로 심볼릭 링크) |
-| `graphical.target` | GUI 로그인이 가능한 상태 |
-| `multi-user.target` | 여러 사용자가 로그인 가능, 네트워크 활성, GUI 없음 |
-| `rescue.target` | 단일 사용자, 네트워크 없음, 기본 파일시스템만 마운트 |
-| `emergency.target` | 최소 환경, 루트만 read-only로 마운트, 셸만 실행 |
-| `network.target` | 네트워크 관리 데몬이 시작된 상태 (네트워크 사용 가능 보장 ✗) |
-| `network-online.target` | 네트워크 연결이 실제로 가능한 상태 |
-| `basic.target` | 거의 모든 부팅 초기화 완료 (sockets, sysinit, paths, slices, timers) |
-| `sysinit.target` | 마운트, swap, fsck 등 초기 시스템 작업 완료 |
-| `local-fs.target` | 로컬 파일시스템 마운트 완료 |
-| `remote-fs.target` | 원격 파일시스템 마운트 완료 |
-| `swap.target` | swap 활성화 완료 |
-| `sockets.target` | 모든 소켓 활성화 됨 |
-| `timers.target` | 모든 타이머 활성화 됨 |
-| `paths.target` | 모든 path unit 활성화 됨 |
-| `shutdown.target` | 종료 시작 |
-| `umount.target` | 마운트 해제 단계 |
-| `reboot.target` | 재부팅 |
-| `poweroff.target` | 전원 끄기 |
-| `halt.target` | 정지 (전원 유지) |
-| `kexec.target` | kexec 재부팅 |
-| `suspend.target`, `hibernate.target` | 절전/최대절전 |
+- `default.target`: 부팅의 최종 목적지 (보통 multi-user나 graphical로 심볼릭 링크)
+- `graphical.target`: GUI 로그인이 가능한 상태
+- `multi-user.target`: 여러 사용자가 로그인 가능, 네트워크 활성, GUI 없음
+- `rescue.target`: 단일 사용자, 네트워크 없음, 기본 파일시스템만 마운트
+- `emergency.target`: 최소 환경, 루트만 read-only로 마운트, 셸만 실행
+- `network.target`: 네트워크 관리 데몬이 시작된 상태 (네트워크 사용 가능 보장 안 함)
+- `network-online.target`: 네트워크 연결이 실제로 가능한 상태
+- `basic.target`: 거의 모든 부팅 초기화 완료 (sockets, sysinit, paths, slices, timers)
+- `sysinit.target`: 마운트, swap, fsck 등 초기 시스템 작업 완료
+- `local-fs.target`: 로컬 파일시스템 마운트 완료
+- `remote-fs.target`: 원격 파일시스템 마운트 완료
+- `swap.target`: swap 활성화 완료
+- `sockets.target`: 모든 소켓 활성화됨
+- `timers.target`: 모든 타이머 활성화됨
+- `paths.target`: 모든 path unit 활성화됨
+- `shutdown.target`: 종료 시작
+- `umount.target`: 마운트 해제 단계
+- `reboot.target`: 재부팅
+- `poweroff.target`: 전원 끄기
+- `halt.target`: 정지 (전원 유지)
+- `kexec.target`: kexec 재부팅
+- `suspend.target`, `hibernate.target`: 절전/최대절전
 
 ---
 
 ### Default target
 
-기본 target은 `/etc/systemd/system/default.target` 심볼릭 링크가 가리키는 곳입니다.
+기본 target은 `/etc/systemd/system/default.target` 심볼릭 링크가 가리키는 곳.
 
 #### 현재 default 확인
 
@@ -336,7 +331,7 @@ graphical.target
 sudo systemctl set-default multi-user.target
 ```
 
-이 명령은 심볼릭 링크를 변경합니다. 다음 부팅부터 적용됩니다.
+이 명령은 심볼릭 링크를 변경함. 다음 부팅부터 적용됨.
 
 #### 일회성 변경
 
@@ -346,7 +341,7 @@ sudo systemctl set-default multi-user.target
 
 ### 부팅 시퀀스
 
-systemd 부팅 단계는 대략 다음 순서로 진행됩니다.
+systemd 부팅 단계는 대략 다음 순서로 진행됨.
 
 ```
                       cryptsetup-pre.target
@@ -384,11 +379,11 @@ systemd 부팅 단계는 대략 다음 순서로 진행됩니다.
                           default.target
 ```
 
-각 target은 **이전 단계의 완료를 보장**합니다. 예를 들어 `multi-user.target`에 등록된 서비스는 `basic.target`에 도달한 후에만 시작됩니다.
+각 target은 이전 단계의 완료를 보장함. 예를 들어 `multi-user.target`에 등록된 서비스는 `basic.target`에 도달한 후에만 시작됨.
 
 #### After=와 Wants= 관계
 
-- 일반 서비스가 부팅 중 시작되려면 `WantedBy=multi-user.target` 같은 `[Install]` 이 필요
+- 일반 서비스가 부팅 중 시작되려면 `WantedBy=multi-user.target` 같은 `[Install]` 필요
 - 시작 순서 제어는 `After=`, `Before=`, `Requires=` 로
 
 #### network-online.target
@@ -397,18 +392,18 @@ systemd 부팅 단계는 대략 다음 순서로 진행됩니다.
 
 ```ini
 [Unit]
-After=network.target           # ❌ 네트워크 사용 가능을 보장 안 함
-After=network-online.target    # ✓ 실제 연결 보장
-Wants=network-online.target    # ✓ 이 target을 끌어옴 (꼭 필요)
+After=network.target           # 금지: 네트워크 사용 가능을 보장 안 함
+After=network-online.target    # 허용: 실제 연결 보장
+Wants=network-online.target    # 허용: 이 target을 끌어옴 (꼭 필요)
 ```
 
-`network-online.target`은 자동으로 활성화되지 않으므로 `Wants=`도 함께 명시해야 합니다.
+`network-online.target`은 자동으로 활성화되지 않으므로 `Wants=`도 함께 명시 필요.
 
 ---
 
 ### Isolate
 
-`systemctl isolate <target>`은 **지정한 target과 그 의존성만 활성 상태로 유지하고, 나머지는 모두 중지**합니다.
+`systemctl isolate <target>`은 지정한 target과 그 의존성만 활성 상태로 유지하고, 나머지는 모두 중지함.
 
 ```bash
 sudo systemctl isolate multi-user.target   # GUI 끄기
@@ -416,25 +411,23 @@ sudo systemctl isolate rescue.target       # 단일 사용자 모드
 sudo systemctl isolate graphical.target    # 다시 GUI로
 ```
 
-isolate 대상이 되려면 해당 target에 `AllowIsolate=yes`가 설정되어 있어야 합니다.
+isolate 대상이 되려면 해당 target에 `AllowIsolate=yes` 설정 필요.
 
 #### isolate 단축 명령
 
-| 명령 | 동작 |
-| --- | --- |
-| `systemctl rescue` | rescue.target으로 isolate |
-| `systemctl emergency` | emergency.target으로 |
-| `systemctl reboot` | reboot.target으로 |
-| `systemctl poweroff` | poweroff.target으로 |
-| `systemctl halt` | halt.target으로 |
-| `systemctl suspend` | 절전 |
-| `systemctl hibernate` | 최대절전 |
+- `systemctl rescue`: rescue.target으로 isolate
+- `systemctl emergency`: emergency.target으로
+- `systemctl reboot`: reboot.target으로
+- `systemctl poweroff`: poweroff.target으로
+- `systemctl halt`: halt.target으로
+- `systemctl suspend`: 절전
+- `systemctl hibernate`: 최대절전
 
 ---
 
 ### Rescue / Emergency
 
-부팅이 실패하거나 시스템에 문제가 생겼을 때 사용합니다.
+부팅이 실패하거나 시스템에 문제가 생겼을 때 사용.
 
 #### Rescue 모드
 
@@ -456,7 +449,7 @@ isolate 대상이 되려면 해당 target에 `AllowIsolate=yes`가 설정되어 
 
 ### 커스텀 target
 
-여러 unit을 묶어 한꺼번에 시작/중지하고 싶을 때 사용합니다.
+여러 unit을 묶어 한꺼번에 시작/중지하고 싶을 때 사용.
 
 ```ini
 # /etc/systemd/system/myapp.target
@@ -475,7 +468,7 @@ AllowIsolate=no
 WantedBy=myapp.target
 ```
 
-이제 `systemctl start myapp.target` 명령 하나로 스택 전체를 제어할 수 있습니다.
+이제 `systemctl start myapp.target` 명령 하나로 스택 전체를 제어 가능.
 
 #### Drop-in으로 target 확장
 
@@ -491,7 +484,7 @@ Wants=my-extra.service
 
 ### 부팅 분석
 
-부팅 시간 측정에는 `systemd-analyze`가 유용합니다.
+부팅 시간 측정에는 `systemd-analyze`가 유용.
 
 ```bash
 $ systemd-analyze

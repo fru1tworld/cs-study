@@ -17,14 +17,14 @@
 
 ## Signal이란?
 
-Signal은 **OpenTelemetry가 다루는 한 종류의 텔레메트리** 를 의미합니다. 각 시그널은 다음을 가집니다:
+Signal = OpenTelemetry가 다루는 한 종류의 텔레메트리. 각 시그널은 다음을 가짐:
 
-- 고유한 **데이터 모델** (Span / DataPoint / LogRecord)
-- 고유한 **API** (Tracer / Meter / Logger)
-- 고유한 **SDK 동작** (Sampling, Aggregation, Batching)
-- **공유되는 부분**: Resource, Context Propagation, OTLP
+- 고유한 데이터 모델 (Span / DataPoint / LogRecord)
+- 고유한 API (Tracer / Meter / Logger)
+- 고유한 SDK 동작 (Sampling, Aggregation, Batching)
+- 공유되는 부분: Resource, Context Propagation, OTLP
 
-같은 Resource·Context 위에서 동작하기 때문에 서로 자연스럽게 상관됩니다.
+같은 Resource·Context 위에서 동작 → 서로 자연스럽게 상관됨.
 
 ---
 
@@ -32,41 +32,45 @@ Signal은 **OpenTelemetry가 다루는 한 종류의 텔레메트리** 를 의�
 
 ### Traces (분산 트레이싱)
 
-**한 요청이 여러 서비스를 거치는 흐름** 을 기록.
+한 요청이 여러 서비스를 거치는 흐름을 기록.
 
-- 단위: **Span** — 하나의 작업 (HTTP 요청 처리, DB 쿼리 등)
-- 한 요청 = 하나의 **Trace** = 여러 Span의 트리/DAG
-- 핵심 질문: "이 요청은 왜 느린가?", "어디서 에러가 났는가?"
+- 단위: Span — 하나의 작업 (HTTP 요청 처리, DB 쿼리 등)
+- 한 요청 = 하나의 Trace = 여러 Span의 트리/DAG
+- 핵심 질문: "이 요청은 왜 느린가", "어디서 에러가 났는가"
 
 ### Metrics (메트릭)
 
-**시간에 따른 수치 측정** 을 집계해서 기록.
+시간에 따른 수치 측정을 집계해서 기록.
 
-- 단위: **DataPoint** — `(시간, 값, attributes)`
+- 단위: DataPoint — `(시간, 값, attributes)`
 - Instrument 종류: Counter, UpDownCounter, Gauge, Histogram
-- 핵심 질문: "초당 요청 수는?", "P99 지연은?", "에러율은?"
+- 핵심 질문: "초당 요청 수는", "P99 지연은", "에러율은"
 
 ### Logs (로그)
 
-**이벤트의 텍스트 기반 기록**.
+이벤트의 텍스트 기반 기록.
 
-- 단위: **LogRecord** — `(timestamp, severity, body, attributes)`
+- 단위: LogRecord — `(timestamp, severity, body, attributes)`
 - 기존 로깅 라이브러리(`logback`, `slf4j`, `python logging`, `winston`)와 통합 가능
-- 핵심 질문: "이 시점에 무슨 일이 있었는가?"
+- 핵심 질문: "이 시점에 무슨 일이 있었는가"
 
-세 시그널의 가장 큰 차이는 **카디널리티 비용**:
+세 시그널의 가장 큰 차이는 카디널리티 비용:
 
-| 시그널 | 데이터당 비용 | 카디널리티 영향 |
-|--------|---------------|-----------------|
-| Trace  | 한 요청당 다수 Span (샘플링 필수) | 낮음 (요청 단위) |
-| Metric | 시간당 하나의 집계 값 | 매우 높음 (라벨 조합마다 시계열 생성) |
-| Log    | 이벤트당 하나 | 중간 |
+- Trace
+  - 데이터당 비용: 한 요청당 다수 Span (샘플링 필수)
+  - 카디널리티 영향: 낮음 (요청 단위)
+- Metric
+  - 데이터당 비용: 시간당 하나의 집계 값
+  - 카디널리티 영향: 매우 높음 (라벨 조합마다 시계열 생성)
+- Log
+  - 데이터당 비용: 이벤트당 하나
+  - 카디널리티 영향: 중간
 
 ---
 
 ## Resource — 누가 보낸 데이터인가
 
-**Resource** 는 **시그널을 생성한 엔티티** 를 식별합니다. 모든 시그널(Trace/Metric/Log)에 동일한 Resource가 붙습니다.
+Resource = 시그널을 생성한 엔티티 식별자. 모든 시그널(Trace/Metric/Log)에 동일한 Resource가 붙음.
 
 표준 attribute 예시 (Semantic Conventions):
 
@@ -96,21 +100,21 @@ process.runtime.version: "21.0.1"
 
 ### 왜 중요한가
 
-- 같은 Resource를 공유하는 Trace·Metric·Log는 **자동으로 같은 서비스의 데이터로 묶임**
+- 같은 Resource를 공유하는 Trace·Metric·Log는 자동으로 같은 서비스의 데이터로 묶임
 - 백엔드는 Resource를 키로 인덱싱 → "service.name=checkout"으로 모든 시그널을 한 번에 조회
-- **Resource Detector** 가 자동으로 채움: K8s downward API, EC2 metadata, GCE metadata 등
+- Resource Detector가 자동으로 채움: K8s downward API, EC2 metadata, GCE metadata 등
 
 ### 주의할 점
 
-- `service.name` 은 **필수**. 없으면 SDK가 `unknown_service` 로 채움
-- Resource는 **프로세스 시작 시 한 번 결정** 되고 변경되지 않음
-- Resource attribute는 모든 시그널에 복제되므로 **요청별로 변하는 값을 넣으면 안 됨** (그건 Span attribute)
+- `service.name`은 필수 항목, 없으면 SDK가 `unknown_service`로 채움
+- Resource는 프로세스 시작 시 한 번 결정되고 이후 변경되지 않음
+- Resource attribute는 모든 시그널에 복제됨 → 요청별로 변하는 값을 넣으면 안 됨 (그건 Span attribute)
 
 ---
 
 ## InstrumentationScope — 어느 라이브러리가 만든 데이터인가
 
-Resource보다 한 단계 안쪽 식별자. **어느 계측 라이브러리가 이 시그널을 만들었는가** 를 나타냅니다.
+Resource보다 한 단계 안쪽 식별자. 어느 계측 라이브러리가 이 시그널을 만들었는지 나타냄.
 
 ```
 Resource (service: checkout, pod: pod-abc)
@@ -127,7 +131,7 @@ Resource (service: checkout, pod: pod-abc)
 - 라이브러리 버전별 동작 차이 추적
 - "이 Span은 자동 계측인가, 수동 계측인가" 구분
 
-`Tracer` / `Meter` / `Logger` 를 가져올 때 이름·버전을 지정:
+`Tracer` / `Meter` / `Logger`를 가져올 때 이름·버전을 지정:
 
 ```python
 tracer = trace.get_tracer("my.app.business", "1.0.0")
@@ -138,7 +142,7 @@ meter = metrics.get_meter("my.app.business", "1.0.0")
 
 ## Attributes — 속성
 
-**Attribute** 는 시그널에 붙는 `key → value` 쌍입니다. 모든 시그널이 attribute를 가집니다.
+Attribute = 시그널에 붙는 `key → value` 쌍. 모든 시그널이 attribute를 가짐.
 
 ### 값 타입
 
@@ -147,13 +151,13 @@ meter = metrics.get_meter("my.app.business", "1.0.0")
 - bool
 - int (signed 64-bit)
 - double
-- 위 타입의 **homogeneous array** (string[], int[], ...)
+- 위 타입의 homogeneous array (string[], int[], ...)
 
-`null` 값은 **속성이 없는 것** 과 동일하게 취급.
+`null` 값은 속성이 없는 것과 동일하게 취급.
 
 ### Semantic Conventions
 
-OpenTelemetry는 잘 알려진 attribute에 **표준 이름** 을 정의합니다. 예:
+OpenTelemetry는 잘 알려진 attribute에 표준 이름을 정의. 예:
 
 ```
 http.request.method            # "GET" | "POST" | ...
@@ -171,11 +175,11 @@ messaging.system               # "kafka" | "rabbitmq"
 messaging.destination.name     # topic name
 ```
 
-표준을 따르면 백엔드 대시보드·알림이 자동으로 동작합니다 (Tempo의 service map, Datadog APM의 endpoint 분석 등).
+표준을 따르면 백엔드 대시보드·알림이 자동으로 동작 (Tempo의 service map, Datadog APM의 endpoint 분석 등).
 
 ### 카디널리티 주의
 
-특히 Metric attribute에 **요청 ID, user ID, full URL 같은 고유값** 을 넣으면 시계열이 폭발합니다.
+특히 Metric attribute에 요청 ID, user ID, full URL 같은 고유값을 넣으면 시계열 폭발.
 
 ```
 # 나쁨: 모든 사용자별로 시계열이 생김
@@ -187,13 +191,13 @@ http_requests_total{user_id="u-12346"} 1
 http_requests_total{route="/orders/:id", status="200"} 1234
 ```
 
-Trace/Log는 카디널리티에 덜 민감하지만 (이벤트마다 한 번만 기록), Metric은 **시계열 수 = 라벨 조합 수** 가 됩니다.
+Trace/Log는 카디널리티에 덜 민감 (이벤트마다 한 번만 기록), Metric은 시계열 수 = 라벨 조합 수.
 
 ---
 
 ## Context — 시그널을 묶어주는 끈
 
-**Context** 는 현재 실행 흐름에 묶인 값들의 컨테이너입니다. 핵심은 두 가지:
+Context = 현재 실행 흐름에 묶인 값들의 컨테이너. 핵심은 두 가지:
 
 ### 1. SpanContext
 
@@ -206,14 +210,14 @@ Trace/Log는 카디널리티에 덜 민감하지만 (이벤트마다 한 번만 
 
 ### 2. Baggage
 
-요청 전체에 걸쳐 전파되는 **사용자 정의 key/value** (예: `user.tier=premium`).
+요청 전체에 걸쳐 전파되는 사용자 정의 key/value (예: `user.tier=premium`).
 
 ```
 Baggage 헤더로 전파되며, 모든 다운스트림 서비스에서 읽을 수 있음.
 주의: Baggage는 외부로 노출되므로 PII나 민감정보 넣지 말 것.
 ```
 
-Context는 언어별로 구현됩니다:
+Context는 언어별로 구현:
 - Go: `context.Context`
 - Python: `contextvars`
 - Java: `io.opentelemetry.context.Context` (ThreadLocal 기반)
@@ -223,11 +227,11 @@ Context는 언어별로 구현됩니다:
 
 ## 시그널 간 상관관계
 
-OpenTelemetry의 강점은 **세 시그널이 자연스럽게 연결** 된다는 점입니다.
+OpenTelemetry의 강점은 세 시그널이 자연스럽게 연결된다는 점.
 
 ### Trace ↔ Log
 
-LogRecord에는 `trace_id` 와 `span_id` 필드가 있어, 활성 Span이 있을 때 자동으로 채워집니다.
+LogRecord에는 `trace_id`와 `span_id` 필드가 있어, 활성 Span이 있을 때 자동으로 채워짐.
 
 ```json
 {
@@ -244,7 +248,7 @@ LogRecord에는 `trace_id` 와 `span_id` 필드가 있어, 활성 Span이 있을
 
 ### Trace ↔ Metric (Exemplars)
 
-Histogram 같은 집계 메트릭에 **대표 샘플의 trace_id** 를 함께 기록 ("Exemplar"). P99에 해당하는 실제 요청의 trace를 클릭으로 찾아갈 수 있음.
+Histogram 같은 집계 메트릭에 대표 샘플의 trace_id를 함께 기록 ("Exemplar"). P99에 해당하는 실제 요청의 trace를 클릭으로 찾아갈 수 있음.
 
 ```
 http_server_duration_seconds_bucket{le="0.5"} 1234
@@ -253,7 +257,7 @@ http_server_duration_seconds_bucket{le="0.5"} 1234
 
 ### Resource로 묶임
 
-세 시그널 모두 같은 `service.name`, `pod.name`, `host.name` 을 가지므로 백엔드가 같은 엔티티의 데이터로 인식.
+세 시그널 모두 같은 `service.name`, `pod.name`, `host.name`을 가짐 → 백엔드가 같은 엔티티의 데이터로 인식.
 
 ---
 
@@ -261,12 +265,12 @@ http_server_duration_seconds_bucket{le="0.5"} 1234
 
 2025년 이후 실험적으로 도입된 시그널.
 
-- **CPU/Heap 프로파일링 데이터** 를 OTLP로 전송
+- CPU/Heap 프로파일링 데이터를 OTLP로 전송
 - 형식: pprof 호환
 - 소스: eBPF (Pyroscope, Parca), 언어 SDK (async-profiler 연동)
 - 백엔드: Grafana Pyroscope, Polar Signals
 
-"어디서 시간을 썼는가"를 함수 단위로 깊이 보여주며, continuous profiling이 OTLP 생태계로 통합되는 단계입니다.
+"어디서 시간을 썼는가"를 함수 단위로 깊이 보여줌 → continuous profiling이 OTLP 생태계로 통합되는 단계.
 
 
 ---

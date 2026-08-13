@@ -23,7 +23,7 @@
 
 ### 보안 개요
 
-Mimir는 자체 인증을 제공하지 않으므로 외부 보안 계층이 필요하다.
+Mimir는 자체 인증을 제공하지 않음 → 외부 보안 계층 필요.
 
 #### 보안 계층
 
@@ -43,13 +43,11 @@ Mimir는 자체 인증을 제공하지 않으므로 외부 보안 계층이 필�
 
 #### 위협 모델
 
-| 위협 | 대응 |
-|------|------|
-| 무단 접근 | 인증 프록시 |
-| 데이터 도청 | TLS |
-| 테넌트 간 침투 | 멀티 테넌시 격리 |
-| 비밀 노출 | 시크릿 관리 |
-| Compliance | 감사 로깅 |
+- 무단 접근: 인증 프록시로 대응
+- 데이터 도청: TLS로 대응
+- 테넌트 간 침투: 멀티 테넌시 격리로 대응
+- 비밀 노출: 시크릿 관리로 대응
+- Compliance: 감사 로깅으로 대응
 
 ---
 
@@ -87,13 +85,11 @@ server:
 
 #### Client Auth Type 옵션
 
-| 값 | 설명 |
-|----|------|
-| `NoClientCert` | 클라이언트 인증서 무시 (TLS만) |
-| `RequestClientCert` | 요청하지만 검증 안 함 |
-| `RequireAnyClientCert` | 인증서 필수, 검증 안 함 |
-| `VerifyClientCertIfGiven` | 있으면 검증 |
-| `RequireAndVerifyClientCert` | 인증서 필수, 검증 (mTLS) |
+- `NoClientCert`: 클라이언트 인증서 무시(TLS만)
+- `RequestClientCert`: 요청하지만 검증 안 함
+- `RequireAnyClientCert`: 인증서 필수, 검증 안 함
+- `VerifyClientCertIfGiven`: 있으면 검증
+- `RequireAndVerifyClientCert`: 인증서 필수, 검증(mTLS)
 
 ---
 
@@ -164,7 +160,7 @@ distributor:
 
 ### 인증 (Authentication)
 
-Mimir는 자체 인증을 제공하지 않는다. 주요 옵션:
+Mimir는 자체 인증을 제공하지 않음. 주요 옵션:
 
 #### 옵션 1: 리버스 프록시
 
@@ -258,7 +254,7 @@ spec:
 multitenancy_enabled: true
 ```
 
-활성화하면 모든 요청에 `X-Scope-OrgID` 헤더가 필수다.
+활성화 시 모든 요청에 `X-Scope-OrgID` 헤더 필수.
 
 #### 테넌트 격리
 
@@ -281,7 +277,7 @@ limits:
 
 #### 테넌트 간 페더레이션 (Cross-tenant)
 
-기본적으로 비활성화되어 있으며 명시적으로 활성화해야 한다:
+기본적으로 비활성화 → 명시적으로 활성화 필요:
 
 ```yaml
 limits:
@@ -448,7 +444,7 @@ env:
 
 #### IAM Roles (AWS)
 
-가장 안전한 방식으로, 별도의 비밀 키가 필요하지 않다.
+가장 안전한 방식 → 별도의 비밀 키 불필요.
 
 ```yaml
 serviceAccount:
@@ -608,7 +604,7 @@ common:
 
 ##### GCS
 
-기본적으로 Google이 암호화를 관리한다. CMEK 사용 시:
+기본적으로 Google이 암호화를 관리함. CMEK 사용 시:
 
 ```yaml
 common:
@@ -620,11 +616,11 @@ common:
 
 ##### Azure Blob
 
-기본적으로 암호화된다. Customer-managed keys는 스토리지 계정 설정에서 구성할 수 있다.
+기본적으로 암호화됨. Customer-managed keys는 스토리지 계정 설정에서 구성 가능.
 
 #### Disk 암호화
 
-Ingester/Compactor의 PV는 호스트/클러스터 레벨 디스크 암호화 사용 (LUKS, EBS encryption 등).
+Ingester/Compactor의 PV는 호스트/클러스터 레벨 디스크 암호화 사용(LUKS, EBS encryption 등).
 
 ---
 
@@ -768,12 +764,10 @@ rules:
 
 #### 시계열 기반 사이징
 
-| 활성 시계열 | 컴포넌트 | 권장 사양 |
-|------------|---------|----------|
-| 1M | Ingester ×3 | 16GB RAM, 4 vCPU each |
-| 10M | Ingester ×6 | 32GB RAM, 8 vCPU each |
-| 100M | Ingester ×30 | 32GB RAM, 8 vCPU each |
-| 1B | Ingester ×100 | 64GB RAM, 16 vCPU each |
+- 활성 시계열 1M: 컴포넌트 Ingester ×3 · 권장 사양 16GB RAM, 4 vCPU each
+- 활성 시계열 10M: 컴포넌트 Ingester ×6 · 권장 사양 32GB RAM, 8 vCPU each
+- 활성 시계열 100M: 컴포넌트 Ingester ×30 · 권장 사양 32GB RAM, 8 vCPU each
+- 활성 시계열 1B: 컴포넌트 Ingester ×100 · 권장 사양 64GB RAM, 16 vCPU each
 
 #### Ingester 메모리 추정
 
@@ -808,12 +802,10 @@ RAM = 블록 인덱스 헤더 크기 합계
 
 #### 캐시 사이징
 
-| 캐시 | 권장 RAM |
-|------|---------|
-| Results | 1-4GB |
-| Chunks | 활성 데이터의 50% |
-| Metadata | 1-4GB |
-| Index | 16-64GB |
+- Results: 권장 RAM 1-4GB
+- Chunks: 권장 RAM 활성 데이터의 50%
+- Metadata: 권장 RAM 1-4GB
+- Index: 권장 RAM 16-64GB
 
 ---
 
@@ -865,7 +857,7 @@ ingester:
           topologyKey: kubernetes.io/hostname
 ```
 
-같은 노드에 Ingester가 여러 개 배치되는 것을 방지한다.
+같은 노드에 Ingester가 여러 개 배치되는 것을 방지.
 
 #### PodDisruptionBudget
 
@@ -1216,7 +1208,7 @@ ingester:
       tag: 2.11.0-rc1
 ```
 
-검증이 완료되면 전체 롤아웃을 진행한다.
+검증 완료 → 전체 롤아웃 진행.
 
 #### Breaking Changes
 
@@ -1264,7 +1256,7 @@ curl -X POST http://mimir-ingester:9009/ingester/ring/forget?id=<unhealthy-insta
 
 #### Object Storage
 
-가장 중요한 백업 대상이다.
+가장 중요한 백업 대상임.
 
 ##### S3 Cross-Region Replication
 
@@ -1313,7 +1305,7 @@ GitOps:
 - Prometheus가 양쪽으로 push
 - Querier가 두 리전 페더레이션
 
-구성이 복잡하지만 가용성이 가장 높다.
+구성이 복잡하지만 가용성이 가장 높음.
 
 ---
 
@@ -1321,13 +1313,11 @@ GitOps:
 
 #### 권장 SLO
 
-| SLI | 목표 |
-|-----|------|
-| Write Availability | 99.9% (월 약 43분 다운 허용) |
-| Read Availability | 99.5% |
-| Write Latency P99 | < 1s |
-| Query Latency P99 | < 30s |
-| Data Freshness | < 1 minute |
+- Write Availability: 목표 99.9%(월 약 43분 다운 허용)
+- Read Availability: 목표 99.5%
+- Write Latency P99: 목표 < 1s
+- Query Latency P99: 목표 < 30s
+- Data Freshness: 목표 < 1 minute
 
 #### Burn Rate 알림
 
@@ -1376,4 +1366,4 @@ GitOps:
 )
 ```
 
-소진 추세를 대시보드로 시각화하여 변경 결정에 활용한다.
+소진 추세를 대시보드로 시각화 → 변경 결정에 활용.

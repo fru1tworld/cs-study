@@ -23,7 +23,7 @@
 
 ### 개요
 
-`tempo-cli` 는 Tempo의 백엔드 데이터를 직접 조회/관리하는 도구입니다.
+`tempo-cli` 는 Tempo의 백엔드 데이터를 직접 조회/관리하는 도구.
 
 #### 주요 용도
 
@@ -346,13 +346,13 @@ tempo-cli gen \
 
 #### `clear`
 
-테넌트의 모든 블록 삭제 (위험!).
+테넌트의 모든 블록 삭제 (위험).
 
 ```bash
 tempo-cli clear --backend=s3 --bucket=my-tempo <tenant-id>
 ```
 
-> ⚠️ 복구 불가능. 백업 후 사용.
+> 주의: 복구 불가능. 백업 후 사용.
 
 #### `delete-block`
 
@@ -499,20 +499,17 @@ X-Scope-OrgID: <tenant-id>
 
 #### 시간 형식
 
-| 파라미터 | 형식 |
-|----------|------|
-| `start`, `end` | Unix seconds 또는 RFC3339 |
+- 파라미터: `start`, `end`
+  - 형식: Unix seconds 또는 RFC3339
 
 #### 응답 코드
 
-| 코드 | 의미 |
-|------|------|
-| 200 | 성공 |
-| 400 | 잘못된 쿼리 |
-| 404 | 트레이스 없음 |
-| 422 | 처리 불가 (한도 초과) |
-| 429 | Rate Limit |
-| 5xx | 서버 에러 |
+- 200: 성공
+- 400: 잘못된 쿼리
+- 404: 트레이스 없음
+- 422: 처리 불가 (한도 초과)
+- 429: Rate Limit
+- 5xx: 서버 에러
 
 ---
 
@@ -571,7 +568,7 @@ OTLP/JSON 형식:
 
 #### Trace 청크 응답
 
-트레이스가 크면 여러 청크로 나뉘어 응답됩니다:
+트레이스가 크면 여러 청크로 나뉘어 응답됨:
 
 ```json
 {
@@ -601,13 +598,11 @@ curl -G "http://tempo:3200/api/search" \
   --data-urlencode 'spss=10'
 ```
 
-| 파라미터 | 설명 |
-|----------|------|
-| `q` | TraceQL 쿼리 |
-| `start` | 시작 시간 |
-| `end` | 종료 시간 |
-| `limit` | 반환할 트레이스 수 |
-| `spss` | 트레이스당 최대 스팬 수 |
+- `q`: TraceQL 쿼리
+- `start`: 시작 시간
+- `end`: 종료 시간
+- `limit`: 반환할 트레이스 수
+- `spss`: 트레이스당 최대 스팬 수
 
 ##### 응답
 
@@ -646,7 +641,7 @@ curl -G "http://tempo:3200/api/search" \
 
 #### 레거시: `GET /api/search` (key=value)
 
-기존 key=value 방식으로, 현재는 TraceQL 사용을 권장합니다:
+기존 key=value 방식으로, 현재는 TraceQL 사용을 권장함:
 
 ```bash
 curl -G "http://tempo:3200/api/search" \
@@ -724,7 +719,7 @@ curl -G "http://tempo:3200/api/search/tag/service.name/values" \
 
 #### `GET /api/v2/search/tag/<tag>/values`
 
-타입 정보가 포함됩니다:
+타입 정보가 포함됨:
 
 ```json
 {
@@ -813,7 +808,7 @@ curl -G "http://tempo:3200/api/metrics/query_range" \
 
 ##### gRPC: `4317`
 
-OpenTelemetry SDK에서 gRPC로 직접 전송합니다.
+OpenTelemetry SDK에서 gRPC로 직접 전송함.
 
 ##### HTTP: `4318`
 
@@ -870,7 +865,7 @@ Prometheus 형식 자체 메트릭.
 
 #### `GET /config`
 
-현재 활성 구성을 반환합니다. 일부 필드는 마스킹됩니다.
+현재 활성 구성을 반환함. 일부 필드는 마스킹됨.
 
 ```bash
 curl http://tempo:3200/config
@@ -931,7 +926,7 @@ curl -X POST http://tempo:3200/shutdown
 
 #### `GET /flush`
 
-Ingester의 메모리 트레이스를 즉시 플러시합니다.
+Ingester의 메모리 트레이스를 즉시 플러시함.
 
 ```bash
 curl http://tempo:3200/flush
@@ -954,7 +949,7 @@ go tool pprof heap.pprof
 
 #### `GET /api/echo`
 
-수신한 헤더와 본문을 그대로 응답합니다 (디버깅용).
+수신한 헤더와 본문을 그대로 응답함 (디버깅용).
 
 ```bash
 curl -H "X-Scope-OrgID: tenant-1" \
@@ -983,7 +978,7 @@ curl http://tempo:3200/api/status/buildinfo
 
 #### `GET /api/overrides`
 
-현재 적용 중인 테넌트별 overrides를 조회합니다 (관리자용).
+현재 적용 중인 테넌트별 overrides를 조회함 (관리자용).
 
 ---
 
@@ -1164,14 +1159,12 @@ datasources:
 
 #### Query Type
 
-Tempo Explore는 4가지 쿼리 타입을 제공한다:
+Tempo Explore는 4가지 쿼리 타입을 제공함:
 
-| 타입 | 용도 |
-|------|------|
-| **Search** | TraceQL로 검색 |
-| **TraceID** | 특정 트레이스 직접 조회 |
-| **Service Graph** | 서비스 그래프 |
-| **Search (legacy)** | key=value 형식 (구식) |
+- Search: TraceQL로 검색
+- TraceID: 특정 트레이스 직접 조회
+- Service Graph: 서비스 그래프
+- Search (legacy): key=value 형식 (구식)
 
 #### TraceQL Search
 
@@ -1353,7 +1346,7 @@ tracesToMetrics:
 
 ##### Mimir → Tempo (Exemplars)
 
-메트릭 차트의 점에 trace ID가 포함된다:
+메트릭 차트의 점에 trace ID가 포함됨:
 
 ```yaml
 # Mimir 데이터소스

@@ -25,12 +25,12 @@
 
 Mimir의 HTTP API:
 
-- **Prometheus 호환 API** (`/prometheus/api/v1/*`): PromQL 쿼리
-- **Mimir 전용 API** (`/api/v1/*`): 푸시, Ruler, Alertmanager
-- **OTLP** (`/otlp/v1/*`): OpenTelemetry
-- **관리 API** (`/-/*`, `/debug/*`): 헬스체크, pprof
+- Prometheus 호환 API(`/prometheus/api/v1/*`): PromQL 쿼리
+- Mimir 전용 API(`/api/v1/*`): 푸시, Ruler, Alertmanager
+- OTLP(`/otlp/v1/*`): OpenTelemetry
+- 관리 API(`/-/*`, `/debug/*`): 헬스체크, pprof
 
-기본 포트: **9009** (HTTP), **9095** (gRPC)
+기본 포트: 9009(HTTP), 9095(gRPC)
 
 ---
 
@@ -44,12 +44,10 @@ X-Scope-OrgID: <tenant-id>
 
 #### 시간 형식
 
-| 형식 | 예시 |
-|------|------|
-| Unix seconds | `1700000000` |
-| Unix seconds + ms | `1700000000.123` |
-| RFC3339 | `2023-11-15T10:00:00Z` |
-| RFC3339Nano | `2023-11-15T10:00:00.123456Z` |
+- Unix seconds: `1700000000`
+- Unix seconds + ms: `1700000000.123`
+- RFC3339: `2023-11-15T10:00:00Z`
+- RFC3339Nano: `2023-11-15T10:00:00.123456Z`
 
 #### 응답 형식
 
@@ -86,13 +84,11 @@ Snappy 압축된 protobuf (`prometheus.WriteRequest`).
 
 ##### 응답
 
-| 코드 | 의미 |
-|------|------|
-| 200 | 성공 |
-| 400 | 잘못된 요청 (라벨 오류 등) |
-| 401 | 인증 실패 |
-| 429 | Rate Limit |
-| 500 | 서버 에러 |
+- 200: 성공
+- 400: 잘못된 요청(라벨 오류 등)
+- 401: 인증 실패
+- 429: Rate Limit
+- 500: 서버 에러
 
 #### `POST /otlp/v1/metrics`
 
@@ -132,11 +128,9 @@ curl -G "http://mimir:9009/prometheus/api/v1/query" \
   --data-urlencode "time=1700000000"
 ```
 
-| 파라미터 | 설명 |
-|----------|------|
-| `query` | PromQL |
-| `time` | 평가 시점 (선택) |
-| `timeout` | 쿼리 타임아웃 |
+- `query`: PromQL
+- `time`: 평가 시점(선택)
+- `timeout`: 쿼리 타임아웃
 
 ##### 응답
 
@@ -168,13 +162,11 @@ curl -G "http://mimir:9009/prometheus/api/v1/query_range" \
   --data-urlencode "step=15s"
 ```
 
-| 파라미터 | 설명 |
-|----------|------|
-| `query` | PromQL |
-| `start` | 시작 시간 |
-| `end` | 종료 시간 |
-| `step` | 평가 간격 |
-| `timeout` | 타임아웃 |
+- `query`: PromQL
+- `start`: 시작 시간
+- `end`: 종료 시간
+- `step`: 평가 간격
+- `timeout`: 타임아웃
 
 #### `POST /prometheus/api/v1/read`
 
@@ -546,7 +538,7 @@ curl -X POST http://mimir:9009/ingester/flush
 
 #### `POST /ingester/prepare-shutdown`
 
-종료 전 준비 단계로, 블록 업로드를 가속화한다.
+종료 전 준비 단계 → 블록 업로드를 가속화함.
 
 #### `GET /distributor/all_user_stats`
 

@@ -21,18 +21,16 @@
 
 ### 컴포넌트 카테고리
 
-| 카테고리 | 개수 (대략) | 용도 |
-|---------|-----------|------|
-| `discovery.*` | 25+ | 서비스 디스커버리 |
-| `prometheus.*` | 60+ | 메트릭 (Exporters, Scrape, Relabel, Remote Write) |
-| `loki.*` | 25+ | 로그 (Source, Process, Write) |
-| `otelcol.*` | 80+ | OpenTelemetry (Receiver, Processor, Exporter) |
-| `pyroscope.*` | 10+ | 프로파일 |
-| `local.*` | 5+ | 로컬 리소스 (파일 등) |
-| `remote.*` | 5+ | 원격 리소스 (HTTP, S3, Vault, Kubernetes) |
-| `mimir.*` | 5+ | Mimir 전용 |
-| `faro.*` | 1+ | 프론트엔드 |
-| `beyla.*` | 1+ | eBPF 자동 계측 |
+- `discovery.*`: 25개 이상, 서비스 디스커버리 용도
+- `prometheus.*`: 60개 이상, 메트릭 용도(Exporters·Scrape·Relabel·Remote Write)
+- `loki.*`: 25개 이상, 로그 용도(Source·Process·Write)
+- `otelcol.*`: 80개 이상, OpenTelemetry 용도(Receiver·Processor·Exporter)
+- `pyroscope.*`: 10개 이상, 프로파일 용도
+- `local.*`: 5개 이상, 로컬 리소스 용도(파일 등)
+- `remote.*`: 5개 이상, 원격 리소스 용도(HTTP·S3·Vault·Kubernetes)
+- `mimir.*`: 5개 이상, Mimir 전용
+- `faro.*`: 1개 이상, 프론트엔드 용도
+- `beyla.*`: 1개 이상, eBPF 자동 계측 용도
 
 ---
 
@@ -224,24 +222,22 @@ prometheus.relabel "drop_internal" {
 
 #### prometheus.exporter.*
 
-내장 Exporter들:
+내장 Exporter 목록:
 
-| Exporter | 컴포넌트 |
-|----------|---------|
-| Node | `prometheus.exporter.unix` |
-| Windows | `prometheus.exporter.windows` |
-| Cloudwatch | `prometheus.exporter.cloudwatch` |
-| MySQL | `prometheus.exporter.mysql` |
-| PostgreSQL | `prometheus.exporter.postgres` |
-| Redis | `prometheus.exporter.redis` |
-| MongoDB | `prometheus.exporter.mongodb` |
-| Kafka | `prometheus.exporter.kafka` |
-| Memcached | `prometheus.exporter.memcached` |
-| Process | `prometheus.exporter.process` |
-| SNMP | `prometheus.exporter.snmp` |
-| Blackbox | `prometheus.exporter.blackbox` |
-| GitHub | `prometheus.exporter.github` |
-| Statsd | `prometheus.exporter.statsd` |
+- Node: `prometheus.exporter.unix`
+- Windows: `prometheus.exporter.windows`
+- Cloudwatch: `prometheus.exporter.cloudwatch`
+- MySQL: `prometheus.exporter.mysql`
+- PostgreSQL: `prometheus.exporter.postgres`
+- Redis: `prometheus.exporter.redis`
+- MongoDB: `prometheus.exporter.mongodb`
+- Kafka: `prometheus.exporter.kafka`
+- Memcached: `prometheus.exporter.memcached`
+- Process: `prometheus.exporter.process`
+- SNMP: `prometheus.exporter.snmp`
+- Blackbox: `prometheus.exporter.blackbox`
+- GitHub: `prometheus.exporter.github`
+- Statsd: `prometheus.exporter.statsd`
 
 예: Unix Exporter
 
@@ -500,7 +496,7 @@ otelcol.processor.tail_sampling "default" {
 
 #### otelcol.connector.spanmetrics
 
-스팬으로부터 메트릭을 자동으로 생성합니다.
+스팬으로부터 메트릭을 자동으로 생성함.
 
 ```alloy
 otelcol.connector.spanmetrics "default" {
@@ -620,7 +616,7 @@ prometheus.remote_write "mimir" {
 
 #### local.file_match
 
-파일 글로브 패턴으로 타겟을 생성합니다.
+파일 글로브 패턴으로 타겟을 생성함.
 
 ```alloy
 local.file_match "logs" {
@@ -741,7 +737,7 @@ beyla.ebpf "default" {
 
 #### mimir.rules.kubernetes
 
-Kubernetes CR(PrometheusRule)에 정의된 룰을 Mimir에 자동으로 동기화합니다.
+Kubernetes CR(PrometheusRule)에 정의된 룰을 Mimir에 자동으로 동기화함.
 
 ```alloy
 mimir.rules.kubernetes "default" {
@@ -784,7 +780,7 @@ mimir.rules.kubernetes "default" {
 
 ### 개요
 
-Alloy 표준 라이브러리는 구성 파일의 표현식에서 사용할 수 있는 내장 함수와 상수를 제공한다.
+Alloy 표준 라이브러리는 구성 파일의 표현식에서 사용할 수 있는 내장 함수와 상수를 제공함.
 
 #### 사용 위치
 
@@ -820,7 +816,7 @@ url      = sys.env("MIMIR_URL")
 password = sys.env("API_KEY")
 ```
 
-환경 변수가 존재하지 않으면 빈 문자열을 반환한다.
+환경 변수가 존재하지 않으면 빈 문자열을 반환함.
 
 기본값:
 ```alloy
@@ -844,7 +840,7 @@ password = file.contents("/run/secrets/mimir-pass")
 
 ##### 자동 리로드
 
-`file.contents()` 결과는 파일이 변경되면 자동으로 갱신되며, 이 값에 의존하는 컴포넌트가 재평가된다. 시크릿 로테이션에 유용하다.
+`file.contents()` 결과는 파일이 변경되면 자동으로 갱신됨 → 이 값에 의존하는 컴포넌트가 재평가됨. 시크릿 로테이션에 유용.
 
 ##### 사용 예 (TLS)
 
@@ -946,7 +942,7 @@ all_targets = array.concat(
 
 #### `array.combine_maps(maps1, maps2, keys)`
 
-두 `list(map(string))`을 지정한 키 기준으로 결합한다. 실험적(Experimental) 함수.
+두 `list(map(string))`을 지정한 키 기준으로 결합함. 실험적(Experimental) 함수.
 
 ```alloy
 // map 리스트 두 개를 "instance" 키를 기준으로 결합
@@ -1001,7 +997,7 @@ json = encoding.to_json({a = 1, b = "hello"})
 
 #### `convert.nonsensitive(secret)`
 
-`secret` 타입을 일반 문자열로 변환한다. UI나 로그에 노출될 수 있으므로 신중하게 사용해야 한다.
+`secret` 타입을 일반 문자열로 변환함. UI나 로그에 노출될 수 있음 → 신중하게 사용 필요.
 
 ```alloy
 // 일반적으로 권장하지 않음
@@ -1016,7 +1012,7 @@ visible_pass = convert.nonsensitive(sys.env("PASSWORD"))
 
 ### `coalesce`
 
-여러 값 중 비어 있지 않은 첫 번째 값을 반환한다.
+여러 값 중 비어 있지 않은 첫 번째 값을 반환함.
 
 ```alloy
 url = coalesce(
@@ -1026,13 +1022,13 @@ url = coalesce(
 )
 ```
 
-null, 빈 문자열, 빈 리스트, 빈 맵을 빈 값으로 간주한다.
+null, 빈 문자열, 빈 리스트, 빈 맵을 빈 값으로 간주함.
 
 ---
 
 ### `concat`
 
-리스트를 결합한다 (`array.concat`의 전역 alias).
+리스트를 결합함(`array.concat`의 전역 alias).
 
 ```alloy
 all = concat(list1, list2, list3)
@@ -1063,7 +1059,7 @@ JSONPath 문법:
 
 ### `format`
 
-문자열 포맷팅 함수로, `string.format`의 전역 alias다.
+문자열 포맷팅 함수로, `string.format`의 전역 alias임.
 
 ```alloy
 msg = format("server %s on port %d", host, port)
@@ -1075,11 +1071,9 @@ msg = format("server %s on port %d", host, port)
 
 내장 상수.
 
-| 상수 | 설명 |
-|------|------|
-| `constants.hostname` | 호스트 이름 |
-| `constants.os` | OS 이름 (`linux`, `darwin`, `windows`) |
-| `constants.arch` | 아키텍처 (`amd64`, `arm64`) |
+- `constants.hostname`: 호스트 이름
+- `constants.os`: OS 이름(`linux`, `darwin`, `windows`)
+- `constants.arch`: 아키텍처(`amd64`, `arm64`)
 
 #### 사용
 
@@ -1205,7 +1199,7 @@ prometheus.remote_write "mimir" {
 }
 ```
 
-시크릿 파일이 변경되면 자동으로 리로드된다.
+시크릿 파일이 변경되면 자동으로 리로드됨.
 
 #### 4. 라벨 동적 생성
 

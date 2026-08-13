@@ -17,13 +17,13 @@
 
 ## Metric의 데이터 모델
 
-OpenTelemetry Metric의 단위는 **DataPoint**:
+OpenTelemetry Metric의 단위는 `DataPoint`:
 
 ```
 (timestamp, attributes, value)
 ```
 
-같은 attribute 조합을 가진 DataPoint들의 시간순 시퀀스가 **시계열(Time Series)** 입니다.
+같은 attribute 조합을 가진 DataPoint들의 시간순 시퀀스가 시계열(Time Series)임.
 
 ```
 http_requests_total
@@ -32,17 +32,17 @@ http_requests_total
 └── {method=POST, status=200, route=/api/users}  → [(t1,  20), (t2,  21), ...]
 ```
 
-라벨 조합마다 별도의 시계열이 생성되므로 **카디널리티 폭발** 이 메트릭의 가장 큰 적입니다.
+라벨 조합마다 별도의 시계열이 생성되므로 카디널리티 폭발이 메트릭의 가장 큰 적임.
 
 ---
 
 ## Instrument 종류
 
-OpenTelemetry는 6개의 Instrument를 정의합니다.
+OpenTelemetry는 6개의 Instrument를 정의함.
 
 ### Counter
 
-**단조 증가하는 누적값**. 감소할 수 없음.
+단조 증가하는 누적값 · 감소 불가.
 
 ```python
 counter = meter.create_counter(
@@ -59,7 +59,7 @@ counter.add(1, {"method": "GET", "status": 200})
 
 ### UpDownCounter
 
-**증감 가능한 값**. 양수/음수 모두 add 가능.
+증감 가능한 값 · 양수/음수 모두 add 가능.
 
 ```python
 in_flight = meter.create_up_down_counter("http.server.active_requests")
@@ -75,7 +75,7 @@ in_flight.add(-1)  # 요청 종료
 
 ### Gauge
 
-**현재 시점의 측정값**. 누적이 아닌 스냅샷.
+현재 시점의 측정값 · 누적이 아닌 스냅샷.
 
 ```python
 # Async Gauge — 콜백으로 현재 값을 보고
@@ -89,11 +89,11 @@ meter.create_observable_gauge("system.cpu.utilization", callbacks=[cpu_callback]
 - CPU 사용률, 메모리 사용량 (스냅샷)
 - 온도, 큐 길이의 현재값
 
-`Sync Gauge` 도 추가되었지만 대부분의 백엔드는 비동기 Gauge가 더 자연스럽습니다.
+`Sync Gauge` 도 추가되었지만 대부분의 백엔드는 비동기 Gauge가 더 자연스러움.
 
 ### Histogram
 
-**값의 분포** 를 기록. P50, P95, P99 같은 백분위 계산 가능.
+값의 분포를 기록 → P50, P95, P99 같은 백분위 계산 가능.
 
 ```python
 duration = meter.create_histogram(
@@ -104,7 +104,7 @@ duration = meter.create_histogram(
 duration.record(0.123, {"route": "/api/users", "status": 200})
 ```
 
-내부적으로 explicit bucket histogram을 사용하며, OTel SDK의 기본 bucket 경계는 다음과 같습니다:
+내부적으로 explicit bucket histogram을 사용하며, OTel SDK의 기본 bucket 경계는 다음과 같음.
 
 ```
 buckets: [0, 5, 10, 25, 50, 75, 100, 250, 500, 750, 1000, 2500, 5000, 7500, 10000]
@@ -126,7 +126,7 @@ count:      525
 
 ### ObservableCounter / ObservableUpDownCounter
 
-비동기 버전. 콜백으로 누적값을 보고.
+비동기 버전 · 콜백으로 누적값을 보고.
 
 ```python
 def gc_count_callback(observer):
@@ -141,25 +141,33 @@ meter.create_observable_counter("runtime.gc.count", callbacks=[gc_count_callback
 
 ## 동기 vs 비동기
 
-| 구분 | 동기 (Sync) | 비동기 (Async / Observable) |
-|------|-------------|------------------------------|
-| 호출 방식 | 코드 흐름에서 `add()`/`record()` 직접 호출 | SDK가 주기적으로 콜백 호출 |
-| 적합한 데이터 | 이벤트(요청, 에러) 발생 시점에 기록 | 외부 자원의 현재 상태(CPU, 메모리) |
-| Counter | `Counter` (delta로 add) | `ObservableCounter` (cumulative 보고) |
-| UpDownCounter | `UpDownCounter` (delta) | `ObservableUpDownCounter` (절대값) |
-| Gauge | `Gauge` (값 직접 기록) | `ObservableGauge` (콜백으로 현재 상태) |
+- 호출 방식
+  - 동기 (Sync): 코드 흐름에서 `add()`/`record()` 직접 호출
+  - 비동기 (Async / Observable): SDK가 주기적으로 콜백 호출
+- 적합한 데이터
+  - 동기 (Sync): 이벤트(요청, 에러) 발생 시점에 기록
+  - 비동기 (Async / Observable): 외부 자원의 현재 상태(CPU, 메모리)
+- Counter
+  - 동기 (Sync): `Counter` (delta로 add)
+  - 비동기 (Async / Observable): `ObservableCounter` (cumulative 보고)
+- UpDownCounter
+  - 동기 (Sync): `UpDownCounter` (delta)
+  - 비동기 (Async / Observable): `ObservableUpDownCounter` (절대값)
+- Gauge
+  - 동기 (Sync): `Gauge` (값 직접 기록)
+  - 비동기 (Async / Observable): `ObservableGauge` (콜백으로 현재 상태)
 
-핵심 차이: 동기 instrument는 **델타** 를 SDK에 누적하고, 비동기 instrument는 콜백이 **현재 절대값** 을 보고합니다 (ObservableCounter는 누적값).
+핵심 차이: 동기 instrument는 델타를 SDK에 누적하고, 비동기 instrument는 콜백이 현재 절대값을 보고함 (ObservableCounter는 누적값).
 
 ---
 
 ## Aggregation Temporality
 
-Counter/Histogram을 export할 때 **무엇을 보낼지** 결정.
+Counter/Histogram을 export할 때 무엇을 보낼지 결정.
 
 ### Cumulative (누적)
 
-프로세스 시작 이후의 **총합** 을 매번 보냄.
+프로세스 시작 이후의 총합을 매번 보냄.
 
 ```
 t1: count = 100
@@ -177,7 +185,7 @@ t3: count = 110
 
 ### Delta (증분)
 
-마지막 보고 이후의 **변화량** 만 보냄.
+마지막 보고 이후의 변화량만 보냄.
 
 ```
 t1: count = 100  (지난 60초간 100)
@@ -195,9 +203,9 @@ t3: count =   5  (다음 60초간 5)
 
 ### 선택 기준
 
-- **Prometheus 백엔드**: Cumulative 강제
-- **Datadog, Dynatrace 등 OTLP 수신 SaaS**: 보통 Delta 선호
-- **Lambda/Cloud Run**: Delta (재시작이 흔하므로)
+- Prometheus 백엔드: Cumulative 강제
+- Datadog, Dynatrace 등 OTLP 수신 SaaS: 보통 Delta 선호
+- Lambda/Cloud Run: Delta (재시작이 흔하므로)
 
 SDK에서 설정:
 
@@ -214,7 +222,7 @@ exporter = OTLPMetricExporter(
 
 ## Views — Instrument을 재구성하기
 
-**View** 는 SDK 단계에서 Instrument의 동작을 바꾸는 메커니즘:
+`View`는 SDK 단계에서 Instrument의 동작을 바꾸는 메커니즘:
 
 - 이름·설명 변경
 - 특정 attribute만 남기기 (카디널리티 제어)
@@ -255,13 +263,13 @@ view = View(
 )
 ```
 
-Views는 **계측 코드를 수정하지 않고** 운영 환경별로 메트릭을 재구성할 수 있게 해주는 강력한 도구입니다.
+Views는 계측 코드를 수정하지 않고 운영 환경별로 메트릭을 재구성할 수 있게 해주는 강력한 도구.
 
 ---
 
 ## Exemplars
 
-**Exemplar** 는 Histogram(또는 Counter) DataPoint에 첨부되는 **대표 샘플** 입니다.
+`Exemplar`는 Histogram(또는 Counter) DataPoint에 첨부되는 대표 샘플.
 
 ```
 http_request_duration_seconds_bucket{le="0.5"} 1234
@@ -290,28 +298,26 @@ exemplar { trace_id: "abc...", span_id: "def...", value: 0.487, time: t }
 
 ## Prometheus와의 관계
 
-OpenTelemetry Metric 모델은 **Prometheus와 의도적으로 호환** 되도록 설계되었습니다.
+OpenTelemetry Metric 모델은 Prometheus와 의도적으로 호환되도록 설계됨.
 
 ### 매핑
 
-| OTel | Prometheus |
-|------|------------|
-| Counter | counter |
-| UpDownCounter | gauge (Prometheus엔 진짜 updown counter가 없음) |
-| Gauge | gauge |
-| Histogram (explicit bucket) | histogram |
-| Resource attributes | `target_info` 메트릭의 라벨 또는 모든 시계열의 라벨 |
-| `service.name` | `job` 라벨로 매핑 |
+- Counter → counter
+- UpDownCounter → gauge (Prometheus엔 진짜 updown counter가 없음)
+- Gauge → gauge
+- Histogram (explicit bucket) → histogram
+- Resource attributes → `target_info` 메트릭의 라벨 또는 모든 시계열의 라벨
+- `service.name` → `job` 라벨로 매핑
 
 ### 양방향 변환
 
-- **OTel SDK → Prometheus**: SDK에 Prometheus exporter 붙이거나, Collector의 `prometheusexporter` 사용
-- **Prometheus → OTel**: Collector의 `prometheusreceiver` 가 `/metrics` 를 scrape하거나 Remote Write 수신
+- OTel SDK → Prometheus: SDK에 Prometheus exporter 붙이거나, Collector의 `prometheusexporter` 사용
+- Prometheus → OTel: Collector의 `prometheusreceiver`가 `/metrics`를 scrape하거나 Remote Write 수신
 
 ### 단위
 
-OTel은 **UCUM(Unified Code for Units of Measure)** 표기를 권장:
-- `s` (seconds, **밀리초가 아님**)
+OTel은 UCUM(Unified Code for Units of Measure) 표기를 권장:
+- `s` (seconds, 밀리초가 아님)
 - `By` (bytes)
 - `1` (dimensionless)
 
@@ -327,11 +333,11 @@ http.server.duration (unit=s) → http_server_duration_seconds
 ### 1. RED 메트릭
 
 서비스 골든 시그널:
-- **R**ate — 초당 요청 수 (Counter)
-- **E**rrors — 에러율 (Counter, status 라벨)
-- **D**uration — 지연 분포 (Histogram)
+- Rate — 초당 요청 수 (Counter)
+- Errors — 에러율 (Counter, status 라벨)
+- Duration — 지연 분포 (Histogram)
 
-자동 계측 라이브러리는 보통 아래 이름으로 생성합니다 (Semantic Conventions):
+자동 계측 라이브러리는 보통 아래 이름으로 생성함 (Semantic Conventions):
 ```
 http.server.request.duration       (Histogram, unit=s)
 http.server.active_requests        (UpDownCounter)
@@ -340,9 +346,9 @@ http.server.active_requests        (UpDownCounter)
 ### 2. USE 메트릭
 
 리소스 골든 시그널:
-- **U**tilization — 사용률 (ObservableGauge)
-- **S**aturation — 큐 길이/대기 (UpDownCounter, Gauge)
-- **E**rrors — 자원 에러 (Counter)
+- Utilization — 사용률 (ObservableGauge)
+- Saturation — 큐 길이/대기 (UpDownCounter, Gauge)
+- Errors — 자원 에러 (Counter)
 
 런타임 메트릭(GC, 스레드, 힙)은 보통 자동 계측 패키지가 제공.
 
@@ -350,8 +356,8 @@ http.server.active_requests        (UpDownCounter)
 
 서비스마다 시계열 수의 상한을 두고 운영:
 - 서비스 1개당 시계열 < 1만 권장
-- attribute는 **enum-like 카테고리** 만 (status, method, route)
-- 고유값(user_id, trace_id, full URL)은 **Span attribute** 로 — Trace에 기록하고 Metric에는 기록 X
+- attribute는 enum-like 카테고리만 (status, method, route)
+- 고유값(user_id, trace_id, full URL)은 Span attribute로 처리 → Trace에 기록하고 Metric에는 기록 금지
 
 ### 4. 단위 통일
 

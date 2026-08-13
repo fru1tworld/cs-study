@@ -22,16 +22,14 @@
 
 ### 네트워크 관리 옵션
 
-Linux의 네트워크 구성 도구는 여러 갈래입니다.
+Linux의 네트워크 구성 도구는 여러 갈래로 존재.
 
-| 도구 | 특징 | 적합한 환경 |
-| --- | --- | --- |
-| `NetworkManager` | 데스크탑/노트북, GUI, Wi-Fi/VPN 강함 | 워크스테이션, 노트북 |
-| `systemd-networkd` | 정적, 선언적, 가벼움 | 서버, 컨테이너, IoT |
-| `netplan` | Ubuntu의 YAML 추상화 (백엔드는 위 둘 중 하나) | Ubuntu 서버 |
-| `ifupdown` | 옛날 스타일 (`/etc/network/interfaces`) | 레거시 Debian |
+- `NetworkManager`: 데스크탑·노트북용·GUI 지원·Wi-Fi/VPN 강함 → 워크스테이션, 노트북에 적합
+- `systemd-networkd`: 정적·선언적·가벼움 → 서버, 컨테이너, IoT에 적합
+- `netplan`: Ubuntu의 YAML 추상화, 백엔드는 위 둘 중 하나 사용 → Ubuntu 서버에 적합
+- `ifupdown`: 옛날 스타일(`/etc/network/interfaces`) → 레거시 Debian에 적합
 
-systemd-networkd는 단순함과 멱등성(idempotency) 측면에서 서버 환경에 매우 적합합니다.
+systemd-networkd는 단순함과 멱등성(idempotency) 측면에서 서버 환경에 매우 적합.
 
 ---
 
@@ -43,17 +41,15 @@ systemd-networkd는 단순함과 멱등성(idempotency) 측면에서 서버 환�
 sudo systemctl enable --now systemd-networkd
 ```
 
-설정 파일은 `/etc/systemd/network/` (관리자) 와 `/usr/lib/systemd/network/` (배포판) 두 경로에서 검색합니다.
+설정 파일은 `/etc/systemd/network/`(관리자)와 `/usr/lib/systemd/network/`(배포판) 두 경로에서 검색.
 
 #### 파일 종류
 
-| 확장자 | 용도 |
-| --- | --- |
-| `.network` | 인터페이스 IP/라우트/DHCP 설정 |
-| `.netdev` | 가상 디바이스 생성 (bridge, bond, vlan, wireguard 등) |
-| `.link` | 디바이스 이름·MAC 등 udev 시점 속성 |
+- `.network`: 인터페이스 IP·라우트·DHCP 설정
+- `.netdev`: 가상 디바이스 생성(bridge, bond, vlan, wireguard 등)
+- `.link`: 디바이스 이름·MAC 등 udev 시점 속성
 
-이름 우선순위는 알파벳 순이며, 보통 `10-wired.network`, `20-vlan.network`처럼 숫자 접두사를 붙입니다.
+이름 우선순위는 알파벳 순 → 보통 `10-wired.network`, `20-vlan.network`처럼 숫자 접두사를 붙임.
 
 ---
 
@@ -75,7 +71,7 @@ IPForward=yes
 
 #### [Match] 섹션
 
-어느 인터페이스에 적용할지 결정합니다.
+어느 인터페이스에 적용할지 결정.
 
 ```ini
 [Match]
@@ -126,11 +122,11 @@ Destination=10.10.0.0/16
 Metric=200
 ```
 
-여러 [Route] 섹션을 가질 수 있습니다.
+여러 [Route] 섹션을 가질 수 있음.
 
 #### [Address]
 
-여러 IP 부여:
+여러 IP 부여 예시.
 
 ```ini
 [Address]
@@ -231,13 +227,13 @@ MTUBytes=9000
 WakeOnLan=magic
 ```
 
-`.link`는 udev가 디바이스를 생성할 때 적용되므로, 인터페이스 이름을 영구적으로 변경할 때 사용합니다 (`enp0s3` → `wan0`).
+`.link`는 udev가 디바이스를 생성할 때 적용 → 인터페이스 이름을 영구적으로 변경할 때 사용(`enp0s3` → `wan0`).
 
 ---
 
 ### networkctl
 
-네트워크 상태 조회 도구입니다.
+네트워크 상태 조회 도구.
 
 ```bash
 $ networkctl
@@ -258,7 +254,7 @@ $ networkctl down eth0
 
 ### systemd-resolved
 
-DNS 해석을 통합 관리하는 데몬으로, systemd 환경에서 `/etc/resolv.conf`를 대체합니다.
+DNS 해석을 통합 관리하는 데몬 → systemd 환경에서 `/etc/resolv.conf`를 대체.
 
 활성화:
 
@@ -294,20 +290,18 @@ DNSStubListener=yes
 ReadEtcHosts=yes
 ```
 
-- `Domains=~.` : 모든 도메인을 이 DNS로 보냄
-- `DNS=...#hostname` : DoT TLS hostname 검증
-- `DNSStubListener=yes` : `127.0.0.53:53` 에서 stub resolver 운영
+- `Domains=~.`: 모든 도메인을 이 DNS로 보냄
+- `DNS=...#hostname`: DoT TLS hostname 검증
+- `DNSStubListener=yes`: `127.0.0.53:53`에서 stub resolver 운영
 
 #### resolv.conf 모드
 
-`/etc/resolv.conf`가 가리키는 대상에 따라 동작이 달라집니다.
+`/etc/resolv.conf`가 가리키는 대상에 따라 동작이 달라짐.
 
-| 심볼릭 링크 대상 | 동작 |
-| --- | --- |
-| `/run/systemd/resolve/stub-resolv.conf` | 127.0.0.53 stub. 가장 권장 |
-| `/run/systemd/resolve/resolv.conf` | 동적 업스트림 직접 사용 (캐시 우회) |
-| `/usr/lib/systemd/resolv.conf` | 정적 (Google DNS 등) |
-| 직접 작성 | resolved 무관 |
+- `/run/systemd/resolve/stub-resolv.conf`: 127.0.0.53 stub 사용 → 가장 권장
+- `/run/systemd/resolve/resolv.conf`: 동적 업스트림 직접 사용(캐시 우회)
+- `/usr/lib/systemd/resolv.conf`: 정적(Google DNS 등)
+- 직접 작성: resolved 무관
 
 ---
 

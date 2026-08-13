@@ -4,9 +4,9 @@
 
 ## Kotlin 기본 타입 개요
 
-> **원문:** https://kotlinlang.org/docs/basic-types.html
+> 원문: https://kotlinlang.org/docs/basic-types.html
 
-Kotlin의 기본 타입은 다음과 같은 범주로 구성됩니다:
+Kotlin 기본 타입 구성 범주:
 
 ### 숫자 타입
 
@@ -37,7 +37,7 @@ Kotlin의 기본 타입은 다음과 같은 범주로 구성됩니다:
 
 ---
 
-자세한 내용은 각 타입의 문서를 참조하세요:
+각 타입 상세 문서:
 - [숫자](numbers.md)
 - [불리언](booleans.md)
 - [문자](characters.md)
@@ -50,23 +50,19 @@ Kotlin의 기본 타입은 다음과 같은 범주로 구성됩니다:
 
 ## Kotlin 불리언
 
-> **원문:** https://kotlinlang.org/docs/booleans.html
+> 원문: https://kotlinlang.org/docs/booleans.html
 
 ### 개요
 
-Kotlin의 `Boolean` 타입은 두 가지 가능한 값을 가진 불리언 객체를 나타냅니다: `true`와 `false`. 또한 nullable 대응 타입인 `Boolean?`도 있습니다.
-
-**JVM 참고:** JVM에서 불리언은 일반적으로 8비트를 사용하는 원시 `boolean` 타입으로 저장됩니다.
+- `Boolean` 타입: `true`·`false` 두 값을 가짐
+- nullable 대응 타입 `Boolean?`도 존재
+- JVM 참고: JVM에서 불리언은 일반적으로 8비트 원시 `boolean` 타입으로 저장됨
 
 ### 내장 연산
 
-Kotlin은 세 가지 주요 불리언 연산을 제공합니다:
-
-| 연산자 | 이름 | 설명 |
-|-------|------|------|
-| `\|\|` | 논리합 | 논리 OR |
-| `&&` | 논리곱 | 논리 AND |
-| `!` | 부정 | 논리 NOT |
+- `||` - 논리합(논리 OR)
+- `&&` - 논리곱(논리 AND)
+- `!` - 부정(논리 NOT)
 
 ### 코드 예제
 
@@ -85,43 +81,53 @@ fun main() {
 
 ### 지연 평가
 
-`||`와 `&&` 연산자 모두 **지연 평가**를 사용합니다:
+`||`와 `&&` 모두 지연 평가 사용:
 
-- **`||` (OR):** 첫 번째 피연산자가 `true`이면 두 번째 피연산자는 평가되지 **않습니다**
-- **`&&` (AND):** 첫 번째 피연산자가 `false`이면 두 번째 피연산자는 평가되지 **않습니다**
+- `||`(OR): 첫 번째 피연산자가 `true`면 → 두 번째 피연산자 평가 안 함
+- `&&`(AND): 첫 번째 피연산자가 `false`면 → 두 번째 피연산자 평가 안 함
 
 ### Nullable 불리언
 
-JVM에서 불리언 객체에 대한 nullable 참조(`Boolean?`)는 [숫자](numbers.html#boxing-and-caching-numbers-on-the-java-virtual-machine)가 처리되는 것과 유사하게 Java 클래스로 박싱됩니다.
+- JVM에서 nullable 참조(`Boolean?`)는 [숫자](numbers.html#boxing-and-caching-numbers-on-the-java-virtual-machine) 처리와 유사하게 Java 클래스로 박싱됨
 
 ---
 
 ## Kotlin 숫자
 
-> **원문:** https://kotlinlang.org/docs/numbers.html
+> 원문: https://kotlinlang.org/docs/numbers.html
 
 ### 개요
 
-이 페이지는 Kotlin의 내장 숫자 타입, 리터럴 상수, 연산, 그리고 부동 소수점 숫자에 대한 특별한 고려 사항을 다룹니다.
+- 다루는 내용: 내장 숫자 타입·리터럴 상수·연산·부동 소수점 숫자 관련 특별 고려 사항
 
 ---
 
 ### 정수 타입
 
-Kotlin은 서로 다른 크기와 범위를 가진 네 가지 부호 있는 정수 타입을 제공합니다:
+부호 있는 정수 타입 4종, 크기·범위별:
 
-| 타입 | 크기 (비트) | 최소값 | 최대값 |
-|------|-----------|-------|-------|
-| `Byte` | 8 | -128 | 127 |
-| `Short` | 16 | -32,768 | 32,767 |
-| `Int` | 32 | -2,147,483,648 (-2^31) | 2,147,483,647 (2^31 - 1) |
-| `Long` | 64 | -9,223,372,036,854,775,808 (-2^63) | 9,223,372,036,854,775,807 (2^63 - 1) |
+- `Byte`
+  - 크기: 8비트
+  - 최소값: -128
+  - 최대값: 127
+- `Short`
+  - 크기: 16비트
+  - 최소값: -32,768
+  - 최대값: 32,767
+- `Int`
+  - 크기: 32비트
+  - 최소값: -2,147,483,648 (-2^31)
+  - 최대값: 2,147,483,647 (2^31 - 1)
+- `Long`
+  - 크기: 64비트
+  - 최소값: -9,223,372,036,854,775,808 (-2^63)
+  - 최대값: 9,223,372,036,854,775,807 (2^63 - 1)
 
-**타입 추론 규칙:**
-- 기본 정수 타입은 `Int` (값이 맞는 경우)
-- `Int` 범위 초과 시 자동으로 `Long`
-- 명시적으로 `Long`을 지정하려면 `L` 접미사 추가
-- 필요한 경우 `Byte` 또는 `Short`를 명시적으로 선언
+타입 추론 규칙:
+- 기본 정수 타입은 `Int`(값이 맞는 경우)
+- `Int` 범위 초과 시 → 자동으로 `Long`
+- 명시적으로 `Long` 지정 → `L` 접미사 추가
+- 필요 시 `Byte` 또는 `Short` 명시적 선언
 
 ```kotlin
 val one = 1 // Int
@@ -134,16 +140,22 @@ val oneByte: Byte = 1
 
 ### 부동 소수점 타입
 
-Kotlin은 [IEEE 754 표준](https://en.wikipedia.org/wiki/IEEE_754)을 준수하는 `Float`와 `Double`을 제공합니다.
+[IEEE 754 표준](https://en.wikipedia.org/wiki/IEEE_754) 준수 `Float`·`Double`:
 
-| 타입 | 크기 (비트) | 유효 비트 | 지수 비트 | 십진수 자릿수 |
-|------|-----------|----------|----------|-------------|
-| `Float` | 32 | 24 | 8 | 6-7 |
-| `Double` | 64 | 53 | 11 | 15-16 |
+- `Float`
+  - 크기: 32비트
+  - 유효 비트: 24
+  - 지수 비트: 8
+  - 십진수 자릿수: 6-7
+- `Double`
+  - 크기: 64비트
+  - 유효 비트: 53
+  - 지수 비트: 11
+  - 십진수 자릿수: 15-16
 
-**초기화 규칙:**
+초기화 규칙:
 - 기본 부동 소수점 타입은 `Double`
-- 명시적 `Float`를 위해 `f` 또는 `F` 접미사 추가
+- 명시적 `Float` → `f` 또는 `F` 접미사 추가
 
 ```kotlin
 val pi = 3.14 // Double
@@ -152,7 +164,7 @@ val oneDouble = 1.0 // Double
 val eFloat = 2.7182818284f // Float, 2.7182817로 반올림
 ```
 
-**암시적 확장 변환 없음:**
+암시적 확장 변환 없음:
 
 ```kotlin
 fun printDouble(x: Double) { print(x) }
@@ -169,15 +181,15 @@ printDouble(xFloat) // 오류: 인수 타입 불일치
 ### 숫자 리터럴 상수
 
 #### 정수 리터럴
-- **10진수:** `123`
-- **Long (대문자 L 접미사):** `123L`
-- **16진수:** `0x0F`
-- **2진수:** `0b00001011`
-- **8진수:** Kotlin에서 지원하지 않음
+- 10진수: `123`
+- Long(대문자 L 접미사): `123L`
+- 16진수: `0x0F`
+- 2진수: `0b00001011`
+- 8진수: Kotlin에서 미지원
 
 #### 부동 소수점 리터럴
-- **Double (기본):** `123.5`, `123.5e10`
-- **Float (f/F 접미사):** `123.5f`
+- Double(기본): `123.5`, `123.5e10`
+- Float(f/F 접미사): `123.5f`
 
 #### 가독성을 위한 밑줄
 
@@ -194,7 +206,8 @@ val bigFractional = 1_234_567.7182818284
 
 ### JVM에서의 박싱과 캐싱
 
-JVM은 **-128에서 127** 사이의 박싱된 정수를 캐시합니다. 이러한 캐시된 값에 대한 참조는 **참조적으로 동일**합니다.
+- JVM은 -128~127 사이 박싱된 정수를 캐시함
+- 캐시된 값에 대한 참조는 참조적으로 동일함
 
 ```kotlin
 val a: Int = 100
@@ -203,7 +216,7 @@ val anotherBoxedA: Int? = a
 println(boxedA === anotherBoxedA) // true (캐시됨)
 ```
 
-이 범위 밖의 숫자는 **구조적으로 동일하지만 참조적으로 동일하지 않습니다:**
+이 범위 밖 숫자 → 구조적으로는 동일하지만 참조적으로는 동일하지 않음:
 
 ```kotlin
 val b: Int = 10000
@@ -213,28 +226,28 @@ println(boxedB === anotherBoxedB) // false
 println(boxedB == anotherBoxedB) // true
 ```
 
-**권장 사항:** 숫자 비교에는 참조 동등성(`===`) 대신 구조적 동등성(`==`)을 사용하세요.
+권장: 숫자 비교에는 참조 동등성(`===`) 대신 구조적 동등성(`==`) 사용.
 
 ---
 
 ### 명시적 숫자 변환
 
-숫자 타입은 서로의 하위 타입이 아니므로 명시적 변환이 필요합니다:
+숫자 타입은 서로의 하위 타입이 아님 → 명시적 변환 필요:
 
 ```kotlin
 val byte: Byte = 1
 val intConvertedByte: Int = byte.toInt()
 ```
 
-**사용 가능한 변환 함수:**
-- `toByte(): Byte` (Float/Double에서는 폐기됨)
+사용 가능한 변환 함수:
+- `toByte(): Byte`(Float/Double에서는 폐기됨)
 - `toShort(): Short`
 - `toInt(): Int`
 - `toLong(): Long`
 - `toFloat(): Float`
 - `toDouble(): Double`
 
-**연산자를 사용한 자동 변환:**
+연산자를 사용한 자동 변환:
 
 ```kotlin
 val l = 1L + 3 // Long + Int => Long
@@ -243,7 +256,7 @@ println(l is Long) // true
 
 #### 암시적 변환에 반대하는 이유
 
-암시적 변환은 예기치 않은 동작과 동등성/동일성 손실로 이어질 수 있습니다:
+암시적 변환 → 예기치 않은 동작·동등성/동일성 손실로 이어질 수 있음:
 
 ```kotlin
 // 가상 (컴파일되지 않음):
@@ -256,7 +269,7 @@ print(b == a) // 예기치 않게 "false"를 출력할 것
 
 ### 숫자 연산
 
-Kotlin은 표준 산술 연산자를 지원합니다: `+`, `-`, `*`, `/`, `%`
+표준 산술 연산자 지원: `+`, `-`, `*`, `/`, `%`
 
 ```kotlin
 println(1 + 2) // 3
@@ -267,7 +280,7 @@ println(10.0 / 3) // 3.3333...
 
 #### 정수 나눗셈
 
-정수 나눗셈은 항상 정수를 반환합니다; 소수 부분은 버려집니다:
+정수 나눗셈은 항상 정수를 반환 → 소수 부분은 버려짐:
 
 ```kotlin
 val x = 5 / 2
@@ -275,7 +288,7 @@ println(x == 2) // true
 println(x == 2.5) // 오류: Int와 Double을 비교할 수 없음
 ```
 
-**소수 결과를 위해 명시적으로 변환:**
+소수 결과를 위해 명시적으로 변환:
 
 ```kotlin
 val x = 5 / 2.toDouble()
@@ -292,7 +305,7 @@ val xShiftedLeft = x shl 2 // 4
 val xAnd = x and 0x000FF000 // 0
 ```
 
-**전체 목록:**
+전체 목록:
 - `shl(bits)` - 부호 있는 왼쪽 시프트
 - `shr(bits)` - 부호 있는 오른쪽 시프트
 - `ushr(bits)` - 부호 없는 오른쪽 시프트
@@ -307,18 +320,18 @@ val xAnd = x and 0x000FF000 // 0
 
 #### Float/Double로 정적 타입 지정된 경우
 
-[IEEE 754 표준](https://en.wikipedia.org/wiki/IEEE_754)을 따릅니다:
+[IEEE 754 표준](https://en.wikipedia.org/wiki/IEEE_754) 준수:
 - `NaN == NaN` -> `false`
 - `0.0 == -0.0` -> `true`
 
-#### 동적으로 타입 지정된 경우 (예: Any, Comparable)
+#### 동적으로 타입 지정된 경우(예: Any, Comparable)
 
-`equals()`와 `compareTo()`를 사용합니다:
-- `NaN == NaN` -> `true` (자기 자신과 동일)
+`equals()`와 `compareTo()` 사용:
+- `NaN == NaN` -> `true`(자기 자신과 동일)
 - `NaN > POSITIVE_INFINITY` -> `true`
 - `-0.0 < 0.0` -> `true`
 
-**예제:**
+예제:
 
 ```kotlin
 // Double로 정적 타입 지정
@@ -342,26 +355,37 @@ println(listOf(Double.NaN, Double.POSITIVE_INFINITY, 0.0, -0.0).sorted())
 
 ## 부호 없는 정수 타입
 
-> **원문:** https://kotlinlang.org/docs/unsigned-integer-types.html
+> 원문: https://kotlinlang.org/docs/unsigned-integer-types.html
 
 ### 개요
 
-Kotlin은 표준 정수 타입 외에 네 가지 부호 없는 정수 타입을 제공합니다:
+표준 정수 타입 외 부호 없는 정수 타입 4종:
 
-| 타입 | 크기 (비트) | 최소값 | 최대값 |
-|------|-----------|-------|-------|
-| `UByte` | 8 | 0 | 255 |
-| `UShort` | 16 | 0 | 65,535 |
-| `UInt` | 32 | 0 | 4,294,967,295 (2^32 - 1) |
-| `ULong` | 64 | 0 | 18,446,744,073,709,551,615 (2^64 - 1) |
+- `UByte`
+  - 크기: 8비트
+  - 최소값: 0
+  - 최대값: 255
+- `UShort`
+  - 크기: 16비트
+  - 최소값: 0
+  - 최대값: 65,535
+- `UInt`
+  - 크기: 32비트
+  - 최소값: 0
+  - 최대값: 4,294,967,295 (2^32 - 1)
+- `ULong`
+  - 크기: 64비트
+  - 최소값: 0
+  - 최대값: 18,446,744,073,709,551,615 (2^64 - 1)
 
-부호 없는 타입은 해당 부호 있는 타입의 대부분의 연산을 지원하며, 해당 부호 있는 타입을 포함하는 단일 저장 프로퍼티를 가진 인라인 클래스로 구현됩니다.
+- 부호 없는 타입은 해당 부호 있는 타입의 대부분 연산 지원
+- 해당 부호 있는 타입을 포함하는 단일 저장 프로퍼티를 가진 인라인 클래스로 구현됨
 
 ---
 
 ### 부호 없는 배열과 범위
 
-**참고:** 부호 없는 배열은 베타 버전이며 `@ExperimentalUnsignedTypes` 어노테이션을 통한 옵트인이 필요합니다.
+참고: 부호 없는 배열은 베타 버전 → `@ExperimentalUnsignedTypes` 어노테이션을 통한 옵트인 필요
 
 #### 배열 타입
 - `UByteArray` - 부호 없는 바이트 배열
@@ -371,13 +395,13 @@ Kotlin은 표준 정수 타입 외에 네 가지 부호 없는 정수 타입을 
 
 #### 범위 지원
 
-`UInt`와 `ULong`에도 범위와 진행이 지원됩니다:
+`UInt`와 `ULong`에도 범위·진행 지원:
 - `UIntRange`
 - `UIntProgression`
 - `ULongRange`
 - `ULongProgression`
 
-이것들은 안정적인 기능입니다.
+이것들은 안정적인 기능임.
 
 ---
 
@@ -385,7 +409,7 @@ Kotlin은 표준 정수 타입 외에 네 가지 부호 없는 정수 타입을 
 
 #### 접미사 표기법
 
-접미사를 사용하여 부호 없는 리터럴을 지정합니다:
+접미사를 사용하여 부호 없는 리터럴 지정:
 
 ```kotlin
 // 'u' 또는 'U' - 컨텍스트에 따라 타입 추론
@@ -418,50 +442,49 @@ val byteOrderMarkUtf8 = ubyteArrayOf(0xEFu, 0xBBu, 0xBFu)
 
 #### 네이티브 API 상호 운용성
 
-Kotlin 함수 시그니처의 부호 없는 타입은 대체 없이 네이티브 선언에 직접 매핑되어 의미를 보존합니다.
+- Kotlin 함수 시그니처의 부호 없는 타입은 대체 없이 네이티브 선언에 직접 매핑됨 → 의미 보존
 
 ---
 
 ### 비목표
 
-부호 없는 정수는 다음 용도로 **의도되지 않았습니다:**
-- 컬렉션 크기나 인덱스 (부호 있는 정수 사용)
+부호 없는 정수는 다음 용도로 의도되지 않음:
+- 컬렉션 크기·인덱스(부호 있는 정수 사용)
 - 음이 아닌 도메인 값 표현
 
-**이유:**
-- 부호 있는 정수는 우발적인 오버플로를 감지하고 오류 조건을 신호하는 데 도움이 됩니다 (예: 빈 리스트의 경우 `List.lastIndex == -1`)
-- 부호 없는 정수는 부호 있는 정수의 범위 제한 버전으로 취급할 수 없습니다; 어느 타입도 다른 타입의 하위 타입이 아닙니다
+이유:
+- 부호 있는 정수는 우발적 오버플로 감지·오류 조건 신호에 도움됨(예: 빈 리스트의 경우 `List.lastIndex == -1`)
+- 부호 없는 정수는 부호 있는 정수의 범위 제한 버전으로 취급 불가 → 어느 타입도 다른 타입의 하위 타입이 아님
 
 ---
 
 ## Kotlin 문자
 
-> **원문:** https://kotlinlang.org/docs/characters.html
+> 원문: https://kotlinlang.org/docs/characters.html
 
 ### 개요
 
-문자는 `Char` 타입으로 표현됩니다. 문자 리터럴은 작은따옴표로 작성합니다: `'1'`.
+- 문자는 `Char` 타입으로 표현됨
+- 문자 리터럴은 작은따옴표로 작성: `'1'`
 
 ### 저장
 
-JVM에서 문자는 16비트 유니코드 문자를 나타내는 원시 타입 `char`로 저장됩니다.
+- JVM에서 문자는 16비트 유니코드 문자를 나타내는 원시 타입 `char`로 저장됨
 
 ### 이스케이프 시퀀스
 
-특수 문자는 백슬래시 `\`로 시작합니다. 다음 이스케이프 시퀀스가 지원됩니다:
+특수 문자는 백슬래시 `\`로 시작. 지원되는 이스케이프 시퀀스:
 
-| 이스케이프 시퀀스 | 의미 |
-|------------------|------|
-| `\t` | 탭 |
-| `\b` | 백스페이스 |
-| `\n` | 새 줄 (LF) |
-| `\r` | 캐리지 리턴 (CR) |
-| `\'` | 작은따옴표 |
-| `\"` | 큰따옴표 |
-| `\\` | 백슬래시 |
-| `\$` | 달러 기호 |
+- `\t` - 탭
+- `\b` - 백스페이스
+- `\n` - 새 줄(LF)
+- `\r` - 캐리지 리턴(CR)
+- `\'` - 작은따옴표
+- `\"` - 큰따옴표
+- `\\` - 백슬래시
+- `\$` - 달러 기호
 
-다른 문자의 경우 유니코드 이스케이프 시퀀스 구문을 사용합니다: `'\uFF00'`
+다른 문자의 경우 유니코드 이스케이프 시퀀스 구문 사용: `'\uFF00'`
 
 ### 코드 예제
 
@@ -476,21 +499,24 @@ fun main() {
 
 ### 문자 변환
 
-문자 변수가 숫자 값을 보유하는 경우 [`digitToInt()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.text/digit-to-int.html) 함수를 사용하여 `Int`로 변환할 수 있습니다.
+- 문자 변수가 숫자 값을 보유하는 경우 [`digitToInt()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.text/digit-to-int.html) 함수로 `Int` 변환 가능
 
 ### JVM에서의 박싱
 
-JVM에서 문자는 nullable 참조가 필요할 때 Java 클래스로 박싱됩니다 (숫자와 유사). 박싱 연산은 동일성을 보존하지 않습니다.
+- JVM에서 문자는 nullable 참조가 필요할 때 Java 클래스로 박싱됨(숫자와 유사)
+- 박싱 연산은 동일성을 보존하지 않음
 
 ---
 
 ## Kotlin 문자열
 
-> **원문:** https://kotlinlang.org/docs/strings.html
+> 원문: https://kotlinlang.org/docs/strings.html
 
 ### 개요
 
-Kotlin에서 문자열은 `String` 타입으로 표현됩니다. JVM에서 문자열은 문자당 약 2바이트의 UTF-16 인코딩을 사용합니다. 문자열은 큰따옴표로 묶인 불변의 문자 시퀀스입니다.
+- 문자열은 `String` 타입으로 표현됨
+- JVM에서 문자열은 문자당 약 2바이트 UTF-16 인코딩 사용
+- 문자열은 큰따옴표로 묶인 불변의 문자 시퀀스
 
 ```kotlin
 val str = "abcd 123"
@@ -500,7 +526,7 @@ val str = "abcd 123"
 
 #### 문자 접근
 
-인덱싱을 통해 요소에 접근하고 `for` 루프로 순회할 수 있습니다:
+인덱싱을 통해 요소 접근·`for` 루프로 순회 가능:
 
 ```kotlin
 val str = "abcd"
@@ -511,7 +537,7 @@ for (c in str) {
 
 #### 문자열 불변성
 
-일단 초기화되면 문자열은 변경할 수 없습니다. 모든 변환은 새로운 `String` 객체를 반환합니다:
+일단 초기화되면 문자열은 변경 불가 → 모든 변환은 새로운 `String` 객체 반환:
 
 ```kotlin
 val str = "abcd"
@@ -521,7 +547,7 @@ println(str)              // abcd (변경되지 않음)
 
 #### 문자열 연결
 
-`+` 연산자를 사용합니다:
+`+` 연산자 사용:
 
 ```kotlin
 val s = "abc" + 1
@@ -534,7 +560,7 @@ println(s + "def") // abc1def
 
 #### 이스케이프된 문자열
 
-백슬래시(`\`)를 사용한 전통적인 이스케이프 시퀀스를 지원합니다:
+백슬래시(`\`)를 사용한 전통적인 이스케이프 시퀀스 지원:
 
 ```kotlin
 val s = "Hello, world!\n"
@@ -542,7 +568,7 @@ val s = "Hello, world!\n"
 
 #### 여러 줄 문자열
 
-삼중 따옴표(`"""`)로 구분되며, 이스케이프가 필요 없습니다:
+삼중 따옴표(`"""`)로 구분 → 이스케이프 불필요:
 
 ```kotlin
 val text = """
@@ -567,7 +593,7 @@ val text = """
 
 ### 문자열 템플릿
 
-템플릿 표현식은 `$`를 사용하여 코드를 평가하고 결과를 문자열에 삽입합니다:
+템플릿 표현식은 `$`를 사용하여 코드를 평가하고 결과를 문자열에 삽입.
 
 #### 단순 변수 보간
 
@@ -596,9 +622,9 @@ val price = """${'$'}9.99"""
 
 ### 다중 달러 문자열 보간
 
-보간을 트리거하기 위해 여러 개의 연속 달러 기호를 지정하여 단일 `$`를 리터럴로 취급합니다:
+보간을 트리거하기 위해 여러 개의 연속 달러 기호를 지정 → 단일 `$`를 리터럴로 취급.
 
-#### 이중 달러 예제 (`$$`)
+#### 이중 달러 예제(`$$`)
 
 ```kotlin
 val KClass<*>.jsonSchema : String get() = $$"""
@@ -612,7 +638,7 @@ val KClass<*>.jsonSchema : String get() = $$"""
 """
 ```
 
-#### 삼중 달러 예제 (`$$$`)
+#### 삼중 달러 예제(`$$$`)
 
 ```kotlin
 val productName = "carrot"
@@ -639,9 +665,9 @@ val requestedData = $$$"""{
 
 ### 문자열 포맷팅
 
-Kotlin/JVM에서만 사용 가능합니다. 형식 지정자와 함께 `String.format()`을 사용합니다:
+Kotlin/JVM에서만 사용 가능. 형식 지정자와 함께 `String.format()` 사용.
 
-**일반적인 지정자:**
+일반적인 지정자:
 - `%d` - 정수
 - `%f` - 부동 소수점 숫자
 - `%s` - 문자열
@@ -664,33 +690,36 @@ val negativeNumberInParentheses = String.format("%(d means %1$d", -31416)
 println(negativeNumberInParentheses) // (31416) means -31416
 ```
 
-**장점:** 템플릿보다 더 다재다능합니다; 포맷 문자열은 변수에서 할당할 수 있습니다 (현지화에 유용).
+장점: 템플릿보다 더 다재다능함 → 포맷 문자열은 변수에서 할당 가능(현지화에 유용).
 
 ---
 
 ## Kotlin 배열
 
-> **원문:** https://kotlinlang.org/docs/arrays.html
+> 원문: https://kotlinlang.org/docs/arrays.html
 
 ### 개요
 
-배열은 같은 타입 또는 그 하위 타입의 고정된 수의 값을 보유하는 데이터 구조입니다. 가장 일반적인 타입은 `Array` 클래스입니다. 객체 타입 배열의 원시 값은 객체로 박싱되어 성능에 영향을 미칩니다. 박싱 오버헤드를 피하려면 원시 타입 배열을 대신 사용하세요.
+- 배열은 같은 타입 또는 그 하위 타입의 고정된 수의 값을 보유하는 데이터 구조
+- 가장 일반적인 타입은 `Array` 클래스
+- 객체 타입 배열의 원시 값은 객체로 박싱됨 → 성능에 영향
+- 박싱 오버헤드를 피하려면 원시 타입 배열을 대신 사용
 
 ---
 
 ### 배열을 사용해야 할 때
 
-**배열을 사용하는 경우:**
+배열을 사용하는 경우:
 - 특수한 저수준 요구 사항이 있는 경우
 - 일반 애플리케이션을 넘어서는 성능 요구 사항이 있는 경우
 - 사용자 정의 데이터 구조를 구축해야 하는 경우
 
-**그 외의 경우 컬렉션을 사용하세요.** 컬렉션은 다음을 제공합니다:
+그 외의 경우 컬렉션 사용. 컬렉션이 제공하는 것:
 - 견고하고 의도가 명확한 코드를 위한 읽기 전용 변형
-- 쉬운 요소 추가/제거 (배열은 고정 크기)
+- 쉬운 요소 추가/제거(배열은 고정 크기)
 - `==` 연산자로 구조적 동등성 검사
 
-**배열 수정의 비효율성 예제:**
+배열 수정의 비효율성 예제:
 
 ```kotlin
 fun main() {
@@ -707,7 +736,7 @@ fun main() {
 
 #### 생성 함수
 
-**`arrayOf()`** - 값으로 배열 생성:
+`arrayOf()` - 값으로 배열 생성:
 
 ```kotlin
 fun main() {
@@ -716,7 +745,7 @@ fun main() {
 }
 ```
 
-**`arrayOfNulls()`** - null로 채워진 배열 생성:
+`arrayOfNulls()` - null로 채워진 배열 생성:
 
 ```kotlin
 fun main() {
@@ -725,7 +754,7 @@ fun main() {
 }
 ```
 
-**`emptyArray()`** - 빈 배열 생성:
+`emptyArray()` - 빈 배열 생성:
 
 ```kotlin
 var exampleArray = emptyArray<String>()
@@ -735,7 +764,7 @@ var exampleArray: Array<String> = emptyArray()
 
 #### 배열 생성자
 
-크기와 초기화 함수를 받습니다:
+크기와 초기화 함수를 받음:
 
 ```kotlin
 fun main() {
@@ -749,11 +778,11 @@ fun main() {
 }
 ```
 
-**참고:** Kotlin에서 인덱스는 0부터 시작합니다.
+참고: Kotlin에서 인덱스는 0부터 시작함.
 
 #### 중첩 배열
 
-배열은 다차원일 수 있습니다:
+배열은 다차원일 수 있음:
 
 ```kotlin
 fun main() {
@@ -768,13 +797,13 @@ fun main() {
 }
 ```
 
-**참고:** 중첩 배열은 같은 타입이나 크기일 필요가 없습니다.
+참고: 중첩 배열은 같은 타입이나 크기일 필요가 없음.
 
 ---
 
 ### 요소 접근 및 수정
 
-인덱스 접근 연산자 `[]`를 사용합니다:
+인덱스 접근 연산자 `[]` 사용:
 
 ```kotlin
 fun main() {
@@ -790,15 +819,15 @@ fun main() {
 }
 ```
 
-**불변성:** Kotlin은 런타임 실패를 방지하기 위해 `Array<String>`을 `Array<Any>`에 할당하는 것을 허용하지 않습니다. 대신 `Array<out Any>`를 사용하세요 (타입 프로젝션).
+불변성: Kotlin은 런타임 실패를 방지하기 위해 `Array<String>`을 `Array<Any>`에 할당하는 것을 허용하지 않음 → 대신 `Array<out Any>` 사용(타입 프로젝션).
 
 ---
 
 ### 배열 작업
 
-#### 가변 인수 전달 (varargs)
+#### 가변 인수 전달(varargs)
 
-스프레드 연산자 `*`를 사용합니다:
+스프레드 연산자 `*` 사용:
 
 ```kotlin
 fun main() {
@@ -815,7 +844,7 @@ fun printAllStrings(vararg strings: String) {
 
 #### 배열 비교
 
-`.contentEquals()`와 `.contentDeepEquals()`를 사용합니다:
+`.contentEquals()`와 `.contentDeepEquals()` 사용:
 
 ```kotlin
 fun main() {
@@ -829,7 +858,7 @@ fun main() {
 }
 ```
 
-**주의: `==`나 `!=`를 사용하지 마세요** - 내용 동등성이 아닌 객체 동일성을 검사합니다.
+주의: `==`나 `!=` 사용 금지 → 내용 동등성이 아닌 객체 동일성을 검사함.
 
 #### 배열 변환
 
@@ -842,7 +871,7 @@ fun main() {
 }
 ```
 
-**참고:** 숫자 데이터 타입(Int 등)에서만 작동합니다.
+참고: 숫자 데이터 타입(Int 등)에서만 작동함.
 
 ##### 셔플
 
@@ -871,7 +900,7 @@ fun main() {
 
 ##### 맵으로 변환
 
-`.toMap()`을 사용하여 `Array<Pair<K,V>>`만 맵으로 변환할 수 있습니다:
+`.toMap()`을 사용하여 `Array<Pair<K,V>>`만 맵으로 변환 가능:
 
 ```kotlin
 fun main() {
@@ -892,20 +921,18 @@ fun main() {
 
 ### 원시 타입 배열
 
-박싱 오버헤드를 피하려면 원시값과 함께 `Array` 대신 원시 타입 배열을 사용하세요:
+박싱 오버헤드를 피하려면 원시값과 함께 `Array` 대신 원시 타입 배열 사용:
 
-| Kotlin 타입 | Java 동등물 |
-|------------|------------|
-| `BooleanArray` | `boolean[]` |
-| `ByteArray` | `byte[]` |
-| `CharArray` | `char[]` |
-| `DoubleArray` | `double[]` |
-| `FloatArray` | `float[]` |
-| `IntArray` | `int[]` |
-| `LongArray` | `long[]` |
-| `ShortArray` | `short[]` |
+- `BooleanArray` - Java `boolean[]`
+- `ByteArray` - Java `byte[]`
+- `CharArray` - Java `char[]`
+- `DoubleArray` - Java `double[]`
+- `FloatArray` - Java `float[]`
+- `IntArray` - Java `int[]`
+- `LongArray` - Java `long[]`
+- `ShortArray` - Java `short[]`
 
-**예제:**
+예제:
 
 ```kotlin
 fun main() {
@@ -916,8 +943,8 @@ fun main() {
 
 #### 변환
 
-- **원시에서 객체로:** `.toTypedArray()`
-- **객체에서 원시로:** `.toBooleanArray()`, `.toByteArray()`, `.toCharArray()` 등
+- 원시에서 객체로: `.toTypedArray()`
+- 객체에서 원시로: `.toBooleanArray()`, `.toByteArray()`, `.toCharArray()` 등
 
 ---
 
@@ -933,11 +960,11 @@ fun main() {
 
 ## Kotlin 조건문과 루프
 
-> **원문:** https://kotlinlang.org/docs/control-flow.html
+> 원문: https://kotlinlang.org/docs/control-flow.html
 
 ### 개요
 
-Kotlin은 `if`, `when`, 그리고 다양한 루프 구조를 사용하여 프로그램 흐름을 제어하는 유연한 도구를 제공합니다.
+- Kotlin은 `if`, `when`, 다양한 루프 구조로 프로그램 흐름을 제어하는 유연한 도구 제공
 
 ---
 
@@ -945,7 +972,7 @@ Kotlin은 `if`, `when`, 그리고 다양한 루프 구조를 사용하여 프로
 
 #### 기본 사용법
 
-괄호 `()` 안에 조건을, 중괄호 `{}` 안에 동작을 사용합니다:
+괄호 `()` 안에 조건을, 중괄호 `{}` 안에 동작을 사용:
 
 ```kotlin
 if (heightAlice < heightBob) {
@@ -955,7 +982,7 @@ if (heightAlice < heightBob) {
 
 #### 표현식으로서의 if
 
-`if`는 값을 직접 할당하는 표현식으로 사용할 수 있습니다 (삼항 연산자를 대체):
+`if`는 값을 직접 할당하는 표현식으로 사용 가능(삼항 연산자를 대체):
 
 ```kotlin
 val taller = if (heightAlice > heightBob) heightAlice else heightBob
@@ -971,7 +998,7 @@ val heightOrLimit = if (heightLimit > heightAlice) heightLimit
 
 #### 블록 표현식
 
-블록의 마지막 표현식이 결과가 됩니다:
+블록의 마지막 표현식이 결과가 됨:
 
 ```kotlin
 val taller = if (heightAlice > heightBob) {
@@ -1000,7 +1027,7 @@ when (userRole) {
 
 #### 표현식 vs 문으로서의 when
 
-**표현식** (값 반환):
+표현식(값 반환):
 
 ```kotlin
 val text = when (x) {
@@ -1010,7 +1037,7 @@ val text = when (x) {
 }
 ```
 
-**문** (동작 수행):
+문(동작 수행):
 
 ```kotlin
 when (x) {
@@ -1032,11 +1059,11 @@ val message = when {
 
 #### 완전성
 
-- **문**: 모든 경우를 다룰 필요 없음
-- **표현식**: 모든 경우를 다뤄야 함 (그렇지 않으면 컴파일러가 오류 발생)
-- **예외**: 열거형, Boolean, 또는 sealed 클래스는 모든 경우가 다뤄지면 `else`가 필요 없음
+- 문: 모든 경우를 다룰 필요 없음
+- 표현식: 모든 경우를 다뤄야 함(그렇지 않으면 컴파일러가 오류 발생)
+- 예외: 열거형·Boolean·sealed 클래스는 모든 경우가 다뤄지면 `else` 불필요
 
-#### 여러 조건 (쉼표로 구분)
+#### 여러 조건(쉼표로 구분)
 
 ```kotlin
 when (ticketPriority) {
@@ -1086,7 +1113,7 @@ val message = when (val input = "yes") {
 
 #### 가드 조건
 
-가드 조건은 기본 조건 후에 추가 검사를 추가합니다:
+가드 조건은 기본 조건 후에 추가 검사를 추가:
 
 ```kotlin
 when (animal) {
@@ -1182,7 +1209,7 @@ for (page in booklet) {
 
 #### while 루프
 
-먼저 조건을 검사한 후 본문을 실행합니다:
+먼저 조건을 검사한 후 본문을 실행:
 
 ```kotlin
 var carsInGarage = 0
@@ -1195,7 +1222,7 @@ while (carsInGarage < maxCapacity) {
 
 #### do-while 루프
 
-먼저 본문을 실행한 후 조건을 검사합니다:
+먼저 본문을 실행한 후 조건을 검사:
 
 ```kotlin
 do {
@@ -1208,43 +1235,45 @@ do {
 
 ### break와 continue
 
-Kotlin은 루프에서 전통적인 `break`와 `continue` 연산자를 지원합니다. 자세한 내용은 [반환과 점프](returns.html) 문서를 참조하세요.
+- Kotlin은 루프에서 전통적인 `break`와 `continue` 연산자 지원
+- 자세한 내용은 [반환과 점프](returns.html) 문서 참조
 
 ---
 
 ## 반환과 점프
 
-> **원문:** https://kotlinlang.org/docs/returns.html
+> 원문: https://kotlinlang.org/docs/returns.html
 
 ### 개요
 
-Kotlin에는 세 가지 구조적 점프 표현식이 있습니다:
+Kotlin의 세 가지 구조적 점프 표현식:
 
-- **`return`** - 가장 가까운 둘러싸는 함수나 익명 함수에서 반환
-- **`break`** - 가장 가까운 둘러싸는 루프를 종료
-- **`continue`** - 가장 가까운 둘러싸는 루프의 다음 단계로 진행
+- `return` - 가장 가까운 둘러싸는 함수나 익명 함수에서 반환
+- `break` - 가장 가까운 둘러싸는 루프를 종료
+- `continue` - 가장 가까운 둘러싸는 루프의 다음 단계로 진행
 
-이 모든 표현식은 더 큰 표현식의 일부로 사용할 수 있습니다:
+이 모든 표현식은 더 큰 표현식의 일부로 사용 가능:
 
 ```kotlin
 val s = person.name ?: return
 ```
 
-이 표현식들의 타입은 `Nothing` 타입입니다.
+이 표현식들의 타입은 `Nothing` 타입임.
 
 ---
 
 ### break와 continue 레이블
 
-Kotlin의 모든 표현식은 레이블로 표시될 수 있습니다. 레이블은 식별자 뒤에 `@` 기호가 오는 형태입니다 (예: `abc@` 또는 `fooBar@`).
+- Kotlin의 모든 표현식은 레이블로 표시 가능
+- 레이블은 식별자 뒤에 `@` 기호가 오는 형태(예: `abc@` 또는 `fooBar@`)
 
-#### 예제:
+예제:
 
 ```kotlin
 loop@ for (i in 1..100) { // ... }
 ```
 
-`break`나 `continue`를 레이블로 한정할 수 있습니다:
+`break`나 `continue`를 레이블로 한정 가능:
 
 ```kotlin
 loop@ for (i in 1..100) {
@@ -1254,18 +1283,19 @@ loop@ for (i in 1..100) {
 }
 ```
 
-- 레이블로 한정된 `break`는 해당 레이블이 표시된 루프 바로 다음 실행 지점으로 점프합니다
-- `continue`는 해당 루프의 다음 반복으로 진행합니다
+- 레이블로 한정된 `break`는 해당 레이블이 표시된 루프 바로 다음 실행 지점으로 점프함
+- `continue`는 해당 루프의 다음 반복으로 진행함
 
-**참고:** 비지역 사용은 둘러싸는 인라인 함수에서 사용되는 람다 표현식에서 유효합니다.
+참고: 비지역 사용은 둘러싸는 인라인 함수에서 사용되는 람다 표현식에서 유효함.
 
 ---
 
 ### 레이블로 반환
 
-함수는 함수 리터럴, 지역 함수, 객체 표현식을 사용하여 중첩될 수 있습니다. 한정된 `return`을 사용하면 외부 함수에서 반환할 수 있습니다.
+- 함수는 함수 리터럴·지역 함수·객체 표현식을 사용하여 중첩될 수 있음
+- 한정된 `return`을 사용하면 외부 함수에서 반환 가능
 
-#### 명시적 레이블로 람다에서 반환:
+#### 명시적 레이블로 람다에서 반환
 
 ```kotlin
 fun foo() {
@@ -1277,7 +1307,7 @@ fun foo() {
 }
 ```
 
-#### 암시적 레이블로 람다에서 반환:
+#### 암시적 레이블로 람다에서 반환
 
 ```kotlin
 fun foo() {
@@ -1289,7 +1319,7 @@ fun foo() {
 }
 ```
 
-#### 익명 함수 사용:
+#### 익명 함수 사용
 
 ```kotlin
 fun foo() {
@@ -1301,7 +1331,7 @@ fun foo() {
 }
 ```
 
-#### run 람다로 break 시뮬레이션:
+#### run 람다로 break 시뮬레이션
 
 ```kotlin
 fun foo() {
@@ -1319,27 +1349,28 @@ fun foo() {
 
 ### 핵심 사항
 
-- 람다에서의 지역 반환은 일반 루프의 `continue`와 유사합니다
-- `break`에 대한 직접적인 등가물은 없지만 외부 `run` 람다를 사용하여 시뮬레이션할 수 있습니다
-- 값을 반환할 때 파서는 한정된 반환에 우선순위를 부여합니다:
+- 람다에서의 지역 반환은 일반 루프의 `continue`와 유사함
+- `break`에 대한 직접적인 등가물은 없지만 → 외부 `run` 람다를 사용하여 시뮬레이션 가능
+- 값을 반환할 때 파서는 한정된 반환에 우선순위를 부여함:
   ```kotlin
   return@a 1  // 레이블 @a에서 1을 반환 (레이블이 지정된 표현식이 아님)
   ```
-- 람다에서의 비지역 반환은 람다가 인라인 함수 역할을 할 때 가능합니다
+- 람다에서의 비지역 반환은 람다가 인라인 함수 역할을 할 때 가능함
 
 ---
 
 ## Kotlin 예외
 
-> **원문:** https://kotlinlang.org/docs/exceptions.html
+> 원문: https://kotlinlang.org/docs/exceptions.html
 
 ### 개요
 
-Kotlin의 예외는 런타임 오류가 발생할 때 코드가 예측 가능하게 실행되도록 도와줍니다. Kotlin은 **모든 예외를 기본적으로 체크되지 않은 예외로 취급**하여 명시적 선언 없이도 예외 처리를 단순화합니다.
+- Kotlin의 예외는 런타임 오류가 발생할 때 코드가 예측 가능하게 실행되도록 도와줌
+- Kotlin은 모든 예외를 기본적으로 체크되지 않은 예외로 취급 → 명시적 선언 없이도 예외 처리가 단순해짐
 
-예외 작업에는 두 가지 주요 동작이 포함됩니다:
-- **예외 던지기**: 문제가 발생했음을 나타냄
-- **예외 잡기**: 예기치 않은 예외를 수동으로 처리
+예외 작업에 포함되는 두 가지 주요 동작:
+- 예외 던지기: 문제가 발생했음을 나타냄
+- 예외 잡기: 예기치 않은 예외를 수동으로 처리
 
 ---
 
@@ -1364,13 +1395,17 @@ if (userInput < 0) {
 
 ### 전제 조건 함수로 예외 던지기
 
-Kotlin은 자동 예외 던지기를 위한 세 가지 전제 조건 함수를 제공합니다:
+Kotlin이 제공하는 자동 예외 던지기용 전제 조건 함수 3종:
 
-| 함수 | 사용 사례 | 던지는 예외 |
-|------|----------|------------|
-| `require()` | 사용자 입력 유효성 검사 | `IllegalArgumentException` |
-| `check()` | 객체/변수 상태 유효성 검사 | `IllegalStateException` |
-| `error()` | 불법 상태 또는 조건 표시 | `IllegalStateException` |
+- `require()`
+  - 사용 사례: 사용자 입력 유효성 검사
+  - 던지는 예외: `IllegalArgumentException`
+- `check()`
+  - 사용 사례: 객체/변수 상태 유효성 검사
+  - 던지는 예외: `IllegalStateException`
+- `error()`
+  - 사용 사례: 불법 상태 또는 조건 표시
+  - 던지는 예외: `IllegalStateException`
 
 #### require() 함수
 
@@ -1407,7 +1442,7 @@ fun main() {
 
 #### error() 함수
 
-불법 상태 신호 (`when` 표현식에서 유용):
+불법 상태 신호(`when` 표현식에서 유용):
 
 ```kotlin
 class User(val name: String, val role: String)
@@ -1454,7 +1489,7 @@ fun count(): Int {
 }
 ```
 
-#### 여러 catch 블록 (가장 구체적인 것 먼저)
+#### 여러 catch 블록(가장 구체적인 것 먼저)
 
 ```kotlin
 open class WithdrawalException(message: String) : Exception(message)
@@ -1485,7 +1520,8 @@ fun main() {
 
 ### finally 블록
 
-`finally` 블록은 성공 또는 예외 여부에 관계없이 **항상 실행**됩니다. 정리 작업에 사용됩니다.
+- `finally` 블록은 성공 또는 예외 여부와 관계없이 항상 실행됨
+- 정리 작업에 사용됨
 
 #### 기본 구조
 
@@ -1522,7 +1558,7 @@ fun main() {
 
 #### `.use()`를 사용한 리소스 관리
 
-자동으로 리소스 닫기 (`AutoClosable` 구현):
+자동으로 리소스 닫기(`AutoClosable` 구현):
 
 ```kotlin
 FileWriter("test.txt").use { writer ->
@@ -1572,7 +1608,7 @@ class NumberTooLargeException: ArithmeticException("My message")
 
 #### 사용자 정의 예외 계층
 
-부모를 `open`으로 선언해야 합니다:
+부모를 `open`으로 선언해야 함:
 
 ```kotlin
 open class MyCustomException(message: String): Exception(message)
@@ -1632,7 +1668,7 @@ fun main() {
 
 ### Nothing 타입
 
-`Nothing`은 **절대 성공적으로 완료되지 않는** 함수/표현식을 나타내는 특별한 타입입니다 (항상 던지거나 무한 루프).
+- `Nothing`은 절대 성공적으로 완료되지 않는 함수/표현식을 나타내는 특별한 타입(항상 던지거나 무한 루프)
 
 #### 기본 사용
 
@@ -1667,7 +1703,7 @@ fun main() {
 
 ### 예외 클래스
 
-일반적인 예외 타입 (`RuntimeException`의 서브클래스):
+일반적인 예외 타입(`RuntimeException`의 서브클래스):
 
 #### ArithmeticException
 
@@ -1719,10 +1755,10 @@ println(text!!.length) // NullPointerException 던짐
 
 ### 예외 계층
 
-루트: **Throwable**
-- **Error**: 심각한 문제 (예: `OutOfMemoryError`, `StackOverflowError`)
-- **Exception**: 처리할 조건
-  - **RuntimeException**: 코드 검사를 통해 방지 가능
+루트: Throwable
+- Error: 심각한 문제(예: `OutOfMemoryError`, `StackOverflowError`)
+- Exception: 처리할 조건
+  - RuntimeException: 코드 검사를 통해 방지 가능
     - `ArithmeticException`
     - `IndexOutOfBoundsException`
     - `NullPointerException`
@@ -1742,7 +1778,7 @@ fun main() {
 }
 ```
 
-**출력:**
+출력:
 
 ```
 Exception in thread "main" java.lang.ArithmeticException: This is an arithmetic exception!
@@ -1759,7 +1795,7 @@ at MainKt.main(Main.kt:3)
 
 ### Java, Swift, Objective-C와의 예외 상호 운용성
 
-호출자에게 가능한 예외를 알리려면 `@Throws` 어노테이션을 사용하세요:
+호출자에게 가능한 예외를 알리려면 `@Throws` 어노테이션 사용:
 
 ```kotlin
 @Throws(IOException::class)
@@ -1768,43 +1804,45 @@ fun someFunction() {
 }
 ```
 
-이것은 체크된 예외와 체크되지 않은 예외를 구분하는 언어에서 Kotlin 코드를 호출할 때 도움이 됩니다.
+- 이것은 체크된 예외와 체크되지 않은 예외를 구분하는 언어에서 Kotlin 코드를 호출할 때 도움이 됨
 
 ---
 
 ### 핵심 사항 요약
 
-- 모든 예외는 Kotlin에서 **체크되지 않음**
+- 모든 예외는 Kotlin에서 체크되지 않음
 - 전제 조건에 `require()`, `check()`, `error()` 사용
 - `catch` 블록을 가장 구체적인 것부터 가장 덜 구체적인 순으로 정렬
 - `finally` 블록은 항상 실행됨
 - 자동 리소스 정리에 `.use()` 사용
 - `Exception`을 확장하여 사용자 정의 예외 생성
 - `Nothing` 타입은 반환하지 않는 함수를 나타냄
-- 예외 방지를 위해 더 안전한 대안 사용 (`getOrNull()`, `firstOrNull()` 등)
+- 예외 방지를 위해 더 안전한 대안 사용(`getOrNull()`, `firstOrNull()` 등)
 
 ---
 
 ## 코루틴 예외 처리
 
-> **원문:** https://kotlinlang.org/docs/exception-handling.html
+> 원문: https://kotlinlang.org/docs/exception-handling.html
 
 ### 개요
 
-이 문서는 Kotlin 코루틴에서의 예외 처리와 취소를 다룹니다. 취소된 코루틴이 일시 중단 지점에서 `CancellationException`을 던지는 방법과 취소 중 예외가 발생하거나 여러 자식이 예외를 던질 때 어떤 일이 발생하는지 설명합니다.
+- 이 문서는 Kotlin 코루틴에서의 예외 처리와 취소를 다룸
+- 취소된 코루틴이 일시 중단 지점에서 `CancellationException`을 던지는 방법과 취소 중 예외가 발생하거나 여러 자식이 예외를 던질 때 어떤 일이 발생하는지 설명
 
 ---
 
 ### 예외 전파
 
-코루틴 빌더는 두 가지 유형이 있습니다:
+코루틴 빌더 2종:
 
-1. **예외를 자동으로 전파**: `launch`
-2. **예외를 사용자에게 노출**: `async`와 `produce`
+1. 예외를 자동으로 전파: `launch`
+2. 예외를 사용자에게 노출: `async`와 `produce`
 
-루트 코루틴을 생성할 때 사용하면, `launch`는 예외를 처리되지 않은 것으로 취급하고 (Java의 `Thread.uncaughtExceptionHandler`와 유사), `async`와 `produce`는 사용자가 `await()` 또는 `receive()`를 통해 예외를 소비하도록 합니다.
+- 루트 코루틴을 생성할 때 사용하면 → `launch`는 예외를 처리되지 않은 것으로 취급함(Java의 `Thread.uncaughtExceptionHandler`와 유사)
+- `async`와 `produce`는 사용자가 `await()` 또는 `receive()`를 통해 예외를 소비하도록 함
 
-#### 예제:
+예제:
 ```kotlin
 @OptIn(DelicateCoroutinesApi::class)
 fun main() = runBlocking {
@@ -1828,7 +1866,7 @@ fun main() = runBlocking {
 }
 ```
 
-**출력:**
+출력:
 ```
 Throwing exception from launch
 Exception in thread "DefaultDispatcher-worker-1 @coroutine#2" java.lang.IndexOutOfBoundsException
@@ -1841,15 +1879,16 @@ Caught ArithmeticException
 
 ### CoroutineExceptionHandler
 
-`CoroutineExceptionHandler`는 루트 코루틴과 그 자식들의 처리되지 않은 예외 처리를 사용자 정의하는 데 사용되는 컨텍스트 요소입니다. 일반적인 `catch` 블록으로 작동합니다.
+- `CoroutineExceptionHandler`는 루트 코루틴과 그 자식들의 처리되지 않은 예외 처리를 사용자 정의하는 데 사용되는 컨텍스트 요소
+- 일반적인 `catch` 블록으로 작동함
 
-#### 핵심 포인트:
-- 핸들러에서 예외를 **복구할 수 없음**
-- **처리되지 않은 예외에만 호출됨**
-- 자식 코루틴은 예외 처리를 계층 구조를 따라 부모에게 위임
-- `async` 빌더는 결과 `Deferred` 객체에서 모든 예외를 잡으므로 핸들러가 효과 없음
+핵심 포인트:
+- 핸들러에서 예외를 복구할 수 없음
+- 처리되지 않은 예외에만 호출됨
+- 자식 코루틴은 예외 처리를 계층 구조를 따라 부모에게 위임함
+- `async` 빌더는 결과 `Deferred` 객체에서 모든 예외를 잡음 → 핸들러가 효과 없음
 
-#### 예제:
+예제:
 ```kotlin
 @OptIn(DelicateCoroutinesApi::class)
 fun main() = runBlocking {
@@ -1869,7 +1908,7 @@ fun main() = runBlocking {
 }
 ```
 
-**출력:**
+출력:
 ```
 CoroutineExceptionHandler got java.lang.AssertionError
 ```
@@ -1878,14 +1917,14 @@ CoroutineExceptionHandler got java.lang.AssertionError
 
 ### 취소와 예외
 
-`CancellationException`은 취소에 내부적으로 사용되며 모든 핸들러에서 무시됩니다.
+- `CancellationException`은 취소에 내부적으로 사용되며 모든 핸들러에서 무시됨
 
-#### 핵심 동작:
+핵심 동작:
 - `Job.cancel()`로 코루틴이 취소되면 종료되지만 부모를 취소하지 않음
-- 코루틴이 `CancellationException` 이외의 예외를 던지면 해당 예외로 부모를 취소
-- 이 동작은 구조적 동시성을 위한 안정적인 코루틴 계층을 보장
+- 코루틴이 `CancellationException` 이외의 예외를 던지면 해당 예외로 부모를 취소함
+- 이 동작은 구조적 동시성을 위한 안정적인 코루틴 계층을 보장함
 
-#### 예제:
+예제:
 ```kotlin
 fun main() = runBlocking {
     val job = launch {
@@ -1907,7 +1946,7 @@ fun main() = runBlocking {
 }
 ```
 
-**출력:**
+출력:
 ```
 Cancelling child
 Child is cancelled
@@ -1919,10 +1958,10 @@ Parent is not cancelled
 ### 예외 집계
 
 여러 자식이 실패할 때:
-- **첫 번째 예외가 우선**하여 처리됨
-- **추가 예외**는 억제된 예외로 첨부됨
+- 첫 번째 예외가 우선하여 처리됨
+- 추가 예외는 억제된 예외로 첨부됨
 
-#### 예제:
+예제:
 ```kotlin
 @OptIn(DelicateCoroutinesApi::class)
 fun main() = runBlocking {
@@ -1948,13 +1987,14 @@ fun main() = runBlocking {
 }
 ```
 
-**출력:**
+출력:
 ```
 CoroutineExceptionHandler got java.io.IOException with suppressed [java.lang.ArithmeticException]
 ```
 
-#### 취소 예외 투명성:
-취소 예외는 기본적으로 언래핑되어 원래 예외가 핸들러에 도달할 수 있습니다:
+#### 취소 예외 투명성
+
+취소 예외는 기본적으로 언래핑되어 원래 예외가 핸들러에 도달할 수 있음:
 
 ```kotlin
 @OptIn(DelicateCoroutinesApi::class)
@@ -1982,7 +2022,7 @@ fun main() = runBlocking {
 }
 ```
 
-**출력:**
+출력:
 ```
 Rethrowing CancellationException with original cause
 CoroutineExceptionHandler got java.io.IOException
@@ -1992,14 +2032,14 @@ CoroutineExceptionHandler got java.io.IOException
 
 ### 슈퍼비전
 
-단방향 취소가 필요한 경우, 슈퍼비전은 다음을 허용합니다:
+단방향 취소가 필요한 경우, 슈퍼비전이 허용하는 것:
 - 부모 취소가 자식에게 영향
 - 자식 실패가 부모에게 영향을 주지 않음
 - 자식 실패가 형제를 취소하지 않음
 
 #### SupervisorJob
 
-`SupervisorJob`은 일반 `Job`과 유사하지만 취소가 아래쪽으로만 전파됩니다.
+- `SupervisorJob`은 일반 `Job`과 유사하지만 취소가 아래쪽으로만 전파됨
 
 ```kotlin
 fun main() = runBlocking {
@@ -2028,7 +2068,7 @@ fun main() = runBlocking {
 }
 ```
 
-**출력:**
+출력:
 ```
 The first child is failing
 The first child is cancelled: true, but the second one is still active
@@ -2038,7 +2078,7 @@ The second child is cancelled because the supervisor was cancelled
 
 #### supervisorScope
 
-`supervisorScope`는 단방향 취소로 범위 지정된 동시성을 제공합니다:
+`supervisorScope`는 단방향 취소로 범위 지정된 동시성을 제공함:
 
 ```kotlin
 fun main() = runBlocking {
@@ -2062,7 +2102,7 @@ fun main() = runBlocking {
 }
 ```
 
-**출력:**
+출력:
 ```
 The child is sleeping
 Throwing an exception from the scope
@@ -2072,7 +2112,8 @@ Caught an assertion error
 
 #### 슈퍼비전된 코루틴의 예외
 
-각 자식은 `CoroutineExceptionHandler`를 통해 독립적으로 예외를 처리합니다. 자식 실패는 부모에게 전파되지 않습니다.
+- 각 자식은 `CoroutineExceptionHandler`를 통해 독립적으로 예외를 처리함
+- 자식 실패는 부모에게 전파되지 않음
 
 ```kotlin
 fun main() = runBlocking {
@@ -2091,7 +2132,7 @@ fun main() = runBlocking {
 }
 ```
 
-**출력:**
+출력:
 ```
 The scope is completing
 The child throws an exception
@@ -2103,11 +2144,9 @@ The scope is completed
 
 ### 요약
 
-| 기능 | 동작 |
-|------|------|
-| `launch` | 예외를 자동으로 전파 |
-| `async` | `await()`를 통해 예외 노출 |
-| `CoroutineExceptionHandler` | 루트 코루틴의 처리되지 않은 예외 처리 |
-| `SupervisorJob` | 단방향 취소 (부모 -> 자식만) |
-| `supervisorScope` | 단방향 취소를 가진 범위 지정된 동시성 |
-| 예외 집계 | 첫 번째 예외가 우선; 나머지는 억제됨 |
+- `launch` - 예외를 자동으로 전파
+- `async` - `await()`를 통해 예외 노출
+- `CoroutineExceptionHandler` - 루트 코루틴의 처리되지 않은 예외 처리
+- `SupervisorJob` - 단방향 취소(부모 -> 자식만)
+- `supervisorScope` - 단방향 취소를 가진 범위 지정된 동시성
+- 예외 집계 - 첫 번째 예외가 우선; 나머지는 억제됨

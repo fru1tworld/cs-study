@@ -28,27 +28,43 @@
 - **풍부한 컨텍스트**: PID/TID/UID/cgroup/SELinux 등 신뢰 가능한 메타데이터
 - **안전성**: verifier가 시스템 안정성 보장
 
-`strace -p`는 ptrace 기반이라 syscall마다 컨텍스트 스위치가 두 번 발생합니다(수십 배 느림). eBPF는 같은 작업을 거의 무비용으로 처리합니다.
+`strace -p`는 ptrace 기반이라 syscall마다 컨텍스트 스위치가 두 번 발생함(수십 배 느림) → eBPF는 같은 작업을 거의 무비용으로 처리함.
 
 ---
 
 ### Tracing 종류와 선택
 
-| 종류 | 안정성 | 오버헤드 | 추천 용도 |
-| --- | --- | --- | --- |
-| **Static Tracepoint** | 안정 ABI | 매우 낮음 | 첫 선택지 |
-| **kfunc/fentry** | BTF 기반, 안정 | 가장 낮음 (5.5+) | 새 코드 |
-| **kprobe** | 함수 시그니처 의존 | 낮음 | tracepoint 없는 함수 |
-| **kretprobe** | 함수 시그니처 의존 | 약간 높음 | 함수 종료/지연 측정 |
-| **USDT** | 애플리케이션 ABI | 낮음 | 애플리케이션 내부 이벤트 |
-| **uprobe** | 함수 시그니처 의존 | 중간 | 자기 코드 트레이싱 |
+- **Static Tracepoint**
+  - 안정성: 안정 ABI
+  - 오버헤드: 매우 낮음
+  - 추천 용도: 첫 선택지
+- **kfunc/fentry**
+  - 안정성: BTF 기반, 안정
+  - 오버헤드: 가장 낮음(5.5+)
+  - 추천 용도: 새 코드
+- **kprobe**
+  - 안정성: 함수 시그니처 의존
+  - 오버헤드: 낮음
+  - 추천 용도: tracepoint 없는 함수
+- **kretprobe**
+  - 안정성: 함수 시그니처 의존
+  - 오버헤드: 약간 높음
+  - 추천 용도: 함수 종료/지연 측정
+- **USDT**
+  - 안정성: 애플리케이션 ABI
+  - 오버헤드: 낮음
+  - 추천 용도: 애플리케이션 내부 이벤트
+- **uprobe**
+  - 안정성: 함수 시그니처 의존
+  - 오버헤드: 중간
+  - 추천 용도: 자기 코드 트레이싱
 
 #### 선택 가이드
 
-1. tracepoint가 있으면 그걸 쓴다. ABI 안정.
-2. fentry/kfunc 가능하면 그걸 쓴다. 가장 빠름.
-3. 안정 ABI가 없으면 kprobe.
-4. 사용자 공간 라이브러리는 USDT > uprobe.
+1. tracepoint가 있으면 그걸 사용 → ABI 안정
+2. fentry/kfunc 가능하면 그걸 사용 → 가장 빠름
+3. 안정 ABI가 없으면 kprobe 사용
+4. 사용자 공간 라이브러리는 USDT > uprobe 순으로 우선 적용
 
 #### tracepoint 찾기
 
@@ -84,7 +100,7 @@ interval:s:30 {
 }'
 ```
 
-99 Hz를 쓰는 이유는 100 Hz와 자연스럽게 어긋나 lockstep 샘플링 편향을 피할 수 있기 때문입니다.
+99 Hz 사용 이유: 100 Hz와 자연스럽게 어긋나 lockstep 샘플링 편향 회피 가능.
 
 #### Flame Graph
 
@@ -99,7 +115,7 @@ git clone https://github.com/brendangregg/FlameGraph
 xdg-open flame.svg
 ```
 
-각 박스의 너비는 해당 함수가 CPU를 점유한 시간 비율을 나타냅니다. 가장 넓은 박스가 hot path입니다.
+각 박스의 너비는 해당 함수가 CPU를 점유한 시간 비율을 나타냄 → 가장 넓은 박스가 hot path.
 
 #### Continuous profiling
 
@@ -109,13 +125,13 @@ xdg-open flame.svg
 - **Perforator** — Yandex
 - **Pixie** — New Relic
 
-위 도구들은 모두 eBPF profile probe를 기반으로 동작합니다.
+위 도구들은 모두 eBPF profile probe를 기반으로 동작함.
 
 ---
 
 ### Off-CPU 분석
 
-CPU를 사용하지 않는데도 시스템이 느리다면 — 프로세스가 어디서 대기하는지 파악하는 것이 핵심입니다.
+CPU를 사용하지 않는데도 시스템이 느리다면 → 프로세스가 어디서 대기하는지 파악이 핵심.
 
 #### offcputime
 
@@ -124,7 +140,7 @@ sudo offcputime -df 30 > out.stacks
 ./FlameGraph/flamegraph.pl --bgcolors=blue < out.stacks > offcpu-flame.svg
 ```
 
-스택의 각 박스 너비는 해당 코드 경로에서 대기한 시간을 나타냅니다.
+스택의 각 박스 너비는 해당 코드 경로에서 대기한 시간을 나타냄.
 
 #### bpftrace로
 
@@ -142,7 +158,7 @@ kretprobe:finish_task_switch /@start[arg0]/ {
 
 #### 결합
 
-CPU + Off-CPU를 합산하면 전체 시간이 어디에 쓰이는지(CPU 작업 vs 대기)를 한눈에 파악할 수 있습니다.
+CPU + Off-CPU를 합산하면 전체 시간이 어디에 쓰이는지(CPU 작업 vs 대기)를 한눈에 파악 가능.
 
 ---
 
@@ -189,13 +205,13 @@ sudo biolatency -m 10
 sudo runqlat
 ```
 
-CPU를 할당받기 전 런 큐에서 대기한 시간을 측정합니다. CPU 부족이나 우선순위 역전을 진단할 때 유용합니다.
+CPU를 할당받기 전 런 큐에서 대기한 시간을 측정함 → CPU 부족이나 우선순위 역전 진단에 유용.
 
 ---
 
 ### USDT와 애플리케이션 트레이싱
 
-USDT는 애플리케이션이 미리 삽입해 둔 트레이스 포인트입니다. systemtap에서 시작했지만 eBPF에서도 활용합니다.
+USDT는 애플리케이션이 미리 삽입해 둔 트레이스 포인트임 → systemtap에서 시작했지만 eBPF에서도 활용함.
 
 #### 사용 가능한 USDT 보기
 
@@ -206,14 +222,12 @@ sudo readelf -n /usr/local/bin/myapp | grep -i 'NT_STAPSDT' -A 8
 
 #### 잘 알려진 USDT 제공 프로그램
 
-| 프로그램 | USDT |
-| --- | --- |
-| MySQL | query__start, query__done, sql__lock 등 |
-| Postgres | query__start, transaction__start 등 |
-| Python (DTrace 빌드) | function__entry, function__return |
-| Node.js | gc__start, http__server__request |
-| Java (libstapsdt) | 사용자 정의 가능 |
-| OpenJDK (with USDT) | hotspot:thread__start 등 |
+- MySQL: query__start, query__done, sql__lock 등
+- Postgres: query__start, transaction__start 등
+- Python (DTrace 빌드): function__entry, function__return
+- Node.js: gc__start, http__server__request
+- Java (libstapsdt): 사용자 정의 가능
+- OpenJDK (with USDT): hotspot:thread__start 등
 
 #### 예: MySQL 느린 쿼리
 
@@ -310,7 +324,7 @@ sysbench --threads=8 cpu run
 
 #### Sampling
 
-이벤트가 너무 많을 경우 샘플링을 적용합니다:
+이벤트가 너무 많을 경우 샘플링을 적용함:
 
 ```c
 SEC("kprobe/tcp_v4_connect")
@@ -322,7 +336,7 @@ int trace(struct pt_regs *ctx) {
 
 #### 백프레셔
 
-ringbuf가 가득 차면 새 이벤트가 손실됩니다. 사용자 공간이 충분히 빠르게 소비하는지, 아니면 BPF 측에서 명시적으로 드롭할지 결정해야 합니다.
+ringbuf가 가득 차면 새 이벤트가 손실됨 → 사용자 공간이 충분히 빠르게 소비하는지, 아니면 BPF 측에서 명시적으로 드롭할지 결정 필요.
 
 ```c
 // 사용자 공간이 못 따라오면 그냥 버림
@@ -335,7 +349,7 @@ if (!e) {
 
 #### 기능 감지
 
-배포 대상 머신마다 커널 버전이 다를 수 있습니다:
+배포 대상 머신마다 커널 버전이 다를 수 있음:
 
 ```c
 // libbpf
@@ -410,21 +424,25 @@ sudo setcap cap_bpf,cap_perfmon+ep /usr/local/bin/myprobe
 [NIC] (egress)
 ```
 
-각 hook은 서로 다른 정보에 접근하며 서로 다른 동작을 수행할 수 있습니다.
+각 hook은 서로 다른 정보에 접근하며 서로 다른 동작을 수행 가능.
 
 ---
 
 ### XDP
 
-**eXpress Data Path**. 디바이스 드라이버가 패킷을 수신하자마자 (skb 할당 전) BPF를 호출한다. 가장 빠른 hook 지점.
+**eXpress Data Path**. 디바이스 드라이버가 패킷을 수신하자마자(skb 할당 전) BPF를 호출함 → 가장 빠른 hook 지점.
 
 #### 모드
 
-| 모드 | 동작 | 호환성 |
-| --- | --- | --- |
-| **Native** | NIC 드라이버가 직접 호출 | 일부 드라이버만 지원 (ixgbe, mlx5, virtio_net 등) |
-| **Generic** | skb 할당 후 hook (느림) | 모든 NIC |
-| **Offload** | NIC 하드웨어가 실행 | Netronome 등 일부 SmartNIC |
+- **Native**
+  - 동작: NIC 드라이버가 직접 호출
+  - 호환성: 일부 드라이버만 지원(ixgbe, mlx5, virtio_net 등)
+- **Generic**
+  - 동작: skb 할당 후 hook(느림)
+  - 호환성: 모든 NIC
+- **Offload**
+  - 동작: NIC 하드웨어가 실행
+  - 호환성: Netronome 등 일부 SmartNIC
 
 #### 컨텍스트
 
@@ -441,13 +459,11 @@ struct xdp_md {
 
 #### 반환값
 
-| 값 | 동작 |
-| --- | --- |
-| `XDP_DROP` | 패킷 폐기 (버림) |
-| `XDP_PASS` | 일반 스택으로 전달 |
-| `XDP_TX` | 같은 NIC로 재송신 |
-| `XDP_REDIRECT` | 다른 NIC 또는 AF_XDP 소켓으로 |
-| `XDP_ABORTED` | 에러 (trace point 발생) |
+- `XDP_DROP`: 패킷 폐기(버림)
+- `XDP_PASS`: 일반 스택으로 전달
+- `XDP_TX`: 같은 NIC로 재송신
+- `XDP_REDIRECT`: 다른 NIC 또는 AF_XDP 소켓으로
+- `XDP_ABORTED`: 에러(trace point 발생)
 
 #### 예: ICMP drop
 
@@ -488,7 +504,7 @@ sudo ip link set dev eth0 xdp off
 #### 한계
 
 - 패킷 크기 임의 변경은 불가 (단, `bpf_xdp_adjust_head/tail/meta` 로 일부 조정 가능)
-- VLAN/터널 처리는 직접 작성
+- VLAN/터널 처리는 직접 작성 필요
 - 일부 NIC만 native 지원
 
 #### 활용
@@ -502,21 +518,19 @@ sudo ip link set dev eth0 xdp off
 
 ### TC (Traffic Control)
 
-`tc` 의 `clsact` qdisc에 attach한다. XDP보다 늦은 단계지만 **ingress와 egress 모두** 지원하며 **skb를 자유롭게 변형**할 수 있다.
+`tc` 의 `clsact` qdisc에 attach함 → XDP보다 늦은 단계지만 **ingress와 egress 모두** 지원하며 **skb를 자유롭게 변형** 가능.
 
 #### 컨텍스트
 
-`struct __sk_buff` — skb를 BPF 프로그램에서 다루기 위한 추상 뷰. 패킷 헤더, 길이, 인터페이스, 마크 등 다양한 필드를 제공한다.
+`struct __sk_buff` — skb를 BPF 프로그램에서 다루기 위한 추상 뷰. 패킷 헤더, 길이, 인터페이스, 마크 등 다양한 필드를 제공함.
 
 #### 반환값
 
-| 값 | 의미 |
-| --- | --- |
-| `TC_ACT_OK` | 정상 진행 |
-| `TC_ACT_SHOT` | drop |
-| `TC_ACT_REDIRECT` | redirect (`bpf_redirect()` 후) |
-| `TC_ACT_PIPE` | 다음 action으로 |
-| `TC_ACT_RECLASSIFY` | 재분류 |
+- `TC_ACT_OK`: 정상 진행
+- `TC_ACT_SHOT`: drop
+- `TC_ACT_REDIRECT`: redirect(`bpf_redirect()` 후)
+- `TC_ACT_PIPE`: 다음 action으로
+- `TC_ACT_RECLASSIFY`: 재분류
 
 #### 예: VLAN 추가
 
@@ -545,13 +559,11 @@ sudo bpftool net attach tc pinned /sys/fs/bpf/myprog dev eth0
 
 #### XDP vs TC
 
-| 항목 | XDP | TC |
-| --- | --- | --- |
-| 위치 | 드라이버 (skb 전) | clsact qdisc (skb 후) |
-| 속도 | 가장 빠름 | XDP 다음 |
-| 패킷 변형 | 제한적 | 자유 |
-| Egress | 불가 | 가능 |
-| 컨텍스트 | xdp_md | __sk_buff (풍부) |
+- 위치: XDP - 드라이버(skb 전) · TC - clsact qdisc(skb 후)
+- 속도: XDP - 가장 빠름 · TC - XDP 다음
+- 패킷 변형: XDP - 제한적 · TC - 자유
+- Egress: XDP - 불가 · TC - 가능
+- 컨텍스트: XDP - xdp_md · TC - __sk_buff(풍부)
 
 DDoS drop은 XDP, 라우팅·NAT·QoS는 TC가 일반적.
 
@@ -559,7 +571,7 @@ DDoS drop은 XDP, 라우팅·NAT·QoS는 TC가 일반적.
 
 ### Socket 필터
 
-원조 BPF — 소켓 단위 패킷 필터. tcpdump가 내부적으로 사용한다.
+원조 BPF — 소켓 단위 패킷 필터. tcpdump가 내부적으로 사용함.
 
 ```c
 SEC("socket")
@@ -573,13 +585,13 @@ int filter(struct __sk_buff *skb) {
 setsockopt(fd, SOL_SOCKET, SO_ATTACH_BPF, &prog_fd, sizeof(prog_fd));
 ```
 
-최근에는 raw_tracepoint나 XDP/TC를 주로 사용한다.
+최근에는 raw_tracepoint나 XDP/TC를 주로 사용함.
 
 ---
 
 ### Sockmap / Sockhash
 
-소켓 fd를 저장하는 BPF 맵. 소켓 redirect에 사용하며, 사용자 공간을 거치지 않고 커널 내부에서 데이터를 다른 소켓으로 전달한다.
+소켓 fd를 저장하는 BPF 맵. 소켓 redirect에 사용하며, 사용자 공간을 거치지 않고 커널 내부에서 데이터를 다른 소켓으로 전달함.
 
 #### 활용
 
@@ -608,16 +620,14 @@ int sk_msg(struct sk_msg_md *msg) {
 
 ### Cgroup BPF
 
-cgroup 단위로 attach한다. 컨테이너/Pod 네트워크 정책 적용에 활용된다.
+cgroup 단위로 attach함 → 컨테이너/Pod 네트워크 정책 적용에 활용됨.
 
-| Hook | 용도 |
-| --- | --- |
-| `cgroup_skb_ingress` | cgroup으로 들어오는 패킷 |
-| `cgroup_skb_egress` | cgroup에서 나가는 패킷 |
-| `cgroup_sock` | socket() 생성 시 |
-| `cgroup_sock_addr/connect4` | connect/bind/sendmsg |
-| `cgroup_sysctl` | sysctl 쓰기 |
-| `cgroup_setsockopt/getsockopt` | sockopt 정책 |
+- `cgroup_skb_ingress`: cgroup으로 들어오는 패킷
+- `cgroup_skb_egress`: cgroup에서 나가는 패킷
+- `cgroup_sock`: socket() 생성 시
+- `cgroup_sock_addr/connect4`: connect/bind/sendmsg
+- `cgroup_sysctl`: sysctl 쓰기
+- `cgroup_setsockopt/getsockopt`: sockopt 정책
 
 #### 예: cgroup 내 outbound 차단
 
@@ -637,7 +647,7 @@ int cg_fd = open("/sys/fs/cgroup/restricted", O_RDONLY);
 bpf_prog_attach(prog_fd, cg_fd, BPF_CGROUP_INET4_CONNECT, 0);
 ```
 
-이 cgroup에 속한 모든 프로세스는 192.168.x.x 대역으로 connect할 수 없다.
+이 cgroup에 속한 모든 프로세스는 192.168.x.x 대역으로 connect 불가.
 
 ---
 
@@ -654,11 +664,11 @@ int ddos_filter(struct xdp_md *ctx) {
 }
 ```
 
-Cloudflare, Facebook이 실제로 적용한 방식이다.
+Cloudflare, Facebook이 실제로 적용한 방식임.
 
 #### 2. L4 로드 밸런서
 
-`XDP_REDIRECT`와 redirect map을 사용해 백엔드 NIC 큐에 분산한다.
+`XDP_REDIRECT`와 redirect map을 사용해 백엔드 NIC 큐에 분산함.
 
 ```c
 SEC("xdp")
@@ -668,11 +678,11 @@ int xdp_lb(struct xdp_md *ctx) {
 }
 ```
 
-Facebook의 Katran이 대표적인 구현체다.
+Facebook의 Katran이 대표적인 구현체임.
 
 #### 3. 컨테이너 네트워킹
 
-Cilium은 iptables를 대체한다. cgroup BPF + TC + XDP 조합으로 다음을 구현한다:
+Cilium은 iptables를 대체함 → cgroup BPF + TC + XDP 조합으로 다음을 구현함:
 - L3 라우팅
 - L7 정책 (HTTP path 검사)
 - 서비스 로드밸런싱
@@ -681,7 +691,7 @@ Cilium은 iptables를 대체한다. cgroup BPF + TC + XDP 조합으로 다음을
 
 #### 4. 프로토콜 디코드
 
-XDP/TC에서 HTTP/gRPC/Kafka 메시지를 파싱해 메트릭을 수집한다. Pixie의 자동 instrumentation이 이 방식을 사용한다.
+XDP/TC에서 HTTP/gRPC/Kafka 메시지를 파싱해 메트릭을 수집함 → Pixie의 자동 instrumentation이 이 방식을 사용함.
 
 #### 5. 네트워크 디버깅
 
@@ -700,7 +710,7 @@ sudo tcpretrans
 
 ### Cilium 사례
 
-쿠버네티스 CNI의 사실상 표준 중 하나로, 거의 모든 네트워크 기능을 eBPF로 구현한다.
+쿠버네티스 CNI의 사실상 표준 중 하나로, 거의 모든 네트워크 기능을 eBPF로 구현함.
 
 ```
 [Pod A] → cgroup_sock_addr (connect 정책)
@@ -712,7 +722,7 @@ sudo tcpretrans
         → veth → [Pod B]
 ```
 
-iptables 의존도가 거의 없어 노드당 룰 수에 관계없이 일정한 성능을 보인다.
+iptables 의존도가 거의 없어 노드당 룰 수에 관계없이 일정한 성능을 보임.
 
 ---
 

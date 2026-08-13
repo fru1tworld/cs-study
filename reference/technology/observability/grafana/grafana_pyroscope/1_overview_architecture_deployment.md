@@ -19,7 +19,7 @@
 
 ### Pyroscope란 무엇인가
 
-**Grafana Pyroscope**는 오픈소스이며 대규모(massively scalable)로 동작하는 **연속 프로파일링(continuous profiling) 집계 시스템** 입니다. 2023년 Grafana Labs가 Pyroscope를 인수하면서 기존 Phlare 프로젝트와 통합되어 현재의 Pyroscope v1으로 통합되었습니다.
+Grafana Pyroscope는 오픈소스이며 대규모(massively scalable)로 동작하는 연속 프로파일링(continuous profiling) 집계 시스템임. 2023년 Grafana Labs가 Pyroscope를 인수 → 기존 Phlare 프로젝트와 합쳐 현재의 Pyroscope v1이 됨.
 
 #### 핵심 특징
 
@@ -36,11 +36,11 @@
 
 #### 프로파일링이란?
 
-**프로파일링**(Profiling)은 애플리케이션 실행 중 어느 부분에서 자원(CPU, 메모리, 락 등)이 소모되는지를 측정하는 기법입니다. 전통적인 프로파일러는 개발 환경에서 짧게 실행하여 단일 스냅샷을 얻는 방식이었습니다.
+프로파일링(Profiling)은 애플리케이션 실행 중 어느 부분에서 자원(CPU, 메모리, 락 등)이 소모되는지를 측정하는 기법임. 전통적인 프로파일러는 개발 환경에서 짧게 실행해 단일 스냅샷을 얻는 방식이었음.
 
 #### 연속 프로파일링의 등장
 
-**Continuous Profiling**은 프로덕션 환경에서 **항상 켜둘 수 있을 만큼 가벼운 오버헤드**로 프로파일을 지속적으로 수집·저장·시각화하는 접근입니다. Google의 [Google-Wide Profiling 논문(2010)](https://research.google/pubs/google-wide-profiling-a-continuous-profiling-infrastructure-for-data-centers/)에서 그 가치가 처음 제시되었습니다.
+Continuous Profiling은 프로덕션 환경에서 항상 켜둘 수 있을 만큼 가벼운 오버헤드로 프로파일을 지속적으로 수집·저장·시각화하는 접근임. Google의 [Google-Wide Profiling 논문(2010)](https://research.google/pubs/google-wide-profiling-a-continuous-profiling-infrastructure-for-data-centers/)에서 그 가치가 처음 제시됨.
 
 #### 왜 Continuous Profiling이 필요한가
 
@@ -52,14 +52,12 @@
 
 #### 관측가능성의 4번째 신호
 
-전통적인 관측가능성(Observability)은 **메트릭, 로그, 트레이스** 의 3가지 신호로 구성되었습니다. Continuous Profiling은 **4번째 신호** 로 자리잡고 있습니다.
+전통적인 관측가능성(Observability)은 메트릭, 로그, 트레이스의 3가지 신호로 구성됨. Continuous Profiling은 4번째 신호로 자리잡음.
 
-| 신호 | 질문 | 도구 |
-|------|------|------|
-| 메트릭 | 무엇이 일어나고 있는가? | Mimir, Prometheus |
-| 로그 | 왜 그런 일이 일어났는가? | Loki |
-| 트레이스 | 어디서 시간이 소요되었는가? | Tempo |
-| **프로파일** | **어느 코드가 비용을 만드는가?** | **Pyroscope** |
+- 메트릭: 질문 "무엇이 일어나고 있는가?" · 도구 Mimir, Prometheus
+- 로그: 질문 "왜 그런 일이 일어났는가?" · 도구 Loki
+- 트레이스: 질문 "어디서 시간이 소요되었는가?" · 도구 Tempo
+- 프로파일: 질문 "어느 코드가 비용을 만드는가?" · 도구 Pyroscope
 
 ---
 
@@ -75,7 +73,7 @@
 
 - **LabelSelector**: Prometheus PromQL 스타일의 라벨 매처 (`{service_name="frontend", env="prod"}`)
 - **시간 범위 쿼리**: 특정 기간의 프로파일 집계
-- **태그/레이블 그룹화**: 여러 차원으로 프로파일 분해
+- **태그/라벨 그룹화**: 여러 차원으로 프로파일 분해
 - **Diff 분석**: 두 시간 구간 또는 두 라벨 셋 간의 차이 시각화
 
 #### Flame Graph 기반 시각화
@@ -100,18 +98,18 @@
 
 ### Pyroscope 프로파일링 스택
 
-일반적인 Pyroscope 기반 스택은 **4가지 컴포넌트** 로 구성됩니다.
+일반적인 Pyroscope 기반 스택은 4가지 컴포넌트로 구성됨.
 
 #### 1. 클라이언트 계측 (Client Instrumentation)
 
-애플리케이션이 프로파일을 생성·전송합니다. 두 가지 방식이 있습니다.
+애플리케이션이 프로파일을 생성·전송함. 두 가지 방식이 있음.
 
 - **풀(Pull) 방식**: 애플리케이션이 pprof 엔드포인트(예: Go의 `/debug/pprof/profile`)를 노출 → Alloy/Agent가 주기적으로 가져감
 - **푸시(Push) 방식**: 언어 SDK가 직접 Pyroscope 서버로 프로파일 전송
 
 #### 2. 파이프라인 (Pipeline)
 
-수집·전처리·전달을 담당합니다.
+수집·전처리·전달을 담당함.
 
 - **Grafana Alloy** (권장): `pyroscope.scrape`, `pyroscope.write` 컴포넌트
 - **OpenTelemetry Collector**: Profiles 신호 지원 추가 중
@@ -119,7 +117,7 @@
 
 #### 3. 백엔드 (Backend)
 
-**Pyroscope** 가 프로파일을 저장하고 조회합니다.
+Pyroscope가 프로파일을 저장하고 조회함.
 
 #### 4. 시각화 (Visualization)
 
@@ -147,37 +145,33 @@
 
 ### 지원 프로파일 타입
 
-Pyroscope는 다양한 자원 사용 측면을 프로파일링할 수 있습니다. 자세한 내용은 [04_profile_types.md](./04_profile_types.md) 참조.
+Pyroscope는 다양한 자원 사용 측면을 프로파일링 가능. 자세한 내용은 [04_profile_types.md](./04_profile_types.md) 참조.
 
-| 프로파일 타입 | 측정 대상 | 주요 사용 |
-|---------------|-----------|----------|
-| `cpu` / `process_cpu` | CPU 사용 시간 | 핫스팟 식별, CPU 비용 절감 |
-| `memory` / `inuse_objects` | 살아있는 객체 수 | 메모리 누수 탐지 |
-| `memory` / `inuse_space` | 살아있는 객체 크기 | 메모리 사용량 분석 |
-| `memory` / `alloc_objects` | 누적 할당 객체 수 | GC 부담 분석 |
-| `memory` / `alloc_space` | 누적 할당 바이트 | 할당 핫스팟 |
-| `goroutines` | 활성 고루틴 (Go) | 고루틴 누수 탐지 |
-| `mutex` | 락 대기 시간 | 컨텐션(contention) 분석 |
-| `block` | I/O 블록 시간 | 동기화 병목 분석 |
+- `cpu` / `process_cpu`: 측정 대상 CPU 사용 시간 · 주요 사용 핫스팟 식별, CPU 비용 절감
+- `memory` / `inuse_objects`: 측정 대상 살아있는 객체 수 · 주요 사용 메모리 누수 탐지
+- `memory` / `inuse_space`: 측정 대상 살아있는 객체 크기 · 주요 사용 메모리 사용량 분석
+- `memory` / `alloc_objects`: 측정 대상 누적 할당 객체 수 · 주요 사용 GC 부담 분석
+- `memory` / `alloc_space`: 측정 대상 누적 할당 바이트 · 주요 사용 할당 핫스팟
+- `goroutines`: 측정 대상 활성 고루틴(Go) · 주요 사용 고루틴 누수 탐지
+- `mutex`: 측정 대상 락 대기 시간 · 주요 사용 컨텐션(contention) 분석
+- `block`: 측정 대상 I/O 블록 시간 · 주요 사용 동기화 병목 분석
 
 ---
 
 ### Pyroscope와 다른 프로파일링 도구 비교
 
-| 항목 | Pyroscope | Parca | Polar Signals Cloud | Datadog Profiler |
-|------|-----------|-------|---------------------|-------------------|
-| 라이선스 | AGPL-3.0 | Apache 2.0 | 상용 | 상용 |
-| 스토리지 | 오브젝트 스토리지 | 오브젝트 스토리지 | 매니지드 | 매니지드 |
-| 비용 | 매우 저렴 (자체 호스팅) | 저렴 | 상용 | 상용 |
-| 멀티 테넌시 | 네이티브 | 부분 지원 | 매니지드 | 매니지드 |
-| Grafana 통합 | 네이티브 | 데이터 소스 | 데이터 소스 | 외부 |
-| eBPF 지원 | Alloy 기반 | 네이티브 | 네이티브 | 네이티브 |
-| 언어 SDK | Go, Java, Python, Node, Ruby, .NET, Rust | 제한적 | 다수 | 다수 |
-| 확장성 | 페타바이트 규모 | 중간 | 매니지드 | 매니지드 |
+- 라이선스: Pyroscope AGPL-3.0 · Parca Apache 2.0 · Polar Signals Cloud 상용 · Datadog Profiler 상용
+- 스토리지: Pyroscope 오브젝트 스토리지 · Parca 오브젝트 스토리지 · Polar Signals Cloud 매니지드 · Datadog Profiler 매니지드
+- 비용: Pyroscope 매우 저렴(자체 호스팅) · Parca 저렴 · Polar Signals Cloud 상용 · Datadog Profiler 상용
+- 멀티 테넌시: Pyroscope 네이티브 · Parca 부분 지원 · Polar Signals Cloud 매니지드 · Datadog Profiler 매니지드
+- Grafana 통합: Pyroscope 네이티브 · Parca 데이터 소스 · Polar Signals Cloud 데이터 소스 · Datadog Profiler 외부
+- eBPF 지원: Pyroscope Alloy 기반 · Parca 네이티브 · Polar Signals Cloud 네이티브 · Datadog Profiler 네이티브
+- 언어 SDK: Pyroscope Go, Java, Python, Node, Ruby, .NET, Rust · Parca 제한적 · Polar Signals Cloud 다수 · Datadog Profiler 다수
+- 확장성: Pyroscope 페타바이트 규모 · Parca 중간 · Polar Signals Cloud 매니지드 · Datadog Profiler 매니지드
 
 #### Pyroscope의 핵심 차별점
 
-**"Grafana 스택과의 일관성"**: Loki/Mimir/Tempo와 동일한 아키텍처와 운영 모델을 따릅니다.
+"Grafana 스택과의 일관성": Loki/Mimir/Tempo와 동일한 아키텍처와 운영 모델을 따름.
 
 - 동일한 마이크로서비스 패턴, 해시 링, 오브젝트 스토리지 모델
 - 동일한 Grafana UI에서 트레이스→프로파일, 메트릭→프로파일 간 자연스러운 이동
@@ -215,7 +209,7 @@ Pyroscope는 다양한 자원 사용 측면을 프로파일링할 수 있습니�
 
 ### 전체 아키텍처
 
-Pyroscope는 **마이크로서비스 기반 수평 확장 아키텍처** 를 따릅니다. 동일한 바이너리를 다른 `target` 플래그로 실행하면 각각 다른 역할(컴포넌트)을 수행합니다.
+Pyroscope는 마이크로서비스 기반 수평 확장 아키텍처를 따름. 동일한 바이너리를 다른 `target` 플래그로 실행하면 각각 다른 역할(컴포넌트)을 수행함.
 
 ```
                         ┌──────────────────────────────────┐
@@ -254,7 +248,7 @@ Pyroscope는 **마이크로서비스 기반 수평 확장 아키텍처** 를 따
 
 #### Distributor
 
-**역할**: 클라이언트로부터 프로파일을 수신하고, 검증한 뒤 적절한 Ingester로 라우팅합니다.
+역할: 클라이언트로부터 프로파일을 수신하고, 검증한 뒤 적절한 Ingester로 라우팅함.
 
 - 멀티 테넌시 인증 처리 (`X-Scope-OrgID` 헤더)
 - 라벨 검증, 시리즈 카디널리티 한도 검사
@@ -264,7 +258,7 @@ Pyroscope는 **마이크로서비스 기반 수평 확장 아키텍처** 를 따
 
 #### Ingester
 
-**역할**: 최근 프로파일을 메모리/로컬 디스크에 보관하고 주기적으로 오브젝트 스토리지로 flush합니다.
+역할: 최근 프로파일을 메모리/로컬 디스크에 보관하고 주기적으로 오브젝트 스토리지로 flush함.
 
 - 활성 시리즈를 메모리에 유지하며 쿼리에 즉시 응답
 - 일정 주기(예: 1시간)마다 블록을 빌드하여 S3 등에 업로드
@@ -273,7 +267,7 @@ Pyroscope는 **마이크로서비스 기반 수평 확장 아키텍처** 를 따
 
 #### Querier
 
-**역할**: 쿼리 시 Ingester(최근)와 Store-Gateway(장기)의 데이터를 합쳐 반환합니다.
+역할: 쿼리 시 Ingester(최근)와 Store-Gateway(장기)의 데이터를 합쳐 반환함.
 
 - 라벨 셀렉터에 매칭되는 시리즈를 탐색하고
 - 시간 범위에 해당하는 블록을 식별해 다운로드/스트리밍
@@ -282,7 +276,7 @@ Pyroscope는 **마이크로서비스 기반 수평 확장 아키텍처** 를 따
 
 #### Query-Frontend
 
-**역할**: Querier 앞단에서 쿼리를 분할·캐싱하여 처리량과 응답성을 높입니다.
+역할: Querier 앞단에서 쿼리를 분할·캐싱해 처리량과 응답성을 높임.
 
 - 큰 시간 범위 쿼리를 여러 작은 단위로 나눠 병렬 처리
 - 결과 캐싱
@@ -291,14 +285,14 @@ Pyroscope는 **마이크로서비스 기반 수평 확장 아키텍처** 를 따
 
 #### Query-Scheduler (선택)
 
-**역할**: 여러 Query-Frontend와 Querier 사이에서 쿼리 큐를 분리·중앙화합니다.
+역할: 여러 Query-Frontend와 Querier 사이에서 쿼리 큐를 분리·중앙화함.
 
 - 대규모 클러스터에서 더 정교한 부하 분산
 - Query-Frontend의 상태를 줄여 무중단 재시작에 유리
 
 #### Store-Gateway
 
-**역할**: 오브젝트 스토리지에 저장된 블록 인덱스를 메모리에 두고 장기 데이터 쿼리를 가속합니다.
+역할: 오브젝트 스토리지에 저장된 블록 인덱스를 메모리에 두고 장기 데이터 쿼리를 가속함.
 
 - 블록 메타데이터, 라벨 인덱스를 메모리/로컬 디스크에 캐시
 - 샤딩(shuffle sharding) 가능 → 테넌트 격리
@@ -306,7 +300,7 @@ Pyroscope는 **마이크로서비스 기반 수평 확장 아키텍처** 를 따
 
 #### Compactor
 
-**역할**: 작은 블록들을 병합해 쿼리 효율과 스토리지 비용을 개선합니다.
+역할: 작은 블록들을 병합해 쿼리 효율과 스토리지 비용을 개선함.
 
 - 같은 시간 범위, 같은 테넌트의 블록을 통합
 - 보존 기간이 지난 블록 삭제
@@ -357,7 +351,7 @@ Pyroscope는 **마이크로서비스 기반 수평 확장 아키텍처** 를 따
 
 ### 해시 링과 멤버십
 
-Pyroscope는 분산 컴포넌트 간 멤버십과 샤딩을 위해 **해시 링(Hash Ring)** 을 사용합니다.
+Pyroscope는 분산 컴포넌트 간 멤버십과 샤딩을 위해 해시 링(Hash Ring)을 사용함.
 
 #### 일관된 해시(Consistent Hashing)
 
@@ -367,7 +361,7 @@ Pyroscope는 분산 컴포넌트 간 멤버십과 샤딩을 위해 **해시 링(
 
 #### 멤버십 백엔드
 
-해시 링 상태를 어떻게 저장/공유할지 선택할 수 있습니다.
+해시 링 상태를 어떻게 저장/공유할지 선택 가능.
 
 - **Memberlist (Gossip)**: 외부 의존성 없음, 권장 기본값
 - **Consul**: 운영 경험이 있다면 채택 가능
@@ -432,7 +426,7 @@ Pyroscope는 분산 컴포넌트 간 멤버십과 샤딩을 위해 **해시 링(
 
 #### 단일 테넌트 운영
 
-소규모 환경이라면 `multitenancy_enabled: false` (기본값)로 두고 모든 데이터를 `anonymous` 테넌트에 저장할 수 있습니다.
+소규모 환경이라면 `multitenancy_enabled: false`(기본값)로 두고 모든 데이터를 `anonymous` 테넌트에 저장 가능.
 
 ---
 
@@ -464,21 +458,19 @@ Pyroscope는 분산 컴포넌트 간 멤버십과 샤딩을 위해 **해시 링(
 
 ### 배포 모드 개요
 
-Pyroscope는 단일 바이너리이며 실행 시 `-target` 플래그로 어떤 컴포넌트를 활성화할지 결정합니다.
+Pyroscope는 단일 바이너리이며 실행 시 `-target` 플래그로 어떤 컴포넌트를 활성화할지 결정함.
 
-| 모드 | `-target` 값 | 특징 |
-|------|--------------|------|
-| Monolithic | `all` (기본) | 모든 컴포넌트가 한 프로세스 |
-| Read/Write 분리 | `read`, `write` | 읽기/쓰기 경로만 분리 |
-| Microservices | `distributor`, `ingester`, ... | 컴포넌트별 독립 프로세스 |
+- Monolithic: `-target` 값 `all`(기본) · 특징 모든 컴포넌트가 한 프로세스
+- Read/Write 분리: `-target` 값 `read`, `write` · 특징 읽기/쓰기 경로만 분리
+- Microservices: `-target` 값 `distributor`, `ingester`, ... · 특징 컴포넌트별 독립 프로세스
 
-> 동일 바이너리를 다르게 실행하므로 운영 자동화가 단순합니다. (Loki/Mimir와 동일 패턴)
+> 동일 바이너리를 다르게 실행 → 운영 자동화가 단순함(Loki/Mimir와 동일 패턴)
 
 ---
 
 ### Monolithic 모드
 
-**모든 컴포넌트가 단일 프로세스에서 실행**됩니다.
+모든 컴포넌트가 단일 프로세스에서 실행됨.
 
 #### 적합한 환경
 
@@ -507,19 +499,17 @@ pyroscope -config.file=pyroscope.yaml -target=all
 
 ### Microservices 모드
 
-**각 컴포넌트를 독립 프로세스/디플로이먼트로 운영**합니다. 대규모 운영의 표준 형태입니다.
+각 컴포넌트를 독립 프로세스/디플로이먼트로 운영함. 대규모 운영의 표준 형태임.
 
 #### 일반적인 구성
 
-| 컴포넌트 | 상태 | 권장 복제 수 |
-|---------|------|--------------|
-| Distributor | Stateless | 2~ |
-| Ingester | Stateful (PVC) | 3~ (RF에 맞춤) |
-| Querier | Stateless | 2~ |
-| Query-Frontend | Stateless | 2 |
-| Query-Scheduler | Stateless | 2 |
-| Store-Gateway | Stateful (캐시) | 2~ |
-| Compactor | Stateful | 1~ |
+- Distributor: 상태 Stateless · 권장 복제 수 2~
+- Ingester: 상태 Stateful(PVC) · 권장 복제 수 3~(RF에 맞춤)
+- Querier: 상태 Stateless · 권장 복제 수 2~
+- Query-Frontend: 상태 Stateless · 권장 복제 수 2
+- Query-Scheduler: 상태 Stateless · 권장 복제 수 2
+- Store-Gateway: 상태 Stateful(캐시) · 권장 복제 수 2~
+- Compactor: 상태 Stateful · 권장 복제 수 1~
 
 #### 장점
 
@@ -537,7 +527,7 @@ pyroscope -config.file=pyroscope.yaml -target=all
 
 ### Kubernetes 배포 (Helm)
 
-Grafana는 공식 Helm 차트를 제공합니다.
+Grafana는 공식 Helm 차트를 제공함.
 
 #### 차트 추가
 
@@ -607,7 +597,7 @@ pyroscope:
 
 #### 영구 볼륨
 
-- Ingester, Store-Gateway, Compactor는 PVC가 필요합니다.
+- Ingester, Store-Gateway, Compactor는 PVC 필요.
 - Ingester PVC 크기는 보통 10~100Gi 사이 (보유 시간 + 인제스트 속도)
 
 #### Ingress / Gateway
@@ -686,7 +676,7 @@ volumes:
 
 ### 용량 산정
 
-대략적인 가이드라인이며, 실제 환경에서는 반드시 테스트가 필요합니다.
+대략적인 가이드라인이며, 실제 환경에서는 반드시 테스트 필요.
 
 #### 시리즈 카디널리티
 

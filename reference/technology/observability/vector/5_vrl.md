@@ -21,18 +21,18 @@
 
 ### 개요
 
-VRL(Vector Remap Language)은 관측성(Observability) 데이터(로그, 메트릭, 트레이스)를 안전하고 효율적으로 변환하기 위해 설계된 표현식 지향(expression-oriented) 언어입니다. VRL은 원래 Vector에서 사용하기 위해 만들어졌지만, 다양한 컨텍스트에서 재사용 가능하도록 범용적으로 설계되었습니다.
+VRL(Vector Remap Language)은 관측성(Observability) 데이터(로그, 메트릭, 트레이스)를 안전하고 효율적으로 변환하기 위해 설계된 표현식 지향(expression-oriented) 언어. VRL은 원래 Vector에서 사용하기 위해 만들어짐 → 다양한 컨텍스트에서 재사용 가능하도록 범용적으로 설계됨.
 
 #### VRL을 사용하는 이유
 
-- 안전성: 컴파일 타임에 오류를 감지하여 런타임 오류를 방지
-- 성능: Rust 네이티브 코드로 컴파일되어 매우 빠른 실행 속도
+- 안전성: 컴파일 타임에 오류 감지 → 런타임 오류 방지
+- 성능: Rust 네이티브 코드로 컴파일 → 매우 빠른 실행 속도
 - 간결함: 관측성 데이터 처리에 최적화된 간단한 문법
 - 타입 안전성: 컴파일 타임에 타입 검사 수행
 
 #### VRL의 디자인 원칙
 
-VRL은 jq에서 영감을 받아 시작되었으며(`.` 기반 경로 참조), 간단한 멀티라인 언어로 발전했습니다. VRL은 "자유 형식(free-form)" 언어로, 모든 형태의 공백은 토큰을 구분하는 역할만 하며 의미론적 중요성은 없습니다.
+VRL은 jq에서 영감을 받아 시작(`.` 기반 경로 참조) → 간단한 멀티라인 언어로 발전. VRL은 "자유 형식(free-form)" 언어로, 모든 형태의 공백은 토큰을 구분하는 역할만 하며 의미론적 중요성은 없음.
 
 ---
 
@@ -40,7 +40,7 @@ VRL은 jq에서 영감을 받아 시작되었으며(`.` 기반 경로 참조), �
 
 #### 1. Fail Safety (실패 안전성)
 
-VRL의 가장 중요한 특징 중 하나는 실패 안전성(fail safety)입니다. VRL 프로그램은 모든 잠재적 오류가 처리되지 않으면 컴파일되지 않습니다.
+VRL의 가장 중요한 특징 중 하나는 실패 안전성(fail safety). VRL 프로그램은 모든 잠재적 오류가 처리되지 않으면 컴파일되지 않음.
 
 ```vrl
 # 잘못된 예시 - 컴파일 오류 발생
@@ -54,7 +54,7 @@ VRL의 가장 중요한 특징 중 하나는 실패 안전성(fail safety)입니
 
 #### 2. 네이티브 성능
 
-VRL 프로그램은 Rust 네이티브 코드로 컴파일되어 실행됩니다. 이는 다음을 의미합니다:
+VRL 프로그램은 Rust 네이티브 코드로 컴파일되어 실행됨. 의미:
 
 - 런타임 없음: 가비지 컬렉션(GC) 일시 중지나 메모리 누적 없음
 - FFI 비용 없음: 이벤트마다 외부 함수 인터페이스 변환 비용 없음
@@ -62,7 +62,7 @@ VRL 프로그램은 Rust 네이티브 코드로 컴파일되어 실행됩니다.
 
 #### 3. 타입 안전성
 
-VRL은 컴파일 타임에 타입 검사를 수행하여 타입 불일치로 인한 런타임 오류를 사전에 방지합니다.
+VRL은 컴파일 타임에 타입 검사 수행 → 타입 불일치로 인한 런타임 오류 사전 방지.
 
 ```vrl
 # parse_syslog는 문자열만 받을 수 있음
@@ -76,7 +76,7 @@ VRL은 컴파일 타임에 타입 검사를 수행하여 타입 불일치로 인
 
 #### 프로그램 구조
 
-VRL 프로그램은 전적으로 표현식으로 구성되며, 모든 표현식은 값을 반환합니다.
+VRL 프로그램은 전적으로 표현식으로 구성됨, 모든 표현식은 값을 반환.
 
 ```vrl
 # 기본 할당
@@ -95,12 +95,12 @@ VRL 프로그램은 전적으로 표현식으로 구성되며, 모든 표현식�
 .field = "value"  # 라인 끝 주석
 
 # 여러 줄 주석은
-# 각 줄마다 # 를 붙입니다
+# 각 줄마다 # 를 붙임
 ```
 
 #### 세미콜론
 
-표현식은 세미콜론으로 구분되거나 줄바꿈으로 구분될 수 있습니다.
+표현식은 세미콜론 또는 줄바꿈으로 구분 가능.
 
 ```vrl
 # 세미콜론 사용
@@ -115,11 +115,11 @@ VRL 프로그램은 전적으로 표현식으로 구성되며, 모든 표현식�
 
 ### 데이터 타입과 리터럴
 
-VRL의 리터럴은 다른 언어와 마찬가지로 코드에 그대로 작성된 고정 값입니다.
+VRL의 리터럴은 다른 언어와 마찬가지로 코드에 그대로 작성된 고정 값.
 
 #### Boolean (불리언)
 
-이진 값을 나타내며 `true` 또는 `false`만 가질 수 있습니다.
+이진 값을 나타내며 `true` 또는 `false`만 가질 수 있음.
 
 ```vrl
 .is_active = true
@@ -128,7 +128,7 @@ VRL의 리터럴은 다른 언어와 마찬가지로 코드에 그대로 작성�
 
 #### Integer (정수)
 
-64비트 부호 있는 정수입니다.
+64비트 부호 있는 정수.
 
 ```vrl
 .count = 42
@@ -140,7 +140,7 @@ VRL의 리터럴은 다른 언어와 마찬가지로 코드에 그대로 작성�
 
 #### Float (부동소수점)
 
-64비트 부동소수점 숫자입니다.
+64비트 부동소수점 숫자.
 
 ```vrl
 .price = 19.99
@@ -150,7 +150,7 @@ VRL의 리터럴은 다른 언어와 마찬가지로 코드에 그대로 작성�
 
 #### String (문자열)
 
-UTF-8 인코딩된 문자열입니다.
+UTF-8 인코딩된 문자열.
 
 ```vrl
 .message = "Hello, World!"
@@ -164,18 +164,16 @@ name = .name
 
 ##### 이스케이프 시퀀스
 
-| 시퀀스 | 의미 |
-|--------|------|
-| `\\` | 백슬래시 |
-| `\n` | 줄바꿈 |
-| `\r` | 캐리지 리턴 |
-| `\t` | 탭 |
-| `\"` | 큰따옴표 |
-| `\0` | 널 문자 |
+- `\\`: 백슬래시
+- `\n`: 줄바꿈
+- `\r`: 캐리지 리턴
+- `\t`: 탭
+- `\"`: 큰따옴표
+- `\0`: 널 문자
 
 #### Null
 
-값이 없음을 나타냅니다.
+값이 없음을 나타냄.
 
 ```vrl
 .optional_field = null
@@ -183,7 +181,7 @@ name = .name
 
 #### Array (배열)
 
-연속적인 값의 집합입니다. 배열 인덱스는 0부터 시작합니다.
+연속적인 값의 집합. 배열 인덱스는 0부터 시작.
 
 ```vrl
 .tags = ["error", "critical", "production"]
@@ -197,7 +195,7 @@ name = .name
 
 #### Object (객체)
 
-키-값 쌍의 집합입니다. 올바른 형식의 JSON 문서는 유효한 VRL 객체입니다.
+키-값 쌍의 집합. 올바른 형식의 JSON 문서는 유효한 VRL 객체.
 
 ```vrl
 .user = {
@@ -210,11 +208,11 @@ name = .name
 .username = .user.name
 ```
 
-참고: 객체 필드는 키를 기준으로 알파벳 오름차순으로 정렬됩니다. JSON으로 인코딩하면 키도 알파벳순으로 출력됩니다.
+참고: 객체 필드는 키를 기준으로 알파벳 오름차순으로 정렬됨. JSON으로 인코딩하면 키도 알파벳순으로 출력됨.
 
 #### Timestamp (타임스탬프)
 
-RFC 3339 형식의 나노초 정밀도 타임스탬프입니다. `t` 시길(sigil)을 사용합니다.
+RFC 3339 형식의 나노초 정밀도 타임스탬프. `t` 시길(sigil) 사용.
 
 ```vrl
 .created_at = t'2021-02-11T10:32:50.553955473Z'
@@ -223,7 +221,7 @@ RFC 3339 형식의 나노초 정밀도 타임스탬프입니다. `t` 시길(sigi
 
 #### Regular Expression (정규 표현식)
 
-문자열 매칭 및 파싱에 사용되는 정규 표현식입니다. `r` 시길을 사용합니다.
+문자열 매칭 및 파싱에 사용되는 정규 표현식. `r` 시길 사용.
 
 ```vrl
 .pattern = r'^\d{4}-\d{2}-\d{2}$'
@@ -237,13 +235,11 @@ RFC 3339 형식의 나노초 정밀도 타임스탬프입니다. `t` 시길(sigi
 
 ##### 정규 표현식 플래그
 
-| 플래그 | 설명 |
-|--------|------|
-| `i` | 대소문자 무시 |
-| `m` | 멀티라인 모드 (^, $가 각 줄의 시작/끝에 매칭) |
-| `x` | 확장 모드 (공백 무시, 주석 허용) |
+- `i`: 대소문자 무시
+- `m`: 멀티라인 모드 (^, $가 각 줄의 시작/끝에 매칭)
+- `x`: 확장 모드 (공백 무시, 주석 허용)
 
-플래그는 조합하여 사용할 수 있습니다: `r'(?ixm)pattern'`
+플래그는 조합 가능: `r'(?ixm)pattern'`
 
 ---
 
@@ -251,7 +247,7 @@ RFC 3339 형식의 나노초 정밀도 타임스탬프입니다. `t` 시길(sigi
 
 #### 변수
 
-변수 이름은 문자로 시작하며, 문자와 숫자로 이루어집니다.
+변수 이름은 문자로 시작, 문자와 숫자로 구성.
 
 ```vrl
 # 변수 선언 및 할당
@@ -266,11 +262,11 @@ is_valid = true
 
 #### 경로 (Paths)
 
-경로 표현식은 점(.)으로 구분된 세그먼트의 연속으로, 객체 내 값의 위치를 나타냅니다.
+경로 표현식은 점(.)으로 구분된 세그먼트의 연속으로, 객체 내 값의 위치를 나타냄.
 
 ##### 이벤트 경로
 
-맨 앞의 `.`는 현재 이벤트를 가리킵니다.
+맨 앞의 `.`는 현재 이벤트를 가리킴.
 
 ```vrl
 # 현재 이벤트 전체
@@ -287,7 +283,7 @@ is_valid = true
 
 ##### 메타데이터 경로
 
-맨 앞의 `%`는 이벤트 메타데이터를 가리킵니다.
+맨 앞의 `%`는 이벤트 메타데이터를 가리킴.
 
 ```vrl
 # 메타데이터 접근
@@ -326,15 +322,13 @@ field_name = "status"
 
 #### 산술 연산자
 
-숫자뿐만 아니라 문자열 등 다른 타입에도 적용할 수 있습니다.
+숫자뿐만 아니라 문자열 등 다른 타입에도 적용 가능.
 
-| 연산자 | 설명 | 예시 |
-|--------|------|------|
-| `+` | 덧셈 / 문자열 연결 | `1 + 2`, `"a" + "b"` |
-| `-` | 뺄셈 | `5 - 3` |
-| `*` | 곱셈 | `4 * 3` |
-| `/` | 나눗셈 | `10 / 2` |
-| `%` | 나머지 | `10 % 3` |
+- `+`: 덧셈 / 문자열 연결 (예: `1 + 2`, `"a" + "b"`)
+- `-`: 뺄셈 (예: `5 - 3`)
+- `*`: 곱셈 (예: `4 * 3`)
+- `/`: 나눗셈 (예: `10 / 2`)
+- `%`: 나머지 (예: `10 % 3`)
 
 ```vrl
 # 숫자 연산
@@ -350,16 +344,14 @@ field_name = "status"
 
 #### 비교 연산자
 
-두 표현식을 비교하여 불리언 값을 생성합니다.
+두 표현식을 비교해 불리언 값 생성.
 
-| 연산자 | 설명 | 예시 |
-|--------|------|------|
-| `==` | 같음 | `.status == 200` |
-| `!=` | 같지 않음 | `.status != 404` |
-| `<` | 작음 | `.count < 100` |
-| `<=` | 작거나 같음 | `.count <= 100` |
-| `>` | 큼 | `.count > 0` |
-| `>=` | 크거나 같음 | `.count >= 1` |
+- `==`: 같음 (예: `.status == 200`)
+- `!=`: 같지 않음 (예: `.status != 404`)
+- `<`: 작음 (예: `.count < 100`)
+- `<=`: 작거나 같음 (예: `.count <= 100`)
+- `>`: 큼 (예: `.count > 0`)
+- `>=`: 크거나 같음 (예: `.count >= 1`)
 
 ```vrl
 .is_success = .status == 200
@@ -367,17 +359,15 @@ field_name = "status"
 .is_empty = .count == 0
 ```
 
-참고: 정규 표현식 매칭에는 `match` 함수를 사용하세요.
+참고: 정규 표현식 매칭에는 `match` 함수 사용.
 
 #### 논리 연산자
 
-두 표현식을 논리 연산으로 결합하며, 단락 평가(short-circuit)를 수행합니다.
+두 표현식을 논리 연산으로 결합, 단락 평가(short-circuit) 수행.
 
-| 연산자 | 설명 | 예시 |
-|--------|------|------|
-| `&&` | 논리 AND | `.a && .b` |
-| `\|\|` | 논리 OR | `.a \|\| .b` |
-| `!` | 논리 NOT | `!.flag` |
+- `&&`: 논리 AND (예: `.a && .b`)
+- `||`: 논리 OR (예: `.a || .b`)
+- `!`: 논리 NOT (예: `!.flag`)
 
 ```vrl
 # AND 연산
@@ -392,12 +382,10 @@ field_name = "status"
 
 #### 병합 연산자 (Coalesce)
 
-첫 번째 null이 아닌 값을 반환하거나 오류를 처리합니다.
+첫 번째 null이 아닌 값을 반환하거나 오류 처리.
 
-| 연산자 | 설명 | 예시 |
-|--------|------|------|
-| `??` | Null 병합 | `.value ?? "default"` |
-| `\|\|` | 오류/null 병합 | `parse_json(.msg) \|\| {}` |
+- `??`: Null 병합 (예: `.value ?? "default"`)
+- `||`: 오류/null 병합 (예: `parse_json(.msg) || {}`)
 
 ```vrl
 # null 병합
@@ -409,10 +397,8 @@ field_name = "status"
 
 #### 할당 연산자
 
-| 연산자 | 설명 | 예시 |
-|--------|------|------|
-| `=` | 할당 | `.field = "value"` |
-| `\|=` | 병합 할당 | `. \|= parse_json!(.msg)` |
+- `=`: 할당 (예: `.field = "value"`)
+- `|=`: 병합 할당 (예: `. |= parse_json!(.msg)`)
 
 ```vrl
 # 기본 할당
@@ -427,11 +413,11 @@ field_name = "status"
 
 ### 표현식
 
-VRL은 표현식 지향 언어입니다. VRL 프로그램은 전적으로 표현식으로 구성되며, 모든 표현식은 값을 반환합니다.
+VRL은 표현식 지향 언어. VRL 프로그램은 전적으로 표현식으로 구성됨, 모든 표현식은 값을 반환.
 
 #### 할당 표현식
 
-오른쪽 표현식의 결과값을 왼쪽 대상(경로 또는 변수)에 할당합니다.
+오른쪽 표현식의 결과값을 왼쪽 대상(경로 또는 변수)에 할당.
 
 ```vrl
 # 변수 할당
@@ -448,7 +434,7 @@ message = "Hello"
 
 #### 블록 표현식
 
-중괄호 내의 하나 이상의 표현식 시퀀스입니다. 블록은 비어 있을 수 없습니다(빈 블록 `{}`는 빈 객체로 처리됨).
+중괄호 내의 하나 이상의 표현식 시퀀스. 블록은 비어 있을 수 없음(빈 블록 `{}`는 빈 객체로 처리됨).
 
 ```vrl
 result = {
@@ -465,7 +451,7 @@ if .condition {
 
 #### 조건문 (If 표현식)
 
-불리언 표현식의 결과에 따라 두 분기 중 하나를 실행합니다.
+불리언 표현식의 결과에 따라 두 분기 중 하나를 실행.
 
 ```vrl
 # 기본 if 문
@@ -488,7 +474,7 @@ if .status >= 500 {
 
 #### 중단 표현식 (Abort)
 
-VRL 프로그램을 종료하고 이벤트에 가한 모든 변경을 되돌립니다.
+VRL 프로그램을 종료 → 이벤트에 가한 모든 변경을 되돌림.
 
 ```vrl
 # 조건부 중단
@@ -504,7 +490,7 @@ if !exists(.required_field) {
 
 #### 함수 호출 표현식
 
-내장 VRL 함수를 호출합니다.
+내장 VRL 함수를 호출.
 
 ```vrl
 # 기본 함수 호출
@@ -520,7 +506,7 @@ if !exists(.required_field) {
 
 #### 인덱스 표현식
 
-배열의 요소를 참조합니다. VRL의 배열 인덱스는 0부터 시작합니다.
+배열의 요소를 참조. VRL의 배열 인덱스는 0부터 시작.
 
 ```vrl
 .first = .items[0]
@@ -533,15 +519,15 @@ if !exists(.required_field) {
 
 ### 함수
 
-VRL은 관측성 데이터 처리에 특화된 풍부한 내장 함수를 제공합니다. 함수는 목적에 따라 분류됩니다.
+VRL은 관측성 데이터 처리에 특화된 풍부한 내장 함수를 제공함. 함수는 목적에 따라 분류됨.
 
 #### 파싱 함수 (Parsing Functions)
 
-다양한 형식의 데이터를 구조화된 형태로 파싱합니다.
+다양한 형식의 데이터를 구조화된 형태로 파싱함.
 
 ##### parse_json
 
-JSON 문자열을 VRL 값으로 파싱합니다.
+JSON 문자열을 VRL 값으로 파싱함.
 
 ```vrl
 # 기본 사용법
@@ -556,7 +542,7 @@ JSON 문자열을 VRL 값으로 파싱합니다.
 
 ##### parse_syslog
 
-Syslog 메시지를 구조화된 데이터로 파싱합니다 (RFC 5424, RFC 3164 지원).
+Syslog 메시지를 구조화된 데이터로 파싱함 (RFC 5424, RFC 3164 지원).
 
 ```vrl
 # Syslog 파싱
@@ -568,7 +554,7 @@ Syslog 메시지를 구조화된 데이터로 파싱합니다 (RFC 5424, RFC 316
 
 ##### parse_regex
 
-정규 표현식을 사용하여 문자열에서 데이터를 추출합니다.
+정규 표현식을 사용하여 문자열에서 데이터를 추출함.
 
 ```vrl
 # 정규 표현식으로 파싱
@@ -581,7 +567,7 @@ Syslog 메시지를 구조화된 데이터로 파싱합니다 (RFC 5424, RFC 316
 
 ##### parse_apache_log
 
-Apache 로그를 파싱합니다.
+Apache 로그를 파싱함.
 
 ```vrl
 # Common 형식
@@ -593,7 +579,7 @@ Apache 로그를 파싱합니다.
 
 ##### parse_nginx_log
 
-Nginx 로그를 파싱합니다.
+Nginx 로그를 파싱함.
 
 ```vrl
 # Combined 형식
@@ -605,7 +591,7 @@ Nginx 로그를 파싱합니다.
 
 ##### parse_key_value
 
-키-값 쌍을 파싱합니다.
+키-값 쌍을 파싱함.
 
 ```vrl
 # 기본 사용법 (key=value 형식)
@@ -617,7 +603,7 @@ Nginx 로그를 파싱합니다.
 
 ##### parse_csv
 
-CSV 형식의 행을 파싱합니다.
+CSV 형식의 행을 파싱함.
 
 ```vrl
 # 기본 CSV 파싱
@@ -629,7 +615,7 @@ CSV 형식의 행을 파싱합니다.
 
 ##### parse_timestamp
 
-문자열을 타임스탬프로 파싱합니다.
+문자열을 타임스탬프로 파싱함.
 
 ```vrl
 # 형식 지정
@@ -641,7 +627,7 @@ CSV 형식의 행을 파싱합니다.
 
 ##### parse_duration
 
-기간 문자열을 초 단위로 파싱합니다.
+기간 문자열을 초 단위로 파싱함.
 
 ```vrl
 # 기간 파싱
@@ -652,7 +638,7 @@ CSV 형식의 행을 파싱합니다.
 
 ##### parse_url
 
-URL을 구성 요소로 파싱합니다.
+URL을 구성 요소로 파싱함.
 
 ```vrl
 .url = parse_url!("https://example.com:8080/path?query=1#fragment")
@@ -669,7 +655,7 @@ URL을 구성 요소로 파싱합니다.
 
 ##### parse_xml
 
-XML 문서를 VRL 값으로 파싱합니다.
+XML 문서를 VRL 값으로 파싱함.
 
 ```vrl
 .data = parse_xml!(.xml_content)
@@ -677,7 +663,7 @@ XML 문서를 VRL 값으로 파싱합니다.
 
 ##### parse_grok
 
-Grok 패턴을 사용하여 파싱합니다.
+Grok 패턴을 사용하여 파싱함.
 
 ```vrl
 .parsed = parse_grok!(.message, "%{IP:client} %{WORD:method} %{URIPATHPARAM:request}")
@@ -685,11 +671,11 @@ Grok 패턴을 사용하여 파싱합니다.
 
 #### 인코딩 함수 (Encoding Functions)
 
-VRL 값을 다양한 형식으로 인코딩합니다.
+VRL 값을 다양한 형식으로 인코딩함.
 
 ##### encode_json
 
-VRL 값을 JSON 문자열로 인코딩합니다.
+VRL 값을 JSON 문자열로 인코딩함.
 
 ```vrl
 .json_string = encode_json(.)
@@ -698,7 +684,7 @@ VRL 값을 JSON 문자열로 인코딩합니다.
 
 ##### encode_base64
 
-문자열을 Base64로 인코딩합니다.
+문자열을 Base64로 인코딩함.
 
 ```vrl
 .encoded = encode_base64(.data)
@@ -707,7 +693,7 @@ VRL 값을 JSON 문자열로 인코딩합니다.
 
 ##### encode_gzip / decode_gzip
 
-Gzip 압축/해제를 수행합니다.
+Gzip 압축/해제를 수행함.
 
 ```vrl
 .compressed = encode_gzip(.data)
@@ -716,7 +702,7 @@ Gzip 압축/해제를 수행합니다.
 
 ##### encode_zlib / decode_zlib
 
-Zlib 압축/해제를 수행합니다.
+Zlib 압축/해제를 수행함.
 
 ```vrl
 .compressed = encode_zlib(.data)
@@ -727,7 +713,7 @@ Zlib 압축/해제를 수행합니다.
 
 ##### upcase / downcase
 
-대소문자 변환을 수행합니다.
+대소문자 변환을 수행함.
 
 ```vrl
 .upper = upcase(.message)      # 대문자로
@@ -736,7 +722,7 @@ Zlib 압축/해제를 수행합니다.
 
 ##### contains
 
-문자열에 하위 문자열이 포함되어 있는지 확인합니다.
+문자열에 하위 문자열이 포함되어 있는지 확인함.
 
 ```vrl
 if contains(.message, "error") {
@@ -751,7 +737,7 @@ if contains(.message, "ERROR", case_sensitive: false) {
 
 ##### starts_with / ends_with
 
-문자열의 시작/끝을 확인합니다.
+문자열의 시작/끝을 확인함.
 
 ```vrl
 if starts_with(.path, "/api/") {
@@ -765,7 +751,7 @@ if ends_with(.file, ".log") {
 
 ##### replace
 
-문자열 치환을 수행합니다.
+문자열 치환을 수행함.
 
 ```vrl
 # 첫 번째 일치 항목 치환
@@ -777,7 +763,7 @@ if ends_with(.file, ".log") {
 
 ##### split
 
-문자열을 구분자로 분할합니다.
+문자열을 구분자로 분할함.
 
 ```vrl
 .parts = split(.path, "/")
@@ -786,7 +772,7 @@ if ends_with(.file, ".log") {
 
 ##### join
 
-배열을 문자열로 결합합니다.
+배열을 문자열로 결합함.
 
 ```vrl
 .path = join(.segments, "/")
@@ -795,7 +781,7 @@ if ends_with(.file, ".log") {
 
 ##### strip_whitespace
 
-앞뒤 공백을 제거합니다.
+앞뒤 공백을 제거함.
 
 ```vrl
 .trimmed = strip_whitespace(.input)
@@ -803,7 +789,7 @@ if ends_with(.file, ".log") {
 
 ##### slice
 
-문자열의 일부를 추출합니다.
+문자열의 일부를 추출함.
 
 ```vrl
 .first_10 = slice!(.message, 0, 10)
@@ -812,7 +798,7 @@ if ends_with(.file, ".log") {
 
 ##### length
 
-문자열(또는 배열/객체)의 길이를 반환합니다.
+문자열(또는 배열/객체)의 길이를 반환함.
 
 ```vrl
 .msg_length = length(.message)
@@ -821,7 +807,7 @@ if ends_with(.file, ".log") {
 
 ##### match
 
-정규 표현식 매칭을 수행합니다.
+정규 표현식 매칭을 수행함.
 
 ```vrl
 if match(.message, r'error|fail|exception') {
@@ -831,7 +817,7 @@ if match(.message, r'error|fail|exception') {
 
 ##### find
 
-문자열에서 패턴의 위치를 찾습니다.
+문자열에서 패턴의 위치를 찾음.
 
 ```vrl
 .position = find(.message, "error") ?? -1
@@ -841,7 +827,7 @@ if match(.message, r'error|fail|exception') {
 
 ##### to_string
 
-값을 문자열로 변환합니다.
+값을 문자열로 변환함.
 
 ```vrl
 .status_str = to_string(.status)
@@ -849,7 +835,7 @@ if match(.message, r'error|fail|exception') {
 
 ##### to_int
 
-값을 정수로 변환합니다.
+값을 정수로 변환함.
 
 ```vrl
 .count = to_int!(.count_str)
@@ -857,7 +843,7 @@ if match(.message, r'error|fail|exception') {
 
 ##### to_float
 
-값을 부동소수점으로 변환합니다.
+값을 부동소수점으로 변환함.
 
 ```vrl
 .price = to_float!(.price_str)
@@ -865,7 +851,7 @@ if match(.message, r'error|fail|exception') {
 
 ##### to_bool
 
-값을 불리언으로 변환합니다.
+값을 불리언으로 변환함.
 
 ```vrl
 .flag = to_bool!(.flag_str)
@@ -873,7 +859,7 @@ if match(.message, r'error|fail|exception') {
 
 ##### to_timestamp
 
-값을 타임스탬프로 변환합니다.
+값을 타임스탬프로 변환함.
 
 ```vrl
 .time = to_timestamp!(.time_value)
@@ -881,7 +867,7 @@ if match(.message, r'error|fail|exception') {
 
 ##### to_regex
 
-문자열을 정규 표현식으로 변환합니다.
+문자열을 정규 표현식으로 변환함.
 
 ```vrl
 pattern_str = "error|warning"
@@ -892,7 +878,7 @@ pattern_str = "error|warning"
 
 ##### push
 
-배열 끝에 요소를 추가합니다.
+배열 끝에 요소를 추가함.
 
 ```vrl
 .tags = push(.tags, "new_tag")
@@ -900,7 +886,7 @@ pattern_str = "error|warning"
 
 ##### append
 
-두 배열을 연결합니다.
+두 배열을 연결함.
 
 ```vrl
 .all_tags = append(.tags1, .tags2)
@@ -908,7 +894,7 @@ pattern_str = "error|warning"
 
 ##### flatten
 
-중첩 배열을 평탄화합니다.
+중첩 배열을 평탄화함.
 
 ```vrl
 .flat = flatten([[1, 2], [3, 4]])  # [1, 2, 3, 4]
@@ -916,7 +902,7 @@ pattern_str = "error|warning"
 
 ##### unique
 
-배열에서 중복을 제거합니다 (첫 번째 발생 유지).
+배열에서 중복을 제거함 (첫 번째 발생 유지).
 
 ```vrl
 .unique_tags = unique(.tags)
@@ -924,7 +910,7 @@ pattern_str = "error|warning"
 
 ##### filter
 
-조건에 맞는 요소만 필터링합니다.
+조건에 맞는 요소만 필터링함.
 
 ```vrl
 .errors = filter(.logs) -> |_index, value| {
@@ -934,7 +920,7 @@ pattern_str = "error|warning"
 
 ##### map_values
 
-배열 또는 객체의 각 값을 변환합니다.
+배열 또는 객체의 각 값을 변환함.
 
 ```vrl
 .doubled = map_values(.numbers) -> |value| {
@@ -944,7 +930,7 @@ pattern_str = "error|warning"
 
 ##### reduce
 
-배열을 단일 값으로 축소합니다.
+배열을 단일 값으로 축소함.
 
 ```vrl
 .sum = reduce(.numbers, 0) -> |acc, _index, value| {
@@ -954,7 +940,7 @@ pattern_str = "error|warning"
 
 ##### zip
 
-여러 배열을 병렬로 순회하여 새 배열을 생성합니다.
+여러 배열을 병렬로 순회하여 새 배열을 생성함.
 
 ```vrl
 .pairs = zip([1, 2, 3], ["a", "b", "c"])
@@ -965,7 +951,7 @@ pattern_str = "error|warning"
 
 ##### keys
 
-객체의 모든 키를 배열로 반환합니다.
+객체의 모든 키를 배열로 반환함.
 
 ```vrl
 .field_names = keys(.)
@@ -973,7 +959,7 @@ pattern_str = "error|warning"
 
 ##### values
 
-객체의 모든 값을 배열로 반환합니다.
+객체의 모든 값을 배열로 반환함.
 
 ```vrl
 .field_values = values(.)
@@ -981,7 +967,7 @@ pattern_str = "error|warning"
 
 ##### merge
 
-두 객체를 병합합니다.
+두 객체를 병합함.
 
 ```vrl
 .combined = merge(.defaults, .overrides)
@@ -992,7 +978,7 @@ pattern_str = "error|warning"
 
 ##### del
 
-필드를 삭제하고 삭제된 값을 반환합니다.
+필드를 삭제하고 삭제된 값을 반환함.
 
 ```vrl
 deleted_value = del(.sensitive_field)
@@ -1002,7 +988,7 @@ del(.user.ssn)
 
 ##### exists
 
-경로가 존재하는지 확인합니다 (null 값과 누락된 경로를 구분).
+경로가 존재하는지 확인함 (null 값과 누락된 경로를 구분).
 
 ```vrl
 if exists(.optional_field) {
@@ -1012,7 +998,7 @@ if exists(.optional_field) {
 
 ##### get
 
-동적으로 경로의 값을 가져옵니다.
+동적으로 경로의 값을 가져옴.
 
 ```vrl
 field_name = "status"
@@ -1021,7 +1007,7 @@ field_name = "status"
 
 ##### set
 
-동적으로 경로에 값을 설정합니다.
+동적으로 경로에 값을 설정함.
 
 ```vrl
 field_name = "new_field"
@@ -1032,7 +1018,7 @@ field_name = "new_field"
 
 ##### now
 
-현재 타임스탬프를 반환합니다.
+현재 타임스탬프를 반환함.
 
 ```vrl
 .processed_at = now()
@@ -1040,7 +1026,7 @@ field_name = "new_field"
 
 ##### format_timestamp
 
-타임스탬프를 문자열로 형식화합니다.
+타임스탬프를 문자열로 형식화함.
 
 ```vrl
 .time_str = format_timestamp!(.timestamp, format: "%Y-%m-%d %H:%M:%S")
@@ -1049,7 +1035,7 @@ field_name = "new_field"
 
 ##### from_unix_timestamp
 
-Unix 타임스탬프를 VRL 타임스탬프로 변환합니다.
+Unix 타임스탬프를 VRL 타임스탬프로 변환함.
 
 ```vrl
 # 초 단위 (기본값)
@@ -1067,7 +1053,7 @@ Unix 타임스탬프를 VRL 타임스탬프로 변환합니다.
 
 ##### to_unix_timestamp
 
-VRL 타임스탬프를 Unix 타임스탬프로 변환합니다.
+VRL 타임스탬프를 Unix 타임스탬프로 변환함.
 
 ```vrl
 .unix_time = to_unix_timestamp(.timestamp)
@@ -1078,7 +1064,7 @@ VRL 타임스탬프를 Unix 타임스탬프로 변환합니다.
 
 ##### ip_aton
 
-IP 주소를 정수로 변환합니다.
+IP 주소를 정수로 변환함.
 
 ```vrl
 .ip_int = ip_aton!(.ip_address)
@@ -1086,7 +1072,7 @@ IP 주소를 정수로 변환합니다.
 
 ##### ip_ntoa
 
-정수를 IP 주소로 변환합니다.
+정수를 IP 주소로 변환함.
 
 ```vrl
 .ip_address = ip_ntoa!(.ip_int)
@@ -1094,7 +1080,7 @@ IP 주소를 정수로 변환합니다.
 
 ##### ip_cidr_contains
 
-IP 주소가 CIDR 범위에 포함되는지 확인합니다.
+IP 주소가 CIDR 범위에 포함되는지 확인함.
 
 ```vrl
 if ip_cidr_contains!("10.0.0.0/8", .client_ip) {
@@ -1104,7 +1090,7 @@ if ip_cidr_contains!("10.0.0.0/8", .client_ip) {
 
 ##### ip_to_ipv6
 
-IPv4 주소를 IPv6 형식으로 변환합니다.
+IPv4 주소를 IPv6 형식으로 변환함.
 
 ```vrl
 .ipv6 = ip_to_ipv6!(.ipv4_address)
@@ -1114,7 +1100,7 @@ IPv4 주소를 IPv6 형식으로 변환합니다.
 
 ##### md5
 
-MD5 해시를 계산합니다.
+MD5 해시를 계산함.
 
 ```vrl
 .hash = md5(.data)
@@ -1122,7 +1108,7 @@ MD5 해시를 계산합니다.
 
 ##### sha1
 
-SHA-1 해시를 계산합니다.
+SHA-1 해시를 계산함.
 
 ```vrl
 .hash = sha1(.data)
@@ -1130,7 +1116,7 @@ SHA-1 해시를 계산합니다.
 
 ##### sha2
 
-SHA-2 해시를 계산합니다.
+SHA-2 해시를 계산함.
 
 ```vrl
 .hash = sha2(.data)                    # SHA-256 (기본값)
@@ -1139,7 +1125,7 @@ SHA-2 해시를 계산합니다.
 
 ##### sha3
 
-SHA-3 해시를 계산합니다.
+SHA-3 해시를 계산함.
 
 ```vrl
 .hash = sha3(.data)
@@ -1149,7 +1135,7 @@ SHA-3 해시를 계산합니다.
 
 ##### hmac
 
-HMAC을 계산합니다.
+HMAC을 계산함.
 
 ```vrl
 .hmac = hmac(.data, key: "secret_key", algorithm: "SHA-256")
@@ -1159,7 +1145,7 @@ HMAC을 계산합니다.
 
 ##### uuid_v4
 
-무작위 UUID v4를 생성합니다.
+무작위 UUID v4를 생성함.
 
 ```vrl
 .id = uuid_v4()
@@ -1167,7 +1153,7 @@ HMAC을 계산합니다.
 
 ##### random_bytes
 
-무작위 바이트를 생성합니다.
+무작위 바이트를 생성함.
 
 ```vrl
 .token = encode_base64(random_bytes(32))
@@ -1175,7 +1161,7 @@ HMAC을 계산합니다.
 
 ##### assert
 
-조건이 참인지 확인하고, 거짓이면 오류를 발생시킵니다.
+조건이 참인지 확인하고, 거짓이면 오류를 발생시킴.
 
 ```vrl
 assert!(.status >= 100 && .status < 600, message: "Invalid HTTP status")
@@ -1183,7 +1169,7 @@ assert!(.status >= 100 && .status < 600, message: "Invalid HTTP status")
 
 ##### log
 
-디버깅을 위해 메시지를 로깅합니다.
+디버깅을 위해 메시지를 로깅함.
 
 ```vrl
 log("Processing event: " + to_string(.event_id), level: "debug")
@@ -1191,7 +1177,7 @@ log("Processing event: " + to_string(.event_id), level: "debug")
 
 ##### type_def
 
-값의 타입을 문자열로 반환합니다.
+값의 타입을 문자열로 반환함.
 
 ```vrl
 .type = type_def(.value)  # "string", "integer", "boolean", etc.
@@ -1199,7 +1185,7 @@ log("Processing event: " + to_string(.event_id), level: "debug")
 
 ##### compact
 
-null 값을 제거합니다.
+null 값을 제거함.
 
 ```vrl
 .cleaned = compact(.)
@@ -1208,7 +1194,7 @@ null 값을 제거합니다.
 
 ##### shannon_entropy
 
-문자열의 섀넌 엔트로피를 계산합니다.
+문자열의 섀넌 엔트로피를 계산함.
 
 ```vrl
 .entropy = shannon_entropy(.password)
@@ -1218,13 +1204,13 @@ null 값을 제거합니다.
 
 ### 에러 처리
 
-VRL은 실패 안전(fail-safe) 언어로, 모든 잠재적 오류가 처리되지 않으면 컴파일되지 않습니다.
+VRL은 실패 안전(fail-safe) 언어로, 모든 잠재적 오류가 처리되지 않으면 컴파일되지 않음.
 
 #### 오류의 종류
 
 ##### 컴파일 타임 오류
 
-컴파일 시점에 발생하는 오류입니다:
+컴파일 시점에 발생하는 오류임:
 
 1. 유효하지 않은 토큰: VRL 파서가 인식하지 못하는 문자
 2. 유효하지 않은 인자: 함수에 잘못된 인자 전달
@@ -1240,7 +1226,7 @@ VRL은 실패 안전(fail-safe) 언어로, 모든 잠재적 오류가 처리되�
 
 ##### 런타임 오류
 
-실행 시점에 발생할 수 있는 오류입니다:
+실행 시점에 발생할 수 있는 오류임:
 
 1. 0으로 나누기: 정수 또는 부동소수점을 0으로 나누기
 2. 파싱 실패: 잘못된 형식의 데이터 파싱
@@ -1255,7 +1241,7 @@ VRL은 실패 안전(fail-safe) 언어로, 모든 잠재적 오류가 처리되�
 
 ##### 1. ! 연산자 (Abort on Error)
 
-오류 발생 시 프로그램을 중단합니다.
+오류 발생 시 프로그램을 중단함.
 
 ```vrl
 # 파싱 실패 시 프로그램 중단
@@ -1267,7 +1253,7 @@ VRL은 실패 안전(fail-safe) 언어로, 모든 잠재적 오류가 처리되�
 
 ##### 2. ?? 연산자 (Coalesce / Default Value)
 
-오류 발생 시 기본값을 사용합니다.
+오류 발생 시 기본값을 사용함.
 
 ```vrl
 # 파싱 실패 시 빈 객체 사용
@@ -1282,7 +1268,7 @@ VRL은 실패 안전(fail-safe) 언어로, 모든 잠재적 오류가 처리되�
 
 ##### 3. 결과 변수 할당
 
-오류를 변수에 캡처하여 처리합니다.
+오류를 변수에 캡처하여 처리함.
 
 ```vrl
 result, err = parse_json(.message)
@@ -1299,7 +1285,7 @@ if err != null {
 
 ##### Fallible 함수
 
-런타임에 실패할 수 있는 함수로, 오류 처리가 필수입니다.
+런타임에 실패할 수 있는 함수로, 오류 처리가 필수임.
 
 ```vrl
 # fallible 함수들
@@ -1310,7 +1296,7 @@ to_int(.str)          # 숫자가 아닌 문자열
 
 ##### Infallible 함수
 
-올바른 인자가 주어지면 실패하지 않는 함수입니다.
+올바른 인자가 주어지면 실패하지 않는 함수임.
 
 ```vrl
 # infallible 함수들 (인자 타입이 보장된 경우)
@@ -1319,11 +1305,11 @@ now()                 # 항상 성공
 length([1, 2, 3])     # 항상 성공
 ```
 
-참고: 함수 자체가 infallible이더라도 전달된 인자가 런타임에 실패할 가능성이 있으면 전체 표현식은 fallible로 간주됩니다.
+참고: 함수 자체가 infallible이더라도 전달된 인자가 런타임에 실패할 가능성이 있으면 전체 표현식은 fallible로 간주됨.
 
 #### 오류 메시지 예시
 
-VRL은 도움이 되는 오류 메시지를 제공합니다:
+VRL은 도움이 되는 오류 메시지를 제공함:
 
 ```
 error[E110]: invalid argument type
@@ -1343,7 +1329,7 @@ error[E110]: invalid argument type
 
 ### Remap Transform 설정
 
-VRL은 주로 Vector의 `remap` transform과 함께 사용됩니다.
+VRL은 주로 Vector의 `remap` transform과 함께 사용됨.
 
 #### 기본 설정
 
@@ -1362,7 +1348,7 @@ source = '''
 
 ##### source
 
-VRL 프로그램을 지정합니다.
+VRL 프로그램을 지정함.
 
 ```toml
 source = '''
@@ -1373,7 +1359,7 @@ source = '''
 
 ##### file
 
-외부 VRL 파일을 사용합니다.
+외부 VRL 파일을 사용함.
 
 ```toml
 file = "/etc/vector/transforms/parse.vrl"
@@ -1381,7 +1367,7 @@ file = "/etc/vector/transforms/parse.vrl"
 
 ##### drop_on_error
 
-VRL 프로그램에서 오류 발생 시 이벤트를 드롭할지 결정합니다.
+VRL 프로그램에서 오류 발생 시 이벤트를 드롭할지 결정함.
 
 ```toml
 drop_on_error = true  # 오류 시 이벤트 드롭 (기본값: false)
@@ -1392,7 +1378,7 @@ drop_on_error = true  # 오류 시 이벤트 드롭 (기본값: false)
 
 ##### drop_on_abort
 
-`abort` 표현식 실행 시 이벤트를 드롭할지 결정합니다.
+`abort` 표현식 실행 시 이벤트를 드롭할지 결정함.
 
 ```toml
 drop_on_abort = true  # abort 시 이벤트 드롭 (기본값: true)
@@ -1400,13 +1386,13 @@ drop_on_abort = true  # abort 시 이벤트 드롭 (기본값: true)
 
 ##### reroute_dropped
 
-드롭된 이벤트를 별도 출력으로 라우팅합니다.
+드롭된 이벤트를 별도 출력으로 라우팅함.
 
 ```toml
 reroute_dropped = true
 ```
 
-이 옵션을 활성화하면 드롭된 이벤트가 `<transform_name>.dropped` 출력으로 전송됩니다.
+이 옵션을 활성화하면 드롭된 이벤트가 `<transform_name>.dropped` 출력으로 전송됨.
 
 #### 완전한 설정 예시
 
@@ -1684,7 +1670,7 @@ if err == null {
 
 #### REPL (대화형 모드)
 
-Vector가 설치되어 있으면 REPL을 사용해 VRL을 대화형으로 테스트할 수 있습니다.
+Vector가 설치되어 있으면 REPL을 사용해 VRL을 대화형으로 테스트할 수 있음.
 
 ```bash
 # REPL 시작
@@ -1718,13 +1704,13 @@ program.vrl:
 
 #### VRL Playground
 
-온라인에서 VRL을 테스트할 수 있는 플레이그라운드도 제공됩니다.
+온라인에서 VRL을 테스트할 수 있는 플레이그라운드도 제공됨.
 
 - URL: https://playground.vrl.dev/
 
 #### 단위 테스트
 
-Vector 설정 파일에서 VRL 프로그램에 대한 단위 테스트를 작성할 수 있습니다.
+Vector 설정 파일에서 VRL 프로그램에 대한 단위 테스트를 작성할 수 있음.
 
 ```toml
 [[tests]]

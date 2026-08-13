@@ -8,13 +8,13 @@
 
 ### 개요
 
-Kafka 브로커는 수백 개 이상의 설정 옵션을 제공합니다. 여기서는 가장 중요하고 자주 사용되는 브로커 설정을 카테고리별로 설명합니다. 각 설정은 타입, 기본값, 유효값, 중요도, 업데이트 모드 정보를 포함합니다.
+Kafka 브로커는 수백 개 이상의 설정 옵션을 제공함. 여기서는 가장 중요하고 자주 사용되는 브로커 설정을 카테고리별로 설명함. 각 설정은 타입·기본값·유효값·중요도·업데이트 모드 정보를 포함함.
 
 #### 업데이트 모드 (Update Mode)
 
-- read-only: 브로커 재시작이 필요합니다
-- per-broker: 개별 브로커에서 동적으로 업데이트 가능합니다
-- cluster-wide: 클러스터 전체에 동적으로 적용됩니다
+- read-only: 브로커 재시작 필요
+- per-broker: 개별 브로커에서 동적으로 업데이트 가능함
+- cluster-wide: 클러스터 전체에 동적으로 적용됨
 
 ---
 
@@ -22,30 +22,26 @@ Kafka 브로커는 수백 개 이상의 설정 옵션을 제공합니다. 여기
 
 #### node.id
 
-브로커의 고유 식별자입니다. KRaft 모드에서 사용됩니다.
+브로커의 고유 식별자임. KRaft 모드에서 사용됨.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | int |
-| 기본값 | 필수 (Required) |
-| 중요도 | High |
-| 업데이트 모드 | read-only |
+- 타입: int
+- 기본값: 필수 (Required)
+- 중요도: High
+- 업데이트 모드: read-only
 
-> 참고: ZooKeeper 모드에서는 `broker.id`를 사용하고, KRaft 모드에서는 `node.id`를 사용합니다. 클러스터 내에서 각 브로커는 고유한 ID를 가져야 합니다.
+> 참고: ZooKeeper 모드에서는 `broker.id`를 사용하고, KRaft 모드에서는 `node.id`를 사용함. 클러스터 내에서 각 브로커는 고유한 ID를 가져야 함.
 
 #### broker.id
 
-브로커의 고유 식별자입니다. ZooKeeper 모드에서 사용됩니다.
+브로커의 고유 식별자임. ZooKeeper 모드에서 사용됨.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | int |
-| 기본값 | -1 |
-| 유효값 | 0 이상의 정수 권장 |
-| 중요도 | High |
-| 업데이트 모드 | read-only |
+- 타입: int
+- 기본값: -1
+- 유효값: 0 이상의 정수 권장
+- 중요도: High
+- 업데이트 모드: read-only
 
-각 브로커는 클러스터 내에서 고유한 ID를 가져야 합니다. 일반적으로 0부터 시작하여 1씩 증가하는 정수를 사용합니다. 최대 2,147,483,647개의 브로커를 지원합니다 (signed 32-bit integer).
+각 브로커는 클러스터 내에서 고유한 ID를 가져야 함. 일반적으로 0부터 시작하여 1씩 증가하는 정수를 사용함. 최대 2,147,483,647개의 브로커를 지원함 (signed 32-bit integer).
 
 ```properties
 broker.id=0
@@ -53,15 +49,13 @@ broker.id=0
 
 #### process.roles
 
-브로커가 수행할 역할을 지정합니다. KRaft 모드에서 사용됩니다.
+브로커가 수행할 역할을 지정함. KRaft 모드에서 사용됨.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | list |
-| 기본값 | 필수 (Required) |
-| 유효값 | broker, controller |
-| 중요도 | High |
-| 업데이트 모드 | read-only |
+- 타입: list
+- 기본값: 필수 (Required)
+- 유효값: broker, controller
+- 중요도: High
+- 업데이트 모드: read-only
 
 ```properties
 # 브로커 전용
@@ -76,16 +70,14 @@ process.roles=broker,controller
 
 #### log.dirs
 
-로그 데이터가 저장될 디렉토리 목록입니다. 쉼표로 구분하여 여러 디렉토리를 지정할 수 있습니다.
+로그 데이터가 저장될 디렉토리 목록임. 쉼표로 구분하여 여러 디렉토리를 지정할 수 있음.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | string |
-| 기본값 | null (log.dir 사용) |
-| 중요도 | High |
-| 업데이트 모드 | read-only |
+- 타입: string
+- 기본값: null (log.dir 사용)
+- 중요도: High
+- 업데이트 모드: read-only
 
-Kafka는 파티션을 이 디렉토리들에 분산하여 저장합니다. 전용 디스크 또는 SSD 사용을 권장합니다.
+Kafka는 파티션을 이 디렉토리들에 분산하여 저장함. 전용 디스크 또는 SSD 사용을 권장함.
 
 ```properties
 log.dirs=/var/kafka-logs/disk1,/var/kafka-logs/disk2,/var/kafka-logs/disk3
@@ -93,14 +85,12 @@ log.dirs=/var/kafka-logs/disk1,/var/kafka-logs/disk2,/var/kafka-logs/disk3
 
 #### log.dir
 
-로그 데이터가 저장될 단일 디렉토리입니다. `log.dirs`가 설정되지 않은 경우에만 사용됩니다.
+로그 데이터가 저장될 단일 디렉토리임. `log.dirs`가 설정되지 않은 경우에만 사용됨.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | string |
-| 기본값 | /tmp/kafka-logs |
-| 중요도 | High |
-| 업데이트 모드 | read-only |
+- 타입: string
+- 기본값: /tmp/kafka-logs
+- 중요도: High
+- 업데이트 모드: read-only
 
 ```properties
 log.dir=/var/kafka-logs
@@ -112,14 +102,12 @@ log.dir=/var/kafka-logs
 
 #### listeners
 
-브로커가 클라이언트 연결을 수신할 주소 목록입니다.
+브로커가 클라이언트 연결을 수신할 주소 목록임.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | string |
-| 기본값 | PLAINTEXT://:9092 |
-| 중요도 | High |
-| 업데이트 모드 | per-broker |
+- 타입: string
+- 기본값: PLAINTEXT://:9092
+- 중요도: High
+- 업데이트 모드: per-broker
 
 형식: `{프로토콜}://{호스트}:{포트}`
 
@@ -140,20 +128,18 @@ listeners=SASL_SSL://0.0.0.0:9094
 - `SASL_PLAINTEXT`: SASL 인증, 암호화 없음
 - `SASL_SSL`: SASL 인증 + TLS/SSL 암호화
 
-> 참고: 포트 번호가 1024 미만이면 root 권한이 필요합니다. 이는 권장되지 않습니다.
+> 참고: 포트 번호가 1024 미만이면 root 권한 필요. 이는 권장되지 않음.
 
 #### advertised.listeners
 
-클라이언트와 다른 브로커에게 광고할 리스너 주소입니다.
+클라이언트와 다른 브로커에게 광고할 리스너 주소임.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | string |
-| 기본값 | null (listeners 값 사용) |
-| 중요도 | High |
-| 업데이트 모드 | per-broker |
+- 타입: string
+- 기본값: null (listeners 값 사용)
+- 중요도: High
+- 업데이트 모드: per-broker
 
-클라우드 환경이나 NAT 뒤에서 실행할 때 실제 리스너와 다른 주소를 외부에 알려야 하는 경우 사용합니다.
+클라우드 환경이나 NAT 뒤에서 실행할 때 실제 리스너와 다른 주소를 외부에 알려야 하는 경우 사용함.
 
 ```properties
 # AWS에서 퍼블릭 IP 광고
@@ -163,18 +149,16 @@ advertised.listeners=PLAINTEXT://ec2-xxx-xxx-xxx-xxx.compute.amazonaws.com:9092
 advertised.listeners=INTERNAL://broker1:9092,EXTERNAL://broker1.example.com:9093
 ```
 
-> 주의: `0.0.0.0` 메타 주소는 `advertised.listeners`에서 사용할 수 없습니다.
+> 주의: `0.0.0.0` 메타 주소는 `advertised.listeners`에서 사용할 수 없음.
 
 #### listener.security.protocol.map
 
-리스너 이름과 보안 프로토콜 간의 매핑을 정의합니다.
+리스너 이름과 보안 프로토콜 간의 매핑을 정의함.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | string |
-| 기본값 | PLAINTEXT:PLAINTEXT,SSL:SSL,SASL_PLAINTEXT:SASL_PLAINTEXT,SASL_SSL:SASL_SSL |
-| 중요도 | High |
-| 업데이트 모드 | per-broker |
+- 타입: string
+- 기본값: PLAINTEXT:PLAINTEXT,SSL:SSL,SASL_PLAINTEXT:SASL_PLAINTEXT,SASL_SSL:SASL_SSL
+- 중요도: High
+- 업데이트 모드: per-broker
 
 ```properties
 listener.security.protocol.map=INTERNAL:PLAINTEXT,EXTERNAL:SSL,CONTROLLER:PLAINTEXT
@@ -182,14 +166,12 @@ listener.security.protocol.map=INTERNAL:PLAINTEXT,EXTERNAL:SSL,CONTROLLER:PLAINT
 
 #### inter.broker.listener.name
 
-브로커 간 통신에 사용할 리스너 이름입니다.
+브로커 간 통신에 사용할 리스너 이름임.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | string |
-| 기본값 | null |
-| 중요도 | High |
-| 업데이트 모드 | read-only |
+- 타입: string
+- 기본값: null
+- 중요도: High
+- 업데이트 모드: read-only
 
 ```properties
 inter.broker.listener.name=INTERNAL
@@ -197,14 +179,12 @@ inter.broker.listener.name=INTERNAL
 
 #### controller.listener.names
 
-컨트롤러에서 사용할 리스너 이름 목록입니다. KRaft 모드에서 사용됩니다.
+컨트롤러에서 사용할 리스너 이름 목록임. KRaft 모드에서 사용됨.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | string |
-| 기본값 | null |
-| 중요도 | High |
-| 업데이트 모드 | read-only |
+- 타입: string
+- 기본값: null
+- 중요도: High
+- 업데이트 모드: read-only
 
 ```properties
 controller.listener.names=CONTROLLER
@@ -212,14 +192,12 @@ controller.listener.names=CONTROLLER
 
 #### controller.quorum.bootstrap.servers
 
-컨트롤러 쿼럼의 부트스트랩 서버 목록입니다. KRaft 모드에서 사용됩니다.
+컨트롤러 쿼럼의 부트스트랩 서버 목록임. KRaft 모드에서 사용됨.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | list |
-| 기본값 | "" |
-| 중요도 | High |
-| 업데이트 모드 | read-only |
+- 타입: list
+- 기본값: ""
+- 중요도: High
+- 업데이트 모드: read-only
 
 ```properties
 controller.quorum.bootstrap.servers=controller1:9093,controller2:9093,controller3:9093
@@ -229,18 +207,16 @@ controller.quorum.bootstrap.servers=controller1:9093,controller2:9093,controller
 
 ### ZooKeeper 설정 (ZooKeeper Configurations)
 
-> 참고: Kafka 4.0에서 ZooKeeper 모드가 제거되었습니다. KRaft 모드를 사용하십시오.
+> 참고: Kafka 4.0에서 ZooKeeper 모드가 제거됨. KRaft 모드 사용 필요.
 
 #### zookeeper.connect
 
-ZooKeeper 연결 문자열입니다.
+ZooKeeper 연결 문자열임.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | string |
-| 기본값 | null |
-| 중요도 | High |
-| 업데이트 모드 | read-only |
+- 타입: string
+- 기본값: null
+- 중요도: High
+- 업데이트 모드: read-only
 
 형식: `호스트명:포트` (쉼표로 구분하여 여러 서버 지정 가능)
 
@@ -257,25 +233,21 @@ zookeeper.connect=zk1:2181,zk2:2181,zk3:2181/kafka
 
 #### zookeeper.connection.timeout.ms
 
-ZooKeeper 연결 타임아웃 시간입니다.
+ZooKeeper 연결 타임아웃 시간임.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | int |
-| 기본값 | null (zookeeper.session.timeout.ms 사용) |
-| 중요도 | High |
-| 업데이트 모드 | read-only |
+- 타입: int
+- 기본값: null (zookeeper.session.timeout.ms 사용)
+- 중요도: High
+- 업데이트 모드: read-only
 
 #### zookeeper.session.timeout.ms
 
-ZooKeeper 세션 타임아웃 시간입니다.
+ZooKeeper 세션 타임아웃 시간임.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | int |
-| 기본값 | 18000 (18초) |
-| 중요도 | High |
-| 업데이트 모드 | read-only |
+- 타입: int
+- 기본값: 18000 (18초)
+- 중요도: High
+- 업데이트 모드: read-only
 
 ---
 
@@ -283,16 +255,14 @@ ZooKeeper 세션 타임아웃 시간입니다.
 
 #### log.retention.hours / log.retention.minutes / log.retention.ms
 
-로그 세그먼트가 삭제되기 전 보관되는 시간입니다.
+로그 세그먼트가 삭제되기 전 보관되는 시간임.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | int / long |
-| 기본값 | 168시간 (7일) |
-| 중요도 | High |
-| 업데이트 모드 | cluster-wide |
+- 타입: int / long
+- 기본값: 168시간 (7일)
+- 중요도: High
+- 업데이트 모드: cluster-wide
 
-`log.retention.ms` > `log.retention.minutes` > `log.retention.hours` 순으로 우선순위가 적용됩니다.
+`log.retention.ms` > `log.retention.minutes` > `log.retention.hours` 순으로 우선순위가 적용됨.
 
 ```properties
 # 7일 보관
@@ -307,14 +277,12 @@ log.retention.ms=604800000
 
 #### log.retention.bytes
 
-파티션별 로그 보관 최대 크기입니다. 초과 시 오래된 세그먼트가 삭제됩니다.
+파티션별 로그 보관 최대 크기임. 초과 시 오래된 세그먼트가 삭제됨.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | long |
-| 기본값 | -1 (무제한) |
-| 중요도 | High |
-| 업데이트 모드 | cluster-wide |
+- 타입: long
+- 기본값: -1 (무제한)
+- 중요도: High
+- 업데이트 모드: cluster-wide
 
 ```properties
 # 파티션당 최대 10GB
@@ -323,15 +291,13 @@ log.retention.bytes=10737418240
 
 #### log.segment.bytes
 
-단일 로그 세그먼트 파일의 최대 크기입니다.
+단일 로그 세그먼트 파일의 최대 크기임.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | int |
-| 기본값 | 1073741824 (1GB) |
-| 유효값 | 14 이상 |
-| 중요도 | High |
-| 업데이트 모드 | cluster-wide |
+- 타입: int
+- 기본값: 1073741824 (1GB)
+- 유효값: 14 이상
+- 중요도: High
+- 업데이트 모드: cluster-wide
 
 ```properties
 log.segment.bytes=1073741824
@@ -339,49 +305,41 @@ log.segment.bytes=1073741824
 
 #### log.segment.ms
 
-시간 기반 로그 세그먼트 롤오버 주기입니다.
+시간 기반 로그 세그먼트 롤오버 주기임.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | long |
-| 기본값 | null (604800000ms = 7일) |
-| 중요도 | High |
-| 업데이트 모드 | cluster-wide |
+- 타입: long
+- 기본값: null (604800000ms = 7일)
+- 중요도: High
+- 업데이트 모드: cluster-wide
 
 #### log.roll.hours / log.roll.ms
 
-새 로그 세그먼트가 생성되기까지의 최대 시간입니다.
+새 로그 세그먼트가 생성되기까지의 최대 시간임.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | int / long |
-| 기본값 | 168시간 (7일) |
-| 중요도 | High |
-| 업데이트 모드 | cluster-wide |
+- 타입: int / long
+- 기본값: 168시간 (7일)
+- 중요도: High
+- 업데이트 모드: cluster-wide
 
 #### log.flush.interval.messages
 
-디스크에 플러시하기 전 누적할 최대 메시지 수입니다.
+디스크에 플러시하기 전 누적할 최대 메시지 수임.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | long |
-| 기본값 | 9223372036854775807 (Long.MAX_VALUE) |
-| 중요도 | High |
-| 업데이트 모드 | cluster-wide |
+- 타입: long
+- 기본값: 9223372036854775807 (Long.MAX_VALUE)
+- 중요도: High
+- 업데이트 모드: cluster-wide
 
-> 참고: 기본값은 OS 레벨 플러시에 의존합니다. 명시적 플러시는 성능에 영향을 줄 수 있습니다.
+> 참고: 기본값은 OS 레벨 플러시에 의존함. 명시적 플러시는 성능에 영향을 줄 수 있음.
 
 #### log.flush.interval.ms
 
-메시지가 디스크에 플러시되기까지의 최대 시간입니다.
+메시지가 디스크에 플러시되기까지의 최대 시간임.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | long |
-| 기본값 | null |
-| 중요도 | High |
-| 업데이트 모드 | cluster-wide |
+- 타입: long
+- 기본값: null
+- 중요도: High
+- 업데이트 모드: cluster-wide
 
 ---
 
@@ -389,70 +347,58 @@ log.segment.bytes=1073741824
 
 #### log.cleaner.enable
 
-로그 클리너를 활성화합니다. 로그 컴팩션을 사용하는 토픽에 필요합니다.
+로그 클리너를 활성화함. 로그 컴팩션을 사용하는 토픽에 필요함.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | boolean |
-| 기본값 | true |
-| 중요도 | High |
-| 업데이트 모드 | read-only |
+- 타입: boolean
+- 기본값: true
+- 중요도: High
+- 업데이트 모드: read-only
 
 #### log.cleaner.threads
 
-로그 클리너에 사용할 백그라운드 스레드 수입니다.
+로그 클리너에 사용할 백그라운드 스레드 수임.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | int |
-| 기본값 | 1 |
-| 중요도 | Medium |
-| 업데이트 모드 | cluster-wide |
+- 타입: int
+- 기본값: 1
+- 중요도: Medium
+- 업데이트 모드: cluster-wide
 
 #### log.cleaner.dedupe.buffer.size
 
-전체 클리너 스레드에서 로그 중복 제거에 사용하는 총 메모리 크기입니다.
+전체 클리너 스레드에서 로그 중복 제거에 사용하는 총 메모리 크기임.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | long |
-| 기본값 | 134217728 (128MB) |
-| 중요도 | Medium |
-| 업데이트 모드 | cluster-wide |
+- 타입: long
+- 기본값: 134217728 (128MB)
+- 중요도: Medium
+- 업데이트 모드: cluster-wide
 
 #### log.cleaner.io.buffer.size
 
-로그 클리너 I/O 버퍼의 총 메모리 크기입니다.
+로그 클리너 I/O 버퍼의 총 메모리 크기임.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | int |
-| 기본값 | 524288 (512KB) |
-| 중요도 | Medium |
-| 업데이트 모드 | cluster-wide |
+- 타입: int
+- 기본값: 524288 (512KB)
+- 중요도: Medium
+- 업데이트 모드: cluster-wide
 
 #### log.cleaner.backoff.ms
 
-클리닝할 로그가 없을 때 대기할 시간입니다.
+클리닝할 로그가 없을 때 대기할 시간임.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | long |
-| 기본값 | 15000 (15초) |
-| 중요도 | Medium |
-| 업데이트 모드 | cluster-wide |
+- 타입: long
+- 기본값: 15000 (15초)
+- 중요도: Medium
+- 업데이트 모드: cluster-wide
 
 #### log.cleanup.policy
 
-보관 기간이 지난 로그 세그먼트에 적용할 정리 정책입니다.
+보관 기간이 지난 로그 세그먼트에 적용할 정리 정책임.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | list |
-| 기본값 | delete |
-| 유효값 | delete, compact, delete,compact |
-| 중요도 | Medium |
-| 업데이트 모드 | cluster-wide |
+- 타입: list
+- 기본값: delete
+- 유효값: delete, compact, delete,compact
+- 중요도: Medium
+- 업데이트 모드: cluster-wide
 
 ```properties
 # 삭제 정책 (기본값)
@@ -471,79 +417,67 @@ log.cleanup.policy=delete,compact
 
 #### num.network.threads
 
-네트워크 요청을 처리하는 스레드 수입니다.
+네트워크 요청을 처리하는 스레드 수임.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | int |
-| 기본값 | 3 |
-| 유효값 | 1 이상 |
-| 중요도 | High |
-| 업데이트 모드 | cluster-wide |
+- 타입: int
+- 기본값: 3
+- 유효값: 1 이상
+- 중요도: High
+- 업데이트 모드: cluster-wide
 
-네트워크에서 요청을 수신하고 응답을 전송하는 역할을 합니다. 실제 요청 처리는 I/O 스레드에서 수행됩니다.
+네트워크에서 요청을 수신하고 응답을 전송하는 역할을 함. 실제 요청 처리는 I/O 스레드에서 수행됨.
 
 #### num.io.threads
 
-요청을 처리하는 스레드 수입니다.
+요청을 처리하는 스레드 수임.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | int |
-| 기본값 | 8 |
-| 유효값 | 1 이상 |
-| 중요도 | High |
-| 업데이트 모드 | cluster-wide |
+- 타입: int
+- 기본값: 8
+- 유효값: 1 이상
+- 중요도: High
+- 업데이트 모드: cluster-wide
 
-디스크 I/O를 포함한 요청 처리를 담당합니다. 최소한 디스크 수만큼은 설정하는 것이 좋습니다.
+디스크 I/O를 포함한 요청 처리를 담당함. 최소한 디스크 수만큼은 설정하는 것이 좋음.
 
 #### num.replica.fetchers
 
-소스 브로커에서 메시지를 복제하는 데 사용되는 페처(Fetcher) 스레드 수입니다.
+소스 브로커에서 메시지를 복제하는 데 사용되는 페처(Fetcher) 스레드 수임.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | int |
-| 기본값 | 1 |
-| 중요도 | High |
-| 업데이트 모드 | cluster-wide |
+- 타입: int
+- 기본값: 1
+- 중요도: High
+- 업데이트 모드: cluster-wide
 
-이 값을 늘리면 팔로워 브로커의 I/O 병렬 처리 수준을 높일 수 있습니다.
+이 값을 늘리면 팔로워 브로커의 I/O 병렬 처리 수준을 높일 수 있음.
 
 #### num.recovery.threads.per.data.dir
 
-브로커 시작 시 로그 복구와 종료 시 플러시에 사용되는 데이터 디렉토리당 스레드 수입니다.
+브로커 시작 시 로그 복구와 종료 시 플러시에 사용되는 데이터 디렉토리당 스레드 수임.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | int |
-| 기본값 | 1 |
-| 중요도 | High |
-| 업데이트 모드 | cluster-wide |
+- 타입: int
+- 기본값: 1
+- 중요도: High
+- 업데이트 모드: cluster-wide
 
 #### background.threads
 
-다양한 백그라운드 처리 작업에 사용되는 스레드 수입니다.
+다양한 백그라운드 처리 작업에 사용되는 스레드 수임.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | int |
-| 기본값 | 10 |
-| 유효값 | 1 이상 |
-| 중요도 | High |
-| 업데이트 모드 | cluster-wide |
+- 타입: int
+- 기본값: 10
+- 유효값: 1 이상
+- 중요도: High
+- 업데이트 모드: cluster-wide
 
 #### queued.max.requests
 
-네트워크 스레드를 블로킹하기 전, 데이터 플레인에서 허용하는 최대 대기 요청 수입니다.
+네트워크 스레드를 블로킹하기 전, 데이터 플레인에서 허용하는 최대 대기 요청 수임.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | int |
-| 기본값 | 500 |
-| 유효값 | 1 이상 |
-| 중요도 | High |
-| 업데이트 모드 | read-only |
+- 타입: int
+- 기본값: 500
+- 유효값: 1 이상
+- 중요도: High
+- 업데이트 모드: read-only
 
 ---
 
@@ -551,16 +485,14 @@ log.cleanup.policy=delete,compact
 
 #### default.replication.factor
 
-자동 생성된 토픽의 기본 복제 팩터입니다.
+자동 생성된 토픽의 기본 복제 팩터임.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | int |
-| 기본값 | 1 |
-| 중요도 | High |
-| 업데이트 모드 | cluster-wide |
+- 타입: int
+- 기본값: 1
+- 중요도: High
+- 업데이트 모드: cluster-wide
 
-프로덕션 환경에서는 3 이상 권장합니다.
+프로덕션 환경에서는 3 이상 권장함.
 
 ```properties
 default.replication.factor=3
@@ -568,15 +500,13 @@ default.replication.factor=3
 
 #### min.insync.replicas
 
-프로듀서가 `acks=all`로 설정된 경우, 쓰기가 성공으로 간주되기 위해 필요한 최소 동기화 레플리카 수입니다.
+프로듀서가 `acks=all`로 설정된 경우, 쓰기가 성공으로 간주되기 위해 필요한 최소 동기화 레플리카 수임.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | int |
-| 기본값 | 1 |
-| 유효값 | 1 이상 |
-| 중요도 | High |
-| 업데이트 모드 | cluster-wide |
+- 타입: int
+- 기본값: 1
+- 유효값: 1 이상
+- 중요도: High
+- 업데이트 모드: cluster-wide
 
 ```properties
 # 프로덕션 권장 설정
@@ -585,58 +515,48 @@ min.insync.replicas=2
 
 #### replica.lag.time.max.ms
 
-팔로워가 리더와 동기화되지 않은 상태를 허용하는 최대 시간입니다. 이 시간을 초과하면 해당 팔로워는 ISR(In-Sync Replicas)에서 제거됩니다.
+팔로워가 리더와 동기화되지 않은 상태를 허용하는 최대 시간임. 이 시간을 초과하면 해당 팔로워는 ISR(In-Sync Replicas)에서 제거됨.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | long |
-| 기본값 | 30000 (30초) |
-| 중요도 | High |
-| 업데이트 모드 | read-only |
+- 타입: long
+- 기본값: 30000 (30초)
+- 중요도: High
+- 업데이트 모드: read-only
 
 #### replica.fetch.wait.max.ms
 
-팔로워 레플리카의 페치 요청 최대 대기 시간입니다.
+팔로워 레플리카의 페치 요청 최대 대기 시간임.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | int |
-| 기본값 | 500 |
-| 중요도 | High |
-| 업데이트 모드 | read-only |
+- 타입: int
+- 기본값: 500
+- 중요도: High
+- 업데이트 모드: read-only
 
 #### replica.fetch.min.bytes
 
-각 페치 응답에 기대하는 최소 바이트 수입니다.
+각 페치 응답에 기대하는 최소 바이트 수임.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | int |
-| 기본값 | 1 |
-| 중요도 | High |
-| 업데이트 모드 | read-only |
+- 타입: int
+- 기본값: 1
+- 중요도: High
+- 업데이트 모드: read-only
 
 #### replica.fetch.max.bytes
 
-파티션당 페치할 최대 바이트 수입니다.
+파티션당 페치할 최대 바이트 수임.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | int |
-| 기본값 | 1048576 (1MB) |
-| 중요도 | High |
-| 업데이트 모드 | read-only |
+- 타입: int
+- 기본값: 1048576 (1MB)
+- 중요도: High
+- 업데이트 모드: read-only
 
 #### replica.socket.timeout.ms
 
-레플리카 네트워크 요청에 대한 소켓 타임아웃입니다.
+레플리카 네트워크 요청에 대한 소켓 타임아웃임.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | int |
-| 기본값 | 30000 (30초) |
-| 중요도 | High |
-| 업데이트 모드 | read-only |
+- 타입: int
+- 기본값: 30000 (30초)
+- 중요도: High
+- 업데이트 모드: read-only
 
 ---
 
@@ -644,16 +564,14 @@ min.insync.replicas=2
 
 #### message.max.bytes
 
-Kafka에서 허용하는 레코드 배치의 최대 크기입니다.
+Kafka에서 허용하는 레코드 배치의 최대 크기임.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | int |
-| 기본값 | 1048588 (~1MB) |
-| 중요도 | High |
-| 업데이트 모드 | cluster-wide |
+- 타입: int
+- 기본값: 1048588 (~1MB)
+- 중요도: High
+- 업데이트 모드: cluster-wide
 
-컨슈머의 `fetch.message.max.bytes` 이상으로 설정해야 합니다.
+컨슈머의 `fetch.message.max.bytes` 이상으로 설정해야 함.
 
 ```properties
 # 10MB로 증가
@@ -662,14 +580,12 @@ message.max.bytes=10485760
 
 #### replica.fetch.response.max.bytes
 
-전체 페치 응답의 최대 바이트 수입니다.
+전체 페치 응답의 최대 바이트 수임.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | int |
-| 기본값 | 10485760 (10MB) |
-| 중요도 | High |
-| 업데이트 모드 | read-only |
+- 타입: int
+- 기본값: 10485760 (10MB)
+- 중요도: High
+- 업데이트 모드: read-only
 
 ---
 
@@ -677,16 +593,14 @@ message.max.bytes=10485760
 
 #### auto.create.topics.enable
 
-서버에서 토픽 자동 생성을 활성화합니다.
+서버에서 토픽 자동 생성을 활성화함.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | boolean |
-| 기본값 | true |
-| 중요도 | High |
-| 업데이트 모드 | read-only |
+- 타입: boolean
+- 기본값: true
+- 중요도: High
+- 업데이트 모드: read-only
 
-프로덕션에서는 `false`로 설정하고 토픽을 명시적으로 생성하는 방식을 권장합니다.
+프로덕션에서는 `false`로 설정하고 토픽을 명시적으로 생성하는 방식을 권장함.
 
 ```properties
 auto.create.topics.enable=false
@@ -694,26 +608,22 @@ auto.create.topics.enable=false
 
 #### delete.topic.enable
 
-토픽 삭제를 활성화합니다.
+토픽 삭제를 활성화함.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | boolean |
-| 기본값 | true |
-| 중요도 | High |
-| 업데이트 모드 | read-only |
+- 타입: boolean
+- 기본값: true
+- 중요도: High
+- 업데이트 모드: read-only
 
 #### num.partitions
 
-토픽당 기본 파티션 수입니다.
+토픽당 기본 파티션 수임.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | int |
-| 기본값 | 1 |
-| 유효값 | 1 이상 |
-| 중요도 | Medium |
-| 업데이트 모드 | read-only |
+- 타입: int
+- 기본값: 1
+- 유효값: 1 이상
+- 중요도: Medium
+- 업데이트 모드: read-only
 
 ```properties
 # 기본 파티션 수 증가
@@ -722,15 +632,13 @@ num.partitions=3
 
 #### compression.type
 
-토픽의 최종 압축 타입입니다.
+토픽의 최종 압축 타입임.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | string |
-| 기본값 | producer |
-| 유효값 | uncompressed, zstd, lz4, snappy, gzip, producer |
-| 중요도 | High |
-| 업데이트 모드 | cluster-wide |
+- 타입: string
+- 기본값: producer
+- 유효값: uncompressed, zstd, lz4, snappy, gzip, producer
+- 중요도: High
+- 업데이트 모드: cluster-wide
 
 ```properties
 # 브로커에서 압축 없이 저장
@@ -749,36 +657,30 @@ compression.type=zstd
 
 #### socket.send.buffer.bytes
 
-소켓 서버의 SO_SNDBUF 버퍼 크기입니다.
+소켓 서버의 SO_SNDBUF 버퍼 크기임.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | int |
-| 기본값 | 102400 (100KB) |
-| 중요도 | High |
-| 업데이트 모드 | read-only |
+- 타입: int
+- 기본값: 102400 (100KB)
+- 중요도: High
+- 업데이트 모드: read-only
 
 #### socket.receive.buffer.bytes
 
-소켓 서버의 SO_RCVBUF 버퍼 크기입니다.
+소켓 서버의 SO_RCVBUF 버퍼 크기임.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | int |
-| 기본값 | 102400 (100KB) |
-| 중요도 | High |
-| 업데이트 모드 | read-only |
+- 타입: int
+- 기본값: 102400 (100KB)
+- 중요도: High
+- 업데이트 모드: read-only
 
 #### socket.request.max.bytes
 
-소켓 요청의 최대 크기입니다.
+소켓 요청의 최대 크기임.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | int |
-| 기본값 | 104857600 (100MB) |
-| 중요도 | High |
-| 업데이트 모드 | read-only |
+- 타입: int
+- 기본값: 104857600 (100MB)
+- 중요도: High
+- 업데이트 모드: read-only
 
 ---
 
@@ -786,36 +688,30 @@ compression.type=zstd
 
 #### connections.max.idle.ms
 
-유휴 연결이 닫히기 전까지의 시간입니다.
+유휴 연결이 닫히기 전까지의 시간임.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | long |
-| 기본값 | 600000 (10분) |
-| 중요도 | Medium |
-| 업데이트 모드 | read-only |
+- 타입: long
+- 기본값: 600000 (10분)
+- 중요도: Medium
+- 업데이트 모드: read-only
 
 #### max.connections
 
-모든 IP에서 허용되는 최대 연결 수입니다.
+모든 IP에서 허용되는 최대 연결 수임.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | int |
-| 기본값 | 2147483647 (무제한) |
-| 중요도 | Medium |
-| 업데이트 모드 | cluster-wide |
+- 타입: int
+- 기본값: 2147483647 (무제한)
+- 중요도: Medium
+- 업데이트 모드: cluster-wide
 
 #### max.connections.per.ip
 
-각 IP 주소에서 허용되는 최대 연결 수입니다.
+각 IP 주소에서 허용되는 최대 연결 수임.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | int |
-| 기본값 | 2147483647 (무제한) |
-| 중요도 | Medium |
-| 업데이트 모드 | cluster-wide |
+- 타입: int
+- 기본값: 2147483647 (무제한)
+- 중요도: Medium
+- 업데이트 모드: cluster-wide
 
 ---
 
@@ -823,38 +719,32 @@ compression.type=zstd
 
 #### offsets.topic.replication.factor
 
-오프셋 토픽(`__consumer_offsets`)의 복제 팩터입니다.
+오프셋 토픽(`__consumer_offsets`)의 복제 팩터임.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | short |
-| 기본값 | 3 |
-| 중요도 | High |
-| 업데이트 모드 | read-only |
+- 타입: short
+- 기본값: 3
+- 중요도: High
+- 업데이트 모드: read-only
 
-가용성 보장을 위해 클러스터 브로커 수 이하로 설정해야 합니다.
+가용성 보장을 위해 클러스터 브로커 수 이하로 설정해야 함.
 
 #### offsets.topic.num.partitions
 
-오프셋 커밋 토픽의 파티션 수입니다.
+오프셋 커밋 토픽의 파티션 수임.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | int |
-| 기본값 | 50 |
-| 중요도 | High |
-| 업데이트 모드 | read-only |
+- 타입: int
+- 기본값: 50
+- 중요도: High
+- 업데이트 모드: read-only
 
 #### offsets.retention.minutes
 
-컨슈머 그룹의 모든 컨슈머가 사라진 이후 오프셋을 보존하는 시간입니다.
+컨슈머 그룹의 모든 컨슈머가 사라진 이후 오프셋을 보존하는 시간임.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | int |
-| 기본값 | 10080 (7일) |
-| 중요도 | High |
-| 업데이트 모드 | read-only |
+- 타입: int
+- 기본값: 10080 (7일)
+- 중요도: High
+- 업데이트 모드: read-only
 
 ---
 
@@ -862,47 +752,39 @@ compression.type=zstd
 
 #### transaction.state.log.replication.factor
 
-트랜잭션 토픽의 복제 팩터입니다.
+트랜잭션 토픽의 복제 팩터임.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | short |
-| 기본값 | 3 |
-| 중요도 | High |
-| 업데이트 모드 | read-only |
+- 타입: short
+- 기본값: 3
+- 중요도: High
+- 업데이트 모드: read-only
 
 #### transaction.state.log.num.partitions
 
-트랜잭션 토픽의 파티션 수입니다.
+트랜잭션 토픽의 파티션 수임.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | int |
-| 기본값 | 50 |
-| 중요도 | High |
-| 업데이트 모드 | read-only |
+- 타입: int
+- 기본값: 50
+- 중요도: High
+- 업데이트 모드: read-only
 
 #### transaction.max.timeout.ms
 
-트랜잭션에 허용되는 최대 타임아웃 시간입니다.
+트랜잭션에 허용되는 최대 타임아웃 시간임.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | int |
-| 기본값 | 900000 (15분) |
-| 중요도 | High |
-| 업데이트 모드 | read-only |
+- 타입: int
+- 기본값: 900000 (15분)
+- 중요도: High
+- 업데이트 모드: read-only
 
 #### transactional.id.expiration.ms
 
-트랜잭션 코디네이터가 트랜잭션 ID를 만료시키기 전까지 대기하는 시간입니다.
+트랜잭션 코디네이터가 트랜잭션 ID를 만료시키기 전까지 대기하는 시간임.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | int |
-| 기본값 | 604800000 (7일) |
-| 중요도 | High |
-| 업데이트 모드 | read-only |
+- 타입: int
+- 기본값: 604800000 (7일)
+- 중요도: High
+- 업데이트 모드: read-only
 
 ---
 
@@ -910,58 +792,48 @@ compression.type=zstd
 
 #### group.coordinator.threads
 
-그룹 코디네이터가 사용하는 스레드 수입니다.
+그룹 코디네이터가 사용하는 스레드 수임.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | int |
-| 기본값 | 1 |
-| 중요도 | Medium |
-| 업데이트 모드 | read-only |
+- 타입: int
+- 기본값: 1
+- 중요도: Medium
+- 업데이트 모드: read-only
 
 #### group.initial.rebalance.delay.ms
 
-그룹 코디네이터가 첫 번째 리밸런스를 시작하기 전에 대기하는 시간입니다.
+그룹 코디네이터가 첫 번째 리밸런스를 시작하기 전에 대기하는 시간임.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | int |
-| 기본값 | 3000 (3초) |
-| 중요도 | Medium |
-| 업데이트 모드 | read-only |
+- 타입: int
+- 기본값: 3000 (3초)
+- 중요도: Medium
+- 업데이트 모드: read-only
 
 #### group.min.session.timeout.ms
 
-등록된 컨슈머에 허용되는 최소 세션 타임아웃입니다.
+등록된 컨슈머에 허용되는 최소 세션 타임아웃임.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | int |
-| 기본값 | 6000 (6초) |
-| 중요도 | Medium |
-| 업데이트 모드 | read-only |
+- 타입: int
+- 기본값: 6000 (6초)
+- 중요도: Medium
+- 업데이트 모드: read-only
 
 #### group.max.session.timeout.ms
 
-등록된 컨슈머에 허용되는 최대 세션 타임아웃입니다.
+등록된 컨슈머에 허용되는 최대 세션 타임아웃임.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | int |
-| 기본값 | 1800000 (30분) |
-| 중요도 | Medium |
-| 업데이트 모드 | read-only |
+- 타입: int
+- 기본값: 1800000 (30분)
+- 중요도: Medium
+- 업데이트 모드: read-only
 
 #### group.max.size
 
-단일 컨슈머 그룹에 허용되는 최대 멤버 수입니다.
+단일 컨슈머 그룹에 허용되는 최대 멤버 수임.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | int |
-| 기본값 | 2147483647 (무제한) |
-| 중요도 | Medium |
-| 업데이트 모드 | read-only |
+- 타입: int
+- 기본값: 2147483647 (무제한)
+- 중요도: Medium
+- 업데이트 모드: read-only
 
 ---
 
@@ -969,14 +841,12 @@ compression.type=zstd
 
 #### ssl.keystore.location
 
-키스토어 파일의 위치입니다.
+키스토어 파일의 위치임.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | string |
-| 기본값 | null |
-| 중요도 | High |
-| 업데이트 모드 | per-broker |
+- 타입: string
+- 기본값: null
+- 중요도: High
+- 업데이트 모드: per-broker
 
 ```properties
 ssl.keystore.location=/var/private/ssl/server.keystore.jks
@@ -984,36 +854,30 @@ ssl.keystore.location=/var/private/ssl/server.keystore.jks
 
 #### ssl.keystore.password
 
-키스토어 파일의 비밀번호입니다.
+키스토어 파일의 비밀번호임.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | password |
-| 기본값 | null |
-| 중요도 | High |
-| 업데이트 모드 | per-broker |
+- 타입: password
+- 기본값: null
+- 중요도: High
+- 업데이트 모드: per-broker
 
 #### ssl.key.password
 
-키스토어의 개인 키 비밀번호입니다.
+키스토어의 개인 키 비밀번호임.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | password |
-| 기본값 | null |
-| 중요도 | High |
-| 업데이트 모드 | per-broker |
+- 타입: password
+- 기본값: null
+- 중요도: High
+- 업데이트 모드: per-broker
 
 #### ssl.truststore.location
 
-트러스트스토어 파일의 위치입니다.
+트러스트스토어 파일의 위치임.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | string |
-| 기본값 | null |
-| 중요도 | High |
-| 업데이트 모드 | per-broker |
+- 타입: string
+- 기본값: null
+- 중요도: High
+- 업데이트 모드: per-broker
 
 ```properties
 ssl.truststore.location=/var/private/ssl/server.truststore.jks
@@ -1021,48 +885,40 @@ ssl.truststore.location=/var/private/ssl/server.truststore.jks
 
 #### ssl.truststore.password
 
-트러스트스토어 파일의 비밀번호입니다.
+트러스트스토어 파일의 비밀번호임.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | password |
-| 기본값 | null |
-| 중요도 | High |
-| 업데이트 모드 | per-broker |
+- 타입: password
+- 기본값: null
+- 중요도: High
+- 업데이트 모드: per-broker
 
 #### ssl.protocol
 
-SSL 컨텍스트를 생성하는 데 사용되는 SSL 프로토콜입니다.
+SSL 컨텍스트를 생성하는 데 사용되는 SSL 프로토콜임.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | string |
-| 기본값 | TLSv1.3 |
-| 중요도 | Medium |
-| 업데이트 모드 | per-broker |
+- 타입: string
+- 기본값: TLSv1.3
+- 중요도: Medium
+- 업데이트 모드: per-broker
 
 #### ssl.enabled.protocols
 
-SSL 연결에 활성화된 프로토콜 목록입니다.
+SSL 연결에 활성화된 프로토콜 목록임.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | list |
-| 기본값 | TLSv1.2,TLSv1.3 |
-| 중요도 | Medium |
-| 업데이트 모드 | per-broker |
+- 타입: list
+- 기본값: TLSv1.2,TLSv1.3
+- 중요도: Medium
+- 업데이트 모드: per-broker
 
 #### ssl.client.auth
 
-클라이언트 인증 구성입니다.
+클라이언트 인증 구성임.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | string |
-| 기본값 | none |
-| 유효값 | required, requested, none |
-| 중요도 | Medium |
-| 업데이트 모드 | per-broker |
+- 타입: string
+- 기본값: none
+- 유효값: required, requested, none
+- 중요도: Medium
+- 업데이트 모드: per-broker
 
 ```properties
 # 클라이언트 인증서 필수
@@ -1078,14 +934,12 @@ ssl.client.auth=requested
 
 #### sasl.enabled.mechanisms
 
-Kafka 서버에서 활성화된 SASL 메커니즘 목록입니다.
+Kafka 서버에서 활성화된 SASL 메커니즘 목록임.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | list |
-| 기본값 | GSSAPI |
-| 중요도 | Medium |
-| 업데이트 모드 | per-broker |
+- 타입: list
+- 기본값: GSSAPI
+- 중요도: Medium
+- 업데이트 모드: per-broker
 
 지원되는 메커니즘:
 - `GSSAPI`: Kerberos
@@ -1100,26 +954,22 @@ sasl.enabled.mechanisms=PLAIN,SCRAM-SHA-256,SCRAM-SHA-512
 
 #### sasl.mechanism.inter.broker.protocol
 
-브로커 간 통신에 사용되는 SASL 메커니즘입니다.
+브로커 간 통신에 사용되는 SASL 메커니즘임.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | string |
-| 기본값 | GSSAPI |
-| 중요도 | Medium |
-| 업데이트 모드 | per-broker |
+- 타입: string
+- 기본값: GSSAPI
+- 중요도: Medium
+- 업데이트 모드: per-broker
 
 #### security.inter.broker.protocol
 
-브로커 간 통신에 사용되는 보안 프로토콜입니다.
+브로커 간 통신에 사용되는 보안 프로토콜임.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | string |
-| 기본값 | PLAINTEXT |
-| 유효값 | PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL |
-| 중요도 | Medium |
-| 업데이트 모드 | read-only |
+- 타입: string
+- 기본값: PLAINTEXT
+- 유효값: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL
+- 중요도: Medium
+- 업데이트 모드: read-only
 
 ---
 
@@ -1127,47 +977,39 @@ sasl.enabled.mechanisms=PLAIN,SCRAM-SHA-256,SCRAM-SHA-512
 
 #### metadata.log.dir
 
-메타데이터 로그가 저장될 디렉토리입니다.
+메타데이터 로그가 저장될 디렉토리임.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | string |
-| 기본값 | null (log.dirs 사용) |
-| 중요도 | High |
-| 업데이트 모드 | read-only |
+- 타입: string
+- 기본값: null (log.dirs 사용)
+- 중요도: High
+- 업데이트 모드: read-only
 
 #### metadata.log.segment.bytes
 
-단일 메타데이터 로그 파일의 최대 크기입니다.
+단일 메타데이터 로그 파일의 최대 크기임.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | int |
-| 기본값 | 1073741824 (1GB) |
-| 중요도 | High |
-| 업데이트 모드 | read-only |
+- 타입: int
+- 기본값: 1073741824 (1GB)
+- 중요도: High
+- 업데이트 모드: read-only
 
 #### metadata.log.segment.ms
 
-시간 기반 메타데이터 로그 세그먼트 롤오버 주기입니다.
+시간 기반 메타데이터 로그 세그먼트 롤오버 주기임.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | long |
-| 기본값 | 604800000 (7일) |
-| 중요도 | High |
-| 업데이트 모드 | read-only |
+- 타입: long
+- 기본값: 604800000 (7일)
+- 중요도: High
+- 업데이트 모드: read-only
 
 #### metadata.max.retention.bytes
 
-메타데이터 로그의 최대 보관 크기입니다.
+메타데이터 로그의 최대 보관 크기임.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | long |
-| 기본값 | 104857600 (100MB) |
-| 중요도 | High |
-| 업데이트 모드 | read-only |
+- 타입: long
+- 기본값: 104857600 (100MB)
+- 중요도: High
+- 업데이트 모드: read-only
 
 ---
 
@@ -1175,81 +1017,69 @@ sasl.enabled.mechanisms=PLAIN,SCRAM-SHA-256,SCRAM-SHA-512
 
 #### remote.log.storage.system.enable
 
-원격 로그 스토리지 시스템을 활성화합니다.
+원격 로그 스토리지 시스템을 활성화함.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | boolean |
-| 기본값 | false |
-| 중요도 | Medium |
-| 업데이트 모드 | read-only |
+- 타입: boolean
+- 기본값: false
+- 중요도: Medium
+- 업데이트 모드: read-only
 
 #### remote.log.manager.thread.pool.size
 
-원격 로그 관리자가 사용하는 스레드 풀 크기입니다.
+원격 로그 관리자가 사용하는 스레드 풀 크기임.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | int |
-| 기본값 | 2 |
-| 중요도 | Medium |
-| 업데이트 모드 | read-only |
+- 타입: int
+- 기본값: 2
+- 중요도: Medium
+- 업데이트 모드: read-only
 
 #### remote.log.reader.threads
 
-원격 로그 읽기에 사용되는 스레드 수입니다.
+원격 로그 읽기에 사용되는 스레드 수임.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | int |
-| 기본값 | 10 |
-| 중요도 | Medium |
-| 업데이트 모드 | cluster-wide |
+- 타입: int
+- 기본값: 10
+- 중요도: Medium
+- 업데이트 모드: cluster-wide
 
 ---
 
 ### 공유 그룹 설정 (Share Groups Configurations)
 
-> 참고: 공유 그룹(Share Groups)은 Kafka 4.0에서 도입된 새로운 기능입니다.
+> 참고: 공유 그룹(Share Groups)은 Kafka 4.0에서 도입된 새로운 기능임.
 
 #### group.share.max.size
 
-공유 그룹의 최대 멤버 수입니다.
+공유 그룹의 최대 멤버 수임.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | int |
-| 기본값 | 200 |
-| 중요도 | Medium |
-| 업데이트 모드 | read-only |
+- 타입: int
+- 기본값: 200
+- 중요도: Medium
+- 업데이트 모드: read-only
 
 #### group.share.record.lock.duration.ms
 
-공유 그룹에서 레코드 잠금 유지 시간입니다.
+공유 그룹에서 레코드 잠금 유지 시간임.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | int |
-| 기본값 | 30000 (30초) |
-| 중요도 | Medium |
-| 업데이트 모드 | read-only |
+- 타입: int
+- 기본값: 30000 (30초)
+- 중요도: Medium
+- 업데이트 모드: read-only
 
 #### group.share.delivery.count.limit
 
-공유 그룹에서 레코드 전달 시도 제한입니다.
+공유 그룹에서 레코드 전달 시도 제한임.
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | int |
-| 기본값 | 5 |
-| 중요도 | Medium |
-| 업데이트 모드 | read-only |
+- 타입: int
+- 기본값: 5
+- 중요도: Medium
+- 업데이트 모드: read-only
 
 ---
 
 ### 브로커 설정 동적 업데이트
 
-Kafka는 브로커를 재시작하지 않고도 일부 설정을 동적으로 변경할 수 있습니다.
+Kafka는 브로커를 재시작하지 않고도 일부 설정을 동적으로 변경할 수 있음.
 
 #### 클러스터 전체 업데이트 (cluster-wide)
 
@@ -1400,7 +1230,7 @@ replica.fetch.max.bytes=10485760
 
 ### 개요
 
-토픽 레벨 설정은 각 토픽에 대해 개별적으로 구성할 수 있는 설정입니다. 모든 설정은 토픽 생성 시 또는 이후에 `kafka-configs.sh` 도구를 사용하여 변경할 수 있습니다. 토픽 레벨 설정은 브로커의 기본 설정보다 우선합니다.
+토픽 레벨 설정은 각 토픽에 대해 개별적으로 구성할 수 있는 설정임. 모든 설정은 토픽 생성 시 또는 이후에 `kafka-configs.sh` 도구를 사용하여 변경할 수 있음. 토픽 레벨 설정은 브로커의 기본 설정보다 우선함.
 
 ---
 
@@ -1408,17 +1238,15 @@ replica.fetch.max.bytes=10485760
 
 #### cleanup.policy
 
-로그 세그먼트에 사용할 보존 정책을 지정합니다.
+로그 세그먼트에 사용할 보존 정책을 지정함.
 
-| 속성 | 값 |
-|------|------|
-| 기본값 | delete |
-| 유효한 값 | compact, delete |
-| 중요도 | medium |
+- 기본값: delete
+- 유효한 값: compact, delete
+- 중요도: medium
 
-- `delete`: 오래된 세그먼트는 보존 시간 또는 크기 제한에 도달하면 삭제됩니다.
-- `compact`: 로그 컴팩션이 활성화됩니다. 각 키의 최신 값만 유지됩니다.
-- 쉼표로 구분된 목록(예: `"compact,delete"`)을 사용하여 두 정책을 모두 활성화할 수 있습니다.
+- `delete`: 오래된 세그먼트는 보존 시간 또는 크기 제한에 도달하면 삭제됨.
+- `compact`: 로그 컴팩션이 활성화됨. 각 키의 최신 값만 유지됨.
+- 쉼표로 구분된 목록(예: `"compact,delete"`)을 사용하여 두 정책을 모두 활성화할 수 있음.
 
 ```bash
 kafka-configs.sh --bootstrap-server localhost:9092 --entity-type topics --entity-name my-topic --alter --add-config cleanup.policy=compact
@@ -1426,16 +1254,14 @@ kafka-configs.sh --bootstrap-server localhost:9092 --entity-type topics --entity
 
 #### retention.ms
 
-오래된 로그 세그먼트를 폐기하기 전까지 유지할 최대 시간을 제어합니다. 세그먼트 생성 후 이 시간이 경과하면 삭제 대상이 됩니다.
+오래된 로그 세그먼트를 폐기하기 전까지 유지할 최대 시간을 제어함. 세그먼트 생성 후 이 시간이 경과하면 삭제 대상이 됨.
 
-| 속성 | 값 |
-|------|------|
-| 기본값 | 604800000 (7일) |
-| 유효한 값 | [-1, ...] |
-| 중요도 | medium |
+- 기본값: 604800000 (7일)
+- 유효한 값: [-1, ...]
+- 중요도: medium
 
-- `-1`로 설정하면 시간 기반 보존이 비활성화됩니다(무제한 보존).
-- 밀리초 단위입니다.
+- `-1`로 설정하면 시간 기반 보존이 비활성화됨(무제한 보존).
+- 밀리초 단위임.
 
 ```bash
 # 3일 보존 설정
@@ -1444,15 +1270,13 @@ kafka-configs.sh --bootstrap-server localhost:9092 --entity-type topics --entity
 
 #### retention.bytes
 
-오래된 세그먼트를 폐기하기 전 파티션의 최대 크기를 제어합니다. 파티션 크기가 이 값을 초과하면 가장 오래된 세그먼트부터 삭제됩니다.
+오래된 세그먼트를 폐기하기 전 파티션의 최대 크기를 제어함. 파티션 크기가 이 값을 초과하면 가장 오래된 세그먼트부터 삭제됨.
 
-| 속성 | 값 |
-|------|------|
-| 기본값 | -1 (제한 없음) |
-| 중요도 | medium |
+- 기본값: -1 (제한 없음)
+- 중요도: medium
 
-- `-1`로 설정하면 크기 기반 보존이 비활성화됩니다.
-- 파티션별 적용됩니다 (토픽 전체가 아님).
+- `-1`로 설정하면 크기 기반 보존이 비활성화됨.
+- 파티션별 적용됨 (토픽 전체가 아님).
 
 ```bash
 # 파티션당 1GB 제한 설정
@@ -1465,17 +1289,15 @@ kafka-configs.sh --bootstrap-server localhost:9092 --entity-type topics --entity
 
 #### compression.type
 
-토픽의 최종 압축 코덱을 지정합니다.
+토픽의 최종 압축 코덱을 지정함.
 
-| 속성 | 값 |
-|------|------|
-| 기본값 | producer |
-| 유효한 값 | uncompressed, zstd, lz4, snappy, gzip, producer |
-| 중요도 | medium |
+- 기본값: producer
+- 유효한 값: uncompressed, zstd, lz4, snappy, gzip, producer
+- 중요도: medium
 
-- `producer`: 프로듀서가 설정한 압축 방식을 그대로 유지합니다.
-- `uncompressed`: 압축을 사용하지 않습니다.
-- `zstd`, `lz4`, `snappy`, `gzip`: 해당 압축 알고리즘을 사용합니다.
+- `producer`: 프로듀서가 설정한 압축 방식을 그대로 유지함.
+- `uncompressed`: 압축을 사용하지 않음.
+- `zstd`, `lz4`, `snappy`, `gzip`: 해당 압축 알고리즘을 사용함.
 
 ```bash
 kafka-configs.sh --bootstrap-server localhost:9092 --entity-type topics --entity-name my-topic --alter --add-config compression.type=lz4
@@ -1483,83 +1305,69 @@ kafka-configs.sh --bootstrap-server localhost:9092 --entity-type topics --entity
 
 #### compression.gzip.level
 
-GZIP 압축 레벨을 설정합니다.
+GZIP 압축 레벨을 설정함.
 
-| 속성 | 값 |
-|------|------|
-| 기본값 | -1 |
-| 유효한 범위 | [1, ..., 9] 또는 -1 |
+- 기본값: -1
+- 유효한 범위: [1, ..., 9] 또는 -1
 
-- `-1`은 기본 압축 레벨을 사용합니다.
-- 높은 값일수록 더 높은 압축률을 제공하지만 CPU 사용량이 증가합니다.
+- `-1`은 기본 압축 레벨을 사용함.
+- 높은 값일수록 더 높은 압축률을 제공하지만 CPU 사용량이 증가함.
 
 #### compression.lz4.level
 
-LZ4 압축 레벨을 설정합니다.
+LZ4 압축 레벨을 설정함.
 
-| 속성 | 값 |
-|------|------|
-| 기본값 | 9 |
-| 유효한 범위 | [1, ..., 17] |
+- 기본값: 9
+- 유효한 범위: [1, ..., 17]
 
 #### compression.zstd.level
 
-Zstandard 압축 레벨을 설정합니다.
+Zstandard 압축 레벨을 설정함.
 
-| 속성 | 값 |
-|------|------|
-| 기본값 | 3 |
-| 유효한 범위 | [-131072, ..., 22] |
+- 기본값: 3
+- 유효한 범위: [-131072, ..., 22]
 
 ---
 
 ### 로그 컴팩션 설정
 
-로그 컴팩션은 각 메시지 키의 최신 값만 유지하여 로그 크기를 줄이는 메커니즘입니다.
+로그 컴팩션은 각 메시지 키의 최신 값만 유지하여 로그 크기를 줄이는 메커니즘임.
 
 #### min.cleanable.dirty.ratio
 
-로그 컴팩터가 로그 정리를 시도하는 빈도를 제어합니다. 이 비율은 컴팩션 대상이 되는 "더티(dirty)" 로그 부분과 이미 컴팩션된 "클린(clean)" 로그 부분의 비율입니다.
+로그 컴팩터가 로그 정리를 시도하는 빈도를 제어함. 이 비율은 컴팩션 대상이 되는 "더티(dirty)" 로그 부분과 이미 컴팩션된 "클린(clean)" 로그 부분의 비율임.
 
-| 속성 | 값 |
-|------|------|
-| 기본값 | 0.5 |
-| 중요도 | medium |
+- 기본값: 0.5
+- 중요도: medium
 
-- 값이 낮을수록 컴팩션이 더 자주 발생하지만 리소스를 더 많이 사용합니다.
-- 값이 높을수록 컴팩션 빈도가 줄어들지만 로그가 더 커질 수 있습니다.
+- 값이 낮을수록 컴팩션이 더 자주 발생하지만 리소스를 더 많이 사용함.
+- 값이 높을수록 컴팩션 빈도가 줄어들지만 로그가 더 커질 수 있음.
 
 #### min.compaction.lag.ms
 
-메시지가 컴팩션되지 않은 상태로 유지되는 최소 시간입니다.
+메시지가 컴팩션되지 않은 상태로 유지되는 최소 시간임.
 
-| 속성 | 값 |
-|------|------|
-| 기본값 | 0 |
+- 기본값: 0
 
-- 이 시간이 지나기 전에는 메시지가 컴팩션되지 않습니다.
-- 컨슈머가 모든 메시지를 읽을 수 있도록 하려면 이 값을 설정하세요.
+- 이 시간이 지나기 전에는 메시지가 컴팩션되지 않음.
+- 컨슈머가 모든 메시지를 읽을 수 있도록 하려면 이 값을 설정 필요.
 
 #### max.compaction.lag.ms
 
-메시지가 컴팩션 대상이 되기까지의 최대 시간입니다.
+메시지가 컴팩션 대상이 되기까지의 최대 시간임.
 
-| 속성 | 값 |
-|------|------|
-| 기본값 | 9223372036854775807 (Long.MAX_VALUE) |
+- 기본값: 9223372036854775807 (Long.MAX_VALUE)
 
-- 이 시간이 지나면 메시지는 컴팩션 대상이 됩니다.
+- 이 시간이 지나면 메시지는 컴팩션 대상이 됨.
 
 #### delete.retention.ms
 
-컴팩션된 토픽에서 삭제 톰스톤(tombstone) 마커를 보존하는 시간입니다.
+컴팩션된 토픽에서 삭제 톰스톤(tombstone) 마커를 보존하는 시간임.
 
-| 속성 | 값 |
-|------|------|
-| 기본값 | 86400000 (1일) |
+- 기본값: 86400000 (1일)
 
-- 톰스톤은 키에 대한 삭제 표시입니다.
-- 컨슈머가 삭제를 확인할 수 있도록 충분한 시간을 설정해야 합니다.
+- 톰스톤은 키에 대한 삭제 표시임.
+- 컨슈머가 삭제를 확인할 수 있도록 충분한 시간을 설정해야 함.
 
 ```bash
 kafka-configs.sh --bootstrap-server localhost:9092 --entity-type topics --entity-name my-topic --alter --add-config delete.retention.ms=172800000
@@ -1571,15 +1379,13 @@ kafka-configs.sh --bootstrap-server localhost:9092 --entity-type topics --entity
 
 #### segment.bytes
 
-세그먼트 파일의 크기를 제어합니다. 세그먼트가 이 크기에 도달하면 새 세그먼트가 생성됩니다.
+세그먼트 파일의 크기를 제어함. 세그먼트가 이 크기에 도달하면 새 세그먼트가 생성됨.
 
-| 속성 | 값 |
-|------|------|
-| 기본값 | 1073741824 (1GB) |
-| 유효한 범위 | [1048576, ...] |
+- 기본값: 1073741824 (1GB)
+- 유효한 범위: [1048576, ...]
 
-- 작은 세그먼트는 보존 정책이 더 세밀하게 적용되지만 파일 핸들이 더 많이 필요합니다.
-- 큰 세그먼트는 I/O 효율성이 높지만 보존 정책 적용이 덜 정밀합니다.
+- 작은 세그먼트는 보존 정책이 더 세밀하게 적용되지만 파일 핸들이 더 많이 필요함.
+- 큰 세그먼트는 I/O 효율성이 높지만 보존 정책 적용이 덜 정밀함.
 
 ```bash
 # 512MB 세그먼트 설정
@@ -1588,11 +1394,9 @@ kafka-configs.sh --bootstrap-server localhost:9092 --entity-type topics --entity
 
 #### segment.ms
 
-Kafka가 로그 롤(roll)을 강제하는 시간 주기입니다. 세그먼트가 가득 차지 않아도 이 시간이 지나면 새 세그먼트가 생성됩니다.
+Kafka가 로그 롤(roll)을 강제하는 시간 주기임. 세그먼트가 가득 차지 않아도 이 시간이 지나면 새 세그먼트가 생성됨.
 
-| 속성 | 값 |
-|------|------|
-| 기본값 | 604800000 (7일) |
+- 기본값: 604800000 (7일)
 
 ```bash
 # 1일마다 새 세그먼트 생성
@@ -1601,25 +1405,21 @@ kafka-configs.sh --bootstrap-server localhost:9092 --entity-type topics --entity
 
 #### segment.index.bytes
 
-오프셋-위치 인덱스의 크기를 제어합니다.
+오프셋-위치 인덱스의 크기를 제어함.
 
-| 속성 | 값 |
-|------|------|
-| 기본값 | 10485760 (10MB) |
-| 유효한 범위 | [4, ...] |
+- 기본값: 10485760 (10MB)
+- 유효한 범위: [4, ...]
 
-- 인덱스 파일은 세그먼트 파일 내에서 오프셋을 빠르게 찾는 데 사용됩니다.
+- 인덱스 파일은 세그먼트 파일 내에서 오프셋을 빠르게 찾는 데 사용됨.
 
 #### segment.jitter.ms
 
-예정된 세그먼트 롤 시간에서 차감되는 최대 무작위 지터(jitter)입니다.
+예정된 세그먼트 롤 시간에서 차감되는 최대 무작위 지터(jitter)임.
 
-| 속성 | 값 |
-|------|------|
-| 기본값 | 0 |
+- 기본값: 0
 
-- 여러 파티션의 세그먼트 롤이 동시에 발생하는 것을 방지합니다.
-- I/O 스파이크를 줄이는 데 유용합니다.
+- 여러 파티션의 세그먼트 롤이 동시에 발생하는 것을 방지함.
+- I/O 스파이크를 줄이는 데 유용함.
 
 ---
 
@@ -1627,15 +1427,13 @@ kafka-configs.sh --bootstrap-server localhost:9092 --entity-type topics --entity
 
 #### max.message.bytes
 
-Kafka가 허용하는 가장 큰 레코드 배치 크기입니다 (압축 후 크기).
+Kafka가 허용하는 가장 큰 레코드 배치 크기임 (압축 후 크기).
 
-| 속성 | 값 |
-|------|------|
-| 기본값 | 1048588 |
-| 중요도 | medium |
+- 기본값: 1048588
+- 중요도: medium
 
-- 이 값을 늘리면 `replica.fetch.max.bytes` 브로커 설정도 함께 늘려야 합니다.
-- 컨슈머의 `fetch.max.bytes` 설정도 충분히 크게 설정해야 합니다.
+- 이 값을 늘리면 `replica.fetch.max.bytes` 브로커 설정도 함께 늘려야 함.
+- 컨슈머의 `fetch.max.bytes` 설정도 충분히 크게 설정해야 함.
 
 ```bash
 # 최대 메시지 크기 10MB 설정
@@ -1644,15 +1442,13 @@ kafka-configs.sh --bootstrap-server localhost:9092 --entity-type topics --entity
 
 #### message.timestamp.type
 
-메시지 타임스탬프가 프로듀서 생성 시간을 기준으로 할지, 브로커 로그 추가 시간을 기준으로 할지 정의합니다.
+메시지 타임스탬프가 프로듀서 생성 시간을 기준으로 할지, 브로커 로그 추가 시간을 기준으로 할지 정의함.
 
-| 속성 | 값 |
-|------|------|
-| 기본값 | CreateTime |
-| 유효한 값 | CreateTime, LogAppendTime |
+- 기본값: CreateTime
+- 유효한 값: CreateTime, LogAppendTime
 
-- `CreateTime`: 프로듀서가 메시지를 생성한 시간을 사용합니다.
-- `LogAppendTime`: 브로커가 메시지를 로그에 추가한 시간을 사용합니다.
+- `CreateTime`: 프로듀서가 메시지를 생성한 시간을 사용함.
+- `LogAppendTime`: 브로커가 메시지를 로그에 추가한 시간을 사용함.
 
 ```bash
 kafka-configs.sh --bootstrap-server localhost:9092 --entity-type topics --entity-name my-topic --alter --add-config message.timestamp.type=LogAppendTime
@@ -1660,21 +1456,17 @@ kafka-configs.sh --bootstrap-server localhost:9092 --entity-type topics --entity
 
 #### message.timestamp.after.max.ms
 
-메시지 타임스탬프가 브로커 시간보다 늦을 때 허용되는 최대 차이입니다.
+메시지 타임스탬프가 브로커 시간보다 늦을 때 허용되는 최대 차이임.
 
-| 속성 | 값 |
-|------|------|
-| 기본값 | 3600000 (1시간) |
+- 기본값: 3600000 (1시간)
 
-- 이 값을 초과하는 타임스탬프를 가진 메시지는 거부됩니다.
+- 이 값을 초과하는 타임스탬프를 가진 메시지는 거부됨.
 
 #### message.timestamp.before.max.ms
 
-메시지 타임스탬프가 브로커 시간보다 앞설 때 허용되는 최대 차이입니다.
+메시지 타임스탬프가 브로커 시간보다 앞설 때 허용되는 최대 차이임.
 
-| 속성 | 값 |
-|------|------|
-| 기본값 | 9223372036854775807 (Long.MAX_VALUE) |
+- 기본값: 9223372036854775807 (Long.MAX_VALUE)
 
 ---
 
@@ -1682,15 +1474,13 @@ kafka-configs.sh --bootstrap-server localhost:9092 --entity-type topics --entity
 
 #### min.insync.replicas
 
-`acks=all` (또는 `acks=-1`)로 설정된 프로듀서의 쓰기가 성공하기 위해 필요한 최소 동기화 복제본(ISR) 수입니다.
+`acks=all` (또는 `acks=-1`)로 설정된 프로듀서의 쓰기가 성공하기 위해 필요한 최소 동기화 복제본(ISR) 수임.
 
-| 속성 | 값 |
-|------|------|
-| 기본값 | 1 |
-| 유효한 범위 | [1, ...] |
+- 기본값: 1
+- 유효한 범위: [1, ...]
 
-- 이 값이 충족되지 않으면 프로듀서는 `NotEnoughReplicasException`을 받습니다.
-- 데이터 내구성을 보장하려면 `min.insync.replicas=2`와 `replication.factor=3`을 함께 사용하는 것이 일반적입니다.
+- 이 값이 충족되지 않으면 프로듀서는 `NotEnoughReplicasException`을 받음.
+- 데이터 내구성을 보장하려면 `min.insync.replicas=2`와 `replication.factor=3`을 함께 사용하는 것이 일반적임.
 
 ```bash
 kafka-configs.sh --bootstrap-server localhost:9092 --entity-type topics --entity-name my-topic --alter --add-config min.insync.replicas=2
@@ -1698,34 +1488,28 @@ kafka-configs.sh --bootstrap-server localhost:9092 --entity-type topics --entity
 
 #### unclean.leader.election.enable
 
-ISR(In-Sync Replica) 세트에 없는 복제본이 최후의 수단으로 리더가 될 수 있는지 여부를 허용합니다.
+ISR(In-Sync Replica) 세트에 없는 복제본이 최후의 수단으로 리더가 될 수 있는지 여부를 허용함.
 
-| 속성 | 값 |
-|------|------|
-| 기본값 | false |
+- 기본값: false
 
-- `true`: 데이터 손실 가능성이 있지만 가용성이 향상됩니다.
-- `false`: 데이터 손실을 방지하지만 ISR 복제본이 없으면 파티션을 사용할 수 없습니다.
+- `true`: 데이터 손실 가능성이 있지만 가용성이 향상됨.
+- `false`: 데이터 손실을 방지하지만 ISR 복제본이 없으면 파티션을 사용할 수 없음.
 
-> 주의: 이 설정을 `true`로 변경하면 데이터 손실이 발생할 수 있습니다.
+> 주의: 이 설정을 `true`로 변경하면 데이터 손실이 발생할 수 있음.
 
 #### leader.replication.throttled.replicas
 
-리더 측에서 스로틀링할 복제본 목록입니다.
+리더 측에서 스로틀링할 복제본 목록임.
 
-| 속성 | 값 |
-|------|------|
-| 기본값 | "" (빈 문자열) |
+- 기본값: "" (빈 문자열)
 
 - 형식: `[partition_id]:[broker_id],[partition_id]:[broker_id]...`
 
 #### follower.replication.throttled.replicas
 
-팔로워 측에서 스로틀링할 복제본 목록입니다.
+팔로워 측에서 스로틀링할 복제본 목록임.
 
-| 속성 | 값 |
-|------|------|
-| 기본값 | "" (빈 문자열) |
+- 기본값: "" (빈 문자열)
 
 - 형식: `[partition_id]:[broker_id],[partition_id]:[broker_id]...`
 
@@ -1735,59 +1519,49 @@ ISR(In-Sync Replica) 세트에 없는 복제본이 최후의 수단으로 리더
 
 #### flush.messages
 
-메시지 쓰기 후 fsync를 강제하는 간격입니다.
+메시지 쓰기 후 fsync를 강제하는 간격임.
 
-| 속성 | 값 |
-|------|------|
-| 기본값 | 9223372036854775807 (Long.MAX_VALUE) |
-| 유효한 범위 | [1, ...] |
+- 기본값: 9223372036854775807 (Long.MAX_VALUE)
+- 유효한 범위: [1, ...]
 
-- 기본값은 OS의 백그라운드 플러시에 의존합니다.
-- 낮은 값은 내구성을 높이지만 성능에 영향을 줍니다.
+- 기본값은 OS의 백그라운드 플러시에 의존함.
+- 낮은 값은 내구성을 높이지만 성능에 영향을 줌.
 
-> 참고: 일반적으로 복제에 의존하는 것이 fsync에 의존하는 것보다 권장됩니다.
+> 참고: 일반적으로 복제에 의존하는 것이 fsync에 의존하는 것보다 권장됨.
 
 #### flush.ms
 
-fsync 작업을 강제하는 시간 간격입니다.
+fsync 작업을 강제하는 시간 간격임.
 
-| 속성 | 값 |
-|------|------|
-| 기본값 | 9223372036854775807 (Long.MAX_VALUE) |
-| 유효한 범위 | [0, ...] |
+- 기본값: 9223372036854775807 (Long.MAX_VALUE)
+- 유효한 범위: [0, ...]
 
 #### index.interval.bytes
 
-Kafka가 오프셋 인덱스에 항목을 추가하는 빈도를 제어합니다.
+Kafka가 오프셋 인덱스에 항목을 추가하는 빈도를 제어함.
 
-| 속성 | 값 |
-|------|------|
-| 기본값 | 4096 (4KB) |
+- 기본값: 4096 (4KB)
 
-- 이 바이트 수만큼 데이터가 추가될 때마다 인덱스 항목이 생성됩니다.
-- 작은 값은 인덱스가 더 정밀해지지만 크기가 커집니다.
+- 이 바이트 수만큼 데이터가 추가될 때마다 인덱스 항목이 생성됨.
+- 작은 값은 인덱스가 더 정밀해지지만 크기가 커짐.
 
 #### file.delete.delay.ms
 
-파일 시스템에서 파일을 삭제하기 전 대기 시간입니다.
+파일 시스템에서 파일을 삭제하기 전 대기 시간임.
 
-| 속성 | 값 |
-|------|------|
-| 기본값 | 60000 (1분) |
+- 기본값: 60000 (1분)
 
 ---
 
 ### 계층형 스토리지 설정
 
-계층형 스토리지(Tiered Storage)를 사용하면 오래된 데이터를 원격 스토리지(예: S3, GCS)로 이동할 수 있습니다.
+계층형 스토리지(Tiered Storage)를 사용하면 오래된 데이터를 원격 스토리지(예: S3, GCS)로 이동할 수 있음.
 
 #### remote.storage.enable
 
-토픽에 대해 계층형 스토리지를 활성화합니다.
+토픽에 대해 계층형 스토리지를 활성화함.
 
-| 속성 | 값 |
-|------|------|
-| 기본값 | false |
+- 기본값: false
 
 ```bash
 kafka-configs.sh --bootstrap-server localhost:9092 --entity-type topics --entity-name my-topic --alter --add-config remote.storage.enable=true
@@ -1795,45 +1569,37 @@ kafka-configs.sh --bootstrap-server localhost:9092 --entity-type topics --entity
 
 #### remote.log.copy.disable
 
-계층형 데이터를 읽기 전용으로 만들어 업로드를 비활성화합니다.
+계층형 데이터를 읽기 전용으로 만들어 업로드를 비활성화함.
 
-| 속성 | 값 |
-|------|------|
-| 기본값 | false |
+- 기본값: false
 
-- `true`로 설정하면 새 데이터가 원격 스토리지로 복사되지 않습니다.
+- `true`로 설정하면 새 데이터가 원격 스토리지로 복사되지 않음.
 
 #### remote.log.delete.on.disable
 
-계층형 스토리지가 비활성화될 때 계층형 데이터를 삭제합니다.
+계층형 스토리지가 비활성화될 때 계층형 데이터를 삭제함.
 
-| 속성 | 값 |
-|------|------|
-| 기본값 | false |
+- 기본값: false
 
 #### local.retention.ms
 
-로컬 로그가 삭제되기 전에 유지되는 시간(밀리초)입니다.
+로컬 로그가 삭제되기 전에 유지되는 시간(밀리초)임.
 
-| 속성 | 값 |
-|------|------|
-| 기본값 | -2 |
+- 기본값: -2
 
-- `-2`: `retention.ms` 값을 사용합니다.
-- `-1`: 무제한 로컬 보존입니다.
-- 계층형 스토리지가 활성화된 경우에만 적용됩니다.
+- `-2`: `retention.ms` 값을 사용함.
+- `-1`: 무제한 로컬 보존임.
+- 계층형 스토리지가 활성화된 경우에만 적용됨.
 
 #### local.retention.bytes
 
-로컬 로그의 최대 크기입니다.
+로컬 로그의 최대 크기임.
 
-| 속성 | 값 |
-|------|------|
-| 기본값 | -2 |
+- 기본값: -2
 
-- `-2`: `retention.bytes` 값을 사용합니다.
-- `-1`: 무제한 로컬 보존입니다.
-- 계층형 스토리지가 활성화된 경우에만 적용됩니다.
+- `-2`: `retention.bytes` 값을 사용함.
+- `-1`: 무제한 로컬 보존임.
+- 계층형 스토리지가 활성화된 경우에만 적용됨.
 
 ---
 
@@ -1841,14 +1607,12 @@ kafka-configs.sh --bootstrap-server localhost:9092 --entity-type topics --entity
 
 #### preallocate
 
-새 로그 세그먼트에 대해 디스크의 파일을 미리 할당할지 여부입니다.
+새 로그 세그먼트에 대해 디스크의 파일을 미리 할당할지 여부임.
 
-| 속성 | 값 |
-|------|------|
-| 기본값 | false |
+- 기본값: false
 
-- `true`로 설정하면 세그먼트 생성 시 전체 크기가 미리 할당됩니다.
-- 일부 파일 시스템에서 성능을 향상시킬 수 있습니다.
+- `true`로 설정하면 세그먼트 생성 시 전체 크기가 미리 할당됨.
+- 일부 파일 시스템에서 성능을 향상시킬 수 있음.
 
 ---
 
@@ -1897,14 +1661,14 @@ kafka-configs.sh --bootstrap-server localhost:9092 \
 
 ### 요약
 
-Kafka 토픽 설정은 토픽별로 데이터 보존, 압축, 복제, 성능 등을 세밀하게 제어할 수 있게 합니다. 주요 포인트는 다음과 같습니다:
+Kafka 토픽 설정은 토픽별로 데이터 보존·압축·복제·성능 등을 세밀하게 제어할 수 있게 함. 주요 포인트는 다음과 같음:
 
-1. 보존 정책: `retention.ms`와 `retention.bytes`로 데이터 보존 기간과 크기를 제어합니다.
-2. 정리 정책: `cleanup.policy`로 삭제(delete) 또는 컴팩션(compact) 방식을 선택합니다.
-3. 복제 내구성: `min.insync.replicas`로 쓰기 내구성을 보장합니다.
-4. 압축: `compression.type`으로 저장 효율성을 높일 수 있습니다.
-5. 세그먼트 관리: `segment.bytes`와 `segment.ms`로 세그먼트 크기와 롤링 주기를 제어합니다.
-6. 계층형 스토리지: `remote.storage.enable`로 비용 효율적인 장기 보관이 가능합니다.
+1. 보존 정책: `retention.ms`와 `retention.bytes`로 데이터 보존 기간과 크기를 제어함.
+2. 정리 정책: `cleanup.policy`로 삭제(delete) 또는 컴팩션(compact) 방식을 선택함.
+3. 복제 내구성: `min.insync.replicas`로 쓰기 내구성을 보장함.
+4. 압축: `compression.type`으로 저장 효율성을 높일 수 있음.
+5. 세그먼트 관리: `segment.bytes`와 `segment.ms`로 세그먼트 크기와 롤링 주기를 제어함.
+6. 계층형 스토리지: `remote.storage.enable`로 비용 효율적인 장기 보관이 가능함.
 
 ---
 

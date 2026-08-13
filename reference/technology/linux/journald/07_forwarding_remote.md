@@ -19,7 +19,7 @@
 
 ## Forward 옵션 복습
 
-`journald.conf` 의 `ForwardTo*=` 옵션은 **로컬에서** 다른 채널로 복사 전송합니다.
+`journald.conf`의 `ForwardTo*=` 옵션은 로컬에서 다른 채널로 복사 전송함.
 
 ```ini
 [Journal]
@@ -35,7 +35,7 @@ MaxLevelConsole=info
 MaxLevelWall=emerg
 ```
 
-원격 전송은 ForwardTo로는 안 되고, 별도 도구(`journal-remote`, `journal-upload`, syslog 데몬, vector 등)가 필요합니다.
+원격 전송은 ForwardTo로는 안 되고, 별도 도구(`journal-remote`, `journal-upload`, syslog 데몬, vector 등) 필요.
 
 ---
 
@@ -45,7 +45,7 @@ MaxLevelWall=emerg
 
 ### rsyslog
 
-`imjournal` 모듈로 journal에서 직접 읽거나 `imuxsock` + journald의 `ForwardToSyslog=yes` 로 받습니다.
+`imjournal` 모듈로 journal에서 직접 읽거나 `imuxsock` + journald의 `ForwardToSyslog=yes`로 받음.
 
 ```conf
 # /etc/rsyslog.conf
@@ -90,7 +90,7 @@ $ModLoad imuxsock                # 시스템 로그 소켓
 
 ## systemd-journal-remote
 
-journal 형식을 그대로 다른 머신에 전송하는 systemd 자체 도구. journal 바이너리 인덱스가 보존되므로 검색 성능이 좋습니다.
+journal 형식을 그대로 다른 머신에 전송하는 systemd 자체 도구. journal 바이너리 인덱스가 보존되므로 검색 성능이 좋음.
 
 ### 수신 측 (서버)
 
@@ -137,7 +137,7 @@ journalctl -o export | curl -k --data-binary @- https://server:19532/upload
 
 ## systemd-journal-upload
 
-송신 전용 데몬. 로컬 journal을 읽어 원격 `journal-remote` 로 전송합니다.
+송신 전용 데몬. 로컬 journal을 읽어 원격 `journal-remote`로 전송함.
 
 ### 설정
 
@@ -171,7 +171,7 @@ systemctl status systemd-journal-upload
 
 ## systemd-journal-gatewayd
 
-journal을 HTTP API로 노출하는 게이트웨이. 웹 UI나 다른 도구에서 조회할 수 있도록 합니다.
+journal을 HTTP API로 노출하는 게이트웨이. 웹 UI나 다른 도구에서 조회 가능하도록 함.
 
 ### 시작
 
@@ -313,7 +313,7 @@ encoding.codec = "json"
     Port  24224
 ```
 
-각 도구는 cursor 또는 마지막 처리 시각을 저장하므로, 재시작 후에도 누락 없이 이어서 처리합니다.
+각 도구는 cursor 또는 마지막 처리 시각을 저장 → 재시작 후에도 누락 없이 이어서 처리함.
 
 ---
 

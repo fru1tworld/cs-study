@@ -28,7 +28,7 @@
 multitenancy_enabled: true
 ```
 
-활성화하면 모든 API 요청에 `X-Scope-OrgID` 헤더가 필수다.
+활성화하면 모든 API 요청에 `X-Scope-OrgID` 헤더가 필수임.
 
 #### 단일 테넌트 모드
 
@@ -36,7 +36,7 @@ multitenancy_enabled: true
 multitenancy_enabled: false
 ```
 
-모든 데이터는 `single-tenant` ID로 저장된다.
+모든 데이터는 `single-tenant` ID로 저장됨.
 
 #### 테넌트별 한도 (overrides.yaml)
 
@@ -105,12 +105,10 @@ distributor:
 
 #### 백엔드 옵션
 
-| 백엔드 | 권장 사용 |
-|--------|----------|
-| AWS S3 | 가장 일반적 |
-| GCS | GCP 환경 |
-| Azure Blob | Azure 환경 |
-| Filesystem | 개발/테스트 |
+- AWS S3: 가장 일반적
+- GCS: GCP 환경
+- Azure Blob: Azure 환경
+- Filesystem: 개발/테스트
 
 #### S3 구성
 
@@ -145,7 +143,7 @@ storage:
 
 #### Bucket Index
 
-각 테넌트의 블록 목록을 캐싱하여 빠르게 조회한다.
+각 테넌트의 블록 목록을 캐싱하여 빠르게 조회함.
 
 ```yaml
 storage:
@@ -240,17 +238,15 @@ compactor:
     instance_id: ${POD_NAME}
 ```
 
-여러 Compactor 인스턴스가 테넌트별로 작업을 분산 처리한다.
+여러 Compactor 인스턴스가 테넌트별로 작업을 분산 처리함.
 
 #### 모니터링
 
-| 메트릭 | 설명 |
-|--------|------|
-| `tempodb_compaction_blocks_total` | 압축된 블록 수 |
-| `tempodb_compaction_bytes_written_total` | 압축으로 쓰인 바이트 |
-| `tempodb_compaction_objects_combined_total` | 결합된 오브젝트 수 |
-| `tempodb_retention_marked_for_deletion_total` | 삭제 마킹된 블록 수 |
-| `tempodb_retention_deleted_total` | 실제 삭제된 블록 수 |
+- `tempodb_compaction_blocks_total`: 압축된 블록 수
+- `tempodb_compaction_bytes_written_total`: 압축으로 쓰인 바이트
+- `tempodb_compaction_objects_combined_total`: 결합된 오브젝트 수
+- `tempodb_retention_marked_for_deletion_total`: 삭제 마킹된 블록 수
+- `tempodb_retention_deleted_total`: 실제 삭제된 블록 수
 
 ---
 
@@ -258,12 +254,10 @@ compactor:
 
 #### 캐시 종류
 
-| 캐시 | 대상 |
-|------|------|
-| Bloom Filter | 빠른 트레이스 ID 조회 |
-| Index | 인덱스 조회 |
-| Search | TraceQL 결과 |
-| Frontend | 쿼리 결과 |
+- Bloom Filter: 빠른 트레이스 ID 조회
+- Index: 인덱스 조회
+- Search: TraceQL 결과
+- Frontend: 쿼리 결과
 
 #### Memcached 설정
 
@@ -431,7 +425,7 @@ tempo-cli rewrite-blocks drop-traces <tenant-id> <trace-ids>
 - GCS: Object Versioning, Multi-region buckets
 - Azure: Geo-Redundant Storage
 
-WAL 디스크는 일시적 데이터이므로 별도 백업이 불필요하다.
+WAL 디스크는 일시적 데이터 → 별도 백업 불필요.
 
 ---
 
@@ -458,7 +452,7 @@ WAL 디스크는 일시적 데이터이므로 별도 백업이 불필요하다.
 
 ### 개요
 
-분산 트레이싱은 다음 문제 해결에 강점을 가진다:
+분산 트레이싱은 다음 문제를 해결하는 데 강점이 있음:
 
 - "왜 이 요청이 느린가?"
 - "어떤 서비스가 에러를 일으키는가?"
@@ -467,11 +461,9 @@ WAL 디스크는 일시적 데이터이므로 별도 백업이 불필요하다.
 
 #### 메트릭/로그와의 비교
 
-| 데이터 | 답할 수 있는 질문 |
-|--------|------------------|
-| 메트릭 | "얼마나 많이? 얼마나 빠르게?" (집계, 추세) |
-| 로그 | "무엇이 일어났는가?" (이벤트 상세) |
-| 트레이스 | "어디서 시간이 소비됐는가? 어떻게 흘렀는가?" (인과 관계) |
+- 메트릭: "얼마나 많이? 얼마나 빠르게?" (집계, 추세)
+- 로그: "무엇이 일어났는가?" (이벤트 상세)
+- 트레이스: "어디서 시간이 소비됐는가? 어떻게 흘렀는가?" (인과 관계)
 
 ---
 
@@ -699,7 +691,7 @@ sum by (client, server) (
 > 100
 ```
 
-같은 트레이스 내에서 동일 SQL이 100번 이상 실행되면 N+1 문제를 의심할 수 있다.
+같은 트레이스 내에서 동일 SQL이 100번 이상 실행 → N+1 문제 의심 가능.
 
 #### 직렬 vs 병렬 호출
 
@@ -707,7 +699,7 @@ sum by (client, server) (
 - 가로로 나란히: 직렬 (느림)
 - 위아래로: 병렬 (빠름)
 
-병렬화 가능한 호출을 식별하여 코드를 개선한다.
+병렬화 가능한 호출을 식별하여 코드 개선.
 
 ---
 
@@ -740,7 +732,7 @@ sum by (client, server) (
 | max(duration) > 5s
 ```
 
-장기 실행 트랜잭션을 감지한다.
+장기 실행 트랜잭션 감지 용도.
 
 ---
 
@@ -803,7 +795,7 @@ sum by (target_service) (
 { status = error && resource.service.name != "frontend" }
 ```
 
-frontend에서 발생한 에러와 다운스트림 에러를 함께 조회한다.
+frontend에서 발생한 에러와 다운스트림 에러를 함께 조회.
 
 #### 에러 지속 시간 (얼마나 오래 걸리고 실패하는가)
 
@@ -815,7 +807,7 @@ histogram_quantile(0.95,
 )
 ```
 
-빠른 실패와 타임아웃 후 실패를 구분할 수 있다.
+빠른 실패와 타임아웃 후 실패 구분 가능.
 
 ---
 
@@ -862,4 +854,4 @@ by (.payment.method)
 by (.payment.method)
 ```
 
-이러한 메트릭은 별도의 메트릭 계측 코드 없이 트레이스에서 바로 추출할 수 있다.
+이러한 메트릭은 별도의 메트릭 계측 코드 없이 트레이스에서 바로 추출 가능.

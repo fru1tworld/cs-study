@@ -18,7 +18,7 @@
 
 #### 1.1 외래 데이터 래퍼란?
 
-외래 데이터 래퍼(Foreign Data Wrapper, FDW) 는 PostgreSQL 코어 서버가 외래 테이블에 대한 모든 연산을 처리하기 위해 호출하는 함수들의 집합입니다. FDW는 다음과 같은 책임을 가집니다:
+외래 데이터 래퍼(Foreign Data Wrapper, FDW) 는 PostgreSQL 코어 서버가 외래 테이블에 대한 모든 연산을 처리하기 위해 호출하는 함수들의 집합임. FDW는 다음과 같은 책임을 가짐:
 
 - 원격 데이터 소스에서 데이터 가져오기 (Fetching data from remote sources)
 - PostgreSQL 실행기에 데이터 반환하기 (Returning data to the executor)
@@ -26,7 +26,7 @@
 
 #### 1.2 아키텍처
 
-외래 테이블에 대한 모든 연산은 해당 외래 데이터 래퍼를 통해 라우팅됩니다. 래퍼는 PostgreSQL이 쿼리 계획(query planning)과 실행(execution) 중에 호출하는 콜백 함수들을 구현해야 합니다.
+외래 테이블에 대한 모든 연산은 해당 외래 데이터 래퍼를 통해 라우팅됨. 래퍼는 PostgreSQL이 쿼리 계획(query planning)과 실행(execution) 중에 호출하는 콜백 함수들을 구현해야 함.
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -46,7 +46,7 @@
 
 #### 1.3 참조 구현
 
-PostgreSQL 표준 배포판의 `contrib` 서브디렉토리에는 자신만의 래퍼를 작성할 때 좋은 참조가 되는 FDW 구현들이 포함되어 있습니다:
+PostgreSQL 표준 배포판의 `contrib` 서브디렉토리에는 자신만의 래퍼를 작성할 때 좋은 참조가 되는 FDW 구현들이 포함되어 있음:
 
 - file_fdw: 서버의 파일 시스템에 있는 데이터 파일 접근
 - postgres_fdw: 다른 PostgreSQL 서버에 접근
@@ -58,11 +58,11 @@ PostgreSQL 표준 배포판의 `contrib` 서브디렉토리에는 자신만의 �
 
 #### 2.1 핸들러 함수 개요
 
-외래 데이터 래퍼는 핸들러 함수(handler function) 를 통해 PostgreSQL에 등록됩니다. 이 함수는 `fdw_handler` 타입을 반환해야 하며, 콜백 함수 포인터들을 포함하는 `FdwRoutine` 구조체를 반환합니다.
+외래 데이터 래퍼는 핸들러 함수(handler function) 를 통해 PostgreSQL에 등록됨. 이 함수는 `fdw_handler` 타입을 반환해야 하며, 콜백 함수 포인터들을 포함하는 `FdwRoutine` 구조체를 반환함.
 
 #### 2.2 FdwRoutine 구조체
 
-`FdwRoutine` 구조체는 `src/include/foreign/fdwapi.h`에 정의되어 있으며, 모든 FDW 콜백 함수 포인터를 포함합니다:
+`FdwRoutine` 구조체는 `src/include/foreign/fdwapi.h`에 정의되어 있으며, 모든 FDW 콜백 함수 포인터를 포함함:
 
 ```c
 typedef struct FdwRoutine
@@ -172,7 +172,7 @@ CREATE FOREIGN TABLE remote_table (
 
 #### 3.1 스캔 콜백 (Scanning Callbacks)
 
-외래 테이블을 스캔하기 위한 필수 콜백 함수들입니다.
+외래 테이블을 스캔하기 위한 필수 콜백 함수들임.
 
 ##### GetForeignRelSize
 
@@ -182,7 +182,7 @@ void GetForeignRelSize(PlannerInfo *root,
                        Oid foreigntableid);
 ```
 
-목적: 쿼리 계획 단계에서 외래 테이블의 크기 추정치를 계산합니다.
+목적: 쿼리 계획 단계에서 외래 테이블의 크기 추정치를 계산함.
 
 설명:
 - `baserel->rows`: 예상 행 수 (WHERE 절 적용 후)
@@ -215,7 +215,7 @@ void GetForeignPaths(PlannerInfo *root,
                      Oid foreigntableid);
 ```
 
-목적: 외래 테이블 스캔을 위한 가능한 접근 경로(access paths)를 생성합니다.
+목적: 외래 테이블 스캔을 위한 가능한 접근 경로(access paths)를 생성함.
 
 설명:
 - 최소 하나의 `ForeignPath` 노드를 생성해야 함
@@ -265,7 +265,7 @@ ForeignScan *GetForeignPlan(PlannerInfo *root,
                             Plan *outer_plan);
 ```
 
-목적: 선택된 외래 접근 경로로부터 `ForeignScan` 계획 노드를 생성합니다.
+목적: 선택된 외래 접근 경로로부터 `ForeignScan` 계획 노드를 생성함.
 
 ```c
 static ForeignScan *
@@ -311,9 +311,9 @@ myGetForeignPlan(PlannerInfo *root,
 void BeginForeignScan(ForeignScanState *node, int eflags);
 ```
 
-목적: 실행기 시작 시 스캔을 초기화합니다.
+목적: 실행기 시작 시 스캔을 초기화함.
 
-주의: `(eflags & EXEC_FLAG_EXPLAIN_ONLY)`가 참이면 외부에서 관찰 가능한 부작용을 일으키는 동작을 수행해서는 안 됩니다 (EXPLAIN 전용 실행).
+주의: `(eflags & EXEC_FLAG_EXPLAIN_ONLY)`가 참이면 외부에서 관찰 가능한 부작용을 일으키는 동작을 수행해서는 안 됨 (EXPLAIN 전용 실행).
 
 ```c
 static void
@@ -344,9 +344,9 @@ myBeginForeignScan(ForeignScanState *node, int eflags)
 TupleTableSlot *IterateForeignScan(ForeignScanState *node);
 ```
 
-목적: 외래 소스에서 한 행을 가져옵니다.
+목적: 외래 소스에서 한 행을 가져옴.
 
-반환값: 더 이상 가져올 행이 없으면 빈 슬롯을 반환합니다.
+반환값: 더 이상 가져올 행이 없으면 빈 슬롯을 반환함.
 
 ```c
 static TupleTableSlot *
@@ -378,7 +378,7 @@ myIterateForeignScan(ForeignScanState *node)
 void ReScanForeignScan(ForeignScanState *node);
 ```
 
-목적: 스캔을 처음부터 다시 시작합니다. 이 시점에 매개변수 값이 변경되어 있을 수 있습니다.
+목적: 스캔을 처음부터 다시 시작함. 이 시점에 매개변수 값이 변경되어 있을 수 있음.
 
 ```c
 static void
@@ -397,7 +397,7 @@ myReScanForeignScan(ForeignScanState *node)
 void EndForeignScan(ForeignScanState *node);
 ```
 
-목적: 스캔을 종료하고 리소스(파일, 연결 등)를 해제합니다.
+목적: 스캔을 종료하고 리소스(파일, 연결 등)를 해제함.
 
 ```c
 static void
@@ -429,7 +429,7 @@ void GetForeignJoinPaths(PlannerInfo *root,
                          JoinPathExtraData *extra);
 ```
 
-목적: 동일한 서버에 있는 여러 외래 테이블의 조인을 위한 접근 경로를 생성합니다.
+목적: 동일한 서버에 있는 여러 외래 테이블의 조인을 위한 접근 경로를 생성함.
 
 설명:
 - 조인을 원격에서 실행할 수 있는지 결정
@@ -486,7 +486,7 @@ void GetForeignUpperPaths(PlannerInfo *root,
                           void *extra);
 ```
 
-목적: 스캔/조인 후의 처리(집계, 정렬 등)를 위한 경로를 생성합니다.
+목적: 스캔/조인 후의 처리(집계, 정렬 등)를 위한 경로를 생성함.
 
 stage 값:
 - `UPPERREL_SETOP`: UNION/INTERSECT/EXCEPT 처리
@@ -532,7 +532,7 @@ myGetForeignUpperPaths(PlannerInfo *root,
 
 #### 3.4 업데이트 콜백 (Updating Callbacks)
 
-외래 테이블에 대한 INSERT, UPDATE, DELETE 연산을 지원하기 위한 콜백들입니다.
+외래 테이블에 대한 INSERT, UPDATE, DELETE 연산을 지원하기 위한 콜백들임.
 
 ##### AddForeignUpdateTargets
 
@@ -543,7 +543,7 @@ void AddForeignUpdateTargets(PlannerInfo *root,
                              Relation target_relation);
 ```
 
-목적: UPDATE/DELETE 연산에 필요한 숨겨진 "junk" 컬럼을 추가합니다.
+목적: UPDATE/DELETE 연산에 필요한 숨겨진 "junk" 컬럼을 추가함.
 
 ```c
 static void
@@ -575,7 +575,7 @@ List *PlanForeignModify(PlannerInfo *root,
                         int subplan_index);
 ```
 
-목적: INSERT/UPDATE/DELETE 연산을 위한 FDW 개인 정보를 생성합니다.
+목적: INSERT/UPDATE/DELETE 연산을 위한 FDW 개인 정보를 생성함.
 
 ```c
 static List *
@@ -630,7 +630,7 @@ void BeginForeignModify(ModifyTableState *mtstate,
                         int eflags);
 ```
 
-목적: 실행기 시작 시 테이블 수정 연산을 초기화합니다.
+목적: 실행기 시작 시 테이블 수정 연산을 초기화함.
 
 ```c
 static void
@@ -667,7 +667,7 @@ TupleTableSlot *ExecForeignInsert(EState *estate,
                                   TupleTableSlot *planSlot);
 ```
 
-목적: 외래 테이블에 한 튜플을 삽입합니다.
+목적: 외래 테이블에 한 튜플을 삽입함.
 
 ```c
 static TupleTableSlot *
@@ -700,7 +700,7 @@ TupleTableSlot **ExecForeignBatchInsert(EState *estate,
                                         int *numSlots);
 ```
 
-목적: 여러 튜플을 일괄 삽입합니다.
+목적: 여러 튜플을 일괄 삽입함.
 
 ```c
 static TupleTableSlot **
@@ -729,7 +729,7 @@ myExecForeignBatchInsert(EState *estate,
 int GetForeignModifyBatchSize(ResultRelInfo *rinfo);
 ```
 
-목적: 단일 `ExecForeignBatchInsert` 호출이 처리할 수 있는 최대 튜플 수를 보고합니다.
+목적: 단일 `ExecForeignBatchInsert` 호출이 처리할 수 있는 최대 튜플 수를 보고함.
 
 ```c
 static int
@@ -749,7 +749,7 @@ TupleTableSlot *ExecForeignUpdate(EState *estate,
                                   TupleTableSlot *planSlot);
 ```
 
-목적: 외래 테이블에서 한 튜플을 업데이트합니다.
+목적: 외래 테이블에서 한 튜플을 업데이트함.
 
 ```c
 static TupleTableSlot *
@@ -784,7 +784,7 @@ TupleTableSlot *ExecForeignDelete(EState *estate,
                                   TupleTableSlot *planSlot);
 ```
 
-목적: 외래 테이블에서 한 튜플을 삭제합니다.
+목적: 외래 테이블에서 한 튜플을 삭제함.
 
 ```c
 static TupleTableSlot *
@@ -816,7 +816,7 @@ myExecForeignDelete(EState *estate,
 void EndForeignModify(EState *estate, ResultRelInfo *rinfo);
 ```
 
-목적: 테이블 수정을 종료하고 리소스를 해제합니다.
+목적: 테이블 수정을 종료하고 리소스를 해제함.
 
 ```c
 static void
@@ -838,7 +838,7 @@ myEndForeignModify(EState *estate, ResultRelInfo *rinfo)
 int IsForeignRelUpdatable(Relation rel);
 ```
 
-목적: 외래 테이블이 지원하는 업데이트 연산을 비트마스크로 반환합니다.
+목적: 외래 테이블이 지원하는 업데이트 연산을 비트마스크로 반환함.
 
 ```c
 static int
@@ -852,7 +852,7 @@ myIsForeignRelUpdatable(Relation rel)
 
 #### 3.5 직접 수정 콜백 (Direct Modification Callbacks)
 
-원격 서버에서 직접 수정을 수행하기 위한 콜백들입니다.
+원격 서버에서 직접 수정을 수행하기 위한 콜백들임.
 
 ##### PlanDirectModify
 
@@ -863,7 +863,7 @@ bool PlanDirectModify(PlannerInfo *root,
                       int subplan_index);
 ```
 
-목적: 원격 서버에서 직접 수정이 안전한지 결정합니다.
+목적: 원격 서버에서 직접 수정이 안전한지 결정함.
 
 ```c
 static bool
@@ -891,7 +891,7 @@ myPlanDirectModify(PlannerInfo *root,
 void BeginDirectModify(ForeignScanState *node, int eflags);
 ```
 
-목적: 직접 수정 실행을 준비합니다.
+목적: 직접 수정 실행을 준비함.
 
 ##### IterateDirectModify
 
@@ -899,7 +899,7 @@ void BeginDirectModify(ForeignScanState *node, int eflags);
 TupleTableSlot *IterateDirectModify(ForeignScanState *node);
 ```
 
-목적: RETURNING 절을 위한 결과 데이터를 가져옵니다.
+목적: RETURNING 절을 위한 결과 데이터를 가져옴.
 
 ##### EndDirectModify
 
@@ -907,7 +907,7 @@ TupleTableSlot *IterateDirectModify(ForeignScanState *node);
 void EndDirectModify(ForeignScanState *node);
 ```
 
-목적: 직접 수정 후 정리합니다.
+목적: 직접 수정 후 정리함.
 
 #### 3.6 TRUNCATE 콜백
 
@@ -919,7 +919,7 @@ void ExecForeignTruncate(List *rels,
                          bool restart_seqs);
 ```
 
-목적: 외래 테이블을 TRUNCATE합니다.
+목적: 외래 테이블을 TRUNCATE함.
 
 매개변수:
 - `behavior`: `DROP_RESTRICT` 또는 `DROP_CASCADE`
@@ -951,7 +951,7 @@ myExecForeignTruncate(List *rels,
 void ExplainForeignScan(ForeignScanState *node, ExplainState *es);
 ```
 
-목적: 외래 테이블 스캔에 대한 추가 EXPLAIN 출력을 인쇄합니다.
+목적: 외래 테이블 스캔에 대한 추가 EXPLAIN 출력을 인쇄함.
 
 ```c
 static void
@@ -975,7 +975,7 @@ void ExplainForeignModify(ModifyTableState *mtstate,
                           struct ExplainState *es);
 ```
 
-목적: 테이블 업데이트에 대한 추가 EXPLAIN 출력을 인쇄합니다.
+목적: 테이블 업데이트에 대한 추가 EXPLAIN 출력을 인쇄함.
 
 #### 3.8 ANALYZE 콜백
 
@@ -987,7 +987,7 @@ bool AnalyzeForeignTable(Relation relation,
                          BlockNumber *totalpages);
 ```
 
-목적: 외래 테이블에 대한 통계를 수집합니다.
+목적: 외래 테이블에 대한 통계를 수집함.
 
 ```c
 static bool
@@ -1032,7 +1032,7 @@ my_acquire_sample_rows(Relation relation,
 List *ImportForeignSchema(ImportForeignSchemaStmt *stmt, Oid serverOid);
 ```
 
-목적: 원격 스키마에서 테이블 정의를 가져옵니다.
+목적: 원격 스키마에서 테이블 정의를 가져옴.
 
 필터 유형:
 - `FDW_IMPORT_SCHEMA_ALL`: 모든 테이블
@@ -1075,7 +1075,7 @@ bool IsForeignScanParallelSafe(PlannerInfo *root,
                                RangeTblEntry *rte);
 ```
 
-목적: 스캔을 병렬 워커에서 수행해도 안전한지 확인합니다.
+목적: 스캔을 병렬 워커에서 수행해도 안전한지 확인함.
 
 ##### EstimateDSMForeignScan
 
@@ -1083,7 +1083,7 @@ bool IsForeignScanParallelSafe(PlannerInfo *root,
 Size EstimateDSMForeignScan(ForeignScanState *node, ParallelContext *pcxt);
 ```
 
-목적: 필요한 동적 공유 메모리 크기(바이트)를 추정합니다.
+목적: 필요한 동적 공유 메모리 크기(바이트)를 추정함.
 
 ##### InitializeDSMForeignScan
 
@@ -1093,7 +1093,7 @@ void InitializeDSMForeignScan(ForeignScanState *node,
                               void *coordinate);
 ```
 
-목적: 병렬 연산에 사용할 공유 메모리를 초기화합니다.
+목적: 병렬 연산에 사용할 공유 메모리를 초기화함.
 
 ##### InitializeWorkerForeignScan
 
@@ -1103,7 +1103,7 @@ void InitializeWorkerForeignScan(ForeignScanState *node,
                                  void *coordinate);
 ```
 
-목적: 리더의 공유 상태를 기반으로 병렬 워커의 로컬 상태를 초기화합니다.
+목적: 리더의 공유 상태를 기반으로 병렬 워커의 로컬 상태를 초기화함.
 
 ##### ShutdownForeignScan
 
@@ -1111,7 +1111,7 @@ void InitializeWorkerForeignScan(ForeignScanState *node,
 void ShutdownForeignScan(ForeignScanState *node);
 ```
 
-목적: DSM 세그먼트가 해제되기 전에 리소스를 정리합니다.
+목적: DSM 세그먼트가 해제되기 전에 리소스를 정리함.
 
 #### 3.11 비동기 실행 콜백 (Asynchronous Execution Callbacks)
 
@@ -1121,7 +1121,7 @@ void ShutdownForeignScan(ForeignScanState *node);
 bool IsForeignPathAsyncCapable(ForeignPath *path);
 ```
 
-목적: 해당 경로가 외래 릴레이션을 비동기적으로 스캔할 수 있는지 확인합니다.
+목적: 해당 경로가 외래 릴레이션을 비동기적으로 스캔할 수 있는지 확인함.
 
 ##### ForeignAsyncRequest
 
@@ -1129,7 +1129,7 @@ bool IsForeignPathAsyncCapable(ForeignPath *path);
 void ForeignAsyncRequest(AsyncRequest *areq);
 ```
 
-목적: 비동기적으로 한 튜플을 생성합니다.
+목적: 비동기적으로 한 튜플을 생성함.
 
 ##### ForeignAsyncConfigureWait
 
@@ -1137,7 +1137,7 @@ void ForeignAsyncRequest(AsyncRequest *areq);
 void ForeignAsyncConfigureWait(AsyncRequest *areq);
 ```
 
-목적: 대기할 파일 디스크립터 이벤트를 구성합니다.
+목적: 대기할 파일 디스크립터 이벤트를 구성함.
 
 ##### ForeignAsyncNotify
 
@@ -1145,13 +1145,13 @@ void ForeignAsyncConfigureWait(AsyncRequest *areq);
 void ForeignAsyncNotify(AsyncRequest *areq);
 ```
 
-목적: 관련 이벤트를 처리하고, 비동기적으로 튜플 하나를 생성합니다.
+목적: 관련 이벤트를 처리하고, 비동기적으로 튜플 하나를 생성함.
 
 ---
 
 ### 4. 헬퍼 함수
 
-PostgreSQL 코어 서버가 FDW 개발을 위해 제공하는 유틸리티 함수들입니다.
+PostgreSQL 코어 서버가 FDW 개발을 위해 제공하는 유틸리티 함수들임.
 
 #### 4.1 ForeignDataWrapper 함수
 
@@ -1248,7 +1248,7 @@ example_helper_usage(Oid foreigntableid)
 
 #### 5.1 계획 참여 콜백
 
-다음 FDW 콜백 함수들이 PostgreSQL의 쿼리 계획에 참여합니다:
+다음 FDW 콜백 함수들이 PostgreSQL의 쿼리 계획에 참여함:
 
 - `GetForeignRelSize`
 - `GetForeignPaths`
@@ -1262,11 +1262,11 @@ example_helper_usage(Oid foreigntableid)
 
 ##### baserestrictinfo와 비용 절감
 
-`root`와 `baserel` 매개변수를 통해 FDW가 데이터 가져오기를 줄일 수 있습니다:
+`root`와 `baserel` 매개변수를 통해 FDW가 데이터 가져오기를 줄일 수 있음:
 
-`baserel->baserestrictinfo`: 행을 필터링해야 하는 제한 조건(WHERE 절)을 포함합니다. FDW는 이를 적용하거나 코어 실행기에 맡길 수 있습니다.
+`baserel->baserestrictinfo`: 행을 필터링해야 하는 제한 조건(WHERE 절)을 포함함. FDW는 이를 적용하거나 코어 실행기에 맡길 수 있음.
 
-`baserel->reltarget->exprs`: ForeignScan 노드가 가져와야 하는 컬럼을 결정합니다 (조건 평가에만 사용되는 컬럼은 제외).
+`baserel->reltarget->exprs`: ForeignScan 노드가 가져와야 하는 컬럼을 결정함 (조건 평가에만 사용되는 컬럼은 제외).
 
 ```c
 static void
@@ -1294,13 +1294,13 @@ analyze_restrictions(RelOptInfo *baserel)
 
 ##### 개인 필드 저장
 
-`baserel->fdw_private`: FDW가 외래 테이블에 대한 정보를 저장하기 위한 void 포인터입니다. 계획자가 NULL로 초기화하고 이후 건드리지 않습니다. 계획 단계 간에 정보를 전달하면서 재계산을 피하는 데 유용합니다.
+`baserel->fdw_private`: FDW가 외래 테이블에 대한 정보를 저장하기 위한 void 포인터임. 계획자가 NULL로 초기화하고 이후 건드리지 않음. 계획 단계 간에 정보를 전달하면서 재계산을 피하는 데 유용함.
 
-`ForeignPath->fdw_private`: 접근 경로 의미를 저장하기 위한 List 포인터입니다. 디버깅을 위해 `nodeToString`으로 덤프 가능한 표현을 사용하는 것이 좋습니다.
+`ForeignPath->fdw_private`: 접근 경로 의미를 저장하기 위한 List 포인터임. 디버깅을 위해 `nodeToString`으로 덤프 가능한 표현을 사용하는 것이 좋음.
 
 #### 5.3 GetForeignPlan 구현
 
-`GetForeignPlan`에서 FDW는 다음을 할 수 있습니다:
+`GetForeignPlan`에서 FDW는 다음을 할 수 있음:
 
 1. 타겟 리스트 복사: 그대로 계획 노드에 복사
 2. scan_clauses 처리: 실제 조건을 추출하여 qual 리스트에 배치
@@ -1309,15 +1309,15 @@ analyze_restrictions(RelOptInfo *baserel)
 
 #### 5.4 조건 재검사 요구사항
 
-qual 리스트에서 제거된 조건은 다음 중 하나여야 합니다:
+qual 리스트에서 제거된 조건은 다음 중 하나여야 함:
 - `fdw_recheck_quals`에 추가되거나
 - `RecheckForeignScan`에서 재검사
 
-이는 `READ COMMITTED` 격리 수준에서 동시 업데이트가 발생했을 때 올바른 동작을 보장하기 위함입니다. NULL이 발생할 수 있는 필드를 포함한 외부 조인을 푸시다운하는 경우 `RecheckForeignScan` 구현이 필요할 수 있습니다.
+이는 `READ COMMITTED` 격리 수준에서 동시 업데이트가 발생했을 때 올바른 동작을 보장하기 위함임. NULL이 발생할 수 있는 필드를 포함한 외부 조인을 푸시다운하는 경우 `RecheckForeignScan` 구현이 필요할 수 있음.
 
 #### 5.5 ForeignScan 출력 설명
 
-`fdw_scan_tlist`: FDW가 반환하는 튜플을 설명합니다:
+`fdw_scan_tlist`: FDW가 반환하는 튜플을 설명함:
 
 - NIL: 반환된 튜플이 외래 테이블의 선언된 행 타입과 일치
 - Non-NIL: 반환되는 컬럼을 나타내는 Var/표현식으로 구성된 TargetEntry 리스트
@@ -1329,7 +1329,7 @@ qual 리스트에서 제거된 조건은 다음 중 하나여야 합니다:
 
 #### 5.6 조인을 위한 매개변수화된 경로
 
-FDW는 다음을 구성해야 합니다:
+FDW는 다음을 구성해야 함:
 
 1. 최소 하나의 경로: 테이블 제한 조건에만 의존
 2. 매개변수화된 경로: 조인용 (예: `foreign_variable = local_variable`)
@@ -1339,7 +1339,7 @@ FDW는 다음을 구성해야 합니다:
 
 #### 5.7 원격 조인 지원
 
-`GetForeignJoinPaths`는 `GetForeignPaths`와 유사하게 원격 조인을 위한 `ForeignPath`를 생성합니다:
+`GetForeignJoinPaths`는 `GetForeignPaths`와 유사하게 원격 조인을 위한 `ForeignPath`를 생성함:
 
 - 조인 조건이 `extra->restrictlist`로 전달됨 (`baserestrictinfo`가 아님)
 - 경로의 `fdw_private`을 통해 `GetForeignPlan`에 정보 전달
@@ -1357,11 +1357,11 @@ FDW는 다음을 구성해야 합니다:
 
 #### 5.9 UPDATE/DELETE 계획
 
-`PlanForeignModify`와 `PlanDirectModify`는 다음에 접근할 수 있습니다:
+`PlanForeignModify`와 `PlanDirectModify`는 다음에 접근할 수 있음:
 - 외래 테이블의 RelOptInfo 구조체
 - 스캔 계획 중 생성된 baserel->fdw_private 데이터
 
-반환되는 `List`는 `copyObject`가 처리할 수 있는 구조체만 포함해야 합니다.
+반환되는 `List`는 `copyObject`가 처리할 수 있는 구조체만 포함해야 함.
 
 ---
 
@@ -1369,7 +1369,7 @@ FDW는 다음을 구성해야 합니다:
 
 #### 6.1 개요
 
-FDW는 행 수준 잠금을 구현해 동시 업데이트를 방지하고, PostgreSQL 표준 테이블 잠금의 의미론을 근사적으로 재현할 수 있습니다.
+FDW는 행 수준 잠금을 구현해 동시 업데이트를 방지하고, PostgreSQL 표준 테이블 잠금의 의미론을 근사적으로 재현할 수 있음.
 
 #### 6.2 초기 잠금 vs 지연 잠금
 
@@ -1411,7 +1411,7 @@ myIterateForeignScan_EarlyLock(ForeignScanState *node)
 
 ##### UPDATE/DELETE 연산용
 
-`ForeignScan` 연산은 대상 테이블 행에 대해 초기 잠금을 수행해야 합니다:
+`ForeignScan` 연산은 대상 테이블 행에 대해 초기 잠금을 수행해야 함:
 
 ```
 ForeignScan → SELECT FOR UPDATE (동등)
@@ -1465,7 +1465,7 @@ UPDATE/DELETE/SELECT FOR UPDATE/SHARE에서 잠금되지 않은 외래 테이블
 
 #### 6.5 READ COMMITTED 격리 고려사항
 
-`READ COMMITTED` 모드에서 PostgreSQL은 업데이트된 튜플에 대해 조건을 재검사해야 할 수 있습니다. FDW는 다음 방법 중 하나를 선택할 수 있습니다:
+`READ COMMITTED` 모드에서 PostgreSQL은 업데이트된 튜플에 대해 조건을 재검사해야 할 수 있음. FDW는 다음 방법 중 하나를 선택할 수 있음:
 
 1. 효율적인 재가져오기를 위해 프로젝션된 컬럼에 TID를 포함 (저비용 재가져오기 기능 필요)
 2. 전체 행 복사를 기본으로 사용 — 특별한 요구사항은 없지만 병합/해시 조인 성능이 저하될 수 있음
@@ -1503,7 +1503,7 @@ myRefetchForeignRow(EState *estate,
 
 #### 7.1 완전한 FDW 구현 예제
 
-다음은 간단한 CSV 파일 FDW의 완전한 구현 예제입니다.
+다음은 간단한 CSV 파일 FDW의 완전한 구현 예제임.
 
 ##### 헤더 파일 (my_csv_fdw.h)
 
@@ -2078,27 +2078,25 @@ ANALYZE employees;
 
 ### 개요
 
-PostgreSQL의 `TABLESAMPLE` 절은 기본 제공되는 `BERNOULLI`와 `SYSTEM` 메서드 외에도 사용자 정의 테이블 샘플링 메서드를 지원합니다. 샘플링 메서드는 `TABLESAMPLE` 절 사용 시 어떤 행이 선택될지를 결정합니다.
+PostgreSQL의 `TABLESAMPLE` 절은 기본 제공되는 `BERNOULLI`와 `SYSTEM` 메서드 외에도 사용자 정의 테이블 샘플링 메서드를 지원함. 샘플링 메서드는 `TABLESAMPLE` 절 사용 시 어떤 행이 선택될지를 결정함.
 
 #### SQL 함수 시그니처
 
-SQL 수준에서 테이블 샘플링 메서드는 다음과 같은 시그니처를 가진 단일 SQL 함수로 표현됩니다:
+SQL 수준에서 테이블 샘플링 메서드는 다음과 같은 시그니처를 가진 단일 SQL 함수로 표현됨:
 
 ```sql
 method_name(internal) RETURNS tsm_handler
 ```
 
-이 함수의 특징은 다음과 같습니다:
+이 함수의 특징은 다음과 같음:
 
-| 특성 | 설명 |
-|------|------|
-| 함수명 | `TABLESAMPLE` 절에서 사용할 메서드 이름과 동일해야 함 |
-| `internal` 인자 | SQL에서 직접 호출을 방지하기 위한 더미 인자 |
-| 반환 타입 | `palloc`된 `TsmRoutine` 타입 구조체에 대한 포인터 |
+- 함수명: `TABLESAMPLE` 절에서 사용할 메서드 이름과 동일해야 함
+- `internal` 인자: SQL에서 직접 호출을 방지하기 위한 더미 인자
+- 반환 타입: `palloc`된 `TsmRoutine` 타입 구조체에 대한 포인터
 
 #### TsmRoutine 구조체
 
-반환되는 `TsmRoutine` 구조체는 샘플링 메서드에 필요한 지원 함수들에 대한 포인터를 포함해야 합니다. 이 지원 함수들은 일반 C 함수로서, SQL에서 직접 호출할 수 없습니다.
+반환되는 `TsmRoutine` 구조체는 샘플링 메서드에 필요한 지원 함수들에 대한 포인터를 포함해야 함. 이 지원 함수들은 일반 C 함수로서, SQL에서 직접 호출할 수 없음.
 
 ##### 구조체 필드
 
@@ -2128,36 +2126,48 @@ typedef struct TsmRoutine
 
 ##### 주요 필드 설명
 
-| 필드 | 타입 | 설명 |
-|------|------|------|
-| `parameterTypes` | `List *` | `TABLESAMPLE` 절에서 받는 파라미터 데이터 타입의 OID 리스트. 내장 메서드들은 샘플링 백분율을 위해 `FLOAT4OID` 사용 |
-| `repeatable_across_queries` | `bool` | `true`인 경우: 동일한 파라미터와 `REPEATABLE` 시드를 사용하면 쿼리마다 동일한 샘플 반환. `false`인 경우: `REPEATABLE` 절을 허용하지 않음 |
-| `repeatable_across_scans` | `bool` | `true`인 경우: 동일 쿼리 내 연속 스캔에서 동일한 샘플 반환. `false`인 경우: 플래너가 다중 스캔을 방지하여 불일치 출력 회피 |
+- `parameterTypes`
+  - 타입: `List *`
+  - 설명: `TABLESAMPLE` 절에서 받는 파라미터 데이터 타입의 OID 리스트. 내장 메서드들은 샘플링 백분율을 위해 `FLOAT4OID` 사용
+- `repeatable_across_queries`
+  - 타입: `bool`
+  - 설명: `true`인 경우: 동일한 파라미터와 `REPEATABLE` 시드를 사용하면 쿼리마다 동일한 샘플 반환. `false`인 경우: `REPEATABLE` 절을 허용하지 않음
+- `repeatable_across_scans`
+  - 타입: `bool`
+  - 설명: `true`인 경우: 동일 쿼리 내 연속 스캔에서 동일한 샘플 반환. `false`인 경우: 플래너가 다중 스캔을 방지하여 불일치 출력 회피
 
 #### 참조 파일
 
-| 파일 경로 | 설명 |
-|-----------|------|
-| `src/include/access/tsmapi.h` | `TsmRoutine` 타입 정의 |
-| `src/backend/access/tablesample/` | 내장 샘플링 메서드 구현 예제 |
-| `contrib/` | 확장 샘플링 메서드 예제 (예: `tsm_system_rows`, `tsm_system_time`) |
+- `src/include/access/tsmapi.h`: `TsmRoutine` 타입 정의
+- `src/backend/access/tablesample/`: 내장 샘플링 메서드 구현 예제
+- `contrib/`: 확장 샘플링 메서드 예제 (예: `tsm_system_rows`, `tsm_system_time`)
 
 ---
 
 ### 60.1. 샘플링 메서드 지원 함수
 
-TSM(Table Sampling Method) 핸들러 함수는 지원 함수에 대한 포인터를 포함하는 `TsmRoutine` 구조체를 반환합니다. 대부분의 함수는 필수이지만, 일부는 선택 사항으로 `NULL`로 설정할 수 있습니다.
+TSM(Table Sampling Method) 핸들러 함수는 지원 함수에 대한 포인터를 포함하는 `TsmRoutine` 구조체를 반환함. 대부분의 함수는 필수이지만, 일부는 선택 사항으로 `NULL`로 설정할 수 있음.
 
 #### 지원 함수 요약
 
-| 함수 | 필수 여부 | 용도 |
-|------|-----------|------|
-| `SampleScanGetSampleSize` | 필수 | 계획(Planning) 단계에서 스캔 크기 추정 |
-| `InitSampleScan` | 선택 | 실행기(Executor) 시작 시 초기화 |
-| `BeginSampleScan` | 필수 | 샘플링 스캔 실행 시작 |
-| `NextSampleBlock` | 선택 | 다음 스캔 페이지 반환 |
-| `NextSampleTuple` | 필수 | 다음 샘플 튜플 반환 |
-| `EndSampleScan` | 선택 | 스캔 종료 및 리소스 해제 |
+- `SampleScanGetSampleSize`
+  - 필수 여부: 필수
+  - 용도: 계획(Planning) 단계에서 스캔 크기 추정
+- `InitSampleScan`
+  - 필수 여부: 선택
+  - 용도: 실행기(Executor) 시작 시 초기화
+- `BeginSampleScan`
+  - 필수 여부: 필수
+  - 용도: 샘플링 스캔 실행 시작
+- `NextSampleBlock`
+  - 필수 여부: 선택
+  - 용도: 다음 스캔 페이지 반환
+- `NextSampleTuple`
+  - 필수 여부: 필수
+  - 용도: 다음 샘플 튜플 반환
+- `EndSampleScan`
+  - 필수 여부: 선택
+  - 용도: 스캔 종료 및 리소스 해제
 
 ---
 
@@ -2174,7 +2184,7 @@ SampleScanGetSampleSize(PlannerInfo *root,
 
 ##### 목적
 
-계획(Planning) 단계에서 호출되어 스캔 크기를 추정합니다.
+계획(Planning) 단계에서 호출되어 스캔 크기를 추정함.
 
 ##### 설명
 
@@ -2185,13 +2195,11 @@ SampleScanGetSampleSize(PlannerInfo *root,
 
 ##### 파라미터
 
-| 파라미터 | 설명 |
-|----------|------|
-| `root` | 플래너 정보 구조체 |
-| `baserel` | 샘플링 대상 릴레이션의 최적화 정보 |
-| `paramexprs` | `TABLESAMPLE` 절 파라미터를 나타내는 표현식 리스트 |
-| `pages` | 출력 파라미터: 읽을 페이지 수 |
-| `tuples` | 출력 파라미터: 선택할 튜플 수 |
+- `root`: 플래너 정보 구조체
+- `baserel`: 샘플링 대상 릴레이션의 최적화 정보
+- `paramexprs`: `TABLESAMPLE` 절 파라미터를 나타내는 표현식 리스트
+- `pages`: 출력 파라미터: 읽을 페이지 수
+- `tuples`: 출력 파라미터: 선택할 튜플 수
 
 ##### 구현 시 주의사항
 
@@ -2248,7 +2256,7 @@ InitSampleScan(SampleScanState *node,
 
 ##### 목적
 
-실행기(Executor) 시작 시 샘플 스캔에 필요한 초기화를 수행합니다.
+실행기(Executor) 시작 시 샘플 스캔에 필요한 초기화를 수행함.
 
 ##### 설명
 
@@ -2260,10 +2268,8 @@ InitSampleScan(SampleScanState *node,
 
 ##### 파라미터
 
-| 파라미터 | 설명 |
-|----------|------|
-| `node` | 샘플 스캔 상태 노드 |
-| `eflags` | 실행기 동작 모드 플래그 |
+- `node`: 샘플 스캔 상태 노드
+- `eflags`: 실행기 동작 모드 플래그
 
 ##### `eflags` 처리
 
@@ -2277,7 +2283,7 @@ if (eflags & EXEC_FLAG_EXPLAIN_ONLY)
 
 ##### 선택 사항
 
-이 함수는 선택 사항입니다. `NULL`로 설정 시 `BeginSampleScan`이 모든 초기화를 수행해야 합니다.
+이 함수는 선택 사항임. `NULL`로 설정 시 `BeginSampleScan`이 모든 초기화를 수행해야 함.
 
 ---
 
@@ -2293,7 +2299,7 @@ BeginSampleScan(SampleScanState *node,
 
 ##### 목적
 
-샘플링 스캔 실행을 시작합니다.
+샘플링 스캔 실행을 시작함.
 
 ##### 설명
 
@@ -2303,19 +2309,19 @@ BeginSampleScan(SampleScanState *node,
 
 ##### 파라미터
 
-| 파라미터 | 설명 |
-|----------|------|
-| `node` | 샘플 스캔 상태 노드 |
-| `params` | `TABLESAMPLE` 절 파라미터 값 배열 |
-| `nparams` | 파라미터 개수 |
-| `seed` | 난수 시드 (`REPEATABLE` 값의 해시 또는 `random()` 결과) |
+- `node`: 샘플 스캔 상태 노드
+- `params`: `TABLESAMPLE` 절 파라미터 값 배열
+- `nparams`: 파라미터 개수
+- `seed`: 난수 시드 (`REPEATABLE` 값의 해시 또는 `random()` 결과)
 
 ##### 설정 가능한 동작
 
-| 필드 | 기본값 | 설명 |
-|------|--------|------|
-| `node->use_bulkread` | `true` | 버퍼 재활용을 권장. 작은 테이블 비율을 읽을 때는 `false`로 설정 |
-| `node->use_pagemode` | `true` | 페이지당 단일 패스로 가시성 검사 수행. 작은 튜플 비율만 선택 시 `false`로 설정 |
+- `node->use_bulkread`
+  - 기본값: `true`
+  - 설명: 버퍼 재활용을 권장. 작은 테이블 비율을 읽을 때는 `false`로 설정
+- `node->use_pagemode`
+  - 기본값: `true`
+  - 설명: 페이지당 단일 패스로 가시성 검사 수행. 작은 튜플 비율만 선택 시 `false`로 설정
 
 ##### 반복 가능성 요구사항
 
@@ -2373,7 +2379,7 @@ NextSampleBlock(SampleScanState *node,
 
 ##### 목적
 
-스캔할 다음 페이지(블록)를 반환합니다.
+스캔할 다음 페이지(블록)를 반환함.
 
 ##### 설명
 
@@ -2382,14 +2388,12 @@ NextSampleBlock(SampleScanState *node,
 
 ##### 파라미터
 
-| 파라미터 | 설명 |
-|----------|------|
-| `node` | 샘플 스캔 상태 노드 |
-| `nblocks` | 릴레이션의 총 블록 수 |
+- `node`: 샘플 스캔 상태 노드
+- `nblocks`: 릴레이션의 총 블록 수
 
 ##### 선택 사항
 
-이 함수는 선택 사항입니다. `NULL`로 설정 시:
+이 함수는 선택 사항임. `NULL`로 설정 시:
 
 - 코어 코드가 전체 릴레이션 순차 스캔 수행
 - 동기화된 스캔(Synchronized Scanning) 사용
@@ -2432,7 +2436,7 @@ NextSampleTuple(SampleScanState *node,
 
 ##### 목적
 
-페이지에서 샘플링할 다음 튜플을 반환합니다.
+페이지에서 샘플링할 다음 튜플을 반환함.
 
 ##### 설명
 
@@ -2442,11 +2446,9 @@ NextSampleTuple(SampleScanState *node,
 
 ##### 파라미터
 
-| 파라미터 | 설명 |
-|----------|------|
-| `node` | 샘플 스캔 상태 노드 |
-| `blockno` | 현재 스캔 중인 블록 번호 |
-| `maxoffset` | 페이지의 최대 오프셋 번호 |
+- `node`: 샘플 스캔 상태 노드
+- `blockno`: 현재 스캔 중인 블록 번호
+- `maxoffset`: 페이지의 최대 오프셋 번호
 
 ##### 중요 참고사항
 
@@ -2500,7 +2502,7 @@ EndSampleScan(SampleScanState *node);
 
 ##### 목적
 
-스캔을 종료하고 리소스를 해제합니다.
+스캔을 종료하고 리소스를 해제함.
 
 ##### 설명
 
@@ -2510,7 +2512,7 @@ EndSampleScan(SampleScanState *node);
 
 ##### 선택 사항
 
-이 함수는 선택 사항입니다. 외부 리소스가 없다면 `NULL`로 설정 가능합니다.
+이 함수는 선택 사항임. 외부 리소스가 없다면 `NULL`로 설정 가능함.
 
 ##### 예제 코드
 
@@ -2536,7 +2538,7 @@ my_EndSampleScan(SampleScanState *node)
 
 ### 완전한 예제: 사용자 정의 샘플링 메서드
 
-다음은 사용자 정의 테이블 샘플링 메서드의 완전한 구현 예제입니다.
+다음은 사용자 정의 테이블 샘플링 메서드의 완전한 구현 예제임.
 
 #### SQL 정의
 
@@ -2623,17 +2625,17 @@ my_sample_method_handler(PG_FUNCTION_ARGS)
 
 #### 내장 샘플링 메서드
 
-| 메서드 | 설명 | 소스 파일 |
-|--------|------|-----------|
-| `BERNOULLI` | 각 튜플을 독립적으로 샘플링 | `src/backend/access/tablesample/bernoulli.c` |
-| `SYSTEM` | 블록 단위로 샘플링 | `src/backend/access/tablesample/system.c` |
+- `BERNOULLI`
+  - 설명: 각 튜플을 독립적으로 샘플링
+  - 소스 파일: `src/backend/access/tablesample/bernoulli.c`
+- `SYSTEM`
+  - 설명: 블록 단위로 샘플링
+  - 소스 파일: `src/backend/access/tablesample/system.c`
 
 #### 확장 샘플링 메서드 (contrib)
 
-| 확장 | 설명 |
-|------|------|
-| `tsm_system_rows` | 지정된 행 수만큼 샘플링 |
-| `tsm_system_time` | 지정된 시간 동안 샘플링 |
+- `tsm_system_rows`: 지정된 행 수만큼 샘플링
+- `tsm_system_time`: 지정된 시간 동안 샘플링
 
 #### 주요 헤더 파일
 
@@ -2665,18 +2667,20 @@ my_sample_method_handler(PG_FUNCTION_ARGS)
 
 ### 개요 (Overview)
 
-PostgreSQL은 확장 모듈(Extension Module)이 시스템에 새로운 스캔 타입을 추가할 수 있도록 하는 실험적 기능을 제공합니다. 외부 데이터 래퍼(Foreign Data Wrapper)가 자체 외부 테이블만 처리하는 것과 달리, 커스텀 스캔 프로바이더(Custom Scan Provider)는 시스템의 모든 릴레이션에 대해 대안적인 스캔 방법을 제공할 수 있습니다.
+PostgreSQL은 확장 모듈(Extension Module)이 시스템에 새로운 스캔 타입을 추가할 수 있도록 하는 실험적 기능을 제공함. 외부 데이터 래퍼(Foreign Data Wrapper)가 자체 외부 테이블만 처리하는 것과 달리, 커스텀 스캔 프로바이더(Custom Scan Provider)는 시스템의 모든 릴레이션에 대해 대안적인 스캔 방법을 제공할 수 있음.
 
 #### 외부 데이터 래퍼와의 차이점
 
-| 구분 | 외부 데이터 래퍼 (FDW) | 커스텀 스캔 프로바이더 |
-|------|------------------------|------------------------|
-| 적용 범위 | 자체 외부 테이블만 스캔 | 시스템의 모든 릴레이션에 대해 스캔 가능 |
-| 유연성 | 제한적 | 높음 |
+- 적용 범위
+  - 외부 데이터 래퍼 (FDW): 자체 외부 테이블만 스캔
+  - 커스텀 스캔 프로바이더: 시스템의 모든 릴레이션에 대해 스캔 가능
+- 유연성
+  - 외부 데이터 래퍼 (FDW): 제한적
+  - 커스텀 스캔 프로바이더: 높음
 
 #### 주요 사용 사례 (Use Cases)
 
-커스텀 스캔 프로바이더는 코어 시스템에서 지원하지 않는 최적화를 구현해야 할 때 주로 사용됩니다:
+커스텀 스캔 프로바이더는 코어 시스템에서 지원하지 않는 최적화를 구현해야 할 때 주로 사용됨:
 
 - 캐싱 전략 (Caching Strategies): 사용자 정의 캐싱 메커니즘 구현
 - 하드웨어 가속 (Hardware Acceleration): GPU나 특수 하드웨어를 활용한 스캔
@@ -2686,7 +2690,7 @@ PostgreSQL은 확장 모듈(Extension Module)이 시스템에 새로운 스캔 �
 
 ### 구현 프로세스 (Implementation Process)
 
-커스텀 스캔 프로바이더 작성은 3단계 프로세스로 이루어집니다:
+커스텀 스캔 프로바이더 작성은 3단계 프로세스로 이루어짐:
 
 ```
 1. 계획 단계 (Planning Phase)
@@ -2703,7 +2707,7 @@ PostgreSQL은 확장 모듈(Extension Module)이 시스템에 새로운 스캔 �
 
 ### 61.1 커스텀 스캔 경로 (Custom Scan Paths)
 
-커스텀 스캔 프로바이더는 코어 시스템의 접근 경로 생성이 완료된 후 호출되는 훅(Hook)을 통해 베이스 릴레이션(Base Relation)에 대한 경로를 추가합니다.
+커스텀 스캔 프로바이더는 코어 시스템의 접근 경로 생성이 완료된 후 호출되는 훅(Hook)을 통해 베이스 릴레이션(Base Relation)에 대한 경로를 추가함.
 
 #### 베이스 릴레이션 훅 (Base Relation Hook)
 
@@ -2715,7 +2719,7 @@ typedef void (*set_rel_pathlist_hook_type) (PlannerInfo *root,
 extern PGDLLIMPORT set_rel_pathlist_hook_type set_rel_pathlist_hook;
 ```
 
-이 훅이 호출되면, 커스텀 스캔 프로바이더는 일반적으로 `CustomPath` 객체를 생성하고 `add_path()` 또는 `add_partial_path()` 함수를 사용하여 추가합니다.
+이 훅이 호출되면, 커스텀 스캔 프로바이더는 일반적으로 `CustomPath` 객체를 생성하고 `add_path()` 또는 `add_partial_path()` 함수를 사용하여 추가함.
 
 #### 조인 릴레이션 훅 (Join Relation Hook)
 
@@ -2729,7 +2733,7 @@ typedef void (*set_join_pathlist_hook_type) (PlannerInfo *root,
 extern PGDLLIMPORT set_join_pathlist_hook_type set_join_pathlist_hook;
 ```
 
-> 중요: `CustomPath`는 사용할 조인 절(Join Clauses) 집합을 포함해야 합니다.
+> 중요: `CustomPath`는 사용할 조인 절(Join Clauses) 집합을 포함해야 함.
 
 #### CustomPath 데이터 구조
 
@@ -2747,22 +2751,18 @@ typedef struct CustomPath
 
 ##### 필드 설명
 
-| 필드 | 설명 |
-|------|------|
-| `path` | 표준 경로 초기화 (행 수, 비용 추정, 정렬 순서 포함) |
-| `flags` | 기능을 지정하는 비트 마스크 |
-| `custom_paths` | 이 경로에서 사용하는 `Path` 노드 목록 (나중에 `Plan` 노드로 변환됨) |
-| `custom_restrictinfo` | 조인 릴레이션의 조인 절 (베이스 릴레이션의 경우 NIL) |
-| `custom_private` | 프로바이더의 프라이빗 데이터 (`nodeToString` 호환 필요) |
-| `methods` | `CustomPathMethods` 구현에 대한 포인터 |
+- `path`: 표준 경로 초기화 (행 수, 비용 추정, 정렬 순서 포함)
+- `flags`: 기능을 지정하는 비트 마스크
+- `custom_paths`: 이 경로에서 사용하는 `Path` 노드 목록 (나중에 `Plan` 노드로 변환됨)
+- `custom_restrictinfo`: 조인 릴레이션의 조인 절 (베이스 릴레이션의 경우 NIL)
+- `custom_private`: 프로바이더의 프라이빗 데이터 (`nodeToString` 호환 필요)
+- `methods`: `CustomPathMethods` 구현에 대한 포인터
 
 ##### flags 비트 마스크 옵션
 
-| 플래그 | 설명 |
-|--------|------|
-| `CUSTOMPATH_SUPPORT_BACKWARD_SCAN` | 역방향 스캔 지원 |
-| `CUSTOMPATH_SUPPORT_MARK_RESTORE` | mark/restore 작업 지원 |
-| `CUSTOMPATH_SUPPORT_PROJECTION` | 스칼라 표현식 평가 가능 |
+- `CUSTOMPATH_SUPPORT_BACKWARD_SCAN`: 역방향 스캔 지원
+- `CUSTOMPATH_SUPPORT_MARK_RESTORE`: mark/restore 작업 지원
+- `CUSTOMPATH_SUPPORT_PROJECTION`: 스칼라 표현식 평가 가능
 
 #### 커스텀 스캔 경로 콜백 (Custom Scan Path Callbacks)
 
@@ -2777,7 +2777,7 @@ Plan *(*PlanCustomPath) (PlannerInfo *root,
                          List *custom_plans);
 ```
 
-커스텀 경로를 완성된 `CustomScan` 계획으로 변환합니다.
+커스텀 경로를 완성된 `CustomScan` 계획으로 변환함.
 
 - `root`: 플래너 정보
 - `rel`: 릴레이션 최적화 정보
@@ -2794,7 +2794,7 @@ List *(*ReparameterizeCustomPathByChild) (PlannerInfo *root,
                                           RelOptInfo *child_rel);
 ```
 
-부모에서 자식 릴레이션 매개변수화로 변환할 때 경로를 재매개변수화합니다.
+부모에서 자식 릴레이션 매개변수화로 변환할 때 경로를 재매개변수화함.
 
 - `reparameterize_path_by_child()` 및 `adjust_appendrel_attrs()` 헬퍼 함수 사용 가능
 
@@ -2810,7 +2810,7 @@ List *(*ReparameterizeCustomPathByChild) (PlannerInfo *root,
 
 ### 61.2 커스텀 스캔 계획 (Custom Scan Plans)
 
-커스텀 스캔 계획(Custom Scan Plan)은 커스텀 스캔을 위한 완성된 계획 트리 구조를 나타냅니다.
+커스텀 스캔 계획(Custom Scan Plan)은 커스텀 스캔을 위한 완성된 계획 트리 구조를 나타냄.
 
 #### CustomScan 데이터 구조
 
@@ -2830,26 +2830,22 @@ typedef struct CustomScan
 
 ##### 필드 설명
 
-| 필드 | 용도 |
-|------|------|
-| `scan` | 표준 스캔 구조 (예상 비용, 타겟 리스트, 자격 조건 포함) |
-| `flags` | `CustomPath`와 동일한 의미의 비트 마스크 |
-| `custom_plans` | 자식 `Plan` 노드 저장 |
-| `custom_exprs` | `setrefs.c`와 `subselect.c`에 의해 수정이 필요한 표현식 트리 |
-| `custom_private` | 커스텀 스캔 프로바이더만 사용하는 프라이빗 데이터 |
-| `custom_scan_tlist` | 실제 스캔 튜플을 설명하는 타겟 리스트 (베이스 릴레이션 스캔의 경우 NIL, 조인의 경우 필수) |
-| `custom_relids` | 이 스캔 노드가 처리하는 릴레이션 집합 (범위 테이블 인덱스) |
-| `methods` | 필수 커스텀 스캔 메서드를 구현하는 객체에 대한 포인터 |
+- `scan`: 표준 스캔 구조 (예상 비용, 타겟 리스트, 자격 조건 포함)
+- `flags`: `CustomPath`와 동일한 의미의 비트 마스크
+- `custom_plans`: 자식 `Plan` 노드 저장
+- `custom_exprs`: `setrefs.c`와 `subselect.c`에 의해 수정이 필요한 표현식 트리
+- `custom_private`: 커스텀 스캔 프로바이더만 사용하는 프라이빗 데이터
+- `custom_scan_tlist`: 실제 스캔 튜플을 설명하는 타겟 리스트 (베이스 릴레이션 스캔의 경우 NIL, 조인의 경우 필수)
+- `custom_relids`: 이 스캔 노드가 처리하는 릴레이션 집합 (범위 테이블 인덱스)
+- `methods`: 필수 커스텀 스캔 메서드를 구현하는 객체에 대한 포인터
 
 #### 주요 요구사항
 
-| 상황 | 요구사항 |
-|------|----------|
-| 단일 릴레이션 스캔 | `scan.scanrelid`는 스캔할 테이블의 범위 테이블 인덱스여야 함 |
-| 조인 대체 | `scan.scanrelid`는 0이어야 함 |
-| 데이터 복제 | "custom" 필드의 모든 데이터는 `copyObject`가 처리할 수 있는 노드로 구성되어야 함 |
+- 단일 릴레이션 스캔: `scan.scanrelid`는 스캔할 테이블의 범위 테이블 인덱스여야 함
+- 조인 대체: `scan.scanrelid`는 0이어야 함
+- 데이터 복제: "custom" 필드의 모든 데이터는 `copyObject`가 처리할 수 있는 노드로 구성되어야 함
 
-> 주의: `CustomPath`나 `CustomScanState`와 달리, `CustomScan`을 포함하는 더 큰 구조체로 대체할 수 없습니다.
+> 주의: `CustomPath`나 `CustomScanState`와 달리, `CustomScan`을 포함하는 더 큰 구조체로 대체할 수 없음.
 
 #### 커스텀 스캔 계획 콜백 (Custom Scan Plan Callbacks)
 
@@ -2859,7 +2855,7 @@ typedef struct CustomScan
 Node *(*CreateCustomScanState) (CustomScan *cscan);
 ```
 
-`CustomScan`에 대한 `CustomScanState`를 할당합니다.
+`CustomScan`에 대한 `CustomScanState`를 할당함.
 
 요구사항:
 - `CustomScanState`보다 큰 구조체를 할당하여 프로바이더별 필드를 포함시킬 수 있음
@@ -2871,7 +2867,7 @@ Node *(*CreateCustomScanState) (CustomScan *cscan);
 
 ### 61.3 커스텀 스캔 실행 (Executing Custom Scans)
 
-`CustomScan`이 실행될 때, 실행 상태는 `CustomScanState` 구조로 표현됩니다.
+`CustomScan`이 실행될 때, 실행 상태는 `CustomScanState` 구조로 표현됨.
 
 #### CustomScanState 데이터 구조
 
@@ -2886,11 +2882,9 @@ typedef struct CustomScanState
 
 ##### 필드 설명
 
-| 필드 | 설명 |
-|------|------|
-| `ss` | 표준 스캔 상태 초기화 (베이스 릴레이션용; 조인 스캔의 경우 `ss.ss_currentRelation`은 NULL) |
-| `flags` | `CustomPath` 및 `CustomScan`과 동일한 의미의 비트 마스크 |
-| `methods` | 커스텀 스캔 상태 메서드를 구현하는 정적으로 할당된 객체에 대한 포인터 |
+- `ss`: 표준 스캔 상태 초기화 (베이스 릴레이션용; 조인 스캔의 경우 `ss.ss_currentRelation`은 NULL)
+- `flags`: `CustomPath` 및 `CustomScan`과 동일한 의미의 비트 마스크
+- `methods`: 커스텀 스캔 상태 메서드를 구현하는 정적으로 할당된 객체에 대한 포인터
 
 #### 필수 콜백 (Required Callbacks)
 
@@ -2900,7 +2894,7 @@ typedef struct CustomScanState
 void (*BeginCustomScan) (CustomScanState *node, EState *estate, int eflags);
 ```
 
-`CustomScanState`의 초기화를 완료합니다. 프라이빗 필드를 여기서 초기화하세요.
+`CustomScanState`의 초기화를 완료함. 프라이빗 필드를 여기서 초기화하세요.
 
 - `node`: 커스텀 스캔 상태
 - `estate`: 실행 상태
@@ -2912,7 +2906,7 @@ void (*BeginCustomScan) (CustomScanState *node, EState *estate, int eflags);
 TupleTableSlot *(*ExecCustomScan) (CustomScanState *node);
 ```
 
-다음 스캔 튜플을 가져옵니다.
+다음 스캔 튜플을 가져옴.
 
 - `ps_ResultTupleSlot`에 현재 스캔 방향의 다음 튜플을 채움
 - 튜플이 더 이상 없으면 NULL 또는 빈 슬롯을 반환
@@ -2923,7 +2917,7 @@ TupleTableSlot *(*ExecCustomScan) (CustomScanState *node);
 void (*EndCustomScan) (CustomScanState *node);
 ```
 
-`CustomScanState`와 연관된 프라이빗 데이터를 정리합니다.
+`CustomScanState`와 연관된 프라이빗 데이터를 정리함.
 
 - 필수 콜백이지만, 정리할 내용이 없으면 아무것도 하지 않을 수 있음
 
@@ -2933,7 +2927,7 @@ void (*EndCustomScan) (CustomScanState *node);
 void (*ReScanCustomScan) (CustomScanState *node);
 ```
 
-현재 스캔을 처음으로 되감고 릴레이션을 다시 스캔할 준비를 합니다.
+현재 스캔을 처음으로 되감고 릴레이션을 다시 스캔할 준비를 함.
 
 #### 선택적 콜백 (Optional Callbacks)
 
@@ -2944,9 +2938,9 @@ void (*MarkPosCustomScan) (CustomScanState *node);
 void (*RestrPosCustomScan) (CustomScanState *node);
 ```
 
-스캔 위치를 저장하고 복원합니다.
+스캔 위치를 저장하고 복원함.
 
-> 주의: `CUSTOMPATH_SUPPORT_MARK_RESTORE` 플래그가 설정된 경우에만 필요합니다.
+> 주의: `CUSTOMPATH_SUPPORT_MARK_RESTORE` 플래그가 설정된 경우에만 필요함.
 
 ##### 병렬 실행 지원 (Parallel Execution Support)
 
@@ -2967,14 +2961,12 @@ void (*InitializeWorkerCustomScan) (CustomScanState *node,
                                      void *coordinate);
 ```
 
-| 콜백 | 용도 |
-|------|------|
-| `EstimateDSMCustomScan` | 동적 공유 메모리(DSM) 크기 추정 |
-| `InitializeDSMCustomScan` | DSM 초기화 |
-| `ReInitializeDSMCustomScan` | DSM 재초기화 |
-| `InitializeWorkerCustomScan` | 워커 프로세스 초기화 |
+- `EstimateDSMCustomScan`: 동적 공유 메모리(DSM) 크기 추정
+- `InitializeDSMCustomScan`: DSM 초기화
+- `ReInitializeDSMCustomScan`: DSM 재초기화
+- `InitializeWorkerCustomScan`: 워커 프로세스 초기화
 
-> 주의: 병렬 실행 지원이 필요한 경우에만 구현합니다.
+> 주의: 병렬 실행 지원이 필요한 경우에만 구현함.
 
 ##### ShutdownCustomScan
 
@@ -2982,7 +2974,7 @@ void (*InitializeWorkerCustomScan) (CustomScanState *node,
 void (*ShutdownCustomScan) (CustomScanState *node);
 ```
 
-노드가 완료되지 않을 때 리소스를 해제합니다.
+노드가 완료되지 않을 때 리소스를 해제함.
 
 - DSM 세그먼트 파괴 전 정리에 유용
 
@@ -2994,13 +2986,13 @@ void (*ExplainCustomScan) (CustomScanState *node,
                             ExplainState *es);
 ```
 
-표준 스캔 상태 데이터 외에 추가 `EXPLAIN` 정보를 출력하기 위한 선택적 콜백입니다.
+표준 스캔 상태 데이터 외에 추가 `EXPLAIN` 정보를 출력하기 위한 선택적 콜백임.
 
 ---
 
 ### 예제: 간단한 커스텀 스캔 프로바이더 구현
 
-아래는 커스텀 스캔 프로바이더의 기본 구조를 보여주는 예제입니다.
+아래는 커스텀 스캔 프로바이더의 기본 구조를 보여주는 예제임.
 
 #### 1. 헤더 및 구조체 정의
 
@@ -3217,26 +3209,24 @@ _PG_init(void)
 
 ### 개요
 
-Generic WAL Records(일반 WAL 레코드)는 PostgreSQL 확장(Extension)이 커스텀 WAL 리소스 매니저(Custom WAL Resource Manager)를 별도로 구현하지 않고도 WAL에 기록되는 데이터 업데이트를 수행할 수 있도록 하는 내장 메커니즘입니다.
+Generic WAL Records(일반 WAL 레코드)는 PostgreSQL 확장(Extension)이 커스텀 WAL 리소스 매니저(Custom WAL Resource Manager)를 별도로 구현하지 않고도 WAL에 기록되는 데이터 업데이트를 수행할 수 있도록 하는 내장 메커니즘임.
 
-페이지(Page)의 변경 사항을 범용적인 방식으로 기술하므로, 확장 개발자가 복잡한 WAL 인프라를 직접 구현하지 않아도 데이터 무결성과 복구 가능성을 보장받을 수 있습니다.
+페이지(Page)의 변경 사항을 범용적인 방식으로 기술하므로, 확장 개발자가 복잡한 WAL 인프라를 직접 구현하지 않아도 데이터 무결성과 복구 가능성을 보장받을 수 있음.
 
 #### 중요 사항
 
-> 주의: Generic WAL 레코드는 논리적 디코딩(Logical Decoding) 과정에서 무시됩니다. 만약 논리적 디코딩이 필요한 경우에는 대신 커스텀 WAL 리소스 매니저(Custom WAL Resource Manager) 를 사용해야 합니다.
+> 주의: Generic WAL 레코드는 논리적 디코딩(Logical Decoding) 과정에서 무시됨. 만약 논리적 디코딩이 필요한 경우에는 대신 커스텀 WAL 리소스 매니저(Custom WAL Resource Manager) 를 사용해야 함.
 
 #### API 위치
 
-| 구분 | 경로 |
-|------|------|
-| 헤더 파일 | `access/generic_xlog.h` |
-| 구현 파일 | `access/transam/generic_xlog.c` |
+- 헤더 파일: `access/generic_xlog.h`
+- 구현 파일: `access/transam/generic_xlog.c`
 
 ---
 
 ### API 함수
 
-Generic WAL의 주요 API 함수는 다음과 같습니다.
+Generic WAL의 주요 API 함수는 다음과 같음.
 
 #### GenericXLogStart
 
@@ -3244,7 +3234,7 @@ Generic WAL의 주요 API 함수는 다음과 같습니다.
 GenericXLogState *GenericXLogStart(Relation relation)
 ```
 
-설명: 지정한 릴레이션(Relation)에 대한 Generic WAL 레코드 생성을 시작합니다.
+설명: 지정한 릴레이션(Relation)에 대한 Generic WAL 레코드 생성을 시작함.
 
 매개변수:
 - `relation`: WAL 레코드를 생성할 대상 릴레이션
@@ -3259,7 +3249,7 @@ GenericXLogState *GenericXLogStart(Relation relation)
 Page GenericXLogRegisterBuffer(GenericXLogState *state, Buffer buffer, int flags)
 ```
 
-설명: 수정할 버퍼를 등록하고, 해당 버퍼 페이지의 임시 복사본에 대한 포인터를 반환합니다.
+설명: 수정할 버퍼를 등록하고, 해당 버퍼 페이지의 임시 복사본에 대한 포인터를 반환함.
 
 매개변수:
 - `state`: `GenericXLogStart()`에서 반환된 상태 객체
@@ -3270,11 +3260,9 @@ Page GenericXLogRegisterBuffer(GenericXLogState *state, Buffer buffer, int flags
 
 플래그 옵션:
 
-| 플래그 | 설명 |
-|--------|------|
-| `GENERIC_XLOG_FULL_IMAGE` | 델타(Delta) 업데이트 대신 전체 페이지 이미지(Full-Page Image)를 포함합니다. 새로 생성되거나 완전히 재작성된 페이지에 사용합니다. |
+- `GENERIC_XLOG_FULL_IMAGE`: 델타(Delta) 업데이트 대신 전체 페이지 이미지(Full-Page Image)를 포함함. 새로 생성되거나 완전히 재작성된 페이지에 사용함.
 
-> 중요: 반드시 이 함수가 반환한 복사본을 수정해야 합니다. 원본 버퍼를 직접 수정해서는 안 됩니다!
+> 중요: 반드시 이 함수가 반환한 복사본을 수정해야 함. 원본 버퍼를 직접 수정해서는 안 됨!
 
 ---
 
@@ -3284,7 +3272,7 @@ Page GenericXLogRegisterBuffer(GenericXLogState *state, Buffer buffer, int flags
 XLogRecPtr GenericXLogFinish(GenericXLogState *state)
 ```
 
-설명: 실제 버퍼에 변경 사항을 적용하고 Generic WAL 레코드를 발행(Emit)합니다.
+설명: 실제 버퍼에 변경 사항을 적용하고 Generic WAL 레코드를 발행(Emit)함.
 
 매개변수:
 - `state`: Generic WAL 상태 객체
@@ -3304,7 +3292,7 @@ XLogRecPtr GenericXLogFinish(GenericXLogState *state)
 void GenericXLogAbort(GenericXLogState *state)
 ```
 
-설명: 페이지 이미지 복사본에 대한 모든 변경 사항을 폐기합니다.
+설명: 페이지 이미지 복사본에 대한 모든 변경 사항을 폐기함.
 
 매개변수:
 - `state`: Generic WAL 상태 객체
@@ -3315,7 +3303,7 @@ void GenericXLogAbort(GenericXLogState *state)
 
 ### 사용 절차
 
-Generic WAL 레코드를 사용해 WAL에 기록되는 데이터 업데이트를 수행하는 절차입니다.
+Generic WAL 레코드를 사용해 WAL에 기록되는 데이터 업데이트를 수행하는 절차임.
 
 #### 1단계: 레코드 생성 시작
 
@@ -3324,7 +3312,7 @@ GenericXLogState *state;
 state = GenericXLogStart(relation);
 ```
 
-지정한 릴레이션에 대한 Generic WAL 레코드 생성을 시작합니다.
+지정한 릴레이션에 대한 Generic WAL 레코드 생성을 시작함.
 
 #### 2단계: 버퍼 등록
 
@@ -3333,11 +3321,11 @@ Page page;
 page = GenericXLogRegisterBuffer(state, buffer, flags);
 ```
 
-수정할 버퍼를 등록합니다. 여러 페이지를 수정해야 할 경우 이 함수를 여러 번 호출할 수 있습니다.
+수정할 버퍼를 등록함. 여러 페이지를 수정해야 할 경우 이 함수를 여러 번 호출할 수 있음.
 
 #### 3단계: 페이지 수정
 
-`GenericXLogRegisterBuffer()`에서 얻은 페이지 이미지에 원하는 수정을 적용합니다.
+`GenericXLogRegisterBuffer()`에서 얻은 페이지 이미지에 원하는 수정을 적용함.
 
 ```c
 // 페이지 복사본에 대한 수정 작업 수행
@@ -3350,7 +3338,7 @@ page = GenericXLogRegisterBuffer(state, buffer, flags);
 GenericXLogFinish(state);
 ```
 
-변경 사항을 실제 버퍼에 적용하고 Generic WAL 레코드를 발행합니다.
+변경 사항을 실제 버퍼에 적용하고 Generic WAL 레코드를 발행함.
 
 #### 취소 시
 
@@ -3366,31 +3354,29 @@ GenericXLogAbort(state);
 
 #### 버퍼 수정 규칙
 
-| 규칙 | 설명 |
-|------|------|
-| 직접 수정 금지 | 모든 변경은 `GenericXLogRegisterBuffer()`에서 반환된 복사본을 통해서만 이루어져야 합니다. `BufferGetPage()`를 직접 호출하여 수정하면 안 됩니다. |
-| 락 관리 | 호출자가 버퍼의 pin/unpin 및 lock/unlock을 직접 관리해야 합니다. |
-| 배타적 락 필요 | `GenericXLogRegisterBuffer()` 호출 전부터 `GenericXLogFinish()` 호출 후까지 배타적 락(Exclusive Lock)을 유지해야 합니다. |
+- 직접 수정 금지: 모든 변경은 `GenericXLogRegisterBuffer()`에서 반환된 복사본을 통해서만 이루어져야 함. `BufferGetPage()`를 직접 호출하여 수정하면 안 됨.
+- 락 관리: 호출자가 버퍼의 pin/unpin 및 lock/unlock을 직접 관리해야 함.
+- 배타적 락 필요: `GenericXLogRegisterBuffer()` 호출 전부터 `GenericXLogFinish()` 호출 후까지 배타적 락(Exclusive Lock)을 유지해야 함.
 
 #### 단계 순서
 
-- 2단계(버퍼 등록)와 3단계(페이지 수정)는 어떤 순서로든 자유롭게 혼합할 수 있습니다.
-- 리플레이(Replay) 시 락을 획득할 순서대로 버퍼를 등록해야 합니다.
+- 2단계(버퍼 등록)와 3단계(페이지 수정)는 어떤 순서로든 자유롭게 혼합할 수 있음.
+- 리플레이(Replay) 시 락을 획득할 순서대로 버퍼를 등록해야 함.
 
 #### 버퍼 제한
 
-- 하나의 레코드에 등록할 수 있는 최대 버퍼 수는 `MAX_GENERIC_XLOG_PAGES`로 제한됩니다.
-- 이 한도를 초과하면 오류가 발생합니다.
+- 하나의 레코드에 등록할 수 있는 최대 버퍼 수는 `MAX_GENERIC_XLOG_PAGES`로 제한됨.
+- 이 한도를 초과하면 오류가 발생함.
 
 #### 페이지 레이아웃
 
-Generic WAL은 표준 페이지 레이아웃(Standard Page Layout)을 가정합니다. `pd_lower`와 `pd_upper` 사이에는 유용한 데이터가 없다고 간주합니다.
+Generic WAL은 표준 페이지 레이아웃(Standard Page Layout)을 가정함. `pd_lower`와 `pd_upper` 사이에는 유용한 데이터가 없다고 간주함.
 
 #### 크리티컬 섹션 (Critical Section)
 
-- `GenericXLogStart()`와 `GenericXLogFinish()` 사이에는 크리티컬 섹션이 없습니다.
-- 따라서 이 구간에서 메모리 할당이나 오류 발생(Error Throw)이 허용됩니다.
-- 크리티컬 섹션은 `GenericXLogFinish()` 내부에만 존재합니다.
+- `GenericXLogStart()`와 `GenericXLogFinish()` 사이에는 크리티컬 섹션이 없음.
+- 따라서 이 구간에서 메모리 할당이나 오류 발생(Error Throw)이 허용됨.
+- 크리티컬 섹션은 `GenericXLogFinish()` 내부에만 존재함.
 
 #### 버퍼 관리
 
@@ -3398,23 +3384,23 @@ Generic WAL은 표준 페이지 레이아웃(Standard Page Layout)을 가정합�
 - 버퍼를 dirty로 표시
 - LSN 설정
 
-별도의 명시적 호출은 필요하지 않습니다.
+별도의 명시적 호출은 필요하지 않음.
 
 #### 언로그드 릴레이션 (Unlogged Relations)
 
-- 언로그드 릴레이션에서도 동일하게 작동합니다.
-- 단, WAL 레코드가 발행되지 않습니다.
-- 특별한 검사가 필요하지 않습니다.
+- 언로그드 릴레이션에서도 동일하게 작동함.
+- 단, WAL 레코드가 발행되지 않음.
+- 특별한 검사가 필요하지 않음.
 
 #### 리두 동작 (Redo Behavior)
 
-- Generic WAL 리두(Redo)는 등록 순서대로 배타적 락을 획득합니다.
-- 이후 동일한 순서로 락을 해제합니다.
+- Generic WAL 리두(Redo)는 등록 순서대로 배타적 락을 획득함.
+- 이후 동일한 순서로 락을 해제함.
 
 #### 델타 인코딩 (Delta Encoding)
 
-- `GENERIC_XLOG_FULL_IMAGE` 플래그 없이 사용하면, 레코드에는 바이트 단위 델타(Byte-by-Byte Delta)가 포함됩니다.
-- 페이지 내 데이터 이동에는 최적화되어 있지 않습니다.
+- `GENERIC_XLOG_FULL_IMAGE` 플래그 없이 사용하면, 레코드에는 바이트 단위 델타(Byte-by-Byte Delta)가 포함됨.
+- 페이지 내 데이터 이동에는 최적화되어 있지 않음.
 
 ---
 
@@ -3598,27 +3584,35 @@ my_extension_conditional_update(Relation relation, Buffer buffer,
 
 #### Generic WAL vs Custom WAL Resource Manager
 
-| 특성 | Generic WAL | Custom WAL Resource Manager |
-|------|-------------|----------------------------|
-| 구현 복잡도 | 낮음 | 높음 |
-| 논리적 디코딩 지원 | 지원 안 함 | 지원 |
-| 유연성 | 제한적 | 높음 |
-| 페이지 레이아웃 | 표준 레이아웃 필요 | 자유로움 |
-| 적합한 용도 | 간단한 확장 | 복잡한 스토리지 엔진 |
+- 구현 복잡도
+  - Generic WAL: 낮음
+  - Custom WAL Resource Manager: 높음
+- 논리적 디코딩 지원
+  - Generic WAL: 지원 안 함
+  - Custom WAL Resource Manager: 지원
+- 유연성
+  - Generic WAL: 제한적
+  - Custom WAL Resource Manager: 높음
+- 페이지 레이아웃
+  - Generic WAL: 표준 레이아웃 필요
+  - Custom WAL Resource Manager: 자유로움
+- 적합한 용도
+  - Generic WAL: 간단한 확장
+  - Custom WAL Resource Manager: 복잡한 스토리지 엔진
 
 #### 성능 고려 사항
 
 1. 전체 페이지 이미지 (Full-Page Image)
-   - `GENERIC_XLOG_FULL_IMAGE` 플래그 사용 시 WAL 크기가 증가합니다.
+   - `GENERIC_XLOG_FULL_IMAGE` 플래그 사용 시 WAL 크기가 증가함.
    - 새 페이지나 완전히 재작성된 페이지에만 사용하세요.
 
 2. 델타 인코딩 한계
-   - 바이트 단위 델타는 페이지 내 데이터 이동에 비효율적입니다.
-   - 대량의 데이터 재배치 시 전체 페이지 이미지가 더 효율적일 수 있습니다.
+   - 바이트 단위 델타는 페이지 내 데이터 이동에 비효율적임.
+   - 대량의 데이터 재배치 시 전체 페이지 이미지가 더 효율적일 수 있음.
 
 3. 버퍼 수 제한
    - `MAX_GENERIC_XLOG_PAGES` 제한을 고려하여 설계하세요.
-   - 대규모 트랜잭션은 여러 Generic WAL 레코드로 분할해야 할 수 있습니다.
+   - 대규모 트랜잭션은 여러 Generic WAL 레코드로 분할해야 할 수 있음.
 
 #### 디버깅 팁
 
@@ -3639,7 +3633,7 @@ my_extension_conditional_update(Relation relation, Buffer buffer,
 
 ## Chapter 64: 인덱스 접근 메서드 인터페이스 (Index Access Method Interface Definition)
 
-이 문서는 PostgreSQL 핵심 시스템과 인덱스 접근 메서드(Index Access Methods) 간의 인터페이스를 정의합니다. 핵심 시스템은 이 인터페이스에서 지정한 사항 이외의 인덱스에 대해 아무것도 알지 못하므로, 추가 코드를 작성하여 완전히 새로운 인덱스 유형을 개발할 수 있습니다.
+이 문서는 PostgreSQL 핵심 시스템과 인덱스 접근 메서드(Index Access Methods) 간의 인터페이스를 정의함. 핵심 시스템은 이 인터페이스에서 지정한 사항 이외의 인덱스에 대해 아무것도 알지 못하므로, 추가 코드를 작성하여 완전히 새로운 인덱스 유형을 개발할 수 있음.
 
 ### 목차
 
@@ -3657,18 +3651,18 @@ my_extension_conditional_update(Relation relation, Buffer buffer,
 
 #### 1.1 보조 인덱스 (Secondary Indexes)
 
-PostgreSQL의 모든 인덱스는 보조 인덱스(secondary indexes) 입니다. 이는 인덱스가 테이블 파일과 물리적으로 분리되어 있음을 의미합니다. 각 인덱스는 자체 물리적 릴레이션(relation) 으로 저장되며, `pg_class` 시스템 카탈로그에 별도의 엔트리를 가집니다.
+PostgreSQL의 모든 인덱스는 보조 인덱스(secondary indexes) 임. 이는 인덱스가 테이블 파일과 물리적으로 분리되어 있음을 의미함. 각 인덱스는 자체 물리적 릴레이션(relation) 으로 저장되며, `pg_class` 시스템 카탈로그에 별도의 엔트리를 가짐.
 
 #### 1.2 인덱스의 역할
 
-인덱스의 주요 역할은 데이터 키 값에서 TID(Tuple Identifiers, 튜플 식별자) 로의 매핑을 제공하는 것입니다:
+인덱스의 주요 역할은 데이터 키 값에서 TID(Tuple Identifiers, 튜플 식별자) 로의 매핑을 제공하는 것임:
 
 - TID 구성: 블록 번호(block number)와 해당 블록 내의 항목 번호(item number)
 - 목적: 테이블에서 특정 행 버전(row version)을 가져오는 데 필요한 정보 제공
 
 #### 1.3 저장소 구조
 
-모든 인덱스 접근 메서드는 다음과 같은 저장소 구조를 따릅니다:
+모든 인덱스 접근 메서드는 다음과 같은 저장소 구조를 따름:
 
 - 인덱스를 표준 크기 페이지(standard-size pages) 로 분할
 - 일반 저장소 관리자(storage manager) 및 버퍼 관리자(buffer manager) 사용
@@ -3692,17 +3686,15 @@ MVCC(Multi-Version Concurrency Control) 환경에서의 인덱스 동작:
 
 #### 2.1 카탈로그 엔트리 (Catalog Entries)
 
-인덱스 접근 메서드는 `pg_am` 시스템 카탈로그의 행으로 정의됩니다. 각 접근 메서드는 이름(name) 과 핸들러 함수(handler function) 를 지정합니다.
+인덱스 접근 메서드는 `pg_am` 시스템 카탈로그의 행으로 정의됨. 각 접근 메서드는 이름(name) 과 핸들러 함수(handler function) 를 지정함.
 
 ##### 필수 카탈로그 항목
 
-| 카탈로그 | 설명 |
-|----------|------|
-| `pg_am` | 접근 메서드 정의 |
-| `pg_opfamily` | 연산자 족 (Operator Family) |
-| `pg_opclass` | 연산자 클래스 (Operator Class) |
-| `pg_amop` | 접근 메서드 연산자 |
-| `pg_amproc` | 접근 메서드 지원 함수 |
+- `pg_am`: 접근 메서드 정의
+- `pg_opfamily`: 연산자 족 (Operator Family)
+- `pg_opclass`: 연산자 클래스 (Operator Class)
+- `pg_amop`: 접근 메서드 연산자
+- `pg_amproc`: 접근 메서드 지원 함수
 
 ##### 접근 메서드 생성 SQL
 
@@ -3809,12 +3801,10 @@ typedef struct IndexAmRoutine
 
 ##### amcanmulticol과 amoptionalkey
 
-| 플래그 | 설명 |
-|--------|------|
-| `amcanmulticol=true` | 다중 열 인덱스 지원 |
-| `amoptionalkey=true` | 첫 번째 열에 대한 제약 조건 없이 스캔 가능 |
+- `amcanmulticol=true`: 다중 열 인덱스 지원
+- `amoptionalkey=true`: 첫 번째 열에 대한 제약 조건 없이 스캔 가능
 
-NULL 색인화 규칙: `amoptionalkey=true`인 경우 NULL 값을 반드시 색인화해야 합니다.
+NULL 색인화 규칙: `amoptionalkey=true`인 경우 NULL 값을 반드시 색인화해야 함.
 
 ##### amcaninclude
 
@@ -3841,11 +3831,9 @@ IndexBuildResult *ambuild(Relation heapRelation,
                           IndexInfo *indexInfo);
 ```
 
-| 항목 | 설명 |
-|------|------|
-| 목적 | 새 인덱스 구축 |
-| 동작 | 빈 인덱스를 채우고 기존 테이블의 모든 튜플에 대해 엔트리 생성 |
-| 반환 | 인덱스 통계 정보를 담은 palloc'd 구조체 |
+- 목적: 새 인덱스 구축
+- 동작: 빈 인덱스를 채우고 기존 테이블의 모든 튜플에 대해 엔트리 생성
+- 반환: 인덱스 통계 정보를 담은 palloc'd 구조체
 
 ##### ambuildempty - 빈 인덱스 초기화
 
@@ -3853,10 +3841,8 @@ IndexBuildResult *ambuild(Relation heapRelation,
 void ambuildempty(Relation indexRelation);
 ```
 
-| 항목 | 설명 |
-|------|------|
-| 목적 | 빈 인덱스 구축 후 초기화 포크(INIT_FORKNUM)에 작성 |
-| 사용처 | 로깅되지 않는(unlogged) 인덱스 에만 호출 |
+- 목적: 빈 인덱스 구축 후 초기화 포크(INIT_FORKNUM)에 작성
+- 사용처: 로깅되지 않는(unlogged) 인덱스 에만 호출
 
 ##### aminsert - 튜플 삽입
 
@@ -3871,12 +3857,10 @@ bool aminsert(Relation indexRelation,
               IndexInfo *indexInfo);
 ```
 
-| 매개변수 | 설명 |
-|----------|------|
-| `values`, `isnull` | 인덱싱할 키 값 |
-| `heap_tid` | 인덱싱될 TID |
-| `checkUnique` | 고유성 검사 유형 |
-| `indexUnchanged` | 중복 튜플 여부 힌트 |
+- `values`, `isnull`: 인덱싱할 키 값
+- `heap_tid`: 인덱싱될 TID
+- `checkUnique`: 고유성 검사 유형
+- `indexUnchanged`: 중복 튜플 여부 힌트
 
 반환값: `UNIQUE_CHECK_PARTIAL`일 때만 의미 있음 (true=고유, false=중복 가능성)
 
@@ -3887,7 +3871,7 @@ void aminsertcleanup(Relation indexRelation,
                      IndexInfo *indexInfo);
 ```
 
-연속 삽입 중 `indexInfo->ii_AmCache`에 유지된 상태를 정리합니다. 메모리 이외의 자원 해제가 필요한 경우 사용됩니다.
+연속 삽입 중 `indexInfo->ii_AmCache`에 유지된 상태를 정리함. 메모리 이외의 자원 해제가 필요한 경우 사용됨.
 
 ##### ambulkdelete - 일괄 삭제
 
@@ -3898,12 +3882,10 @@ IndexBulkDeleteResult *ambulkdelete(IndexVacuumInfo *info,
                                     void *callback_state);
 ```
 
-| 항목 | 설명 |
-|------|------|
-| 목적 | 인덱스에서 튜플 일괄 삭제 |
-| 동작 | 전체 인덱스를 스캔하고 콜백 함수로 삭제 대상 결정 |
-| 콜백 | `callback(TID, callback_state)` - bool 반환 |
-| 반환 | 삭제 결과 통계 또는 NULL |
+- 목적: 인덱스에서 튜플 일괄 삭제
+- 동작: 전체 인덱스를 스캔하고 콜백 함수로 삭제 대상 결정
+- 콜백: `callback(TID, callback_state)` - bool 반환
+- 반환: 삭제 결과 통계 또는 NULL
 
 ##### amvacuumcleanup - VACUUM 후 정리
 
@@ -3912,7 +3894,7 @@ IndexBulkDeleteResult *amvacuumcleanup(IndexVacuumInfo *info,
                                        IndexBulkDeleteResult *stats);
 ```
 
-VACUUM 작업 완료 후 정리를 수행합니다. 빈 페이지 회수 등 대량 정리 작업이 가능하며, ANALYZE 완료 시에도 호출될 수 있습니다.
+VACUUM 작업 완료 후 정리를 수행함. 빈 페이지 회수 등 대량 정리 작업이 가능하며, ANALYZE 완료 시에도 호출될 수 있음.
 
 #### 3.2 인덱스 기능 지원 함수
 
@@ -3922,7 +3904,7 @@ VACUUM 작업 완료 후 정리를 수행합니다. 빈 페이지 회수 등 대
 bool amcanreturn(Relation indexRelation, int attno);
 ```
 
-인덱스 전용 스캔(Index-Only Scan) 지원 여부를 확인합니다. 포함된 컬럼(included columns)은 항상 true를 반환합니다.
+인덱스 전용 스캔(Index-Only Scan) 지원 여부를 확인함. 포함된 컬럼(included columns)은 항상 true를 반환함.
 
 ##### amcostestimate - 비용 추정
 
@@ -3937,7 +3919,7 @@ void amcostestimate(PlannerInfo *root,
                     double *indexPages);
 ```
 
-인덱스 스캔의 비용을 추정합니다. 자세한 내용은 [7. 인덱스 비용 추정 함수](#7-인덱스-비용-추정-함수-index-cost-estimation-functions)를 참조하세요.
+인덱스 스캔의 비용을 추정함. 자세한 내용은 [7. 인덱스 비용 추정 함수](#7-인덱스-비용-추정-함수-index-cost-estimation-functions)를 참조하세요.
 
 ##### amgettreeheight - 트리 높이 계산
 
@@ -3945,7 +3927,7 @@ void amcostestimate(PlannerInfo *root,
 int amgettreeheight(Relation rel);
 ```
 
-트리 형태 인덱스의 높이를 계산합니다. 비용 추정에 사용됩니다.
+트리 형태 인덱스의 높이를 계산함. 비용 추정에 사용됨.
 
 ##### amoptions - 옵션 파싱
 
@@ -3953,7 +3935,7 @@ int amgettreeheight(Relation rel);
 bytea *amoptions(ArrayType *reloptions, bool validate);
 ```
 
-인덱스 reloptions를 파싱하고 검증합니다.
+인덱스 reloptions를 파싱하고 검증함.
 
 ##### amproperty - 속성 조회
 
@@ -3963,7 +3945,7 @@ bool amproperty(Oid index_oid, int attno,
                 bool *res, bool *isnull);
 ```
 
-인덱스 속성 조회를 재정의합니다.
+인덱스 속성 조회를 재정의함.
 
 ##### amvalidate - 연산자 클래스 검증
 
@@ -3971,7 +3953,7 @@ bool amproperty(Oid index_oid, int attno,
 bool amvalidate(Oid opclassoid);
 ```
 
-연산자 클래스 카탈로그 항목의 유효성을 검증합니다.
+연산자 클래스 카탈로그 항목의 유효성을 검증함.
 
 #### 3.3 인덱스 스캔 함수
 
@@ -3983,11 +3965,9 @@ IndexScanDesc ambeginscan(Relation indexRelation,
                           int norderbys);
 ```
 
-| 항목 | 설명 |
-|------|------|
-| 목적 | 인덱스 스캔 준비 |
-| 주의 | `RelationGetIndexScan()`으로 구조체 생성 필수 |
-| 반환 | palloc'd 구조체 |
+- 목적: 인덱스 스캔 준비
+- 주의: `RelationGetIndexScan()`으로 구조체 생성 필수
+- 반환: palloc'd 구조체
 
 ##### amrescan - 스캔 재시작
 
@@ -3999,7 +3979,7 @@ void amrescan(IndexScanDesc scan,
               int norderbys);
 ```
 
-인덱스 스캔을 시작하거나 재시작합니다. 스캔 키 개수는 `ambeginscan`에 전달된 값 이하여야 합니다.
+인덱스 스캔을 시작하거나 재시작함. 스캔 키 개수는 `ambeginscan`에 전달된 값 이하여야 함.
 
 ##### amgettuple - 튜플 페치
 
@@ -4008,13 +3988,11 @@ bool amgettuple(IndexScanDesc scan,
                 ScanDirection direction);
 ```
 
-| 항목 | 설명 |
-|------|------|
-| 목적 | 스캔에서 다음 튜플 페치 |
-| 반환 | true=튜플 획득, false=일치하는 튜플 없음 |
-| 출력 | 성공 시 `scan->xs_recheck` 설정 (true=재확인 필요) |
+- 목적: 스캔에서 다음 튜플 페치
+- 반환: true=튜플 획득, false=일치하는 튜플 없음
+- 출력: 성공 시 `scan->xs_recheck` 설정 (true=재확인 필요)
 
-Index-Only Scan: `scan->xs_want_itup=true`이면 원본 인덱스 데이터를 반환합니다.
+Index-Only Scan: `scan->xs_want_itup=true`이면 원본 인덱스 데이터를 반환함.
 
 ##### amgetbitmap - 비트맵 스캔
 
@@ -4023,11 +4001,9 @@ int64 amgetbitmap(IndexScanDesc scan,
                   TIDBitmap *tbm);
 ```
 
-| 항목 | 설명 |
-|------|------|
-| 목적 | 스캔의 모든 튜플을 TIDBitmap에 추가 |
-| 반환 | 페치된 튜플 개수 |
-| 동작 | 튜플 ID를 비트맵에 OR 연산 |
+- 목적: 스캔의 모든 튜플을 TIDBitmap에 추가
+- 반환: 페치된 튜플 개수
+- 동작: 튜플 ID를 비트맵에 OR 연산
 
 ##### amendscan - 스캔 종료
 
@@ -4035,7 +4011,7 @@ int64 amgetbitmap(IndexScanDesc scan,
 void amendscan(IndexScanDesc scan);
 ```
 
-스캔을 종료하고 자원을 해제합니다. scan 구조체 자체는 해제하지 않습니다.
+스캔을 종료하고 자원을 해제함. scan 구조체 자체는 해제하지 않음.
 
 ##### ammarkpos / amrestrpos - 위치 마킹
 
@@ -4044,7 +4020,7 @@ void ammarkpos(IndexScanDesc scan);   /* 현재 위치 표시 */
 void amrestrpos(IndexScanDesc scan);  /* 표시된 위치로 복원 */
 ```
 
-정렬된 스캔에서 위치를 기억하고 복원합니다. 스캔당 하나의 기억 위치만 지원됩니다.
+정렬된 스캔에서 위치를 기억하고 복원함. 스캔당 하나의 기억 위치만 지원됨.
 
 #### 3.4 병렬 스캔 함수
 
@@ -4056,7 +4032,7 @@ Size amestimateparallelscan(Relation indexRelation,
                             int norderbys);
 ```
 
-병렬 스캔에 필요한 동적 공유 메모리 바이트 수를 추정합니다.
+병렬 스캔에 필요한 동적 공유 메모리 바이트 수를 추정함.
 
 ##### aminitparallelscan
 
@@ -4064,7 +4040,7 @@ Size amestimateparallelscan(Relation indexRelation,
 void aminitparallelscan(void *target);
 ```
 
-병렬 스캔 시작 시 동적 공유 메모리를 초기화합니다.
+병렬 스캔 시작 시 동적 공유 메모리를 초기화함.
 
 ##### amparallelrescan
 
@@ -4072,7 +4048,7 @@ void aminitparallelscan(void *target);
 void amparallelrescan(IndexScanDesc scan);
 ```
 
-병렬 인덱스 스캔 재시작 시 공유 상태를 초기화합니다.
+병렬 인덱스 스캔 재시작 시 공유 상태를 초기화함.
 
 #### 3.5 전략 변환 함수
 
@@ -4084,7 +4060,7 @@ StrategyNumber amtranslatecmptype(CompareType cmptype,
                                   Oid opfamily, Oid opcintype);
 ```
 
-`CompareType`과 전략 번호 간의 변환을 수행합니다. btree/hash와 유사한 기능의 접근 메서드에서 사용됩니다.
+`CompareType`과 전략 번호 간의 변환을 수행함. btree/hash와 유사한 기능의 접근 메서드에서 사용됨.
 
 ---
 
@@ -4092,7 +4068,7 @@ StrategyNumber amtranslatecmptype(CompareType cmptype,
 
 #### 4.1 스캔 키 (Scan Keys)
 
-인덱스 스캔에서 접근 메서드는 스캔 키(scan keys) 와 일치하는 모든 튜플의 TID를 반환해야 합니다.
+인덱스 스캔에서 접근 메서드는 스캔 키(scan keys) 와 일치하는 모든 튜플의 TID를 반환해야 함.
 
 ```
 index_key operator constant
@@ -4104,7 +4080,7 @@ index_key operator constant
 
 #### 4.2 Lossy 인덱스 스캔
 
-인덱스가 스캔 키를 정확히 만족하는 항목 외에 추가 항목을 반환할 수 있습니다:
+인덱스가 스캔 키를 정확히 만족하는 항목 외에 추가 항목을 반환할 수 있음:
 
 ```
 Lossy 스캔 결과 = 정확한 일치 항목 + 추가 항목 (false positive)
@@ -4135,10 +4111,8 @@ SELECT * FROM table ORDER BY point_column <-> '(0,0)'::point;
 
 `amgettuple` 함수의 direction 인자:
 
-| 방향 | 설명 |
-|------|------|
-| `ForwardScanDirection` | 정방향 스캔 (앞에서 뒤로) |
-| `BackwardScanDirection` | 역방향 스캔 (뒤에서 앞으로) |
+- `ForwardScanDirection`: 정방향 스캔 (앞에서 뒤로)
+- `BackwardScanDirection`: 역방향 스캔 (뒤에서 앞으로)
 
 동작 예시:
 
@@ -4199,14 +4173,20 @@ int64 count = amgetbitmap(scan, bitmap);
 
 ##### PostgreSQL 핵심 시스템의 잠금
 
-| 작업 | 잠금 유형 | 설명 |
-|------|-----------|------|
-| 인덱스 스캔 | `AccessShareLock` | 읽기 잠금 |
-| 인덱스 업데이트 | `RowExclusiveLock` | 일반 VACUUM 포함 |
-| 인덱스 생성/삭제/REINDEX | `ACCESS EXCLUSIVE` | 배타적 잠금 |
-| CONCURRENTLY 옵션 | `SHARE UPDATE EXCLUSIVE` | 동시 작업 허용 |
+- 인덱스 스캔
+  - 잠금 유형: `AccessShareLock`
+  - 설명: 읽기 잠금
+- 인덱스 업데이트
+  - 잠금 유형: `RowExclusiveLock`
+  - 설명: 일반 VACUUM 포함
+- 인덱스 생성/삭제/REINDEX
+  - 잠금 유형: `ACCESS EXCLUSIVE`
+  - 설명: 배타적 잠금
+- CONCURRENTLY 옵션
+  - 잠금 유형: `SHARE UPDATE EXCLUSIVE`
+  - 설명: 동시 작업 허용
 
-중요: `AccessShareLock`과 `RowExclusiveLock`은 충돌하지 않음 - 접근 메서드가 세밀한 잠금을 책임져야 합니다.
+중요: `AccessShareLock`과 `RowExclusiveLock`은 충돌하지 않음 - 접근 메서드가 세밀한 잠금을 책임져야 함.
 
 #### 5.2 동시성 제어 규칙
 
@@ -4227,7 +4207,7 @@ int64 count = amgetbitmap(scan, bitmap);
 
 #### 5.3 인덱스 페이지 핀(Pin)
 
-인덱스 스캔은 `amgettuple`이 반환한 마지막 항목이 있는 인덱스 페이지에 핀(pin) 을 유지해야 합니다:
+인덱스 스캔은 `amgettuple`이 반환한 마지막 항목이 있는 인덱스 페이지에 핀(pin) 을 유지해야 함:
 
 ```c
 /* 핀 유지 이유: VACUUM이 인덱스 항목을 제거한 후
@@ -4268,7 +4248,7 @@ ambulkdelete() // 다른 백엔드가 핀을 유지한 페이지에서 항목 �
 
 ##### ampredlocks = true
 
-세밀한 술어 잠금을 구현하여 트랜잭션 취소 빈도를 감소시킵니다.
+세밀한 술어 잠금을 구현하여 트랜잭션 취소 빈도를 감소시킴.
 
 ---
 
@@ -4276,14 +4256,14 @@ ambulkdelete() // 다른 백엔드가 핀을 유지한 페이지에서 항목 �
 
 #### 6.1 개요
 
-PostgreSQL은 고유 인덱스(unique indexes) 를 사용하여 SQL 고유성 제약 조건을 강제합니다:
+PostgreSQL은 고유 인덱스(unique indexes) 를 사용하여 SQL 고유성 제약 조건을 강제함:
 
 - `amcanunique=true`를 설정하는 접근 메서드만 지원 (현재 B-tree만 지원)
 - `INCLUDE` 절의 컬럼은 고유성 검사 시 고려되지 않음
 
 #### 6.2 MVCC와 고유성
 
-MVCC 환경에서는 인덱스에 물리적으로 중복 항목이 존재할 수 있습니다:
+MVCC 환경에서는 인덱스에 물리적으로 중복 항목이 존재할 수 있음:
 
 ```
 강제되어야 할 규칙:
@@ -4293,11 +4273,9 @@ MVCC 환경에서는 인덱스에 물리적으로 중복 항목이 존재할 수
 
 #### 6.3 새 행 삽입 시 확인 사항
 
-| 상황 | 동작 |
-|------|------|
-| 현재 트랜잭션이 충돌 행 삭제 | 삽입 허용 (UPDATE 시나리오) |
-| 미커밋 트랜잭션이 충돌 행 삽입 | 해당 트랜잭션 완료 대기 |
-| 미커밋 트랜잭션이 충돌 행 삭제 | 트랜잭션 완료 후 재검사 |
+- 현재 트랜잭션이 충돌 행 삭제: 삽입 허용 (UPDATE 시나리오)
+- 미커밋 트랜잭션이 충돌 행 삽입: 해당 트랜잭션 완료 대기
+- 미커밋 트랜잭션이 충돌 행 삭제: 트랜잭션 완료 후 재검사
 
 #### 6.4 checkUnique 매개변수
 
@@ -4385,21 +4363,17 @@ void amcostestimate(PlannerInfo *root,
 
 #### 7.2 입력 매개변수
 
-| 매개변수 | 설명 |
-|----------|------|
-| `root` | 처리 중인 쿼리에 대한 플래너 정보 |
-| `path` | 고려 중인 인덱스 접근 경로 |
-| `loop_count` | 인덱스 스캔 반복 횟수 (중첩 루프 조인 시 1보다 큼) |
+- `root`: 처리 중인 쿼리에 대한 플래너 정보
+- `path`: 고려 중인 인덱스 접근 경로
+- `loop_count`: 인덱스 스캔 반복 횟수 (중첩 루프 조인 시 1보다 큼)
 
 #### 7.3 출력 매개변수 (pass-by-reference)
 
-| 매개변수 | 설명 |
-|----------|------|
-| `*indexStartupCost` | 인덱스 시작 처리 비용 |
-| `*indexTotalCost` | 인덱스 처리 총 비용 |
-| `*indexSelectivity` | 인덱스 선택도 (0~1 사이) |
-| `*indexCorrelation` | 인덱스 스캔 순서와 테이블 순서 간 상관계수 (-1.0~1.0) |
-| `*indexPages` | 인덱스 리프 페이지 수 |
+- `*indexStartupCost`: 인덱스 시작 처리 비용
+- `*indexTotalCost`: 인덱스 처리 총 비용
+- `*indexSelectivity`: 인덱스 선택도 (0~1 사이)
+- `*indexCorrelation`: 인덱스 스캔 순서와 테이블 순서 간 상관계수 (-1.0~1.0)
+- `*indexPages`: 인덱스 리프 페이지 수
 
 #### 7.4 비용 계산에 사용되는 매개변수
 
@@ -4605,43 +4579,41 @@ EXPLAIN SELECT * FROM mytable WHERE column1 = 100;
 
 ### 68.1 소개 (Introduction)
 
-GiST (Generalized Search Tree, 일반화 검색 트리)는 균형 잡힌 트리 구조의 액세스 메서드로, 다양한 인덱싱 스키마를 구현하기 위한 기본 템플릿 역할을 합니다. B-트리, R-트리를 비롯한 다양한 인덱싱 스키마를 GiST로 구현할 수 있습니다.
+GiST (Generalized Search Tree, 일반화 검색 트리)는 균형 잡힌 트리 구조의 액세스 메서드로, 다양한 인덱싱 스키마를 구현하기 위한 기본 템플릿 역할을 함. B-트리, R-트리를 비롯한 다양한 인덱싱 스키마를 GiST로 구현할 수 있음.
 
 #### 주요 장점
 
-GiST의 가장 큰 장점은 확장성(Extensibility) 입니다:
+GiST의 가장 큰 장점은 확장성(Extensibility) 임:
 
-1. 도메인 전문가가 커스텀 데이터 타입 개발 가능: 적절한 액세스 메서드를 갖춘 새로운 데이터 타입을 개발할 수 있습니다.
-2. 높은 수준의 추상화: 구현자는 데이터 타입의 의미론(semantics)만 구현하면 됩니다.
-3. GiST 계층이 관리: 동시성(concurrency), 로깅(logging), 트리 구조 관리는 GiST 계층이 담당합니다.
+1. 도메인 전문가가 커스텀 데이터 타입 개발 가능: 적절한 액세스 메서드를 갖춘 새로운 데이터 타입을 개발할 수 있음.
+2. 높은 수준의 추상화: 구현자는 데이터 타입의 의미론(semantics)만 구현하면 됨.
+3. GiST 계층이 관리: 동시성(concurrency), 로깅(logging), 트리 구조 관리는 GiST 계층이 담당함.
 
 #### GiST의 역사
 
-GiST 인덱싱 방법은 Joseph M. Hellerstein, Jeffrey F. Naughton, Avi Pfeffer가 개발했으며, 이들의 논문 "Generalized Search Trees for Database Systems"에서 처음 발표되었습니다.
+GiST 인덱싱 방법은 Joseph M. Hellerstein, Jeffrey F. Naughton, Avi Pfeffer가 개발했으며, 이들의 논문 "Generalized Search Trees for Database Systems"에서 처음 발표되었음.
 
 ---
 
 ### 68.2 내장 연산자 클래스 (Built-in Operator Classes)
 
-PostgreSQL의 핵심 배포판에는 다음 표에 나열된 GiST 연산자 클래스가 포함되어 있습니다. `contrib` 컬렉션의 많은 애드온 모듈도 추가적인 GiST 연산자 클래스를 제공합니다.
+PostgreSQL의 핵심 배포판에는 다음 표에 나열된 GiST 연산자 클래스가 포함되어 있음. `contrib` 컬렉션의 많은 애드온 모듈도 추가적인 GiST 연산자 클래스를 제공함.
 
 #### 내장 GiST 연산자 클래스 표
 
-| 연산자 클래스 (Operator Class) | 인덱싱 가능 연산자 (Indexable Operators) |
-|-------------------------------|----------------------------------------|
-| `box_ops` | `<<` `&<` `&&` `&>` `>>` `~=` `@>` `<@` `&<\|` `<<\|` `\|>>` `\|&>` |
-| `circle_ops` | `<<` `&<` `&>` `>>` `<@` `@>` `~=` `&&` `\|>>` `<<\|` `&<\|` `\|&>` |
-| `inet_ops` | `<<` `<<=` `>>` `>>=` `=` `<>` `<` `<=` `>` `>=` `&&` |
-| `point_ops` | `\|>>` `<<` `>>` `<<\|` `~=` `<@` (box/polygon/circle) |
-| `poly_ops` | `<<` `&<` `&>` `>>` `<@` `@>` `~=` `&&` `<<\|` `&<\|` `\|&>` `\|>>` |
-| `range_ops` | `=` `&&` `@>` `<@` `<<` `>>` `&<` `&>` `-\|-` |
-| `multirange_ops` | `=` `&&` `@>` `<@` `<<` `>>` `&<` `&>` `-\|-` |
-| `tsquery_ops` | `<@` `@>` |
-| `tsvector_ops` | `@@` |
+- `box_ops`: `<<` `&<` `&&` `&>` `>>` `~=` `@>` `<@` `&<\|` `<<\|` `\|>>` `\|&>`
+- `circle_ops`: `<<` `&<` `&>` `>>` `<@` `@>` `~=` `&&` `\|>>` `<<\|` `&<\|` `\|&>`
+- `inet_ops`: `<<` `<<=` `>>` `>>=` `=` `<>` `<` `<=` `>` `>=` `&&`
+- `point_ops`: `\|>>` `<<` `>>` `<<\|` `~=` `<@` (box/polygon/circle)
+- `poly_ops`: `<<` `&<` `&>` `>>` `<@` `@>` `~=` `&&` `<<\|` `&<\|` `\|&>` `\|>>`
+- `range_ops`: `=` `&&` `@>` `<@` `<<` `>>` `&<` `&>` `-\|-`
+- `multirange_ops`: `=` `&&` `@>` `<@` `<<` `>>` `&<` `&>` `-\|-`
+- `tsquery_ops`: `<@` `@>`
+- `tsvector_ops`: `@@`
 
 #### inet_ops 사용 시 주의사항
 
-역사적인 이유로 `inet_ops` 연산자 클래스는 `inet`과 `cidr` 타입의 기본 클래스가 아닙니다. 이를 사용하려면 명시적으로 지정해야 합니다:
+역사적인 이유로 `inet_ops` 연산자 클래스는 `inet`과 `cidr` 타입의 기본 클래스가 아님. 이를 사용하려면 명시적으로 지정해야 함:
 
 ```sql
 CREATE INDEX ON my_table USING GIST (my_inet_column inet_ops);
@@ -4649,34 +4621,32 @@ CREATE INDEX ON my_table USING GIST (my_inet_column inet_ops);
 
 #### 기하학적 연산자 설명
 
-| 연산자 | 설명 |
-|--------|------|
-| `<<` | 왼쪽에 있음 (strictly left of) |
-| `>>` | 오른쪽에 있음 (strictly right of) |
-| `&<` | 오른쪽으로 확장하지 않음 (does not extend to right of) |
-| `&>` | 왼쪽으로 확장하지 않음 (does not extend to left of) |
-| `<<\|` | 아래에 있음 (strictly below) |
-| `\|>>` | 위에 있음 (strictly above) |
-| `&<\|` | 위로 확장하지 않음 (does not extend above) |
-| `\|&>` | 아래로 확장하지 않음 (does not extend below) |
-| `&&` | 겹침 (overlaps) |
-| `@>` | 포함함 (contains) |
-| `<@` | 포함됨 (contained by) |
-| `~=` | 동일함 (same as) |
+- `<<`: 왼쪽에 있음 (strictly left of)
+- `>>`: 오른쪽에 있음 (strictly right of)
+- `&<`: 오른쪽으로 확장하지 않음 (does not extend to right of)
+- `&>`: 왼쪽으로 확장하지 않음 (does not extend to left of)
+- `<<\|`: 아래에 있음 (strictly below)
+- `\|>>`: 위에 있음 (strictly above)
+- `&<\|`: 위로 확장하지 않음 (does not extend above)
+- `\|&>`: 아래로 확장하지 않음 (does not extend below)
+- `&&`: 겹침 (overlaps)
+- `@>`: 포함함 (contains)
+- `<@`: 포함됨 (contained by)
+- `~=`: 동일함 (same as)
 
 ---
 
 ### 68.3 확장성 (Extensibility)
 
-전통적으로 새로운 인덱스 액세스 메서드를 구현하는 것은 매우 어려운 작업이었습니다. 동시성과 로깅의 내부 동작을 이해해야 했기 때문입니다. GiST 인터페이스는 높은 수준의 추상화를 제공하므로, 액세스 메서드 구현자는 해당 데이터 타입의 의미론만 구현하면 됩니다.
+전통적으로 새로운 인덱스 액세스 메서드를 구현하는 것은 매우 어려운 작업이었음. 동시성과 로깅의 내부 동작을 이해해야 했기 때문임. GiST 인터페이스는 높은 수준의 추상화를 제공하므로, 액세스 메서드 구현자는 해당 데이터 타입의 의미론만 구현하면 됨.
 
-GiST 연산자 클래스를 구현하려면 여러 메서드를 제공해야 합니다.
+GiST 연산자 클래스를 구현하려면 여러 메서드를 제공해야 함.
 
 #### 필수 메서드 (Required Methods) - 5개
 
 ##### 1. consistent
 
-인덱스 항목이 쿼리 조건에 부합하는지 확인합니다.
+인덱스 항목이 쿼리 조건에 부합하는지 확인함.
 
 SQL 함수 정의:
 ```sql
@@ -4721,7 +4691,7 @@ my_consistent(PG_FUNCTION_ARGS)
 
 ##### 2. union
 
-트리의 정보를 통합하여 주어진 모든 항목을 포괄하는 새 인덱스 항목을 생성합니다.
+트리의 정보를 통합하여 주어진 모든 항목을 포괄하는 새 인덱스 항목을 생성함.
 
 SQL 함수 정의:
 ```sql
@@ -4765,12 +4735,12 @@ my_union(PG_FUNCTION_ARGS)
 ```
 
 중요 사항:
-- 반드시 새로 `palloc()`된 메모리를 반환해야 합니다.
-- 결과는 인덱스의 저장 타입이어야 합니다.
+- 반드시 새로 `palloc()`된 메모리를 반환해야 함.
+- 결과는 인덱스의 저장 타입이어야 함.
 
 ##### 3. penalty
 
-트리의 특정 분기에 항목을 삽입하는 비용을 반환합니다. 항목은 페널티가 가장 낮은 경로를 따라 삽입됩니다.
+트리의 특정 분기에 항목을 삽입하는 비용을 반환함. 항목은 페널티가 가장 낮은 경로를 따라 삽입됨.
 
 SQL 함수 정의:
 ```sql
@@ -4799,12 +4769,12 @@ my_penalty(PG_FUNCTION_ARGS)
 ```
 
 중요 사항:
-- 결과는 세 번째 인수 포인터를 통해 저장됩니다.
-- 음수 값은 0으로 처리됩니다.
+- 결과는 세 번째 인수 포인터를 통해 저장됨.
+- 음수 값은 0으로 처리됨.
 
 ##### 4. picksplit
 
-페이지 분할 시 어느 항목을 기존 페이지에 남기고 어느 항목을 새 페이지로 옮길지 결정합니다.
+페이지 분할 시 어느 항목을 기존 페이지에 남기고 어느 항목을 새 페이지로 옮길지 결정함.
 
 SQL 함수 정의:
 ```sql
@@ -4879,7 +4849,7 @@ GIST_SPLITVEC 구조체 필드:
 
 ##### 5. same
 
-두 인덱스 항목이 동일하면 true를, 그렇지 않으면 false를 반환합니다.
+두 인덱스 항목이 동일하면 true를, 그렇지 않으면 false를 반환함.
 
 SQL 함수 정의:
 ```sql
@@ -4911,7 +4881,7 @@ my_same(PG_FUNCTION_ARGS)
 
 ##### 1. compress
 
-데이터를 인덱스 페이지의 물리적 저장에 적합한 형식으로 변환합니다. 생략하면 데이터가 그대로 저장됩니다.
+데이터를 인덱스 페이지의 물리적 저장에 적합한 형식으로 변환함. 생략하면 데이터가 그대로 저장됨.
 
 ```c
 PG_FUNCTION_INFO_V1(my_compress);
@@ -4942,7 +4912,7 @@ my_compress(PG_FUNCTION_ARGS)
 
 ##### 2. decompress
 
-저장된 표현을 GiST 메서드가 처리할 수 있는 형식으로 복원합니다.
+저장된 표현을 GiST 메서드가 처리할 수 있는 형식으로 복원함.
 
 ```c
 PG_FUNCTION_INFO_V1(my_decompress);
@@ -4957,7 +4927,7 @@ my_decompress(PG_FUNCTION_ARGS)
 
 ##### 3. distance
 
-인덱스 항목과 쿼리 값 사이의 거리를 계산합니다. 연산자 클래스에 정렬 연산자가 있는 경우 필수입니다.
+인덱스 항목과 쿼리 값 사이의 거리를 계산함. 연산자 클래스에 정렬 연산자가 있는 경우 필수임.
 
 SQL 함수 정의:
 ```sql
@@ -4993,12 +4963,12 @@ my_distance(PG_FUNCTION_ARGS)
 ```
 
 중요 사항:
-- 내부 노드의 경우, 반환된 거리는 어떤 자식까지의 거리보다 크면 안 됩니다.
-- 근사치인 경우 `*recheck = true`로 설정합니다.
+- 내부 노드의 경우, 반환된 거리는 어떤 자식까지의 거리보다 크면 안 됨.
+- 근사치인 경우 `*recheck = true`로 설정함.
 
 ##### 4. fetch
 
-인덱스 전용 스캔(Index-Only Scan)을 지원하기 위해 압축된 인덱스 표현을 원래 데이터 타입으로 변환합니다.
+인덱스 전용 스캔(Index-Only Scan)을 지원하기 위해 압축된 인덱스 표현을 원래 데이터 타입으로 변환함.
 
 ```c
 PG_FUNCTION_INFO_V1(my_fetch);
@@ -5024,11 +4994,11 @@ my_fetch(PG_FUNCTION_ARGS)
 }
 ```
 
-참고: `compress`가 리프 항목에 대해 손실 없이 동작하는 경우에만 필요합니다.
+참고: `compress`가 리프 항목에 대해 손실 없이 동작하는 경우에만 필요함.
 
 ##### 5. options
 
-연산자 클래스의 동작을 제어하는 사용자 정의 매개변수를 선언합니다.
+연산자 클래스의 동작을 제어하는 사용자 정의 매개변수를 선언함.
 
 ```c
 typedef struct
@@ -5069,7 +5039,7 @@ if (PG_HAS_OPCLASS_OPTIONS())
 
 ##### 6. sortsupport
 
-지역성(locality)을 보존하는 방식으로 데이터를 정렬하는 비교 함수를 제공합니다. 인덱스 빌드 속도를 높이기 위해 사용됩니다.
+지역성(locality)을 보존하는 방식으로 데이터를 정렬하는 비교 함수를 제공함. 인덱스 빌드 속도를 높이기 위해 사용됨.
 
 ```c
 PG_FUNCTION_INFO_V1(my_sortsupport);
@@ -5097,7 +5067,7 @@ my_sortsupport(PG_FUNCTION_ARGS)
 
 ##### 7. translate_cmptype
 
-`CompareType` 값을 전략 번호(strategy numbers)로 변환합니다. 시간적(temporal) 인덱스 제약 조건에 사용됩니다.
+`CompareType` 값을 전략 번호(strategy numbers)로 변환함. 시간적(temporal) 인덱스 제약 조건에 사용됨.
 
 SQL 함수 정의:
 ```sql
@@ -5144,13 +5114,13 @@ ALTER OPERATOR FAMILY my_opfamily USING gist ADD
 
 #### GiST 인덱스 빌드 방법
 
-GiST 인덱스 구축에는 여러 가지 방법이 있으며, 상황에 따라 각각의 장단점이 있습니다.
+GiST 인덱스 구축에는 여러 가지 방법이 있으며, 상황에 따라 각각의 장단점이 있음.
 
 ##### 1. 정렬 방법 (Sorted Method) - 기본값
 
-- 조건: 모든 연산자 클래스가 `sortsupport` 함수를 제공할 때 사용됩니다.
-- 장점: 대부분의 데이터셋에 가장 효율적입니다.
-- 동작: 데이터를 먼저 정렬한 후 트리를 bottom-up 방식으로 구축합니다.
+- 조건: 모든 연산자 클래스가 `sortsupport` 함수를 제공할 때 사용됨.
+- 장점: 대부분의 데이터셋에 가장 효율적임.
+- 동작: 데이터를 먼저 정렬한 후 트리를 bottom-up 방식으로 구축함.
 
 ```sql
 -- sortsupport가 있는 경우 자동으로 정렬 방법 사용
@@ -5159,9 +5129,9 @@ CREATE INDEX idx_point ON locations USING GIST (point_column);
 
 ##### 2. 버퍼링 방법 (Buffered Method)
 
-- 장점: 정렬되지 않은 데이터셋에 대해 무작위 I/O를 크게 줄입니다.
-- 단점: I/O 감소를 위해 CPU를 더 사용하며, 인덱스 크기만큼의 임시 디스크 공간이 필요합니다.
-- 자동 활성화: 인덱스 크기가 `effective_cache_size`에 도달하면 자동으로 전환됩니다.
+- 장점: 정렬되지 않은 데이터셋에 대해 무작위 I/O를 크게 줄임.
+- 단점: I/O 감소를 위해 CPU를 더 사용하며, 인덱스 크기만큼의 임시 디스크 공간이 필요함.
+- 자동 활성화: 인덱스 크기가 `effective_cache_size`에 도달하면 자동으로 전환됨.
 
 ```sql
 -- 버퍼링 빌드 명시적 활성화
@@ -5176,7 +5146,7 @@ CREATE INDEX idx_geo ON geo_data USING GIST (geom) WITH (buffering=auto);
 
 #### 트리 구조
 
-GiST 인덱스는 B-트리와 유사한 균형 트리 구조를 가집니다:
+GiST 인덱스는 B-트리와 유사한 균형 트리 구조를 가짐:
 
 ```
          [루트 노드]
@@ -5186,13 +5156,13 @@ GiST 인덱스는 B-트리와 유사한 균형 트리 구조를 가집니다:
 [리프] ... [리프] ... [리프]
 ```
 
-- 내부 노드 (Internal Nodes): 하위 항목들의 "바운딩 박스" 또는 유니온을 저장합니다.
-- 리프 노드 (Leaf Nodes): 실제 인덱스 키를 저장합니다.
-- 균형 유지: 모든 리프 노드는 루트에서 동일한 깊이에 위치합니다.
+- 내부 노드 (Internal Nodes): 하위 항목들의 "바운딩 박스" 또는 유니온을 저장함.
+- 리프 노드 (Leaf Nodes): 실제 인덱스 키를 저장함.
+- 균형 유지: 모든 리프 노드는 루트에서 동일한 깊이에 위치함.
 
 #### 동시성 제어
 
-GiST는 동시 접근을 위한 정교한 잠금 메커니즘을 사용합니다:
+GiST는 동시 접근을 위한 정교한 잠금 메커니즘을 사용함:
 
 1. 읽기 작업: 페이지 단위 공유 잠금 사용
 2. 쓰기 작업: 페이지 단위 배타 잠금 사용
@@ -5280,21 +5250,33 @@ WHERE network >>= '192.168.1.0/24';
 
 ### 68.6 contrib 모듈의 GiST 지원
 
-PostgreSQL `contrib` 컬렉션에는 GiST를 활용하는 여러 유용한 모듈이 있습니다:
+PostgreSQL `contrib` 컬렉션에는 GiST를 활용하는 여러 유용한 모듈이 있음:
 
-| 모듈 | 용도 | 인덱싱 대상 |
-|------|------|-------------|
-| `btree_gist` | B-트리 동등 기능을 GiST로 제공 | 스칼라 타입 (integer, text 등) |
-| `cube` | 다차원 큐브 인덱싱 | N차원 큐브 |
-| `hstore` | 키-값 쌍 저장 및 검색 | 키-값 데이터 |
-| `intarray` | 정수 배열의 RD-Tree | 1차원 int4 배열 |
-| `ltree` | 트리 구조 레이블 경로 | 계층적 레이블 |
-| `pg_trgm` | 트라이그램 기반 텍스트 유사도 | 텍스트 유사도 검색 |
-| `seg` | 부동소수점 범위 인덱싱 | 숫자 범위 |
+- `btree_gist`
+  - 용도: B-트리 동등 기능을 GiST로 제공
+  - 인덱싱 대상: 스칼라 타입 (integer, text 등)
+- `cube`
+  - 용도: 다차원 큐브 인덱싱
+  - 인덱싱 대상: N차원 큐브
+- `hstore`
+  - 용도: 키-값 쌍 저장 및 검색
+  - 인덱싱 대상: 키-값 데이터
+- `intarray`
+  - 용도: 정수 배열의 RD-Tree
+  - 인덱싱 대상: 1차원 int4 배열
+- `ltree`
+  - 용도: 트리 구조 레이블 경로
+  - 인덱싱 대상: 계층적 레이블
+- `pg_trgm`
+  - 용도: 트라이그램 기반 텍스트 유사도
+  - 인덱싱 대상: 텍스트 유사도 검색
+- `seg`
+  - 용도: 부동소수점 범위 인덱싱
+  - 인덱싱 대상: 숫자 범위
 
 #### btree_gist 예제
 
-`btree_gist`를 사용하면 스칼라 타입에 대해 GiST 인덱스를 생성하고 제외 제약 조건에서 사용할 수 있습니다:
+`btree_gist`를 사용하면 스칼라 타입에 대해 GiST 인덱스를 생성하고 제외 제약 조건에서 사용할 수 있음:
 
 ```sql
 -- 확장 설치
@@ -5332,7 +5314,7 @@ ORDER BY title <-> 'PostgreSQL';  -- 유사도 순 정렬
 
 ### 68.7 메모리 관리 (Memory Management)
 
-GiST 지원 메서드는 일반적으로 각 튜플 처리 후 리셋되는 단기 메모리 컨텍스트 내에서 실행됩니다. 호출 간에 데이터를 캐시하려면 다음과 같이 합니다:
+GiST 지원 메서드는 일반적으로 각 튜플 처리 후 리셋되는 단기 메모리 컨텍스트 내에서 실행됨. 호출 간에 데이터를 캐시하려면 다음과 같이 함:
 
 ```c
 /* 더 오래 지속되는 컨텍스트에 할당 */
@@ -5358,15 +5340,41 @@ CachedData *cached = (CachedData *) fcinfo->flinfo->fn_extra;
 
 ### 68.8 GiST vs 다른 인덱스 타입
 
-| 특성 | GiST | B-tree | GIN | SP-GiST |
-|------|------|--------|-----|---------|
-| 용도 | 범용 확장 가능 | 비교 가능한 데이터 | 복합 값 검색 | 불균형 구조 |
-| 기하학적 데이터 | 우수 | 미지원 | 미지원 | 지원 |
-| 범위 쿼리 | 우수 | 우수 | 제한적 | 지원 |
-| 전체 텍스트 | 지원 | 미지원 | 우수 | 미지원 |
-| 최근접 이웃 | 지원 | 미지원 | 미지원 | 지원 |
-| 인덱스 크기 | 중간 | 작음 | 큼 | 작음 |
-| 빌드 속도 | 보통 | 빠름 | 느림 | 보통 |
+- 용도
+  - GiST: 범용 확장 가능
+  - B-tree: 비교 가능한 데이터
+  - GIN: 복합 값 검색
+  - SP-GiST: 불균형 구조
+- 기하학적 데이터
+  - GiST: 우수
+  - B-tree: 미지원
+  - GIN: 미지원
+  - SP-GiST: 지원
+- 범위 쿼리
+  - GiST: 우수
+  - B-tree: 우수
+  - GIN: 제한적
+  - SP-GiST: 지원
+- 전체 텍스트
+  - GiST: 지원
+  - B-tree: 미지원
+  - GIN: 우수
+  - SP-GiST: 미지원
+- 최근접 이웃
+  - GiST: 지원
+  - B-tree: 미지원
+  - GIN: 미지원
+  - SP-GiST: 지원
+- 인덱스 크기
+  - GiST: 중간
+  - B-tree: 작음
+  - GIN: 큼
+  - SP-GiST: 작음
+- 빌드 속도
+  - GiST: 보통
+  - B-tree: 빠름
+  - GIN: 느림
+  - SP-GiST: 보통
 
 ---
 
@@ -5374,9 +5382,9 @@ CachedData *cached = (CachedData *) fcinfo->flinfo->fn_extra;
 
 #### 인덱스 선택 시 고려사항
 
-1. 데이터 타입: 기하학적 데이터, 범위, 전체 텍스트에는 GiST가 적합합니다.
-2. 쿼리 패턴: 포함, 겹침, 최근접 이웃 쿼리에 효과적입니다.
-3. 업데이트 빈도: 업데이트가 잦을 경우 B-tree보다 느릴 수 있습니다.
+1. 데이터 타입: 기하학적 데이터, 범위, 전체 텍스트에는 GiST가 적합함.
+2. 쿼리 패턴: 포함, 겹침, 최근접 이웃 쿼리에 효과적임.
+3. 업데이트 빈도: 업데이트가 잦을 경우 B-tree보다 느릴 수 있음.
 
 #### 성능 최적화 팁
 
@@ -5399,7 +5407,7 @@ REINDEX INDEX idx_locations_pos;
 
 #### fillfactor 설정
 
-업데이트가 잦은 테이블에서는 fillfactor를 낮게 설정해 페이지 분할을 줄일 수 있습니다:
+업데이트가 잦은 테이블에서는 fillfactor를 낮게 설정해 페이지 분할을 줄일 수 있음:
 
 ```sql
 CREATE INDEX idx_geo ON geo_data USING GIST (geom)
@@ -5433,7 +5441,7 @@ PostgreSQL 18 공식 문서 번역
 
 ### 69.1. 소개 (Introduction)
 
-SP-GiST는 Space-Partitioned GiST 의 약자로, 분할 검색 트리(partitioned search trees)를 지원하는 인덱스 접근 방법입니다. SP-GiST를 사용하면 다음과 같은 다양한 비균형(non-balanced) 디스크 기반 데이터 구조를 구현할 수 있습니다:
+SP-GiST는 Space-Partitioned GiST 의 약자로, 분할 검색 트리(partitioned search trees)를 지원하는 인덱스 접근 방법임. SP-GiST를 사용하면 다음과 같은 다양한 비균형(non-balanced) 디스크 기반 데이터 구조를 구현할 수 있음:
 
 - 쿼드 트리 (Quad-trees): 2차원 공간을 4개의 사분면으로 재귀적으로 분할
 - k-d 트리 (K-d trees): k차원 점 데이터를 이진 분할
@@ -5441,9 +5449,9 @@ SP-GiST는 Space-Partitioned GiST 의 약자로, 분할 검색 트리(partitione
 
 #### SP-GiST의 특징
 
-SP-GiST는 검색 공간을 동일하지 않은 크기의 파티션으로 반복적으로 분할 하는 구조를 지원합니다. 쿼리가 분할 규칙과 잘 일치하면 매우 빠른 검색이 가능합니다.
+SP-GiST는 검색 공간을 동일하지 않은 크기의 파티션으로 반복적으로 분할 하는 구조를 지원함. 쿼리가 분할 규칙과 잘 일치하면 매우 빠른 검색이 가능함.
 
-전통적인 메모리 기반 검색 트리의 주요 과제는 노드를 디스크 페이지에 효율적으로 매핑하는 것입니다. SP-GiST는 이를 해결하기 위해 설계되었습니다:
+전통적인 메모리 기반 검색 트리의 주요 과제는 노드를 디스크 페이지에 효율적으로 매핑하는 것임. SP-GiST는 이를 해결하기 위해 설계되었음:
 
 - 포인터 기반 구조 대신 디스크 페이지에 최적화된 구조 사용
 - 높은 팬아웃(fanout)으로 I/O 연산 최소화
@@ -5451,11 +5459,11 @@ SP-GiST는 검색 공간을 동일하지 않은 크기의 파티션으로 반복
 
 #### SP-GiST 트리의 구조
 
-SP-GiST 트리는 두 가지 유형의 튜플로 구성됩니다:
+SP-GiST 트리는 두 가지 유형의 튜플로 구성됨:
 
 ##### 내부 튜플 (Inner Tuples)
 
-검색 트리의 분기점(branch points)으로, 하나 이상의 노드(nodes) 를 포함합니다:
+검색 트리의 분기점(branch points)으로, 하나 이상의 노드(nodes) 를 포함함:
 
 ```
 내부 튜플 구조:
@@ -5464,14 +5472,14 @@ SP-GiST 트리는 두 가지 유형의 튜플로 구성됩니다:
 └─────────────────────────────────────────────────┘
 ```
 
-각 노드는 다음을 포함합니다:
+각 노드는 다음을 포함함:
 - 레이블 (Label): 노드를 설명 (예: 기수 트리에서 다음 문자)
 - 다운링크 (Downlink): 하위 내부 튜플이나 리프 튜플 목록을 가리킴
 - 접두사 (Prefix): 선택적으로 모든 멤버에 공통적인 값 설명
 
 ##### 리프 튜플 (Leaf Tuples)
 
-인덱싱된 컬럼의 실제 값을 포함합니다:
+인덱싱된 컬럼의 실제 값을 포함함:
 
 - 인덱싱된 컬럼과 동일한 데이터 타입의 값 저장
 - 손실 표현(lossy representation)이나 부분 값 저장 가능
@@ -5519,25 +5527,37 @@ SP-GiST 트리는 두 가지 유형의 튜플로 구성됩니다:
 
 ### 69.2. 내장 연산자 클래스 (Built-in Operator Classes)
 
-PostgreSQL의 핵심 배포판에는 다음 표에 나열된 SP-GiST 연산자 클래스가 포함되어 있습니다.
+PostgreSQL의 핵심 배포판에는 다음 표에 나열된 SP-GiST 연산자 클래스가 포함되어 있음.
 
 #### SP-GiST 내장 연산자 클래스 목록
 
-| 연산자 클래스 | 인덱싱 타입 | 인덱싱 가능 연산자 |
-|-------------|-----------|------------------|
-| `box_ops` | `box` | `<<` `&<` `&>` `>>` `<@` `@>` `~=` `&&` `<<\|` `&<\|` `\|&>` `\|>>` |
-| `inet_ops` | `inet`, `cidr` | `<<` `<<=` `>>` `>>=` `=` `<>` `<` `<=` `>` `>=` `&&` |
-| `kd_point_ops` | `point` | `\|>>` `<->` `<<` `>>` `<<\|` `~=` `<@` |
-| `quad_point_ops` | `point` | `\|>>` `<->` `<<` `>>` `<<\|` `~=` `<@` |
-| `poly_ops` | `polygon` | `<<` `&<` `&>` `>>` `<@` `@>` `~=` `&&` `<<\|` `&<\|` `\|>>` `\|&>` |
-| `range_ops` | 모든 범위 타입 | `=` `&&` `@>` `<@` `<<` `>>` `&<` `&>` `-\|-` |
-| `text_ops` | `text` | `=` `<` `<=` `>` `>=` `~<~` `~<=~` `~>=~` `~>~` `^@` |
+- `box_ops`
+  - 인덱싱 타입: `box`
+  - 인덱싱 가능 연산자: `<<` `&<` `&>` `>>` `<@` `@>` `~=` `&&` `<<\|` `&<\|` `\|&>` `\|>>`
+- `inet_ops`
+  - 인덱싱 타입: `inet`, `cidr`
+  - 인덱싱 가능 연산자: `<<` `<<=` `>>` `>>=` `=` `<>` `<` `<=` `>` `>=` `&&`
+- `kd_point_ops`
+  - 인덱싱 타입: `point`
+  - 인덱싱 가능 연산자: `\|>>` `<->` `<<` `>>` `<<\|` `~=` `<@`
+- `quad_point_ops`
+  - 인덱싱 타입: `point`
+  - 인덱싱 가능 연산자: `\|>>` `<->` `<<` `>>` `<<\|` `~=` `<@`
+- `poly_ops`
+  - 인덱싱 타입: `polygon`
+  - 인덱싱 가능 연산자: `<<` `&<` `&>` `>>` `<@` `@>` `~=` `&&` `<<\|` `&<\|` `\|>>` `\|&>`
+- `range_ops`
+  - 인덱싱 타입: 모든 범위 타입
+  - 인덱싱 가능 연산자: `=` `&&` `@>` `<@` `<<` `>>` `&<` `&>` `-\|-`
+- `text_ops`
+  - 인덱싱 타입: `text`
+  - 인덱싱 가능 연산자: `=` `<` `<=` `>` `>=` `~<~` `~<=~` `~>=~` `~>~` `^@`
 
 #### 연산자 클래스 상세 설명
 
 ##### box_ops (상자 연산자 클래스)
 
-`box` 타입에 대한 SP-GiST 인덱스입니다. 쿼드 트리를 사용하여 2차원 상자를 인덱싱합니다.
+`box` 타입에 대한 SP-GiST 인덱스임. 쿼드 트리를 사용하여 2차원 상자를 인덱싱함.
 
 지원 연산자:
 - `<<`: 왼쪽에 엄격히 위치 (strictly left of)
@@ -5555,7 +5575,7 @@ PostgreSQL의 핵심 배포판에는 다음 표에 나열된 SP-GiST 연산자 �
 
 ##### inet_ops (IP 주소 연산자 클래스)
 
-`inet` 및 `cidr` 타입에 대한 SP-GiST 인덱스입니다. 기수 트리를 사용합니다.
+`inet` 및 `cidr` 타입에 대한 SP-GiST 인덱스임. 기수 트리를 사용함.
 
 지원 연산자:
 - `<<`: 서브넷에 포함됨 (is subnet)
@@ -5567,7 +5587,7 @@ PostgreSQL의 핵심 배포판에는 다음 표에 나열된 SP-GiST 연산자 �
 
 ##### quad_point_ops (쿼드 포인트 연산자 클래스)
 
-`point` 타입의 기본 연산자 클래스입니다. 쿼드 트리를 사용하여 2차원 점을 인덱싱합니다.
+`point` 타입의 기본 연산자 클래스임. 쿼드 트리를 사용하여 2차원 점을 인덱싱함.
 
 지원 연산자:
 - `|>>`: 위에 엄격히 위치
@@ -5580,7 +5600,7 @@ PostgreSQL의 핵심 배포판에는 다음 표에 나열된 SP-GiST 연산자 �
 
 ##### kd_point_ops (k-d 포인트 연산자 클래스)
 
-`point` 타입에 대한 대안적 연산자 클래스입니다. k-d 트리를 사용합니다.
+`point` 타입에 대한 대안적 연산자 클래스임. k-d 트리를 사용함.
 
 quad_point_ops와의 차이점:
 - 균형 잡힌 트리 구조로 더 나은 균형 제공
@@ -5597,7 +5617,7 @@ CREATE INDEX idx_points_kd ON geo_table USING spgist (location kd_point_ops);
 
 ##### range_ops (범위 연산자 클래스)
 
-모든 범위 타입에 대한 SP-GiST 인덱스입니다.
+모든 범위 타입에 대한 SP-GiST 인덱스임.
 
 지원 연산자:
 - `=`: 같음
@@ -5612,7 +5632,7 @@ CREATE INDEX idx_points_kd ON geo_table USING spgist (location kd_point_ops);
 
 ##### text_ops (텍스트 연산자 클래스)
 
-`text` 타입에 대한 SP-GiST 인덱스입니다. 기수 트리(Trie)를 사용합니다.
+`text` 타입에 대한 SP-GiST 인덱스임. 기수 트리(Trie)를 사용함.
 
 지원 연산자:
 - `=`: 같음
@@ -5682,15 +5702,15 @@ SELECT name FROM products WHERE name LIKE 'App%';
 
 ### 69.3. 확장성 (Extensibility)
 
-SP-GiST는 다양한 유형의 비균형 디스크 기반 데이터 구조를 구현할 수 있도록 확장 가능한 인터페이스를 제공합니다. 분할 규칙 및 동등성에 대한 높은 수준의 추상화를 제공하며, 데이터를 내부 튜플 간에 이동하거나 값을 압축하는 등의 일반적인 작업은 SP-GiST 코어에서 처리합니다.
+SP-GiST는 다양한 유형의 비균형 디스크 기반 데이터 구조를 구현할 수 있도록 확장 가능한 인터페이스를 제공함. 분할 규칙 및 동등성에 대한 높은 수준의 추상화를 제공하며, 데이터를 내부 튜플 간에 이동하거나 값을 압축하는 등의 일반적인 작업은 SP-GiST 코어에서 처리함.
 
 #### 필수 사용자 정의 메서드
 
-모든 SP-GiST 연산자 클래스는 5개의 필수 메서드와 선택적 메서드를 구현해야 합니다:
+모든 SP-GiST 연산자 클래스는 5개의 필수 메서드와 선택적 메서드를 구현해야 함:
 
 ##### 1. config 메서드
 
-인덱스 구현에 대한 정적 정보를 반환합니다.
+인덱스 구현에 대한 정적 정보를 반환함.
 
 ```c
 /* 입력 구조체 */
@@ -5719,7 +5739,7 @@ typedef struct spgConfigOut
 
 ##### 2. choose 메서드
 
-새 값을 내부 튜플에 삽입할 방법을 결정합니다.
+새 값을 내부 튜플에 삽입할 방법을 결정함.
 
 ```c
 /* 입력 구조체 */
@@ -5787,7 +5807,7 @@ typedef struct spgChooseOut
 
 ##### 3. picksplit 메서드
 
-리프 튜플 집합에서 새 내부 튜플을 생성하는 방법을 결정합니다.
+리프 튜플 집합에서 새 내부 튜플을 생성하는 방법을 결정함.
 
 ```c
 /* 입력 구조체 */
@@ -5818,7 +5838,7 @@ typedef struct spgPickSplitOut
 
 ##### 4. inner_consistent 메서드
 
-트리 검색 시 탐색할 노드(분기)를 반환합니다.
+트리 검색 시 탐색할 노드(분기)를 반환함.
 
 ```c
 /* 입력 구조체 */
@@ -5857,7 +5877,7 @@ typedef struct spgInnerConsistentOut
 
 ##### 5. leaf_consistent 메서드
 
-리프 튜플이 쿼리를 만족하는지 확인합니다.
+리프 튜플이 쿼리를 만족하는지 확인함.
 
 ```c
 /* 입력 구조체 */
@@ -5890,7 +5910,7 @@ typedef struct spgLeafConsistentOut
 
 ##### compress 메서드
 
-데이터 항목을 리프 튜플 저장에 적합한 형식으로 변환합니다.
+데이터 항목을 리프 튜플 저장에 적합한 형식으로 변환함.
 
 ```c
 Datum compress(Datum in)
@@ -5903,7 +5923,7 @@ Datum compress(Datum in)
 
 ##### options 메서드
 
-연산자 클래스 동작을 제어하는 사용자 정의 매개변수를 정의합니다.
+연산자 클래스 동작을 제어하는 사용자 정의 매개변수를 정의함.
 
 ```sql
 CREATE OR REPLACE FUNCTION my_spgist_options(internal)
@@ -5914,7 +5934,7 @@ LANGUAGE C STRICT;
 
 #### 연산자 클래스 구현 예제
 
-다음은 간단한 정수 범위에 대한 SP-GiST 연산자 클래스 개념을 보여주는 예제입니다:
+다음은 간단한 정수 범위에 대한 SP-GiST 연산자 클래스 개념을 보여주는 예제임:
 
 ```sql
 -- 연산자 클래스 생성 예제 (개념적)
@@ -5947,15 +5967,15 @@ CREATE OPERATOR CLASS my_int_ops
 
 ##### 리프 그룹화 제약
 
-하나의 노드가 가리키는 모든 리프 튜플은 동일한 인덱스 페이지에 있어야 합니다. 이는 SP-GiST 코어가 자동으로 처리합니다.
+하나의 노드가 가리키는 모든 리프 튜플은 동일한 인덱스 페이지에 있어야 함. 이는 SP-GiST 코어가 자동으로 처리함.
 
 ##### 무한 루프 방지
 
-SP-GiST는 리프 데이텀이 10회의 `choose` 호출 내에 축소되지 않으면 오류를 발생시킵니다.
+SP-GiST는 리프 데이텀이 10회의 `choose` 호출 내에 축소되지 않으면 오류를 발생시킴.
 
 #### 노드 레이블 없는 SP-GiST
 
-일부 트리 알고리즘은 고정된 노드 집합을 사용합니다. 예를 들어, 쿼드 트리는 항상 정확히 4개의 노드를 가집니다:
+일부 트리 알고리즘은 고정된 노드 집합을 사용함. 예를 들어, 쿼드 트리는 항상 정확히 4개의 노드를 가짐:
 
 ```
          NW | NE
@@ -6000,7 +6020,7 @@ allTheSame = true 인 내부 튜플 예시:
 
 #### NULL 처리
 
-SP-GiST 코어는 NULL 항목을 자동으로 처리합니다:
+SP-GiST 코어는 NULL 항목을 자동으로 처리함:
 
 - NULL 값은 인덱스에 저장되지만 연산자 클래스 코드에서는 숨겨짐
 - 연산자 클래스 메서드에 NULL 인덱스 항목이나 검색 조건이 전달되지 않음
@@ -6026,7 +6046,7 @@ SELECT * FROM test_spgist WHERE location IS NULL;
 
 #### 메모리 관리
 
-SP-GiST 지원 메서드는 단기 메모리 컨텍스트에서 호출됩니다:
+SP-GiST 지원 메서드는 단기 메모리 컨텍스트에서 호출됨:
 
 - `CurrentMemoryContext`는 각 튜플 처리 후 재설정됨
 - `config` 메서드는 메모리 누수를 피해야 함
@@ -6051,7 +6071,7 @@ my_config(PG_FUNCTION_ARGS)
 
 #### 예제 구현 위치
 
-PostgreSQL 소스 배포판에는 다음 위치에 예제 구현이 포함되어 있습니다:
+PostgreSQL 소스 배포판에는 다음 위치에 예제 구현이 포함되어 있음:
 
 - `src/backend/access/spgist/`: SP-GiST 코어 코드
   - `spgutils.c`: 유틸리티 함수
@@ -6070,13 +6090,26 @@ PostgreSQL 소스 배포판에는 다음 위치에 예제 구현이 포함되어
 
 #### SP-GiST vs. GiST vs. B-tree
 
-| 특성 | SP-GiST | GiST | B-tree |
-|-----|---------|------|--------|
-| 데이터 구조 | 분할 트리 | 균형 트리 | 균형 트리 |
-| 적합한 데이터 | 공간, 네트워크, 텍스트 | 복잡한 데이터 타입 | 스칼라 값 |
-| k-NN 지원 | 예 (일부 타입) | 예 | 아니오 |
-| 접두사 검색 | 매우 효율적 | 보통 | 효율적 |
-| 메모리 사용 | 낮음 | 중간 | 낮음 |
+- 데이터 구조
+  - SP-GiST: 분할 트리
+  - GiST: 균형 트리
+  - B-tree: 균형 트리
+- 적합한 데이터
+  - SP-GiST: 공간, 네트워크, 텍스트
+  - GiST: 복잡한 데이터 타입
+  - B-tree: 스칼라 값
+- k-NN 지원
+  - SP-GiST: 예 (일부 타입)
+  - GiST: 예
+  - B-tree: 아니오
+- 접두사 검색
+  - SP-GiST: 매우 효율적
+  - GiST: 보통
+  - B-tree: 효율적
+- 메모리 사용
+  - SP-GiST: 낮음
+  - GiST: 중간
+  - B-tree: 낮음
 
 #### 최적 사용 사례
 
@@ -6121,7 +6154,7 @@ CREATE INDEX idx_location_fill ON locations
 
 ### 요약
 
-SP-GiST는 공간 분할 기반의 유연한 인덱스 구조를 제공합니다:
+SP-GiST는 공간 분할 기반의 유연한 인덱스 구조를 제공함:
 
 1. 다양한 트리 구조 지원: 쿼드 트리, k-d 트리, 기수 트리 등
 2. 효율적인 공간 검색: 점, 상자, 다각형 등의 기하 데이터
@@ -6129,7 +6162,7 @@ SP-GiST는 공간 분할 기반의 유연한 인덱스 구조를 제공합니다
 4. 텍스트 접두사 검색: 기수 트리 기반의 빠른 접두사 매칭
 5. k-NN 검색 지원: 가장 가까운 이웃 검색
 
-SP-GiST는 GiST와 달리 비균형 트리 구조를 지원하여 특정 유형의 데이터에 대해 더 효율적인 검색이 가능합니다. 데이터 특성에 따라 적절한 인덱스 유형을 선택하는 것이 중요합니다.
+SP-GiST는 GiST와 달리 비균형 트리 구조를 지원하여 특정 유형의 데이터에 대해 더 효율적인 검색이 가능함. 데이터 특성에 따라 적절한 인덱스 유형을 선택하는 것이 중요함.
 
 ---
 
@@ -6150,25 +6183,23 @@ SP-GiST는 GiST와 달리 비균형 트리 구조를 지원하여 특정 유형�
 
 #### 1.1 GIN이란?
 
-GIN 은 Generalized Inverted Index(일반화된 역 인덱스) 의 약자입니다. GIN은 복합 값(composite values)을 처리하기 위해 설계되었으며, 쿼리가 해당 항목 내의 요소 값을 검색하는 경우에 적합합니다. 예를 들어, 특정 단어를 포함하는 문서를 검색하는 경우가 이에 해당합니다.
+GIN 은 Generalized Inverted Index(일반화된 역 인덱스) 의 약자임. GIN은 복합 값(composite values)을 처리하기 위해 설계되었으며, 쿼리가 해당 항목 내의 요소 값을 검색하는 경우에 적합함. 예를 들어, 특정 단어를 포함하는 문서를 검색하는 경우가 이에 해당함.
 
 #### 1.2 핵심 개념
 
-GIN 인덱스에서 사용되는 주요 용어는 다음과 같습니다:
+GIN 인덱스에서 사용되는 주요 용어는 다음과 같음:
 
-| 용어 | 설명 |
-|------|------|
-| 항목 (Item) | 인덱싱될 복합 값 |
-| 키 (Key) | 항목 내의 요소 값 |
-| 포스팅 리스트 (Posting List) | 특정 키가 발생하는 행 ID(row ID)의 집합 |
+- 항목 (Item): 인덱싱될 복합 값
+- 키 (Key): 항목 내의 요소 값
+- 포스팅 리스트 (Posting List): 특정 키가 발생하는 행 ID(row ID)의 집합
 
 #### 1.3 데이터 구조
 
-GIN은 (키, 포스팅 리스트) 쌍을 저장합니다:
+GIN은 (키, 포스팅 리스트) 쌍을 저장함:
 
-- 각 키 값은 한 번만 저장됩니다 (자주 등장하는 키에 대해 공간 효율적)
-- 동일한 행 ID가 여러 포스팅 리스트에 나타날 수 있습니다 (항목이 여러 키를 포함하기 때문)
-- 검색은 항목이 아닌 키를 대상으로 수행됩니다
+- 각 키 값은 한 번만 저장됨 (자주 등장하는 키에 대해 공간 효율적)
+- 동일한 행 ID가 여러 포스팅 리스트에 나타날 수 있음 (항목이 여러 키를 포함하기 때문)
+- 검색은 항목이 아닌 키를 대상으로 수행됨
 
 #### 1.4 주요 장점
 
@@ -6180,16 +6211,22 @@ GIN은 (키, 포스팅 리스트) 쌍을 저장합니다:
 
 ### 2. 내장 연산자 클래스 (Built-in Operator Classes)
 
-PostgreSQL은 다음과 같은 GIN 연산자 클래스를 기본적으로 제공합니다:
+PostgreSQL은 다음과 같은 GIN 연산자 클래스를 기본적으로 제공함:
 
 #### 2.1 연산자 클래스 목록
 
-| 이름 | 인덱싱 가능한 연산자 | 설명 |
-|------|---------------------|------|
-| `array_ops` | `&&`, `@>`, `<@`, `=` | 배열 연산 |
-| `jsonb_ops` | `@>`, `@?`, `@@`, `?`, `?\|`, `?&` | JSONB 기본 연산자 클래스 |
-| `jsonb_path_ops` | `@>`, `@?`, `@@` | 더 적은 연산자, 더 나은 성능 |
-| `tsvector_ops` | `@@` | 전문 검색(Full-Text Search) |
+- `array_ops`
+  - 인덱싱 가능한 연산자: `&&`, `@>`, `<@`, `=`
+  - 설명: 배열 연산
+- `jsonb_ops`
+  - 인덱싱 가능한 연산자: `@>`, `@?`, `@@`, `?`, `?\|`, `?&`
+  - 설명: JSONB 기본 연산자 클래스
+- `jsonb_path_ops`
+  - 인덱싱 가능한 연산자: `@>`, `@?`, `@@`
+  - 설명: 더 적은 연산자, 더 나은 성능
+- `tsvector_ops`
+  - 인덱싱 가능한 연산자: `@@`
+  - 설명: 전문 검색(Full-Text Search)
 
 #### 2.2 연산자 설명
 
@@ -6260,13 +6297,13 @@ WHERE to_tsvector('english', content) @@ to_tsquery('english', 'postgresql & ind
 
 ### 3. 확장성 (Extensibility)
 
-GIN은 사용자 정의 연산자 클래스 메서드를 구현할 수 있는 확장 인터페이스를 제공합니다. GIN 계층은 동시성, 로깅 및 트리 구조 검색을 처리합니다.
+GIN은 사용자 정의 연산자 클래스 메서드를 구현할 수 있는 확장 인터페이스를 제공함. GIN 계층은 동시성, 로깅 및 트리 구조 검색을 처리함.
 
 #### 3.1 필수 메서드
 
 ##### 3.1.1 extractValue()
 
-인덱싱할 항목에서 키를 추출합니다.
+인덱싱할 항목에서 키를 추출함.
 
 ```c
 Datum *extractValue(Datum itemValue, int32 *nkeys, bool **nullFlags)
@@ -6283,7 +6320,7 @@ Datum *extractValue(Datum itemValue, int32 *nkeys, bool **nullFlags)
 
 ##### 3.1.2 extractQuery()
 
-쿼리 값에서 키를 추출합니다.
+쿼리 값에서 키를 추출함.
 
 ```c
 Datum *extractQuery(Datum query, int32 *nkeys, StrategyNumber n,
@@ -6302,11 +6339,9 @@ Datum *extractQuery(Datum query, int32 *nkeys, StrategyNumber n,
 
 searchMode 출력 값:
 
-| 값 | 설명 |
-|---|------|
-| `GIN_SEARCH_MODE_DEFAULT` | 1개 이상의 키와 일치하는 항목만 후보 |
-| `GIN_SEARCH_MODE_INCLUDE_EMPTY` | 키가 없는 항목도 포함 |
-| `GIN_SEARCH_MODE_ALL` | 모든 non-null 항목이 후보 (느림, 특수 케이스용) |
+- `GIN_SEARCH_MODE_DEFAULT`: 1개 이상의 키와 일치하는 항목만 후보
+- `GIN_SEARCH_MODE_INCLUDE_EMPTY`: 키가 없는 항목도 포함
+- `GIN_SEARCH_MODE_ALL`: 모든 non-null 항목이 후보 (느림, 특수 케이스용)
 
 #### 3.2 항목 일치 메서드 (하나 이상 구현)
 
@@ -6346,7 +6381,7 @@ GinTernaryValue triConsistent(GinTernaryValue check[], StrategyNumber n,
 - `GIN_FALSE`: 확실히 일치하지 않음
 - `GIN_MAYBE`: 키 존재 여부 불확실
 
-`triConsistent`만 제공해도 충분하며, `consistent` 기능을 포함합니다.
+`triConsistent`만 제공해도 충분하며, `consistent` 기능을 포함함.
 
 #### 3.3 키 정렬 메서드
 
@@ -6361,13 +6396,13 @@ int compare(Datum a, Datum b)
 - `0`: 같음
 - `> 0`: a가 b보다 큼
 
-제공하지 않으면 GIN은 키 데이터 타입의 기본 btree 연산자 클래스를 찾습니다.
+제공하지 않으면 GIN은 키 데이터 타입의 기본 btree 연산자 클래스를 찾음.
 
 #### 3.4 선택적 메서드
 
 ##### 3.4.1 comparePartial()
 
-부분 일치 쿼리 지원을 위한 메서드입니다.
+부분 일치 쿼리 지원을 위한 메서드임.
 
 ```c
 int comparePartial(Datum partial_key, Datum key, StrategyNumber n,
@@ -6379,29 +6414,48 @@ int comparePartial(Datum partial_key, Datum key, StrategyNumber n,
 - `0`: 일치
 - `> 0`: 스캔 중지
 
-`extractQuery`가 `pmatch` 매개변수를 설정하는 경우 필수입니다.
+`extractQuery`가 `pmatch` 매개변수를 설정하는 경우 필수임.
 
 ##### 3.4.2 options()
 
-연산자 클래스 동작을 제어하는 사용자 표시 매개변수를 정의합니다.
+연산자 클래스 동작을 제어하는 사용자 표시 매개변수를 정의함.
 
 ```c
 void options(local_relopts *relopts)
 ```
 
-`PG_HAS_OPCLASS_OPTIONS()` 및 `PG_GET_OPCLASS_OPTIONS()` 매크로로 접근합니다.
+`PG_HAS_OPCLASS_OPTIONS()` 및 `PG_GET_OPCLASS_OPTIONS()` 매크로로 접근함.
 
 #### 3.5 메서드 요약 테이블
 
-| 메서드 | 목적 | 입력 | 출력 |
-|--------|------|------|------|
-| `extractValue` | 항목에서 키 추출 | 항목 datum | 키 배열, 개수, null 플래그 |
-| `extractQuery` | 쿼리에서 키 추출 | 쿼리 datum, 전략 | 키 배열, 검색 모드, 부분 일치 플래그 |
-| `consistent` | 항목이 쿼리와 일치하는지 확인 | check 배열, 쿼리 | Boolean + recheck 플래그 |
-| `triConsistent` | 항목이 쿼리와 일치하는지 확인 | check 배열(3값), 쿼리 | GIN_TRUE/FALSE/MAYBE |
-| `compare` | 키 정렬 | 두 개의 키 datum | -1, 0, 또는 1 |
-| `comparePartial` | 부분 일치 키 범위 | 부분 키, 인덱스 키 | -1, 0, 또는 1 |
-| `options` | 연산자 클래스 옵션 정의 | relopts 구조체 | (구조체 수정) |
+- `extractValue`
+  - 목적: 항목에서 키 추출
+  - 입력: 항목 datum
+  - 출력: 키 배열, 개수, null 플래그
+- `extractQuery`
+  - 목적: 쿼리에서 키 추출
+  - 입력: 쿼리 datum, 전략
+  - 출력: 키 배열, 검색 모드, 부분 일치 플래그
+- `consistent`
+  - 목적: 항목이 쿼리와 일치하는지 확인
+  - 입력: check 배열, 쿼리
+  - 출력: Boolean + recheck 플래그
+- `triConsistent`
+  - 목적: 항목이 쿼리와 일치하는지 확인
+  - 입력: check 배열(3값), 쿼리
+  - 출력: GIN_TRUE/FALSE/MAYBE
+- `compare`
+  - 목적: 키 정렬
+  - 입력: 두 개의 키 datum
+  - 출력: -1, 0, 또는 1
+- `comparePartial`
+  - 목적: 부분 일치 키 범위
+  - 입력: 부분 키, 인덱스 키
+  - 출력: -1, 0, 또는 1
+- `options`
+  - 목적: 연산자 클래스 옵션 정의
+  - 입력: relopts 구조체
+  - 출력: (구조체 수정)
 
 ---
 
@@ -6409,7 +6463,7 @@ void options(local_relopts *relopts)
 
 #### 4.1 내부 구조
 
-GIN 인덱스는 다음을 포함합니다:
+GIN 인덱스는 다음을 포함함:
 
 - 키에 대한 B-tree 인덱스 (인덱싱된 항목의 요소)
 - 리프 페이지 튜플:
@@ -6431,11 +6485,11 @@ CREATE INDEX idx_multi ON documents USING GIN (tags, categories);
 
 ##### 문제점
 
-GIN 인덱스 업데이트는 느립니다. 하나의 힙 행(heap row)이 많은 인덱스 삽입을 유발할 수 있기 때문입니다(키당 하나씩).
+GIN 인덱스 업데이트는 느림. 하나의 힙 행(heap row)이 많은 인덱스 삽입을 유발할 수 있기 때문임(키당 하나씩).
 
 ##### 해결책
 
-새 튜플을 임시 보류 항목 리스트 (pending entries list) 에 삽입하여 대부분의 작업을 연기합니다.
+새 튜플을 임시 보류 항목 리스트 (pending entries list) 에 삽입하여 대부분의 작업을 연기함.
 
 ##### 정리 시점
 
@@ -6468,7 +6522,7 @@ ALTER INDEX idx_gin SET (gin_pending_list_limit = 256);
 
 ##### 사용 사례
 
-쿼리가 하나 이상의 키에 대해 정확한 일치 여부를 판단하기 어렵지만, 일치 항목이 좁은 키 값 범위 안에 있는 경우에 사용합니다.
+쿼리가 하나 이상의 키에 대해 정확한 일치 여부를 판단하기 어렵지만, 일치 항목이 좁은 키 값 범위 안에 있는 경우에 사용함.
 
 ##### 프로세스
 
@@ -6499,7 +6553,7 @@ SELECT * FROM articles WHERE title LIKE '%postgresql%';
 2. 데이터 삽입
 3. 인덱스 재생성
 
-이 방법이 기존 인덱스에 계속 삽입하는 것보다 빠릅니다.
+이 방법이 기존 인덱스에 계속 삽입하는 것보다 빠름.
 
 ```sql
 -- 대량 데이터 로드 시
@@ -6508,11 +6562,11 @@ DROP INDEX idx_gin;
 CREATE INDEX idx_gin ON documents USING GIN (data);
 ```
 
-참고: fastupdate가 활성화되어 있으면 오버헤드가 줄어들지만, 데이터 규모가 매우 클 경우 인덱스를 삭제하고 재생성하는 방법이 여전히 유리할 수 있습니다.
+참고: fastupdate가 활성화되어 있으면 오버헤드가 줄어들지만, 데이터 규모가 매우 클 경우 인덱스를 삭제하고 재생성하는 방법이 여전히 유리할 수 있음.
 
 #### 5.2 maintenance_work_mem
 
-GIN 빌드 시간은 이 설정에 매우 민감합니다. 인덱스 생성 중에는 작업 메모리를 충분히 확보하는 것이 좋습니다.
+GIN 빌드 시간은 이 설정에 매우 민감함. 인덱스 생성 중에는 작업 메모리를 충분히 확보하는 것이 좋음.
 
 ```sql
 -- 인덱스 생성 전 임시로 증가
@@ -6523,7 +6577,7 @@ RESET maintenance_work_mem;
 
 #### 5.3 gin_pending_list_limit
 
-보류 항목이 정리되는 시점을 제어합니다.
+보류 항목이 정리되는 시점을 제어함.
 
 포그라운드 정리를 피하려면:
 - 제한값을 높이거나 (단, 정리가 발생할 때 더 오래 걸림)
@@ -6538,7 +6592,7 @@ ALTER INDEX idx_gin SET (gin_pending_list_limit = 128);
 ```
 
 개별 인덱스 오버라이드:
-자주 업데이트되는 인덱스에는 높은 제한값을, 그렇지 않은 인덱스에는 낮은 제한값을 설정합니다.
+자주 업데이트되는 인덱스에는 높은 제한값을, 그렇지 않은 인덱스에는 낮은 제한값을 설정함.
 
 ```sql
 -- 자주 업데이트되는 테이블
@@ -6550,7 +6604,7 @@ ALTER INDEX idx_rarely_updated SET (gin_pending_list_limit = 64);
 
 #### 5.4 gin_fuzzy_search_limit
 
-전문 검색에서 반환되는 행의 소프트 상한을 설정합니다.
+전문 검색에서 반환되는 행의 소프트 상한을 설정함.
 
 ```sql
 -- 기본값: 0 (제한 없음)
@@ -6562,7 +6616,7 @@ SET gin_fuzzy_search_limit = 10000;
 
 권장 값: 5000-20000
 
-참고: "소프트" 제한이므로 실제 반환되는 행 수는 쿼리 및 난수 생성 결과에 따라 달라질 수 있습니다.
+참고: "소프트" 제한이므로 실제 반환되는 행 수는 쿼리 및 난수 생성 결과에 따라 달라질 수 있음.
 
 #### 5.5 성능 최적화 체크리스트
 
@@ -6590,14 +6644,14 @@ SELECT * FROM gin_pending_pages('idx_jsonb');
 
 #### 6.1 엄격한 연산자 요구 사항
 
-인덱싱 가능한 연산자는 반드시 strict여야 합니다:
+인덱싱 가능한 연산자는 반드시 strict여야 함:
 
-- null 항목 값에 대해서는 `extractValue`가 호출되지 않으며, 대신 플레이스홀더 항목이 자동으로 생성됩니다.
-- null 쿼리 값에 대해서는 `extractQuery`가 호출되지 않으며, 해당 쿼리는 충족 불가능한 것으로 처리됩니다.
+- null 항목 값에 대해서는 `extractValue`가 호출되지 않으며, 대신 플레이스홀더 항목이 자동으로 생성됨.
+- null 쿼리 값에 대해서는 `extractQuery`가 호출되지 않으며, 해당 쿼리는 충족 불가능한 것으로 처리됨.
 
 #### 6.2 예외
 
-non-null 복합 항목/쿼리 내의 null 키 값은 지원됩니다.
+non-null 복합 항목/쿼리 내의 null 키 값은 지원됨.
 
 ```sql
 -- 허용: 배열 내 null 값
@@ -6797,14 +6851,24 @@ SELECT * FROM settings WHERE config @> 'theme => dark';
 
 ### 부록: GIN vs GiST 비교
 
-| 특성 | GIN | GiST |
-|------|-----|------|
-| 검색 속도 | 빠름 (정확한 일치에 최적) | 보통 |
-| 인덱스 빌드 속도 | 느림 | 빠름 |
-| 인덱스 크기 | 큼 | 작음 |
-| 업데이트 속도 | 느림 (fastupdate로 완화) | 빠름 |
-| 적합한 사용 사례 | 전문 검색, 배열, JSONB | 기하학적 데이터, 범위 쿼리 |
-| 정확도 | 손실 없음 (lossless) | 손실 가능 (lossy) |
+- 검색 속도
+  - GIN: 빠름 (정확한 일치에 최적)
+  - GiST: 보통
+- 인덱스 빌드 속도
+  - GIN: 느림
+  - GiST: 빠름
+- 인덱스 크기
+  - GIN: 큼
+  - GiST: 작음
+- 업데이트 속도
+  - GIN: 느림 (fastupdate로 완화)
+  - GiST: 빠름
+- 적합한 사용 사례
+  - GIN: 전문 검색, 배열, JSONB
+  - GiST: 기하학적 데이터, 범위 쿼리
+- 정확도
+  - GIN: 손실 없음 (lossless)
+  - GiST: 손실 가능 (lossy)
 
 ```sql
 -- GIN: 전문 검색에 최적
@@ -6841,25 +6905,25 @@ CREATE INDEX idx_gist ON locations USING GiST (coordinates);
 
 ### 71.1 소개 (Introduction)
 
-BRIN은 Block Range Index의 약자입니다. BRIN은 특정 컬럼이 테이블 내 물리적 위치와 자연스러운 상관관계(correlation)를 갖는 매우 큰 테이블을 처리하기 위해 설계되었습니다.
+BRIN은 Block Range Index의 약자임. BRIN은 특정 컬럼이 테이블 내 물리적 위치와 자연스러운 상관관계(correlation)를 갖는 매우 큰 테이블을 처리하기 위해 설계되었음.
 
 #### 블록 범위 (Block Range) 개념
 
-BRIN은 블록 범위 (또는 "페이지 범위")를 기준으로 동작합니다. 블록 범위는 테이블에서 물리적으로 인접한 페이지들의 그룹입니다. 각 블록 범위에 대해 인덱스는 요약 정보(summary information)를 저장합니다.
+BRIN은 블록 범위 (또는 "페이지 범위")를 기준으로 동작함. 블록 범위는 테이블에서 물리적으로 인접한 페이지들의 그룹임. 각 블록 범위에 대해 인덱스는 요약 정보(summary information)를 저장함.
 
-예를 들어, 판매 주문 테이블에 날짜 컬럼이 있고 오래된 주문이 테이블 앞부분에 위치한다면, 해당 컬럼은 물리적 위치와 자연스러운 상관관계를 갖습니다.
+예를 들어, 판매 주문 테이블에 날짜 컬럼이 있고 오래된 주문이 테이블 앞부분에 위치한다면, 해당 컬럼은 물리적 위치와 자연스러운 상관관계를 갖음.
 
 #### 쿼리 실행 방식
 
-BRIN 인덱스는 일반적인 비트맵 인덱스 스캔(bitmap index scan)을 통해 쿼리를 처리합니다:
+BRIN 인덱스는 일반적인 비트맵 인덱스 스캔(bitmap index scan)을 통해 쿼리를 처리함:
 
-1. 요약 정보가 쿼리 조건과 일치하면 해당 범위 내 모든 페이지의 튜플을 반환합니다
-2. BRIN 인덱스는 손실(lossy) 인덱스입니다 — 쿼리 실행기(query executor)가 튜플을 재확인하여 조건에 맞지 않는 것을 제거해야 합니다
-3. 인덱스 크기가 매우 작아, 순차 스캔에 비해 최소한의 오버헤드로 테이블의 상당 부분을 건너뛸 수 있습니다
+1. 요약 정보가 쿼리 조건과 일치하면 해당 범위 내 모든 페이지의 튜플을 반환함
+2. BRIN 인덱스는 손실(lossy) 인덱스임 — 쿼리 실행기(query executor)가 튜플을 재확인하여 조건에 맞지 않는 것을 제거해야 함
+3. 인덱스 크기가 매우 작아, 순차 스캔에 비해 최소한의 오버헤드로 테이블의 상당 부분을 건너뛸 수 있음
 
 #### 스토리지와 정밀도
 
-`pages_per_range` 스토리지 매개변수는 인덱스 생성 시 블록 범위의 크기를 결정합니다:
+`pages_per_range` 스토리지 매개변수는 인덱스 생성 시 블록 범위의 크기를 결정함:
 
 ```sql
 -- 기본값으로 BRIN 인덱스 생성
@@ -6886,17 +6950,17 @@ CREATE INDEX idx_brin_custom ON sales_orders USING brin (order_date)
 ##### 요약화 프로세스 (Summarization Process)
 
 초기 생성 단계:
-- 기존의 모든 힙(heap) 페이지가 스캔됩니다
-- 각 범위에 대해 요약 인덱스 튜플이 생성됩니다
-- 끝에 있는 불완전한 범위도 포함됩니다
+- 기존의 모든 힙(heap) 페이지가 스캔됨
+- 각 범위에 대해 요약 인덱스 튜플이 생성됨
+- 끝에 있는 불완전한 범위도 포함됨
 
 지속적인 업데이트:
-- 이미 요약된 페이지 범위에 새 데이터가 삽입되면 요약 정보가 갱신됩니다
-- 마지막으로 요약된 범위 이후의 새 페이지는 요약화가 실행될 때까지 요약되지 않은 상태로 남습니다
+- 이미 요약된 페이지 범위에 새 데이터가 삽입되면 요약 정보가 갱신됨
+- 마지막으로 요약된 범위 이후의 새 페이지는 요약화가 실행될 때까지 요약되지 않은 상태로 남음
 
 ##### 요약화 트리거 방법
 
-요약화는 다음 방법으로 트리거될 수 있습니다:
+요약화는 다음 방법으로 트리거될 수 있음:
 
 1. 수동 VACUUM: 테이블을 수동으로 또는 autovacuum을 통해 VACUUM 실행
 
@@ -6914,7 +6978,7 @@ SELECT brin_summarize_range('idx_brin'::regclass, 128);
 
 ##### 역요약화 (De-summarization)
 
-인덱스 튜플이 더 이상 해당 범위의 값을 잘 나타내지 못할 때, `brin_desummarize_range` 함수로 범위 요약을 해제할 수 있습니다:
+인덱스 튜플이 더 이상 해당 범위의 값을 잘 나타내지 못할 때, `brin_desummarize_range` 함수로 범위 요약을 해제할 수 있음:
 
 ```sql
 -- 특정 범위의 요약 해제
@@ -6923,9 +6987,9 @@ SELECT brin_desummarize_range('idx_brin'::regclass, 128);
 
 ##### Autosummarize 세부사항
 
-- 기본적으로 비활성화되어 있습니다
-- 활성화하면 다음 블록 범위로의 첫 삽입이 감지될 때 autovacuum이 해당 범위의 요약 요청을 수신합니다
-- 요청 큐가 가득 차면 서버 로그에 메시지가 나타납니다:
+- 기본적으로 비활성화되어 있음
+- 활성화하면 다음 블록 범위로의 첫 삽입이 감지될 때 autovacuum이 해당 범위의 요약 요청을 수신함
+- 요청 큐가 가득 차면 서버 로그에 메시지가 나타남:
 
 ```
 LOG: request for BRIN range summarization for index "brin_wi_idx" page 128 was not recorded
@@ -6941,69 +7005,123 @@ CREATE INDEX idx_brin_auto ON sales_orders USING brin (order_date)
 
 ### 71.2 내장 연산자 클래스 (Built-in Operator Classes)
 
-PostgreSQL의 핵심 배포판에는 네 가지 유형의 BRIN 연산자 클래스가 포함되어 있습니다:
+PostgreSQL의 핵심 배포판에는 네 가지 유형의 BRIN 연산자 클래스가 포함되어 있음:
 
-| 유형 | 설명 | 사용 사례 |
-|------|------|----------|
-| minmax | 범위 내 인덱싱된 컬럼의 최솟값과 최댓값 저장 | 완전 순서 집합(totally ordered set) |
-| minmax-multi | 범위 내 값을 나타내는 여러 최솟값/최댓값 저장 | 이상치(outlier)가 있는 데이터 |
-| inclusion | 범위 내 값을 포함하는 값 저장 | 기하학적 타입, 범위 타입 |
-| bloom | 범위 내 모든 값에 대한 블룸 필터 구축 | 등호 비교만 필요한 경우 |
+- minmax
+  - 설명: 범위 내 인덱싱된 컬럼의 최솟값과 최댓값 저장
+  - 사용 사례: 완전 순서 집합(totally ordered set)
+- minmax-multi
+  - 설명: 범위 내 값을 나타내는 여러 최솟값/최댓값 저장
+  - 사용 사례: 이상치(outlier)가 있는 데이터
+- inclusion
+  - 설명: 범위 내 값을 포함하는 값 저장
+  - 사용 사례: 기하학적 타입, 범위 타입
+- bloom
+  - 설명: 범위 내 모든 값에 대한 블룸 필터 구축
+  - 사용 사례: 등호 비교만 필요한 경우
 
 #### 전체 내장 연산자 클래스 목록
 
 ##### 숫자 타입 (Numeric Types)
 
-| 데이터 타입 | minmax | bloom | minmax-multi |
-|------------|--------|-------|--------------|
-| `int2` | `int2_minmax_ops` | `int2_bloom_ops` | `int2_minmax_multi_ops` |
-| `int4` | `int4_minmax_ops` | `int4_bloom_ops` | `int4_minmax_multi_ops` |
-| `int8` | `int8_minmax_ops` | `int8_bloom_ops` | `int8_minmax_multi_ops` |
-| `float4` | `float4_minmax_ops` | `float4_bloom_ops` | `float4_minmax_multi_ops` |
-| `float8` | `float8_minmax_ops` | `float8_bloom_ops` | `float8_minmax_multi_ops` |
-| `numeric` | `numeric_minmax_ops` | `numeric_bloom_ops` | `numeric_minmax_multi_ops` |
+- `int2`
+  - minmax: `int2_minmax_ops`
+  - bloom: `int2_bloom_ops`
+  - minmax-multi: `int2_minmax_multi_ops`
+- `int4`
+  - minmax: `int4_minmax_ops`
+  - bloom: `int4_bloom_ops`
+  - minmax-multi: `int4_minmax_multi_ops`
+- `int8`
+  - minmax: `int8_minmax_ops`
+  - bloom: `int8_bloom_ops`
+  - minmax-multi: `int8_minmax_multi_ops`
+- `float4`
+  - minmax: `float4_minmax_ops`
+  - bloom: `float4_bloom_ops`
+  - minmax-multi: `float4_minmax_multi_ops`
+- `float8`
+  - minmax: `float8_minmax_ops`
+  - bloom: `float8_bloom_ops`
+  - minmax-multi: `float8_minmax_multi_ops`
+- `numeric`
+  - minmax: `numeric_minmax_ops`
+  - bloom: `numeric_bloom_ops`
+  - minmax-multi: `numeric_minmax_multi_ops`
 
 ##### 문자/문자열 타입 (Character/String Types)
 
-| 데이터 타입 | minmax | bloom |
-|------------|--------|-------|
-| `char` | `char_minmax_ops` | `char_bloom_ops` |
-| `bpchar` | `bpchar_minmax_ops` | `bpchar_bloom_ops` |
-| `text` | `text_minmax_ops` | `text_bloom_ops` |
-| `name` | `name_minmax_ops` | `name_bloom_ops` |
-| `bytea` | `bytea_minmax_ops` | `bytea_bloom_ops` |
+- `char`
+  - minmax: `char_minmax_ops`
+  - bloom: `char_bloom_ops`
+- `bpchar`
+  - minmax: `bpchar_minmax_ops`
+  - bloom: `bpchar_bloom_ops`
+- `text`
+  - minmax: `text_minmax_ops`
+  - bloom: `text_bloom_ops`
+- `name`
+  - minmax: `name_minmax_ops`
+  - bloom: `name_bloom_ops`
+- `bytea`
+  - minmax: `bytea_minmax_ops`
+  - bloom: `bytea_bloom_ops`
 
 ##### 날짜/시간 타입 (Date/Time Types)
 
-| 데이터 타입 | minmax | bloom | minmax-multi |
-|------------|--------|-------|--------------|
-| `date` | `date_minmax_ops` | `date_bloom_ops` | `date_minmax_multi_ops` |
-| `timestamp` | `timestamp_minmax_ops` | `timestamp_bloom_ops` | `timestamp_minmax_multi_ops` |
-| `timestamptz` | `timestamptz_minmax_ops` | `timestamptz_bloom_ops` | `timestamptz_minmax_multi_ops` |
-| `time` | `time_minmax_ops` | `time_bloom_ops` | `time_minmax_multi_ops` |
-| `timetz` | `timetz_minmax_ops` | `timetz_bloom_ops` | `timetz_minmax_multi_ops` |
-| `interval` | `interval_minmax_ops` | `interval_bloom_ops` | `interval_minmax_multi_ops` |
+- `date`
+  - minmax: `date_minmax_ops`
+  - bloom: `date_bloom_ops`
+  - minmax-multi: `date_minmax_multi_ops`
+- `timestamp`
+  - minmax: `timestamp_minmax_ops`
+  - bloom: `timestamp_bloom_ops`
+  - minmax-multi: `timestamp_minmax_multi_ops`
+- `timestamptz`
+  - minmax: `timestamptz_minmax_ops`
+  - bloom: `timestamptz_bloom_ops`
+  - minmax-multi: `timestamptz_minmax_multi_ops`
+- `time`
+  - minmax: `time_minmax_ops`
+  - bloom: `time_bloom_ops`
+  - minmax-multi: `time_minmax_multi_ops`
+- `timetz`
+  - minmax: `timetz_minmax_ops`
+  - bloom: `timetz_bloom_ops`
+  - minmax-multi: `timetz_minmax_multi_ops`
+- `interval`
+  - minmax: `interval_minmax_ops`
+  - bloom: `interval_bloom_ops`
+  - minmax-multi: `interval_minmax_multi_ops`
 
 ##### 네트워크 타입 (Network Types)
 
-| 데이터 타입 | minmax | bloom | minmax-multi | inclusion |
-|------------|--------|-------|--------------|-----------|
-| `inet` | `inet_minmax_ops` | `inet_bloom_ops` | `inet_minmax_multi_ops` | `inet_inclusion_ops` |
-| `macaddr` | `macaddr_minmax_ops` | `macaddr_bloom_ops` | `macaddr_minmax_multi_ops` | - |
-| `macaddr8` | `macaddr8_minmax_ops` | `macaddr8_bloom_ops` | `macaddr8_minmax_multi_ops` | - |
+- `inet`
+  - minmax: `inet_minmax_ops`
+  - bloom: `inet_bloom_ops`
+  - minmax-multi: `inet_minmax_multi_ops`
+  - inclusion: `inet_inclusion_ops`
+- `macaddr`
+  - minmax: `macaddr_minmax_ops`
+  - bloom: `macaddr_bloom_ops`
+  - minmax-multi: `macaddr_minmax_multi_ops`
+  - inclusion: 없음
+- `macaddr8`
+  - minmax: `macaddr8_minmax_ops`
+  - bloom: `macaddr8_bloom_ops`
+  - minmax-multi: `macaddr8_minmax_multi_ops`
+  - inclusion: 없음
 
 ##### 특수 타입 (Specialized Types)
 
-| 데이터 타입 | 연산자 클래스 |
-|------------|--------------|
-| `uuid` | `uuid_minmax_ops`, `uuid_bloom_ops`, `uuid_minmax_multi_ops` |
-| `bit` | `bit_minmax_ops` |
-| `varbit` | `varbit_minmax_ops` |
-| `oid` | `oid_minmax_ops`, `oid_bloom_ops`, `oid_minmax_multi_ops` |
-| `tid` | `tid_minmax_ops`, `tid_bloom_ops`, `tid_minmax_multi_ops` |
-| `pg_lsn` | `pg_lsn_minmax_ops`, `pg_lsn_bloom_ops`, `pg_lsn_minmax_multi_ops` |
-| `box` | `box_inclusion_ops` |
-| `range` | `range_inclusion_ops` |
+- `uuid`: `uuid_minmax_ops`, `uuid_bloom_ops`, `uuid_minmax_multi_ops`
+- `bit`: `bit_minmax_ops`
+- `varbit`: `varbit_minmax_ops`
+- `oid`: `oid_minmax_ops`, `oid_bloom_ops`, `oid_minmax_multi_ops`
+- `tid`: `tid_minmax_ops`, `tid_bloom_ops`, `tid_minmax_multi_ops`
+- `pg_lsn`: `pg_lsn_minmax_ops`, `pg_lsn_bloom_ops`, `pg_lsn_minmax_multi_ops`
+- `box`: `box_inclusion_ops`
+- `range`: `range_inclusion_ops`
 
 #### 사용 예제
 
@@ -7025,12 +7143,12 @@ CREATE INDEX idx_location ON locations USING brin (bounding_box box_inclusion_op
 
 #### 71.2.1 연산자 클래스 매개변수 (Operator Class Parameters)
 
-bloom 과 minmax-multi 연산자 클래스만 매개변수를 지원합니다.
+bloom 과 minmax-multi 연산자 클래스만 매개변수를 지원함.
 
 ##### Bloom 연산자 클래스 매개변수
 
 `n_distinct_per_range`
-- 블록 범위 내 예상되는 고유한 non-null 값의 수를 정의합니다
+- 블록 범위 내 예상되는 고유한 non-null 값의 수를 정의함
 - 양수 값: 블록 범위에 이 수만큼의 고유 값이 있다고 가정
 - 음수 값 (≥ -1): 고유 non-null 값의 수가 블록 범위의 최대 튜플 수에 비례하여 선형적으로 증가 (블록당 약 290개 행)
 - 기본값: `-0.1`
@@ -7055,7 +7173,7 @@ CREATE INDEX idx_bloom_custom ON orders USING brin (
 
 `values_per_range`
 - 블록 범위를 요약하기 위해 저장할 최대 값의 수
-- 각 값은 점(point) 또는 구간 경계(interval boundary)를 나타냅니다
+- 각 값은 점(point) 또는 구간 경계(interval boundary)를 나타냄
 - 유효 범위: `8` ~ `256`
 - 기본값: `32`
 
@@ -7070,11 +7188,11 @@ CREATE INDEX idx_multi_custom ON orders USING brin (
 
 ### 71.3 확장성 (Extensibility)
 
-BRIN 인터페이스는 높은 수준의 추상화를 제공하므로, 액세스 메서드 구현자는 대상 데이터 타입의 의미론(semantics)만 구현하면 됩니다. 동시성, 로깅, 인덱스 구조 탐색은 BRIN 레이어가 직접 처리합니다.
+BRIN 인터페이스는 높은 수준의 추상화를 제공하므로, 액세스 메서드 구현자는 대상 데이터 타입의 의미론(semantics)만 구현하면 됨. 동시성, 로깅, 인덱스 구조 탐색은 BRIN 레이어가 직접 처리함.
 
 #### 필수 메서드 (Required Methods)
 
-BRIN 연산자 클래스는 네 가지 핵심 메서드를 제공해야 합니다:
+BRIN 연산자 클래스는 네 가지 핵심 메서드를 제공해야 함:
 
 ##### 1. `opcInfo`
 
@@ -7082,7 +7200,7 @@ BRIN 연산자 클래스는 네 가지 핵심 메서드를 제공해야 합니�
 BrinOpcInfo *opcInfo(Oid type_oid)
 ```
 
-인덱싱된 컬럼의 요약 데이터에 대한 내부 정보를 반환합니다:
+인덱싱된 컬럼의 요약 데이터에 대한 내부 정보를 반환함:
 
 ```c
 typedef struct BrinOpcInfo
@@ -7099,7 +7217,7 @@ typedef struct BrinOpcInfo
 bool consistent(BrinDesc *bdesc, BrinValues *column, ScanKey *keys, int nkeys)
 ```
 
-모든 ScanKey 항목이 해당 범위의 인덱싱된 값과 일치하는지 검사합니다. 동일한 속성에 대해 여러 스캔 키를 지원합니다.
+모든 ScanKey 항목이 해당 범위의 인덱싱된 값과 일치하는지 검사함. 동일한 속성에 대해 여러 스캔 키를 지원함.
 
 이전 버전과의 호환성을 위한 단일 ScanKey 변형:
 ```c
@@ -7112,7 +7230,7 @@ bool consistent(BrinDesc *bdesc, BrinValues *column, ScanKey key)
 bool addValue(BrinDesc *bdesc, BrinValues *column, Datum newval, bool isnull)
 ```
 
-인덱스 튜플이 새 값도 포함하도록 수정합니다. 튜플이 실제로 수정된 경우 `true`를 반환합니다.
+인덱스 튜플이 새 값도 포함하도록 수정함. 튜플이 실제로 수정된 경우 `true`를 반환함.
 
 ##### 4. `unionTuples`
 
@@ -7120,7 +7238,7 @@ bool addValue(BrinDesc *bdesc, BrinValues *column, Datum newval, bool isnull)
 bool unionTuples(BrinDesc *bdesc, BrinValues *a, BrinValues *b)
 ```
 
-두 인덱스 튜플을 병합하여 첫 번째 튜플이 두 튜플 모두를 나타내도록 수정합니다.
+두 인덱스 튜플을 병합하여 첫 번째 튜플이 두 튜플 모두를 나타내도록 수정함.
 
 #### 선택적 메서드 (Optional Method)
 
@@ -7130,7 +7248,7 @@ bool unionTuples(BrinDesc *bdesc, BrinValues *a, BrinValues *b)
 void options(local_relopts *relopts)
 ```
 
-연산자 클래스 동작을 제어하는 사용자 노출 매개변수를 정의합니다. 옵션은 `PG_HAS_OPCLASS_OPTIONS()`와 `PG_GET_OPCLASS_OPTIONS()` 매크로를 통해 접근합니다.
+연산자 클래스 동작을 제어하는 사용자 노출 매개변수를 정의함. 옵션은 `PG_HAS_OPCLASS_OPTIONS()`와 `PG_GET_OPCLASS_OPTIONS()` 매크로를 통해 접근함.
 
 #### 지원 함수 번호 규칙
 
@@ -7141,21 +7259,19 @@ void options(local_relopts *relopts)
 
 #### 71.3.1 Minmax 연산자 클래스
 
-단일 연속 구간으로 표현 가능한 완전 순서 집합(totally ordered set)을 위한 연산자 클래스입니다.
+단일 연속 구간으로 표현 가능한 완전 순서 집합(totally ordered set)을 위한 연산자 클래스임.
 
 ##### 필수 멤버
 
-| 멤버 | 객체 |
-|------|------|
-| 지원 함수 1 | `brin_minmax_opcinfo()` |
-| 지원 함수 2 | `brin_minmax_add_value()` |
-| 지원 함수 3 | `brin_minmax_consistent()` |
-| 지원 함수 4 | `brin_minmax_union()` |
-| 연산자 전략 1 | 미만 (`<`) |
-| 연산자 전략 2 | 이하 (`<=`) |
-| 연산자 전략 3 | 같음 (`=`) |
-| 연산자 전략 4 | 이상 (`>=`) |
-| 연산자 전략 5 | 초과 (`>`) |
+- 지원 함수 1: `brin_minmax_opcinfo()`
+- 지원 함수 2: `brin_minmax_add_value()`
+- 지원 함수 3: `brin_minmax_consistent()`
+- 지원 함수 4: `brin_minmax_union()`
+- 연산자 전략 1: 미만 (`<`)
+- 연산자 전략 2: 이하 (`<=`)
+- 연산자 전략 3: 같음 (`=`)
+- 연산자 전략 4: 이상 (`>=`)
+- 연산자 전략 5: 초과 (`>`)
 
 ##### 사용자 정의 Minmax 연산자 클래스 예제
 
@@ -7178,27 +7294,41 @@ CREATE OPERATOR CLASS my_type_minmax_ops
 
 #### 71.3.2 Inclusion 연산자 클래스
 
-다른 값에 포함되는(containment) 값을 갖는 복잡한 데이터 타입을 위한 연산자 클래스입니다.
+다른 값에 포함되는(containment) 값을 갖는 복잡한 데이터 타입을 위한 연산자 클래스임.
 
 ##### 필수 멤버
 
-| 멤버 | 객체 | 설명 |
-|------|------|------|
-| 지원 함수 1 | `brin_inclusion_opcinfo()` | 기본 정보 |
-| 지원 함수 2 | `brin_inclusion_add_value()` | 값 추가 |
-| 지원 함수 3 | `brin_inclusion_consistent()` | 일관성 검사 |
-| 지원 함수 4 | `brin_inclusion_union()` | 통합 |
-| 지원 함수 11 | 병합 함수 (필수) | 두 요소 병합 |
-| 지원 함수 12 | 병합 가능성 검사 (선택) | 요소 병합 가능 여부 |
-| 지원 함수 13 | 포함 검사 (선택) | 요소 포함 여부 |
-| 지원 함수 14 | 빈 요소 검사 (선택) | 범위 타입용 |
+- 지원 함수 1
+  - 객체: `brin_inclusion_opcinfo()`
+  - 설명: 기본 정보
+- 지원 함수 2
+  - 객체: `brin_inclusion_add_value()`
+  - 설명: 값 추가
+- 지원 함수 3
+  - 객체: `brin_inclusion_consistent()`
+  - 설명: 일관성 검사
+- 지원 함수 4
+  - 객체: `brin_inclusion_union()`
+  - 설명: 통합
+- 지원 함수 11
+  - 객체: 병합 함수 (필수)
+  - 설명: 두 요소 병합
+- 지원 함수 12
+  - 객체: 병합 가능성 검사 (선택)
+  - 설명: 요소 병합 가능 여부
+- 지원 함수 13
+  - 객체: 포함 검사 (선택)
+  - 설명: 요소 포함 여부
+- 지원 함수 14
+  - 객체: 빈 요소 검사 (선택)
+  - 설명: 범위 타입용
 
 ##### 주요 지원 함수
 
-- 지원 함수 11 (필수): 연산자 클래스와 동일한 데이터 타입의 두 요소를 병합합니다
-- 지원 함수 12: 두 요소가 병합 가능한지 검사합니다 (네트워크 주소 패밀리 등)
-- 지원 함수 13: 한 요소가 다른 요소에 포함되는지 검사합니다 (성능 향상에 권장)
-- 지원 함수 14: 요소가 비어 있는지 검사합니다 (범위 타입용)
+- 지원 함수 11 (필수): 연산자 클래스와 동일한 데이터 타입의 두 요소를 병합함
+- 지원 함수 12: 두 요소가 병합 가능한지 검사함 (네트워크 주소 패밀리 등)
+- 지원 함수 13: 한 요소가 다른 요소에 포함되는지 검사함 (성능 향상에 권장)
+- 지원 함수 14: 요소가 비어 있는지 검사함 (범위 타입용)
 
 ##### Inclusion 연산자 클래스 사용 예제
 
@@ -7224,21 +7354,19 @@ CREATE INDEX idx_during ON reservations USING brin (during range_inclusion_ops);
 
 #### 71.3.3 Bloom 연산자 클래스
 
-등호 비교만 지원하고 해싱을 지원하는 데이터 타입을 위한 연산자 클래스입니다.
+등호 비교만 지원하고 해싱을 지원하는 데이터 타입을 위한 연산자 클래스임.
 
 ##### 필수 멤버
 
-| 멤버 | 객체 |
-|------|------|
-| 지원 프로시저 1 | `brin_bloom_opcinfo()` |
-| 지원 프로시저 2 | `brin_bloom_add_value()` |
-| 지원 프로시저 3 | `brin_bloom_consistent()` |
-| 지원 프로시저 4 | `brin_bloom_union()` |
-| 지원 프로시저 5 | `brin_bloom_options()` |
-| 지원 프로시저 11 | 해시 계산 함수 |
-| 연산자 전략 1 | 같음 (`=`) |
+- 지원 프로시저 1: `brin_bloom_opcinfo()`
+- 지원 프로시저 2: `brin_bloom_add_value()`
+- 지원 프로시저 3: `brin_bloom_consistent()`
+- 지원 프로시저 4: `brin_bloom_union()`
+- 지원 프로시저 5: `brin_bloom_options()`
+- 지원 프로시저 11: 해시 계산 함수
+- 연산자 전략 1: 같음 (`=`)
 
-지원 프로시저 11: 연산자 클래스와 동일한 데이터 타입의 인수 하나를 받아 해시 값을 반환합니다.
+지원 프로시저 11: 연산자 클래스와 동일한 데이터 타입의 인수 하나를 받아 해시 값을 반환함.
 
 ##### Bloom 연산자 클래스 사용 예제
 
@@ -7268,19 +7396,17 @@ CREATE INDEX idx_session_bloom_custom ON user_sessions
 
 #### 71.3.4 Minmax-Multi 연산자 클래스
 
-완전 순서 집합을 위한 minmax의 확장판으로, 단일 연속 구간 대신 여러 개의 작은 구간을 저장합니다. 이상치(outlier) 값이 있는 데이터를 더 효과적으로 처리합니다.
+완전 순서 집합을 위한 minmax의 확장판으로, 단일 연속 구간 대신 여러 개의 작은 구간을 저장함. 이상치(outlier) 값이 있는 데이터를 더 효과적으로 처리함.
 
 ##### 필수 멤버
 
-| 멤버 | 객체 |
-|------|------|
-| 지원 프로시저 1 | `brin_minmax_multi_opcinfo()` |
-| 지원 프로시저 2 | `brin_minmax_multi_add_value()` |
-| 지원 프로시저 3 | `brin_minmax_multi_consistent()` |
-| 지원 프로시저 4 | `brin_minmax_multi_union()` |
-| 지원 프로시저 5 | `brin_minmax_multi_options()` |
-| 지원 프로시저 11 | 거리 계산 함수 (범위 길이) |
-| 연산자 전략 1-5 | `<`, `<=`, `=`, `>=`, `>` |
+- 지원 프로시저 1: `brin_minmax_multi_opcinfo()`
+- 지원 프로시저 2: `brin_minmax_multi_add_value()`
+- 지원 프로시저 3: `brin_minmax_multi_consistent()`
+- 지원 프로시저 4: `brin_minmax_multi_union()`
+- 지원 프로시저 5: `brin_minmax_multi_options()`
+- 지원 프로시저 11: 거리 계산 함수 (범위 길이)
+- 연산자 전략 1-5: `<`, `<=`, `=`, `>=`, `>`
 
 ##### Minmax vs Minmax-Multi 비교 예제
 
@@ -7315,10 +7441,10 @@ CREATE INDEX idx_amount_multi ON sales
 
 ### 교차 데이터 타입 연산자 (Cross-Data-Type Operators)
 
-minmax와 inclusion 연산자 클래스 모두 교차 데이터 타입 연산자를 지원합니다:
+minmax와 inclusion 연산자 클래스 모두 교차 데이터 타입 연산자를 지원함:
 
-- Minmax: 동일한 데이터 타입에 대한 전체 연산자 세트가 필요하며, 추가 데이터 타입용 연산자 세트를 별도로 정의할 수 있습니다
-- Inclusion: 교차 타입 연산자를 사용하면 의존성이 더 복잡해집니다
+- Minmax: 동일한 데이터 타입에 대한 전체 연산자 세트가 필요하며, 추가 데이터 타입용 연산자 세트를 별도로 정의할 수 있음
+- Inclusion: 교차 타입 연산자를 사용하면 의존성이 더 복잡해짐
 
 ```sql
 -- 예: float4_minmax_ops는 float4 비교 연산자뿐만 아니라
@@ -7429,13 +7555,13 @@ WHERE relid = 'size_comparison'::regclass;
 
 ## Chapter 72: 해시 인덱스 (Hash Indexes)
 
-PostgreSQL은 영구적이고 충돌 복구 가능한(crash-recoverable) 온디스크 해시 인덱스(hash index) 구현을 포함하고 있습니다. 해시 인덱스는 선형 순서가 잘 정의되지 않은 데이터 타입을 포함하여 모든 데이터 타입을 인덱싱할 수 있습니다.
+PostgreSQL은 영구적이고 충돌 복구 가능한(crash-recoverable) 온디스크 해시 인덱스(hash index) 구현을 포함하고 있음. 해시 인덱스는 선형 순서가 잘 정의되지 않은 데이터 타입을 포함하여 모든 데이터 타입을 인덱싱할 수 있음.
 
 ### 72.1 개요 (Overview)
 
 #### 72.1.1 기본 개념
 
-해시 인덱스는 인덱싱된 컬럼 값에서 파생된 32비트 해시 코드를 저장합니다. 따라서 단순 동등 비교(equality comparison)만 처리할 수 있습니다.
+해시 인덱스는 인덱싱된 컬럼 값에서 파생된 32비트 해시 코드를 저장함. 따라서 단순 동등 비교(equality comparison)만 처리할 수 있음.
 
 ```sql
 -- 해시 인덱스 생성 구문
@@ -7446,12 +7572,10 @@ CREATE INDEX name ON table USING HASH (column);
 
 ##### 저장 방식
 
-| 특성 | 설명 |
-|------|------|
-| 저장 데이터 | 실제 컬럼 값이 아닌 해시 값만 저장 |
-| 해시 크기 | 각 인덱스 튜플은 4바이트 해시 값 저장 |
-| 인덱스 크기 | UUID, URL 등 긴 데이터 항목 인덱싱 시 B-tree보다 훨씬 작음 |
-| 스캔 특성 | 모든 해시 인덱스 스캔은 손실성(lossy) |
+- 저장 데이터: 실제 컬럼 값이 아닌 해시 값만 저장
+- 해시 크기: 각 인덱스 튜플은 4바이트 해시 값 저장
+- 인덱스 크기: UUID, URL 등 긴 데이터 항목 인덱싱 시 B-tree보다 훨씬 작음
+- 스캔 특성: 모든 해시 인덱스 스캔은 손실성(lossy)
 
 ##### 지원 기능
 
@@ -7463,7 +7587,7 @@ CREATE INDEX name ON table USING HASH (column);
 
 #### 72.1.3 제한 사항
 
-해시 인덱스는 다음 연산에 사용할 수 없습니다:
+해시 인덱스는 다음 연산에 사용할 수 없음:
 
 - 범위 쿼리 (`<`, `<=`, `>=`, `>`)
 - 패턴 매칭 (`LIKE`, `~`)
@@ -7476,9 +7600,9 @@ CREATE INDEX name ON table USING HASH (column);
 
 ##### B-tree와의 비교
 
-B-tree 인덱스에서는 리프 페이지를 찾을 때까지 트리를 타고 내려가야 합니다. 수백만 행이 있는 테이블에서 이 하강(descent)은 데이터 접근 시간을 증가시킬 수 있습니다.
+B-tree 인덱스에서는 리프 페이지를 찾을 때까지 트리를 타고 내려가야 함. 수백만 행이 있는 테이블에서 이 하강(descent)은 데이터 접근 시간을 증가시킬 수 있음.
 
-해시 인덱스에서 리프 페이지에 해당하는 것을 버킷 페이지(bucket page)라고 합니다. 해시 인덱스는 버킷 페이지에 직접 접근할 수 있어, 대용량 테이블에서 인덱스 접근 시간을 잠재적으로 줄일 수 있습니다.
+해시 인덱스에서 리프 페이지에 해당하는 것을 버킷 페이지(bucket page)라고 함. 해시 인덱스는 버킷 페이지에 직접 접근할 수 있어, 대용량 테이블에서 인덱스 접근 시간을 잠재적으로 줄일 수 있음.
 
 ```
 B-tree 인덱스:  루트 -> 내부 노드 -> ... -> 리프 페이지
@@ -7487,7 +7611,7 @@ B-tree 인덱스:  루트 -> 내부 노드 -> ... -> 리프 페이지
 
 ##### 최적 사용 사례
 
-해시 인덱스는 다음 상황에 가장 적합합니다:
+해시 인덱스는 다음 상황에 가장 적합함:
 
 1. 유일하거나 거의 유일한 데이터
 2. 해시 버킷당 행 수가 적은 데이터
@@ -7496,9 +7620,9 @@ B-tree 인덱스:  루트 -> 내부 노드 -> ... -> 리프 페이지
 
 ##### 주의 사항
 
-해시 값 분포가 고르지 않으면 오버플로우 페이지를 모두 스캔해야 합니다. 따라서 불균형 해시 인덱스는 일부 데이터에서 B-tree보다 더 많은 블록 접근이 필요할 수 있습니다.
+해시 값 분포가 고르지 않으면 오버플로우 페이지를 모두 스캔해야 함. 따라서 불균형 해시 인덱스는 일부 데이터에서 B-tree보다 더 많은 블록 접근이 필요할 수 있음.
 
-완화 방법: 고유하지 않은 값이 많은 경우 부분 인덱스(partial index)를 사용하여 제외할 수 있습니다.
+완화 방법: 고유하지 않은 값이 많은 경우 부분 인덱스(partial index)를 사용하여 제외할 수 있음.
 
 ```sql
 -- 부분 인덱스 예제: NULL이 아닌 값만 인덱싱
@@ -7524,7 +7648,7 @@ WHERE email IS NOT NULL;
 
 ##### 튜플 삭제
 
-B-tree와 마찬가지로 해시 인덱스는 단순 인덱스 튜플 삭제(지연 유지 관리)를 수행합니다:
+B-tree와 마찬가지로 해시 인덱스는 단순 인덱스 튜플 삭제(지연 유지 관리)를 수행함:
 
 - 삭제해도 안전한 것으로 알려진 인덱스 튜플 삭제 (LP_DEAD 비트가 이미 설정된 항목)
 - 삽입에 공간이 필요할 때 또는 VACUUM 중에 데드 튜플 제거
@@ -7537,7 +7661,7 @@ B-tree와 마찬가지로 해시 인덱스는 단순 인덱스 튜플 삭제(지
 
 #### 72.1.7 확장 (Expansion)
 
-해시 인덱스는 인덱싱된 행 수가 증가함에 따라 버킷 페이지 수를 확장할 수 있습니다:
+해시 인덱스는 인덱싱된 행 수가 증가함에 따라 버킷 페이지 수를 확장할 수 있음:
 
 1. 새 버킷이 추가될 때 정확히 하나의 기존 버킷이 "분할(split)"됨
 2. 일부 튜플이 업데이트된 키-버킷 번호 매핑에 따라 새 버킷으로 전송됨
@@ -7556,14 +7680,12 @@ WHERE indexrelname LIKE '%hash%';
 
 #### 72.2.1 페이지 유형
 
-해시 인덱스는 네 가지 유형의 페이지로 구성됩니다:
+해시 인덱스는 네 가지 유형의 페이지로 구성됨:
 
-| 페이지 유형 | 설명 |
-|------------|------|
-| 메타 페이지 (Meta page) | 페이지 0, 정적으로 할당된 제어 정보 포함 |
-| 기본 버킷 페이지 (Primary bucket pages) | 해시 버킷의 주요 저장소 |
-| 오버플로우 페이지 (Overflow pages) | 버킷이 용량을 초과할 때 추가 페이지 |
-| 비트맵 페이지 (Bitmap pages) | 재사용 가능한 해제된 오버플로우 페이지 추적 |
+- 메타 페이지 (Meta page): 페이지 0, 정적으로 할당된 제어 정보 포함
+- 기본 버킷 페이지 (Primary bucket pages): 해시 버킷의 주요 저장소
+- 오버플로우 페이지 (Overflow pages): 버킷이 용량을 초과할 때 추가 페이지
+- 비트맵 페이지 (Bitmap pages): 재사용 가능한 해제된 오버플로우 페이지 추적
 
 ```
 해시 인덱스 구조:
@@ -7644,21 +7766,23 @@ REINDEX INDEX CONCURRENTLY index_name;
 
 #### 72.3.1 해시 인덱스 전략
 
-해시 인덱스는 동등 비교만 지원하므로 단일 전략만 정의합니다:
+해시 인덱스는 동등 비교만 지원하므로 단일 전략만 정의함:
 
-| 연산 | 전략 번호 |
-|------|----------|
-| equal (`=`) | 1 |
+- equal (`=`): 1
 
 #### 72.3.2 해시 지원 함수
 
-해시 인덱스는 하나의 필수 지원 함수와 두 개의 선택적 함수를 요구합니다:
+해시 인덱스는 하나의 필수 지원 함수와 두 개의 선택적 함수를 요구함:
 
-| 함수 | 지원 번호 | 설명 |
-|------|----------|------|
-| 32비트 해시 값 계산 | 1 | 필수 |
-| 64비트 솔트로 64비트 해시 값 계산 | 2 | 선택적; 솔트가 0이면 하위 32비트는 함수 1의 결과와 일치해야 함 |
-| 연산자 클래스별 옵션 정의 | 3 | 선택적 |
+- 32비트 해시 값 계산
+  - 지원 번호: 1
+  - 설명: 필수
+- 64비트 솔트로 64비트 해시 값 계산
+  - 지원 번호: 2
+  - 설명: 선택적; 솔트가 0이면 하위 32비트는 함수 1의 결과와 일치해야 함
+- 연산자 클래스별 옵션 정의
+  - 지원 번호: 3
+  - 설명: 선택적
 
 #### 72.3.3 해시 연산자 클래스 조회
 
@@ -7679,33 +7803,77 @@ ORDER BY opclass_name;
 
 #### 72.3.4 주요 내장 해시 연산자 클래스
 
-다음은 PostgreSQL에서 제공하는 주요 해시 연산자 클래스입니다:
+다음은 PostgreSQL에서 제공하는 주요 해시 연산자 클래스임:
 
-| 연산자 클래스 | 인덱싱 타입 | 연산자 |
-|--------------|-----------|--------|
-| `int2_ops` | smallint | `=` |
-| `int4_ops` | integer | `=` |
-| `int8_ops` | bigint | `=` |
-| `float4_ops` | real | `=` |
-| `float8_ops` | double precision | `=` |
-| `numeric_ops` | numeric | `=` |
-| `text_ops` | text | `=` |
-| `varchar_ops` | varchar | `=` |
-| `char_ops` | char | `=` |
-| `bpchar_ops` | bpchar | `=` |
-| `bytea_ops` | bytea | `=` |
-| `date_ops` | date | `=` |
-| `time_ops` | time | `=` |
-| `timetz_ops` | timetz | `=` |
-| `timestamp_ops` | timestamp | `=` |
-| `timestamptz_ops` | timestamptz | `=` |
-| `interval_ops` | interval | `=` |
-| `uuid_ops` | uuid | `=` |
-| `oid_ops` | oid | `=` |
-| `bool_ops` | boolean | `=` |
-| `macaddr_ops` | macaddr | `=` |
-| `inet_ops` | inet | `=` |
-| `cidr_ops` | cidr | `=` |
+- `int2_ops`
+  - 인덱싱 타입: smallint
+  - 연산자: `=`
+- `int4_ops`
+  - 인덱싱 타입: integer
+  - 연산자: `=`
+- `int8_ops`
+  - 인덱싱 타입: bigint
+  - 연산자: `=`
+- `float4_ops`
+  - 인덱싱 타입: real
+  - 연산자: `=`
+- `float8_ops`
+  - 인덱싱 타입: double precision
+  - 연산자: `=`
+- `numeric_ops`
+  - 인덱싱 타입: numeric
+  - 연산자: `=`
+- `text_ops`
+  - 인덱싱 타입: text
+  - 연산자: `=`
+- `varchar_ops`
+  - 인덱싱 타입: varchar
+  - 연산자: `=`
+- `char_ops`
+  - 인덱싱 타입: char
+  - 연산자: `=`
+- `bpchar_ops`
+  - 인덱싱 타입: bpchar
+  - 연산자: `=`
+- `bytea_ops`
+  - 인덱싱 타입: bytea
+  - 연산자: `=`
+- `date_ops`
+  - 인덱싱 타입: date
+  - 연산자: `=`
+- `time_ops`
+  - 인덱싱 타입: time
+  - 연산자: `=`
+- `timetz_ops`
+  - 인덱싱 타입: timetz
+  - 연산자: `=`
+- `timestamp_ops`
+  - 인덱싱 타입: timestamp
+  - 연산자: `=`
+- `timestamptz_ops`
+  - 인덱싱 타입: timestamptz
+  - 연산자: `=`
+- `interval_ops`
+  - 인덱싱 타입: interval
+  - 연산자: `=`
+- `uuid_ops`
+  - 인덱싱 타입: uuid
+  - 연산자: `=`
+- `oid_ops`
+  - 인덱싱 타입: oid
+  - 연산자: `=`
+- `bool_ops`
+  - 인덱싱 타입: boolean
+  - 연산자: `=`
+- `macaddr_ops`
+  - 인덱싱 타입: macaddr
+  - 연산자: `=`
+- `inet_ops`
+  - 인덱싱 타입: inet
+  - 연산자: `=`
+- `cidr_ops`
+  - 인덱싱 타입: cidr
+  - 연산자: `=`
 
 #### 72.3.5 다중 데이터 타입 해시 패밀리
 
@@ -7844,21 +8012,17 @@ DROP INDEX idx_users_email_hash;
 
 #### 72.5.1 해시 인덱스를 사용해야 할 때
 
-| 조건 | 이유 |
-|------|------|
-| 동등 비교(`=`)만 사용 | 해시 인덱스의 유일한 지원 연산 |
-| 긴 값 인덱싱 (UUID, URL 등) | 4바이트 해시만 저장하여 공간 절약 |
-| 대용량 테이블 | 직접 버킷 접근으로 빠른 조회 |
-| 유일하거나 거의 유일한 데이터 | 오버플로우 페이지 최소화 |
+- 동등 비교(`=`)만 사용: 해시 인덱스의 유일한 지원 연산
+- 긴 값 인덱싱 (UUID, URL 등): 4바이트 해시만 저장하여 공간 절약
+- 대용량 테이블: 직접 버킷 접근으로 빠른 조회
+- 유일하거나 거의 유일한 데이터: 오버플로우 페이지 최소화
 
 #### 72.5.2 B-tree를 사용해야 할 때
 
-| 조건 | 이유 |
-|------|------|
-| 범위 쿼리 필요 | B-tree만 `<`, `>`, `BETWEEN` 지원 |
-| 정렬 필요 | 해시 인덱스는 순서 정보 없음 |
-| 유일성 제약 필요 | 해시 인덱스는 유일성 검사 불가 |
-| 다중 컬럼 인덱스 필요 | 해시는 단일 컬럼만 지원 |
+- 범위 쿼리 필요: B-tree만 `<`, `>`, `BETWEEN` 지원
+- 정렬 필요: 해시 인덱스는 순서 정보 없음
+- 유일성 제약 필요: 해시 인덱스는 유일성 검사 불가
+- 다중 컬럼 인덱스 필요: 해시는 단일 컬럼만 지원
 
 #### 72.5.3 의사 결정 플로우차트
 

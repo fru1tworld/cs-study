@@ -34,12 +34,12 @@ auth_enabled: true
 #### 테넌트 ID 명명 규칙
 
 - 영문 대소문자, 숫자, 일부 특수문자 가능
-- 슬래시 `/`, 빈 문자열, `..`, 디렉토리 트래버설 문자 금지
-- 테넌트별로 디렉토리/접두사 분리 저장
+- 슬래시 `/`, 빈 문자열, `..`, 디렉터리 트래버설 문자 금지
+- 테넌트별로 디렉터리·접두사 분리 저장
 
 #### 테넌트 페더레이션
 
-`limits_config`에서 활성화하면 여러 테넌트를 한 번에 쿼리할 수 있다.
+`limits_config`에서 활성화하면 여러 테넌트를 한 번에 쿼리 가능.
 
 ```yaml
 limits_config:
@@ -58,7 +58,7 @@ Headers:
 
 #### 테넌트별 한도 오버라이드
 
-`runtime_config`를 통해 동적으로 조정할 수 있다.
+`runtime_config`를 통해 동적으로 조정 가능.
 
 ```yaml
 overrides:
@@ -81,7 +81,7 @@ overrides:
 
 ##### Local
 
-각 Distributor 인스턴스가 독립적으로 한도를 적용한다. Distributor 수에 따라 실제 한도가 달라진다.
+각 Distributor 인스턴스가 독립적으로 한도 적용 → Distributor 수에 따라 실제 한도 변동
 
 ```yaml
 limits_config:
@@ -91,7 +91,7 @@ limits_config:
 
 ##### Global (권장)
 
-모든 Distributor가 협력하여 테넌트당 글로벌 한도를 적용한다.
+모든 Distributor가 협력하여 테넌트당 글로벌 한도 적용
 
 ```yaml
 limits_config:
@@ -149,17 +149,15 @@ limits_config:
 
 #### 권장 백엔드
 
-| 환경 | 백엔드 |
-|------|--------|
-| AWS | S3 |
-| GCP | GCS |
-| Azure | Blob Storage |
-| 온프레미스 | MinIO, Ceph S3 호환 |
-| 개발 | Filesystem |
+- AWS: S3
+- GCP: GCS
+- Azure: Blob Storage
+- 온프레미스: MinIO, Ceph S3 호환
+- 개발: Filesystem
 
 #### 스키마 마이그레이션
 
-새 스키마는 **미래 시점**부터 적용되도록 추가한다.
+새 스키마는 미래 시점부터 적용되도록 추가
 
 ```yaml
 schema_config:
@@ -183,7 +181,7 @@ schema_config:
 
 #### 인덱스 게이트웨이 (Index Gateway)
 
-Querier가 인덱스를 매번 다운로드하지 않도록 중앙에서 관리한다.
+Querier가 인덱스를 매번 다운로드하지 않도록 중앙에서 관리
 
 ```yaml
 storage_config:
@@ -231,7 +229,7 @@ limits_config:
 
 #### 우선순위 규칙
 
-`priority` 값이 **클수록** 우선 적용. 매칭되는 규칙이 없으면 글로벌 `retention_period` 적용.
+`priority` 값이 클수록 우선 적용 → 매칭되는 규칙이 없으면 글로벌 `retention_period` 적용
 
 #### 테넌트별 보존
 
@@ -251,13 +249,13 @@ overrides:
 1. Compactor가 `compaction_interval`마다 실행
 2. 보존 기간 지난 청크 식별
 3. `retention_delete_delay` 후 실제 삭제
-4. 워커들이 병렬 삭제 처리
+4. 워커가 병렬 삭제 처리
 
 ---
 
 ### 로그 삭제
 
-특정 로그를 삭제하는 API로, GDPR 등 컴플라이언스 요건에 대응할 때 사용한다.
+특정 로그를 삭제하는 API로, GDPR 등 컴플라이언스 요건 대응용
 
 #### 활성화
 
@@ -273,11 +271,9 @@ limits_config:
 
 #### 삭제 모드
 
-| 모드 | 동작 |
-|------|------|
-| `disabled` | 삭제 비활성 |
-| `filter-only` | 쿼리에서만 필터링 (실제 데이터는 보존) |
-| `filter-and-delete` | 쿼리 필터링 + 실제 삭제 |
+- `disabled`: 삭제 비활성
+- `filter-only`: 쿼리에서만 필터링 (실제 데이터는 보존)
+- `filter-and-delete`: 쿼리 필터링 + 실제 삭제
 
 #### 삭제 요청 API
 
@@ -310,7 +306,7 @@ curl -XDELETE "http://loki:3100/loki/api/v1/delete?request_id=<id>" \
 
 #### 쿼리 분할 (Query Splitting)
 
-긴 시간 범위의 쿼리를 작은 단위로 분할하여 처리한다.
+긴 시간 범위의 쿼리를 작은 단위로 분할해 처리
 
 ```yaml
 query_range:
@@ -353,12 +349,10 @@ frontend:
 
 #### 캐시 종류
 
-| 캐시 | 대상 | 효과 |
-|------|------|------|
-| Results Cache | 최종 쿼리 결과 | 반복 쿼리 가속 |
-| Chunk Cache | 청크 데이터 | 스토리지 IO 감소 |
-| Index Cache | 인덱스 조회 | 인덱스 IO 감소 |
-| Volume Cache | 볼륨 쿼리 | 라벨 메타 가속 |
+- Results Cache: 최종 쿼리 결과 대상 → 반복 쿼리 가속
+- Chunk Cache: 청크 데이터 대상 → 스토리지 IO 감소
+- Index Cache: 인덱스 조회 대상 → 인덱스 IO 감소
+- Volume Cache: 볼륨 쿼리 대상 → 라벨 메타 가속
 
 #### Memcached 사용
 
@@ -407,7 +401,7 @@ query_range:
 
 ### WAL (Write-Ahead Log)
 
-Ingester가 충돌하더라도 데이터를 복구할 수 있게 한다.
+Ingester가 충돌하더라도 데이터 복구 가능
 
 ```yaml
 ingester:
@@ -421,13 +415,13 @@ ingester:
 
 #### 동작
 
-1. 모든 쓰기는 메모리와 WAL 디스크에 동시에 기록된다.
-2. 청크가 스토리지로 플러시되면 해당 WAL 항목이 정리된다.
-3. Ingester 재시작 시 WAL을 리플레이하여 메모리 상태를 복원한다.
+1. 모든 쓰기는 메모리와 WAL 디스크에 동시 기록됨
+2. 청크가 스토리지로 플러시되면 해당 WAL 항목 정리됨
+3. Ingester 재시작 시 WAL을 리플레이해 메모리 상태 복원
 
 #### 디스크 요구사항
 
-`replay_memory_ceiling` × Ingester 수만큼의 디스크 용량 이상을 확보하는 것을 권장한다.
+`replay_memory_ceiling` × Ingester 수만큼의 디스크 용량 이상 확보 권장
 
 ---
 
@@ -435,15 +429,15 @@ ingester:
 
 #### 무중단 롤링 업데이트
 
-마이크로서비스 모드에서 권장하는 업데이트 순서:
+마이크로서비스 모드에서 권장하는 업데이트 순서.
 
-1. **Compactor** (단일 인스턴스, 다운타임 허용)
-2. **Index Gateway**
-3. **Ruler**
-4. **Query Frontend / Query Scheduler**
-5. **Querier**
-6. **Distributor**
-7. **Ingester** (가장 신중하게)
+1. Compactor (단일 인스턴스, 다운타임 허용)
+2. Index Gateway
+3. Ruler
+4. Query Frontend / Query Scheduler
+5. Querier
+6. Distributor
+7. Ingester (가장 신중하게)
 
 #### Ingester 업그레이드 주의
 
@@ -465,18 +459,16 @@ ingester:
 
 #### 자체 메트릭
 
-Loki는 Prometheus 형식의 메트릭을 `/metrics` 엔드포인트로 노출한다.
+Loki는 Prometheus 형식의 메트릭을 `/metrics` 엔드포인트로 노출
 
 #### 주요 메트릭
 
-| 메트릭 | 설명 |
-|--------|------|
-| `loki_distributor_lines_received_total` | 수신 로그 라인 수 |
-| `loki_distributor_bytes_received_total` | 수신 바이트 |
-| `loki_ingester_chunks_flushed_total` | 플러시된 청크 수 |
-| `loki_ingester_memory_streams` | 메모리 내 스트림 수 |
-| `loki_request_duration_seconds` | 요청 지연 시간 |
-| `loki_logql_querystats_*` | 쿼리 통계 |
+- `loki_distributor_lines_received_total`: 수신 로그 라인 수
+- `loki_distributor_bytes_received_total`: 수신 바이트
+- `loki_ingester_chunks_flushed_total`: 플러시된 청크 수
+- `loki_ingester_memory_streams`: 메모리 내 스트림 수
+- `loki_request_duration_seconds`: 요청 지연 시간
+- `loki_logql_querystats_*`: 쿼리 통계
 
 #### Mixin (대시보드 + 알림)
 
@@ -489,14 +481,14 @@ jsonnet -J vendor -m dashboards mixin.libsonnet
 
 #### 핵심 SLI/SLO
 
-- **수집 가용성**: 4xx/5xx 응답 비율 < 0.1%
-- **쿼리 가용성**: 쿼리 5xx 비율 < 0.5%
-- **수집 지연**: p99 < 1s
-- **쿼리 지연**: p99 < 30s (시간 범위 기준)
+- 수집 가용성: 4xx/5xx 응답 비율 < 0.1%
+- 쿼리 가용성: 쿼리 5xx 비율 < 0.5%
+- 수집 지연: p99 < 1s
+- 쿼리 지연: p99 < 30s (시간 범위 기준)
 
 #### Self-Monitoring
 
-Loki 자체 로그를 Loki로 수집하는 셀프 모니터링을 권장한다.
+Loki 자체 로그를 Loki로 수집하는 셀프 모니터링 권장
 
 ```alloy
 loki.source.kubernetes "loki_logs" {
@@ -538,7 +530,7 @@ loki.write "self" {
 
 ### 개요
 
-Loki는 **Ruler** 컴포넌트를 통해 **로그 기반 알림**을 제공합니다. Ruler는 다음 작업을 수행합니다.
+Loki는 Ruler 컴포넌트를 통해 로그 기반 알림을 제공함. Ruler는 다음 작업을 수행함.
 
 - LogQL 쿼리를 주기적으로 평가
 - 조건 충족 시 Alertmanager로 알림 전송 (Alerting Rules)
@@ -546,7 +538,7 @@ Loki는 **Ruler** 컴포넌트를 통해 **로그 기반 알림**을 제공합�
 
 #### Prometheus와의 호환성
 
-Loki Ruler는 Prometheus의 룰 파일 포맷과 동일한 구조를 사용하므로, Prometheus 알림에 익숙한 운영자라면 쉽게 적용할 수 있습니다.
+Loki Ruler는 Prometheus의 룰 파일 포맷과 동일한 구조 사용 → Prometheus 알림에 익숙한 운영자라면 쉽게 적용 가능
 
 ---
 
@@ -591,7 +583,7 @@ ruler:
       └── rules.yaml
 ```
 
-각 테넌트별로 디렉토리가 있어야 합니다.
+각 테넌트별로 디렉터리 필요
 
 ---
 
@@ -682,7 +674,7 @@ groups:
 
 #### 라벨/주석 템플릿
 
-Go 템플릿 문법을 사용할 수 있습니다.
+Go 템플릿 문법 사용 가능
 
 ```yaml
 annotations:
@@ -699,7 +691,7 @@ annotations:
 
 ### Recording 룰
 
-LogQL 쿼리 결과를 메트릭으로 저장합니다. Loki는 직접 저장하지 않고 **Remote Write**로 Prometheus나 Mimir에 전송합니다.
+LogQL 쿼리 결과를 메트릭으로 저장. Loki는 직접 저장하지 않고 Remote Write로 Prometheus나 Mimir에 전송
 
 #### Remote Write 설정
 
@@ -737,7 +729,7 @@ groups:
           sum by (service) (rate({namespace="prod"} [5m]))
 ```
 
-이렇게 저장된 메트릭은 Mimir/Prometheus에서 일반 메트릭처럼 PromQL로 조회할 수 있습니다.
+이렇게 저장된 메트릭은 Mimir/Prometheus에서 일반 메트릭처럼 PromQL로 조회 가능
 
 ---
 
@@ -753,7 +745,7 @@ ruler:
       directory: /etc/loki/rules
 ```
 
-ConfigMap이나 PV로 마운트.
+ConfigMap이나 PV로 마운트
 
 #### S3
 
@@ -838,7 +830,7 @@ ruler:
 
 ### Ruler 분산 모드
 
-대규모 환경에서 룰 평가를 여러 Ruler 인스턴스에 분산합니다.
+대규모 환경에서 룰 평가를 여러 Ruler 인스턴스에 분산
 
 #### 활성화
 
@@ -857,7 +849,7 @@ ruler:
 
 #### Shuffle Sharding
 
-테넌트별로 일부 Ruler만 사용하도록 격리합니다. 한 테넌트의 무거운 룰이 다른 테넌트에 영향을 주지 않습니다.
+테넌트별로 일부 Ruler만 사용하도록 격리 → 한 테넌트의 무거운 룰이 다른 테넌트에 영향을 주지 않음
 
 ```yaml
 limits_config:

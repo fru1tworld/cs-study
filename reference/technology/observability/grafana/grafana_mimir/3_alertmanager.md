@@ -22,7 +22,7 @@
 
 ### 개요
 
-Mimir는 **Prometheus Alertmanager를 내장**하여 별도 구성 없이 알림을 처리할 수 있습니다.
+Mimir는 Prometheus Alertmanager를 내장 → 별도 구성 없이 알림 처리 가능.
 
 #### 컴포넌트 흐름
 
@@ -379,7 +379,7 @@ inhibit_rules:
     equal: [cluster, alertname]
 ```
 
-`severity=critical` 알림이 활성 상태이면 같은 cluster/alertname의 `warning` 알림은 억제됩니다.
+`severity=critical` 알림 활성 상태 → 같은 cluster/alertname의 `warning` 알림 억제됨.
 
 #### Silence: 일시적으로 알림 숨김
 
@@ -400,7 +400,7 @@ curl -X POST -H "X-Scope-OrgID: tenant-1" \
   }'
 ```
 
-또는 Grafana UI에서 관리.
+또는 Grafana UI에서 관리 가능.
 
 ---
 
@@ -408,7 +408,7 @@ curl -X POST -H "X-Scope-OrgID: tenant-1" \
 
 #### 테넌트별 Alertmanager 설정
 
-테넌트마다 별도의 Alertmanager 설정을 가질 수 있습니다.
+테넌트마다 별도의 Alertmanager 설정 가능.
 
 ##### API로 설정
 
@@ -524,7 +524,7 @@ mimirtool alertmanager verify alertmanager-config.yaml
 
 #### HA 클러스터링
 
-Alertmanager 인스턴스 3개 이상을 gossip으로 연결합니다.
+Alertmanager 인스턴스 3개 이상을 gossip으로 연결.
 
 ```yaml
 alertmanager:
@@ -550,9 +550,7 @@ limits:
 
 #### 모니터링
 
-| 메트릭 | 설명 |
-|--------|------|
-| `cortex_alertmanager_alerts_received_total` | 수신 알림 수 |
-| `cortex_alertmanager_notifications_total` | 발송된 통지 수 |
-| `cortex_alertmanager_notifications_failed_total` | 실패한 통지 수 |
-| `cortex_alertmanager_partial_state_merges_total` | 상태 병합 |
+- `cortex_alertmanager_alerts_received_total`: 수신 알림 수
+- `cortex_alertmanager_notifications_total`: 발송된 통지 수
+- `cortex_alertmanager_notifications_failed_total`: 실패한 통지 수
+- `cortex_alertmanager_partial_state_merges_total`: 상태 병합

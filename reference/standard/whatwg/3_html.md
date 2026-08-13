@@ -6,20 +6,28 @@
 
 #### HTML Living Standard란
 
-WHATWG(Web Hypertext Application Technology Working Group)가 관리하는 HTML 명세로, 버전 번호 없이 지속적으로 업데이트되는 "살아있는 표준(Living Standard)"이다. 웹 브라우저 벤더(Apple, Google, Mozilla, Microsoft)가 주도하며, 현재 HTML의 유일한 공식 표준이다.
+WHATWG(Web Hypertext Application Technology Working Group)가 관리하는 HTML 명세 → 버전 번호 없이 지속 업데이트되는 "살아있는 표준(Living Standard)".
 
+- 웹 브라우저 벤더(Apple, Google, Mozilla, Microsoft) 주도
+- 현재 HTML의 유일한 공식 표준
 - 명세 URL: https://html.spec.whatwg.org/
 - 2004년 WHATWG 설립 (W3C의 XHTML 2.0 방향에 반대)
-- 2019년 W3C와 WHATWG가 합의하여 WHATWG HTML을 유일한 HTML 표준으로 인정
+- 2019년 W3C와 WHATWG 합의 → WHATWG HTML을 유일한 HTML 표준으로 인정
 
 #### W3C HTML5와의 차이
 
-| 항목 | W3C HTML5 | WHATWG HTML Living Standard |
-|------|-----------|----------------------------|
-| 버전 관리 | 스냅샷(HTML5, 5.1, 5.2) | 버전 없음, 지속 업데이트 |
-| 상태 | 2019년 이후 개발 중단 | 현재 유일한 공식 표준 |
-| 범위 | HTML 마크업 중심 | HTML + 관련 API 전체 포함 |
-| 갱신 주기 | 수년 단위 | 수시(거의 매일) |
+- 버전 관리
+  - W3C HTML5: 스냅샷(HTML5, 5.1, 5.2)
+  - WHATWG HTML Living Standard: 버전 없음, 지속 업데이트
+- 상태
+  - W3C HTML5: 2019년 이후 개발 중단
+  - WHATWG HTML Living Standard: 현재 유일한 공식 표준
+- 범위
+  - W3C HTML5: HTML 마크업 중심
+  - WHATWG HTML Living Standard: HTML + 관련 API 전체 포함
+- 갱신 주기
+  - W3C HTML5: 수년 단위
+  - WHATWG HTML Living Standard: 수시(거의 매일)
 
 ---
 
@@ -43,11 +51,11 @@ WHATWG(Web Hypertext Application Technology Working Group)가 관리하는 HTML 
 
 #### DOCTYPE
 
-`<!DOCTYPE html>`은 브라우저를 표준 모드(Standards Mode)로 동작시키기 위해 필요하다. 생략하면 호환 모드(Quirks Mode)로 렌더링되어 예측 불가능한 동작이 발생한다.
+`<!DOCTYPE html>`: 브라우저를 표준 모드(Standards Mode)로 동작시키기 위해 필요 → 생략 시 호환 모드(Quirks Mode)로 렌더링되어 예측 불가능한 동작 발생.
 
 #### `<html>` 요소
 
-문서의 루트 요소. `lang` 속성으로 문서 언어를 명시한다.
+문서의 루트 요소 - `lang` 속성으로 문서 언어 명시.
 
 ```html
 <html lang="ko">    <!-- 한국어 -->
@@ -83,7 +91,7 @@ WHATWG(Web Hypertext Application Technology Working Group)가 관리하는 HTML 
 
 #### Open Graph 프로토콜
 
-소셜 미디어에서 링크 공유 시 미리보기를 제어한다.
+소셜 미디어에서 링크 공유 시 미리보기 제어.
 
 ```html
 <meta property="og:title" content="글 제목">
@@ -102,7 +110,7 @@ WHATWG(Web Hypertext Application Technology Working Group)가 관리하는 HTML 
 
 ### 3. 시맨틱 요소
 
-시맨틱 요소는 콘텐츠의 의미와 역할을 명확히 전달한다. 접근성(스크린 리더)과 SEO에 직접적 영향을 준다.
+시맨틱 요소: 콘텐츠의 의미와 역할을 명확히 전달 → 접근성(스크린 리더)·SEO에 직접 영향.
 
 #### 페이지 레이아웃 구조
 
@@ -154,20 +162,42 @@ WHATWG(Web Hypertext Application Technology Working Group)가 관리하는 HTML 
 
 #### 주요 시맨틱 요소 정리
 
-| 요소 | 역할 | 비고 |
-|------|------|------|
-| `<header>` | 소개, 내비게이션 그룹 | 여러 번 사용 가능 |
-| `<nav>` | 주요 내비게이션 링크 | `aria-label`로 구분 |
-| `<main>` | 페이지 핵심 콘텐츠 | 문서당 하나, `hidden` 없는 것은 하나만 |
-| `<article>` | 독립적 콘텐츠 단위 | RSS 피드 항목이 될 수 있는 단위 |
-| `<section>` | 주제별 그룹 | 제목(`h2`~`h6`)을 포함해야 함 |
-| `<aside>` | 부가 정보, 사이드바 | 본문과 간접적으로 관련된 콘텐츠 |
-| `<footer>` | 저작권, 연락처, 관련 링크 | 여러 번 사용 가능 |
-| `<figure>` | 자체 포함 콘텐츠 | `<figcaption>`과 함께 사용 |
-| `<address>` | 연락처 정보 | 가장 가까운 `article`/`body`의 연락처 |
-| `<time>` | 날짜/시간 | `datetime` 속성으로 기계 판독 가능 |
-| `<mark>` | 강조(하이라이트) | 검색 결과 하이라이트 등 |
-| `<hgroup>` | 제목 그룹 | 제목 + 부제목 그룹화 |
+- `<header>`
+  - 역할: 소개, 내비게이션 그룹
+  - 비고: 여러 번 사용 가능
+- `<nav>`
+  - 역할: 주요 내비게이션 링크
+  - 비고: `aria-label`로 구분
+- `<main>`
+  - 역할: 페이지 핵심 콘텐츠
+  - 비고: 문서당 하나, `hidden` 없는 것은 하나만
+- `<article>`
+  - 역할: 독립적 콘텐츠 단위
+  - 비고: RSS 피드 항목이 될 수 있는 단위
+- `<section>`
+  - 역할: 주제별 그룹
+  - 비고: 제목(`h2`~`h6`)을 포함해야 함
+- `<aside>`
+  - 역할: 부가 정보, 사이드바
+  - 비고: 본문과 간접적으로 관련된 콘텐츠
+- `<footer>`
+  - 역할: 저작권, 연락처, 관련 링크
+  - 비고: 여러 번 사용 가능
+- `<figure>`
+  - 역할: 자체 포함 콘텐츠
+  - 비고: `<figcaption>`과 함께 사용
+- `<address>`
+  - 역할: 연락처 정보
+  - 비고: 가장 가까운 `article`/`body`의 연락처
+- `<time>`
+  - 역할: 날짜/시간
+  - 비고: `datetime` 속성으로 기계 판독 가능
+- `<mark>`
+  - 역할: 강조(하이라이트)
+  - 비고: 검색 결과 하이라이트 등
+- `<hgroup>`
+  - 역할: 제목 그룹
+  - 비고: 제목 + 부제목 그룹화
 
 ---
 
@@ -182,7 +212,7 @@ WHATWG(Web Hypertext Application Technology Working Group)가 관리하는 HTML 
 <h4>~</h4><h5>~</h5><h6>최하위</h6>
 ```
 
-제목 레벨을 건너뛰지 않는다(`h1` 다음 `h3` 사용 금지).
+제목 레벨 건너뛰지 않음 (`h1` 다음 `h3` 사용 금지).
 
 #### 문단과 줄바꿈
 
@@ -309,7 +339,7 @@ function hello() {
 </figure>
 ```
 
-- `alt`: 필수. 장식용 이미지는 `alt=""`로 빈 문자열 지정
+- `alt`: 필수 - 장식용 이미지는 `alt=""`로 빈 문자열 지정
 - `loading="lazy"`: 뷰포트 진입 시 로드 (네이티브 지연 로딩)
 - `decoding="async"`: 이미지 디코딩을 비동기로 처리
 
@@ -336,7 +366,7 @@ function hello() {
 </video>
 ```
 
-주요 속성: `autoplay`, `muted`, `loop`, `playsinline` (iOS 인라인 재생)
+주요 속성: `autoplay`·`muted`·`loop`·`playsinline` (iOS 인라인 재생)
 
 #### 오디오
 
@@ -384,7 +414,7 @@ ctx.fillRect(10, 10, 150, 100);
 
 ### 6. 테이블
 
-테이블은 표 형태의 데이터에만 사용한다. 레이아웃 목적으로 사용하지 않는다.
+테이블: 표 형태의 데이터에만 사용 → 레이아웃 목적으로 사용 금지.
 
 ```html
 <table>
@@ -433,15 +463,13 @@ ctx.fillRect(10, 10, 150, 100);
 </table>
 ```
 
-| 요소 | 역할 |
-|------|------|
-| `<caption>` | 테이블 제목 (접근성 필수) |
-| `<thead>` | 헤더 행 그룹 |
-| `<tbody>` | 본문 행 그룹 (여러 개 가능) |
-| `<tfoot>` | 푸터 행 그룹 |
-| `<th scope="col/row">` | 헤더 셀, 스크린 리더가 연관 데이터 파악 |
-| `colspan`, `rowspan` | 셀 병합 |
-| `<colgroup>`, `<col>` | 열 단위 스타일링 |
+- `<caption>`: 테이블 제목 (접근성 필수)
+- `<thead>`: 헤더 행 그룹
+- `<tbody>`: 본문 행 그룹 (여러 개 가능)
+- `<tfoot>`: 푸터 행 그룹
+- `<th scope="col/row">`: 헤더 셀, 스크린 리더가 연관 데이터 파악
+- `colspan`, `rowspan`: 셀 병합
+- `<colgroup>`, `<col>`: 열 단위 스타일링
 
 ---
 
@@ -638,7 +666,7 @@ details.addEventListener('toggle', () => {
 
 #### 배타적 아코디언 (name 속성)
 
-같은 `name`을 가진 `<details>` 요소들은 하나만 열린다.
+같은 `name`을 가진 `<details>` 요소들 중 하나만 열림.
 
 ```html
 <details name="faq">
@@ -705,7 +733,7 @@ dialog::backdrop {
 
 ### 9. 콘텐츠 모델
 
-HTML 요소는 포함할 수 있는 콘텐츠의 종류(카테고리)에 따라 분류된다. 이 모델은 어떤 요소 안에 어떤 요소를 넣을 수 있는지를 정의한다.
+HTML 요소: 포함 가능한 콘텐츠의 종류(카테고리)에 따라 분류 → 어떤 요소 안에 어떤 요소를 넣을 수 있는지 정의.
 
 #### 콘텐츠 카테고리
 
@@ -748,16 +776,30 @@ HTML 요소는 포함할 수 있는 콘텐츠의 종류(카테고리)에 따라 
 
 #### 카테고리별 설명
 
-| 카테고리 | 설명 | 주요 요소 |
-|----------|------|-----------|
-| Metadata | 문서 메타데이터, 동작 설정 | `base`, `link`, `meta`, `script`, `style`, `title` |
-| Flow | body 안에 들어갈 수 있는 대부분의 요소 | 거의 모든 요소 |
-| Sectioning | 아웃라인을 형성하는 요소 | `article`, `aside`, `nav`, `section` |
-| Heading | 섹션의 제목 | `h1`~`h6`, `hgroup` |
-| Phrasing | 텍스트 수준 인라인 요소 | `a`, `em`, `strong`, `span`, `img`, `input` 등 |
-| Embedded | 외부 리소스 삽입 | `img`, `video`, `audio`, `iframe`, `canvas`, `svg` |
-| Interactive | 사용자 상호작용 대상 | `a`(href), `button`, `details`, `input`, `select` |
-| Palpable | 비어있지 않은 렌더링 콘텐츠 | 대부분의 Flow/Phrasing (빈 요소 제외) |
+- Metadata
+  - 설명: 문서 메타데이터·동작 설정
+  - 주요 요소: `base`, `link`, `meta`, `script`, `style`, `title`
+- Flow
+  - 설명: body 안에 들어갈 수 있는 대부분의 요소
+  - 주요 요소: 거의 모든 요소
+- Sectioning
+  - 설명: 아웃라인을 형성하는 요소
+  - 주요 요소: `article`, `aside`, `nav`, `section`
+- Heading
+  - 설명: 섹션의 제목
+  - 주요 요소: `h1`~`h6`, `hgroup`
+- Phrasing
+  - 설명: 텍스트 수준 인라인 요소
+  - 주요 요소: `a`, `em`, `strong`, `span`, `img`, `input` 등
+- Embedded
+  - 설명: 외부 리소스 삽입
+  - 주요 요소: `img`, `video`, `audio`, `iframe`, `canvas`, `svg`
+- Interactive
+  - 설명: 사용자 상호작용 대상
+  - 주요 요소: `a`(href), `button`, `details`, `input`, `select`
+- Palpable
+  - 설명: 비어있지 않은 렌더링 콘텐츠
+  - 주요 요소: 대부분의 Flow/Phrasing (빈 요소 제외)
 
 #### 유효하지 않은 중첩 예시
 
@@ -781,7 +823,7 @@ HTML 요소는 포함할 수 있는 콘텐츠의 종류(카테고리)에 따라 
 
 #### Transparent 콘텐츠 모델
 
-`<a>`, `<ins>`, `<del>` 등은 투명(transparent) 콘텐츠 모델을 가진다. 부모 요소의 콘텐츠 모델을 그대로 상속받는다.
+`<a>`, `<ins>`, `<del>` 등: 투명(transparent) 콘텐츠 모델 → 부모 요소의 콘텐츠 모델을 그대로 상속.
 
 ```html
 <!-- p(Phrasing만 허용) 안의 a는 Phrasing만 포함 가능 -->
@@ -924,63 +966,71 @@ article.dataset.isActive;  // "true"
 
 #### 글로벌 속성 요약
 
-| 속성 | 용도 |
-|------|------|
-| `id` | 고유 식별자 |
-| `class` | CSS 클래스 |
-| `style` | 인라인 스타일 |
-| `title` | 부가 설명 (툴팁) |
-| `lang` | 콘텐츠 언어 |
-| `dir` | 텍스트 방향 (`ltr`, `rtl`, `auto`) |
-| `tabindex` | 포커스/탭 순서 |
-| `hidden` | 요소 숨김 |
-| `inert` | 상호작용 비활성화 |
-| `data-*` | 커스텀 데이터 |
-| `draggable` | 드래그 가능 여부 |
-| `contenteditable` | 편집 가능 여부 |
-| `spellcheck` | 맞춤법 검사 |
-| `translate` | 번역 대상 여부 |
-| `inputmode` | 가상 키보드 유형 |
-| `enterkeyhint` | 엔터 키 힌트 |
-| `autocomplete` | 자동 완성 |
-| `autofocus` | 자동 포커스 |
-| `nonce` | CSP용 일회성 토큰 |
-| `popover` | 팝오버 API |
-| `slot` | Shadow DOM 슬롯 |
-| `is` | 커스텀 요소 확장 |
-| `part` | Shadow DOM 파트 이름 |
-| `exportparts` | Shadow DOM 파트 노출 |
+- `id`: 고유 식별자
+- `class`: CSS 클래스
+- `style`: 인라인 스타일
+- `title`: 부가 설명 (툴팁)
+- `lang`: 콘텐츠 언어
+- `dir`: 텍스트 방향 (`ltr`, `rtl`, `auto`)
+- `tabindex`: 포커스/탭 순서
+- `hidden`: 요소 숨김
+- `inert`: 상호작용 비활성화
+- `data-*`: 커스텀 데이터
+- `draggable`: 드래그 가능 여부
+- `contenteditable`: 편집 가능 여부
+- `spellcheck`: 맞춤법 검사
+- `translate`: 번역 대상 여부
+- `inputmode`: 가상 키보드 유형
+- `enterkeyhint`: 엔터 키 힌트
+- `autocomplete`: 자동 완성
+- `autofocus`: 자동 포커스
+- `nonce`: CSP용 일회성 토큰
+- `popover`: 팝오버 API
+- `slot`: Shadow DOM 슬롯
+- `is`: 커스텀 요소 확장
+- `part`: Shadow DOM 파트 이름
+- `exportparts`: Shadow DOM 파트 노출
 
 ---
 
-Part 2는 [html-apis.md](html-apis.md)에서 계속됩니다.
+Part 2: [html-apis.md](html-apis.md)에서 계속.
 
 ---
 
 ## HTML Living Standard - Web API 및 고급 주제 (Part 2)
 
-> 이 문서는 [HTML Living Standard 기본](html.md)의 후속 문서입니다.
+> [HTML Living Standard 기본](html.md)의 후속 문서.
 
 ---
 
 ### 1. HTML 파싱
 
-브라우저가 HTML 문자열을 DOM 트리로 변환하는 과정은 토크나이저와 트리 구성 두 단계로 나뉜다.
+브라우저가 HTML 문자열을 DOM 트리로 변환하는 과정: 토크나이저·트리 구성 2단계로 구분.
 
 #### 1.1 토크나이저 (Tokenizer)
 
-상태 기반 머신으로 동작하며, 입력 스트림을 다음 토큰들로 변환한다.
+상태 기반 머신으로 동작 → 입력 스트림을 다음 토큰들로 변환.
 
-| 토큰 타입 | 설명 | 예시 |
-|-----------|------|------|
-| DOCTYPE | 문서 타입 선언 | `<!DOCTYPE html>` |
-| Start Tag | 여는 태그 | `<div class="a">` |
-| End Tag | 닫는 태그 | `</div>` |
-| Comment | 주석 | `<!-- 주석 -->` |
-| Character | 텍스트 문자 | `Hello` |
-| EOF | 입력 끝 | - |
+- DOCTYPE
+  - 설명: 문서 타입 선언
+  - 예시: `<!DOCTYPE html>`
+- Start Tag
+  - 설명: 여는 태그
+  - 예시: `<div class="a">`
+- End Tag
+  - 설명: 닫는 태그
+  - 예시: `</div>`
+- Comment
+  - 설명: 주석
+  - 예시: `<!-- 주석 -->`
+- Character
+  - 설명: 텍스트 문자
+  - 예시: `Hello`
+- EOF
+  - 설명: 입력 끝
+  - 예시: 없음
 
-토크나이저는 80개 이상의 상태를 가지며, 각 문자를 읽을 때마다 상태가 전이된다.
+토크나이저: 80개 이상의 상태 보유 → 문자를 읽을 때마다 상태 전이.
 
 ```
 Data State → '<' → Tag Open State → 'a'-'z' → Tag Name State → ...
@@ -988,14 +1038,14 @@ Data State → '<' → Tag Open State → 'a'-'z' → Tag Name State → ...
 
 #### 1.2 트리 구성 (Tree Construction)
 
-토크나이저가 생성한 토큰을 받아 DOM 트리를 구성한다. 열린 요소 스택(stack of open elements)을 관리하며, 삽입 모드(insertion mode)에 따라 동작이 달라진다.
+토크나이저가 생성한 토큰을 받아 DOM 트리 구성 → 열린 요소 스택(stack of open elements) 관리, 삽입 모드(insertion mode)에 따라 동작 달라짐.
 
 주요 삽입 모드:
 - `initial` → `before html` → `before head` → `in head` → `after head` → `in body` → `after body` → `after after body`
 
 #### 1.3 에러 처리
 
-HTML 파서는 절대 실패하지 않는다. 잘못된 마크업도 일관된 규칙으로 처리한다.
+HTML 파서: 절대 실패하지 않음 → 잘못된 마크업도 일관된 규칙으로 처리.
 
 ```html
 <!-- 입력 -->
@@ -1015,7 +1065,7 @@ HTML 파서는 절대 실패하지 않는다. 잘못된 마크업도 일관된 �
 
 #### 1.4 Foster Parenting
 
-`<table>`, `<tbody>`, `<tr>`, `<td>` 내부에 허용되지 않는 노드가 등장하면, 해당 노드를 테이블의 부모 요소 앞으로 이동시킨다. 이를 foster parenting이라 한다.
+`<table>`, `<tbody>`, `<tr>`, `<td>` 내부에 허용되지 않는 노드 등장 → 해당 노드를 테이블의 부모 요소 앞으로 이동 (foster parenting).
 
 ```html
 <!-- 입력 -->
@@ -1031,7 +1081,7 @@ HTML 파서는 절대 실패하지 않는다. 잘못된 마크업도 일관된 �
 </table>
 ```
 
-> `<tbody>`가 자동 삽입되고, "잘못된 텍스트"는 테이블 앞으로 foster parent 된다.
+> `<tbody>` 자동 삽입 → "잘못된 텍스트"는 테이블 앞으로 foster parent됨.
 
 ---
 
@@ -1069,7 +1119,7 @@ module: defer와 동일 (async 속성 추가 시 async 동작)
 
 #### 2.2 `<template>`
 
-렌더링되지 않는 HTML 조각을 선언적으로 정의한다. `content` 프로퍼티로 `DocumentFragment`에 접근한다.
+렌더링되지 않는 HTML 조각을 선언적으로 정의 → `content` 프로퍼티로 `DocumentFragment`에 접근.
 
 ```html
 <template id="card-template">
@@ -1090,7 +1140,7 @@ module: defer와 동일 (async 속성 추가 시 async 동작)
 
 #### 2.3 `<slot>`
 
-Shadow DOM 내에서 외부 콘텐츠를 삽입할 위치를 지정한다.
+Shadow DOM 내에서 외부 콘텐츠를 삽입할 위치 지정.
 
 ```html
 <user-card>
@@ -1116,28 +1166,26 @@ Shadow DOM 내에서 외부 콘텐츠를 삽입할 위치를 지정한다.
 </script>
 ```
 
-`slotchange` 이벤트로 슬롯 내용 변경을 감지할 수 있다.
+`slotchange` 이벤트로 슬롯 내용 변경 감지 가능.
 
 ---
 
 ### 3. Window 인터페이스
 
-`Window`는 브라우저 탭(또는 프레임)의 전역 객체다.
+`Window`: 브라우저 탭(또는 프레임)의 전역 객체.
 
 #### 3.1 주요 속성
 
-| 속성 | 설명 |
-|------|------|
-| `window.document` | 현재 Document 객체 |
-| `window.location` | 현재 URL 정보 (Location 객체) |
-| `window.history` | History 객체 |
-| `window.navigator` | Navigator 객체 (UA, 언어, 온라인 상태 등) |
-| `window.innerWidth/Height` | 뷰포트 크기 (스크롤바 제외) |
-| `window.outerWidth/Height` | 브라우저 창 전체 크기 |
-| `window.devicePixelRatio` | 물리 픽셀 / CSS 픽셀 비율 |
-| `window.name` | 창 이름 (탭 간 유지) |
-| `window.opener` | 현재 창을 연 창의 참조 |
-| `window.closed` | 창이 닫혔는지 여부 |
+- `window.document`: 현재 Document 객체
+- `window.location`: 현재 URL 정보 (Location 객체)
+- `window.history`: History 객체
+- `window.navigator`: Navigator 객체 (UA·언어·온라인 상태 등)
+- `window.innerWidth/Height`: 뷰포트 크기 (스크롤바 제외)
+- `window.outerWidth/Height`: 브라우저 창 전체 크기
+- `window.devicePixelRatio`: 물리 픽셀 / CSS 픽셀 비율
+- `window.name`: 창 이름 (탭 간 유지)
+- `window.opener`: 현재 창을 연 창의 참조
+- `window.closed`: 창이 닫혔는지 여부
 
 #### 3.2 주요 메서드
 
@@ -1200,7 +1248,7 @@ window.addEventListener('popstate', (e) => {
 });
 ```
 
-> `pushState`/`replaceState` 호출 시에는 `popstate`가 발생하지 않는다.
+> `pushState`/`replaceState` 호출 시 `popstate` 발생하지 않음.
 
 #### 4.2 Location 객체
 
@@ -1224,7 +1272,7 @@ location.reload();              // 새로고침
 
 #### 4.3 Navigation API
 
-`History API`의 한계를 보완하는 API로, 현재 주요 브라우저에서 폭넓게(Baseline) 지원된다.
+`History API`의 한계를 보완하는 API → 현재 주요 브라우저에서 폭넓게(Baseline) 지원.
 
 ```javascript
 // navigate 이벤트 인터셉트
@@ -1265,16 +1313,22 @@ const entries = navigation.entries();
 
 ### 5. Web Storage
 
-동일 출처(origin) 단위로 키-값 데이터를 저장한다. 값은 항상 문자열이다.
+동일 출처(origin) 단위로 키-값 데이터 저장 → 값은 항상 문자열.
 
 #### 5.1 localStorage vs sessionStorage
 
-| 특성 | `localStorage` | `sessionStorage` |
-|------|----------------|-------------------|
-| 수명 | 영구 (수동 삭제 전까지) | 탭/창 닫으면 소멸 |
-| 범위 | 동일 출처의 모든 탭 | 해당 탭/창에만 한정 |
-| 용량 | 약 5~10MB | 약 5MB |
-| storage 이벤트 | 다른 탭에서 발생 | 발생하지 않음 |
+- 수명
+  - `localStorage`: 영구 (수동 삭제 전까지)
+  - `sessionStorage`: 탭/창 닫으면 소멸
+- 범위
+  - `localStorage`: 동일 출처의 모든 탭
+  - `sessionStorage`: 해당 탭/창에만 한정
+- 용량
+  - `localStorage`: 약 5~10MB
+  - `sessionStorage`: 약 5MB
+- storage 이벤트
+  - `localStorage`: 다른 탭에서 발생
+  - `sessionStorage`: 발생하지 않음
 
 #### 5.2 API
 
@@ -1300,7 +1354,7 @@ for (let i = 0; i < localStorage.length; i++) {
 
 #### 5.3 storage 이벤트
 
-같은 출처의 다른 탭에서 `localStorage`가 변경될 때 발생한다.
+같은 출처의 다른 탭에서 `localStorage` 변경 시 발생.
 
 ```javascript
 window.addEventListener('storage', (e) => {
@@ -1312,17 +1366,17 @@ window.addEventListener('storage', (e) => {
 });
 ```
 
-> 현재 탭에서의 변경에는 이벤트가 발생하지 않는다. 탭 간 간단한 동기화에 활용 가능하다.
+> 현재 탭에서의 변경에는 이벤트 발생하지 않음 → 탭 간 간단한 동기화에 활용 가능.
 
 ---
 
 ### 6. Web Workers
 
-메인 스레드와 분리된 백그라운드 스레드에서 스크립트를 실행한다. DOM에 접근할 수 없다.
+메인 스레드와 분리된 백그라운드 스레드에서 스크립트 실행 → DOM 접근 불가.
 
 #### 6.1 Dedicated Worker
 
-하나의 생성자(페이지)만 통신할 수 있다.
+하나의 생성자(페이지)만 통신 가능.
 
 ```javascript
 // main.js
@@ -1355,7 +1409,7 @@ self.onmessage = (e) => {
 
 #### 6.2 Shared Worker
 
-여러 페이지/탭이 하나의 워커 인스턴스를 공유한다.
+여러 페이지/탭이 하나의 워커 인스턴스 공유.
 
 ```javascript
 // main.js (여러 탭에서 동일 코드)
@@ -1387,7 +1441,7 @@ self.onconnect = (e) => {
 
 #### 6.3 Transferable Objects
 
-데이터를 복사 대신 소유권을 이전하여 성능을 높인다. 전송 후 원본은 사용 불가가 된다.
+데이터를 복사 대신 소유권 이전 → 성능 향상. 전송 후 원본은 사용 불가.
 
 ```javascript
 // ArrayBuffer 전송 (복사 없이 이동)
@@ -1410,7 +1464,7 @@ worker.postMessage({ payload: ab }, { transfer: [ab] });
 
 #### 7.1 MessageChannel
 
-양방향 통신을 위한 전용 채널을 생성한다. 두 개의 `MessagePort`로 구성된다.
+양방향 통신을 위한 전용 채널 생성 → 두 개의 `MessagePort`로 구성.
 
 ```javascript
 const channel = new MessageChannel();
@@ -1429,7 +1483,7 @@ iframe.contentWindow.postMessage('포트 전달', '*', [channel.port2]);
 
 #### 7.2 BroadcastChannel
 
-같은 출처의 모든 탭/창/iframe/워커 간 간편한 메시지 브로드캐스트를 제공한다.
+같은 출처의 모든 탭/창/iframe/워커 간 간편한 메시지 브로드캐스트 제공.
 
 ```javascript
 // 탭 A
@@ -1451,17 +1505,21 @@ bc.close();
 
 MessageChannel vs BroadcastChannel:
 
-| 특성 | MessageChannel | BroadcastChannel |
-|------|---------------|------------------|
-| 통신 방식 | 1:1 (두 포트 간) | 1:N (구독자 전체) |
-| 포트 전달 | 필요 | 불필요 (채널명으로 연결) |
-| 크로스 오리진 | postMessage로 포트 전달 시 가능 | 동일 출처만 |
+- 통신 방식
+  - MessageChannel: 1:1 (두 포트 간)
+  - BroadcastChannel: 1:N (구독자 전체)
+- 포트 전달
+  - MessageChannel: 필요
+  - BroadcastChannel: 불필요 (채널명으로 연결)
+- 크로스 오리진
+  - MessageChannel: postMessage로 포트 전달 시 가능
+  - BroadcastChannel: 동일 출처만
 
 ---
 
 ### 8. Server-Sent Events (SSE)
 
-서버에서 클라이언트로의 단방향 실시간 스트림이다. HTTP 기반이며 자동 재연결을 지원한다.
+서버에서 클라이언트로의 단방향 실시간 스트림 → HTTP 기반, 자동 재연결 지원.
 
 #### 클라이언트
 
@@ -1513,18 +1571,16 @@ data: 여러 줄
 data: 메시지도 가능
 ```
 
-| 필드 | 설명 |
-|------|------|
-| `data:` | 메시지 본문 |
-| `event:` | 이벤트 타입 (기본: `message`) |
-| `id:` | 이벤트 ID (재연결 시 `Last-Event-ID` 헤더로 전송) |
-| `retry:` | 재연결 대기 시간 (ms) |
+- `data:`: 메시지 본문
+- `event:`: 이벤트 타입 (기본: `message`)
+- `id:`: 이벤트 ID (재연결 시 `Last-Event-ID` 헤더로 전송)
+- `retry:`: 재연결 대기 시간 (ms)
 
 ---
 
 ### 9. Cross-document Messaging
 
-서로 다른 출처의 문서(iframe, popup) 간 안전한 통신을 제공한다.
+서로 다른 출처의 문서(iframe, popup) 간 안전한 통신 제공.
 
 ```javascript
 // 보내는 쪽 (부모 페이지)
@@ -1631,7 +1687,7 @@ zone.addEventListener('drop', (e) => {
 });
 ```
 
-> `webkitGetAsEntry()`는 HTML Living Standard에 정의된 API가 아니다. `DataTransferItem`은 HTML 표준이 정의하지만, 이 메서드는 별도의 비표준 사양인 File and Directory Entries API(원래 WebKit이 도입한 벤더 확장)에 속한다. 대부분의 브라우저가 호환성 때문에 구현하고 있지만, 표준화된 대안으로는 File System Access API(`showDirectoryPicker()` 등)를 사용하는 것이 권장된다.
+> `webkitGetAsEntry()`: HTML Living Standard에 정의된 API 아님. `DataTransferItem`은 HTML 표준이 정의하지만, 이 메서드는 별도의 비표준 사양인 File and Directory Entries API(원래 WebKit이 도입한 벤더 확장)에 속함 → 대부분의 브라우저가 호환성 때문에 구현 중이나, 표준화된 대안으로는 File System Access API(`showDirectoryPicker()` 등) 권장.
 
 ---
 
@@ -1730,11 +1786,11 @@ customElements.define('fancy-button', FancyButton, { extends: 'button' });
 <button is="fancy-button">클릭</button>
 ```
 
-> Safari는 Customized Built-in Elements를 지원하지 않는다. Autonomous Custom Element 사용을 권장.
+> Safari: Customized Built-in Elements 미지원 → Autonomous Custom Element 사용 권장.
 
 #### 11.3 ElementInternals
 
-Custom Element가 폼 참여, 접근성, 상태 관리를 네이티브 요소처럼 수행할 수 있게 한다.
+Custom Element가 폼 참여·접근성·상태 관리를 네이티브 요소처럼 수행할 수 있게 함.
 
 ```javascript
 class MyInput extends HTMLElement {
@@ -1798,16 +1854,14 @@ customElements.define('my-input', MyInput);
 
 ### 12. Microdata
 
-HTML에 기계가 읽을 수 있는 구조화된 데이터를 내장하는 메커니즘이다. 주로 Schema.org 어휘와 함께 사용한다.
+HTML에 기계가 읽을 수 있는 구조화된 데이터를 내장하는 메커니즘 → 주로 Schema.org 어휘와 함께 사용.
 
 #### 12.1 기본 문법
 
-| 속성 | 설명 |
-|------|------|
-| `itemscope` | 새로운 아이템(항목)의 범위를 선언 |
-| `itemtype` | 아이템의 타입 (Schema.org URL) |
-| `itemprop` | 속성 이름 |
-| `itemid` | 아이템의 고유 식별자 |
+- `itemscope`: 새로운 아이템(항목)의 범위를 선언
+- `itemtype`: 아이템의 타입 (Schema.org URL)
+- `itemprop`: 속성 이름
+- `itemid`: 아이템의 고유 식별자
 
 #### 12.2 예시: 제품 정보
 
@@ -1833,16 +1887,14 @@ HTML에 기계가 읽을 수 있는 구조화된 데이터를 내장하는 메�
 
 #### 12.3 속성값 추출 규칙
 
-요소에 따라 `itemprop`의 값이 추출되는 방식이 다르다.
+요소에 따라 `itemprop` 값 추출 방식 다름.
 
-| 요소 | 값 소스 |
-|------|---------|
-| `<meta>` | `content` 속성 |
-| `<a>`, `<area>`, `<link>` | `href` 속성 |
-| `<img>`, `<source>`, `<video>`, `<audio>` | `src` 속성 |
-| `<time>` | `datetime` 속성 |
-| `<data>` | `value` 속성 |
-| 기타 요소 | `textContent` |
+- `<meta>`: `content` 속성
+- `<a>`, `<area>`, `<link>`: `href` 속성
+- `<img>`, `<source>`, `<video>`, `<audio>`: `src` 속성
+- `<time>`: `datetime` 속성
+- `<data>`: `value` 속성
+- 기타 요소: `textContent`
 
 #### 12.4 중첩 아이템과 itemid
 
@@ -1862,7 +1914,7 @@ HTML에 기계가 읽을 수 있는 구조화된 데이터를 내장하는 메�
 
 #### 12.5 JavaScript Microdata API (표준에서 제거됨)
 
-과거 HTML 표준은 `document.getItems()`, `HTMLPropertiesCollection` 등 Microdata를 위한 전용 JavaScript API를 정의했으나, 실제 구현이 거의 없어 현재는 HTML Living Standard에서 완전히 제거되었다. 따라서 Microdata 값을 읽으려면 아래처럼 일반 DOM API(`querySelectorAll`, `getAttribute` 등)로 직접 순회해야 한다.
+과거 HTML 표준은 `document.getItems()`, `HTMLPropertiesCollection` 등 Microdata 전용 JavaScript API를 정의했으나 → 실제 구현이 거의 없어 현재는 HTML Living Standard에서 완전히 제거됨. Microdata 값을 읽으려면 일반 DOM API(`querySelectorAll`, `getAttribute` 등)로 직접 순회 필요.
 
 ```javascript
 // itemscope 요소 찾기 (표준 DOM API만 사용)
@@ -1875,7 +1927,7 @@ products.forEach(product => {
 });
 ```
 
-> 검색엔진은 Microdata, JSON-LD, RDFa 중 JSON-LD를 선호하는 추세이지만, Microdata는 HTML과 콘텐츠가 직접 연결되어 동기화 문제가 적다는 장점이 있다.
+> 검색엔진: Microdata·JSON-LD·RDFa 중 JSON-LD 선호 추세 → 다만 Microdata는 HTML과 콘텐츠가 직접 연결되어 동기화 문제가 적은 장점 있음.
 
 ---
 
