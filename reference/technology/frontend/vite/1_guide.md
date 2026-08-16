@@ -494,7 +494,7 @@ export default defineConfig({
 **1. CommonJS 및 UMD 호환성**
 
 - 비ESM 의존성을 개발 중에 네이티브 ESM 형식으로 변환함
-- 지능적인 임포트 분석을 수행하여 동적으로 할당되는 내보내기(React 등)에서도 이름 있는 임포트가 올바르게 작동함
+- 정밀한 임포트 분석을 수행하여 동적으로 할당되는 내보내기(React 등)에서도 이름 있는 임포트가 올바르게 작동함
 
 ```js
 // 기대대로 작동함
@@ -629,7 +629,7 @@ import InlineWorker from './shader.js?worker&inline'
 
 이 디렉터리의 파일은 개발 중에는 루트 경로 `/`에서 서빙되고, 배포 루트에 변경 없이 복사됨. 공개 에셋은 절대 루트 경로를 사용하여 참조함. 예를 들어 `public/icon.png`은 소스 코드에서 `/icon.png`으로 참조해야 함.
 
-특별한 `public` 디렉터리 보장이 필요하지 않다면 에셋 임포트를 권장함.
+`public` 디렉터리의 특수 동작이 필요하지 않다면 에셋 임포트를 권장함.
 
 ### 네이티브 ESM 패턴: `new URL(url, import.meta.url)`
 

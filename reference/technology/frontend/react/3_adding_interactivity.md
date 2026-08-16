@@ -731,7 +731,7 @@ function useState(initialState) {
 
 ### state는 격리되고 비공개임
 
-- state는 화면 위의 컴포넌트 인스턴스에 대해 지역적임
+- state는 화면 위의 컴포넌트 인스턴스 단위로 지역적임
 - **같은 컴포넌트를 두 번 렌더링하면 각 복사본이 완전히 격리된 state를 가짐**
 - 하나를 변경해도 다른 하나에 영향을 주지 않음
 
@@ -768,7 +768,7 @@ export default function Page() {
 
 > 원문: https://react.dev/learn/render-and-commit
 
-- 컴포넌트가 화면에 표시되기 전에 React에 의해 렌더링되어야 함
+- 컴포넌트가 화면에 표시되기 전에 React가 렌더링해야 함
 - 이 과정을 이해하면 코드가 어떻게 실행되는지 파악하고 동작을 설명할 수 있음
 
 ### UI 제공의 3단계
@@ -988,7 +988,7 @@ export default function Counter() {
 ```
 
 - `+3` 버튼을 클릭해도 `number`는 클릭당 1만 증가함
-- **state 설정은 다음 렌더링에 대해서만 변경됨**
+- **state 설정은 다음 렌더링에서만 변경됨**
 - 첫 렌더링에서 `number`는 `0`이므로, 해당 렌더의 `onClick` 핸들러에서 `setNumber(number + 1)`을 호출한 후에도 `number`의 값은 여전히 `0`임
 
 ```js
@@ -1152,7 +1152,7 @@ export default function Counter() {
 
 - 여러 컴포넌트에서 여러 state 변수를 갱신해도 너무 많은 리렌더링을 촉발하지 않음
 - UI가 이벤트 핸들러와 그 안의 코드가 모두 완료될 때까지 갱신되지 않음
-- **배칭(batching)**이라 불리며, React 앱을 훨씬 빠르게 만듦
+- **배칭**(batching)이라 불리며, React 앱을 훨씬 빠르게 만듦
 - 일부 변수만 갱신된 "중간 완료" 렌더를 다루지 않아도 됨
 
 참고:
@@ -1306,7 +1306,7 @@ function delay(ms) {
 }
 ```
 
-- updater function을 사용하면 클릭 시점의 state가 아닌 **최신** state에 대해 증감 연산을 수행함
+- updater function을 사용하면 클릭 시점의 state가 아닌 **최신** state 기준으로 증감 연산을 수행함
 
 ### 챌린지 -- state 대기열 직접 구현하기
 
@@ -1351,7 +1351,7 @@ setX(5); // x state가 0에서 5로 변경됨. 숫자 0 자체는 변하지 않�
 ```
 
 - state의 객체는 기술적으로 변경 가능하지만, 불변인 것처럼 취급해야 함
-- 객체의 내용을 직접 변경하는 것을 **변이(mutation)**라 부름
+- 객체의 내용을 직접 변경하는 것을 **변이**(mutation)라 부름
 
 ```js
 const [position, setPosition] = useState({ x: 0, y: 0 });
