@@ -1322,7 +1322,7 @@ right2: 4
 #### 7.6 전파(Propagation)
 
 - `FiberRef`와 비교되는 `ThreadLocal`의 동작 먼저 살펴봄
-  - 스레드 `A`가 `ThreadLocal` 값을 가지고 있고, 스레드 `A`가 새 스레드(스레드 `B`)를 생성한다고 가정
+  - 스레드 `A`가 `ThreadLocal` 값을 갖고, 스레드 `A`가 새 스레드(스레드 `B`)를 생성한다고 가정
   - 스레드 `B`가 동일한 `ThreadLocal`을 참조하면 `A`의 값이 아닌 `ThreadLocal`의 기본값을 봄
   - 즉 `ThreadLocal`은 스레드 그래프 전반에 값을 전파하지 않음 → 한 스레드가 다른 스레드를 생성할 때 `ThreadLocal` 값은 부모에서 자식으로 전파되지 않음
 

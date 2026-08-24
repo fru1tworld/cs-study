@@ -106,7 +106,7 @@ class Editor(formatter: Formatter, compiler: Compiler) {
 }
 ```
 
-**2단계: 인터페이스를 통한 분리(Decoupling via Interfaces)** — 구체 클래스(concrete class)가 아닌 트레잇(trait)에 대해 프로그래밍 → 테스트 시 구현 교체 용이.
+**2단계: 인터페이스를 통한 분리(Decoupling via Interfaces)** — 구체 클래스(concrete class)가 아닌 트레잇(trait)을 대상으로 프로그래밍 → 테스트 시 구현 교체 용이.
 
 **3단계: 중앙 집중식 매핑(Centralized Mapping)** — `ZEnvironment`를 타입 레벨 맵(type-level map)으로 사용해 인터페이스와 구현을 바인딩(bind) → 코드 전반의 수동 배선(manual wiring) 제거.
 
@@ -141,7 +141,7 @@ ZIO가 제공하는 세 가지 주요 컨텍스트 추상화(contextual abstract
 
 ZIO의 환경 기능을 사용하면 가능해지는 것.
 
-- 구현(implementation)이 아닌 인터페이스(interface)에 대해 코딩
+- 구현(implementation)이 아닌 인터페이스(interface)를 대상으로 코딩
 - 서비스 모킹(mocking)을 통한 테스트 가능한 이펙트 작성
 - 강력한 타입 추론(type inference)과 함께 서비스를 합성
 
@@ -816,3 +816,706 @@ object MainApp extends ZIOAppDefault {
 - [RLayer](https://zio.dev/reference/contextual/rlayer/)
 - [URLayer](https://zio.dev/reference/contextual/urlayer/)
 - [ULayer](https://zio.dev/reference/contextual/ulayer/)
+
+---
+
+## ZIO 서비스 작성 패턴(Writing ZIO Services)
+
+> 원본: https://zio.dev/reference/service-pattern/introduction
+
+---
+
+### 목차
+
+1. [서비스/모듈 패턴 개요(Introduction)](#1-서비스모듈-패턴-개요introduction)
+2. [서비스 패턴(Service Pattern)](#2-서비스-패턴service-pattern)
+3. [ZIO 환경의 세 가지 법칙(The Three Laws of ZIO Environment)](#3-zio-환경의-세-가지-법칙the-three-laws-of-zio-environment)
+4. [다형적 서비스(Polymorphic Services)](#4-다형적-서비스polymorphic-services)
+5. [재로드 가능한 서비스(Reloadable Services)](#5-재로드-가능한-서비스reloadable-services)
+6. [참고 자료](#6-참고-자료)
+
+---
+
+### 1. 서비스/모듈 패턴 개요(Introduction)
+
+#### 객체지향 방식(OOP Approach)
+
+전통적인 객체지향 프로그래밍에서 서비스는 다음 세 요소로 구성.
+
+- 트레이트(trait)로 서비스 인터페이스(interface)를 정의
+- 클래스(class)로 그 인터페이스를 구현
+- 생성자(constructor)를 통해 의존성을 주입
+
+#### ZIO 방식(ZIO Approach)
+
+ZIO는 이와 동일한 발상을 함수형으로 재구성. 핵심 원칙: "프로그램을 구현이 아닌 인터페이스에 맞춰 작성"하고, `ZLayer`를 서비스의 생성자(constructor)처럼 활용. 트레이트로 서비스의 계약(contract)을 정의하고, `ZLayer`로 그 구현을 만들고 조립(assemble)함으로써 테스트 가능성(testability)과 모듈성(modularity)을 확보.
+
+---
+
+### 2. 서비스 패턴(Service Pattern)
+
+서비스 패턴은 네 가지 요소로 구성.
+
+#### 2.1 서비스 정의(Service Definition)
+
+트레이트로 서비스 인터페이스 정의.
+
+```scala
+trait DocRepo {
+  def get(id: String): ZIO[Any, Throwable, Doc]
+  def save(document: Doc): ZIO[Any, Throwable, String]
+  def delete(id: String): ZIO[Any, Throwable, Unit]
+  def findByTitle(title: String): ZIO[Any, Throwable, List[Doc]]
+}
+```
+
+#### 2.2 서비스 구현(Service Implementation)
+
+Scala 클래스로 트레이트를 구현.
+
+```scala
+final class DocRepoLive() extends DocRepo {
+  override def get(id: String): ZIO[Any, Throwable, Doc] = ???
+  override def save(document: Doc): ZIO[Any, Throwable, String] = ???
+  override def delete(id: String): ZIO[Any, Throwable, Unit] = ???
+  override def findByTitle(title: String): ZIO[Any, Throwable, List[Doc]] = ???
+}
+```
+
+#### 2.3 의존성 관리(Service Dependencies)
+
+구현체가 다른 서비스에 의존한다면 생성자 주입(constructor injection) 방식으로 받음. 아래 예제에서 `DocRepoLive`는 `MetadataRepo`와 `BlobStorage`에 의존.
+
+```scala
+final class DocRepoLive(
+  metadataRepo: MetadataRepo,
+  blobStorage: BlobStorage
+) extends DocRepo {
+  override def get(id: String): ZIO[Any, Throwable, Doc] =
+    (metadataRepo.get(id) <&> blobStorage.get(id)).map {
+      case (metadata, content) =>
+        Doc(
+          title = metadata.title,
+          description = metadata.description,
+          language = metadata.language,
+          format = metadata.format,
+          content = content
+        )
+    }
+  // 나머지 메서드 구현...
+}
+```
+
+#### 2.4 ZLayer 정의(Constructor)
+
+컴패니언 객체(companion object)에서 서비스 구현을 `ZLayer`로 감싸 정의. 이 레이어가 곧 서비스의 생성자 역할.
+
+```scala
+object DocRepo {
+  val live: ZLayer[BlobStorage & MetadataRepo, Nothing, DocRepo] =
+    ZLayer {
+      for {
+        metadataRepo <- ZIO.service[MetadataRepo]
+        blobStorage  <- ZIO.service[BlobStorage]
+      } yield new DocRepoLive(metadataRepo, blobStorage)
+    }
+}
+```
+
+#### 2.5 애플리케이션 조립(Assembling the Application)
+
+`ZIOAppDefault`를 확장한 진입점에서 필요한 모든 레이어를 제공.
+
+```scala
+object MainApp extends ZIOAppDefault {
+  val app = for {
+    docRepo <- ZIO.service[DocRepo]
+    // 비즈니스 로직...
+  } yield ()
+
+  def run = app.provide(
+    DocRepo.live,
+    InmemoryBlobStorage.layer,
+    InmemoryMetadataRepo.layer
+  )
+}
+```
+
+이 패턴은 객체지향 프로그래밍의 모범 사례(생성자 주입, 인터페이스 지향 설계)를 그대로 따르면서도, `ZLayer`의 합성성·자원 안전성 같은 함수형 프로그래밍의 이점을 함께 누림.
+
+---
+
+### 3. ZIO 환경의 세 가지 법칙(The Three Laws of ZIO Environment)
+
+서비스 패턴을 올바르게 적용하려면 다음 세 가지 법칙을 지켜야 함.
+
+#### 법칙 1: 서비스 인터페이스(트레이트)
+
+서비스 인터페이스를 정의할 때는 그 서비스 자신의 의존성을 환경(`R`)에 반영하면 안 됨. 구현 세부사항(implementation detail)을 인터페이스에 노출시키지 말아야 한다는 원칙.
+
+잘못된 예 — `DocRepo`가 `BlobStorage`와 `MetadataRepo`에 의존한다는 사실이 트레이트 시그니처에 새어 나옴.
+
+```scala
+trait DocRepo {
+  def save(document: Doc): ZIO[BlobStorage & MetadataRepo, Throwable, String]
+}
+```
+
+올바른 예 — 인터페이스는 `Any` 환경만 요구.
+
+```scala
+trait DocRepo {
+  def save(document: Doc): ZIO[Any, Throwable, String]
+}
+```
+
+#### 법칙 2: 서비스 구현(클래스)
+
+서비스 인터페이스를 구현할 때는 모든 의존성을 클래스 생성자에서 받아야 함. `ZIO.service`로 환경에서 의존성을 조회하는 작업은 `ZLayer` 정의 시점(레이어 생성 과정)에서 끝나야 하며, 개별 메서드 안에서 반복되어서는 안 됨.
+
+```scala
+case class DocRepoImpl(
+    metadataRepo: MetadataRepo,
+    blobStorage: BlobStorage) extends DocRepo {
+  override def delete(id: String): ZIO[Any, Throwable, Unit] =
+    for {
+      _ <- blobStorage.delete(id)
+      _ <- metadataRepo.delete(id)
+    } yield ()
+}
+
+object DocRepoImpl {
+  val layer: ZLayer[BlobStorage with MetadataRepo, Nothing, DocRepo] =
+    ZLayer {
+      for {
+        metadataRepo <- ZIO.service[MetadataRepo]
+        blobStorage  <- ZIO.service[BlobStorage]
+      } yield DocRepoImpl(metadataRepo, blobStorage)
+    }
+}
+```
+
+#### 법칙 3: 비즈니스 로직
+
+비즈니스 로직에서는 ZIO 환경을 통해 서비스를 소비(consume)해야 함 → `ZIO.serviceWithZIO[Service]`로 접근.
+
+```scala
+object MainApp extends ZIOAppDefault {
+  val app =
+    for {
+      id <-
+        ZIO.serviceWithZIO[DocRepo](_.save(
+          Doc("제목", "설명", "언어", "형식", "내용".getBytes())
+        ))
+      doc <- ZIO.serviceWithZIO[DocRepo](_.get(id))
+      _   <- Console.printLine(s"문서 ID: $id")
+      _   <- ZIO.serviceWithZIO[DocRepo](_.delete(id))
+    } yield ()
+
+  def run =
+    app.provide(
+      DocRepoImpl.layer,
+      InmemoryBlobStorage.layer,
+      InmemoryMetadataRepo.layer
+    )
+}
+```
+
+#### 예외 상황(Exceptions)
+
+일부 경우에는 트레이트 시그니처에 환경을 노출하는 것이 허용됨.
+
+- **HTTP 요청 컨텍스트**: `ZIO[HttpRequest, ...]` — 구현 세부사항이 아니라 인터페이스 의미론(semantics)의 일부
+- **데이터베이스 트랜잭션**: `ZIO[DatabaseTransaction, ...]` — 트랜잭션 안에서의 동작이 서비스 자체의 핵심 의미론에 해당
+
+두 경우 모두 "로컬 컨텍스트(local context)"로서 구현과 무관하게 독립적이므로 법칙 1의 예외로 허용.
+
+---
+
+### 4. 다형적 서비스(Polymorphic Services)
+
+타입 파라미터를 가진 서비스 인터페이스를 작성할 때는 `Tag` 타입 클래스가 필요. `ZEnvironment`는 서비스 타입에서 구현으로의 타입 레벨 매핑(type-level mapping)으로 뒷받침되는데, 이 매핑은 내부적으로 `izumi.reflect.Tag`에 의존하기 때문.
+
+#### 문제 상황(The Problem)
+
+타입 파라미터가 있는 서비스.
+
+```scala
+trait KeyValueStore[K, V, E, F[_, _]] {
+  def get(key: K): F[E, V]
+  def set(key: K, value: V): F[E, V]
+  def remove(key: K): F[E, Unit]
+}
+```
+
+`Tag` 없이 접근자 메서드를 작성하면 컴파일 에러 발생.
+
+```scala
+def get[K, V, E](key: K): ZIO[KeyValueStore[K, V, E, IO], E, V] =
+  ZIO.serviceWithZIO[KeyValueStore[K, V, E, IO]](_.get(key))
+// could not find implicit value for izumi.reflect.Tag[K]
+```
+
+#### 해결책: Tag 컨텍스트 바운드 추가
+
+타입 파라미터마다 `Tag` 컨텍스트 바운드(context bound)를 붙여 해결.
+
+```scala
+object KeyValueStore {
+  def get[K: Tag, V: Tag, E: Tag](key: K):
+    ZIO[KeyValueStore[K, V, E, IO], E, V] =
+    ZIO.serviceWithZIO[KeyValueStore[K, V, E, IO]](_.get(key))
+
+  def set[K: Tag, V: Tag, E: Tag](key: K, value: V):
+    ZIO[KeyValueStore[K, V, E, IO], E, V] =
+    ZIO.serviceWithZIO[KeyValueStore[K, V, E, IO]](_.set(key, value))
+
+  def remove[K: Tag, V: Tag, E: Tag](key: K):
+    ZIO[KeyValueStore[K, V, E, IO], E, Unit] =
+    ZIO.serviceWithZIO(_.remove(key))
+}
+```
+
+구현 예제:
+
+```scala
+case class InmemoryKeyValueStore(map: Ref[Map[String, Int]])
+  extends KeyValueStore[String, Int, String, IO] {
+  override def get(key: String): IO[String, Int] =
+    map.get.map(_.get(key)).someOrFail(s"$key not found")
+  override def set(key: String, value: Int): IO[String, Int] =
+    map.update(_.updated(key, value)).map(_ => value)
+  override def remove(key: String): IO[String, Unit] =
+    map.update(_.removed(key))
+}
+
+object InmemoryKeyValueStore {
+  def layer: ULayer[KeyValueStore[String, Int, String, IO]] =
+    ZLayer {
+      Ref.make(Map[String, Int]()).map(InmemoryKeyValueStore.apply)
+    }
+}
+```
+
+사용 예제:
+
+```scala
+object MainApp extends ZIOAppDefault {
+  val myApp: ZIO[KeyValueStore[String, Int, String, IO], String, Unit] =
+    for {
+      _ <- KeyValueStore.set[String, Int, String]("key1", 3).debug
+      _ <- KeyValueStore.get[String, Int, String]("key1").debug
+      _ <- KeyValueStore.remove[String, Int, String]("key1")
+      _ <- KeyValueStore.get[String, Int, String]("key1").either.debug
+    } yield ()
+
+  def run = myApp.provide(InmemoryKeyValueStore.layer)
+}
+// 출력: 3, 3, Left(key1 not found)
+```
+
+#### 고차 타입 파라미터 지원(Higher-Kinded Type Parameters)
+
+`F[_, _]`처럼 고차 타입 생성자(higher-kinded type constructor)까지 다형적으로 다루려면 `TagKK` 컨텍스트 바운드 추가.
+
+```scala
+def get[K: Tag, V: Tag, E: Tag, F[_, _]: TagKK](key: K):
+  ZIO[KeyValueStore[K, V, E, F], Nothing, F[E, V]] =
+  ZIO.serviceWith[KeyValueStore[K, V, E, F]](_.get(key))
+```
+
+핵심: 다형적인 서비스 코드를 작성할 때는 항상 타입 파라미터에 `Tag`(단일 타입) 또는 `TagKK`(고차 타입 생성자) 컨텍스트 바운드를 명시.
+
+---
+
+### 5. 재로드 가능한 서비스(Reloadable Services)
+
+#### 5.1 개요(Overview)
+
+재로드 가능한 서비스(reloadable service) → 애플리케이션을 재시작하지 않고도 런타임(runtime)에 서비스를 다시 로드(reload)할 수 있게 하는 패턴. 서비스를 리로드하면 기존 리소스(파일, 네트워크 연결, DB 연결 등)가 자동으로 해제되고 새 리소스가 할당됨.
+
+대표적인 사용 사례:
+
+- 설정(configuration) 변경 시 서비스 리로드
+- 일정한 간격(예: n분마다)으로 스케줄된 리로드
+- 데이터베이스 스키마 변경 시 리로드
+
+#### 5.2 Reloadable 데이터 타입
+
+```scala
+case class Reloadable[Service](
+  scopedRef: ScopedRef[Service],
+  reload: IO[Any, Unit]
+) {
+  def get: UIO[Service] = scopedRef.get
+  def reloadFork: UIO[Unit] = reload.ignoreLogged.forkDaemon.unit
+}
+```
+
+- `get` — 현재 관리 중인 서비스 인스턴스를 반환
+- `reload` — 서비스를 리로드(기존 리소스 해제 후 새 리소스 할당)
+
+#### 5.3 수동 리로드(Reloadable.manual)
+
+명시적으로 `reload`를 호출해야 하는 방식.
+
+```scala
+object Counter {
+  val live: ZLayer[Any, Nothing, Counter] = ZLayer.scoped {
+    for {
+      id  <- Ref.make(UUID.randomUUID())
+      ref <- Ref.make(0)
+      service = CounterLive(id, ref)
+      _ <- service.acquire
+      _ <- ZIO.addFinalizer(service.release)
+    } yield service
+  }
+
+  val reloadable: ZLayer[Any, Nothing, Reloadable[Counter]] =
+    Reloadable.manual(live)
+    // 또는: live.reloadableManual
+}
+```
+
+```scala
+object ReloadableExample extends ZIOAppDefault {
+  val app: ZIO[Reloadable[Counter], Any, Unit] =
+    for {
+      reloadable <- ZIO.service[Reloadable[Counter]]
+      counter    <- reloadable.get
+      _          <- counter.increment
+      _          <- counter.increment
+      _          <- counter.increment
+      _          <- counter.get.debug("Counter value is")
+      _          <- reloadable.reload *> ZIO.sleep(1.second)
+      counter    <- reloadable.get
+      _          <- counter.increment
+      _          <- counter.increment
+      _          <- counter.get.debug("Counter value is")
+    } yield ()
+
+  def run = app.provide(Counter.reloadable)
+}
+```
+
+실행 결과 — 리로드 시점에 기존 인스턴스가 해제(release)되고 새 인스턴스가 획득(acquire)되며, 카운터 값이 0으로 리셋됨.
+
+```
+Acquired counter d04519a3-7332-43ca-bc86-f61fbaf2e3d6
+Counter value: 3
+Released counter d04519a3-7332-43ca-bc86-f61fbaf2e3d6
+Acquired counter bc66ba00-0b50-4e6e-9f60-c38b6e140a82
+Counter value: 2
+```
+
+#### 5.4 자동 리로드(Reloadable.auto)
+
+`Schedule`을 지정하여 일정한 주기마다 자동으로 리로드.
+
+```scala
+object Counter {
+  val live: ZLayer[Any, Nothing, Counter] = ???
+
+  val autoReloadable: ZLayer[Any, Nothing, Reloadable[Counter]] =
+    Reloadable.auto(live, Schedule.fixed(5.seconds))
+    // 또는: live.reloadableAuto(Schedule.fixed(5.seconds))
+}
+```
+
+5초마다 자동으로 리로드되므로 애플리케이션 코드에서 수동으로 `reload`를 호출할 필요 없음.
+
+#### 5.5 ServiceReloader(zio-macros)
+
+`zio-macros` 라이브러리가 제공하는 `ServiceReloader`를 사용하면 `Reloadable` 래퍼 없이 서비스에 직접 접근하면서도 리로드 가능.
+
+```scala
+libraryDependencies ++= Seq("dev.zio" %% "zio-macros" % "<version>")
+```
+
+```scala
+trait ServiceReloader {
+  def register[A: Tag: IsReloadable](
+    serviceLayer: ZLayer[Any, Any, A]
+  ): IO[ServiceReloader.Error, A]
+  def reload[A: Tag]: IO[ServiceReloader.Error, Unit]
+}
+```
+
+```scala
+import zio._
+import zio.macros._
+
+object Counter {
+  val live: ZLayer[Any, Nothing, Counter] = ???
+
+  val reloadable: ZLayer[ServiceReloader, ServiceReloader.Error, Counter] =
+    live.reloadable
+}
+```
+
+```scala
+object ServiceReloaderExample extends ZIOAppDefault {
+  def app: ZIO[Counter with ServiceReloader, ServiceReloader.Error, Unit] =
+    for {
+      _ <- Counter.increment
+      _ <- Counter.increment
+      _ <- Counter.increment
+      _ <- Counter.get.debug("Counter value")
+      _ <- ServiceReloader.reload[Counter]
+      _ <- ZIO.sleep(1.seconds)
+      _ <- Counter.increment
+      _ <- Counter.increment
+      _ <- Counter.get.debug("Counter value")
+    } yield ()
+
+  def run = app.provide(Counter.reloadable, ServiceReloader.live)
+}
+```
+
+리로드 워크플로를 애플리케이션 로직과 병렬로 실행하는 것도 가능.
+
+```scala
+object ServiceReloaderParallelExample extends ZIOAppDefault {
+  def reloadWorkflow =
+    ServiceReloader.reload[Counter].delay(5.seconds)
+
+  def app: ZIO[Counter with ServiceReloader, ServiceReloader.Error, Unit] =
+    for {
+      _ <- Counter.increment
+      _ <- Counter.increment
+      _ <- Counter.increment
+      _ <- Counter.get.debug("Counter value")
+      _ <- ZIO.sleep(6.seconds)
+      _ <- Counter.increment
+      _ <- Counter.increment
+      _ <- Counter.increment
+      _ <- Counter.get.debug("Counter value")
+    } yield ()
+
+  def run = (app <&> reloadWorkflow).provide(
+    Counter.reloadable,
+    ServiceReloader.live
+  )
+}
+```
+
+#### 5.6 세 방식 비교
+
+- `Reloadable.manual` — `reloadable.reload`를 명시적으로 호출. 코드가 다소 장황(boilerplate)하지만 리로드 시점을 완전히 제어 가능
+- `Reloadable.auto` — `Schedule` 기반으로 자동 리로드. 정기적인 갱신에 적합
+- `ServiceReloader` — `ServiceReloader.reload[A]`로 더 간결하게 사용 가능하지만 `zio-macros` 의존성 필요, 서비스에 직접 접근
+
+---
+
+### 6. 참고 자료
+
+- [Introduction to Writing ZIO Services](https://zio.dev/reference/service-pattern/introduction)
+- [Service Pattern](https://zio.dev/reference/service-pattern/)
+- [The Three Laws of ZIO Environment](https://zio.dev/reference/service-pattern/the-three-laws-of-zio-environment)
+- [Defining Polymorphic Services in ZIO](https://zio.dev/reference/service-pattern/defining-polymorphic-services-in-zio)
+- [Reloadable Services](https://zio.dev/reference/service-pattern/reloadable-services)
+
+---
+
+## ZIO 설정 관리(Configuration)
+
+> 원본: https://zio.dev/reference/configuration/
+
+---
+
+### 목차
+
+1. [설정 시스템 개요(Overview)](#1-설정-시스템-개요overview)
+2. [원시 설정(Primitive Configs)](#2-원시-설정primitive-configs)
+3. [커스텀 설정 정의(Custom Configs)](#3-커스텀-설정-정의custom-configs)
+4. [중첩 설정(Nested Configs)](#4-중첩-설정nested-configs)
+5. [ConfigProvider(설정 백엔드)](#5-configprovider설정-백엔드)
+6. [커스텀 ConfigProvider와 Runtime.setConfigProvider](#6-커스텀-configprovider와-runtimesetconfigprovider)
+7. [테스트에서 설정 모킹하기](#7-테스트에서-설정-모킹하기)
+8. [참고 자료](#8-참고-자료)
+
+---
+
+### 1. 설정 시스템 개요(Overview)
+
+ZIO의 설정 시스템은 세 가지 요소로 구성.
+
+1. **`Config[A]` 설명(description)** — 어떤 설정 데이터가 필요한지 선언적으로 기술하는 타입
+2. **프론트엔드(front-end)** — `ZIO.config`로 애플리케이션이 설정을 로드
+3. **백엔드(back-end)** — `ConfigProvider`가 실제 소스(환경 변수, 시스템 프로퍼티, 콘솔 등)로부터 데이터를 읽어들임
+
+이 구조 덕분에 애플리케이션 코드는 설정이 "어디서" 오는지(환경 변수인지, 파일인지, 원격 설정 서버인지)에 신경 쓰지 않고 "무엇이" 필요한지만 선언 가능 → 소스 교체가 `ConfigProvider` 교체만으로 끝남.
+
+---
+
+### 2. 원시 설정(Primitive Configs)
+
+`Config.string`, `Config.int` 같은 원시 설정 생성자로 개별 값을 선언하고, `ZIO.config`로 로드.
+
+```scala
+import zio._
+
+object MainApp extends ZIOAppDefault {
+  def run = {
+    for {
+      host <- ZIO.config(Config.string("host"))
+      port <- ZIO.config(Config.int("port"))
+      _    <- Console.printLine(s"Application started: $host:$port")
+    } yield ()
+  }
+}
+```
+
+기본 `ConfigProvider`는 환경 변수와 시스템 프로퍼티를 순서대로 탐색.
+
+```bash
+HOST=localhost PORT=8080 sbt "runMain MainApp"
+# 또는
+sbt -Dhost=localhost -Dport=8080 "runMain MainApp"
+```
+
+---
+
+### 3. 커스텀 설정 정의(Custom Configs)
+
+#### 3.1 단순 데이터 타입
+
+여러 원시 설정을 `++`로 결합하고 `map`으로 케이스 클래스에 매핑하여 커스텀 `Config` 인스턴스 정의.
+
+```scala
+case class HostPort(host: String, port: Int)
+
+object HostPort {
+  implicit val config: Config[HostPort] =
+    (Config.string("host") ++ Config.int("port")).map { case (host, port) =>
+      HostPort(host, port)
+    }
+}
+
+for {
+  config <- ZIO.config[HostPort]
+  _      <- Console.printLine(s"Application started: $config")
+} yield ()
+```
+
+#### 3.2 컬렉션 설정
+
+`Config.listOf`로 여러 개의 설정 값을 리스트로 한 번에 로드 가능.
+
+```scala
+case class HostPorts(hostPorts: List[HostPort])
+
+object HostPorts {
+  implicit val config: Config[HostPorts] =
+    Config.listOf(HostPort.config).map(HostPorts(_))
+}
+
+for {
+  config <- ZIO.config[HostPorts]
+  _      <- Console.printLine(s"Application started with:")
+  _      <- ZIO.foreachDiscard(config.hostPorts)(e =>
+              Console.printLine(s"  - http://${e.host}:${e.port}"))
+} yield ()
+```
+
+```bash
+HOST=host1,host2,host3 PORT=8080,8081,8082 sbt "runMain MainApp"
+```
+
+---
+
+### 4. 중첩 설정(Nested Configs)
+
+`nested`로 설정에 접두사(prefix)를 붙여 중첩 구조를 표현 가능.
+
+```scala
+case class ServiceConfig(hostPort: HostPort, timeout: Int)
+
+object ServiceConfig {
+  implicit val config: Config[ServiceConfig] =
+    (HostPort.config.nested("hostport") ++ Config.int("timeout")).map {
+      case (a, b) => ServiceConfig(a, b)
+    }
+}
+```
+
+이 정의는 다음 키들로 값을 조회.
+
+- 환경 변수: `HOSTPORT_HOST`, `HOSTPORT_PORT`, `TIMEOUT`
+- 시스템 프로퍼티: `hostport.host`, `hostport.port`, `timeout`
+
+---
+
+### 5. ConfigProvider(설정 백엔드)
+
+`ConfigProvider`는 `Config[A]` 설명을 실제 값으로 채워 넣는 백엔드. ZIO가 기본으로 제공하는 프로바이더.
+
+```scala
+ConfigProvider.defaultProvider  // 환경변수 → 시스템 프로퍼티 순으로 탐색
+ConfigProvider.envProvider      // 환경변수만 탐색
+ConfigProvider.propsProvider    // 시스템 프로퍼티만 탐색
+ConfigProvider.consoleProvider  // 콘솔 입력으로부터 값을 읽음
+```
+
+---
+
+### 6. 커스텀 ConfigProvider와 Runtime.setConfigProvider
+
+`Runtime.setConfigProvider`를 `bootstrap` 레이어에 설치하면 애플리케이션 전역의 설정 백엔드를 교체 가능.
+
+```scala
+import zio._
+
+object MainAppScoped extends ZIOAppDefault {
+  override val bootstrap: ZLayer[Any, Nothing, Unit] =
+    Runtime.setConfigProvider(ConfigProvider.consoleProvider)
+
+  def run =
+    for {
+      host <- ZIO.config(Config.string("host"))
+      port <- ZIO.config(Config.int("port"))
+      _    <- Console.printLine(s"Application started: http://$host:$port")
+    } yield ()
+}
+```
+
+이 방식으로 실행 환경(로컬 개발, CI, 운영)에 따라 설정 소스(콘솔 입력, 환경 변수, 원격 설정 서버 등)를 자유롭게 교체 가능.
+
+---
+
+### 7. 테스트에서 설정 모킹하기
+
+테스트에서는 `ConfigProvider.fromMap`으로 인메모리 맵 기반 프로바이더를 만들어 실제 환경 변수·시스템 프로퍼티 없이 설정을 모킹(mocking) 가능.
+
+```scala
+import zio._
+import zio.test._
+
+object MyServiceTest extends ZIOSpecDefault {
+  val mockConfigProvider: ZLayer[Any, Nothing, Unit] =
+    Runtime.setConfigProvider(
+      ConfigProvider.fromMap(Map("timeout" -> "5s"))
+    )
+
+  def myService: ZIO[Any, Config.Error, Double] = ???
+
+  override def spec = {
+    val expected: Double = ???
+    test("test myService") {
+      for {
+        result <- myService
+      } yield assertTrue(result == expected)
+    }
+  }.provideLayer(mockConfigProvider)
+}
+```
+
+`Runtime.setConfigProvider`로 만든 레이어를 `provideLayer`로 테스트 스펙에 주입 → 실제 시스템 환경에 전혀 의존하지 않는 결정론적(deterministic) 설정 테스트 작성 가능.
+
+---
+
+### 8. 참고 자료
+
+- [Configuration | ZIO](https://zio.dev/reference/configuration/)
+- [Config | ZIO](https://zio.dev/reference/configuration/config)
+- [ConfigProvider | ZIO](https://zio.dev/reference/configuration/configprovider)

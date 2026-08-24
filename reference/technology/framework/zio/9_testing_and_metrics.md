@@ -842,9 +842,114 @@ val tuples: Gen[Any, (Int, Double)] =
 
 ### 12. 동적 테스트 생성(Dynamic Test Generation)
 
-ZIO에서 테스트는 동적(dynamic)임 → 컴파일 타임(compile time)에 정적으로(statically) 정의될 필요 없음.
+#### 핵심 개념(Core Concept)
 
-외부 소스(예: CSV 데이터)로부터 테스트 데이터를 불러와 런타임에 테스트 스펙(spec)을 동적으로 생성 가능. 불러온 파라미터를 기반으로 테스트를 구성하는 `makeTest` 함수를 사용하여 데이터를 개별 테스트 스펙으로 변환하는 것이 일반적인 패턴.
+ZIO에서 테스트는 동적(dynamic)임 → 컴파일 타임(compile time)에 정적으로(statically) 정의될 필요 없음. 외부 소스(예: CSV 데이터)로부터 테스트 데이터를 불러와 런타임에 테스트 스펙(spec)을 동적으로 생성 가능.
+
+#### 예제: CSV로부터 덧셈 테스트 생성하기(Generating Addition Tests from a CSV File)
+
+`add` 함수의 다양한 입력·출력 조합을 검증하는 테스트를 CSV 파일에서 읽어와 동적으로 만드는 예제.
+
+`src/test/resources/test-data.csv` 파일:
+
+```
+0, 0, 0
+1, 0, 1
+0, 1, 1
+0, -1, -1
+-1, 0, -1
+1, 1, 2
+1, -1, 0
+-1, 1, 0
+```
+
+각 줄은 `(a, b, expected)` 형태 → `add(a, b)`가 `expected`와 같아야 함을 나타냄.
+
+CSV 파일을 읽어 `(Int, Int) → Int` 튜플 목록으로 변환하는 `loadTestData` 함수:
+
+```scala
+def loadTestData: Task[List[((Int, Int), Int)]] =
+  ZIO.attemptBlocking(
+    scala.io.Source
+      .fromResource("test-data.csv")
+      .getLines()
+      .toList
+      .map(_.split(',').map(_.trim))
+      .map(i => ((i(0).toInt, i(1).toInt), i(2).toInt))
+  )
+```
+
+불러온 파라미터 하나로부터 개별 `Spec`을 만드는 `makeTest` 함수:
+
+```scala
+def makeTest(a: Int, b: Int)(expected: Int): Spec[Any, Nothing] =
+  test(s"test add($a, $b) == $expected") {
+    assertTrue(add(a, b) == expected)
+  }
+```
+
+로드된 전체 테스트 데이터를 `Spec` 목록으로 변환하는 `makeTests` 함수:
+
+```scala
+def makeTests: ZIO[Any, Throwable, List[Spec[Any, Nothing]]] =
+  loadTestData.map { testData =>
+    testData.map { case ((a, b), expected) =>
+      makeTest(a, b)(expected)
+    }
+  }
+```
+
+`ZIOSpecDefault`로 이 동적 테스트들을 실행하는 전체 예제:
+
+```scala
+import zio._
+import zio.test._
+
+def add(a: Int, b: Int): Int = a + b
+
+def loadTestData: Task[List[((Int, Int), Int)]] =
+  ZIO.attemptBlocking(
+    scala.io.Source
+      .fromResource("test-data.csv")
+      .getLines()
+      .toList
+      .map(_.split(',').map(_.trim))
+      .map(i => ((i(0).toInt, i(1).toInt), i(2).toInt))
+  )
+
+def makeTest(a: Int, b: Int)(expected: Int): Spec[Any, Nothing] =
+  test(s"test add($a, $b) == $expected") {
+    assertTrue(add(a, b) == expected)
+  }
+
+def makeTests: ZIO[Any, Throwable, List[Spec[Any, Nothing]]] =
+  loadTestData.map { testData =>
+    testData.map { case ((a, b), expected) =>
+      makeTest(a, b)(expected)
+    }
+  }
+
+object AdditionSpec extends ZIOSpecDefault {
+  override def spec = suite("add")(makeTests)
+}
+```
+
+`suite`의 인자로 `Spec` 목록을 담은 효과(`ZIO[Any, Throwable, List[Spec[Any, Nothing]]]`)를 직접 넘길 수 있음 → 스펙 트리(spec tree) 자체가 효과적으로(effectfully) 구성될 수 있기 때문. 실행 결과:
+
+```
++ add
+  + test add(0, 0) == 0
+  + test add(1, 0) == 1
+  + test add(0, -1) == -1
+  + test add(0, 1) == 1
+  + test add(-1, 1) == 0
+  + test add(1, -1) == 0
+  + test add(1, 1) == 2
+  + test add(-1, 0) == -1
+8 tests passed. 0 tests failed. 0 tests ignored.
+```
+
+CSV의 각 행이 독립적인 테스트 케이스로 변환되어 8개의 테스트가 모두 통과함을 확인 가능. 이 패턴 → 대량의 테스트 데이터를 코드베이스 밖에 두고 관리하거나, 데이터베이스·API 등 다른 외부 소스로부터 테스트 케이스를 생성해야 할 때 유용.
 
 ---
 
@@ -1552,7 +1657,7 @@ Random.nextDoubleBetween(100, 500) @@ summary
 
 `Frequency` 메트릭: "지정된 값들의 발생 횟수(the number of occurrences of specified values)"를 나타냄. 자동으로 확장되는(auto-expanding) 카운터 집합처럼 동작 → 새로운 값이 관측되면 그 값에 대한 카운터가 자동으로 생성됨.
 
-기술적으로 프리퀀시는 "같은 이름과 태그(tags)를 공유하는 관련 카운터들의 집합(a set of related counters sharing the same name and tags)"으로 구성됨. 이 카운터들은 추가로 설정 가능한 태그(configurable tag)에 의해 서로 구별되며, 그 태그의 값들이 관측된 서로 다른 값(distinct values)을 나타냄.
+기술적으로 프리퀀시는 "같은 이름과 태그(tags)를 공유하는 관련 카운터들의 집합(a set of related counters sharing the same name and tags)"으로 구성됨. 이 카운터들은 추가로 설정 가능한 태그(configurable tag)로 서로 구별되며, 그 태그의 값들이 관측된 서로 다른 값(distinct values)을 나타냄.
 
 #### 주요 사용 사례(Primary Use Cases)
 

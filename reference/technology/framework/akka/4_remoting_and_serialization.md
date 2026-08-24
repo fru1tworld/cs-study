@@ -738,7 +738,7 @@ akka {
 핵심 사항:
 - 트레이트(trait)/인터페이스(interface) 이름이나 추상 기반 클래스(abstract base class) 지정
 - 바인딩이 모호한 경우 가장 구체적인(most specific) 클래스 선택
-- Scala 객체(object) 안에 정의된 메시지 클래스는 완전한 정규화 이름(fully qualified name)에서 `Wrapper.Message` 대신 `Wrapper$Message` 형식 사용 필요
+- Scala 객체(object) 안에 정의된 메시지 클래스는 완전한 정규화 이름(FQN)에서는 `Wrapper.Message` 대신 `Wrapper$Message` 형식 사용 필요
 
 #### 식별자 설정(Identifier Configuration)
 

@@ -595,3 +595,350 @@ val zipRight2: ZIO[Any, IOException, String] =
 - [Basic Operations (ZIO 공식 문서)](https://zio.dev/overview/basic-operations)
 - [Handling Errors (다음 단계)](https://zio.dev/overview/handling-errors)
 - [ZIO Overview](https://zio.dev/overview/)
+
+---
+
+## ZIO 제어 흐름(Control Flow)
+
+> 원본: https://zio.dev/reference/control-flow/
+
+---
+
+### 목차
+
+1. [조건부 연산자(if / when / unless / ifZIO)](#1-조건부-연산자if--when--unless--ifzio)
+2. [루프 연산자(loop, loopDiscard, iterate)](#2-루프-연산자loop-loopdiscard-iterate)
+3. [foreach를 이용한 반복(Iterating with foreach)](#3-foreach를-이용한-반복iterating-with-foreach)
+4. [acquireReleaseWith 기반 try/catch/finally 패턴](#4-acquirereleasewith-기반-trycatchfinally-패턴)
+5. [참고 자료](#5-참고-자료)
+
+---
+
+### 1. 조건부 연산자(if / when / unless / ifZIO)
+
+#### 1.1 일반 Scala의 if 표현식
+
+효과를 조건부로 실행하는 가장 단순한 방법 → 일반적인 Scala의 `if-then-else` 표현식 그대로 사용.
+
+```scala
+def validateWeightOrFail(weight: Double): ZIO[Any, String, Double] =
+  if (weight >= 0)
+    ZIO.succeed(weight)
+  else
+    ZIO.fail(s"negative input: $weight")
+```
+
+#### 1.2 when — 조건이 참이면 실행
+
+`ZIO.when`은 "조건이 참이면 실행(execute the effect if the condition is true)"의 의미론적 등가물. 조건과 효과를 받아, 조건이 참이면 `Some`으로 감싼 결과를, 거짓이면 `None`을 산출하는 새 효과를 반환.
+
+```scala
+def validateWeightOption(weight: Double): ZIO[Any, Nothing, Option[Double]] =
+  ZIO.when(weight >= 0)(ZIO.succeed(weight))
+```
+
+조건 자체가 효과적(effectful)일 때는 `whenZIO` 사용.
+
+```scala
+val randomIntOption: ZIO[Any, Nothing, Option[Int]] =
+  Random.nextInt.whenZIO(Random.nextBoolean)
+```
+
+#### 1.3 unless — 조건이 거짓이면 실행
+
+`ZIO.unless`(및 효과적 조건을 위한 `unlessZIO`)는 `when`의 반대 → 조건이 거짓일 때만 효과를 실행.
+
+#### 1.4 ifZIO — 효과적 조건에 따른 분기
+
+`ZIO.ifZIO`는 효과적인(effectful) 불리언 조건에 따라 두 개의 서로 다른 효과 중 하나를 실행.
+
+```scala
+val flipTheCoin: ZIO[Any, IOException, Unit] =
+  ZIO.ifZIO(Random.nextBoolean)(
+    onTrue = Console.printLine("Head"),
+    onFalse = Console.printLine("Tail")
+  )
+```
+
+---
+
+### 2. 루프 연산자(loop, loopDiscard, iterate)
+
+#### 2.1 loop와 loopDiscard
+
+`ZIO.loop`는 초기 상태(initial state)에서 시작해 조건(`cont`)이 참인 동안 증분 함수(`inc`)로 상태를 갱신하며 반복적으로 효과(`body`)를 실행. Scala의 명령형 `while` 루프의 함수형 등가물.
+
+```scala
+object ZIO {
+  def loop[R, E, A, S](
+    initial: => S
+  )(cont: S => Boolean, inc: S => S)(body: S => ZIO[R, E, A]):
+    ZIO[R, E, List[A]]
+
+  def loopDiscard[R, E, S](
+    initial: => S
+  )(cont: S => Boolean, inc: S => S)(body: S => ZIO[R, E, Any]):
+    ZIO[R, E, Unit]
+}
+```
+
+- `loop`: 각 반복에서 산출된 결과를 모두 수집하여 `List[A]`로 반환
+- `loopDiscard`: 결과를 버리고 `Unit`만 반환
+
+```scala
+val r1: ZIO[Any, Nothing, List[Int]] =
+  ZIO.loop(1)(_ <= 5, _ + 1)(n => ZIO.succeed(n)).debug
+// List(1, 2, 3, 4, 5)
+
+val r4: ZIO[Any, IOException, Unit] =
+  ZIO.loopDiscard(1)(_ <= 5, _ + 1) { index =>
+    Console.printLine(s"Currently at index $index")
+  }.debug
+```
+
+#### 2.2 iterate
+
+`ZIO.iterate`는 초기 상태에서 시작해 조건이 참인 동안, 매 반복마다 효과적인(effectful) 연산으로 상태 자체를 변경하며 계속 진행. `loop`와 달리 다음 상태를 계산하는 함수도 효과(`ZIO[R, E, S]`)를 반환.
+
+```scala
+object ZIO {
+  def iterate[R, E, S](
+    initial: => S
+  )(cont: S => Boolean)(body: S => ZIO[R, E, S]): ZIO[R, E, S]
+}
+```
+
+사용자로부터 이름을 계속 입력받다가 "exit"를 입력하면 멈추는 예제.
+
+```scala
+def getNames: ZIO[Any, IOException, List[String]] =
+  Console.print("Please enter all names") *>
+    Console.printLine(" (enter \"exit\" to indicate end of the list):") *>
+    ZIO.iterate((List.empty[String], true))(_._2) { case (names, _) =>
+      Console.print(s"${names.length + 1}. ") *>
+        Console.readLine.map {
+          case "exit" => (names, false)
+          case name   => (names.appended(name), true)
+        }
+    }
+    .map(_._1)
+```
+
+---
+
+### 3. foreach를 이용한 반복(Iterating with foreach)
+
+명시적인 재귀(explicit recursion) 대신, `ZIO.foreach`를 사용하는 고수준(high-level) 접근으로 컬렉션의 각 원소마다 효과를 실행하고 그 결과들을 모을 수 있음.
+
+```scala
+Console.printLine("Please enter three names:") *>
+  ZIO.foreach(1 to 3) { index =>
+    Console.print(s"$index. ") *> Console.readLine
+  }.debug
+// Vector(John, Jane, Joe)
+```
+
+---
+
+### 4. acquireReleaseWith 기반 try/catch/finally 패턴
+
+`ZIO.acquireReleaseWith`는 명령형 프로그래밍의 `try/catch/finally`에 대응하는 함수형 등가물. 세 개의 효과를 받음.
+
+- **acquire** — 리소스를 획득하는 효과
+- **release** — 리소스를 해제하는 효과(정리 로직, finalizer)
+- **use** — 획득한 리소스를 사용하는 효과
+
+리소스 획득이 성공하면, `use` 효과의 성공·실패·인터럽트 여부와 상관없이 `release`가 항상 실행됨이 보장.
+
+```scala
+def wordCount(fileName: String): ZIO[Any, Throwable, Int] = {
+  def openFile(name: => String): ZIO[Any, IOException, Source] =
+    ZIO.attemptBlockingIO(Source.fromFile(name))
+  def closeFile(source: => Source): ZIO[Any, Nothing, Unit] =
+    ZIO.succeedBlocking(source.close())
+  def wordCount(source: => Source): ZIO[Any, Throwable, Int] =
+    ZIO.attemptBlocking(source.getLines().length)
+
+  ZIO.acquireReleaseWith(openFile(fileName))(closeFile(_))(wordCount(_))
+}
+```
+
+단순화한 예제로 실행 흐름을 확인 가능.
+
+```scala
+ZIO.acquireReleaseWith {
+  ZIO.succeed("resource").tap(r => ZIO.debug(s"$r acquired"))
+} { i =>
+  ZIO.debug(s"$i released")
+} { i =>
+  ZIO.debug(s"start using $i")
+}
+// Output:
+// resource acquired
+// start using resource
+// resource released
+```
+
+acquire → use → release 순서가 보장되며, use 도중 실패나 인터럽트가 발생해도 release는 반드시 실행됨.
+
+---
+
+### 5. 참고 자료
+
+- [Control Flow | ZIO](https://zio.dev/reference/control-flow/)
+- [Resource Management | ZIO](https://zio.dev/reference/resource/)
+
+---
+
+## ZIO 내장 서비스(Built-in Services)
+
+> 원본: https://zio.dev/reference/services/
+
+---
+
+### 목차
+
+1. [개요(Overview)](#1-개요overview)
+2. [Console](#2-console)
+3. [Clock](#3-clock)
+4. [Random](#4-random)
+5. [System](#5-system)
+6. [참고 자료](#6-참고-자료)
+
+---
+
+### 1. 개요(Overview)
+
+ZIO는 네 가지 표준 서비스(standard service)를 기본으로 내장 → `Console`(콘솔 입출력), `Clock`(시간·스케줄링), `Random`(난수 생성), `System`(환경 변수·시스템 프로퍼티). 이 서비스들을 사용할 때는 명시적으로 환경을 제공(provide)할 필요가 없음 → ZIO 런타임이 자동으로 라이브(live) 구현을 공급하기 때문. 테스트 시에는 `zio-test`가 제공하는 `TestClock`·`TestConsole`·`TestRandom`·`TestSystem`으로 손쉽게 대체 가능(9장 테스트 서비스 참고).
+
+---
+
+### 2. Console
+
+`Console` 서비스 → 표준 입출력(standard input/output)과 에러 콘솔에서 문자열을 읽고 쓰는 작업 담당.
+
+주요 메서드:
+
+- `Console.print` — 줄바꿈 없이 출력
+- `Console.printLine` — 줄바꿈과 함께 출력
+- `Console.printError` / `Console.printLineError` — 에러 스트림에 출력
+- `Console.readLine` — 표준 입력에서 한 줄 읽기
+
+```scala
+import zio._
+import zio.Console._
+
+object MyHelloApp extends ZIOAppDefault {
+  val program: ZIO[Any, IOException, Unit] = for {
+    _    <- printLine("이름이 무엇인가요?")
+    name <- readLine
+    _    <- printLine(s"환영합니다, $name!")
+  } yield ()
+
+  def run = program
+}
+```
+
+모든 메서드는 효과적(effectful) → 실제 입출력은 즉시 일어나지 않고, 실행될 때 수행할 읽기·쓰기 작업의 설명(description)만 만들어짐.
+
+---
+
+### 3. Clock
+
+`Clock` 서비스 → 시간(time) 및 스케줄링(scheduling)과 관련된 기능 제공. 논블로킹(non-blocking) 방식으로 동작 → 기본 스레드를 차단하지 않음.
+
+주요 메서드:
+
+- `Clock.currentTime(unit: TimeUnit)` — 지정한 시간 단위(time unit)로 현재 시간을 `Long`으로 반환
+- `Clock.currentDateTime` — 현재 타임존의 `OffsetDateTime` 반환
+- `ZIO#sleep(duration: Duration)` — 스레드를 블로킹하지 않고 지정한 시간만큼 대기
+
+```scala
+import zio._
+import java.util.concurrent.TimeUnit
+
+val inMilliseconds: UIO[Long] = Clock.currentTime(TimeUnit.MILLISECONDS)
+val inDays: UIO[Long] = Clock.currentTime(TimeUnit.DAYS)
+
+def printTimeForever: ZIO[Any, Throwable, Nothing] =
+  Clock.currentDateTime.flatMap(Console.printLine(_)) *>
+    ZIO.sleep(1.seconds) *> printTimeForever
+```
+
+테스트에서는 `TestClock`으로 실제 시간 경과 없이 시간을 임의로 진행 가능(9.3.2절 참고).
+
+---
+
+### 4. Random
+
+`Random` 서비스 → Scala 표준 라이브러리의 `Random`을 함수형으로 감싸 난수 생성 유틸리티 제공. 생성되는 모든 값은 `URIO[Random, T]` 형태.
+
+주요 메서드:
+
+- `Random.nextInt` / `Random.nextBoolean` / `Random.nextDouble` — 기본 난수 생성
+- `Random.nextDoubleBetween` — 지정 범위 내 난수 생성
+- `Random.setSeed` — 시드(seed)를 고정하여 재현 가능한(reproducible) 수열 생성(테스트에 유용)
+- `Random.shuffle` — 리스트를 무작위로 섞음
+- `Random.nextGaussian` — 가우스 분포(Gaussian distribution) 난수 생성
+
+```scala
+for {
+  randomInt <- Random.nextInt
+  _         <- Console.printLine(s"A random Int: $randomInt")
+} yield ()
+```
+
+시드를 고정하면 동일한 수열이 재현됨.
+
+```scala
+for {
+  _        <- Random.setSeed(0)
+  nextInts <- Random.nextInt zip Random.nextInt
+} yield assert(nextInts == (-1155484576, -723955400))
+```
+
+> 주의: `Random`이 생성하는 난수는 암호학적으로 안전(cryptographically secure)하지 않음 → 비밀번호·토큰 생성 등 보안이 필요한 영역에는 부적합.
+
+---
+
+### 5. System
+
+`System` 서비스 → 시스템 환경 변수(environment variable, OS 수준의 전역 변수)와 시스템 프로퍼티(system property, 애플리케이션 수준의 변수)에 접근하는 유용한 함수 제공.
+
+주요 메서드:
+
+- `System.env(name)` — 환경 변수를 `Option[String]`으로 조회
+- `System.property(name)` — 시스템 프로퍼티를 `Option[String]`으로 조회
+- `System.lineSeparator` — 운영체제별 줄 구분자(line separator) 반환
+
+```scala
+import zio._
+
+for {
+  user <- System.env("USER")
+  _ <- user match {
+    case Some(value) => Console.printLine(s"USER: $value")
+    case None        => Console.printLine("USER 환경변수 미설정")
+  }
+} yield ()
+
+for {
+  logLevel <- System.property("LOG_LEVEL")
+  _ <- logLevel match {
+    case Some(value) => Console.printLine(s"LOG_LEVEL: $value")
+    case None        => Console.printLine("LOG_LEVEL 속성 미설정")
+  }
+} yield ()
+```
+
+값의 존재 여부를 `Option`으로 다루므로, 미설정된 환경 변수·프로퍼티도 안전하게 처리 가능. 더 구조화된 설정 관리가 필요할 때는 4장 의존성 주입 문서의 `zio.Config`/`ConfigProvider` 사용 권장.
+
+---
+
+### 6. 참고 자료
+
+- [Built-in Services | ZIO](https://zio.dev/reference/services/)
+- [Console | ZIO](https://zio.dev/reference/services/console)
+- [Clock | ZIO](https://zio.dev/reference/services/clock)
+- [Random | ZIO](https://zio.dev/reference/services/random)
+- [System | ZIO](https://zio.dev/reference/services/system)

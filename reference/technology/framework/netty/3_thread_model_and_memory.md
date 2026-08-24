@@ -245,7 +245,7 @@ public void process(ByteBuf buf) {
 
 #### Inbound 메시지
 
-이벤트 루프가 데이터를 `ByteBuf`로 읽고 그것으로 `channelRead()` 이벤트를 트리거하면, 해당 파이프라인의 `ChannelHandler`가 그 버퍼를 release할 책임을 짐. 따라서 받은 데이터를 소비하는 핸들러는 자신의 `channelRead()` 핸들러 메서드에서 데이터에 대해 `release()` 호출 필요.
+이벤트 루프가 데이터를 `ByteBuf`로 읽고 그것으로 `channelRead()` 이벤트를 트리거하면, 해당 파이프라인의 `ChannelHandler`가 그 버퍼를 release할 책임을 짐. 따라서 받은 데이터를 소비하는 핸들러는 자신의 `channelRead()` 핸들러 메서드에서 데이터를 `release()` 해야 함.
 
 ```java
 public void channelRead(ChannelHandlerContext ctx, Object msg) {

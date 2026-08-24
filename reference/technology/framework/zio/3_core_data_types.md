@@ -1140,7 +1140,31 @@ object CustomizedRuntimeZIOApp extends ZIOAppDefault {
 }
 ```
 
-#### 10.5 여러 ZIO 애플리케이션 합성하기(Composing Multiple ZIO Applications)
+#### 10.5 저수준 기능 설치하기(Installing Low-level Functionalities)
+
+ZIO 런타임에 훅(hook)을 걸어 로깅(logging)·프로파일링(profiling)처럼 애플리케이션의 기반이 되는(foundational) 저수준 인프라 관심사를 설치 가능. `bootstrap` 레이어를 오버라이드하는 방식이 그 통로가 되며, 자세한 설명과 예제는 위 9.5절 "런타임 설정 유형(Runtime Configuration Types)"의 부트스트랩 레이어 설정 부분 참고.
+
+```scala
+import zio._
+
+object MainApp extends ZIOAppDefault {
+  val addSimpleLogger: ZLayer[Any, Nothing, Unit] =
+    Runtime.addLogger((_, _, _, message: () => Any, _, _, _, _) => println(message()))
+
+  override val bootstrap: ZLayer[Any, Nothing, Unit] =
+    Runtime.removeDefaultLoggers ++ addSimpleLogger
+
+  def run =
+    for {
+      _ <- ZIO.log("Application started!")
+      _ <- ZIO.log("Application is about to exit!")
+    } yield ()
+}
+```
+
+이 방식으로 애플리케이션 전역에 걸쳐 로깅 백엔드 교체·프로파일러 연결 같은 저수준 관심사를 진입점 한 곳에서 일괄 구성 가능.
+
+#### 10.6 여러 ZIO 애플리케이션 합성하기(Composing Multiple ZIO Applications)
 
 `<>` 연산자를 사용하여 애플리케이션을 결합.
 
@@ -1162,7 +1186,7 @@ object Main extends ZIOApp.Proxy(MyApp1 <> MyApp2)
 
 문서 설명: "`<>` 연산자가 두 애플리케이션의 레이어를 결합한 다음, 두 애플리케이션을 병렬로(in parallel) 실행한다."
 
-#### 10.6 우아한 종료 타임아웃(Graceful Shutdown Timeout)
+#### 10.7 우아한 종료 타임아웃(Graceful Shutdown Timeout)
 
 - 인터럽트 신호(예: Ctrl+C로 인한 SIGINT)를 받으면 "런타임은 종료 전에 모든 종료자(finalizers, 정리 로직)를 실행하려고 시도"
 - 기본값은 무한(infinite) → `gracefulShutdownTimeout` 오버라이드로 변경 가능

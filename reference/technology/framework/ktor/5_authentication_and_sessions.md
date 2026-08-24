@@ -158,6 +158,120 @@ install(Authentication) {
 }
 ```
 
+#### Digest
+
+HTTP Digest는 비밀번호를 평문으로 보내지 않고 해시(HA1)로 검증함. `digestProvider`가 저장된 HA1 해시를 돌려주면 Ktor가 클라이언트 응답과 비교함.
+
+```kotlin
+fun computeHa1(userName: String, realm: String, password: String, algorithm: DigestAlgorithm): ByteArray =
+    algorithm.toDigester().digest("$userName:$realm:$password".toByteArray(Charsets.UTF_8))
+
+install(Authentication) {
+    digest("auth-digest") {
+        realm = "Access to the '/' path"
+        algorithms = listOf(DigestAlgorithm.SHA_512_256, DigestAlgorithm.MD5)
+
+        digestProvider { userName, realm, algorithm ->
+            userPasswords[userName]?.let { password -> computeHa1(userName, realm, password, algorithm) }
+        }
+    }
+}
+```
+
+`realm`은 `WWW-Authenticate` 헤더에 실리는 보안 영역 식별자, `algorithms`는 지원할 해시 알고리즘 목록임(SHA-512-256 권장, MD5는 레거시 호환용). RFC 7616을 엄격히 따르려면 `strictRfc7616Mode()`를 호출해 MD5를 제외하고 UTF-8을 강제함.
+
+#### Bearer
+
+Bearer는 `Authorization: Bearer <token>` 헤더의 토큰을 그대로 검증하는 가장 단순한 토큰 인증 방식임. 반드시 HTTPS 위에서만 사용함.
+
+```kotlin
+install(Authentication) {
+    bearer("auth-bearer") {
+        realm = "Access to the '/' path"
+        authenticate { tokenCredential ->
+            if (tokenCredential.token == validToken) UserIdPrincipal("jetbrains") else null
+        }
+    }
+}
+```
+
+#### API Key
+
+API 키를 커스텀 헤더로 주고받는 방식임. 전용 `apiKey` 프로바이더를 쓰거나, 별도 의존성 없이 `bearer`로 직접 파싱해도 됨.
+
+```kotlin
+implementation("io.ktor:ktor-server-auth-api-key:$ktor_version")
+```
+
+```kotlin
+data class ApiPrincipal(val key: String) : Principal
+
+install(Authentication) {
+    apiKey {
+        headerName = "X-API-Key"
+        validate { keyFromHeader ->
+            keyFromHeader.takeIf { it == expectedApiKey }?.let { ApiPrincipal(it) }
+        }
+        challenge { _, _ -> call.respond(HttpStatusCode.Unauthorized, "Invalid API key") }
+    }
+}
+```
+
+키는 반드시 HTTPS로만 전송하고, 코드에 하드코딩하지 말고 환경변수/시크릿 매니저에서 로드함.
+
+#### LDAP
+
+사용자명/비밀번호를 LDAP 디렉터리 서버에 그대로 위임해 검증함. `basic` 프로바이더의 `validate`에서 `ldapAuthenticate`를 호출하는 형태임.
+
+```kotlin
+implementation("io.ktor:ktor-server-auth-ldap:$ktor_version")
+```
+
+```kotlin
+install(Authentication) {
+    basic("auth-ldap") {
+        validate { credentials ->
+            ldapAuthenticate(credentials, "ldap://localhost:389", "cn=%s,dc=ktor,dc=io")
+        }
+    }
+}
+```
+
+DN 패턴의 `%s`는 사용자명으로 치환됨. 인증 성공/실패에 따른 원(raw) `LDAPPrincipal`을 다른 조건으로 한 번 더 걸러내려면 트레일링 람다를 추가함.
+
+```kotlin
+ldapAuthenticate(credentials, "ldap://localhost:389", "cn=%s,dc=ktor,dc=io") {
+    if (it.name == it.password) UserIdPrincipal(it.name) else null
+}
+```
+
+현재 LDAP 구현은 동기식이므로 트래픽이 많다면 별도 스레드 풀/타임아웃 전략을 함께 고려함.
+
+---
+
+### 커스텀 인증 프로바이더
+
+기본 제공 방식으로 표현하기 어려운 검증 로직은 `provider()` 함수로 프로바이더 자체를 완전히 직접 구현할 수 있음. `authenticate {}` 블록이 요청마다 실행되며 인증 흐름 전체를 제어함.
+
+```kotlin
+install(Authentication) {
+    provider("custom") {
+        authenticate { context ->
+            val exampleHeader = context.call.request.headers["Example-Header"]
+            if (exampleHeader == null) {
+                val cause = AuthenticationFailedCause.Error("No example header found")
+                context.challenge(key = this, cause) { challenge, call ->
+                    call.respondText("Challenge")
+                    challenge.complete()
+                }
+            }
+        }
+    }
+}
+```
+
+`context.challenge { }`를 호출하지 않으면 인증이 통과된 것으로 취급됨 → 검증 실패 시 반드시 `challenge`를 호출해 응답을 완료해야 함.
+
 ---
 
 ### challenge
@@ -319,6 +433,18 @@ routing {
     }
 }
 ```
+
+---
+
+### 지연 세션 로딩
+
+기본적으로 Ktor는 `Sessions` 플러그인이 설치된 모든 요청에서 스토리지 접근을 시도함 → 세션이 실제로 필요 없는 라우트에서도 조회가 일어나므로, 커스텀 세션 스토리지(DB·Redis 등)를 쓰는 경우 불필요한 오버헤드가 생김. 다음 시스템 프로퍼티를 켜면 `call.sessions.get()`을 실제로 호출하는 시점까지 조회를 미룸.
+
+```kotlin
+System.setProperty("io.ktor.server.sessions.deferred", "true")
+```
+
+세션을 쓰지 않는 엔드포인트가 많은 애플리케이션일수록 효과가 큼.
 
 ---
 

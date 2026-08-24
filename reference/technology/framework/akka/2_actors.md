@@ -1161,6 +1161,10 @@ timers.startSingleTimer(Timeout, 1.second)
    - [6.2 ActorSystem 변환](#62-actorsystem-변환)
    - [6.3 액터의 생성과 관리](#63-액터의-생성과-관리)
    - [6.4 슈퍼비전(supervision) 차이](#64-슈퍼비전supervision-차이)
+7. [Classic에서 Typed로 넘어오기(Learning Akka Typed from Classic)](#7-classic에서-typed로-넘어오기learning-akka-typed-from-classic)
+   - [7.1 개념은 대부분 그대로 유지된다](#71-개념은-대부분-그대로-유지된다)
+   - [7.2 개념별 대응표](#72-개념별-대응표)
+   - [7.3 의존성과 패키지 이름 변경](#73-의존성과-패키지-이름-변경)
 
 ---
 
@@ -1738,6 +1742,53 @@ Typed 액터는 `Adapter.actorOf()`를 사용해 Classic 자식 액터를 생성
 
 ---
 
+### 7. Classic에서 Typed로 넘어오기(Learning Akka Typed from Classic)
+
+> 원본: https://doc.akka.io/libraries/akka-core/current/typed/from-classic.html
+
+앞서 다룬 "공존(Coexisting)" 절이 Typed와 Classic을 같은 시스템 안에서 함께 굴리는 방법을 다뤘다면, 이 절은 이미 Classic Akka에 익숙한 개발자가 Typed로 넘어올 때 각 개념이 서로 어떻게 대응되는지를 정리함. 두 API 모두 계속 지원되지만, 신규 프로젝트에는 더 나은 타입 안전성과 명시적인 액터 구조를 제공하는 Typed 사용이 권장됨.
+
+#### 7.1 개념은 대부분 그대로 유지된다
+
+- Classic에서 배운 개념(행위, 슈퍼비전, 생명주기, 라우터, 타이머, 스태시 등) 대부분은 Typed에서도 이름과 형태만 바뀐 채 그대로 존재함 → 완전히 새로 배워야 하는 것이 아니라, "이 개념이 Typed에서는 어떻게 표현되는가"를 찾아가는 문제에 가까움
+- 가장 근본적인 차이는 다음 세 가지로 요약됨.
+    - **타입 안전성**: `ActorRef[T]`와 `Behavior[T]`가 메시지 타입을 제네릭 파라미터로 명시함 → 어떤 액터가 어떤 메시지를 받을 수 있는지 컴파일 타임에 검증됨
+    - **상속 대신 행위(Behavior)**: `Actor` 클래스를 상속하는 대신, 메시지를 처리할 때마다 새로운 `Behavior`를 반환하는 함수형 스타일을 사용함 → `context.become`/`unbecome` 같은 별도 메서드 없이도 상태 전이(transition)를 표현할 수 있음
+    - **명시성(explicitness)**: Classic의 `sender()`나 `getParent()`처럼 암묵적으로 얻을 수 있던 정보를, Typed에서는 메시지 안에 명시적으로 담아 전달해야 함
+
+#### 7.2 개념별 대응표
+
+- **의존성**: 대부분의 아티팩트(artifact) 이름에 `-typed` 접미사가 붙음(예: `akka-cluster-typed`)
+- **패키지 이름**: Classic 패키지 경로 뒤에 `typed.scaladsl` 또는 `typed.javadsl`을 붙이는 규칙을 따름
+- **액터 정의**: `Actor` 클래스를 확장하는 대신, `AbstractBehavior`를 상속하는 클래스 기반 스타일이나 함수형 스타일로 `Behavior`를 정의함
+- **actorOf/Props**: `Props` 팩토리 대신 `ActorContext`의 `spawn()` 메서드로 자식 액터를 생성함
+- **ActorRef**: 이제 메시지 타입 정보를 제네릭 파라미터로 함께 가짐
+- **ActorSystem**: 최상위 사용자 가디언 역할을 하는 `Behavior`가 반드시 필요하며, 최상위에서 임의로 `actorOf()`를 호출할 수 없음
+- **become**: 메서드 호출이 아니라, 메시지 핸들러가 새로운 `Behavior`를 반환하는 것으로 암묵적으로 표현됨
+- **sender**: 응답을 받을 `ActorRef[ReplyType]`을 메시지 안에 명시적으로 포함시켜야 함
+- **parent**: 부모 `ActorRef`를 생성 시점에 명시적으로 전달받아야 함
+- **슈퍼비전**: 자식 `Behavior`를 `Behaviors.supervise`로 감싸는 방식으로 선언함
+- **생명주기 훅**: 메서드 오버라이드 대신 `PreRestart`, `PostStop` 같은 시그널(signal)로 처리함
+- **watch**: 기존과 비슷하게 동작하되, `ChildFailed` 시그널로 자식의 실패 원인을 더 자세히 알 수 있음
+- **정지(stopping)**: `stop()` 메서드 대신 `Behaviors.stopped`를 반환함
+- **ActorSelection**: 리셉셔니스트(Receptionist) 기반의 액터 탐색으로 대체됨
+- **ask**: 액터 간 호출에는 컨텍스트 인지형(context-aware) `ask`(예: `context.ask`) 사용이 권장됨
+- **pipeTo**: `ActorContext`의 `pipeToSelf()`로 대체됨
+- **ActorContext**: 역할은 동일하며, 자식 액터를 직접 관리해야 할 때는 애플리케이션 수준의 `Map` 등을 활용함
+- **원격 배포(Remote Deployment)**: Typed에서는 지원되지 않음 → 강한 결합(coupling)을 유발한다는 이유로 권장되지 않음
+- **라우터**: 더 단순화되었으며, 그룹 라우터(group router)는 리셉셔니스트 등록을 기반으로 동작함
+- **FSM**: 별도의 FSM 전용 API가 필요 없음 → `Behavior` 자체가 자연스럽게 상태 기계를 표현할 수 있기 때문
+- **타이머**: `Behaviors.withTimers`로 감싸서 접근함
+- **스태시**: `Behaviors.withStash`로 감싸서 접근함
+- **PersistentActor**: `EventSourcedBehavior`가 이에 대응하며, 더 명확한 가이드가 제공됨
+- **테스트**: 비동기 테스트는 `ActorTestKit`, 동기 테스트는 `BehaviorTestKit`으로 Classic과는 다른 접근법을 사용함
+
+#### 7.3 의존성과 패키지 이름 변경
+
+Classic 모듈은 대체로 이름 끝에 `-typed`가 붙은 대응 모듈로 옮겨감. 예를 들어 `akka-actor`는 `akka-actor-typed`로, `akka-persistence`는 `akka-persistence-typed`로 옮겨가며, 클러스터 싱글톤(Cluster Singleton)이나 분산 데이터(Distributed Data) 같은 기능은 `akka-cluster-typed` 안에 함께 묶여 제공됨.
+
+---
+
 ### 참고 자료
 
 - [Akka 공식 문서](https://doc.akka.io/libraries/akka-core/current/)
@@ -1747,3 +1798,4 @@ Typed 액터는 `Adapter.actorOf()`를 사용해 Classic 자식 액터를 생성
 - [Style Guide](https://doc.akka.io/libraries/akka-core/current/typed/style-guide.html)
 - [Coordinated Shutdown](https://doc.akka.io/libraries/akka-core/current/coordinated-shutdown.html)
 - [Coexisting](https://doc.akka.io/libraries/akka-core/current/typed/coexisting.html)
+- [Learning Akka Typed from Classic](https://doc.akka.io/libraries/akka-core/current/typed/from-classic.html)

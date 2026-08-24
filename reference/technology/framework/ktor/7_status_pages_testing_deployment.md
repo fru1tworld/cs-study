@@ -181,11 +181,29 @@ fun `posts JSON`() = testApplication {
 }
 ```
 
-쿠키 기반 세션을 다룰 때:
+쿠키 기반 세션을 다룰 때는 `HttpCookies`를 설치한 클라이언트로 로그인 → 인증이 필요한 엔드포인트 호출까지 이어지는 흐름을 그대로 테스트함.
 
 ```kotlin
-val cookied = createClient { install(HttpCookies) }
+@Test
+fun `session cookie is preserved across requests`() = testApplication {
+    application { module() }
+
+    val client = createClient {
+        install(HttpCookies)
+    }
+
+    val loginResponse = client.get("/login")
+    assertEquals(HttpStatusCode.OK, loginResponse.status)
+
+    val response1 = client.get("/user")
+    assertEquals("Session ID is 123abc. Reload count is 1.", response1.bodyAsText())
+
+    val response2 = client.get("/user")
+    assertEquals("Session ID is 123abc. Reload count is 2.", response2.bodyAsText())
+}
 ```
+
+`/login` 응답의 `Set-Cookie`가 클라이언트에 저장되고, 이후 `/user` 호출마다 자동으로 같은 쿠키가 실려 나가므로 서버 쪽 세션 카운터가 요청마다 증가하는 것으로 쿠키 유지를 확인함.
 
 ---
 
@@ -225,6 +243,59 @@ fun `ws echo`() = testApplication {
     }
 }
 ```
+
+---
+
+### HTTPS 엔드포인트 테스트
+
+`testApplication`의 in-memory 클라이언트로도 요청 프로토콜을 `URLBuilder.protocol`로 지정하면 보안 커넥터로 라우팅된 핸들러를 그대로 검증할 수 있음.
+
+```kotlin
+@Test
+fun `responds over https`() = testApplication {
+    application { module() }
+
+    val response = client.get("/") {
+        url { protocol = URLProtocol.HTTPS }
+    }
+    assertEquals("Hello, world!", response.bodyAsText())
+}
+```
+
+실제 TLS 핸드셰이크 없이도 `call.request.local.scheme`이 `https`인 경우의 분기 로직(리다이렉트, `Secure` 쿠키 등)을 검증할 수 있음.
+
+---
+
+### HttpClient를 이용한 End-to-End 테스트
+
+`testApplication`은 실제 소켓을 열지 않으므로 네트워크 계층까지 포함한 진짜 통합 검증이 필요하면 `embeddedServer`로 서버를 직접 기동한 뒤 일반 `HttpClient`로 요청을 보냄.
+
+```kotlin
+abstract class TestServer {
+    private lateinit var server: EmbeddedServer<*, *>
+
+    @BeforeTest
+    fun startServer() {
+        server = embeddedServer(Netty, port = 8080, module = Application::module)
+            .start(wait = false)
+    }
+
+    @AfterTest
+    fun stopServer() {
+        server.stop(1000, 2000)
+    }
+}
+
+class EmbeddedServerTest : TestServer() {
+    @Test
+    fun rootRouteRespondsWithHelloWorldString(): Unit = runBlocking {
+        val response: String = HttpClient().get("http://localhost:8080/").body()
+        assertEquals("Hello, world!", response)
+    }
+}
+```
+
+`testApplication`보다 느리고 포트 충돌 가능성이 있으므로, 배포 전 스모크 테스트나 실제 엔진 동작(연결 타임아웃, 압축 등)을 확인해야 할 때만 제한적으로 사용함.
 
 ---
 

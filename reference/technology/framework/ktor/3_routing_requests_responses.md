@@ -219,23 +219,27 @@ post("/users") {
 
 #### Multipart 파일 업로드
 
+바이너리/파일 파트는 기본적으로 크기가 50MiB로 제한됨 → 초과하면 `IOException`이 발생함. 상한을 올리려면 `receiveMultipart(formFieldLimit = ...)`에 바이트 수를 넘겨줌.
+
 ```kotlin
 post("/upload") {
-    val multipart = call.receiveMultipart()
+    var fileDescription = ""
+    var fileName = ""
+    val multipart = call.receiveMultipart(formFieldLimit = 1024 * 1024 * 100) // 100MiB
     multipart.forEachPart { part ->
         when (part) {
             is PartData.FormItem -> {
-                println("${part.name} = ${part.value}")
+                fileDescription = part.value
             }
             is PartData.FileItem -> {
-                val name = part.originalFileName ?: "file"
-                part.provider().copyAndClose(File("uploads/$name").writeChannel())
+                fileName = part.originalFileName ?: "file"
+                part.provider().copyAndClose(File("uploads/$fileName").writeChannel())
             }
             else -> {}
         }
         part.dispose()
     }
-    call.respond(HttpStatusCode.OK)
+    call.respondText("$fileDescription is uploaded to 'uploads/$fileName'")
 }
 ```
 

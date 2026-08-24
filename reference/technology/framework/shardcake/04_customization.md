@@ -147,7 +147,7 @@ libraryDependencies += "com.devsisters" %% "shardcake-serialization-kryo" % "2.7
 
 ## 4. 헬스(Health)
 
-`PodsHealth` 트레이트는 파드가 아직 살아 있는지, 아니면 죽었는지(죽었다면 그 파드의 샤드를 모두 재할당해야 합니다)를 판단하는 방법을 정의합니다.
+`PodsHealth` 트레이트는 파드가 아직 살아 있는지, 아니면 죽었는지(죽었다면 그 파드의 샤드를 모두 재할당해야 함)를 판단하는 방법을 정의.
 
 ```scala
 trait PodsHealth {
@@ -155,19 +155,19 @@ trait PodsHealth {
 }
 ```
 
-테스트할 때는 항상 true를 반환하는 `PodsHealth.noop` 레이어를 쓰거나, [메시징 프로토콜](#2-메시징-프로토콜messaging-protocol)의 `ping`으로 파드 생존 여부를 확인하는 `PodsHealth.local` 레이어를 쓰면 됩니다.
+테스트할 때는 항상 true를 반환하는 `PodsHealth.noop` 레이어를 쓰거나, [메시징 프로토콜](#2-메시징-프로토콜messaging-protocol)의 `ping`으로 파드 생존 여부를 확인하는 `PodsHealth.local` 레이어를 쓰면 됨.
 
-Shardcake는 [Kubernetes](https://kubernetes.io) API로 만든 `PodsHealth` 구현을 제공합니다. 사용하려면 다음 의존성을 추가하세요.
+Shardcake는 [Kubernetes](https://kubernetes.io) API로 만든 `PodsHealth` 구현을 제공. 사용하려면 다음 의존성을 추가.
 
 ```scala
 libraryDependencies += "com.devsisters" %% "shardcake-health-k8s" % "2.7.1"
 ```
 
-그리고 `K8sPodsHealth.live` 레이어를 그대로 가져다 쓰면 됩니다. 이 레이어에는 [zio-k8s](https://coralogix.github.io/zio-k8s/docs/overview/overview_gettingstarted)가 제공하는 `Pods` 레이어가 필요합니다.
+그리고 `K8sPodsHealth.live` 레이어를 그대로 가져다 쓰면 됨. 이 레이어에는 [zio-k8s](https://coralogix.github.io/zio-k8s/docs/overview/overview_gettingstarted)가 제공하는 `Pods` 레이어가 필요.
 
 > **💡 예제**
 >
-> Redis, gRPC, Kryo 직렬화를 한꺼번에 사용하는 전체 예제는 [examples](https://github.com/devsisters/shardcake/tree/series/2.x/examples/src/main/scala/example/complex) 폴더에서 확인할 수 있습니다.
+> Redis, gRPC, Kryo 직렬화를 한꺼번에 사용하는 전체 예제는 [examples](https://github.com/devsisters/shardcake/tree/series/2.x/examples/src/main/scala/example/complex) 폴더에서 확인 가능.
 
 ---
 

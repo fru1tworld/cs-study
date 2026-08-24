@@ -66,6 +66,35 @@ routing {
 
 ---
 
+### 표준 WebSocket 이벤트와의 대응
+
+브라우저 WebSocket API의 `onopen`/`onmessage`/`onclose`/`onerror` 콜백에 익숙하다면, Ktor의 `webSocket { }` 블록은 다음과 같이 대응됨.
+
+- onConnect: 블록이 시작되는 시점 자체가 연결 성사 시점임 → 별도 콜백 없이 블록 맨 위 코드가 그 역할을 함
+- onMessage: `incoming` 채널에서 프레임을 성공적으로 읽어온 직후 (`for (frame in incoming)` 또는 `incoming.receive()`)
+- onClose: `incoming` 채널이 닫히는 시점 → 보통 `ClosedReceiveChannelException`으로 루프가 빠져나옴
+- onError: 그 외의 예외가 발생하는 시점 → 다른 예외 처리와 동일하게 취급됨
+
+onClose·onError 두 경우 모두 세션의 `closeReason` 프로퍼티가 채워지므로, 정상 종료인지 비정상 종료인지와 종료 코드를 그 값으로 구분할 수 있음.
+
+```kotlin
+webSocket("/events") {
+    try {
+        for (frame in incoming) {
+            // onMessage에 해당
+        }
+    } catch (e: ClosedReceiveChannelException) {
+        // onClose에 해당
+        println("Session closed: ${closeReason.await()}")
+    } catch (e: Throwable) {
+        // onError에 해당
+        println("Error: ${closeReason.await()}")
+    }
+}
+```
+
+---
+
 ### 프레임 타입
 
 - `Frame.Text`: UTF-8 텍스트 → `readText()`로 추출

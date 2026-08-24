@@ -19,7 +19,9 @@
 9. [액터 참조, 경로, 주소(Actor References, Paths and Addresses)](#9-액터-참조-경로-주소actor-references-paths-and-addresses)
 10. [메시지 전달 신뢰성(Message Delivery Reliability)](#10-메시지-전달-신뢰성message-delivery-reliability)
 11. [설정(Configuration)](#11-설정configuration)
-12. [참고 자료](#12-참고-자료)
+12. [위치 투명성(Location Transparency)](#12-위치-투명성location-transparency)
+13. [Akka와 자바 메모리 모델(Akka and the Java Memory Model)](#13-akka와-자바-메모리-모델akka-and-the-java-memory-model)
+14. [참고 자료](#14-참고-자료)
 
 ---
 
@@ -638,7 +640,73 @@ akka {
 
 ---
 
-### 12. 참고 자료
+### 12. 위치 투명성(Location Transparency)
+
+> 원본: https://doc.akka.io/libraries/akka-core/current/general/remoting.html
+
+#### 12.1 원격 우선(Distributed by Default) 설계
+
+- 액터끼리의 모든 상호작용은 순수하게 메시지 전달로만 이루어지고, 모든 처리는 비동기(asynchronous)임 → 이 성질 덕분에 액터가 같은 JVM 안에 있든 다른 노드에 있든 동일한 방식으로 상호작용할 수 있음
+- Akka는 "로컬을 먼저 만들고 나중에 원격을 덧붙이는" 방식이 아니라, 반대로 "원격을 기본으로 두고 로컬을 그 위에서의 최적화(optimization)로 취급"하는 접근을 택함
+- 로컬 통신을 나중에 원격 통신으로 확장하려는 설계는 대개 파탄에 이름 → 반면 처음부터 분산을 전제로 설계하면, 실제로는 로컬에서만 돌아가는 애플리케이션도 아무 문제 없이 그 설계를 그대로 사용할 수 있음
+- 이것이 액터 참조(`ActorRef`)가 로컬/원격 어느 쪽을 가리키든 동일하게 취급될 수 있는 이유이며, "위치 투명성(location transparency)"이라 부름
+
+#### 12.2 투명성이 깨지는 지점
+
+완전한 위치 투명성은 추상화(abstraction)이지 마법이 아님 → 다음과 같은 지점에서 로컬과 원격의 차이가 드러남.
+
+- 네트워크로 전송되는 메시지는 반드시 직렬화(serialize)할 수 있어야 함 → 로컬 호출에서는 필요 없던 제약
+- 네트워크를 오가는 메시지는 로컬 메시지보다 지연(latency)이 훨씬 크고, 부분 장애(partial failure) 가능성도 훨씬 높음 → 코드를 작성할 때 이 차이를 완전히 무시할 수는 없음
+- 따라서 위치 투명성은 "같은 코드를 재사용할 수 있게 해 주는" 추상화이지, "로컬과 원격의 성능·신뢰성 특성이 동일하다"는 보장은 아님
+
+#### 12.3 피어 투 피어(Peer-to-Peer) 대 클라이언트-서버(Client-Server)
+
+- Akka 리모팅(remoting)은 대칭적(symmetric)인 피어 투 피어 통신을 전제로 함 → 두 액터 시스템은 서로를 향해 커넥션을 열 수 있어야 정상 동작함
+- 이 때문에 순수한 클라이언트-서버 구성(클라이언트는 서버로만 연결하고, 서버는 클라이언트로 역방향 연결을 열 수 없는 구조)은 안전하게 만들 수 없음 → 클라이언트를 향한 액터 참조를 서버가 사용하려 할 때 문제가 생김
+- NAT, 로드 밸런서(load balancer), 도커(Docker) 컨테이너 환경 등에서 이런 대칭적 연결성을 유지하려면 추가 네트워크 설정이 필요함
+
+#### 12.4 서비스 메시(Service Mesh) 관련 고려 사항
+
+- 쿠버네티스(Kubernetes)와 같은 서비스 메시 환경은 종종 클라이언트-서버 형태의 트래픽 흐름을 전제로 설계되어 있음 → Akka 리모팅의 대칭적 연결 요구와 충돌할 수 있으므로, 클러스터를 배포할 때 네트워크 토폴로지(topology)를 함께 고려해야 함
+
+#### 12.5 확장을 위한 라우터(Routers for Scaling)
+
+- 위치 투명성 덕분에, 하나의 액터를 여러 개로 늘려 부하를 분산하는 라우터(router)를 로컬이든 클러스터 전역이든 동일한 방식으로 구성할 수 있음 → 액터를 복제(multiply)하는 것만으로 처리량을 늘리는 수평 확장(scale-out) 전략이 가능해짐
+
+---
+
+### 13. Akka와 자바 메모리 모델(Akka and the Java Memory Model)
+
+> 원본: https://doc.akka.io/libraries/akka-core/current/general/jmm.html
+
+#### 13.1 자바 메모리 모델(JMM)
+
+- 자바 5부터 자바 메모리 모델(Java Memory Model, JMM)은 "happens-before" 관계를 기반으로 재정비되었음 → 이 관계가 없으면 한 스레드가 만든 변경을 다른 스레드가 보지 못하거나(가시성 문제), 컴파일러/CPU가 명령어 순서를 재배치(reordering)해 예상치 못한 동작이 발생할 수 있음
+- 멀티스레드 환경에서 안전한 프로그램을 작성하려면 이런 happens-before 관계를 직접 신경 써서 보장해야 함(예: `volatile`, 락, 동기화 블록)
+
+#### 13.2 액터와 자바 메모리 모델
+
+Akka는 액터에 대해 다음 두 가지 규칙을 보장하므로, 액터 내부 상태를 다룰 때는 개발자가 JMM을 직접 신경 쓸 필요가 없음.
+
+- **액터 전송 규칙(actor send rule)**: 액터에게 메시지를 보내는 행위는, 같은 액터가 그 메시지를 수신 처리하는 시점보다 happens-before 관계로 앞섬
+- **액터 후속 처리 규칙(actor subsequent processing rule)**: 한 액터가 어떤 메시지를 처리하는 것은, 같은 액터가 다음 메시지를 처리하는 시점보다 happens-before 관계로 앞섬
+
+이 두 규칙 덕분에 액터 내부 필드는 `volatile`로 선언하지 않아도 됨 → 한 메시지 처리 중에 바뀐 상태는, 다음 메시지가 도착해 처리될 때 항상 최신 값으로 보임(액터가 메시지를 한 번에 하나씩만 순차 처리하기 때문).
+
+#### 13.3 퓨처(Future)와 자바 메모리 모델
+
+- 퓨처(future)의 완료(completion)는 그 퓨처에 등록된 콜백(callback)의 실행보다 happens-before 관계로 앞섬
+- 다만 콜백 안에서 `final`이 아닌 필드를 클로저(closure)로 캡처(close over)하면서 그 필드를 `volatile`로 선언하지 않으면, 여전히 가시성 문제가 발생할 수 있음 → 콜백에서 참조하는 인스턴스는 스레드 안전(thread-safe)하게 다뤄야 함
+
+#### 13.4 액터와 공유 가변 상태(Shared Mutable State)
+
+- 가장 중요한 원칙: 액터 내부의 가변 상태(mutable state)를 다른 스레드에 절대로 노출해서는 안 됨 → 예를 들어 액터 필드를 직접 캡처한 퓨처 콜백에서 그 필드를 변경하는 코드는, 콜백이 액터의 메시지 처리 스레드와 다른 스레드에서 실행될 수 있으므로 안전하지 않음
+- 올바른 패턴: 외부 비동기 작업의 결과를 액터에게 다시 메시지로 전달해, 그 결과 처리가 액터의 정상적인 메시지 처리 흐름 안에서 이루어지도록 해야 함 → `pipeToSelf`나 `context.ask` 같은 도구가 이를 위해 제공됨
+- 메시지는 불변(immutable)이어야 함 → 가변 메시지를 여러 액터가 주고받으면 공유 가변 상태 문제가 그대로 재현되어, 경쟁 조건(race condition)이나 예측 불가능한 동작으로 이어질 수 있음
+
+---
+
+### 14. 참고 자료
 
 - [Akka 공식 문서](https://doc.akka.io/libraries/akka-core/current/)
 - [Introduction to Akka Libraries](https://doc.akka.io/libraries/akka-core/current/typed/guide/introduction.html)
@@ -652,6 +720,8 @@ akka {
 - [Actor References, Paths and Addresses](https://doc.akka.io/libraries/akka-core/current/general/addressing.html)
 - [Message Delivery Reliability](https://doc.akka.io/libraries/akka-core/current/general/message-delivery-reliability.html)
 - [Configuration](https://doc.akka.io/libraries/akka-core/current/general/configuration.html)
+- [Location Transparency](https://doc.akka.io/libraries/akka-core/current/general/remoting.html)
+- [Akka and the Java Memory Model](https://doc.akka.io/libraries/akka-core/current/general/jmm.html)
 
 ---
 

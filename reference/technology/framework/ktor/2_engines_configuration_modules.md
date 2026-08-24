@@ -282,6 +282,40 @@ fun Application.module() {
 
 ---
 
+### 환경별 분기 처리
+
+`dev`/`prod`처럼 배포 환경에 따라 동작을 바꾸고 싶을 때는 사전 정의된 키 대신 커스텀 프로퍼티를 하나 두고 환경변수로 채워 넣는 방식이 흔함.
+
+```hocon
+ktor {
+    environment = ${?KTOR_ENV}
+}
+```
+
+`KTOR_ENV` 환경변수 값이 `ktor.environment`로 들어가며, 코드에서는 이 값을 읽어 분기함.
+
+```kotlin
+fun Application.module() {
+    val env = environment.config.propertyOrNull("ktor.environment")?.getString()
+
+    routing {
+        get {
+            call.respondText(
+                when (env) {
+                    "dev" -> "Development"
+                    "prod" -> "Production"
+                    else -> "..."
+                }
+            )
+        }
+    }
+}
+```
+
+로컬에서는 `KTOR_ENV=dev`, 운영 환경에서는 `KTOR_ENV=prod`로 실행 시점에 값을 넣어주면 됨.
+
+---
+
 ### Application 모듈이란
 
 모듈(Module)은 `Application` 클래스의 확장 함수로 정의되는 단위임. 라우팅, 플러그인 설치, 직렬화 등 한 묶음의 설정을 캡슐화.
@@ -337,3 +371,71 @@ ktor:
 ```
 
 설정 파일에서 등록할 때는 모듈 함수의 완전한 정규화 이름(예: `com.example.ApplicationKt.module`)을 정확히 명시 필요.
+
+---
+
+### 모듈 간 의존성 공유
+
+모듈이 여러 개로 쪼개지면 서비스·리포지토리 같은 공용 의존성을 어떻게 넘길지 정해야 함. 세 가지 접근이 흔함.
+
+#### 파라미터로 전달
+
+```kotlin
+fun main() {
+    embeddedServer(CIO, port = 8080) {
+        val myService = MyService(property<MyServiceConfig>())
+        routingModule(myService)
+        schedulingModule(myService)
+    }.start(wait = true)
+}
+```
+
+의존성이 함수 시그니처에 그대로 드러나 추적하기 쉬움 → 소·중형 애플리케이션에 적합하지만, 모듈 간 컴파일 타임 결합이 생김.
+
+#### Application.attributes
+
+```kotlin
+val customerServiceKey = AttributeKey<CustomerService>("CustomerService")
+
+fun Application.servicesModule() {
+    attributes[customerServiceKey] = CustomerService()
+}
+
+fun Application.customerModule() {
+    val service = attributes[customerServiceKey]
+    routing { /* service 사용 */ }
+}
+```
+
+모듈끼리 서로 직접 참조하지 않고 `Application` 인스턴스를 통해 값을 주고받음 → 느슨한 결합을 얻는 대신, 타입이 attributes 맵 뒤에 숨어 컴파일 타임 검증을 잃음.
+
+#### DI 플러그인
+
+Ktor가 제공하는 의존성 주입 플러그인을 설치하면 경량 컨테이너에 의존성을 등록하고 필요한 곳에서 바로 꺼내 쓸 수 있음 → 대규모 애플리케이션에서 모듈 수가 많아질 때 위 두 방식보다 관리가 수월함.
+
+---
+
+### 모듈 병렬 로딩
+
+모듈이 많고 각각 외부 리소스(DB, 메시지 브로커 등)에 연결하는 부팅 로직을 갖고 있으면, 기본 순차 로딩 방식은 시작 시간이 모듈 수에 비례해 늘어남. `ktor.application.startup`을 `concurrent`로 바꾸면 모듈들을 동시에 로드함.
+
+- `ktor.application.startup`: `sequential`(기본값) / `concurrent`
+- `ktor.application.startupTimeoutMillis`: 로딩 전체에 허용할 최대 시간(ms), 기본값 `10000`
+
+```hocon
+ktor {
+    application {
+        startup = concurrent
+    }
+}
+```
+
+모듈 함수를 `suspend fun Application.xxx()`로 선언해두면 동시 로딩 시 각 모듈의 초기화(예: 외부 커넥션 수립)가 블로킹 없이 병렬로 진행됨.
+
+```kotlin
+suspend fun Application.installEvents() {
+    val kubernetesConnection = connect(property<KubernetesConfig>())
+}
+```
+
+동시 모듈 로딩 자체는 단일 스레드에서 코루틴으로 진행되므로, 애플리케이션 내부 공유 상태에 대한 스레드 안전성 문제는 새로 생기지 않음.

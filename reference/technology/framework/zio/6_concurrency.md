@@ -1338,7 +1338,7 @@ object MainApp extends ZIOAppDefault {
 배리어는 다음 상황에서 깨짐.
 
 - 대기 중인 어떤 파이버가 인터럽트(interruption), 실패(failure), 또는 타임아웃(timeout)을 겪을 때.
-- 배리어에 대해 수동 `reset`이 호출될 때.
+- 배리어에 수동으로 `reset`을 호출할 때.
 
 깨짐(breaking)은 "전부 아니면 전무(all-or-none)" 모델을 통해 대기 중인 모든 파티에 전파됨.
 

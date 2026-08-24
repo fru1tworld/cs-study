@@ -255,7 +255,7 @@ object MainApp extends ZIOAppDefault {
 }
 ```
 
-이 경우, 원래 실패가 종료자의 결함에 의해 억제되어(suppressed) 에러 체인이 형성됨.
+이 경우, 원래 실패가 종료자의 결함으로 억제되어(suppressed) 에러 체인이 형성됨.
 
 #### 병렬 에러(Parallel Errors)
 

@@ -689,7 +689,44 @@ ReplicatedEventSourcing.commonJournalConfig(
   - Akka Distributed Cluster Guide에 종합적인 문서와 예제 존재
 - 직접 데이터베이스 접근 (Direct database access)
   - 복제본들이 서로의 데이터베이스에 직접 연결 → 이벤트 소비하는 대안적 접근법
-  - 별도의 문서에 자세히 설명
+  - gRPC 전송에 비해 설정과 보안이 까다로움 → 사설 네트워크(private network)로 묶여 있지 않은 한 실용적이지 않음
+  - 자세한 내용은 아래 "직접 데이터베이스 전송을 통한 복제"에서 다룸
+
+#### 직접 데이터베이스 전송을 통한 복제 (Replicated Event Sourcing over Direct Database Transport)
+
+> 원본: https://doc.akka.io/libraries/akka-core/current/typed/replicated-eventsourcing-db-transport.html
+
+- gRPC 전송이 권장되는 기본 방식이지만, 모든 복제본이 같은 분산 데이터베이스(예: Cassandra)를 공유하는 사설 네트워크 환경이나 테스트 목적이라면 각 복제본이 다른 복제본의 저널을 직접 폴링(polling)하는 방식도 사용할 수 있음
+- 클러스터 샤딩(Cluster Sharding)과 함께 쓰는 경우, 복제본들은 저널 폴링에 더해 이벤트를 액터 클러스터 네트워크로도 발행(publish)함 → 대부분의 이벤트는 클러스터를 통해 먼저 도착하므로, 저널 폴링 주기를 더 느슨하게 설정할 수 있음. 다만 클러스터를 통한 전달은 보장되지 않으므로 저널 조회 자체는 계속 필요함
+
+##### 샤딩된 복제 이벤트 소싱 엔티티(Sharded Replicated Event Sourced entities)
+
+- 클러스터 샤딩 위에서 복제 이벤트 소싱 엔티티를 실행할 때 적용되는 설정 방식으로, 엔티티 ID·복제본 식별자·알려진 전체 복제본 목록을 미리 지정해야 함
+
+##### 이벤트 직접 복제(Direct Replication of Events)
+
+- 저널 폴링과 별개로, 액터 간 직접 메시지 전달을 통해 이벤트를 다른 복제본에 즉시 전파하는 경로를 함께 둘 수 있음 → 저널 폴링 주기가 길어도 지연(latency)을 낮게 유지할 수 있음
+
+##### 핫 스탠바이(Hot Standby)
+
+- 평상시에는 조회 트래픽을 받지 않는 복제본이라도, 이벤트를 지속적으로 복제받아 로컬 상태를 최신으로 유지하도록 구성할 수 있음 → 장애 조치(failover) 시 즉시 활성화될 수 있는 준비된 복제본을 유지하는 용도
+
+##### 설정 팩토리 메서드
+
+두 가지 설정 방식이 제공됨.
+
+- `perReplicaJournalConfig`: 복제본마다 별도의 데이터베이스·고유한 저널 식별자를 사용함
+- `commonJournalConfig`: 모든 복제본이 동일한 저널을 공유함(Cassandra처럼 분산 데이터베이스를 여러 복제본이 함께 바라보는 경우에 적합)
+
+두 방식 모두 엔티티 ID, 복제본 식별자, 알려진 모든 복제본 목록을 사전에 지정해야 함.
+
+##### 저널 지원(Journal Support)
+
+- 직접 데이터베이스 전송을 통한 복제를 지원하는 저널 플러그인
+  - Akka Persistence Cassandra 1.0.3 이상
+  - Akka Persistence R2DBC 1.0.0 이상
+  - Akka Persistence JDBC 5.0.0 이상
+- 각 플러그인은 복제에 필요한 메타데이터를 저널 구현 내부에서 처리함
 
 #### 충돌 해결 전략 (Conflict resolution strategies)
 
@@ -930,6 +967,7 @@ DC-1: e2 읽기, e3 쓰기
    - [2.4 플러그인 설정](#24-플러그인-설정)
    - [2.5 사전 패키징된 플러그인](#25-사전-패키징된-플러그인)
    - [2.6 영속성 플러그인 프록시(Persistence Plugin Proxy)](#26-영속성-플러그인-프록시persistence-plugin-proxy)
+   - [2.7 커스텀 저장소 백엔드 구현(Building a Storage Backend)](#27-커스텀-저장소-백엔드-구현building-a-storage-backend)
 3. [스키마 진화(Schema Evolution)](#3-스키마-진화schema-evolution)
    - [3.1 의존성 설정](#31-의존성-설정)
    - [3.2 소개](#32-소개)
@@ -2033,6 +2071,57 @@ akka.persistence.snapshot-store.local.dir = "target/snapshots"
   - 하나의 시스템에서 `start-target-journal` 또는 `start-target-snapshot-store` 를 `on` 으로 설정 → 대상 인스턴스 생성 활성화
 - 공유 플러그인 → `target-journal-address` 및 `target-snapshot-store-address` 설정 키를 통해, 또는 프로그래밍 방식으로 `PersistencePluginProxy.setTargetLocation()` 을 사용하여 대상 위치 탐색
 - Akka → 확장(extension)을 지연 로딩(lazily) → 대상 플러그인 로드 보장이 필요하면 `PersistencePluginProxyExtension` 을 인스턴스화하거나 `PersistencePluginProxy.start()` 호출
+
+---
+
+#### 2.7 커스텀 저장소 백엔드 구현(Building a Storage Backend)
+
+> 원본: https://doc.akka.io/libraries/akka-core/current/persistence-journals.html
+
+- 미리 제공되는 플러그인이 요구사항에 맞지 않는 경우 → 저널(journal)·스냅샷 스토어를 직접 구현 가능
+- 플러그인 API는 공개(public) API임 → 서드파티(third-party) 구현체를 자유롭게 만들 수 있음
+
+##### 저널 플러그인 API
+
+- `AsyncWriteJournal` 을 확장하여 다음 메서드 구현
+  - `asyncWriteMessages()`: 영속 메시지의 배치(batch) 쓰기를 처리함. 원자적(atomic) 쓰기가 보장되어야 함
+  - `asyncDeleteMessagesTo()`: 지정한 시퀀스 번호까지의 메시지를 삭제함
+  - `asyncReplayMessages()`: 액터 복구(recovery)를 위해 저장된 메시지를 재생(replay)함
+  - `asyncReadHighestSequenceNr()`: 저장된 가장 높은 시퀀스 번호를 조회함
+- 핵심 요구사항
+  - 동일한 `persistenceId` 에 대한 쓰기는 직렬화(serialize)되어야 함(순서를 지켜 하나씩 처리)
+  - 시퀀스 번호의 정합성을 유지해야 함
+  - 완전 비동기(async)로 동작하는 스토리지든, 블로킹(blocking) API만 제공하는 스토리지든 모두 감쌀 수 있어야 함
+
+##### 스냅샷 스토어 플러그인 API
+
+- `SnapshotStore` 액터를 확장하여 다음 메서드 구현
+  - `loadAsync()`: 선택 조건(selection criteria)에 맞는 스냅샷을 조회함
+  - `saveAsync()`: 스냅샷을 비동기로 저장함
+  - `deleteAsync(메타데이터)`: 스냅샷 하나를 삭제함
+  - `deleteAsync(조건)`: 조건에 맞는 여러 스냅샷을 한꺼번에 삭제함
+
+##### 플러그인 설정
+
+- 플러그인은 클래스 이름과 디스패처(dispatcher)만 지정하면 최소한의 설정으로 활성화됨
+- 생성자 시그니처는 다음 세 가지 형태 중 하나를 지원
+  - `(Config, String)`: 설정 객체와 설정 경로(path)를 함께 받음
+  - `(Config)`: 설정 객체만 받음
+  - 인자 없음(parameterless)
+
+##### 기술 호환성 키트(Technology Compatibility Kit, TCK)
+
+- `akka-persistence-tck` 의존성이 제공하는 표준 테스트 스위트로, 직접 만든 플러그인이 계약(contract)을 만족하는지 검증함
+  - `JournalSpec`/`JavaJournalSpec`: 저널 구현체를 포괄적으로 검증함
+  - `SnapshotStoreSpec`: 스냅샷 스토어 구현체를 검증함
+  - `JournalPerfSpec`: 저널 구현체의 성능을 벤치마킹함
+  - 선택적(optional) 기능은 캐퍼빌리티 플래그(capability flag)로 테스트 포함 여부를 제어함
+- 비동기 퓨처(future) 기반 구현, 서킷 브레이커(circuit breaker)를 통한 보호, 명확한 오류 신호 전달, 테스트 인프라 준비를 위한 `beforeAll`/`afterAll` 생명주기 훅 사용을 권장함
+
+##### 손상된 이벤트 로그(Corrupt Event Logs)
+
+- 동일한 `persistenceId` 를 사용하는 여러 액터가 동시에 존재하는 등의 상황에서 저널이 손상될 수 있음
+- 권장 사항: 저널 구현체는 이런 손상된 이벤트를 조용히 걸러내기(filter)보다는, 중복된 시퀀스 번호를 포함해 있는 그대로 전달하여 상위 계층(애플리케이션)이 어떻게 처리할지 판단할 수 있게 함
 
 ---
 

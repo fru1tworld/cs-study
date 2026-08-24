@@ -749,7 +749,12 @@ val driftFlow = Flow[Double].expand(i => Iterator.from(0).map(i -> _))
 6. [Reactive Streams 상호운용성(Reactive Streams Interoperability)](#6-reactive-streams-상호운용성reactive-streams-interoperability)
 7. [스트림 테스트하기(Testing Streams)](#7-스트림-테스트하기testing-streams)
 8. [연산자 색인(Operators Index)](#8-연산자-색인operators-index)
-9. [참고 자료](#참고-자료)
+9. [서브스트림(Substreams)](#9-서브스트림substreams)
+10. [파이프라이닝과 병렬성(Pipelining and Parallelism)](#10-파이프라이닝과-병렬성pipelining-and-parallelism)
+11. [스트림 컨텍스트 전파(Context Propagation)](#11-스트림-컨텍스트-전파context-propagation)
+12. [StreamRefs: 네트워크를 통한 리액티브 스트림](#12-streamrefs-네트워크를-통한-리액티브-스트림)
+13. [스트림 쿡북(Streams Cookbook)](#13-스트림-쿡북streams-cookbook)
+14. [참고 자료](#참고-자료)
 
 ---
 
@@ -1554,6 +1559,191 @@ Akka Stream은 액터와 기본적으로 통합됨. `Sink.actorRef` 컴포넌트
 - `RestartSource.withBackoff`: 실패 또는 완료 시 백오프와 함께 소스를 재시작
 - `RetryFlow.withBackoff`: 지수 백오프와 함께 개별 요소를 재시도
 - `RetryFlow.withBackoffAndContext`: 백오프와 함께 `FlowWithContext` 요소를 재시도
+
+---
+
+### 9. 서브스트림(Substreams)
+
+> 원본: https://doc.akka.io/libraries/akka-core/current/stream/stream-substream.html
+
+`groupBy`, `splitWhen`, `splitAfter`처럼 하나의 스트림을 여러 개의 스트림으로 나누는 연산자는 `SubSource`나 `SubFlow`라는 결과를 만들어 냄. 이를 서브스트림(substream)이라 부르며, 하나의 스트림을 "스트림들의 스트림(stream of streams)"으로 다중화(multiplexing)하는 수단임. 서브스트림은 런타임에 뒤늦게 머티리얼라이즈되므로, 상위 플로우의 머티리얼라이즈된 값에는 기여하지 않음.
+
+#### 9.1 서브스트림 만들기(Nesting Operators)
+
+**groupBy**
+
+- 들어오는 요소의 키(key) 함수 결과에 따라 스트림을 별도의 출력 스트림들로 분할함. 키 값마다 전용 서브스트림 하나가 열림.
+- `groupBy` 이후에 이어붙인 연산은 모든 서브스트림에 동일하게 적용됨.
+- `allowClosedSubstreamRecreation` 파라미터로 이미 닫힌 서브스트림을 다시 열 수 있는지를 제어함.
+- 서브스트림을 다시 하나의 스트림으로 합치려면 다음 세 방법 중 하나를 사용함.
+    - `mergeSubstreams()`: 동시에 열려 있는 서브스트림 수에 제한 없이 병합함.
+    - `mergeSubstreamsWithParallelism(n)`: 동시에 활성화될 수 있는 서브스트림 수를 `n`으로 제한함.
+    - `concatSubstreams()`: 서브스트림을 순차적으로 하나씩 소비함(병렬성 1과 동일).
+
+> **교착 위험**: 활성 서브스트림 수를 제한한 상태에서, 이미 열려 있는 서브스트림 중 어느 것도 완료되지 않았는데 새로운 키의 요소가 도착하면 백프레셔로 인한 교착(deadlock)이 발생할 수 있음. 예를 들어 병렬성을 1로 설정했는데 첫 번째 서브스트림이 데이터를 계속 기다리는 상태에서 다른 키의 요소가 들어오면, 그 요소는 첫 번째 서브스트림이 끝날 때까지 처리될 수 없음.
+
+**splitWhen과 splitAfter**
+
+- 두 연산자 모두 술어(predicate)가 참을 반환하는 지점에서 새로운 서브스트림을 시작함.
+- 차이는 트리거(trigger)가 된 요소를 어느 쪽에 포함시키느냐임.
+    - `splitWhen`: 조건을 만족한 요소부터 새 서브스트림에 포함시킴.
+    - `splitAfter`: 조건을 만족한 요소까지는 기존 서브스트림에 포함시키고, 그다음 요소부터 새 서브스트림을 시작함.
+- 예를 들어 줄바꿈 문자를 기준으로 텍스트를 나눠 줄마다 문자 수를 세는 것과 같은 처리에 활용할 수 있음.
+
+#### 9.2 서브스트림 소비하기(Flattening Operators)
+
+**flatMapConcat**
+
+- 입력 요소마다 `Source`를 만들어 낸 뒤, 이 서브스트림들을 순서대로 이어 붙여(concatenate) 하나의 출력 스트림으로 평탄화함.
+- 한 번에 하나의 서브스트림만 실행되며, 앞선 서브스트림이 완료된 뒤에야 다음 서브스트림이 시작됨.
+
+**flatMapMerge**
+
+- `flatMapConcat`과 유사하지만, 지정한 `breadth` 개수만큼의 서브스트림이 동시에 요소를 방출할 수 있음.
+- 여러 서브스트림을 순차적으로가 아니라 병렬로 소비할 수 있게 해 줌.
+
+---
+
+### 10. 파이프라이닝과 병렬성(Pipelining and Parallelism)
+
+> 원본: https://doc.akka.io/libraries/akka-core/current/stream/stream-parallelism.html
+
+Akka Streams의 연산자는 기본적으로 퓨징(fusing)되어 하나의 액터 안에서 순차적으로 실행됨. `async()`를 호출해 특정 연산자를 비동기 경계(asynchronous boundary)로 표시하면, 그 연산자는 전용 액터에서 실행되어 앞뒤 연산자와 동시에(concurrently) 실행될 수 있음.
+
+#### 10.1 파이프라이닝(Pipelining)
+
+- 여러 단계로 이루어진 처리를 서로 다른 연산자에 나누어 `async`로 연결하면, 한 요소가 두 번째 단계를 처리하는 동안 다음 요소가 첫 번째 단계에서 처리될 수 있음. 즉 여러 요소가 서로 다른 단계에 걸쳐 동시에 진행 중일 수 있음.
+- 파이프라이닝은 각 단계를 병렬화하지 않고도 처리량을 늘릴 수 있지만, 전체 처리량은 가장 느린 단계에 의해 제한됨. 각 단계의 처리 시간이 고르지 않으면 빠른 단계가 느린 단계를 기다리며 유휴 상태(idle)가 되는 병목이 발생함.
+
+#### 10.2 병렬 처리(Parallel Processing)
+
+- 동일한 처리 단계를 여러 인스턴스로 복제하고, `Balance`로 입력 요소를 분배한 뒤 `Merge`로 결과를 다시 모으면 여러 요소를 완전히 동시에 처리할 수 있음.
+- 워커(worker) 수를 늘리는 것만으로 손쉽게 확장(scale)할 수 있다는 장점이 있으나, `Balance`/`Merge` 조합은 입력 순서를 보존하지 않으므로 순서가 중요한 경우에는 적합하지 않음.
+
+#### 10.3 파이프라이닝과 병렬 처리 결합하기
+
+- 두 패턴은 서로 배타적이지 않음. 파이프라인의 각 단계를 다시 병렬화하거나, 병렬로 동작하는 여러 워커 각각의 내부를 파이프라인으로 구성하는 하이브리드 방식이 가능함.
+- 이런 조합은 대개 `GraphDSL`을 사용해 `Balance`, `Merge`, `async` 경계를 원하는 형태로 배치하여 구현함.
+
+---
+
+### 11. 스트림 컨텍스트 전파(Context Propagation)
+
+> 원본: https://doc.akka.io/libraries/akka-core/current/stream/stream-context.html
+
+스트림을 흘러가는 각 요소에 부가 데이터(메타데이터)를 함께 실어 나르고 싶을 때가 있음. 대표적인 예가 외부 데이터 소스로부터 읽어온 오프셋(offset)을 추적해, 싱크에 도달한 시점에 "여기까지 처리됨"으로 커밋하는 경우임. `SourceWithContext`와 `FlowWithContext`는 이런 요구를 위한 전용 추상화로, 요소와 컨텍스트를 한 쌍으로 묶어 나르되 연산자 코드는 요소에만 집중할 수 있게 해 줌.
+
+#### 11.1 생성
+
+- `Source.asSourceWithContext`: 일반 `Source`를 컨텍스트 인지형(context-aware)으로 변환함. 소스가 방출하는 각 요소로부터 컨텍스트를 추출하는 함수를 받음.
+- `Flow.asFlowWithContext`: 이미 만들어진 `Flow`를 컨텍스트를 함께 나르는 `FlowWithContext`로 변환함. 입력 시 컨텍스트를 추출하고 출력 시 다시 결합하는 함수가 필요함.
+- 공식 문서는 기존 `Flow`를 사후에 컨텍스트 인지형으로 바꾸기보다는, 처음부터 `FlowWithContext`로 설계하는 편을 권장함.
+
+#### 11.2 허용되는 연산과 제한되는 연산
+
+- `FlowWithContext`는 사실상 `(요소, 컨텍스트)` 튜플을 감싼 `Flow`이지만, 오프셋 커밋 같은 컨텍스트의 의미를 깨뜨리지 않도록 사용 가능한 연산을 제한함.
+    - **허용**: `filter`, `filterNot`, `collect` 같은 필터링 연산, `grouped`, `sliding` 같은 그룹핑 연산, `mapConcat`처럼 하나의 요소를 여러 요소로 펼치는 연산(각 결과 요소는 원래 컨텍스트를 그대로 이어받음).
+    - **제한**: `mapAsyncUnordered`나 `statefulMapConcat`처럼 요소 순서를 재배치할 수 있는 연산은 컨텍스트(예: 오프셋)와 요소 사이의 대응 관계를 깨뜨릴 위험이 있어 제공되지 않음.
+
+#### 11.3 탈출구(Escape Hatch): via
+
+- `via` 연산자를 사용하면 `(요소, 컨텍스트)` 쌍 자체에 직접 접근하는 임의의 `Flow`를 끼워 넣을 수 있음.
+- 이 경우 요소와 컨텍스트의 대응 관계를 올바르게 유지하는 책임은 전적으로 그 `Flow`를 작성한 쪽에 있으며, 잘못 다루면 싱크가 전제하는 컨텍스트 보장이 깨질 수 있음.
+
+---
+
+### 12. StreamRefs: 네트워크를 통한 리액티브 스트림
+
+> 원본: https://doc.akka.io/libraries/akka-core/current/stream/stream-refs.html
+
+StreamRefs는 클러스터의 다른 노드에 있는 `Source`나 `Sink`를 가리키는 참조(reference)를 제공해, 노드 간에도 백프레셔가 적용되는 스트림을 이어 붙일 수 있게 해 줌. 공식 문서의 표현을 빌리면 "`ActorRef`와 비슷하지만, Akka Streams의 `Source`와 `Sink`를 위한 것"임. 액터 메시징을 대체하는 것이 아니라 보완하는 용도이며, 흐름 제어(flow control)와 백프레셔를 네트워크 너머로 자동으로 유지함.
+
+> **주의**: StreamRefs는 반드시 Akka 클러스터(Akka Cluster)와 함께 사용해야 함. 그렇지 않으면 장애 감지기(failure detector)의 격리(quarantine) 처리와 충돌할 수 있음.
+
+#### 12.1 SourceRef: 원격 시스템에 데이터 제공하기
+
+- `Sink.sourceRef()`로 `Source`를 머티리얼라이즈하면 `SourceRef`를 얻을 수 있음.
+- `SourceRef`는 단발성(single-shot)으로만 머티리얼라이즈할 수 있어 의미론이 명확함.
+- 사용 흐름: 원본 시스템 A가 소스를 준비해 머티리얼라이즈하고, 얻어진 `SourceRef`를 도메인 메시지에 담아 원격 시스템 B로 전송함. B는 이를 일반 소스처럼 실행해 데이터를 소비함.
+
+#### 12.2 SinkRef: 원격 시스템으로부터 데이터 받기
+
+- `SourceRef`의 대응물로, 원격 시스템이 데이터를 보낼 수 있게 해 줌.
+- `StreamRefs.sinkRef().to(sink).run()`으로 싱크를 머티리얼라이즈해 `SinkRef`를 얻음. 이 역시 단발성 머티리얼라이즈 제약이 적용됨.
+- 사용 흐름: 시스템 A가 싱크를 준비해 머티리얼라이즈하고, 얻어진 `SinkRef`를 시스템 B로 전송함. B는 자신의 데이터 소스를 이 `SinkRef`로 흘려보냄.
+
+#### 12.3 전달 보장(Delivery Guarantees)
+
+StreamRefs는 전송 계층으로 일반 액터 메시징(TCP 또는 Aeron UDP를 통한 리모팅)을 그대로 사용하므로 다음이 보장됨.
+
+- 메시지는 순서대로(in-order) 전달됨.
+- 유실된 수요(demand) 신호는 자동으로 재전송됨.
+- 유실된 요소(element) 신호는 스트림 실패로 처리됨.
+
+#### 12.4 직렬화(Serialization)
+
+- 참조를 직접 메시지로 보낼 때 사용할 내장 직렬화기(serializer)가 기본 제공됨.
+- Akka Jackson 직렬화는 다른 메시지에 감싸 넣은 참조도 자동으로 처리함.
+- 커스텀 직렬화기를 작성해야 한다면, `StreamRefResolver` 익스텐션의 `toSerializationFormat()`, `resolveSourceRef()`/`resolveSinkRef()` 메서드를 사용함.
+
+#### 12.5 설정(Configuration)
+
+- **구독 타임아웃(subscription timeout)**: 아직 실현(materialize)되지 않은 스트림 제안이 자원을 계속 점유하는 것을 막기 위한 마감 시간. 기본값 30초이며, `StreamRefAttributes.subscriptionTimeout()`으로 개별 설정 가능함.
+- `akka.stream.materializer.stream-ref` 하위의 주요 설정.
+    - `buffer-capacity`: 노드 간 요청 요소를 배치(batch) 처리하는 버퍼 크기 (기본 32)
+    - `demand-redelivery-interval`: 유실된 수요 신호를 재전송하는 주기 (기본 1초)
+    - `subscription-timeout`: 머티리얼라이즈 유예 시간 (기본 30초)
+    - `final-termination-signal-deadline`: 노드 다운 등의 상황을 처리하기 위한 최종 종료 신호 유예 시간 (기본 2초)
+
+#### 12.6 그 외 특징
+
+- 메시지 브로커 없이 지점 간(point-to-point) 스트리밍을 하도록 설계됨.
+- 스트림 자체는 영속화되지 않지만, 액터 프로토콜을 조합하면 재개 가능한(resumable) 스트림도 구현할 수 있음.
+- 대용량 파일이나 미디어 같은 대규모 데이터 전송을 위한 벌크 스트림 참조(bulk stream references) 기능이 계획되어 있으나 아직 구현되지 않음.
+- 현재 API 안정성 등급은 "may change"이므로, 향후 버전에서 변경될 수 있음.
+
+---
+
+### 13. 스트림 쿡북(Streams Cookbook)
+
+> 원본: https://doc.akka.io/libraries/akka-core/current/stream/stream-cookbook.html
+
+쿡북은 흔히 마주치는 문제들에 대해, 어떤 연산자 조합으로 해결하면 되는지를 보여주는 레시피 모음임. 여기서는 분류별 핵심 레시피만 요약함(각 레시피의 전체 Scala/Java 코드는 공식 문서와 예제 저장소를 참고).
+
+#### 13.1 플로우 다루기(Working with Flows)
+
+- **스트림 로깅**: `map` 안에서 값을 출력하거나, 로그 레벨을 지정할 수 있는 `log()` 연산자를 사용함.
+- **함수로부터 소스 만들기**: `Source.repeat(NotUsed).map(_ => f())` 형태로 함수를 반복 평가하는 소스를 만들되, 단일 스레드로만 호출되는 보장을 유지함.
+- **시퀀스 평탄화**: 중첩된 컬렉션 요소를 낱개 요소로 펼치려면 `mapConcat(identity)`를 사용함.
+- **컬렉션으로 모으기**: `Sink.seq`와 `limit()`/`take()`를 조합해 메모리 사용량을 제한하며 요소를 모음.
+- **ByteString 다이제스트 계산**: 커스텀 `GraphStage`로 바이트 스트림을 처리하면서 암호화 해시를 계산함.
+- **구분자로 나뉜 데이터 파싱**: `Framing.delimiter()`로 `ByteString` 스트림에서 줄이나 바이너리 프레임을 추출함.
+- **압축 해제**: `Compression.gunzip()`으로 gzip으로 압축된 바이트 스트림을 처리함.
+- **분할기(Splitter) 패턴**: 복합 메시지를 하위 메시지로 나눌 때 `map`과 `mapConcat`을 사용함.
+- **분할-집계(Splitter-Aggregator) 조합**: `splitWhen`, `mapConcat`, `mergeSubstreams`를 조합해 메시지를 나누고 다시 결과를 모음.
+- **키별 리듀스(Reduce-by-key)**: `groupBy`, `reduce`, `mergeSubstreams`로 단어 수 세기 같은 그룹 집계를 구현함.
+- **다중 그룹 정렬**: `mapConcat`과 `groupBy`를 조합해 하나의 요소를 여러 그룹으로 동시에 라우팅함.
+- **애드혹(ad-hoc) 소스**: `lazySource`, `backpressureTimeout()`, `recoverWithRetries`로 소스의 생명주기를 제어함.
+
+#### 13.2 연산자 다루기(Working with Operators)
+
+- **프로그래밍 방식의 플로우 트리거**: `Zip`이나 `ZipWith`로 트리거 신호와 요소 방출 타이밍을 동기화함.
+- **워커 풀 부하 분산**: 고정된 워커 풀에 작업을 분배할 때 `Balance`와 `Merge`를 `.async`와 함께 사용함.
+
+#### 13.3 처리율 다루기(Working with Rate)
+
+- **요소 버리기**: `conflate`로 백프레셔 상황에서 업스트림 요소를 접어(collapse) 생산자가 느려지지 않게 함.
+- **브로드캐스트에서 버리기**: 브로드캐스트 출력마다 `buffer` 단계에 `OverflowStrategy.dropHead`를 적용해, 빠른 소비자가 느린 소비자에게 발목 잡히지 않게 함.
+- **놓친 신호(missed tick) 집계**: `conflateWithSeed`로 버퍼링 대신 건너뛴 이벤트 수를 집계함.
+- **마지막 요소 반복**: `HoldWithInitial`, `HoldWithWait` 같은 커스텀 `GraphStage`로, 다운스트림이 업스트림보다 빠르게 풀(pull)할 때 최신 값을 반복해서 방출함.
+- **전역 처리율 제한**: 여러 독립된 스트림에 걸친 처리량을 조율하려면, `mapAsync`와 `ask` 패턴으로 공유 리미터(limiter) 액터에 요청함.
+
+#### 13.4 IO 다루기(Working with IO)
+
+- **ByteString 청킹**: 커스텀 `GraphStage`로 큰 `ByteString`을 고정 크기 조각으로 나눔.
+- **바이트 처리율 제한**: 커스텀 `GraphStage`가 누적 바이트 수를 검증해 한도를 초과하면 스트림을 실패시킴.
+- **ByteString 압축(compact)**: 마지막 변환 단계에서 `.compact()`를 호출해 구조적 공유(structural sharing) 참조를 해제함.
+- **킵얼라이브(keep-alive) 주입**: 통신이 일정 시간 유휴 상태일 때 `keepAlive()` 연산자로 하트비트 메시지를 자동으로 끼워 넣음.
 
 ---
 
