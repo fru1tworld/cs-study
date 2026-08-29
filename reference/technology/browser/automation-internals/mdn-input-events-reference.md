@@ -74,5 +74,3 @@ console.log(window.devicePixelRatio);
 - [MDN User activation](https://developer.mozilla.org/docs/Web/Security/User_activation)
 - [MDN compositionstart](https://developer.mozilla.org/docs/Web/API/Element/compositionstart_event)
 - [MDN devicePixelRatio](https://developer.mozilla.org/docs/Web/API/Window/devicePixelRatio)
-</content>
-</invoke>

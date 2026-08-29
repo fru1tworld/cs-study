@@ -96,5 +96,3 @@ CDP `Input` 도메인으로 실제 키 입력을 하나씩 시뮬레이션하면
 - [MDN Event.isTrusted](./mdn-input-events-reference.md)
 - [Puppeteer 공식 문서](https://pptr.dev/)
 - [Playwright Actionability 공식 문서](https://playwright.dev/docs/actionability)
-</content>
-</invoke>

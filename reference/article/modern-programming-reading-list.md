@@ -28,7 +28,7 @@
 
 ## 2. Scala 3 / Scala 생태계
 
-- [Scala 3 Book (공식)](https://docs.scala-lang.org/scala3/book/introduction.html) — Scala 3 문법과 관용구를 처음부터 다시 정리한 공식 책. 기존 `technology/pl/scala` 문서의 원전.
+- [Scala 3 Book (공식)](https://docs.scala-lang.org/scala3/book/introduction.html) — Scala 3 문법과 관용구를 처음부터 다시 정리한 공식 책. 기존 `technology/scala/scala-language` 문서의 원전.
 - [Scala 3 Macros Tutorial (공식)](https://docs.scala-lang.org/scala3/guides/macros/) — inline, quote/splice 기반의 새 매크로 시스템 공식 가이드.
 - [Strategic Scala Style: Principle of Least Power (Li Haoyi)](https://www.lihaoyi.com/post/StrategicScalaStylePrincipleofLeastPower.html) — "표현 가능한 것 중 가장 약한 기능을 써라". Scala의 방대한 기능 중 무엇을 언제 쓸지에 대한 실무 지침.
 - [Strategic Scala Style: Practical Type Safety (Li Haoyi)](https://www.lihaoyi.com/post/StrategicScalaStylePracticalTypeSafety.html) — 실무에서 비용 대비 효과가 좋은 타입 안전성 기법의 우선순위를 매긴다.

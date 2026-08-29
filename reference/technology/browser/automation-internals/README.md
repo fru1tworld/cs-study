@@ -15,5 +15,3 @@ CDP 기반 자동화 도구(Puppeteer, Playwright, MCP 서버 등)가 실제로 
 
 - [CDP 개요](../cdp/README.md)
 - [Chrome 확장 프로그램](../chrome-extension/README.md)
-</content>
-</invoke>

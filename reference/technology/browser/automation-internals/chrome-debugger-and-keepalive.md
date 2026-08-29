@@ -62,5 +62,3 @@ chrome.runtime.onStartup.addListener(async () => {
 - [Service Worker Lifecycle](../chrome-extension/service-worker-lifecycle.md)
 - [chrome.debugger API](../chrome-extension/debugger-api.md)
 - [chrome-devtools-mcp](./chrome-devtools-mcp.md)
-</content>
-</invoke>

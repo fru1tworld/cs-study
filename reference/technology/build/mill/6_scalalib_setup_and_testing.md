@@ -1176,4 +1176,3 @@ error: This project's statement coverage (40.00) did not meet minimum (50.0)
   - `./mill ratchet` / `--check`: 변경분만 점진적 포매팅
 - Scoverage
   - `./mill scoverage.validateCoverageMinimums`: 커버리지 기준 검증
-</content>

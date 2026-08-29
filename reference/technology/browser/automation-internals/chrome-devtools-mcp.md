@@ -86,5 +86,3 @@ MCP 서버: Input.dispatchMouseEvent로 신뢰된 클릭 이벤트 생성
 - [MCP Specification](../../../standard/mcp/specification.md)
 - [WebMCP Explainer](../../../standard/w3c/webmcp.md)
 - [CDP Accessibility 도메인](../cdp/accessibility.md)
-</content>
-</invoke>

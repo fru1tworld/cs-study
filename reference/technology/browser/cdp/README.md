@@ -11,6 +11,6 @@ Chrome DevTools가 브라우저를 검사/제어할 때 내부적으로 사용�
 
 ## 관련 문서
 
-- [chrome.debugger API](../chrome-extension/debugger-api.md)
+- [chrome.debugger API](../chrome-extension/2_debugger_and_network.md)
 - [브라우저 자동화 내부 동작](../automation-internals/README.md)
 - [WAI-ARIA 1.2](../../../standard/w3c/wai-aria.md)

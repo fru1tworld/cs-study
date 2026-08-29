@@ -72,5 +72,3 @@ button.addEventListener("click", () => {
 - [MDN User activation](https://developer.mozilla.org/docs/Web/Security/User_activation)
 - [CDP Input 도메인](../cdp/input.md)
 - [Trusted Input 구현 비교](./trusted-input-implementations.md)
-</content>
-</invoke>

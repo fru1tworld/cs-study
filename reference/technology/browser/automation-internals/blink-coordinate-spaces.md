@@ -72,5 +72,3 @@ CSS 픽셀 좌표 × devicePixelRatio = 물리 픽셀 좌표
 - [CDP DOM 도메인](../cdp/dom.md)
 - [MDN 입력 이벤트 레퍼런스 (devicePixelRatio)](./mdn-input-events-reference.md)
 - [OOPIF / Site Isolation](./oopif-site-isolation.md)
-</content>
-</invoke>

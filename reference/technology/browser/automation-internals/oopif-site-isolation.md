@@ -71,5 +71,3 @@ Site Isolation은 [Same-Origin Policy](../../../standard/RFC/Layer7-Application/
 - [Target 도메인](../cdp/target.md)
 - [DOM 도메인](../cdp/dom.md)
 - [RFC 6454 Web Origin](../../../standard/RFC/Layer7-Application/HTTP/RFC6454-Web-Origin.md)
-</content>
-</invoke>

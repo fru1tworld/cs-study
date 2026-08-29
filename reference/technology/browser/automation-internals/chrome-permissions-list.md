@@ -69,5 +69,3 @@ document.getElementById("enableAdvanced").addEventListener("click", async () => 
 - [Chrome Extensions 권한 문서 (공식)](https://developer.chrome.com/docs/extensions/reference/permissions-list)
 - [scripting API](../chrome-extension/scripting-api.md)
 - [debugger API](../chrome-extension/debugger-api.md)
-</content>
-</invoke>
