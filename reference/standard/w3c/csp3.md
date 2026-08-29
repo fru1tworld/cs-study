@@ -128,7 +128,7 @@ Content-Security-Policy: frame-ancestors 'self' https://trusted-parent.com
 - CSP3 → 출처 화이트리스트 대신 nonce/hash + `strict-dynamic`으로 스크립트 신뢰를 관리하는 방향으로 발전
 - Trusted Types 연계 → DOM XSS의 싱크(sink) 자체를 타입 시스템으로 차단 가능
 - `frame-ancestors`가 `X-Frame-Options`를 대체, `report-to`가 `report-uri`를 대체하는 흐름
-- Chrome 확장 프로그램의 CSP 정책([Chrome improve-security 가이드](../../technology/browser/chrome-extension/improve-security-csp.md) 참고)도 이 CSP3 모델을 기반으로 함
+- Chrome 확장 프로그램의 CSP 정책([Chrome 확장 프로그램 보안 가이드](../../technology/frontend/browser/chrome-extension/4_security_and_policy.md) 참고)도 이 CSP3 모델을 기반으로 함
 
 ---
 

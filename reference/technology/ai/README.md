@@ -20,4 +20,4 @@
 
 - [MCP Specification](../../standard/mcp/specification.md)
 - [WebMCP Explainer](../../standard/w3c/webmcp.md)
-- [브라우저 자동화 내부 동작](../browser/automation-internals/README.md)
+- [브라우저 자동화 내부 동작](../frontend/browser/automation-internals/README.md)

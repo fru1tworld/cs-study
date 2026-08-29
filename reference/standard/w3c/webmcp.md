@@ -120,5 +120,5 @@ navigator.modelContext.registerTool({
 ## 참고 자료
 
 - [WebMCP Explainer (WICG)](https://webmachinelearning.github.io/webmcp/)
-- [Chrome AI/WebMCP Origin Trial 발표](../../technology/browser/chrome-extension/webmcp-origin-trial.md)
+- [Chrome AI/WebMCP Origin Trial 발표](../../technology/frontend/browser/chrome-extension/3_side_panel_and_webmcp.md)
 - [MCP Specification](../mcp/specification.md)

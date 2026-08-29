@@ -122,4 +122,4 @@ MCP는 원래 로컬 프로세스 간(Host-Server) 프로토콜로 설계됨 →
 
 - [MCP Specification (공식)](https://modelcontextprotocol.io/specification)
 - [WebMCP Explainer](../w3c/webmcp.md)
-- [chrome-devtools-mcp 개요](../../technology/browser/automation-internals/chrome-devtools-mcp.md)
+- [chrome-devtools-mcp 개요](../../technology/frontend/browser/automation-internals/chrome-devtools-mcp.md)

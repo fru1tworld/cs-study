@@ -24,7 +24,7 @@ Computer Use는 Claude가 스크린샷을 통해 화면을 "보고", 마우스 �
 - 스크롤: 지정 방향으로 스크롤
 - 대기: 페이지 로딩 등을 기다리기 위한 지연
 
-이 도구는 Claude가 좌표 기반으로 화면을 조작한다는 점에서, 브라우저 자동화의 [CDP Input 도메인](../../browser/cdp/input.md) 기반 접근과 개념적으로 유사함. 다만 Computer Use는 특정 브라우저 프로토콜에 종속되지 않고 임의의 GUI 환경(OS 데스크톱 포함)에 적용 가능하도록 설계됨.
+이 도구는 Claude가 좌표 기반으로 화면을 조작한다는 점에서, 브라우저 자동화의 [CDP Input 도메인](../../frontend/browser/cdp/input.md) 기반 접근과 개념적으로 유사함. 다만 Computer Use는 특정 브라우저 프로토콜에 종속되지 않고 임의의 GUI 환경(OS 데스크톱 포함)에 적용 가능하도록 설계됨.
 
 ---
 
@@ -61,4 +61,4 @@ Computer Use는 [일반 Tool Use](./tool-use.md)의 한 특수 형태로, "화�
 
 - [Computer use (Anthropic 공식)](https://platform.claude.com/docs/en/agents-and-tools/tool-use/computer-use-tool)
 - [Tool use (Anthropic 공식)](./tool-use.md)
-- [CDP Input 도메인](../../browser/cdp/input.md)
+- [CDP Input 도메인](../../frontend/browser/cdp/input.md)
