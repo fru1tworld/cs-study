@@ -1,0 +1,13 @@
+<ol>
+  <!--
+    우리는 각 todo-item에 해당하는 todo 객체를 제공하여
+    그 내용이 동적으로 되도록 하고 있습니다.
+    또한 각 컴포넌트에 "key"를 제공해야 하는데,
+    이는 v-for에 대한 가이드 섹션에서 설명되어 있습니다.
+  -->
+  <TodoItem
+    v-for="item in groceryList"
+    :todo="item"
+    :key="item.id"
+  ></TodoItem>
+</ol>

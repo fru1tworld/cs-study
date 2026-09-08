@@ -1,0 +1,20 @@
+<h1>최신 Vue 코어 커밋</h1>
+<template v-for="branch in branches">
+  <input type="radio"
+    :id="branch"
+    :value="branch"
+    name="branch"
+    v-model="currentBranch">
+  <label :for="branch">{{ branch }}</label>
+</template>
+<p>vuejs/core@{{ currentBranch }}</p>
+<ul v-if="commits.length > 0">
+  <li v-for="{ html_url, sha, author, commit } in commits" :key="sha">
+    <a :href="html_url" target="_blank" class="commit">{{ sha.slice(0, 7) }}</a>
+    - <span class="message">{{ truncate(commit.message) }}</span><br>
+    작성자 <span class="author">
+      <a :href="author.html_url" target="_blank">{{ commit.author.name }}</a>
+    </span>
+    작성일 <span class="date">{{ formatDate(commit.author.date) }}</span>
+  </li>
+</ul>

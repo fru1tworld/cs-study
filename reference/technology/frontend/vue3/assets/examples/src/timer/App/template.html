@@ -1,0 +1,12 @@
+<label
+>경과 시간: <progress :value="progressRate"></progress
+></label>
+
+<div>{{ (elapsed / 1000).toFixed(1) }}초</div>
+
+<div>
+  지속 시간: <input type="range" v-model="duration" min="1" max="30000">
+  {{ (duration / 1000).toFixed(1) }}초
+</div>
+
+<button @click="reset">초기화</button>

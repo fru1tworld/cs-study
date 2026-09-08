@@ -1,0 +1,10 @@
+<button @click="show = !show">목록 토글</button>
+<button @click="list.push(list.length + 1)">숫자 추가</button>
+<button @click="list.pop()">숫자 제거</button>
+<button @click="list.reverse()">목록 뒤집기</button>
+
+<ul v-if="show && list.length">
+  <li v-for="item of list">{{ item }}</li>
+</ul>
+<p v-else-if="list.length">목록이 비어있지 않지만, 숨겨져 있습니다.</p>
+<p v-else>목록이 비어 있습니다.</p>

@@ -1,0 +1,107 @@
+# 스타일 가이드 & Do's and Don'ts
+
+> 원본: https://protobuf.dev/programming-guides/style/ , https://protobuf.dev/programming-guides/dos-donts/
+
+<a id="파일-이름과-구조"></a>
+## 파일 이름과 구조
+
+- 파일 이름은 `lower_snake_case.proto` 사용
+- 파일 내용은 다음 순서로 작성
+  - 1\. 라이선스 헤더(있다면)
+  - 2\. 파일 개요(주석)
+  - 3\. `syntax` 또는 `edition` 선언
+  - 4\. `package` 선언
+  - 5\. `import`(정렬된 상태로)
+  - 6\. 파일 옵션(`option ...`)
+  - 7\. 그 외 모든 정의(메시지, enum, 서비스 등)
+
+<a id="포맷팅-규칙"></a>
+
+## 포맷팅 규칙
+
+- 한 줄 길이는 80자로 유지
+- 들여쓰기는 공백 2칸 사용
+- 문자열은 큰따옴표(`"`) 사용
+
+<a id="네이밍-규칙"></a>
+
+## 네이밍 규칙
+
+- 메시지: PascalCase(TitleCase).
+
+```proto
+message SongRequest {}
+```
+
+- 필드: snake_case. repeated 필드는 복수형 이름 사용
+
+```proto
+string song_name = 1;
+repeated Song songs = 2;
+```
+
+- oneof: lower_snake_case.
+
+```proto
+oneof song_id {
+  string song_human_readable_id = 1;
+  int64 song_machine_id = 2;
+}
+```
+
+- enum: 타입 이름은 PascalCase, 값은 UPPER_SNAKE_CASE.
+
+```proto
+enum FooBar {
+  FOO_BAR_UNSPECIFIED = 0;
+  FOO_BAR_FIRST_VALUE = 1;
+}
+```
+
+첫 값은 0으로 두고 `_UNSPECIFIED` 또는 `_UNKNOWN` 접미사를 붙이는 것이 좋다. 값 이름이 충돌하지 않도록 모든 값에 enum 이름을 UPPER_SNAKE_CASE로 변환한 접두사를 붙인다.
+
+- package: 점으로 구분된 lower_snake_case 사용
+  - 대문자나 Java 스타일 네이밍은 지양
+
+- service / rpc: 둘 다 PascalCase.
+
+```proto
+service FooService {
+  rpc GetSomething(GetSomethingRequest) returns (GetSomethingResponse);
+}
+```
+
+<a id="피해야-할-것-스타일"></a>
+
+## 피해야 할 것 (스타일)
+
+- `required` 필드: 스키마 진화에 해로움
+- group: deprecated → 대신 중첩 메시지 사용
+- 문제를 일으키는 접두사를 가진 필드/oneof 이름: `has_`, `get_`, `set_`, `clear_`
+- `_value`로 끝나는 필드/oneof 이름
+- `descriptor`라는 이름, 각 언어의 예약어
+
+<a id="donts-하지-말-것"></a>
+
+## Don'ts (하지 말 것)
+
+- 필드 번호를 재사용하지 말 것: 필드 번호는 바이너리 형식에서 필드를 식별하는 값 → 재사용 시 구버전 메시지를 새 코드로 역직렬화할 때 데이터 손상
+- 삭제한 필드를 다시 태깅하지 말 것: 필드 제거 시 그 번호를 `reserved`로 예약 → 향후 실수로 재사용되는 것을 방지 필요
+- 필드 타입을 바꾸지 말 것: 버전 간 타입 변경 → 역직렬화가 깨지고 조용한 데이터 손실, 손상 유발
+- required 필드를 추가하지 말 것: 하위 호환을 깨뜨림 → 새 required 필드는 해당 값을 제공하지 못하는 기존 코드를 망가뜨림
+- 필드가 과도하게 많은 메시지를 만들지 말 것: 가독성, 유지보수성, 성능을 해치는 나쁜 설계 신호
+- 언어 예약어를 쓰지 말 것: C/C++ 등의 예약어와 겹치는 필드 이름은 컴파일 오류와 네임스페이스 충돌 유발
+- 불리언 이름을 모호하게 짓지 말 것: 의도가 분명한 이름 사용 → 상태에 대한 혼란 감소
+- 기본값을 바꾸지 말 것: 기본값에 의존하던 시스템의 동작이 예기치 않게 변경됨
+- 텍스트 형식 메시지를 데이터 교환에 쓰지 말 것: 텍스트 형식은 사람이 읽기 위한 용도 → 시스템 간 교환에는 바이너리 형식 사용
+
+<a id="dos-해야-할-것"></a>
+
+## Dos (해야 할 것)
+
+- 삭제한 필드 번호를 예약할 것: 제거한 필드 번호를 명시적으로 `reserved` 처리 → 재사용 방지 및 호환성 유지
+- enum 값 0을 포함할 것: 0을 unspecified/unknown 상태로 예약 → 미설정 값을 버전 간에 안전하게 처리 가능
+- well-known/공통 타입을 사용할 것: `Duration`, `Timestamp`, `FieldMask` 같은 표준 타입 활용 → 일관성, 상호운용성 향상, 커스텀 코드 감소
+- 네이밍 규칙을 따를 것: 메시지/필드/서비스에 일관된 명명 패턴 적용 → 명확성 및 언어 간 사용성 확보
+
+<a id="요약-체크리스트"></a>

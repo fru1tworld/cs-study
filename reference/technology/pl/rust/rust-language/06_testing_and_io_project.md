@@ -1,0 +1,1027 @@
+# 러스트 테스트 작성과 I/O 프로젝트
+
+## 자동화된 테스트 작성하기
+
+> **원문:** https://doc.rust-lang.org/book/ch11-00-testing.html
+
+### 개요
+
+Rust는 정확성(Correctness)을 중시하지만 타입 시스템만으로 로직의 오류까지 모두 잡아낼 수는 없다. 이를 보완하는 도구가 자동화된 테스트다. 코드가 의도대로 동작하는지 검사하고, 코드를 변경한 뒤에도 기존 동작이 유지되는지 확인할 수 있다.
+
+### 테스트의 필요성
+
+- Edsger W. Dijkstra, 1972년 에세이 "겸손한 프로그래머(The Humble Programmer)": "프로그램 테스트는 버그의 존재를 보여주는 데에는 매우 효과적일 수 있지만, 버그의 부재를 보여주기에는 절망적으로 부적절하다"
+- 다만 가능한 한 많이 테스트하려는 노력을 포기할 이유는 아님
+- 정확성(Correctness): 코드가 의도한 바를 수행하는 정도
+- Rust는 정확성에 높은 관심을 두고 설계 → 다만 정확성은 복잡하며 증명이 쉽지 않음
+- 타입 시스템(Type System)이 부담의 상당 부분을 감당 → 그러나 모든 것을 잡아내지는 못함
+- 따라서 Rust는 자동화된 소프트웨어 테스트 작성 지원을 포함
+
+### 예시: `add_two` 함수
+
+정수를 받아 2를 더한 정수를 반환하는 `add_two` 함수를 생각해 보자. 컴파일러의 타입 검사(Type Checking)와 대여 검사(Borrow Checking)는 `String`이나 유효하지 않은 참조를 전달하는 문제를 막는다. 하지만 함수가 2 대신 10을 더하거나 50을 빼는지는 확인하지 못한다.
+
+이때 `3`을 전달한 결과가 `5`인지 단언(assert)하는 테스트를 작성하면 의도한 계산을 검사할 수 있다. 코드를 변경할 때마다 같은 테스트를 실행해 이 동작이 유지되는지도 확인한다.
+
+## 테스트 작성하기
+
+> **원문:** https://doc.rust-lang.org/book/ch11-01-writing-tests.html
+
+### 개요
+
+- 테스트: 비테스트 코드가 예상대로 작동하는지 검증하는 Rust 함수
+- 테스트 함수가 일반적으로 수행하는 세 가지 작업:
+
+- 필요한 데이터 또는 상태 설정
+- 테스트하려는 코드 실행
+- 결과가 예상과 일치하는지 단언(assert)
+
+### 테스트 함수 구조
+
+Rust에서는 함수에 `#[test]` 속성(attribute)을 붙여 테스트로 표시한다. `cargo test`를 실행하면 이 함수들을 실행하고 통과/실패 결과를 보고하는 테스트 러너 바이너리를 빌드한다.
+
+#### 기본 테스트 구조
+
+```rust
+pub fn add(left: u64, right: u64) -> u64 {
+    left + right
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn it_works() {
+        let result = add(2, 2);
+        assert_eq!(result, 4);
+    }
+}
+```
+
+- `cargo test` 실행 시 출력 예:
+
+```
+running 1 test
+test tests::it_works ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured
+```
+
+예제의 `tests` 모듈은 `#[cfg(test)]`가 붙어 테스트 중에만 컴파일된다. `use super::*`로 상위 모듈의 항목을 가져와 `add`를 호출한다.
+
+#### 테스트 실패
+
+- 테스트 함수 내에서 패닉 발생 시 테스트 실패
+- 각 테스트는 새 스레드에서 실행:
+
+```rust
+#[test]
+fn another() {
+    panic!("Make this test fail");
+}
+```
+
+- 출력:
+
+```
+test tests::another ... FAILED
+
+failures:
+---- tests::another stdout ----
+thread 'tests::another' panicked at src/lib.rs:17:9:
+Make this test fail
+```
+
+### 단언 매크로 (Assertion Macros)
+
+#### `assert!` 매크로
+
+`assert!`는 불리언 조건을 받아 `true`이면 통과하고 `false`이면 패닉을 발생시킨다. 아래에서는 큰 사각형이 작은 사각형을 포함할 수 있는지 검사한다.
+
+```rust
+#[derive(Debug)]
+struct Rectangle {
+    width: u32,
+    height: u32,
+}
+
+impl Rectangle {
+    fn can_hold(&self, other: &Rectangle) -> bool {
+        self.width > other.width && self.height > other.height
+    }
+}
+
+#[test]
+fn larger_can_hold_smaller() {
+    let larger = Rectangle { width: 8, height: 7 };
+    let smaller = Rectangle { width: 5, height: 1 };
+    assert!(larger.can_hold(&smaller));
+}
+```
+
+#### `assert_eq!`와 `assert_ne!` 매크로
+
+- 동등성, 비동등성 테스트 → 실패 시 두 값 출력:
+
+```rust
+pub fn add_two(a: u64) -> u64 {
+    a + 2
+}
+
+#[test]
+fn it_adds_two() {
+    let result = add_two(2);
+    assert_eq!(result, 4);
+}
+```
+
+- 단언이 실패하면:
+
+```
+assertion `left == right` failed
+  left: 5
+ right: 4
+```
+
+`assert_eq!`는 `==`로, `assert_ne!`는 `!=`로 비교한다. 비교와 실패 메시지 출력에 각각 `PartialEq`와 `Debug`가 필요하므로, 구조체와 열거형을 비교할 때는 다음처럼 두 트레이트를 derive할 수 있다.
+
+```rust
+#[derive(PartialEq, Debug)]
+struct Guess {
+    value: i32,
+}
+```
+
+### 사용자 정의 실패 메시지
+
+실패 원인을 더 자세히 남기려면 `assert!`, `assert_eq!`, `assert_ne!`에 메시지를 추가한다. 단언에 필요한 인자 뒤에 포맷 문자열과 값을 전달하며, `format!`처럼 플레이스홀더를 사용할 수 있다.
+
+```rust
+pub fn greeting(name: &str) -> String {
+    format!("Hello {name}!")
+}
+
+#[test]
+fn greeting_contains_name() {
+    let result = greeting("Carol");
+    assert!(
+        result.contains("Carol"),
+        "Greeting did not contain name, value was `{result}`"
+    );
+}
+```
+
+- 실패 시 출력:
+
+```
+thread 'tests::greeting_contains_name' panicked at src/lib.rs:12:9:
+Greeting did not contain name, value was `Hello!`
+```
+
+### `#[should_panic]`으로 패닉 확인
+
+`#[test]` 다음에 `#[should_panic]`을 붙이면 코드가 패닉할 때 테스트가 통과하고, 패닉하지 않으면 실패한다. 아래 테스트는 허용 범위를 벗어난 `200`을 전달한다.
+
+```rust
+pub struct Guess {
+    value: i32,
+}
+
+impl Guess {
+    pub fn new(value: i32) -> Guess {
+        if value < 1 || value > 100 {
+            panic!("Guess value must be between 1 and 100, got {value}.");
+        }
+        Guess { value }
+    }
+}
+
+#[test]
+#[should_panic]
+fn greater_than_100() {
+    Guess::new(200);
+}
+```
+
+#### `#[should_panic(expected = "...")]`
+
+- 예상 패닉 메시지의 하위 문자열을 지정 → 패닉 테스트를 더 정밀하게 함:
+
+```rust
+impl Guess {
+    pub fn new(value: i32) -> Guess {
+        if value < 1 {
+            panic!("Guess value must be greater than or equal to 1, got {value}.");
+        } else if value > 100 {
+            panic!("Guess value must be less than or equal to 100, got {value}.");
+        }
+        Guess { value }
+    }
+}
+
+#[test]
+#[should_panic(expected = "less than or equal to 100")]
+fn greater_than_100() {
+    Guess::new(200);
+}
+```
+
+- 불일치 시 출력:
+
+```
+panic did not contain expected string
+  panic message: "Guess value must be greater than or equal to 1, got 200."
+   expected substring: "less than or equal to 100"
+```
+
+### 테스트에서 `Result<T, E>` 사용
+
+- 테스트는 패닉 대신 `Result<T, E>` 반환 가능:
+
+```rust
+#[test]
+fn it_works() -> Result<(), String> {
+    let result = add(2, 2);
+
+    if result == 4 {
+        Ok(())
+    } else {
+        Err(String::from("two plus two does not equal four"))
+    }
+}
+```
+
+`Result<T, E>`를 반환하는 테스트에서는 `?`로 오류를 전파할 수 있다. 다만 `#[should_panic]`은 함께 사용할 수 없으며, 반환값이 에러인지 검사하려면 `assert!(value.is_err())`를 사용한다.
+
+## 테스트 실행 방법 제어하기
+
+> **원문:** https://doc.rust-lang.org/book/ch11-02-running-tests.html
+
+### 개요
+
+- `cargo test`: 코드를 테스트 모드로 컴파일 → 결과 테스트 바이너리 실행
+- 기본 동작: 테스트를 병렬로 실행, 출력 캡처 → 결과를 읽기 쉽게 함
+- 명령줄 옵션으로 이 동작 수정 가능
+
+#### 명령줄 인수
+
+- 인수는 두 가지 범주로 구분:
+- `cargo test`에 대한 인수: `--` 앞에 나열
+- 테스트 바이너리에 대한 인수: `--` 뒤에 나열
+
+```bash
+$ cargo test -- --option
+$ cargo test --help              # cargo test 옵션
+$ cargo test -- --help           # 테스트 바이너리 옵션
+```
+
+### 테스트를 병렬 또는 순차적으로 실행하기
+
+테스트는 기본적으로 여러 스레드에서 병렬 실행되어 빠르게 피드백을 준다. 다만 테스트끼리 상태를 공유하면 서로의 결과에 영향을 줄 수 있으므로 독립적으로 작성해야 한다.
+
+#### 문제 예시
+
+- 문제 예시: 여러 테스트가 같은 파일을 읽고/쓰면 서로 간섭 가능
+
+```rust
+// 각 테스트가 test-output.txt에 쓰기
+// 한 테스트가 병렬 실행 중 다른 테스트의 데이터를 덮어쓸 수 있음
+```
+
+파일뿐 아니라 현재 작업 디렉토리나 환경 변수에 의존하는 테스트도 공유 환경 때문에 서로 간섭할 수 있다. 이런 테스트를 실행할 때는 스레드 수를 제한하는 방법을 고려한다.
+
+#### 해결책: 단일 스레드 실행
+
+```bash
+$ cargo test -- --test-threads=1
+```
+
+`--test-threads`는 테스트 실행에 사용할 스레드 수를 지정한다. `1`로 설정하면 시간이 더 걸리더라도 순차 실행하므로 동시에 공유 상태를 변경하는 간섭을 피할 수 있다.
+
+### 함수 출력 표시하기
+
+- 기본 동작: Rust 테스트 라이브러리는 통과하는 테스트의 출력을 캡처 → 실패한 테스트만 출력 표시
+
+#### 예제 코드 (Listing 11-10)
+
+```rust
+fn prints_and_returns_10(a: i32) -> i32 {
+    println!("I got the value {a}");
+    10
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn this_test_will_pass() {
+        let value = prints_and_returns_10(4);
+        assert_eq!(value, 10);
+    }
+
+    #[test]
+    fn this_test_will_fail() {
+        let value = prints_and_returns_10(8);
+        assert_eq!(value, 5);
+    }
+}
+```
+
+이 예제에서는 통과한 테스트의 `println!` 출력은 숨기고, 실패한 테스트가 표준 출력에 쓴 내용만 실패 메시지와 함께 보여 준다.
+
+#### 모든 출력 보기
+
+```bash
+$ cargo test -- --show-output
+```
+
+`--show-output`을 붙이면 통과한 테스트의 출력도 테스트별로 구분해 보여 준다. 성공한 테스트가 어떤 값을 출력했는지 디버깅할 때 사용한다.
+
+### 이름으로 테스트의 하위 집합 실행하기
+
+#### 단일 테스트 실행
+
+```bash
+$ cargo test one_hundred
+```
+
+- `one_hundred`라는 이름의 테스트 함수만 실행
+
+#### 예제 코드 (Listing 11-11)
+
+```rust
+pub fn add_two(a: u64) -> u64 {
+    a + 2
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn add_two_and_two() {
+        let result = add_two(2);
+        assert_eq!(result, 4);
+    }
+
+    #[test]
+    fn add_three_and_two() {
+        let result = add_two(3);
+        assert_eq!(result, 5);
+    }
+
+    #[test]
+    fn one_hundred() {
+        let result = add_two(100);
+        assert_eq!(result, 102);
+    }
+}
+```
+
+이 방식으로 이름을 지정하면 나머지 테스트는 "filtered out"으로 표시된다. 여러 이름을 나열하는 대신 관련 테스트를 함께 실행하려면 다음처럼 이름의 일부로 필터링한다.
+
+#### 여러 테스트 필터링
+
+```bash
+$ cargo test add
+```
+
+- 이름에 "add"가 포함된 모든 테스트 실행(예: `add_two_and_two`, `add_three_and_two`) → 모듈 이름도 필터와 일치
+
+### 특별히 요청하지 않으면 일부 테스트 무시하기
+
+- 시간이 많이 걸리는 테스트에는 `#[ignore]` 속성 사용:
+
+```rust
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn it_works() {
+        let result = add(2, 2);
+        assert_eq!(result, 4);
+    }
+
+    #[test]
+    #[ignore]
+    fn expensive_test() {
+        // 실행하는 데 한 시간이 걸리는 코드
+    }
+}
+```
+
+`expensive_test`는 기본 `cargo test` 실행에서 제외된다. 이 테스트가 필요할 때는 아래 옵션으로 무시된 테스트만 실행하거나 전체 테스트에 포함한다.
+
+#### 무시된 테스트만 실행
+
+```bash
+$ cargo test -- --ignored
+```
+
+#### 모든 테스트 실행 (무시된 테스트 포함)
+
+```bash
+$ cargo test -- --include-ignored
+```
+
+## 테스트 조직화
+
+> **원문:** https://doc.rust-lang.org/book/ch11-03-test-organization.html
+
+### 개요
+
+- Rust에서 테스트는 두 가지 주요 카테고리로 구성:
+
+- 단위 테스트(Unit Tests): 작고 집중된 테스트로 하나의 모듈을 격리해 테스트 → 비공개 인터페이스도 테스트 가능
+- 통합 테스트(Integration Tests): 라이브러리의 공개 API만 사용하는 외부 테스트 → 여러 모듈을 함께 테스트
+
+### 단위 테스트
+
+#### `tests` 모듈과 `#[cfg(test)]`
+
+단위 테스트는 대상 코드와 함께 `src`에 두고, 관례적으로 `#[cfg(test)]` 속성을 붙인 `tests` 모듈에 작성한다. 이 속성 덕분에 테스트 코드는 `cargo test`에서만 컴파일되고 실행되며, `cargo build`의 결과물에는 포함되지 않는다. 프로덕션 코드와 테스트 코드를 구분하면서 컴파일 시간과 결과물 크기도 줄일 수 있다.
+
+- 예제:
+
+```rust
+pub fn add(left: u64, right: u64) -> u64 {
+    left + right
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn it_works() {
+        let result = add(2, 2);
+        assert_eq!(result, 4);
+    }
+}
+```
+
+#### 비공개 함수 테스트
+
+Rust에서는 자식 모듈이 부모 모듈의 항목에 접근할 수 있다. 따라서 자식인 `tests` 모듈에서 부모의 비공개 함수도 직접 테스트할 수 있다.
+
+```rust
+pub fn add_two(a: u64) -> u64 {
+    internal_adder(a, 2)
+}
+
+fn internal_adder(left: u64, right: u64) -> u64 {
+    left + right
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn internal() {
+        let result = internal_adder(2, 2);
+        assert_eq!(result, 4);
+    }
+}
+```
+
+예제에서는 `use super::*`로 비공개 함수 `internal_adder`까지 가져온다. Rust가 이를 허용하더라도 비공개 함수를 직접 테스트할지는 프로젝트의 테스트 방식에 따라 정한다.
+
+### 통합 테스트
+
+#### `tests` 디렉토리
+
+- 통합 테스트는 프로젝트 루트 레벨의 `tests` 디렉토리에 배치(`src` 옆)
+- `tests` 디렉토리의 각 파일은 별도 크레이트로 컴파일
+
+- 프로젝트 구조:
+
+```
+adder
+├── Cargo.lock
+├── Cargo.toml
+├── src
+│   └── lib.rs
+└── tests
+    └── integration_test.rs
+```
+
+#### 통합 테스트 예제
+
+```rust
+use adder::add_two;
+
+#[test]
+fn it_adds_two() {
+    let result = add_two(2);
+    assert_eq!(result, 4);
+}
+```
+
+- 단위 테스트와의 주요 차이점:
+- `#[cfg(test)]` 어노테이션이 필요 없음 (Cargo가 `tests` 디렉토리를 특별히 처리)
+- 라이브러리의 공개 API를 가져오기 위해 `use` 문 필수
+- 비공개 함수에 접근 불가
+
+#### 통합 테스트 실행
+
+- 모든 테스트 실행:
+
+```bash
+$ cargo test
+```
+
+- 특정 통합 테스트 파일 실행:
+
+```bash
+$ cargo test --test integration_test
+```
+
+### 통합 테스트의 서브모듈
+
+#### 헬퍼 모듈 문제
+
+`tests` 바로 아래의 각 파일은 별도 크레이트로 컴파일된다. 공유 헬퍼를 `tests/common.rs`에 두면 테스트가 없는 이 파일도 `running 0 tests`로 출력된다. 헬퍼를 독립된 테스트로 다루지 않으려면 다음처럼 배치한다.
+
+#### 해결책: `tests/common/mod.rs` 사용
+
+- 헬퍼 모듈이 테스트 출력에 나타나지 않게 하려면 이전 명명 규칙 사용:
+
+```
+tests
+├── common
+│   └── mod.rs
+└── integration_test.rs
+```
+
+- `tests`의 하위 디렉토리는 별도 크레이트로 컴파일되지 않음
+
+- `tests/common/mod.rs` 예제:
+
+```rust
+pub fn setup() {
+    // 라이브러리 테스트에 필요한 설정 코드
+}
+```
+
+- `tests/integration_test.rs`에서 사용:
+
+```rust
+use adder::add_two;
+
+mod common;
+
+#[test]
+fn it_adds_two() {
+    common::setup();
+
+    let result = add_two(2);
+    assert_eq!(result, 4);
+}
+```
+
+### 바이너리 크레이트의 통합 테스트
+
+- 바이너리 크레이트(`src/lib.rs` 없이 `src/main.rs`만 포함)는 통합 테스트를 가질 수 없음 → 통합 테스트에는 가져올 라이브러리 크레이트가 필요하기 때문
+
+- 모범 사례:
+- `src/lib.rs`: 테스트 가능한 재사용 로직 포함
+- `src/main.rs`: 라이브러리의 로직 호출 (최소한의 코드, 테스트 불필요)
+
+- 이 구조로 통합 테스트가 중요한 기능을 검증하면서 `main.rs`는 단순하게 유지 가능
+
+### 테스트 출력
+
+- `cargo test` 실행 시 세 가지 섹션 출력:
+
+- 1\. 단위 테스트 - `src/lib.rs`에서
+- 2\. 통합 테스트 - `tests/` 디렉토리에서
+- 3\. 문서 테스트 - 문서화 예제에서
+
+- 어떤 섹션이 실패하면 이후 섹션은 실행되지 않음
+
+## I/O 프로젝트: 커맨드 라인 프로그램 만들기
+
+> **원문:** https://doc.rust-lang.org/book/ch12-00-an-io-project.html
+
+### 개요
+
+- 이 장: 지금까지 배운 기술을 복습하고 추가적인 표준 라이브러리 기능을 탐구하는 프로젝트
+- 파일 및 커맨드 라인 입출력(I/O)과 상호작용하는 커맨드 라인 도구를 제작해 개념을 실습
+
+### 프로젝트 소개
+
+Rust는 빠른 실행 속도와 안전성, 단일 바이너리 출력, 크로스 플랫폼 지원 덕분에 커맨드 라인 도구를 만들기 좋다. 이 프로젝트에서는 검색 도구 `grep`(globally search a regular expression and print)의 간단한 버전을 구현한다.
+
+### `grep`의 작동 방식
+
+- 가장 단순한 사용 사례: `grep`이 지정된 파일에서 지정된 문자열을 검색
+- 이를 위해 `grep`이 받는 인수:
+
+- 파일 경로(file path)
+- 검색할 문자열(string)
+
+- 파일을 읽고 → 문자열 인수를 포함하는 줄을 찾아 → 해당 줄들을 출력
+
+### 구현할 주요 기능
+
+- 다른 커맨드 라인 도구들이 사용하는 터미널 기능을 이 도구에 적용하는 방법을 다룸:
+
+- 환경 변수(environment variables): 환경 변수의 값을 읽어 사용자가 도구의 동작을 설정할 수 있도록 함
+- 표준 오류 출력(stderr): 오류 메시지를 표준 출력(`stdout`) 대신 표준 오류 콘솔 스트림(`stderr`)에 출력하여, 예를 들어 사용자가 성공적인 출력을 파일로 리다이렉트하면서도 오류 메시지는 화면에서 계속 볼 수 있도록 함
+
+### 다루는 개념
+
+- 이 `grep` 프로젝트는 지금까지 배운 여러 개념을 결합:
+
+- 코드 구성하기 (7장)
+- 벡터(vector)와 문자열(string) 사용하기 (8장)
+- 오류 처리하기 (9장)
+- 적절한 곳에서 트레이트(trait)와 라이프타임(lifetime) 사용하기 (10장)
+- 테스트 작성하기 (11장)
+
+- 클로저(closure), 반복자(iterator), 트레이트 객체(trait object)도 간략히 소개 → 13장, 18장에서 상세히 다룸
+
+### ripgrep에 대한 참고
+
+- Rust 커뮤니티 멤버 Andrew Gallant가 `grep`의 완전한 기능을 갖춘 고속 버전 `ripgrep`을 이미 구현
+- 이 장의 버전은 상당히 단순하지만, `ripgrep` 같은 실제 프로젝트를 이해하는 데 필요한 배경 지식을 제공
+
+## 커맨드 라인 인수 받기
+
+> **원문:** https://doc.rust-lang.org/book/ch12-01-accepting-command-line-arguments.html
+
+### 개요
+
+- 이 섹션에서 다루는 내용: 커맨드 라인 인수를 받아들이는 `minigrep` 프로젝트 제작 방법
+- 목표: 다음과 같이 실행 가능한 프로그램 제작
+
+```
+$ cargo run -- searchstring example-filename.txt
+```
+
+### 인수 값 읽기
+
+커맨드 라인 인수는 표준 라이브러리의 `std::env::args`로 읽는다. 이 함수가 인수의 반복자(iterator)를 반환하므로, 아래 예제에서는 `collect()`로 모아 벡터에 저장한다.
+
+#### 코드 예제 (Listing 12-1)
+
+```rust
+use std::env;
+
+fn main() {
+    let args: Vec<String> = env::args().collect();
+    dbg!(args);
+}
+```
+
+이 예제만으로는 `collect()`가 만들 컬렉션 타입을 추론할 수 없으므로 `args`에 `Vec<String>`을 명시한다.
+
+#### 프로그램 실행
+
+- 인수 없이 실행:
+
+```
+$ cargo run
+[src/main.rs:5:5] args = [
+    "target/debug/minigrep",
+]
+```
+
+- 인수와 함께 실행:
+
+```
+$ cargo run -- needle haystack
+[src/main.rs:5:5] args = [
+    "target/debug/minigrep",
+    "needle",
+    "haystack",
+]
+```
+
+- 참고: 첫 번째 값은 항상 바이너리 이름(`target/debug/minigrep`)
+
+### `args` 함수와 유효하지 않은 유니코드
+
+`std::env::args`는 유효하지 않은 유니코드를 포함한 인수에서 패닉(panic)을 발생시킨다. 이런 인수도 처리해야 한다면 `OsString` 값을 반환하는 `std::env::args_os`를 사용한다.
+
+### 인수 값을 변수에 저장하기
+
+#### 코드 예제 (Listing 12-2)
+
+```rust
+use std::env;
+
+fn main() {
+    let args: Vec<String> = env::args().collect();
+
+    let query = &args[1];
+    let file_path = &args[2];
+
+    println!("Searching for {query}");
+    println!("In file {file_path}");
+}
+```
+
+- 설명:
+- `args[0]` = 프로그램 이름 (건너뜀)
+- `args[1]` = 검색 문자열 (`query`)
+- `args[2]` = 파일 경로 (`file_path`)
+
+#### 출력 예제
+
+```
+$ cargo run -- test sample.txt
+Searching for test
+In file sample.txt
+```
+
+## 파일 읽기
+
+> **원문:** https://doc.rust-lang.org/book/ch12-02-reading-a-file.html
+
+### 개요
+
+- 커맨드라인 인수로 지정된 파일을 읽는 기능
+- `minigrep` 검색 유틸리티 구축의 일부로 파일 내용을 읽어 처리하는 방법을 다룸
+
+### 테스트 파일 설정
+
+- 프로젝트 루트 디렉토리에 `poem.txt` 파일 생성:
+
+```
+I'm nobody! Who are you?
+Are you nobody, too?
+Then there's a pair of us - don't tell!
+They'd banish us, you know.
+
+How dreary to be somebody!
+How public, like a frog
+To tell your name the livelong day
+To an admiring bog!
+```
+
+- Emily Dickinson의 시: 여러 줄과 반복되는 단어가 있어 테스트에 적합
+
+### 코드 구현
+
+- `src/main.rs`를 업데이트하여 파일 읽기 구현:
+
+```rust
+use std::env;
+use std::fs;
+
+fn main() {
+    // --snip--
+    let args: Vec<String> = env::args().collect();
+
+    let query = &args[1];
+    let file_path = &args[2];
+
+    println!("Searching for {query}");
+    println!("In file {file_path}");
+
+    let contents = fs::read_to_string(file_path)
+        .expect("Should have been able to read the file");
+
+    println!("With text:\n{contents}");
+}
+```
+
+`std::fs`의 `read_to_string()`은 경로의 파일을 열어 읽은 뒤 `std::io::Result<String>`을 반환한다. 여기서는 `expect()`로 내용을 꺼내므로 파일을 읽을 수 없으면 지정한 메시지와 함께 패닉이 발생한다.
+
+### 프로그램 실행
+
+- 다음 명령어로 실행:
+
+```bash
+$ cargo run -- the poem.txt
+```
+
+- 출력:
+
+```
+Searching for the
+In file poem.txt
+With text:
+I'm nobody! Who are you?
+Are you nobody, too?
+Then there's a pair of us - don't tell!
+They'd banish us, you know.
+
+How dreary to be somebody!
+How public, like a frog
+To tell your name the livelong day
+To an admiring bog!
+```
+
+### 코드 품질에 대한 참고 사항
+
+현재 `main`은 인수를 읽고 파일을 처리하는 여러 책임을 맡고 있으며, 오류 처리도 개선할 여지가 있다. 구조가 더 복잡해지기 전에 리팩토링하는 편이 좋으므로 다음 섹션에서 오류 처리와 모듈성을 다듬는다.
+
+## 환경 변수로 작업하기
+
+> **원문:** https://doc.rust-lang.org/book/ch12-05-working-with-environment-variables.html
+
+### 개요
+
+- 이 섹션: 환경 변수를 사용해 `minigrep` 바이너리에 대소문자 구분 없는 검색 기능을 추가하는 방법
+- 테스트 주도 개발(TDD) 원칙을 따라 진행
+
+### 대소문자 구분 없는 검색을 위한 실패하는 테스트 작성
+
+- 먼저 새로운 `search_case_insensitive` 함수를 추가 → 대소문자 구분 검색, 구분 없는 검색을 검증하는 테스트 작성
+
+- 파일명: src/lib.rs
+
+```rust
+pub fn search<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
+    let mut results = Vec::new();
+
+    for line in contents.lines() {
+        if line.contains(query) {
+            results.push(line);
+        }
+    }
+
+    results
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn case_sensitive() {
+        let query = "duct";
+        let contents = "\
+Rust:
+safe, fast, productive.
+Pick three.
+Duct tape.";
+
+        assert_eq!(vec!["safe, fast, productive."], search(query, contents));
+    }
+
+    #[test]
+    fn case_insensitive() {
+        let query = "rUsT";
+        let contents = "\
+Rust:
+safe, fast, productive.
+Pick three.
+Trust me.";
+
+        assert_eq!(
+            vec!["Rust:", "Trust me."],
+            search_case_insensitive(query, contents)
+        );
+    }
+}
+```
+
+### `search_case_insensitive` 함수 구현
+
+- 구현: 비교 전에 쿼리와 각 줄을 모두 소문자로 변환
+
+- 파일명: src/lib.rs
+
+```rust
+pub fn search_case_insensitive<'a>(
+    query: &str,
+    contents: &'a str,
+) -> Vec<&'a str> {
+    let query = query.to_lowercase();
+    let mut results = Vec::new();
+
+    for line in contents.lines() {
+        if line.to_lowercase().contains(&query) {
+            results.push(line);
+        }
+    }
+
+    results
+}
+```
+
+`query.to_lowercase()`는 문자열 슬라이스가 아닌 새로운 `String`을 만들므로, 문자열 슬라이스를 기대하는 `contains()`에는 `&query`를 전달한다. 각 줄도 비교할 때 소문자로 바꾸지만 결과에는 원본 `line`을 넣는다. 따라서 반환된 줄은 원래 대소문자를 유지한다.
+
+이 변환은 기본적인 유니코드를 처리하지만 모든 언어에서 정확한 대소문자 비교를 보장하지는 않는다.
+
+### Config 구조체와 run 함수 업데이트
+
+- 파일명: src/main.rs
+
+```rust
+use std::env;
+use std::error::Error;
+use std::fs;
+use std::process;
+
+use minigrep::{search, search_case_insensitive};
+
+fn main() {
+    let args: Vec<String> = env::args().collect();
+
+    let config = Config::build(&args).unwrap_or_else(|err| {
+        println!("Problem parsing arguments: {err}");
+        process::exit(1);
+    });
+
+    if let Err(e) = run(config) {
+        println!("Application error: {e}");
+        process::exit(1);
+    }
+}
+
+pub struct Config {
+    pub query: String,
+    pub file_path: String,
+    pub ignore_case: bool,
+}
+
+impl Config {
+    fn build(args: &[String]) -> Result<Config, &'static str> {
+        if args.len() < 3 {
+            return Err("not enough arguments");
+        }
+
+        let query = args[1].clone();
+        let file_path = args[2].clone();
+
+        let ignore_case = env::var("IGNORE_CASE").is_ok();
+
+        Ok(Config {
+            query,
+            file_path,
+            ignore_case,
+        })
+    }
+}
+
+fn run(config: Config) -> Result<(), Box<dyn Error>> {
+    let contents = fs::read_to_string(config.file_path)?;
+
+    let results = if config.ignore_case {
+        search_case_insensitive(&config.query, &contents)
+    } else {
+        search(&config.query, &contents)
+    };
+
+    for line in results {
+        println!("{line}");
+    }
+
+    Ok(())
+}
+```
+
+### 환경 변수 사용하기
+
+#### IGNORE_CASE 변수 확인
+
+아래 구현은 `IGNORE_CASE` 환경 변수의 설정 여부로 검색 방식을 결정한다. 명령줄 인수로도 같은 옵션을 제공한다면 어느 쪽을 우선할지 프로그램에서 정해야 한다. `std::env` 모듈의 다른 환경 변수 유틸리티는 공식 문서에서 확인할 수 있다.
+
+```rust
+let ignore_case = env::var("IGNORE_CASE").is_ok();
+```
+
+- `env::var()` 함수는 `Result` 반환:
+- Ok 변형: 환경 변수가 설정됨 (어떤 값이든 대소문자 구분 없는 검색을 트리거)
+- Err 변형: 환경 변수가 설정되지 않음
+- `is_ok()`는 변수가 설정된 경우에만 `true`를 반환 (값에 관계없이)
+
+#### 프로그램 실행
+
+- 대소문자 구분 검색 (기본값):
+
+```bash
+$ cargo run -- to poem.txt
+Are you nobody, too?
+How dreary to be somebody!
+```
+
+- 대소문자 구분 없는 검색 (Linux/Mac):
+
+```bash
+$ IGNORE_CASE=1 cargo run -- to poem.txt
+Are you nobody, too?
+How dreary to be somebody!
+To tell your name the livelong day
+To an admiring bog!
+```
+
+- 대소문자 구분 없는 검색 (PowerShell):
+
+```powershell
+PS> $Env:IGNORE_CASE=1; cargo run -- to poem.txt
+```
+
+- 변수 해제 (PowerShell):
+
+```powershell
+PS> Remove-Item Env:IGNORE_CASE
+```

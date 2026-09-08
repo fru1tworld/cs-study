@@ -1,0 +1,45 @@
+<h2>텍스트 입력</h2>
+<input v-model="text">
+<p>{{ text }}</p>
+
+<h2>체크박스</h2>
+<input type="checkbox" id="checkbox" v-model="checked">
+<label for="checkbox">체크됨: {{ checked }}</label>
+
+<!--
+  여러 개의 체크박스가 동일한
+  배열 v-model 값에 바인딩될 수 있습니다
+-->
+<h2>다중 체크박스</h2>
+<input type="checkbox" id="jack" value="Jack" v-model="checkedNames">
+<label for="jack">Jack</label>
+<input type="checkbox" id="john" value="John" v-model="checkedNames">
+<label for="john">John</label>
+<input type="checkbox" id="mike" value="Mike" v-model="checkedNames">
+<label for="mike">Mike</label>
+<p>체크된 이름: {{ checkedNames }}</p>
+
+<h2>라디오</h2>
+<input type="radio" id="one" value="One" v-model="picked">
+<label for="one">One</label>
+<br>
+<input type="radio" id="two" value="Two" v-model="picked">
+<label for="two">Two</label>
+<p>선택됨: {{ picked }}</p>
+
+<h2>셀렉트</h2>
+<select v-model="selected">
+  <option disabled value="">하나를 선택하세요</option>
+  <option>A</option>
+  <option>B</option>
+  <option>C</option>
+</select>
+<p>선택됨: {{ selected }}</p>
+
+<h2>다중 선택</h2>
+<select v-model="multiSelected" multiple style="width:100px">
+  <option>A</option>
+  <option>B</option>
+  <option>C</option>
+</select>
+<p>선택됨: {{ multiSelected }}</p>

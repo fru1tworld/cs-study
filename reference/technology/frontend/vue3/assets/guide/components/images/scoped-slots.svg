@@ -1,0 +1,83 @@
+<svg width="678" height="425" viewBox="0 0 678 425" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="strokeWidth">
+      <path d="M1 1L7 4L1 7Z" fill="#4B7EFF"/>
+    </marker>
+    <style>
+      .label {
+        font: 600 18px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        fill: #8E67CD;
+      }
+
+      .legend {
+        font: 600 16px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      .code {
+        color: #42B883;
+        font: 600 16px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        line-height: 27px;
+        white-space: nowrap;
+      }
+
+      .indent {
+        padding-left: 22px;
+      }
+
+      .received {
+        border: 2px solid #4B7EFF;
+        border-radius: 4px;
+        box-sizing: border-box;
+        display: inline-block;
+        line-height: 25px;
+        padding: 0 8px;
+      }
+
+      .content,
+      .props {
+        border-radius: 4px;
+        color: #FFFFFF;
+        display: inline-block;
+        line-height: 25px;
+        padding: 0 8px;
+      }
+
+      .content {
+        background: #FF6464;
+      }
+
+      .props {
+        background: #4B7EFF;
+      }
+    </style>
+  </defs>
+
+  <text x="52" y="34" class="label">부모 템플릿 (사용처)</text>
+  <rect x="52" y="52" width="574" height="144" rx="4" stroke="#8E67CD" stroke-width="3" stroke-dasharray="4 4"/>
+  <foreignObject x="78" y="68" width="520" height="112">
+    <div xmlns="http://www.w3.org/1999/xhtml" class="code">
+      <div>&lt;ChildComponent v-slot="<span class="received">receivedProps</span>"&gt;</div>
+      <div class="indent"><span class="content">{{ receivedProps.text }}</span></div>
+      <div class="indent"><span class="content">{{ receivedProps.count }}</span></div>
+      <div>&lt;/ChildComponent&gt;</div>
+    </div>
+  </foreignObject>
+
+  <text x="52" y="228" class="label">자식 템플릿 (슬롯 정의)</text>
+  <rect x="52" y="246" width="574" height="140" rx="4" stroke="#8E67CD" stroke-width="3" stroke-dasharray="4 4"/>
+  <foreignObject x="78" y="260" width="520" height="112">
+    <div xmlns="http://www.w3.org/1999/xhtml" class="code">
+      <div>&lt;slot</div>
+      <div class="indent"><span class="props">text="hello"</span></div>
+      <div class="indent"><span class="props">:count="1"</span></div>
+      <div>/&gt;</div>
+    </div>
+  </foreignObject>
+
+  <path d="M244 316H394V102" stroke="#4B7EFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none" marker-end="url(#arrow)"/>
+
+  <circle cx="70" cy="405" r="9" fill="#FF6464"/>
+  <text x="90" y="411" class="legend" fill="#FF6464">스코프드 슬롯 콘텐츠</text>
+  <circle cx="405" cy="405" r="9" fill="#4B7EFF"/>
+  <text x="425" y="411" class="legend" fill="#4B7EFF">스코프드 슬롯 아웃렛</text>
+</svg>

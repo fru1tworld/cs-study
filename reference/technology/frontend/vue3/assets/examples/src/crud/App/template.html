@@ -1,0 +1,14 @@
+<div><input v-model="prefix" placeholder="접두사로 필터링"></div>
+
+<select size="5" v-model="selected">
+  <option v-for="name in filteredNames" :key="name">{{ name }}</option>
+</select>
+
+<label>이름: <input v-model="first"></label>
+<label>성: <input v-model="last"></label>
+
+<div class="buttons">
+  <button @click="create">생성</button>
+  <button @click="update">수정</button>
+  <button @click="del">삭제</button>
+</div>

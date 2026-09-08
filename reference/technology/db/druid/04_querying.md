@@ -1,0 +1,2308 @@
+# Druid 쿼리: SQL과 네이티브 쿼리
+
+## Druid SQL
+
+> 원본: https://druid.apache.org/docs/latest/querying/sql
+
+> 원본: https://druid.apache.org/docs/latest/querying/sql-data-types
+
+> 원본: https://druid.apache.org/docs/latest/querying/sql-scalar
+
+> 원본: https://druid.apache.org/docs/latest/querying/sql-aggregations
+
+> 원본: https://druid.apache.org/docs/latest/querying/sql-metadata-tables
+
+> 원본: https://druid.apache.org/docs/latest/querying/sql-translation
+
+> 원본: https://druid.apache.org/docs/latest/api-reference/sql-api
+
+먼저 SQL 문법과 타입, 함수를 살펴보고, 작성한 SQL이 어떤 네이티브 쿼리로 변환되는지와 API로 실행하는 방법을 다룬다.
+
+<a id="druid-sql-개요"></a>
+### Druid SQL 개요
+
+Druid SQL은 Apache Calcite 기반의 파서와 플래너로 SQL을 해석한다. Broker가 이를 네이티브 쿼리로 변환하면 데이터 서버가 실행하므로, 직접 네이티브 쿼리를 제출할 때와 비교해 변환에 드는 약간의 오버헤드 외에는 성능 차이가 거의 없다.
+
+#### 식별자와 리터럴
+
+- 식별자(identifier): 큰따옴표로 선택적으로 감쌈
+  - 식별자 내부의 큰따옴표는 두 번 써서 이스케이프함(`"My ""very own"" identifier"`). 식별자는 대소문자를 구분하며 암묵적 변환이 없음
+- 문자열 리터럴: 작은따옴표를 사용함(`'foo'`). 유니코드 이스케이프는 `U&'fo\00F6'` 형태로 씀
+- 숫자 리터럴: `100`(정수), `100.0`(실수), `1.0e5`(지수 표기)
+- 타임스탬프 리터럴: `TIMESTAMP '2000-01-01 00:00:00'`
+- 인터벌 리터럴: `INTERVAL '1' HOUR`, `INTERVAL '1 02:03' DAY TO MINUTE`, `INTERVAL '1-2' YEAR TO MONTH`
+
+#### 예약어
+
+- Druid는 Apache Calcite의 예약어에 더해 `CLUSTERED`, `PARTITIONED`를 예약어로 사용함
+  - 예약어를 식별자로 쓰려면 큰따옴표로 감쌈
+
+```sql
+SELECT "PARTITIONED" from druid.table
+```
+
+#### 동적 파라미터
+
+실행할 때마다 달라지는 값은 쿼리에 직접 넣는 대신 물음표(`?`) 자리표시자로 남겨 둘 수 있다. HTTP POST와 JDBC API 모두 실행 시점에 이 값을 바인딩하는 방식을 지원한다.
+
+```json
+{
+  "query": "SELECT doubleArrayColumn from druid.table where ARRAY_CONTAINS(doubleArrayColumn, ?)",
+  "parameters": [
+    {
+      "type": "ARRAY",
+      "value": [-25.7, null, 36.85]
+    }
+  ]
+}
+```
+
+- 타입 추론이 모호하면 CAST로 명시함
+
+```sql
+SELECT * FROM druid.foo WHERE dim1 like CONCAT('%', CAST (? AS VARCHAR), '%')
+```
+
+- IN 필터에는 `SCALAR_IN_ARRAY`와 배열 파라미터를 조합함
+
+```sql
+SELECT count(city) from druid.table where SCALAR_IN_ARRAY(city, ?)
+```
+
+#### SET 문
+
+쿼리 앞에 SET 문을 두면 같은 요청 안의 SELECT, INSERT, REPLACE 쿼리에 컨텍스트 파라미터를 적용할 수 있다. SET에는 리터럴 값만 쓸 수 있으므로 배열이나 JSON 객체는 API의 `context` 필드에 넣어야 한다. 같은 설정이 양쪽에 있으면 SET이 우선한다.
+
+```sql
+SET useApproximateTopN = false;
+SET sqlTimeZone = 'America/Los_Angeles';
+SET timeout = 90000;
+SELECT some_column, COUNT(*) FROM druid.foo WHERE other_column = 'foo' GROUP BY 1 ORDER BY 2 DESC
+```
+
+<a id="select-문법"></a>
+
+### SELECT 문법
+
+- Druid SQL의 SELECT 문은 다음 구조를 따름
+
+```
+[ EXPLAIN PLAN FOR ]
+[ WITH tableName [ ( column1, column2, ... ) ] AS ( query ) ]
+SELECT [ ALL | DISTINCT ] { * | exprs }
+FROM { <table> | (<subquery>) | <o1> [ INNER | LEFT ] JOIN <o2> ON condition }
+[ PIVOT (...) ]
+[ UNPIVOT (...) ]
+[ CROSS JOIN UNNEST(source_expression) as table_alias_name(column_alias_name) ]
+[ WHERE expr ]
+[ GROUP BY [ exprs | GROUPING SETS | ROLLUP | CUBE ] ]
+[ HAVING expr ]
+[ ORDER BY expr [ ASC | DESC ], ... ]
+[ LIMIT limit ]
+[ OFFSET offset ]
+[ UNION ALL <another query> ]
+```
+
+#### FROM 절
+
+FROM 절에서 참조할 수 있는 대상은 다음과 같다.
+
+- `druid` 스키마의 테이블 데이터소스(기본 스키마이므로 접두사 생략 가능)
+- `lookup` 스키마의 lookup(예: `lookup.countries`)
+- 서브쿼리
+- 호환되는 소스 간의 JOIN(조인 조건은 동등 비교여야 함)
+- `INFORMATION_SCHEMA`, `sys` 스키마의 메타데이터 테이블
+
+#### PIVOT
+
+- PIVOT 연산자는 집계를 수행하면서 행 값을 컬럼으로 변환함
+
+```
+PIVOT (aggregation_function(column_to_aggregate)
+       FOR column_with_values_to_pivot
+       IN (pivoted_column1 [, pivoted_column2 ...]))
+```
+
+- `cityName` 값을 컬럼으로 펼치는 예시임
+
+```sql
+SELECT user, channel, ba_sum_deleted, ny_sum_deleted
+FROM "wikipedia"
+PIVOT (SUM(deleted) AS "sum_deleted"
+       FOR "cityName"
+       IN ( 'Buenos Aires' AS ba, 'New York' AS ny))
+WHERE ba_sum_deleted IS NOT NULL OR ny_sum_deleted IS NOT NULL
+LIMIT 15
+```
+
+#### UNPIVOT
+
+- UNPIVOT 연산자는 기존 컬럼 값을 행으로 변환함
+
+```
+UNPIVOT (values_column
+         FOR names_column
+         IN (unpivoted_column1 [, unpivoted_column2 ... ]))
+```
+
+- `added`, `deleted` 컬럼을 행으로 펼치는 예시임
+
+```sql
+SELECT channel, user, action, SUM(changes) AS total_changes
+FROM "wikipedia"
+UNPIVOT ( changes FOR action IN ("added", "deleted") )
+WHERE channel LIKE '#ar%'
+GROUP BY channel, user, action
+LIMIT 15
+```
+
+#### UNNEST
+
+- UNNEST 절은 ARRAY 타입 값을 개별 행으로 펼침
+
+```sql
+SELECT column_alias_name
+FROM datasource
+CROSS JOIN UNNEST(source_expression1) AS table_alias_name1(column_alias_name1)
+CROSS JOIN UNNEST(source_expression2) AS table_alias_name2(column_alias_name2) ...
+```
+
+주요 특징은 다음과 같다.
+
+- 소스는 테이블, 필터링한 부분 집합, JOIN 결과 모두 가능함
+- 소스 표현식은 ARRAY 타입이어야 하며, 다중값 VARCHAR는 `MV_TO_ARRAY(dimension)`로 변환함
+- `ARRAY[dim1,dim2]`, `ARRAY_CONCAT(dim1,dim2)` 같은 표현식도 사용할 수 있음
+- alias 절(`AS table_alias_name(column_alias_name)`)은 필수는 아니지만 권장함
+- 한 쿼리에서 UNNEST를 여러 번 사용할 수 있음
+- 대부분의 경우 데이터소스와 UNNEST 함수 사이에 CROSS JOIN이 필요함
+- Druid는 내부적으로 `j0.unnest` 가상 컬럼을 사용함
+- UNNEST는 펼치는 원본 배열의 순서를 유지함
+
+- 제약 사항: 중복 값과 null을 제거하지 않으며, 중첩 JSON(COMPLEX) 타입 내부의 복합 객체 배열은 지원하지 않음
+
+#### WHERE 절
+
+- FROM 테이블의 컬럼을 필터링하며 네이티브 필터로 변환됨
+  - 문자열과 숫자는 암묵적 타입 변환으로 비교할 수 있지만, 성능을 위해 명시적으로 캐스팅하는 것이 좋음
+
+```sql
+WHERE stringDim = '1'
+```
+
+- 문자열 디멘션(dimension)을 숫자 목록과 비교할 때는 문자열 목록으로 씀
+
+```sql
+WHERE stringDim IN ('1', '2', '3')
+```
+
+- `WHERE col1 IN (SELECT foo FROM ...)` 형태의 서브쿼리도 지원함
+
+#### GROUP BY 절
+
+- 표현식뿐 아니라 서수 위치(예: `GROUP BY 2`)로도 지정할 수 있으며, 다음과 같은 다중 그룹핑을 지원함
+
+- `GROUP BY GROUPING SETS ( (country, city), () )`
+- `GROUP BY ROLLUP (country, city)`: 여러 grouping set과 동등
+- `GROUP BY CUBE (country, city)`: 모든 조합을 계산
+
+- 특정 행에 적용되지 않는 그룹핑 컬럼은 `NULL`이 됨
+  - 원래 데이터의 NULL과 구분하려면 `GROUPING` 집계를 사용함
+
+#### HAVING / ORDER BY
+
+- HAVING 절은 GROUP BY 실행 후 결과를 필터링하며, 그룹핑 컬럼 또는 집계 값을 참조할 수 있음
+  - GROUP BY가 있는 쿼리에서만 사용함
+- ORDER BY 절은 표현식 또는 서수 위치를 참조할 수 있음
+  - 비집계 쿼리에서는 `__time`으로만 정렬할 수 있고, 집계 쿼리에서는 임의의 컬럼으로 정렬할 수 있음
+
+#### LIMIT / OFFSET
+
+- LIMIT은 반환 행 수를 제한함
+  - 상황에 따라 Druid가 limit을 데이터 서버로 push down하여 성능을 높이며, 네이티브 Scan, TopN 쿼리 타입으로 실행되는 쿼리에서는 항상 push down함
+- OFFSET은 지정한 수만큼 행을 건너뜀
+  - LIMIT과 함께 쓰면 OFFSET을 먼저 적용한 뒤 LIMIT을 적용함
+  - 예를 들어 `LIMIT 100 OFFSET 10`은 10번째 행부터 100개를 반환함
+- 건너뛴 행도 내부적으로 생성한 뒤 버리므로, OFFSET을 크게 잡으면 추가 리소스를 소모함
+  - OFFSET은 네이티브 Scan과 GroupBy 쿼리 타입에서만 지원함
+
+#### UNION ALL
+
+- 최상위 UNION ALL은 쿼리의 가장 바깥에서 사용함(서브쿼리나 FROM 절에서는 불가). 각 쿼리를 순차 실행하고 결과를 이어 붙이며, 결과 전체에 GROUP BY, ORDER BY 등의 연산을 적용할 수 없음
+
+```sql
+SELECT COUNT(*) FROM tbl WHERE my_column = 'value1'
+UNION ALL
+SELECT COUNT(*) FROM tbl WHERE my_column = 'value2'
+```
+
+- 테이블 수준 UNION ALL은 FROM 절의 서브쿼리 안에서 사용하며, 하위 서브쿼리는 표현식, 별칭, JOIN, GROUP BY, ORDER BY가 없는 단순 테이블 SELECT여야 함
+  - 각 테이블에서 같은 컬럼을 같은 순서로 선택해야 하고, 컬럼 타입이 같거나 서로 암묵적 캐스팅이 가능해야 함
+
+```sql
+SELECT col1, COUNT(*)
+FROM (
+  SELECT col1, col2, col3 FROM tbl1
+  UNION ALL
+  SELECT col1, col2, col3 FROM tbl2
+)
+GROUP BY col1
+```
+
+- `TABLE(APPEND())`로 같은 효과를 낼 수도 있음
+
+```sql
+SELECT col1, COUNT(*) from TABLE(APPEND('tbl1', 'tbl2'))
+```
+
+#### EXPLAIN PLAN
+
+- 쿼리 앞에 `EXPLAIN PLAN FOR`를 붙이면 실제로 실행하지 않고 네이티브 쿼리 변환 결과를 확인할 수 있음
+
+```sql
+EXPLAIN PLAN FOR SELECT ...
+```
+
+<a id="데이터-타입"></a>
+
+### 데이터 타입
+
+Druid가 네이티브로 지원하는 기본 컬럼 타입은 다음과 같다.
+
+- `LONG`: 64비트 부호 있는 정수
+- `FLOAT`: 32비트 부동소수점
+- `DOUBLE`: 64비트 부동소수점
+- `STRING`: UTF-8 문자열과 문자열 배열
+- `COMPLEX`: 중첩 JSON, hyperUnique, approxHistogram, DataSketches 등 비표준 타입
+- `ARRAY`: 위 타입들로 구성된 배열
+
+#### 표준 타입 매핑
+
+- CHAR: Druid 런타임 타입 STRING, 기본값 `''`
+- VARCHAR: Druid 런타임 타입 STRING, 기본값 `''`
+  - Druid STRING 컬럼은 VARCHAR로 표시됨
+- DECIMAL: Druid 런타임 타입 DOUBLE, 기본값 `0.0`
+  - 고정소수점이 아닌 부동소수점 연산을 사용함
+- FLOAT: Druid 런타임 타입 FLOAT, 기본값 `0.0`
+  - Druid FLOAT 컬럼은 FLOAT로 표시됨
+- REAL: Druid 런타임 타입 DOUBLE, 기본값 `0.0`
+- DOUBLE: Druid 런타임 타입 DOUBLE, 기본값 `0.0`
+  - Druid DOUBLE 컬럼은 DOUBLE로 표시됨
+- BOOLEAN: Druid 런타임 타입 LONG, 기본값 `false`
+- TINYINT: Druid 런타임 타입 LONG, 기본값 `0`
+- SMALLINT: Druid 런타임 타입 LONG, 기본값 `0`
+- INTEGER: Druid 런타임 타입 LONG, 기본값 `0`
+- BIGINT: Druid 런타임 타입 LONG, 기본값 `0`
+  - `__time`을 제외한 Druid LONG 컬럼은 BIGINT로 표시됨
+- TIMESTAMP: Druid 런타임 타입 LONG, 기본값 `0` (1970-01-01 UTC)
+  - 문자열과 타임스탬프 간 캐스팅은 표준 SQL 형식을 가정함
+- DATE: Druid 런타임 타입 LONG, 기본값 `0` (1970-01-01)
+  - TIMESTAMP를 DATE로 캐스팅하면 일 단위로 내림함
+- ARRAY: Druid 런타임 타입 ARRAY, 기본값 `NULL`
+  - Druid 네이티브 배열 타입은 SQL 배열로 동작함
+- OTHER: Druid 런타임 타입 COMPLEX, 기본값 없음
+  - hyperUnique, approxHistogram 등을 표현함
+
+#### 타임스탬프 처리
+
+- Druid는 `__time` 컬럼을 포함한 타임스탬프를 LONG으로 다루며, 값은 1970-01-01 00:00:00 UTC 이후의 밀리초 수(윤초 제외)임
+  - 따라서 Druid의 타임스탬프는 시간대 정보를 담지 않음
+
+#### 캐스팅 규칙
+
+- Druid 런타임 타입이 같은 SQL 타입 간 캐스팅은 효과가 없음(명시된 예외 제외).
+- 런타임 타입이 다르면 Druid에서 런타임 캐스팅을 수행함
+- 캐스팅에 실패하면 NULL로 대체함(예: `CAST('foo' AS BIGINT)`).
+
+#### 배열
+
+Druid의 `ARRAY` 타입은 표준 SQL 배열처럼 동작한다. 그룹핑하면 배열 전체가 일치하는 값끼리 묶이므로, 원소 단위로 연산하려면 `UNNEST`로 배열을 개별 행으로 펼친다.
+
+SQL 기반 인제스천으로 배열을 적재할 때는 `arrayIngestMode`를 `"array"`로 설정해야 한다. 조회 결과의 배열은 기본적으로 JSON 문자열로 직렬화되며, 이 동작은 `sqlStringifyArrays` 컨텍스트 파라미터로 제어한다.
+
+#### 다중값 문자열
+
+- Druid 네이티브 타입 시스템에서는 문자열이 여러 값을 가질 수 있음
+  - 다중값 문자열 디멘션은 SQL에서 VARCHAR 타입으로 표시되며 문법상 일반 VARCHAR처럼 사용할 수 있음
+  - 표준 VARCHAR 함수는 행마다 모든 값에 적용됨
+  - `MV_` 접두사가 붙은 다중값 전용 함수는 값을 배열처럼 처리하면서 VARCHAR 타입을 유지함
+  - 그룹핑을 적용하면 암묵적 UNNEST가 일어나 단일값 VARCHAR 결과를 만듦
+
+#### NULL과 불리언 논리
+
+- Druid는 기본적으로 NULL 값을 ANSI SQL 표준과 유사하게 처리함
+- 필터 처리와 불리언 표현식 평가에는 SQL 3치 논리(three-valued logic)를 사용함
+
+#### 중첩 컬럼
+
+- Druid는 네이티브 `COMPLEX<json>` 타입으로 세그먼트에 중첩 데이터 구조를 저장할 수 있음
+  - 중첩 데이터는 JSON 함수로 추출, 파싱, 직렬화하거나 새 구조를 만들 수 있음
+  - COMPLEX 타입은 전용 처리 없이 그룹핑, 직접 필터링, 집계에 사용하면 동작이 정의되지 않음
+
+<a id="스칼라-함수"></a>
+
+### 스칼라 함수
+
+- 대표적인 함수를 카테고리별로 정리함
+  - 전체 목록은 원본 문서를 참고함
+
+#### 숫자 함수
+
+- `ABS(expr)`: 절댓값을 반환함
+- `ROUND(expr[, digits])`: 지정한 소수 자릿수로 반올림함
+  - digits가 음수면 소수점 왼쪽 자리에서 반올림함
+- `POWER(expr, power)`: 거듭제곱을 계산함
+- `SQRT(expr)`: 제곱근을 반환함
+- `MOD(x, y)`: x를 y로 나눈 나머지를 반환함
+- `BITWISE_AND(expr1, expr2)`: 비트 AND 연산을 수행함
+- `SAFE_DIVIDE(x, y)`: 0으로 나누면 오류 대신 null을 반환하는 나눗셈임
+
+#### 문자열 함수
+
+- `CONCAT(expr[, expr, ...])`: 표현식 목록을 이어 붙임
+- `LENGTH(expr)`: UTF-16 코드 단위 기준 문자열 길이를 반환함
+- `UPPER(expr)`: 문자열을 모두 대문자로 변환함
+- `SUBSTRING(expr, index[, length])`: 1부터 시작하는 index 위치에서 부분 문자열을 추출함
+- `REGEXP_EXTRACT(expr, pattern[, index])`: 정규식 패턴을 적용해 매칭 그룹을 추출함
+- `REPLACE(expr, substring, replacement)`: 모든 substring 출현을 치환함
+- `TRIM([direction] [chars FROM] expr)`: 문자열 양끝에서 지정 문자를 제거함
+
+#### 날짜, 시간 함수
+
+- `CURRENT_TIMESTAMP`: 현재 타임스탬프를 UTC 기준으로 반환함(다른 시간대를 지정하지 않는 한)
+- `DATE_TRUNC(unit, timestamp_expr)`: 타임스탬프를 내림해 새 타임스탬프로 반환함
+- `TIME_FLOOR(timestamp_expr, period[, origin[, timezone]])`: ISO 8601 period 기준으로 내림함
+- `TIME_EXTRACT(timestamp_expr, unit[, timezone])`: 시간 구성 요소를 숫자로 추출함
+- `TIME_PARSE(string_expr[, pattern[, timezone]])`: 패턴으로 문자열을 파싱해 타임스탬프로 변환함
+- `TIMESTAMPDIFF(unit, timestamp1, timestamp2)`: 두 타임스탬프 간 부호 있는 시간 차이를 반환함
+
+#### 축약(reduction) 함수
+
+- `GREATEST([expr1, ...])`: 0개 이상의 표현식을 평가해 최댓값을 반환함
+- `LEAST([expr1, ...])`: 0개 이상의 표현식을 평가해 최솟값을 반환함
+
+#### IP 주소 함수
+
+- `IPV4_MATCH(address, subnet)`: 주소가 subnet 리터럴에 속하면 true, 아니면 false를 반환함
+- `IPV4_PARSE(address)`: 주소를 정수로 저장되는 IPv4 주소로 파싱함
+- `IPV6_MATCH(address, subnet)`: IPv6 주소가 subnet에 속하면 1, 아니면 0을 반환함
+
+#### 스케치 함수 (DataSketches)
+
+- `HLL_SKETCH_ESTIMATE(expr[, round])`: HLL 스케치에서 고유 개수 추정치를 반환함
+- `THETA_SKETCH_ESTIMATE(expr)`: Theta 스케치에서 고유 개수 추정치를 반환함
+- `DS_GET_QUANTILE(expr, fraction)`: quantiles 스케치에서 분위수 추정치를 반환함
+
+#### 기타 함수
+
+- `CASE expr WHEN value1 THEN result1 [...] END`: 단순 CASE 표현식임
+- `CASE WHEN boolean_expr1 THEN result1 [...] END`: 조건 검색 CASE 표현식임
+- `CAST(value AS TYPE)`: 타입을 변환함
+- `COALESCE(value1, value2, ...)`: 첫 번째 non-null 값을 반환함
+- `NULLIF(value1, value2)`: 두 값이 같으면 NULL, 다르면 value1을 반환함
+
+<a id="집계-함수"></a>
+
+### 집계 함수
+
+#### 공통 동작
+
+- FILTER 절: `FILTER(WHERE condition)`으로 조건에 맞는 행만 집계할 수 있음
+  - Druid는 이를 네이티브 filtered aggregator로 변환하므로, 한 쿼리 안에서 집계마다 다른 필터를 적용할 수 있음
+- NULL 처리: 선택된 행이 없으면 집계 함수는 초기값을 반환함
+  - 필터가 모든 행을 제외하거나 그룹 집계에서 매칭이 없을 때 발생함
+- DISTINCT: `COUNT`, `ARRAY_AGG`, `STRING_AGG`만 DISTINCT 키워드를 허용함
+- 비결정적 순서: 세그먼트 간 집계 연산 순서는 결정적이지 않으므로, 교환법칙이 성립하지 않는 집계 함수는 같은 쿼리에서도 결과가 달라질 수 있음
+  - float/double 타입 연산에서 변동이 나타날 수 있으며, `ROUND` 함수로 완화할 수 있음
+
+#### 기본 집계
+
+- `COUNT(*)`
+  - 설명: 행 수를 셈
+  - 기본값: `0`
+- `COUNT([DISTINCT] expr)`
+  - 설명: 값 개수를 셈
+    - DISTINCT는 `useApproximateCountDistinct=false`가 아닌 한 근사 계산을 사용함
+  - 기본값: `0`
+- `SUM(expr)`
+  - 설명: 숫자 값의 합을 구함
+  - 기본값: `null`
+- `MIN(expr)`
+  - 설명: 최솟값을 구함
+  - 기본값: `null`
+- `MAX(expr)`
+  - 설명: 최댓값을 구함
+  - 기본값: `null`
+- `AVG(expr)`
+  - 설명: 평균을 구함
+  - 기본값: `null`
+- `ANY_VALUE(expr, [maxBytesPerValue, [aggregateMultipleValues]])`
+  - 설명: null을 포함해 만나는 임의의 값을 반환하며 조기 반환에 최적화되어 있음
+  - 기본값: `null`
+
+#### 근사 고유 개수(approximate distinct count)
+
+- `APPROX_COUNT_DISTINCT(expr)`
+  - 설명: `druid.sql.approxCountDistinct.function`에 지정된 알고리즘으로 근사 고유 개수를 계산함
+  - 기본값: `0`
+- `APPROX_COUNT_DISTINCT_BUILTIN(expr)`
+  - 설명: Druid 내장 HyperLogLog 변형임
+    - 문자열, 숫자, 사전 빌드된 hyperUnique 컬럼에 사용함
+  - 기본값: `0`
+- `APPROX_COUNT_DISTINCT_DS_HLL(expr, [lgK, tgtHllType])`
+  - 설명: DataSketches HLL 구현으로 일반적으로 더 나은 정확도를 제공함
+  - 기본값: `0`
+- `APPROX_COUNT_DISTINCT_DS_THETA(expr, [size])`
+  - 설명: DataSketches Theta 스케치를 사용함
+  - 기본값: `0`
+
+#### 분위수(quantile)
+
+- `APPROX_QUANTILE(expr, probability, [resolution])`
+  - 설명: Deprecated. approximate histogram을 사용함
+    - probability는 0과 1 사이(경계 제외)임
+  - 기본값: `NaN`
+- `APPROX_QUANTILE_FIXED_BUCKETS(expr, probability, numBuckets, lowerLimit, upperLimit, [outlierHandlingMode])`
+  - 설명: 고정 버킷 히스토그램 기반 분위수임
+    - approximate histogram 익스텐션이 필요함
+  - 기본값: `0.0`
+- `APPROX_QUANTILE_DS(expr, probability, [k])`
+  - 설명: DataSketches quantiles 스케치를 사용하며, 분포에 무관하게 동작하는 더 우수한 알고리즘임
+  - 기본값: `NaN`
+
+#### 시간 기준 집계
+
+- `EARLIEST(expr, [maxBytesPerValue])`
+  - 설명: 가장 이른 non-null 타임스탬프를 가진 행의 값을 반환함
+  - 기본값: `null`
+- `EARLIEST_BY(expr, timestampExpr, [maxBytesPerValue])`
+  - 설명: 지정한 타임스탬프 기준으로 가장 이른 값을 반환함
+    - rollup이 활성화된 테이블에서는 지정한 타임스탬프를 무시함
+  - 기본값: `null`
+- `LATEST(expr, [maxBytesPerValue])`
+  - 설명: 가장 늦은 non-null 타임스탬프를 가진 행의 값을 반환함
+  - 기본값: `null`
+- `LATEST_BY(expr, timestampExpr, [maxBytesPerValue])`
+  - 설명: 지정한 타임스탬프 기준으로 가장 늦은 값을 반환함
+    - rollup이 활성화된 테이블에서는 지정한 타임스탬프를 무시함
+  - 기본값: `null`
+
+#### 배열, 문자열 집계
+
+- `ARRAY_AGG([DISTINCT] expr, [size])`
+  - 설명: 값을 배열로 모음
+    - size 기본값은 1024바이트이며 ORDER BY는 지원하지 않음
+  - 기본값: `null`
+- `ARRAY_CONCAT_AGG([DISTINCT] expr, [size])`
+  - 설명: 배열 입력을 이어 붙임
+    - null 배열은 무시하지만 null 원소는 포함함
+  - 기본값: `null`
+- `STRING_AGG([DISTINCT] expr, [separator, [size]])`
+  - 설명: 값을 구분자로 연결한 문자열을 만듦
+    - null을 무시하며 size 기본값은 1024바이트임
+  - 기본값: `null`
+- `LISTAGG([DISTINCT] expr, [separator, [size]])`
+  - 설명: STRING_AGG의 동의어임
+  - 기본값: `null`
+
+#### 통계 함수
+
+- `VAR_POP(expr)`
+  - 설명: 모분산
+  - 기본값: `null`
+- `VAR_SAMP(expr)`
+  - 설명: 표본분산
+  - 기본값: `null`
+- `VARIANCE(expr)`
+  - 설명: 표본분산(별칭)
+  - 기본값: `null`
+- `STDDEV_POP(expr)`
+  - 설명: 모표준편차
+  - 기본값: `null`
+- `STDDEV_SAMP(expr)`
+  - 설명: 표본표준편차
+  - 기본값: `null`
+- `STDDEV(expr)`
+  - 설명: 표본표준편차(별칭)
+  - 기본값: `null`
+
+#### 비트 연산 집계
+
+- `BIT_AND(expr)`
+  - 설명: 모든 입력에 걸친 비트 AND
+  - 기본값: `null`
+- `BIT_OR(expr)`
+  - 설명: 모든 입력에 걸친 비트 OR
+  - 기본값: `null`
+- `BIT_XOR(expr)`
+  - 설명: 모든 입력에 걸친 비트 XOR
+  - 기본값: `null`
+
+#### 스케치 생성 집계
+
+- `DS_HLL(expr, [lgK, tgtHllType])`
+  - 설명: HLL 스케치를 생성함(DataSketches 익스텐션)
+  - 기본값: `'0'` (STRING)
+- `DS_THETA(expr, [size])`
+  - 설명: Theta 스케치를 생성함(DataSketches 익스텐션)
+  - 기본값: `'0.0'` (STRING)
+- `DS_QUANTILES_SKETCH(expr, [k])`
+  - 설명: quantiles 스케치를 생성함(DataSketches 익스텐션)
+  - 기본값: `'0'` (STRING)
+- `DS_TUPLE_DOUBLES(expr [, nominalEntries])`
+  - 설명: double 배열을 담는 Tuple 스케치를 생성함(DataSketches 익스텐션)
+  - 기본값: 없음
+- `TDIGEST_QUANTILE(expr, quantileFraction, [compression])`
+  - 설명: T-Digest 분위수임
+    - compression 기본값은 100임
+  - 기본값: `Double.NaN`
+- `TDIGEST_GENERATE_SKETCH(expr, [compression])`
+  - 설명: T-Digest 스케치를 생성함
+  - 기본값: 빈 스케치(STRING)
+
+#### 기타 특수 집계
+
+- `GROUPING(expr, expr...)`
+  - 설명: GROUPING SETS에서 어떤 디멘션이 포함되었는지를 숫자로 나타냄
+  - 기본값: 없음
+- `BLOOM_FILTER(expr, numEntries)`
+  - 설명: 지정한 최대 고유 값 수에 대한 bloom filter를 생성함
+  - 기본값: 빈 base64 STRING
+- `SPECTATOR_COUNT(expr)`
+  - 설명: Spectator 히스토그램의 관측 개수를 셈
+  - 기본값: `0`
+- `SPECTATOR_PERCENTILE(expr, percentile)`
+  - 설명: Spectator 히스토그램에서 근사 백분위수(0–100)를 구함
+  - 기본값: `NaN`
+
+<a id="메타데이터-테이블"></a>
+
+### 메타데이터 테이블
+
+- INFORMATION_SCHEMA 테이블과 sys 테이블은 `TIME_PARSE`, `APPROX_QUANTILE_DS` 같은 Druid 전용 함수를 지원하지 않으며 표준 SQL 함수만 사용할 수 있음
+
+#### INFORMATION_SCHEMA
+
+- SCHEMATA: 알려진 모든 스키마를 나열함: `druid`(일반 데이터소스), `lookup`(lookup), `sys`(시스템 메타데이터), `INFORMATION_SCHEMA`(가상 테이블).
+
+- CATALOG_NAME: VARCHAR
+- SCHEMA_NAME: VARCHAR
+- SCHEMA_OWNER: VARCHAR
+- DEFAULT_CHARACTER_SET_CATALOG: VARCHAR
+- DEFAULT_CHARACTER_SET_SCHEMA: VARCHAR
+- DEFAULT_CHARACTER_SET_NAME: VARCHAR
+- SQL_PATH: VARCHAR
+
+- TABLES: 알려진 모든 테이블과 스키마를 나열함
+
+- TABLE_CATALOG
+  - 타입: VARCHAR
+  - 비고: 항상 `druid`
+- TABLE_SCHEMA
+  - 타입: VARCHAR
+  - 비고: 소속 스키마
+- TABLE_NAME
+  - 타입: VARCHAR
+  - 비고: `druid` 스키마에서는 dataSource 이름
+- TABLE_TYPE
+  - 타입: VARCHAR
+  - 비고: "TABLE" 또는 "SYSTEM_TABLE"
+- IS_JOINABLE
+  - 타입: VARCHAR
+  - 비고: JOIN 우측에 직접 사용할 수 있으면 "YES", 아니면 "NO"
+- IS_BROADCAST
+  - 타입: VARCHAR
+  - 비고: 모든 노드에 브로드캐스트되면 "YES", 아니면 "NO"
+
+- COLUMNS: 모든 테이블의 컬럼을 나열함
+  - 주요 컬럼: `TABLE_CATALOG`(항상 `druid`), `TABLE_SCHEMA`, `TABLE_NAME`, `COLUMN_NAME`, `ORDINAL_POSITION`(저장 순서), `IS_NULLABLE`, `DATA_TYPE`(SQL 데이터 타입), `NUMERIC_PRECISION`, `NUMERIC_SCALE`, `DATETIME_PRECISION`, `JDBC_TYPE`(java.sql.Types 코드). `COLUMN_DEFAULT`, `CHARACTER_MAXIMUM_LENGTH`, `CHARACTER_OCTET_LENGTH`는 사용하지 않음
+
+```sql
+SELECT "ORDINAL_POSITION", "COLUMN_NAME", "IS_NULLABLE", "DATA_TYPE", "JDBC_TYPE"
+FROM INFORMATION_SCHEMA.COLUMNS
+WHERE "TABLE_NAME" = 'foo'
+```
+
+- ROUTINES: 알려진 모든 함수를 나열함
+
+- ROUTINE_CATALOG
+  - 타입: VARCHAR
+  - 비고: 항상 `druid`
+- ROUTINE_SCHEMA
+  - 타입: VARCHAR
+  - 비고: 항상 `INFORMATION_SCHEMA`
+- ROUTINE_NAME
+  - 타입: VARCHAR
+  - 비고: 함수 이름
+- ROUTINE_TYPE
+  - 타입: VARCHAR
+  - 비고: 항상 `FUNCTION`
+- IS_AGGREGATOR
+  - 타입: VARCHAR
+  - 비고: 집계 함수면 "YES", 아니면 "NO"
+- SIGNATURES
+  - 타입: VARCHAR
+  - 비고: 하나 이상의 함수 시그니처
+
+```sql
+SELECT "ROUTINE_CATALOG", "ROUTINE_SCHEMA", "ROUTINE_NAME", "ROUTINE_TYPE", "IS_AGGREGATOR", "SIGNATURES"
+FROM "INFORMATION_SCHEMA"."ROUTINES"
+WHERE "IS_AGGREGATOR" = 'YES'
+```
+
+#### sys 스키마
+
+- SEGMENTS: published 여부와 관계없이 모든 세그먼트 정보를 담음
+
+- segment_id
+  - 타입: VARCHAR
+  - 비고: 고유 식별자
+- datasource
+  - 타입: VARCHAR
+  - 비고: 데이터소스 이름
+- start
+  - 타입: VARCHAR
+  - 비고: 인터벌 시작(ISO 8601)
+- end
+  - 타입: VARCHAR
+  - 비고: 인터벌 끝(ISO 8601)
+- size
+  - 타입: BIGINT
+  - 비고: 세그먼트 크기(바이트)
+- version
+  - 타입: VARCHAR
+  - 비고: 버전 문자열(ISO 8601 타임스탬프, 높을수록 최신)
+- partition_num
+  - 타입: BIGINT
+  - 비고: 파티션 번호(datasource+interval+version 안에서 고유)
+- num_replicas
+  - 타입: BIGINT
+  - 비고: 현재 복제본 수
+- num_rows
+  - 타입: BIGINT
+  - 비고: 행 수(모르면 0, 스트림 인제스천 세그먼트는 지연될 수 있음)
+- is_active
+  - 타입: BIGINT
+  - 비고: 데이터소스 최신 상태에 속하면 true
+- is_published
+  - 타입: BIGINT
+  - 비고: 메타데이터 저장소에 published되고 used로 표시되면 1
+- is_available
+  - 타입: BIGINT
+  - 비고: Historical 또는 실시간 태스크가 서빙 중이면 1
+- is_realtime
+  - 타입: BIGINT
+  - 비고: 실시간에서만 서빙하면 1, Historical이 서빙하면 0
+- is_overshadowed
+  - 타입: BIGINT
+  - 비고: published 상태이면서 다른 세그먼트에 완전히 가려졌으면 1
+- shard_spec
+  - 타입: VARCHAR
+  - 비고: JSON 직렬화된 ShardSpec
+- dimensions
+  - 타입: VARCHAR
+  - 비고: JSON 직렬화된 디멘션 목록
+- metrics
+  - 타입: VARCHAR
+  - 비고: JSON 직렬화된 metric 목록
+- last_compaction_state
+  - 타입: VARCHAR
+  - 비고: JSON 직렬화된 compaction 태스크 설정(compaction 이력이 없으면 null)
+- replication_factor
+  - 타입: BIGINT
+  - 비고: 티어 전체에 필요한 복제본 수(아직 평가 전이면 -1)
+
+- 활성 세그먼트 조회 예시임
+
+```sql
+SELECT * FROM sys.segments
+WHERE datasource = 'wikipedia'
+AND is_active = 1
+```
+
+- 데이터소스별 통계 예시임
+
+```sql
+SELECT
+    datasource,
+    SUM("size") AS total_size,
+    CASE WHEN SUM("size") = 0 THEN 0 ELSE SUM("size") / (COUNT(*) FILTER(WHERE "size" > 0)) END AS avg_size,
+    CASE WHEN SUM(num_rows) = 0 THEN 0 ELSE SUM("num_rows") / (COUNT(*) FILTER(WHERE num_rows > 0)) END AS avg_num_rows,
+    COUNT(*) AS num_segments
+FROM sys.segments
+WHERE is_active = 1
+GROUP BY 1
+ORDER BY 2 DESC
+```
+
+- compaction이 수행된 세그먼트 조회 예시임
+
+```sql
+SELECT * FROM sys.segments WHERE is_active = 1 AND last_compaction_state IS NOT NULL
+```
+
+- SERVERS: 클러스터에서 발견된 모든 서버를 나열함
+
+- server
+  - 타입: VARCHAR
+  - 비고: 서버 이름(host:port 형식)
+- host
+  - 타입: VARCHAR
+  - 비고: 호스트명
+- plaintext_port
+  - 타입: BIGINT
+  - 비고: 비보안 포트(비활성화면 -1)
+- tls_port
+  - 타입: BIGINT
+  - 비고: TLS 포트(비활성화면 -1)
+- server_type
+  - 타입: VARCHAR
+  - 비고: COORDINATOR, OVERLORD, BROKER, ROUTER, HISTORICAL, MIDDLE_MANAGER, PEON
+- tier
+  - 타입: VARCHAR
+  - 비고: 분배 티어(HISTORICAL 전용)
+- current_size
+  - 타입: BIGINT
+  - 비고: 현재 세그먼트 크기 합(바이트, HISTORICAL 전용)
+- max_size
+  - 타입: BIGINT
+  - 비고: 권장 최대 세그먼트 크기(HISTORICAL 전용)
+- is_leader
+  - 타입: BIGINT
+  - 비고: 리더면 1, 아니면 0, 리더 개념이 없으면 null
+- start_time
+  - 타입: STRING
+  - 비고: 서버가 자신을 알린 ISO 8601 타임스탬프
+- version
+  - 타입: VARCHAR
+  - 비고: Druid 버전
+- build_revision
+  - 타입: VARCHAR
+  - 비고: 빌드의 git 커밋
+- labels
+  - 타입: VARCHAR
+  - 비고: `druid.labels`로 지정한 서버 레이블
+- available_processors
+  - 타입: BIGINT
+  - 비고: 사용 가능한 CPU 프로세서 수
+- total_memory
+  - 타입: BIGINT
+  - 비고: 전체 메모리(바이트)
+
+- SERVER_SEGMENTS: 서버와 세그먼트를 연결함
+  - `server`(servers 테이블 기본 키), `segment_id`(segments 테이블 기본 키) 두 컬럼으로 구성됨
+
+```sql
+SELECT count(segments.segment_id) as num_segments from sys.segments as segments
+INNER JOIN sys.server_segments as server_segments
+ON segments.segment_id  = server_segments.segment_id
+INNER JOIN sys.servers as servers
+ON servers.server = server_segments.server
+WHERE segments.datasource = 'wikipedia'
+GROUP BY servers.server;
+```
+
+- TASKS: 실행 중이거나 최근 완료된 인제스천 태스크 정보임
+  - 주요 컬럼: `task_id`, `group_id`, `type`, `datasource`, `created_time`, `queue_insertion_time`, `status`(RUNNING/FAILED/SUCCESS), `runner_status`(완료 태스크는 NONE, 진행 중은 RUNNING/WAITING/PENDING), `duration`(완료 태스크의 소요 밀리초), `location`(실행 중인 host:port), `host`, `plaintext_port`, `tls_port`, `error_msg`(실패 태스크의 상세 오류).
+
+```sql
+SELECT * FROM sys.tasks WHERE status='FAILED';
+```
+
+- SUPERVISORS: supervisor 정보임
+  - 주요 컬럼: `supervisor_id`, `datasource`, `state`(UNHEALTHY_SUPERVISOR, UNHEALTHY_TASKS, PENDING, RUNNING, SUSPENDED, STOPPING), `detailed_state`, `healthy`(정상이면 1), `type`(kafka, kinesis, materialized_view), `source`(Kafka 토픽이나 Kinesis 스트림 등), `suspended`, `spec`(JSON 직렬화된 supervisor 스펙).
+
+```sql
+SELECT * FROM sys.supervisors WHERE healthy=0;
+```
+
+- SERVER_PROPERTIES: 각 서버에 설정된 런타임 프로퍼티를 노출함
+  - 컬럼: `server`(host:port), `service_name`(`druid.service` 값), `node_roles`(쉼표 구분 역할 목록), `property`, `value`.
+
+```sql
+SELECT * FROM sys.server_properties WHERE server='192.168.1.1:8081'
+```
+
+- QUERIES: 실험적 기능으로, Broker에 `druid.sql.planner.enableSysQueriesTable=true` 설정이 필요하며 현재는 Dart 엔진 쿼리만 표시함
+  - 컬럼: `id`(Dart의 dartQueryId), `engine`(예: msq-dart), `state`(ACCEPTED, RUNNING, SUCCESS, FAILED, CANCELED), `info`(sqlQueryId, sql, identity, startTime 등을 담은 JSON). 완료된 쿼리의 보존은 `druid.msq.dart.controller.maxRetainedReportCount`와 `druid.msq.dart.controller.maxRetainedReportDuration`이 결정함
+
+```sql
+SELECT *
+FROM sys.queries
+WHERE  engine = 'msq-dart'
+  AND state IN ('SUCCESS', 'FAILED', 'CANCELED')
+```
+
+<a id="sql--네이티브-쿼리-변환"></a>
+
+### SQL → 네이티브 쿼리 변환
+
+- Druid SQL은 Broker에서 네이티브 쿼리로 변환된 뒤 실행됨
+
+#### 모범 사례
+
+- 1\. `__time` 컬럼 필터가 네이티브 `"intervals"` 필터로 변환되는지 확인함
+  - 그래야 성능이 좋음
+- 2\. JOIN 안의 서브쿼리를 피함
+  - 타입 불일치로 생기는 암묵적 서브쿼리를 포함해 성능과 확장성에 영향을 줌
+- 3\. 조건절 위치에 주의함
+  - Druid는 JOIN 너머로 조건을 push down하지 못하므로 comma join을 피함
+- 4\. 네이티브 쿼리가 어떻게 실행되는지 Query execution 문서로 이해함
+- 5\. EXPLAIN PLAN과 요청 로깅으로 실제 실행되는 네이티브 쿼리를 확인함
+- 6\. 변환이 비효율적인 사례를 발견하면 재현 가능한 테스트 케이스와 함께 GitHub에 보고함
+
+#### EXPLAIN PLAN 출력 해석
+
+- EXPLAIN PLAN은 세 개의 컬럼을 반환함
+
+- PLAN: Druid가 실행할 네이티브 쿼리의 JSON 배열
+- RESOURCES: 사용하는 리소스 설명
+- ATTRIBUTES: `statementType`, `targetDataSource`, `partitionedBy`, `clusteredBy`, `replaceTimeChunks` 등 쿼리 메타데이터
+
+#### 쿼리 타입 선택
+
+- Druid SQL은 네 가지 네이티브 쿼리 타입 중 하나를 자동으로 선택함
+
+- Scan: GROUP BY, DISTINCT가 없는 비집계 쿼리
+- Timeseries: `FLOOR(__time TO unit)` 또는 `TIME_FLOOR(__time, period)`만으로 그룹핑하고, 다른 그룹핑, HAVING, 중첩이 없는 쿼리
+- TopN: 단일 컬럼 그룹핑에 ORDER BY와 LIMIT이 있는 쿼리
+  - 결과가 근사일 수 있으며 `"useApproximateTopN": "false"`로 비활성화할 수 있음
+- GroupBy: 그 밖의 모든 집계
+  - 정확한 결과를 내며 디스크로 spill될 수 있음
+
+#### 시간 필터 변환
+
+- 다음 패턴은 네이티브 `"intervals"` 필터로 변환됨
+
+```sql
+__time >= TIMESTAMP '2000-01-01 00:00:00'                -- 절대 시간
+__time >= CURRENT_TIMESTAMP - INTERVAL '8' HOUR          -- 상대 시간
+FLOOR(__time TO DAY) = TIMESTAMP '2000-01-01 00:00:00'   -- 특정 일자
+```
+
+#### JOIN 변환
+
+- 1\. 직접 변환: 동등 조건의 lookup 또는 서브쿼리 조인은 네이티브 join 데이터소스로 그대로 변환됨
+- 2\. 서브쿼리 삽입: 직접 변환할 수 없는 조인(예: 우측에 표현식이 있는 경우)은 자동으로 서브쿼리로 감쌈
+- 3\. 재배열 없음: Druid SQL은 조인 순서를 최적화하지 않음
+
+#### 서브쿼리 변환
+
+- 서브쿼리는 일반적으로 네이티브 query 데이터소스로 변환됨
+  - `WHERE col1 IN (SELECT foo FROM ...)` 형태의 WHERE 절 서브쿼리는 inner join으로 변환됨
+
+#### 근사 계산
+
+- COUNT(DISTINCT): 기본적으로 HyperLogLog 근사를 사용함
+  - `"useApproximateCountDistinct": "false"`로 정확한 계산으로 전환할 수 있음
+- TopN: 근사 알고리즘을 사용하며 `"useApproximateTopN": "false"`로 비활성화함
+- 스케치 함수: `APPROX_QUANTILE_DS` 등은 항상 근사임
+  - 한도에 걸리면 `approxQuantileDsMaxStreamLength`(기본값 1,000,000,000)를 조정함
+
+#### 지원하지 않는 기능
+
+SQL에서 지원하지 않는 기능은 다음과 같다.
+
+- 시스템 테이블이 참여하는 JOIN
+- 동등 비교가 아닌 JOIN 조건
+- 상수가 들어간 JOIN 조건
+- 다중값 디멘션 컬럼에 대한 JOIN
+- 비집계 쿼리에서 `__time` 이외 컬럼의 ORDER BY
+- DDL, DML 문
+- 시스템 테이블에 대한 Druid 전용 함수
+
+- 네이티브에는 있지만 SQL에서 사용할 수 없는 기능은 inline 데이터소스, 공간(spatial) 필터가 있으며, 다중값 디멘션은 부분적으로만 지원되고 알려진 비일관성이 있음
+
+<a id="sql-api"></a>
+
+### SQL API
+
+#### 쿼리 실행: POST /druid/v2/sql
+
+- JSON 또는 텍스트 형식으로 쿼리를 받아 결과를 반환함
+  - JSON 요청 본문의 필드는 다음과 같음
+
+- `query`: SQL 쿼리 문자열
+  - 컨텍스트 파라미터를 위한 여러 개의 SET 문을 포함할 수 있음
+- `resultFormat`: 결과 형식: `object`, `array`, `objectLines`, `arrayLines`, `csv`
+- `header`: true면 첫 행에 컬럼 이름을 포함함
+- `typesHeader`: Druid 런타임 타입 정보를 추가함(`header: true` 필요)
+- `sqlTypesHeader`: SQL 타입 정보를 추가함(`header: true` 필요)
+- `context`: SQL 쿼리 컨텍스트 파라미터 JSON 객체
+- `parameters`: 파라미터화 쿼리의 type/value 객체 목록
+
+- 텍스트 형식 요청 예시임
+
+```bash
+echo 'SELECT 1' | curl -H 'Content-Type: text/plain' \
+  http://ROUTER_IP:ROUTER_PORT/druid/v2/sql --data @-
+```
+
+#### 결과 형식
+
+- `object`
+  - Content-Type: application/json
+  - 구조: 필드 이름을 가진 객체들의 JSON 배열
+- `array`
+  - Content-Type: application/json
+  - 구조: 배열들의 JSON 배열
+- `objectLines`
+  - Content-Type: text/plain
+  - 구조: 줄바꿈으로 구분한 JSON 객체
+- `arrayLines`
+  - Content-Type: text/plain
+  - 구조: 줄바꿈으로 구분한 JSON 배열
+- `csv`
+  - Content-Type: text/csv
+  - 구조: 필드를 이스케이프한 쉼표 구분 값
+
+#### 응답 헤더
+
+- `X-Druid-SQL-Query-Id`: 자동 생성되거나 직접 지정한 SQL 쿼리 식별자임
+  - 쿼리 취소에 필요함
+- `X-Druid-SQL-Header-Included`: header, typesHeader, sqlTypesHeader 조건이 충족되면 `yes`를 반환함
+
+#### 오류 처리와 응답 잘림
+
+응답 전송 전에 오류가 발생하면 HTTP 500과 함께 `error`, `errorMessage`, `errorClass`, `host` 필드를 담은 JSON을 반환한다. 스트리밍 응답이 전송 도중 잘리는 경우에는 마지막 줄바꿈 문자가 없으므로, 이를 확인해 응답이 끝까지 도착했는지 판단할 수 있다.
+
+#### 쿼리 취소: DELETE /druid/v2/sql/{sqlQueryId}
+
+- 성공하면 HTTP 202를 반환함
+  - 취소는 best-effort 방식이라 요청 후에도 쿼리가 잠시 계속 실행될 수 있음
+
+#### 딥 스토리지(deep storage) 쿼리 (MSQ): POST /druid/v2/sql/statements
+
+- MSQ 태스크 엔진 기반의 비동기 쿼리 엔드포인트로, `executionMode: ASYNC`와 대용량 결과를 위한 `selectDestination: durableStorage`를 지원함
+  - 부속 엔드포인트는 다음과 같음
+
+- `GET /druid/v2/sql/statements/{queryId}`: 상태 조회
+- `GET /druid/v2/sql/statements/{queryId}/results`: 결과 조회
+- 취소 엔드포인트도 별도로 제공함
+
+## Druid 네이티브 쿼리
+
+> 원본: https://druid.apache.org/docs/latest/querying/
+
+> 원본: https://druid.apache.org/docs/latest/querying/timeseriesquery
+
+> 원본: https://druid.apache.org/docs/latest/querying/topnquery
+
+> 원본: https://druid.apache.org/docs/latest/querying/groupbyquery
+
+> 원본: https://druid.apache.org/docs/latest/querying/scan-query
+
+> 원본: https://druid.apache.org/docs/latest/querying/searchquery
+
+> 원본: https://druid.apache.org/docs/latest/querying/filters
+
+> 원본: https://druid.apache.org/docs/latest/querying/aggregations
+
+> 원본: https://druid.apache.org/docs/latest/querying/granularities
+
+> 원본: https://druid.apache.org/docs/latest/querying/query-context
+
+- JSON 기반 네이티브 쿼리의 제출 방법과 주요 쿼리 타입(timeseries, topN, groupBy, scan, search), 그리고 쿼리를 구성하는 필터, 집계, 그래뉼래리티, 쿼리 컨텍스트를 정리함
+
+<a id="네이티브-쿼리-개요"></a>
+### 네이티브 쿼리 개요
+
+Druid의 네이티브 쿼리는 내부 연산 방식에 밀접하게 대응하는 저수준 API다. 쿼리를 JSON 객체로 작성해 Broker 또는 Router 프로세스에 제출한다. Druid가 가볍고 빠른 쿼리에 맞게 설계된 만큼, 복잡한 분석에서는 여러 쿼리를 순차적으로 조합해야 할 때가 많다.
+
+#### 쿼리 제출
+
+- 네이티브 쿼리는 다음 HTTP 엔드포인트로 POST함
+
+```
+POST <queryable_host>:<port>/druid/v2/?pretty
+```
+
+curl 예시는 다음과 같다.
+
+```bash
+curl -X POST '<queryable_host>:<port>/druid/v2/?pretty' \
+  -H 'Content-Type:application/json' \
+  -H 'Accept:application/json' \
+  -d @<query_json_file>
+```
+
+- `Content-Type`/`Accept` 헤더로 `application/x-jackson-smile`도 사용할 수 있음
+  - `Accept` 헤더를 생략하면 `Content-Type` 값을 그대로 따름
+- 퀵스타트 구성이라면 호스트는 `localhost:8888`을 사용함
+- 웹 콘솔의 Query 뷰에 JSON을 붙여넣으면 에디터가 JSON 모드로 전환되어 네이티브 쿼리를 직접 실행할 수 있음
+
+#### 쿼리 타입
+
+- 집계(aggregation) 쿼리: Timeseries, TopN, GroupBy
+- 메타데이터(metadata) 쿼리: TimeBoundary, SegmentMetadata, DatasourceMetadata
+- 기타 쿼리: Scan, Search
+
+여러 타입이 요구 사항을 충족한다면 각 용도에 최적화된 Timeseries나 TopN을 먼저 고려한다. 둘 다 적합하지 않으면 더 유연한 GroupBy를 사용한다.
+
+#### 쿼리 취소
+
+- 쿼리 제출 시 지정한 `queryId`로 실행 중인 쿼리를 취소할 수 있음
+
+```
+DELETE /druid/v2/{queryId}
+```
+
+```bash
+curl -X DELETE "http://host:port/druid/v2/abc123"
+```
+
+#### 오류 응답
+
+- 쿼리가 실패하면 다음 구조의 JSON을 반환함
+
+```json
+{
+  "error": "Query timeout",
+  "errorMessage": "Timeout waiting for task.",
+  "errorClass": "java.util.concurrent.TimeoutException",
+  "host": "druid1.example.com:8083"
+}
+```
+
+- SQL parse failed
+  - HTTP 코드: 400
+  - 설명: SQL 쿼리 파싱 실패
+- Plan validation failed
+  - HTTP 코드: 400
+  - 설명: SQL 쿼리 검증 실패
+- Resource limit exceeded
+  - HTTP 코드: 400
+  - 설명: 설정된 한도 초과(예: groupBy의 maxResults)
+- Query capacity exceeded
+  - HTTP 코드: 429
+  - 설명: 실행 시점의 자원 부족
+- Unsupported operation
+  - HTTP 코드: 501
+  - 설명: 지원하지 않는 연산 시도
+- Query timeout
+  - HTTP 코드: 504
+  - 설명: 쿼리 실행 시간 한도 초과
+- Query interrupted
+  - HTTP 코드: 500
+  - 설명: 쿼리 중단(JVM 종료 등)
+- Query cancelled
+  - HTTP 코드: 500
+  - 설명: 취소 API로 쿼리 취소됨
+- Truncated response context
+  - HTTP 코드: 500
+  - 설명: 중간 response context가 7KiB 한도를 초과해 잘림
+- Unknown exception
+  - HTTP 코드: 500
+  - 설명: 그 밖의 예외
+    - `errorMessage`와 `errorClass`를 확인
+
+- 보안이 적용된 클러스터에서 인증 실패는 HTTP 401, 인가 실패는 HTTP 403을 반환함
+
+<a id="timeseries-쿼리"></a>
+
+### Timeseries 쿼리
+
+- Timeseries 쿼리는 지정한 기간을 그래뉼래리티 단위로 버킷팅해 시계열 형태의 집계 결과를 반환함
+
+```json
+{
+  "queryType": "timeseries",
+  "dataSource": "sample_datasource",
+  "granularity": "day",
+  "descending": "true",
+  "filter": {
+    "type": "and",
+    "fields": [
+      { "type": "selector", "dimension": "sample_dimension1", "value": "sample_value1" },
+      { "type": "or",
+        "fields": [
+          { "type": "selector", "dimension": "sample_dimension2", "value": "sample_value2" },
+          { "type": "selector", "dimension": "sample_dimension3", "value": "sample_value3" }
+        ]
+      }
+    ]
+  },
+  "aggregations": [
+    { "type": "longSum", "name": "sample_name1", "fieldName": "sample_fieldName1" },
+    { "type": "doubleSum", "name": "sample_name2", "fieldName": "sample_fieldName2" }
+  ],
+  "postAggregations": [
+    { "type": "arithmetic",
+      "name": "sample_divide",
+      "fn": "/",
+      "fields": [
+        { "type": "fieldAccess", "name": "postAgg__sample_name1", "fieldName": "sample_name1" },
+        { "type": "fieldAccess", "name": "postAgg__sample_name2", "fieldName": "sample_name2" }
+      ]
+    }
+  ],
+  "intervals": [ "2012-01-01T00:00:00.000/2012-01-03T00:00:00.000" ]
+}
+```
+
+#### 속성
+
+- `queryType`
+  - 설명: 항상 `"timeseries"`
+  - 필수 여부: 예
+- `dataSource`
+  - 설명: 조회 대상 데이터소스
+    - 관계형 데이터베이스의 테이블에 해당
+  - 필수 여부: 예
+- `descending`
+  - 설명: 정렬 방향
+    - 기본값은 `false`(오름차순)
+  - 필수 여부: 아니요
+- `intervals`
+  - 설명: 쿼리 대상 시간 범위를 나타내는 ISO-8601 interval 목록
+  - 필수 여부: 예
+- `granularity`
+  - 설명: 결과를 버킷팅할 그래뉼래리티
+  - 필수 여부: 예
+- `filter`
+  - 설명: 필터
+  - 필수 여부: 아니요
+- `virtualColumns`
+  - 설명: 집계, 후처리 집계에서 참조할 수 있는 가상 컬럼 목록
+  - 필수 여부: 아니요
+- `aggregations`
+  - 설명: 집계 목록
+  - 필수 여부: 아니요
+- `postAggregations`
+  - 설명: 후처리 집계(post-aggregation) 목록
+  - 필수 여부: 아니요
+- `limit`
+  - 설명: 반환 결과 수 제한 정수
+    - 기본은 무제한
+  - 필수 여부: 아니요
+- `context`
+  - 설명: 쿼리 컨텍스트
+  - 필수 여부: 아니요
+
+#### Grand total
+
+- 쿼리 컨텍스트에 `"grandTotal": true`를 추가하면 전체 합계 행을 함께 반환함
+  - Grand total 행은 결과의 마지막에 타임스탬프 없이 추가되며, 후처리 집계도 grand total 값을 기준으로 계산됨
+
+#### 빈 버킷 처리
+
+- Druid는 기본적으로 결과 내부의 빈 시간 버킷을 해당 집계 함수의 기본값으로 채움(zero-filling). 예를 들어 `longSum`이라면 0으로 채움
+  - 빈 버킷을 결과에서 제외하려면 쿼리 컨텍스트에 `"skipEmptyBuckets": "true"`를 지정함
+
+<a id="topn-쿼리"></a>
+
+### TopN 쿼리
+
+- TopN 쿼리는 단일 디멘션을 기준으로 지정한 metric에 따라 정렬한 상위 N개 결과를 반환함
+  - 같은 용도라면 GroupBy 쿼리보다 훨씬 빠르고 자원을 적게 사용함
+
+```json
+{
+  "queryType": "topN",
+  "dataSource": "sample_data",
+  "dimension": "sample_dim",
+  "threshold": 5,
+  "metric": "count",
+  "granularity": "all",
+  "filter": {
+    "type": "and",
+    "fields": [
+      { "type": "selector", "dimension": "dim1", "value": "some_value" },
+      { "type": "selector", "dimension": "dim2", "value": "some_other_val" }
+    ]
+  },
+  "aggregations": [
+    { "type": "longSum", "name": "count", "fieldName": "count" },
+    { "type": "doubleSum", "name": "some_metric", "fieldName": "some_metric" }
+  ],
+  "postAggregations": [
+    {
+      "type": "arithmetic",
+      "name": "average",
+      "fn": "/",
+      "fields": [
+        { "type": "fieldAccess", "name": "some_metric", "fieldName": "some_metric" },
+        { "type": "fieldAccess", "name": "count", "fieldName": "count" }
+      ]
+    }
+  ],
+  "intervals": [ "2013-08-31T00:00:00.000/2013-09-03T00:00:00.000" ]
+}
+```
+
+#### 속성
+
+- `queryType`
+  - 설명: 항상 `"topN"`. Druid가 쿼리 해석 방식을 결정할 때 가장 먼저 확인하는 값
+  - 필수 여부: 예
+- `dataSource`
+  - 설명: 조회 대상 데이터소스
+  - 필수 여부: 예
+- `intervals`
+  - 설명: ISO-8601 interval 목록
+  - 필수 여부: 예
+- `granularity`
+  - 설명: 결과 버킷팅 그래뉼래리티
+  - 필수 여부: 예
+- `filter`
+  - 설명: 필터
+  - 필수 여부: 아니요
+- `virtualColumns`
+  - 설명: 가상 컬럼 목록
+    - 그룹핑 디멘션이나 집계, 후처리 집계 입력으로 참조 가능
+  - 필수 여부: 아니요(기본값 없음)
+- `aggregations`
+  - 설명: 집계 목록
+  - 필수 여부: 숫자형 metricSpec이면 `aggregations` 또는 `postAggregations` 중 하나 필수
+- `postAggregations`
+  - 설명: 후처리 집계 목록
+  - 필수 여부: 숫자형 metricSpec이면 `aggregations` 또는 `postAggregations` 중 하나 필수
+- `dimension`
+  - 설명: 상위 목록을 뽑을 디멘션을 지정하는 문자열 또는 JSON 객체(DimensionSpec)
+  - 필수 여부: 예
+- `threshold`
+  - 설명: topN의 N에 해당하는 정수(상위 몇 개를 반환할지)
+  - 필수 여부: 예
+- `metric`
+  - 설명: 정렬 기준 metric을 지정하는 문자열 또는 JSON 객체(TopNMetricSpec)
+  - 필수 여부: 예
+- `context`
+  - 설명: 쿼리 컨텍스트
+  - 필수 여부: 아니요
+
+#### 응답 예시
+
+```json
+[
+  {
+    "timestamp": "2013-08-31T00:00:00.000Z",
+    "result": [
+      { "dim1": "dim1_val",         "count": 111, "some_metrics": 10669, "average": 96.11711711711712 },
+      { "dim1": "another_dim1_val", "count": 88,  "some_metrics": 28344, "average": 322.09090909090907 },
+      { "dim1": "dim1_val3",        "count": 70,  "some_metrics": 871,   "average": 12.442857142857143 },
+      { "dim1": "dim1_val4",        "count": 62,  "some_metrics": 815,   "average": 13.14516129032258 },
+      { "dim1": "dim1_val5",        "count": 60,  "some_metrics": 2787,  "average": 46.45 }
+    ]
+  }
+]
+```
+
+#### 다중 값 디멘션에서의 동작
+
+TopN에서 다중 값(multi-value) 디멘션으로 그룹핑하면, 매칭된 행에 들어 있는 모든 값이 각각 그룹을 만든다. 그래서 입력 행 수보다 결과 그룹 수가 많아질 수 있다. 이때 filtered dimensionSpec을 적용하면 필터 조건에 매칭되는 값만 남겨 결과를 제한하고 성능도 개선할 수 있다.
+
+#### 근사(approximation) 동작과 정확도
+
+TopN은 각 세그먼트의 로컬 결과를 일부만 모아 전역 순위를 정하는 근사 알고리즘이다. 기본적으로 세그먼트마다 상위 `max(1000, threshold)`개를 반환해 병합하며, `minTopNThreshold` 컨텍스트로 이 한도를 쿼리별로 조정할 수 있다.
+
+- 디멘션의 고유 값이 1000개 이하이면 순위와 집계 값 모두 정확함
+  - 정확도 문제는 고유 값이 1000개를 초과할 때만 발생함
+- 상위권 분포가 고른 경우에 잘 맞음
+  - 어떤 값이 시간별로는 겨우 상위 1000위 안에 들지만 전체적으로는 상위 500위라면, 순위가 부정확하거나 집계가 불완전할 수 있음
+- 고유 값이 1000개를 넘는 디멘션에서 정확한 순위와 정확한 집계가 필요하면 groupBy 쿼리를 실행하고 결과를 직접 정렬해야 함
+- 근사 순위 + 정확한 집계가 필요하면 쿼리를 두 번 실행함
+  - 첫 번째 쿼리로 근사 topN 값을 구하고, 두 번째 쿼리에서 그 디멘션 값들로 필터링해 다시 조회함
+
+- 첫 번째 쿼리(근사 순위) 예시임
+
+```json
+{
+  "aggregations": [
+    { "fieldName": "L_QUANTITY_longSum", "name": "L_QUANTITY_", "type": "longSum" }
+  ],
+  "dataSource": "tpch_year",
+  "dimension": "l_orderkey",
+  "granularity": "all",
+  "intervals": [ "1900-01-09T00:00:00.000Z/2992-01-10T00:00:00.000Z" ],
+  "metric": "L_QUANTITY_",
+  "queryType": "topN",
+  "threshold": 2
+}
+```
+
+- 두 번째 쿼리(정확한 집계) 예시임
+
+```json
+{
+  "aggregations": [
+    { "fieldName": "L_TAX_doubleSum", "name": "L_TAX_", "type": "doubleSum" },
+    { "fieldName": "L_DISCOUNT_doubleSum", "name": "L_DISCOUNT_", "type": "doubleSum" },
+    { "fieldName": "L_EXTENDEDPRICE_doubleSum", "name": "L_EXTENDEDPRICE_", "type": "doubleSum" },
+    { "fieldName": "L_QUANTITY_longSum", "name": "L_QUANTITY_", "type": "longSum" },
+    { "name": "count", "type": "count" }
+  ],
+  "dataSource": "tpch_year",
+  "dimension": "l_orderkey",
+  "filter": {
+    "fields": [
+      { "dimension": "l_orderkey", "type": "selector", "value": "103136" },
+      { "dimension": "l_orderkey", "type": "selector", "value": "1648672" }
+    ],
+    "type": "or"
+  },
+  "granularity": "all",
+  "intervals": [ "1900-01-09T00:00:00.000Z/2992-01-10T00:00:00.000Z" ],
+  "metric": "L_QUANTITY_",
+  "queryType": "topN",
+  "threshold": 2
+}
+```
+
+<a id="groupby-쿼리"></a>
+
+### GroupBy 쿼리
+
+- GroupBy 쿼리는 여러 디멘션을 기준으로 그룹핑해 집계 결과를 반환하는, 가장 유연한 집계 쿼리임
+
+```json
+{
+  "queryType": "groupBy",
+  "dataSource": "sample_datasource",
+  "granularity": "day",
+  "dimensions": ["country", "device"],
+  "limitSpec": {
+    "type": "default",
+    "limit": 5000,
+    "columns": ["country", "data_transfer"]
+  },
+  "filter": {
+    "type": "and",
+    "fields": [
+      { "type": "selector", "dimension": "carrier", "value": "AT&T" },
+      {
+        "type": "or",
+        "fields": [
+          { "type": "selector", "dimension": "make", "value": "Apple" },
+          { "type": "selector", "dimension": "make", "value": "Samsung" }
+        ]
+      }
+    ]
+  },
+  "aggregations": [
+    { "type": "longSum", "name": "total_usage", "fieldName": "user_count" },
+    { "type": "doubleSum", "name": "data_transfer", "fieldName": "data_transfer" }
+  ],
+  "postAggregations": [
+    {
+      "type": "arithmetic",
+      "name": "avg_usage",
+      "fn": "/",
+      "fields": [
+        { "type": "fieldAccess", "fieldName": "data_transfer" },
+        { "type": "fieldAccess", "fieldName": "total_usage" }
+      ]
+    }
+  ],
+  "intervals": [ "2012-01-01T00:00:00.000/2012-01-03T00:00:00.000" ],
+  "having": {
+    "type": "greaterThan",
+    "aggregation": "total_usage",
+    "value": 100
+  }
+}
+```
+
+#### 속성
+
+- `queryType`
+  - 설명: 항상 `"groupBy"`
+  - 필수 여부: 예
+- `dataSource`
+  - 설명: 조회 대상 데이터소스
+  - 필수 여부: 예
+- `dimensions`
+  - 설명: 그룹핑 기준 디멘션 또는 DimensionSpec의 JSON 목록
+  - 필수 여부: 예
+- `virtualColumns`
+  - 설명: 가상 컬럼 목록
+  - 필수 여부: 아니요
+- `limitSpec`
+  - 설명: 결과 정렬, 제한을 지정하는 LimitSpec
+  - 필수 여부: 아니요
+- `having`
+  - 설명: 집계 결과에 적용하는 having 절 필터
+  - 필수 여부: 아니요
+- `granularity`
+  - 설명: 쿼리 그래뉼래리티
+  - 필수 여부: 예
+- `filter`
+  - 설명: 필터
+  - 필수 여부: 아니요
+- `aggregations`
+  - 설명: 집계 목록
+  - 필수 여부: 아니요
+- `postAggregations`
+  - 설명: 후처리 집계 목록
+  - 필수 여부: 아니요
+- `intervals`
+  - 설명: ISO-8601 interval 목록
+  - 필수 여부: 예
+- `subtotalsSpec`
+  - 설명: 추가로 그룹핑할 디멘션 부분집합의 목록
+  - 필수 여부: 아니요
+- `context`
+  - 설명: 추가 플래그를 담는 JSON 객체
+  - 필수 여부: 아니요
+
+#### 다중 값 디멘션에서의 동작
+
+- 다중 값 디멘션으로 그룹핑하면 매칭된 행의 모든 값이 값별로 하나씩 그룹을 만들어, 결과 그룹이 행 수보다 많아질 수 있음
+  - filtered dimensionSpec으로 필터에 매칭되는 값만 남기면 결과를 제한하면서 성능도 개선할 수 있음
+
+#### subtotalsSpec
+
+- `subtotalsSpec`을 사용하면 한 번의 쿼리로 여러 부분 그룹핑(sub-grouping)을 계산할 수 있음
+  - 각 원소는 디멘션의 `outputName` 부분집합임
+
+```json
+{
+  "type": "groupBy",
+  "dimensions": [
+    { "type": "default", "dimension": "d1col", "outputName": "D1" },
+    { "type": "extraction", "dimension": "d2col", "outputName": "D2", "extractionFn": "extraction_func" },
+    { "type": "lookup", "dimension": "d3col", "outputName": "D3", "name": "my_lookup" }
+  ],
+  "subtotalsSpec": [ ["D1", "D2", "D3"], ["D1", "D3"], ["D3"] ]
+}
+```
+
+- 각 부분 그룹핑의 결과 집합은 순서대로 이어 붙여 반환하며, 해당 그룹핑에서 제외된 디멘션은 null 값으로 반환함
+
+#### 메모리와 디스크 스필
+
+- GroupBy 쿼리의 자원 사용은 다음 파라미터로 제어함
+
+- `druid.processing.buffer.sizeBytes`: 쿼리당 off-heap 해시 테이블 크기(바이트)
+- `druid.query.groupBy.maxSelectorDictionarySize`: 세그먼트별 on-heap 딕셔너리 한도
+- `druid.query.groupBy.maxMergingDictionarySize`: 쿼리별 on-heap 딕셔너리 한도
+- `druid.query.groupBy.maxOnDiskStorage`: 쿼리별 디스크 스필(spill) 한도(바이트, 0이면 비활성)
+- `druid.query.groupBy.maxSpillFileCount`: 실패 전까지 허용하는 최대 스필 파일 수
+
+- `maxOnDiskStorage`가 0보다 크면, 메모리 한도에 도달했을 때 부분 집계된 레코드를 정렬해 디스크로 내려씀
+
+#### 성능 튜닝
+
+- Limit pushdown: 가능한 경우 groupBy 쿼리의 limitSpec을 Historical의 세그먼트까지 내려보내 불필요한 중간 결과를 조기에 잘라냄
+  - orderBy 필드가 그룹핑 키의 부분집합이면 기본으로 적용되며, `forceLimitPushDown` 컨텍스트 플래그로 제어함
+- 해시 테이블: open addressing과 선형 탐사(linear probing)를 사용함
+  - 초기 버킷 1024개, 최대 load factor 0.7이 기본이며, `bufferGrouperInitialBuckets`와 `bufferGrouperMaxLoadFactor`로 조정함
+- Parallel combine: 정렬된 집계 결과 병합에 처리 스레드를 추가로 사용하는 기능으로, 기본은 비활성임
+  - `numParallelCombineThreads`로 제어하며, 데이터 스필이 필요하고 Historical 쿼리당 병합 버퍼 2개를 사용함
+
+#### 대안 쿼리
+
+- Timeseries: 시간 기준으로만 그룹핑한다면 완전 스트리밍으로 동작하는 Timeseries가 더 나음
+- TopN: 단일 디멘션 그룹핑, 특히 metric 기준 정렬에는 TopN이 더 빠름
+
+#### 중첩 groupBy
+
+- 중첩 groupBy(데이터소스 타입이 `query`)는 Broker가 내부 groupBy 쿼리를 먼저 일반적인 방식으로 실행하고, 그 결과 스트림 위에서 외부 쿼리를 실행함
+  - 이때 off-heap fact map과 디스크로 스필 가능한 on-heap 문자열 딕셔너리를 사용함
+
+#### 런타임 설정 속성
+
+- `druid.query.groupBy.maxSelectorDictionarySize`
+  - 설명: 세그먼트별 문자열 딕셔너리 최대 크기
+  - 기본값: 0(자동)
+- `druid.query.groupBy.maxMergingDictionarySize`
+  - 설명: 쿼리별 문자열 딕셔너리 최대 크기
+  - 기본값: 0(자동)
+- `druid.query.groupBy.maxOnDiskStorage`
+  - 설명: 쿼리별 디스크 스필 최대 크기
+  - 기본값: 0(비활성)
+- `druid.query.groupBy.maxSpillFileCount`
+  - 설명: 최대 스필 파일 수
+  - 기본값: Integer.MAX_VALUE
+- `druid.query.groupBy.singleThreaded`
+  - 설명: 병합을 단일 스레드로 수행
+  - 기본값: false
+- `druid.query.groupBy.bufferGrouperInitialBuckets`
+  - 설명: 해시 테이블 초기 버킷 수
+  - 기본값: 0(1024)
+- `druid.query.groupBy.bufferGrouperMaxLoadFactor`
+  - 설명: 해시 테이블 최대 load factor
+  - 기본값: 0(0.7)
+- `druid.query.groupBy.forceHashAggregation`
+  - 설명: 해시 기반 집계 강제
+  - 기본값: false
+- `druid.query.groupBy.intermediateCombineDegree`
+  - 설명: combining 트리 차수
+  - 기본값: 8
+- `druid.query.groupBy.numParallelCombineThreads`
+  - 설명: parallel combine 스레드 수
+  - 기본값: 1(비활성)
+- `druid.query.groupBy.applyLimitPushDownToSegment`
+  - 설명: 세그먼트 스캔 단계에서 limit 적용
+  - 기본값: false
+
+- 대부분의 설정은 쿼리 컨텍스트로 개별 쿼리에서 재정의할 수 있음
+  - 주요 컨텍스트 키: `maxOnDiskStorage`, `maxSpillFileCount`, `groupByIsSingleThreaded`, `bufferGrouperInitialBuckets`, `bufferGrouperMaxLoadFactor`, `forceHashAggregation`, `forceLimitPushDown`, `applyLimitPushDownToSegment`, `groupByEnableMultiValueUnnesting`, `deferExpressionDimensions`, `sortByDimsFirst`, `mergeThreadLocal`, `maxSelectorDictionarySize`, `maxMergingDictionarySize`, `resultAsArray`.
+
+#### 배열 기반 결과 형식
+
+컨텍스트에서 `resultAsArray`를 true로 지정하면 각 행을 위치 기반 배열로 반환한다. 값은 타임스탬프(선택), 디멘션, aggregator, post-aggregator 순서로 들어간다. 응답에는 이 스키마가 포함되지 않으므로, 결과를 해석할 때 제출한 쿼리에서 각 위치에 해당하는 항목을 구해야 한다.
+
+<a id="scan-쿼리"></a>
+
+### Scan 쿼리
+
+- Scan 쿼리는 집계 없이 원본 Druid 행을 스트리밍 방식으로 반환함
+
+```json
+{
+  "queryType": "scan",
+  "dataSource": "wikipedia",
+  "resultFormat": "list",
+  "columns": ["__time", "isRobot", "page", "added", "isAnonymous", "user", "deleted"],
+  "intervals": [ "2016-01-01/2017-01-02" ],
+  "batchSize": 20480,
+  "limit": 2
+}
+```
+
+#### 속성
+
+- `queryType`
+  - 설명: 항상 `"scan"`
+  - 필수 여부: 예
+- `dataSource`
+  - 설명: 조회 대상 데이터소스
+  - 필수 여부: 예
+- `intervals`
+  - 설명: ISO-8601 interval 목록
+  - 필수 여부: 예
+- `resultFormat`
+  - 설명: 결과 형식
+    - `list` 또는 `compactedList`(기본값 `list`)
+  - 필수 여부: 아니요
+- `filter`
+  - 설명: 필터
+  - 필수 여부: 아니요
+- `columns`
+  - 설명: 반환할 디멘션/metric 목록
+    - 비워 두면 전체 컬럼 반환
+  - 필수 여부: 아니요
+- `batchSize`
+  - 설명: 버퍼링할 최대 행 수(기본값 20480)
+  - 필수 여부: 아니요
+- `limit`
+  - 설명: 반환할 총 행 수
+  - 필수 여부: 아니요
+- `offset`
+  - 설명: 처음에 건너뛸 행 수
+  - 필수 여부: 아니요
+- `order`
+  - 설명: 시간 정렬
+    - `ascending`, `descending`, `none`(기본값)
+  - 필수 여부: 아니요
+- `context`
+  - 설명: 쿼리 컨텍스트
+  - 필수 여부: 아니요
+
+#### 결과 형식
+
+- `list` 형식은 각 이벤트를 JSON 객체로 반환함
+
+```json
+[{
+  "segmentId": "wikipedia_2016-06-27T00:00:00.000Z_2016-06-28T00:00:00.000Z_2024-12-17T13:08:03.142Z",
+  "columns": ["__time", "isRobot", "page", "added", "isAnonymous", "user", "deleted"],
+  "events": [{
+    "__time": 1466985611080,
+    "isRobot": "true",
+    "page": "Salo Toraut",
+    "added": 31,
+    "isAnonymous": "false",
+    "user": "Lsjbot",
+    "deleted": 0
+  }],
+  "rowSignature": [{ "name": "__time", "type": "LONG" }]
+}]
+```
+
+- `compactedList` 형식은 각 이벤트를 값 배열로 반환함
+
+```json
+[{
+  "segmentId": "wikipedia_2016-06-27T00:00:00.000Z_2016-06-28T00:00:00.000Z_2024-12-17T13:08:03.142Z",
+  "columns": ["__time", "isRobot", "page", "added", "isAnonymous", "user", "deleted"],
+  "events": [
+    [1466985611080, "true", "Salo Toraut", 31, "false", "Lsjbot", 0],
+    [1466985634959, "false", "Bailando 2015", 2, "true", "181.230.118.178", 0]
+  ],
+  "rowSignature": [{ "name": "__time", "type": "LONG" }]
+}]
+```
+
+#### 시간 정렬
+
+- Scan 쿼리는 타임스탬프 기준 정렬을 지원하지만 제약이 있음
+  - 시간 정렬을 사용하면 세그먼트 ID가 null로 표시되며, 결과 limit이 `druid.query.scan.maxRowsQueuedForOrdering`보다 작거나, 스캔하는 모든 세그먼트의 파티션 수가 `druid.query.scan.maxSegmentPartitionsOrderedInMemory`보다 적어야 함
+
+- 시간 정렬에는 두 가지 전략을 사용함
+
+- 1\. Priority queue: 세그먼트를 순차적으로 열면서 타임스탬프 기준으로 크기가 제한된 우선순위 큐를 유지함
+- 2\. N-way merge: 파티션별 압축 해제 버퍼를 병렬로 열고, 파티션별로 미리 정렬된 결과를 병합함
+
+#### 설정 속성
+
+- `druid.query.scan.maxRowsQueuedForOrdering`
+  - 설명: 시간 정렬 사용 시 큐에 쌓을 수 있는 최대 행 수
+  - 값 범위: [1, 2147483647] 정수
+  - 기본값: 100000
+- `druid.query.scan.maxSegmentPartitionsOrderedInMemory`
+  - 설명: 시간 정렬 사용 시 Historical당 처리 가능한 최대 세그먼트 파티션 수
+  - 값 범위: [1, 2147483647] 정수
+  - 기본값: 50
+
+- 두 값 모두 쿼리 컨텍스트의 `maxRowsQueuedForOrdering`, `maxSegmentPartitionsOrderedInMemory`로 개별 쿼리에서 재정의할 수 있음
+
+```json
+{
+  "maxRowsQueuedForOrdering": 100001,
+  "maxSegmentPartitionsOrderedInMemory": 100
+}
+```
+
+- 레거시 모드(`legacy`)는 현재 버전에서 제거됨
+
+<a id="search-쿼리"></a>
+
+### Search 쿼리
+
+- Search 쿼리는 검색어에 매칭되는 디멘션 값을 반환함
+
+```json
+{
+  "queryType": "search",
+  "dataSource": "sample_datasource",
+  "granularity": "day",
+  "searchDimensions": [ "dim1", "dim2" ],
+  "query": {
+    "type": "insensitive_contains",
+    "value": "Ke"
+  },
+  "sort": { "type": "lexicographic" },
+  "intervals": [ "2013-01-01T00:00:00.000/2013-01-03T00:00:00.000" ]
+}
+```
+
+#### 속성
+
+- `queryType`
+  - 설명: 항상 `"search"`
+  - 필수 여부: 예
+- `dataSource`
+  - 설명: 조회 대상 데이터소스
+  - 필수 여부: 예
+- `granularity`
+  - 설명: 결과 버킷팅 그래뉼래리티
+  - 필수 여부: 아니요(기본값 `all`)
+- `filter`
+  - 설명: 필터
+  - 필수 여부: 아니요
+- `limit`
+  - 설명: Historical 프로세스당 최대 결과 수
+  - 필수 여부: 아니요(기본값 1000)
+- `intervals`
+  - 설명: ISO-8601 interval 목록
+  - 필수 여부: 예
+- `searchDimensions`
+  - 설명: 검색 대상 디멘션 목록
+    - 생략하면 모든 디멘션 검색
+  - 필수 여부: 아니요
+- `virtualColumns`
+  - 설명: 가상 컬럼 목록
+  - 필수 여부: 아니요
+- `query`
+  - 설명: SearchQuerySpec 객체
+  - 필수 여부: 예
+- `sort`
+  - 설명: 결과 정렬 방식
+  - 필수 여부: 아니요
+- `context`
+  - 설명: 쿼리 컨텍스트
+  - 필수 여부: 아니요
+
+#### 응답 예시
+
+```json
+[
+  {
+    "timestamp": "2013-01-01T00:00:00.000Z",
+    "result": [
+      { "dimension": "dim1", "value": "Ke$ha", "count": 3 },
+      { "dimension": "dim2", "value": "Ke$haForPresident", "count": 1 }
+    ]
+  }
+]
+```
+
+#### 정렬 방식
+
+- `sort`에는 `lexicographic`(기본값), `alphanumeric`, `strlen`, `numeric`을 지정할 수 있음
+
+#### 실행 전략
+
+- 쿼리 컨텍스트의 `searchStrategy`로 실행 전략을 선택함
+
+- useIndexes(기본값): 검색 디멘션을 비트맵 인덱스 지원 여부에 따라 두 그룹으로 나눈 뒤, 인덱스 기반 실행 계획과 커서 기반 실행 계획을 각각 적용함
+- cursorOnly: 커서 기반 실행 계획만 생성함
+  - 행을 직접 읽으며 조건식을 평가하므로, 선택도(selectivity)가 낮은 필터에서 유리할 수 있음
+
+#### SearchQuerySpec 종류
+
+- insensitive_contains: 대소문자 구분 없이 부분 문자열 포함 여부를 검사함
+
+```json
+{ "type": "insensitive_contains", "value": "some_value" }
+```
+
+- fragment: 여러 조각(fragment)이 모두 포함되는지 검사함
+
+```json
+{ "type": "fragment", "case_sensitive": false, "values": ["fragment1", "fragment2"] }
+```
+
+- contains: 대소문자 구분 여부를 지정해 부분 문자열 포함 여부를 검사함
+
+```json
+{ "type": "contains", "case_sensitive": true, "value": "some_value" }
+```
+
+- regex: 정규식 매칭임
+
+```json
+{ "type": "regex", "pattern": "some_pattern" }
+```
+
+<a id="필터"></a>
+
+### 필터
+
+- 필터는 SQL의 WHERE 절에 해당하며, 어떤 행을 포함할지 지정하는 JSON 객체임
+  - 기본적으로 3값 불리언 논리(three-value Boolean logic)를 따름
+
+#### selector 필터
+
+- 가장 단순한 필터로, 특정 디멘션 값과의 일치를 검사함
+
+```json
+{ "type": "selector", "dimension": "someColumn", "value": "hello" }
+```
+
+#### equality 필터
+
+- selector를 대체하는 최신 필터로, 모든 컬럼 타입을 지원하며 null과는 매칭되지 않음
+
+```json
+{ "type": "equals", "column": "someColumn", "matchValueType": "STRING", "matchValue": "hello" }
+```
+
+#### null 필터
+
+- NULL 값 매칭 전용 필터임
+
+```json
+{ "type": "null", "column": "someColumn" }
+```
+
+#### bound 필터
+
+- 사전순(lexicographic) 또는 숫자(numeric) 순서 기반 범위 필터임
+
+```json
+{ "type": "bound", "dimension": "age", "lower": "21", "upper": "31", "ordering": "numeric" }
+```
+
+#### range 필터
+
+- bound 필터를 대체하는 SQL 호환 범위 필터로, null과는 매칭되지 않음
+
+```json
+{ "type": "range", "column": "age", "matchValueType": "LONG", "lower": 21, "upper": 31 }
+```
+
+#### like 필터
+
+- SQL LIKE처럼 `%`와 `_` 와일드카드를 지원함
+
+```json
+{ "type": "like", "dimension": "last_name", "pattern": "D%" }
+```
+
+#### regex 필터
+
+- Java 정규식 패턴과 디멘션 값을 매칭함
+
+```json
+{ "type": "regex", "dimension": "someColumn", "pattern": "^50.*" }
+```
+
+#### in 필터
+
+- 문자열 집합에 포함되는 값을 매칭함
+
+```json
+{ "type": "in", "dimension": "outlaw", "values": ["Good", "Bad", "Ugly"] }
+```
+
+#### arrayContainsElement 필터
+
+- 배열 컬럼이 특정 원소를 포함하는지 검사함
+
+```json
+{ "type": "arrayContainsElement", "column": "someArrayColumn", "elementMatchValueType": "STRING", "elementMatchValue": "hello" }
+```
+
+#### 논리 필터(and / or / not)
+
+```json
+{ "type": "and", "fields": [
+  { "type": "equals", "column": "col1", "matchValueType": "STRING", "matchValue": "a" },
+  { "type": "equals", "column": "col2", "matchValueType": "LONG", "matchValue": 1234 }
+] }
+```
+
+```json
+{ "type": "or", "fields": [
+  { "type": "equals", "column": "col1", "matchValueType": "STRING", "matchValue": "a" },
+  { "type": "null", "column": "col3" }
+] }
+```
+
+```json
+{ "type": "not", "field": { "type": "null", "column": "someColumn" } }
+```
+
+#### interval 필터
+
+- long 밀리초 값을 담은 컬럼에 ISO-8601 interval 기반 범위 필터를 적용함
+
+```json
+{ "type": "interval", "dimension": "__time", "intervals": [
+  "2014-10-01T00:00:00.000Z/2014-10-07T00:00:00.000Z"
+] }
+```
+
+#### search 필터
+
+- 부분 문자열 매칭 필터로, 대소문자 구분 옵션을 지원함
+
+```json
+{ "type": "search", "dimension": "product", "query": {
+  "type": "insensitive_contains", "value": "foo"
+} }
+```
+
+#### expression 필터
+
+- Druid 표현식(expression) 시스템으로 임의의 조건을 기술함
+
+```json
+{ "type": "expression", "expression": "((product_type == 42) && (!is_deleted))" }
+```
+
+#### javascript 필터
+
+- JavaScript 함수를 조건식으로 사용함
+  - JavaScript 기능은 기본적으로 비활성화되어 있음
+
+```json
+{ "type": "javascript", "dimension": "name", "function": "function(x) { return(x >= 'bar' && x <= 'foo') }" }
+```
+
+#### columnComparison 필터
+
+- 디멘션끼리 비교함
+  - 비교 시 값을 문자열로 변환함
+
+```json
+{ "type": "columnComparison", "dimensions": ["someColumn", { "type": "default", "dimension": "someLongColumn" }] }
+```
+
+#### true / false 필터
+
+- `true` 필터는 모든 값과 매칭되며 필터를 임시로 무력화할 때 사용하고, `false` 필터는 아무 값과도 매칭되지 않아 빈 결과를 강제할 때 사용함
+
+```json
+{ "type": "true" }
+```
+
+```json
+{ "type": "false" }
+```
+
+#### 타임스탬프 컬럼 필터링
+
+- 타임스탬프 컬럼은 디멘션 이름 `__time`으로 참조함
+  - long 밀리초 값 비교, 포맷 변환을 위한 extraction 함수, ISO-8601 interval을 지원함
+
+```json
+{ "type": "equals", "dimension": "__time", "matchValueType": "LONG", "value": 124457387532 }
+```
+
+#### extraction 함수와 함께 필터링
+
+- spatial 필터를 제외한 모든 필터는 extraction 함수를 지원하며, 필터링 전에 디멘션 값에 적용됨
+  - 별도의 extraction 필터는 deprecated이므로, extraction 함수를 지정한 selector 필터를 사용함
+
+```json
+{ "type": "selector", "dimension": "product", "value": "bar_1", "extractionFn": {
+  "type": "lookup", "lookup": { "type": "map", "map": { "product_1": "bar_1", "product_5": "bar_1" } }
+} }
+```
+
+#### 참고 사항
+
+- SQL 플래너는 `sqlUseBoundAndSelectors`를 활성화하지 않는 한 selector, bound 필터 대신 equality, null, range 필터를 사용함
+- 다중 값 문자열 컬럼은 값 중 하나라도 필터를 만족하면 매칭됨
+- 숫자 컬럼에 문자열 매칭 값을 지정하면 자동으로 형 변환함
+
+<a id="집계"></a>
+
+### 집계
+
+- 집계(aggregation)는 데이터 인제스천(ingestion) 시점에 롤업의 일부로 지정할 수도 있고, 쿼리 시점에 지정할 수도 있음
+
+#### count
+
+- Druid 행 수를 셈
+
+```json
+{ "type": "count", "name": "count" }
+```
+
+이 `count`가 세는 대상은 저장된 Druid 행이다. 인제스천할 때 롤업으로 여러 이벤트를 합쳤다면 원본 이벤트 수와 결과가 다를 수 있다.
+
+#### sum 계열
+
+- `longSum`: 64비트 부호 있는 정수 합
+- `doubleSum`: 64비트 부동소수점 합
+- `floatSum`: 32비트 부동소수점 합
+
+```json
+{ "type": "longSum", "name": "sumLong", "fieldName": "aLong" }
+```
+
+- sum 계열 aggregator는 `fieldName` 또는 `expression` 중 하나를 지정해야 함
+
+#### min / max 계열
+
+- `doubleMin`, `doubleMax`, `floatMin`, `floatMax`, `longMin`, `longMax` 여섯 가지가 있음
+
+```json
+{ "type": "doubleMin", "name": "maxDouble", "fieldName": "aDouble" }
+```
+
+#### first / last 계열
+
+- 숫자형은 `doubleFirst`, `doubleLast`, `floatFirst`, `floatLast`, `longFirst`, `longLast`를 지원함
+
+```json
+{ "type": "doubleFirst", "name": "firstDouble", "fieldName": "aDouble" }
+```
+
+- 문자열형은 `stringFirst`, `stringLast`를 지원하며 `maxStringBytes`(기본값 1024)를 지정할 수 있음
+
+```json
+{ "type": "stringFirst", "name": "firstString", "fieldName": "aString", "maxStringBytes": 2048 }
+```
+
+- 롤업이 적용된 세그먼트에 first/last aggregator를 사용하면 롤업된 값을 반환할 뿐, 인제스천된 원본 데이터의 첫/마지막 값을 반환하지 않음
+
+#### any 계열
+
+- 만난 값 중 아무 값이나 반환하며, 쿼리 시점에서만 사용할 수 있음
+  - 숫자형은 `doubleAny`, `floatAny`, `longAny`, 문자열형은 `stringAny`이며, `stringAny`는 `aggregateMultipleValues` 플래그(기본값 true)를 지원함
+
+```json
+{ "type": "stringAny", "name": "anyString", "fieldName": "aString", "maxStringBytes": 2048 }
+```
+
+#### doubleMean
+
+- 산술 평균을 계산하며, 쿼리 시점에서만 사용할 수 있음
+
+```json
+{ "type": "doubleMean", "name": "aMean", "fieldName": "aDouble" }
+```
+
+#### 근사 집계
+
+- Count distinct
+
+- DataSketches Theta Sketch: 합집합, 교집합, 차집합 등 집합 연산 지원
+- DataSketches HLL Sketch: 메모리 사용량이 더 적고 집합 연산 미지원
+- Cardinality / HyperUnique: 내장 레거시 구현
+  - DataSketches 계열 사용을 권장
+
+- 분위수(quantile), 히스토그램
+
+- DataSketches Quantiles Sketch: 공식적인 오차 범위를 제공하므로 권장
+- Moments Sketch: 실험적
+  - 병합 속도에 최적화되어 있으나 정확도가 분포에 의존
+- Fixed Buckets Histogram: 성능이 데이터에 의존
+- Approximate Histogram: 분포에 따라 왜곡이 발생해 deprecated
+
+#### expression aggregator
+
+- Druid 표현식으로 커스텀 집계를 정의함
+
+```json
+{
+  "type": "expression",
+  "name": "expression_count",
+  "fields": [],
+  "initialValue": "0",
+  "fold": "__acc + 1",
+  "combine": "__acc + expression_count"
+}
+```
+
+주요 속성은 다음과 같다.
+
+- `initialValue`: 누산기(accumulator) 초기 상태
+- `fold`: 행 단위 누산 표현식
+- `combine`: 세그먼트 간 병합 표현식
+- `finalize`: 출력 변환 표현식(선택)
+- `compare`: 비교자 표현식(선택)
+
+#### javascript aggregator
+
+- JavaScript 함수로 집계를 정의함
+  - JavaScript 기능은 기본적으로 비활성화되어 있음
+
+```json
+{
+  "type": "javascript",
+  "name": "sum(log(x)*y) + 10",
+  "fieldNames": ["x", "y"],
+  "fnAggregate": "function(current, a, b) { return current + (Math.log(a) * b); }",
+  "fnCombine": "function(partialA, partialB) { return partialA + partialB; }",
+  "fnReset": "function() { return 10; }"
+}
+```
+
+#### filtered aggregator
+
+- 임의의 aggregator를 필터로 감싸, 필터에 매칭되는 행만 집계함
+
+```json
+{
+  "type": "filtered",
+  "name": "filteredSumLong",
+  "filter": {
+    "type": "selector",
+    "dimension": "someColumn",
+    "value": "abcdef"
+  },
+  "aggregator": {
+    "type": "longSum",
+    "name": "sumLong",
+    "fieldName": "aLong"
+  }
+}
+```
+
+#### grouping aggregator
+
+- groupBy 쿼리의 `subtotalsSpec`과 함께 사용하며, 각 행이 어떤 디멘션 조합으로 그룹핑되었는지 비트로 인코딩해 반환함
+  - 부분 그룹핑에서 제외된 디멘션의 비트가 1이 됨
+
+```json
+{ "type": "grouping", "name": "someGrouping", "groupings": ["dim1", "dim2"] }
+```
+
+<a id="그래뉼래리티"></a>
+
+### 그래뉼래리티
+
+- 그래뉼래리티(granularity)는 데이터를 시간 단위로 버킷팅하는 방법을 결정함
+  - simple, duration, period 세 가지 방식으로 지정함
+
+#### Simple 그래뉼래리티
+
+- 문자열로 지정하는 사전 정의된 시간 버킷이며, UTC 기준임
+
+```
+all, none, second, minute, five_minute, ten_minute, fifteen_minute,
+thirty_minute, hour, six_hour, eight_hour, day, week, month, quarter, year
+```
+
+- `all`: 모든 데이터를 하나의 버킷으로 집계함
+- `none`: 밀리초 단위(내부 인덱스 해상도와 동일)로 버킷팅함
+
+Timeseries 쿼리에서 `none`을 사용하면 모든 밀리초마다 결과를 만들고 내부의 빈 버킷을 0으로 채우므로 이 설정은 피해야 한다.
+
+groupBy는 빈 버킷을 버리고 값이 있는 버킷만 반환한다. `hour`를 지정하면 시간 단위로, `day`를 지정하면 일 단위로 나눈 결과를 받는다.
+
+#### Duration 그래뉼래리티
+
+- 밀리초 단위 길이로 지정하며, 기준점(`origin`)을 선택적으로 지정함
+  - 다음은 2시간 버킷임
+
+```json
+{ "type": "duration", "duration": 7200000 }
+```
+
+- `origin`을 지정하면 해당 시각부터 버킷을 나눔
+  - 다음은 매시 30분을 기준으로 1시간 단위로 자르는 예시임
+
+```json
+{ "type": "duration", "duration": 3600000, "origin": "2012-01-01T00:30:00Z" }
+```
+
+#### Period 그래뉼래리티
+
+- ISO-8601 기간 형식으로 지정하며, 시간대(`timeZone`)와 기준점(`origin`)을 선택적으로 지정함
+
+```json
+{ "type": "period", "period": "P2D", "timeZone": "America/Los_Angeles" }
+```
+
+```json
+{ "type": "period", "period": "P3M", "timeZone": "America/Los_Angeles", "origin": "2012-02-01T00:00:00-08:00" }
+```
+
+- 시간대 지원은 Joda Time 라이브러리가 제공하며, 표준 IANA 시간대를 사용함
+
+<a id="쿼리-컨텍스트"></a>
+
+### 쿼리 컨텍스트
+
+- 쿼리 컨텍스트는 쿼리 계획과 실행 방식을 제어하는 파라미터 모음임
+
+#### 컨텍스트 지정 방법
+
+- 네이티브 쿼리: 쿼리 JSON 안에 `context` 객체로 포함함
+- 웹 콘솔: Query 뷰에서 Edit query context를 열어 JSON 파라미터를 추가함
+- JDBC 드라이버: 데이터베이스 연결 시 프로퍼티로 지정함
+- SQL SET 문: `SET sqlTimeZone = 'America/Los_Angeles';`처럼 지정함
+  - 단, JDBC 연결에서는 SET 문을 사용할 수 없음
+- 런타임 프로퍼티: `druid.query.default.context.{PARAMETER}={VALUE}` 형식으로 기본값을 지정함
+
+- 우선순위는 낮은 순서부터 내장 기본값 → 런타임 프로퍼티 → Broker 동적 설정 → HTTP 요청의 context 객체 → SET 문임
+
+#### 일반 파라미터
+
+- `timeout`
+  - 기본값: `druid.server.http.defaultQueryTimeout`
+  - 설명: 밀리초 단위 쿼리 타임아웃
+    - 초과 시 미완료 쿼리를 취소
+- `priority`
+  - 기본값: 0
+  - 설명: 우선순위가 높은 쿼리가 연산 자원을 먼저 배정받음
+- `lane`
+  - 기본값: `null`
+  - 설명: 쿼리 lane. 쿼리 부류별 사용량 제한에 사용
+- `queryId`
+  - 기본값: 자동 생성
+  - 설명: 쿼리 고유 식별자
+- `brokerService`
+  - 기본값: `null`
+  - 설명: 이 쿼리를 라우팅할 Broker 서비스
+- `useCache`
+  - 기본값: `true`
+  - 설명: 쿼리 캐시 사용 여부
+- `populateCache`
+  - 기본값: `true`
+  - 설명: 결과를 쿼리 캐시에 저장할지 여부
+- `useResultLevelCache`
+  - 기본값: `true`
+  - 설명: 결과 수준(result level) 캐시 사용 여부
+- `populateResultLevelCache`
+  - 기본값: `true`
+  - 설명: 결과를 결과 수준 캐시에 저장할지 여부
+- `bySegment`
+  - 기본값: `false`
+  - 설명: 결과를 세그먼트 단위로 묶어 반환
+- `finalize`
+  - 기본값: 해당 없음
+  - 설명: 집계 결과의 finalize 수행 여부
+- `maxScatterGatherBytes`
+  - 기본값: `druid.server.http.maxScatterGatherBytes`
+  - 설명: 데이터 프로세스에서 수집하는 최대 바이트 수
+- `maxQueuedBytes`
+  - 기본값: `druid.broker.http.maxQueuedBytes`
+  - 설명: 백프레셔 발생 전 쿼리당 큐잉 가능한 최대 바이트 수
+- `maxSubqueryRows`
+  - 기본값: `druid.server.http.maxSubqueryRows`
+  - 설명: 서브쿼리가 생성할 수 있는 행 수 상한
+- `maxSubqueryBytes`
+  - 기본값: `druid.server.http.maxSubqueryBytes`
+  - 설명: 서브쿼리가 생성할 수 있는 바이트 수 상한
+- `serializeDateTimeAsLong`
+  - 기본값: `false`
+  - 설명: true면 Broker 결과에서 DateTime을 long으로 직렬화
+- `serializeDateTimeAsLongInner`
+  - 기본값: `false`
+  - 설명: true면 Broker와 데이터 프로세스 간 전송에서 DateTime을 long으로 직렬화
+- `enableParallelMerge`
+  - 기본값: `true`
+  - 설명: Broker에서 결과 병렬 병합 활성화
+- `parallelMergeParallelism`
+  - 기본값: `druid.processing.merge.parallelism`
+  - 설명: 결과 병합에 사용할 최대 병렬 스레드 수
+- `parallelMergeInitialYieldRows`
+  - 기본값: `druid.processing.merge.initialYieldNumRows`
+  - 설명: 병합 태스크가 fork 전에 yield할 행 수
+- `parallelMergeSmallBatchRows`
+  - 기본값: `druid.processing.merge.smallBatchNumRows`
+  - 설명: 병합 태스크의 결과 배치 크기
+- `useFilterCNF`
+  - 기본값: `false`
+  - 설명: 쿼리 필터를 논리곱 정규형(CNF)으로 변환
+- `secondaryPartitionPruning`
+  - 기본값: `true`
+  - 설명: Broker에서 2차 파티션 프루닝(pruning) 활성화
+- `debug`
+  - 기본값: `false`
+  - 설명: 디버깅 출력과 예외 스택 트레이스 활성화
+- `setProcessingThreadNames`
+  - 기본값: `true`
+  - 설명: 스레드 덤프 해석을 돕도록 처리 스레드 이름 설정
+
+#### 쿼리 타입별 파라미터
+
+- TopN
+
+- `minTopNThreshold`
+  - 기본값: 1000
+  - 설명: 각 세그먼트에서 병합용으로 반환할 상위 로컬 결과 수
+
+- Timeseries
+
+- `skipEmptyBuckets`
+  - 기본값: `false`
+  - 설명: zero-filling을 끄고 결과가 있는 버킷만 반환
+
+- Join 필터
+
+- `enableJoinFilterPushDown`
+  - 기본값: `true`
+  - 설명: 조인 대상 행을 줄이도록 필터 push down 시도
+- `enableJoinFilterRewrite`
+  - 기본값: `true`
+  - 설명: 베이스 테이블이 아닌 컬럼을 참조하는 필터 재작성
+- `enableJoinFilterRewriteValueColumnFilters`
+  - 기본값: `false`
+  - 설명: 비 베이스 테이블의 키가 아닌 컬럼에 대한 필터 재작성
+- `enableRewriteJoinToFilter`
+  - 기본값: `true`
+  - 설명: 조인을 부분 또는 전체적으로 베이스 테이블 필터로 변환
+- `joinFilterRewriteMaxSize`
+  - 기본값: 10000
+  - 설명: 필터 재작성 시 상관 값 집합의 최대 크기
+
+#### 벡터화 파라미터
+
+- `vectorize`
+  - 기본값: `true`
+  - 설명: 벡터화 실행 제어
+    - `false`, `true`, `force` 지정 가능
+- `vectorSize`
+  - 기본값: 512
+  - 설명: 벡터화 쿼리 처리 시 행 배치 크기
+- `vectorizeVirtualColumns`
+  - 기본값: `true`
+  - 설명: 가상 컬럼의 벡터화 활성화 여부

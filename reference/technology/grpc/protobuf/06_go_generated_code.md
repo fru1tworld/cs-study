@@ -1,0 +1,287 @@
+# Go 생성 코드 (protoc-gen-go)
+
+> 원본: https://protobuf.dev/reference/go/go-generated/
+
+> 기준 런타임: `google.golang.org/protobuf` v1.36.x (`protoc-gen-go`)
+
+<a id="컴파일러-설치와-호출"></a>
+## 컴파일러 설치와 호출
+
+- Go 플러그인을 먼저 설치함
+
+```bash
+go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+```
+
+- `protoc`를 `--go_out`과 함께 호출함
+
+```bash
+protoc --go_out=. --go_opt=paths=source_relative addressbook.proto
+```
+
+- 출력 경로 모드(`--go_opt=paths=...`)
+
+- `paths=import` (기본): Go 패키지 import 경로에 해당하는 디렉터리에 출력 파일을 생성함
+- `paths=source_relative`: 입력 파일과 동일한 상대 디렉터리에 출력함(일반적으로 권장)
+- `module=$PREFIX`: import 경로에서 지정한 접두사를 제거해 출력 위치를 결정함(Go 모듈용)
+
+- M 플래그: 특정 proto 파일을 Go import 경로로 매핑함
+
+```bash
+protoc --go_out=. --go_opt=Mprotos/foo.proto=example.com/package protos/foo.proto
+```
+
+- buf 원격 플러그인을 쓸 경우 `protocolbuffers/go:v1.34.2` 같은 플러그인을 지정 가능
+
+<a id="go_package-옵션"></a>
+
+## go_package 옵션
+
+- `.proto` 파일에 Go import 경로를 지정함
+
+```proto
+option go_package = "github.com/protocolbuffers/protobuf/examples/go/tutorialpb";
+```
+
+이 경로는 다른 proto 파일이 생성 코드에서 import할 패키지와 출력 파일의 위치에 영향을 준다. Go 패키지 이름은 경로의 마지막 요소에서 유도되므로 위 예제에서는 `tutorialpb`가 된다.
+
+`"경로;패키지명"`처럼 세미콜론 뒤에 이름을 직접 지정할 수도 있지만, 일반적으로는 경로에서 자동으로 유도되는 이름을 사용한다.
+
+<a id="메시지--구조체-매핑"></a>
+
+## 메시지 → 구조체 매핑
+
+```proto
+message Artist {}
+```
+
+- 다음 Go 구조체가 생성됨
+
+```go
+type Artist struct { /* 필드들 */ }
+```
+
+- `*Artist`는 `proto.Message` 인터페이스를 구현하며, `ProtoReflect()`로 리플렉션 접근(`protoreflect.Message`)을 제공함
+
+<a id="필드-이름과-getter"></a>
+
+## 필드 이름과 getter
+
+- 생성된 Go 필드 이름은 `.proto`가 snake_case를 쓰더라도 항상 카멜케이스(CamelCase)로 변환됨
+
+- `birth_year` → `BirthYear`
+- 밑줄로 시작하면 앞에 `X`를 붙임: `_birth_year_2` → `XBirthYear_2`
+
+각 필드에는 nil-safe한 getter도 생성된다. 다음 메서드는 필드의 값이나 기본값을 반환하므로 호출하는 쪽에서 메시지가 `nil`인지 먼저 확인할 필요가 없다.
+
+```go
+func (m *Artist) GetBirthYear() int32 { /* 값 또는 기본값 반환 */ }
+```
+
+- 메시지 필드 getter는 수신자가 `nil`이어도 안전하게 동작함 → 중간에 nil 검사 없이 체이닝(chaining) 가능
+
+<a id="optional--메시지--repeated--map-필드"></a>
+
+## optional / 메시지 / repeated / map 필드
+
+- 암시적 presence 스칼라 (proto3 기본): 포인터가 아닌 값 필드
+
+```proto
+int32 birth_year = 1;
+```
+
+```go
+type Artist struct {
+    BirthYear int32
+}
+func (m *Artist) GetBirthYear() int32 { /* 값 또는 0 */ }
+```
+
+- 명시적 presence 스칼라 (`optional` / proto2 / editions EXPLICIT): 포인터 필드로 설정 여부를 구분
+
+```proto
+optional int32 birth_year = 1;
+```
+
+```go
+type Artist struct {
+    BirthYear *int32
+}
+func (m *Artist) GetBirthYear() int32 { /* 설정값 또는 기본값 */ }
+```
+
+- 메시지 필드: 항상 포인터, `nil`이면 미설정
+
+```proto
+message Concert { Band headliner = 1; }
+```
+
+```go
+type Concert struct {
+    Headliner *Band
+}
+func (m *Concert) GetHeadliner() *Band { /* nil-safe */ }
+```
+
+- repeated 필드: 슬라이스, 메시지 요소는 포인터
+
+```proto
+message Concert { repeated Band support_acts = 1; }
+```
+
+```go
+type Concert struct {
+    SupportActs []*Band
+}
+```
+
+- map 필드: Go map, 메시지 값은 포인터
+
+```proto
+message MerchBooth { map<string, MerchItem> items = 1; }
+```
+
+```go
+type MerchBooth struct {
+    Items map[string]*MerchItem
+}
+```
+
+<a id="enum-생성-코드"></a>
+
+## enum 생성 코드
+
+```proto
+enum Genre {
+  GENRE_UNSPECIFIED = 0;
+  GENRE_ROCK = 1;
+}
+```
+
+```go
+type Genre int32
+
+const (
+    Genre_GENRE_UNSPECIFIED Genre = 0
+    Genre_GENRE_ROCK        Genre = 1
+)
+
+func (Genre) String() string { /* ... */ }
+func (Genre) Enum() *Genre    { /* ... */ }
+
+var Genre_name = map[int32]string{
+    0: "GENRE_UNSPECIFIED",
+    1: "GENRE_ROCK",
+}
+var Genre_value = map[string]int32{
+    "GENRE_UNSPECIFIED": 0,
+    "GENRE_ROCK":        1,
+}
+```
+
+- 중첩 enum은 부모 이름을 접두사로 붙임: `Venue_Kind`.
+
+<a id="oneof-생성-코드"></a>
+
+## oneof 생성 코드
+
+```proto
+message Profile {
+  oneof avatar {
+    string image_url = 1;
+    bytes image_data = 2;
+  }
+}
+```
+
+- oneof 필드는 인터페이스와 래퍼(wrapper) 구조체로 생성됨
+
+```go
+type Profile struct {
+    // Avatar에 할당 가능한 타입:
+    //   *Profile_ImageUrl
+    //   *Profile_ImageData
+    Avatar isProfile_Avatar `protobuf_oneof:"avatar"`
+}
+
+type Profile_ImageUrl struct { ImageUrl string }
+type Profile_ImageData struct { ImageData []byte }
+```
+
+- 설정된 멤버는 타입 스위치로 확인함
+
+```go
+switch x := m.Avatar.(type) {
+case *Profile_ImageUrl:
+    _ = x.ImageUrl
+case *Profile_ImageData:
+    _ = x.ImageData
+case nil:
+    // 미설정
+}
+```
+
+- 각 멤버에 대한 getter(`GetImageUrl()` 등)도 함께 생성되며, 미설정 시 제로 값을 반환함
+
+<a id="중첩-타입"></a>
+
+## 중첩 타입
+
+- 중첩 메시지는 부모 메시지 이름을 접두사로 붙여 생성됨
+
+```proto
+message Artist {
+  message Name {}
+}
+```
+
+```go
+type Artist_Name struct { /* ... */ }
+```
+
+<a id="marshal--unmarshal"></a>
+
+## Marshal / Unmarshal
+
+- `google.golang.org/protobuf/proto` 패키지를 사용해 직렬화, 역직렬화함
+
+```go
+import "google.golang.org/protobuf/proto"
+
+// 직렬화
+out, err := proto.Marshal(book)
+if err != nil {
+    log.Fatalln("주소록 인코딩 실패:", err)
+}
+
+// 역직렬화
+book := &pb.AddressBook{}
+if err := proto.Unmarshal(in, book); err != nil {
+    log.Fatalln("주소록 파싱 실패:", err)
+}
+```
+
+- 메시지 인스턴스 생성 예시:
+
+```go
+p := &pb.Person{
+    Id:    1234,
+    Name:  "John Doe",
+    Email: "jdoe@example.com",
+    Phones: []*pb.Person_PhoneNumber{
+        {Number: "555-4321", Type: pb.PhoneType_PHONE_TYPE_HOME},
+    },
+}
+```
+
+<a id="서비스"></a>
+
+## 서비스
+
+`protoc-gen-go`는 앞에서 살펴본 메시지 코드를 생성하며, 서비스(rpc) 코드는 생성하지 않는다. gRPC 서비스 코드까지 필요하면 다음처럼 `protoc-gen-go-grpc` 플러그인도 함께 실행한다.
+
+```bash
+protoc --go_out=. --go_opt=paths=source_relative \
+       --go-grpc_out=. --go-grpc_opt=paths=source_relative \
+       service.proto
+```

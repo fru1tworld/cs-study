@@ -1,0 +1,275 @@
+# gRPC 개요와 핵심 개념
+
+## gRPC 개요
+
+> 원본: https://grpc.io/docs/what-is-grpc/introduction/
+
+<a id="grpc란"></a>
+### gRPC란
+
+gRPC는 구글이 만든 고성능 오픈 소스 RPC(Remote Procedure Call, 원격 프로시저 호출) 프레임워크다. 클라이언트가 다른 머신에 있는 서버의 메서드를 로컬 객체의 메서드처럼 호출하도록 해 분산 애플리케이션과 서비스 구축을 돕는다.
+
+이를 위해 서비스(service) 정의에 호출 가능한 메서드와 파라미터, 반환 타입을 미리 명시한다. 서버는 이 인터페이스를 구현하고 gRPC 서버를 실행해 호출을 처리한다. 클라이언트는 같은 메서드를 제공하는 스텁(stub, 일부 언어에서는 client라고 부름)을 통해 서버를 호출한다.
+
+- gRPC 클라이언트와 서버는 구글 서버부터 개인 데스크톱까지 다양한 환경에서 실행 가능, gRPC가 지원하는 어떤 언어로도 작성 가능
+  - 예: Java로 작성한 gRPC 서버 → Go, Python, Ruby 클라이언트가 호출 가능
+
+<a id="rpc-동작-방식"></a>
+
+### RPC 동작 방식
+
+RPC는 네트워크 통신의 세부 사항을 추상화해 원격 호출을 로컬 함수 호출처럼 보이게 한다. gRPC에서는 스텁이 호출을 받아 다음 순서로 요청과 응답을 처리한다.
+
+- 1\. 클라이언트가 로컬 스텁의 메서드 호출
+- 2\. 스텁이 요청 메시지를 직렬화(serialize) → 네트워크로 전송
+- 3\. 서버가 메시지를 역직렬화(deserialize) → 실제 구현 메서드 실행
+- 4\. 서버가 응답을 직렬화 → 클라이언트로 반환
+- 5\. 클라이언트 스텁이 응답을 역직렬화 → 호출자에게 반환
+
+- 개발자는 직렬화/역직렬화, 네트워크 전송, 연결 관리 같은 저수준 작업 신경 쓸 필요 없이 비즈니스 로직에만 집중 가능
+
+<a id="protocol-buffers"></a>
+
+### Protocol Buffers
+
+gRPC는 기본 인터페이스 정의 언어(IDL, Interface Definition Language)이자 메시지 직렬화 포맷으로 Protocol Buffers(프로토콜 버퍼, protobuf)를 사용한다. 직렬화할 데이터의 구조는 `.proto` 파일에 메시지(message)로 정의하며, 각 메시지는 이름과 번호(field number)를 가진 필드들의 집합이다.
+
+```proto
+message Person {
+  string name = 1;
+  int32 id = 2;
+  bool has_ponycopter = 3;
+}
+```
+
+- `.proto` 파일을 `protoc` 컴파일러로 컴파일하면 선택한 언어에 맞는 데이터 접근 클래스(data access class)와 직렬화/역직렬화 코드가 자동 생성됨
+  - protobuf는 바이너리 포맷 → JSON 같은 텍스트 포맷보다 빠르고 작음
+
+- gRPC와 함께 사용할 때는 proto3 버전 사용 권장
+  - 모든 gRPC 지원 언어를 사용할 수 있고 호환성 문제를 피할 수 있기 때문
+
+<a id="서비스-정의"></a>
+
+### 서비스 정의
+
+- gRPC 서비스는 `.proto` 파일에서 `service` 키워드로 정의
+  - 각 RPC 메서드는 파라미터(요청 메시지)와 반환 타입(응답 메시지)을 명시
+
+```proto
+service Greeter {
+  rpc SayHello (HelloRequest) returns (HelloReply) {}
+}
+
+message HelloRequest {
+  string name = 1;
+}
+
+message HelloReply {
+  string message = 1;
+}
+```
+
+- 이 정의로부터 서버 인터페이스와 클라이언트 스텁 생성됨
+
+<a id="4가지-rpc-타입"></a>
+
+### 4가지 RPC 타입
+
+- gRPC는 요청/응답이 단일인지 스트림(stream)인지에 따라 네 가지 RPC 타입 지원
+
+#### 단방향(Unary) RPC
+
+- 클라이언트가 단일 요청을 보내고 단일 응답 수신 → 일반 함수 호출과 동일
+
+```proto
+rpc SayHello(HelloRequest) returns (HelloReply);
+```
+
+#### 서버 스트리밍(Server Streaming) RPC
+
+- 클라이언트가 단일 요청을 보내면 서버가 메시지 스트림 반환 → 클라이언트는 메시지가 더 이상 없을 때까지 스트림 읽음
+
+```proto
+rpc LotsOfReplies(HelloRequest) returns (stream HelloReply);
+```
+
+#### 클라이언트 스트리밍(Client Streaming) RPC
+
+- 클라이언트가 메시지 시퀀스를 스트림으로 전송 → 서버는 모든 메시지 수신 후 단일 응답 반환
+
+```proto
+rpc LotsOfGreetings(stream HelloRequest) returns (HelloReply);
+```
+
+#### 양방향 스트리밍(Bidirectional Streaming) RPC
+
+클라이언트와 서버는 각각 읽기와 쓰기 스트림을 갖는다. 두 스트림이 독립적으로 동작하므로 애플리케이션이 읽기와 쓰기의 순서를 자유롭게 정할 수 있다.
+
+```proto
+rpc BidiHello(stream HelloRequest) returns (stream HelloReply);
+```
+
+<a id="http2-기반"></a>
+
+### HTTP/2 기반
+
+- gRPC는 전송 계층(transport)으로 HTTP/2 사용
+  - HTTP/2의 기능 덕분에 다음과 같은 이점 확보
+
+- 멀티플렉싱(multiplexing): 하나의 TCP 연결에서 여러 RPC 동시 처리
+- 스트리밍(streaming): HTTP/2 스트림으로 4가지 RPC 타입 구현
+- 헤더 압축(header compression, HPACK): 메타데이터를 효율적으로 전송
+- 바이너리 프레이밍(binary framing): 텍스트 기반 HTTP/1.1보다 효율적
+
+- 메타데이터는 HTTP/2 헤더로, 메시지는 HTTP/2 데이터 프레임으로 전송됨
+
+<a id="장점"></a>
+
+### 장점
+
+- 고성능: 바이너리 직렬화(protobuf) + HTTP/2 → 낮은 지연 시간, 높은 처리량
+- 언어 중립성: 단일 `.proto` 정의로 여러 언어의 클라이언트/서버 생성
+- 스트리밍 지원: 단방향 외에 서버/클라이언트/양방향 스트리밍 기본 지원
+- 강타입 계약(strongly-typed contract): `.proto`가 명확한 API 계약 역할
+- 코드 생성: 보일러플레이트 코드 자동 생성 → 휴먼 에러 감소
+- 부가 기능: 인증, 타임아웃/데드라인, 재시도, 인터셉터, 헬스 체크 등 분산 시스템에 필요한 기능 내장
+
+- 마이크로서비스 간 통신, 모바일/백엔드 연동, 폴리글랏(polyglot) 환경에 특히 적합
+
+<a id="지원-언어"></a>
+
+### 지원 언어
+
+- proto3는 Java, C++, Dart, Python, Objective-C, C#, Android Java, Ruby, JavaScript, Go 지원, 추가 언어도 개발 중
+  - 이 레퍼런스의 코드 예제는 Go(`google.golang.org/grpc`) 기준으로 작성
+
+## gRPC 핵심 개념
+
+> 원본: https://grpc.io/docs/what-is-grpc/core-concepts/
+
+### 서비스 정의
+
+- gRPC는 기본 IDL로 Protocol Buffers 사용
+  - 서비스 안에 RPC 메서드를 정의하고 각 메서드의 요청/응답 타입 명시
+
+```proto
+service HelloService {
+  rpc SayHello (HelloRequest) returns (HelloResponse);
+}
+
+message HelloRequest {
+  string greeting = 1;
+}
+
+message HelloResponse {
+  string reply = 1;
+}
+```
+
+- RPC 메서드는 요청/응답이 단일인지 스트림인지에 따라 4가지로 구분
+
+- 단방향(Unary): `rpc SayHello(HelloRequest) returns (HelloResponse);`
+- 서버 스트리밍: `rpc LotsOfReplies(HelloRequest) returns (stream HelloResponse);`
+- 클라이언트 스트리밍: `rpc LotsOfGreetings(stream HelloRequest) returns (HelloResponse);`
+- 양방향 스트리밍: `rpc BidiHello(stream HelloRequest) returns (stream HelloResponse);`
+
+- `.proto`로부터 클라이언트 스텁과 서버 인터페이스 생성됨
+
+<a id="api-사용-동기와-비동기"></a>
+
+### API 사용: 동기와 비동기
+
+- 클라이언트에는 서버와 동일한 메서드를 제공하는 로컬 객체인 스텁이 존재
+  - 클라이언트는 스텁의 메서드를 호출 → gRPC가 서버로 요청을 보내 응답 수신
+
+- gRPC 프로그래밍 API는 대부분의 언어에서 동기(synchronous)와 비동기(asynchronous) 두 가지 형태 제공
+
+- 동기 RPC: 서버 응답이 올 때까지 블로킹(blocking) → "원격 호출을 로컬 함수처럼" 추상화하는 모델에 가장 잘 부합
+- 비동기 RPC: 블로킹하지 않음 → 동시성(concurrency)/확장성이 중요할 때 유용
+
+- Go에서는 일반적으로 동기 호출 형태로 메서드 호출, 동시성은 고루틴(goroutine)으로 처리
+
+<a id="rpc-라이프사이클"></a>
+
+### RPC 라이프사이클
+
+#### 단방향 RPC
+
+- 1\. 클라이언트가 스텁 메서드를 호출 → 서버는 호출에 대한 클라이언트 메타데이터, 메서드 이름, 데드라인 수신
+- 2\. 서버는 즉시 자신의 초기 메타데이터를 보내거나 클라이언트의 요청 메시지를 대기
+- 3\. 서버는 요청을 받아 응답 생성 → 상태 코드(status code), 상태 메시지, 선택적 트레일링 메타데이터(trailing metadata)와 함께 반환
+- 4\. 상태가 OK이면 클라이언트가 응답을 받아 호출 완료
+
+#### 서버 스트리밍 RPC
+
+- 단방향과 유사하나, 서버가 상태 정보를 보내기 전에 여러 개의 응답 메시지를 스트림으로 전송
+  - 모든 메시지 전송 후 상태 정보(와 트레일링 메타데이터)를 전송하면 완료
+
+#### 클라이언트 스트리밍 RPC
+
+- 클라이언트가 여러 요청 메시지를 스트림으로 전송
+  - 서버는 모든(또는 일부) 메시지 수신 후 단일 응답 메시지와 상태 정보 전송
+
+#### 양방향 스트리밍 RPC
+
+- 클라이언트가 메서드를 호출하면 양쪽이 각자의 메시지 스트림을 독립적으로 운용
+  - 두 스트림은 서로 독립적 → 클라이언트와 서버는 임의의 순서로 읽고 쓰기 가능(예: 서버가 모든 요청을 받은 뒤 응답 또는 핑퐁식으로 주고받기).
+
+<a id="채널channel"></a>
+
+### 채널(Channel)
+
+gRPC 채널(channel)은 지정된 호스트와 포트의 gRPC 서버에 연결하며, 클라이언트는 이 채널을 사용해 스텁을 만든다. 채널은 `connected`, `idle` 등의 상태(state)를 갖고, 내부적으로 여러 HTTP/2 연결을 관리할 수 있다. 압축 활성화 여부 같은 동작은 채널 인자(channel arguments)로 설정한다.
+
+채널 생성에는 비용이 들므로 RPC마다 새로 만들기보다 재사용하는 편이 좋다.
+
+<a id="스텁stub"></a>
+
+### 스텁(Stub)
+
+- 스텁(stub)은 클라이언트가 가지는 로컬 객체로, 서버의 서비스 메서드와 동일한 메서드 노출
+  - 클라이언트는 채널 위에 스텁을 생성한 뒤 스텁 메서드 호출만 하면 됨
+  - 직렬화, 전송, 응답 수신은 gRPC가 처리
+
+<a id="데드라인과-타임아웃"></a>
+
+### 데드라인과 타임아웃
+
+- gRPC는 클라이언트가 RPC 완료를 얼마나 기다릴지 지정 가능
+  - 시간이 지나면 RPC는 `DEADLINE_EXCEEDED` 에러로 종료
+
+- 데드라인(deadline): "이 시점 이후로는 응답을 기다리지 않겠다"는 절대 시각
+- 타임아웃(timeout): 호출이 완료될 때까지 허용하는 최대 기간, 호출 시작 시 현재 시각에 더해 데드라인으로 변환됨
+
+- 서버는 데드라인이 지났는지, 남은 시간이 얼마인지 확인 가능
+  - 기본값은 언어마다 다르며 일부는 데드라인 없음
+  - 따라서 클라이언트는 항상 현실적인 데드라인 명시 필요
+  - (자세한 Go 예제는 `08_error_handling_deadlines.md` 참조)
+
+<a id="rpc-취소cancellation"></a>
+
+### RPC 취소(Cancellation)
+
+- 클라이언트나 서버는 언제든지 RPC 취소 가능
+  - 취소하면 RPC가 즉시 종료 → 더 이상 작업 진행 안 됨
+
+취소 이전에 이루어진 변경은 롤백되지 않는다. 또한 gRPC 라이브러리는 일반적으로 애플리케이션이 제공한 서버 핸들러를 강제로 중단시키지 못한다. 장시간 실행되는 핸들러가 주기적으로 RPC 취소 여부를 확인하고 스스로 처리를 멈춰야 하는 이유다. Go에서는 `ctx.Done()` / `ctx.Err()`로 확인한다.
+
+<a id="rpc-종료termination"></a>
+
+### RPC 종료(Termination)
+
+gRPC의 클라이언트와 서버는 각자의 관점에서 호출의 성공 여부를 판단하므로 결론이 다를 수 있다. 예를 들어 서버가 모든 응답을 보내 `OK`로 판단했더라도, 클라이언트에는 데드라인 이후에 응답이 도착해 `DEADLINE_EXCEEDED`로 처리될 수 있다.
+
+<a id="메타데이터metadata"></a>
+
+### 메타데이터(Metadata)
+
+- 메타데이터(metadata)는 특정 RPC 호출에 관한 정보를 키-값(key-value) 쌍으로 담는 데이터(예: 인증 토큰). RPC가 처리하는 실제 메시지와는 별개의 부가 채널(side channel).
+
+- 키는 대소문자를 구분하지 않으며(case insensitive), ASCII 문자, 숫자, 특수문자 `-`, `_`, `.`로 구성
+- 키는 `grpc-` 접두사로 시작 불가. 이 접두사는 gRPC 자체가 예약해 사용
+- 값은 ASCII 문자열 또는 바이너리 데이터 가능(바이너리 키는 `-bin` 접미사 사용)
+
+- 메타데이터에 접근하는 방식은 언어마다 다름
+  - (Go 예제는 `06_metadata_interceptors.md` 참조)

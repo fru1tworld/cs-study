@@ -1,0 +1,758 @@
+# HTTP 캐싱
+
+## RFC 7234: Hypertext Transfer Protocol (HTTP/1.1): Caching
+
+> HTTP/1.1 캐싱 - HTTP 캐시와 캐시 동작을 제어하는 헤더 필드 정의
+
+### 문서 정보
+
+- RFC 번호: 7234
+- 제목: Hypertext Transfer Protocol (HTTP/1.1): Caching
+- 분류: Standards Track (표준 트랙)
+- 작성자: R. Fielding (Adobe), M. Nottingham (Akamai), J. Reschke (greenbytes)
+- 발행일: 2014년 6월
+- 폐기: RFC 9111로 대체(2022년 6월)
+- 이전 문서: RFC 2616 Section 13 폐기
+
+---
+
+### 1. 개요
+
+RFC 7234는 HTTP 캐시의 동작과 이를 제어하는 헤더 필드를 정의한다. 아래에서는 이 명세를 기준으로 응답의 저장, 재사용, 검증 과정을 살펴본다.
+
+#### 1.1 캐시의 정의
+
+캐시(Cache)는 응답 메시지를 보관하는 로컬 저장소와 메시지의 저장, 검색, 삭제를 제어하는 하위 시스템을 말한다.
+
+#### 1.2 캐시의 목적
+
+캐싱의 주요 목표:
+
+- 응답 시간 단축: 원본 서버 왕복 불필요
+- 네트워크 대역폭 절약: 동일 콘텐츠 반복 전송 방지
+- 서버 부하 감소: 원본 서버 요청 횟수 감소
+- 사용자 경험 향상: 빠른 페이지 로딩
+
+#### 1.3 캐시의 유형
+
+- 공유 캐시(Shared Cache): 여러 사용자를 위해 응답을 저장하는 캐시
+  - 예: 프록시 서버, CDN, 게이트웨이
+- 개인 캐시(Private Cache): 단일 사용자 전용 캐시
+  - 예: 웹 브라우저 캐시
+
+사용자 A, B, C가 같은 프록시나 CDN을 거쳐 원본 서버에 접근한다면, 공유 캐시는 여러 사용자의 요청을 함께 처리할 수 있다.
+
+---
+
+### 2. 응답 저장 (Storing Responses in Caches)
+
+#### 2.1 저장 가능 조건
+
+캐시는 다음 조건을 모두 만족하지 않는 한 응답을 저장해서는 안 됨(MUST NOT):
+
+- 요청 메서드 이해: 캐시가 요청 메서드를 이해하고 해당 메서드가 캐시 가능으로 정의됨
+- 응답 상태 코드 이해: 캐시가 응답 상태 코드를 이해함
+- no-store 지시어 없음: 요청 또는 응답 헤더에 `no-store` 캐시 지시어가 없음
+- private 지시어 없음: 공유 캐시의 경우, 응답에 `private` 지시어가 없음
+- Authorization 헤더: 공유 캐시의 경우, Authorization 헤더가 없거나 명시적 허용이 있음
+- 명시적 만료 정보: 명시적 만료 정보 또는 기본 캐시 가능 상태 코드가 존재
+
+#### 2.2 기본 캐시 가능 상태 코드
+
+기본적으로 캐시 가능한 상태 코드:
+
+- 200 OK: 성공적인 요청 결과
+- 203 Non-Authoritative Information: 변환된 정보
+- 204 No Content: 콘텐츠 없음
+- 206 Partial Content: 부분 콘텐츠(Range 요청)
+- 300 Multiple Choices: 다중 선택
+- 301 Moved Permanently: 영구 이동
+- 404 Not Found: 찾을 수 없음
+- 405 Method Not Allowed: 허용되지 않는 메서드
+- 410 Gone: 영구 삭제
+- 414 URI Too Long: URI 너무 김
+- 501 Not Implemented: 구현되지 않음
+
+이 목록은 RFC 7231 Section 6.1에서 정의 → RFC 7234는 이를 참조
+
+#### 2.3 불완전한 응답 저장
+
+- 요청 메서드가 GET이고, 응답 상태 코드가 200(OK)이며, 전체 응답 헤더 섹션이 수신된 경우
+  - 캐시는 불완전한 응답 본문을 저장 가능(MAY)
+  - 단, 해당 캐시 항목을 "불완전"으로 기록해야 함
+
+---
+
+### 3. Vary 헤더를 사용한 보조 키 계산
+
+#### 3.1 Vary 헤더의 목적
+
+같은 URI를 요청하더라도 요청 헤더에 따라 응답이 달라질 수 있다. `Vary` 헤더는 어떤 요청 헤더가 응답 선택에 영향을 주었는지 알려준다.
+
+예를 들어 클라이언트 A가 `Accept-Language: ko`로 `GET /page`를 요청하면, 서버는 한국어 콘텐츠와 함께 `Vary: Accept-Language`를 반환할 수 있다. 이후 클라이언트 B가 `Accept-Language: en`으로 같은 URI를 요청하면 캐시는 저장된 한국어 응답을 사용하지 않고 서버에 새로 요청한다.
+
+#### 3.2 Vary 헤더 매칭 규칙
+
+캐시가 `Vary` 헤더 필드가 있는 저장된 응답으로 요청을 충족하려면, `Vary`에서 지정한 모든 선택 헤더 필드가 원래 요청과 현재 요청에서 일치해야만 해당 응답을 사용 가능(MUST NOT 위반 시 사용 불가):
+
+- `Vary: *`: 항상 불일치 처리(매번 서버에 요청)
+- 헤더 필드 부재: 두 요청 모두에서 부재해야 일치로 간주
+- 여러 응답 가능: 가장 최근 응답(Date 헤더 기준)을 사용
+
+#### 3.3 헤더 필드 매칭 기준
+
+두 요청의 선택 헤더 필드는 다음 변환을 적용해 동일해지면 일치로 정의:
+
+1. 공백 추가 또는 제거(허용된 경우)
+2. 동일한 필드 이름을 가진 여러 헤더 필드 결합
+3. 의미가 동일한 방식으로 정규화(예: 순서 무관 시 재정렬, 대소문자 무관 값 정규화)
+
+---
+
+### 4. 신선도 (Freshness)
+
+#### 4.1 신선도 개념
+
+- 신선한 응답(Fresh): 나이(age)가 신선도 수명(freshness_lifetime)을 아직 초과하지 않은 응답
+- 오래된 응답(Stale): 나이가 신선도 수명을 초과한 응답
+
+시간축: 생성 시점부터 신선도 수명 구간 동안 신선함 유지 → 만료 시점 이후 오래됨으로 전환
+
+#### 4.2 신선도 판단 공식
+
+```
+response_is_fresh = (freshness_lifetime > current_age)
+```
+
+- freshness_lifetime: 원본 서버에서 응답이 생성된 시점과 만료 시점 사이의 시간
+- current_age: 응답이 원본 서버에서 생성된 이후 경과한 시간
+
+#### 4.3 신선도 수명 계산 (Freshness Lifetime Calculation)
+
+신선도 수명 결정 우선순위:
+
+1. `s-maxage` 지시어(공유 캐시만)
+2. 없으면 `max-age` 지시어
+3. 없으면 `Expires` 헤더 필드
+4. 없으면 휴리스틱 만료(Heuristic Expiration)
+
+##### 명시적 신선도 수명
+
+- `s-maxage`: 지시어 값(초), 공유 캐시 전용
+- `max-age`: 지시어 값(초)
+- `Expires`: `Expires - Date`(초)
+
+##### 휴리스틱 신선도 수명
+
+원본 서버가 만료 시간을 명시하지 않았다면 캐시는 `Last-Modified` 같은 다른 헤더 값을 바탕으로 만료 시간을 추정할 수 있다(MAY). 이렇게 추정한 값을 휴리스틱 신선도 수명이라고 한다.
+
+계산 방식(Last-Modified 헤더가 있는 경우):
+
+```
+heuristic_freshness = (Date - Last-Modified) × 0.1
+```
+
+예시:
+- `Date: Sat, 01 Jan 2024 10:00:00 GMT`
+- `Last-Modified: Sat, 01 Dec 2023 10:00:00 GMT`
+- 경과 시간: 31일 = 2,678,400초
+- 휴리스틱 수명: 2,678,400 × 0.1 = 267,840초 ≈ 3.1일
+
+일반적인 설정: Last-Modified 이후 시간의 10퍼센트. Firefox는 10퍼센트 계산과 1주일 중 더 작은 값 사용
+
+경고 요구사항: 휴리스틱으로 계산된 신선도 수명 때문에 `current_age`가 24시간을 초과하면 → 캐시는 응답에 `113` 경고 코드가 포함된 `Warning` 헤더 필드를 생성해야 함(SHOULD)
+
+#### 4.4 나이 계산 (Calculating Age)
+
+##### 4.4.1 나이 계산 공식
+
+1. 외견상 나이(Apparent Age): `apparent_age = max(0, response_time - date_value)`
+2. 응답 지연(Response Delay): `response_delay = response_time - request_time`
+3. 보정된 나이 값(Corrected Age Value): `corrected_age_value = age_value + response_delay`
+4. 보정된 초기 나이(Corrected Initial Age): `corrected_initial_age = max(apparent_age, corrected_age_value)`
+5. 상주 시간(Resident Time): `resident_time = now - response_time`
+6. 현재 나이(Current Age): `current_age = corrected_initial_age + resident_time`
+
+##### 4.4.2 변수 설명
+
+- `age_value`: Age 헤더 필드의 값(0이면 Age 헤더 없음)
+- `date_value`: Date 헤더 필드의 값
+- `request_time`: 캐시가 요청을 시작한 시점의 로컬 시간
+- `response_time`: 캐시가 응답을 받은 시점의 로컬 시간
+- `now`: 현재 시간
+
+#### 4.5 오래된 응답 제공
+
+캐시는 오래된 응답을 제공해서는 안 됨(MUST NOT), 다만 다음은 예외:
+
+1. 응답에 `must-revalidate` 또는 `proxy-revalidate` 지시어가 없는 경우
+2. 요청에 `max-stale` 지시어가 있는 경우(지정된 시간까지 오래된 응답 허용)
+3. 원본 서버에 연결할 수 없는 경우(disconnected operation)
+
+요청 지시어별 캐시 동작:
+- `max-stale`: 지정된 초까지 오래된 응답 허용
+- `max-stale=600`: 600초까지 오래된 응답 허용
+
+응답 지시어별 캐시 동작:
+- `must-revalidate`: 오래되면 반드시 재검증
+- `proxy-revalidate`: 공유 캐시는 반드시 재검증
+- 지시어 없음: 휴리스틱에 따라 오래된 응답 가능
+
+---
+
+### 5. 유효성 검사 (Validation)
+
+#### 5.1 검증자 (Validators)
+
+캐시된 응답을 그대로 제공할 수 없다면 조건부 요청으로 유효성을 확인할 수 있다. 이때 저장된 응답을 식별하거나 수정 시점을 비교하는 데 다음 검증자를 사용한다.
+
+- ETag(Entity Tag)
+  - 리소스의 특정 버전을 식별하는 불투명 문자열
+  - 강한 검증자: 바이트 단위 동일성 보장
+  - 약한 검증자: 의미적 동등성(`W/` 접두사)
+  - 예: `ETag: "abc123"`(강한 검증자), `ETag: W/"xyz789"`(약한 검증자)
+- Last-Modified
+  - 리소스의 마지막 수정 시간
+  - 초 단위 정밀도
+  - 예: `Last-Modified: Wed, 15 Nov 2023 04:58:08 GMT`
+
+#### 5.2 조건부 요청 (Conditional Requests)
+
+- `If-None-Match` (대응 검증자: ETag): 지정된 ETag와 일치하지 않으면 응답
+- `If-Modified-Since` (대응 검증자: Last-Modified): 지정된 시간 이후 수정되었으면 응답
+
+조건부 요청 흐름:
+- 클라이언트가 캐시에 `GET /resource` 요청
+- 캐시에 저장된 응답이 있지만 오래됨 → 재검증 필요
+- 캐시가 원본 서버에 `GET /resource` + `If-None-Match: "abc"` 전송
+- 원본 서버가 `304 Not Modified` 응답
+- 캐시가 클라이언트에 `200 OK` + 캐시된 본문 반환
+
+#### 5.3 저장된 응답 갱신
+
+캐시가 `304 (Not Modified)` 응답을 수신하면:
+
+1. 동일한 캐시 키에 대해 저장된 200(OK) 응답이 있는지 확인
+2. 새 응답의 검증자와 일치하는 저장된 응답 식별
+3. 304 응답에서 제공된 새 정보로 저장된 응답 업데이트
+
+304 응답에 포함되는 헤더:
+- `Cache-Control`, `Content-Location`, `Date`, `ETag`, `Expires`, `Vary`
+
+---
+
+### 6. 캐시 무효화 (Invalidation)
+
+#### 6.1 무효화 트리거
+
+PUT, POST, DELETE처럼 안전하지 않은 메서드는 원본 서버의 상태를 바꿀 수 있다. 이런 요청이 성공한 뒤에도 이전 응답을 계속 사용하지 않도록 캐시는 관련 응답을 무효화한다.
+
+캐시는 다음 조건에서 무효화해야 함(MUST):
+
+- 안전하지 않은 요청 메서드에 대한 비오류 응답 수신
+  - PUT, POST, DELETE 등
+  - 비오류 응답: 2xx(성공) 또는 3xx(리다이렉션)
+- 안전성을 알 수 없는 메서드에 대한 비오류 응답 수신
+
+무효화 대상 URI:
+- 효과적인 요청 URI(Effective Request URI)
+- Location 헤더 필드의 URI(있는 경우)
+- Content-Location 헤더 필드의 URI(있는 경우)
+
+단, Location/Content-Location의 호스트가 요청 URI의 호스트와 다르면 무효화하지 않음(서비스 거부 공격 방지)
+
+#### 6.2 무효화의 의미
+
+"무효화(Invalidate)"란:
+- 해당 효과적인 요청 URI와 관련된 모든 저장된 응답을 제거하거나
+- "무효"로 표시해 후속 요청에 응답하기 전 필수 검증이 필요하도록 함
+
+---
+
+### 7. Cache-Control 헤더 필드
+
+#### 7.1 개요
+
+`Cache-Control` 헤더 필드: 요청/응답 체인을 따라 캐시에 대한 지시어를 지정하는 용도
+
+```
+Cache-Control = 1#cache-directive
+
+cache-directive = token [ "=" ( token / quoted-string ) ]
+```
+
+특성:
+- 캐시 지시어는 대소문자를 구분하지 않음(소문자 권장)
+- 여러 지시어는 쉼표로 구분
+- 지시어는 단방향임(요청의 지시어가 응답에 동일하게 적용되지 않음)
+
+#### 7.2 요청 캐시 지시어 (Request Cache-Control Directives)
+
+##### 7.2.1 max-age
+
+```
+Cache-Control: max-age=<초>
+```
+
+클라이언트가 지정된 초 이하의 나이를 가진 응답을 원한다는 의미
+
+예: `Cache-Control: max-age=3600` → 클라이언트는 1시간(3600초) 이하의 나이를 가진 캐시된 응답을 받기를 원함
+
+##### 7.2.2 max-stale
+
+```
+Cache-Control: max-stale[=<초>]
+```
+
+클라이언트가 만료 시간을 초과한 응답을 받아들일 의향이 있음을 나타냄
+
+- `max-stale`: 어떤 나이의 오래된 응답도 허용
+- `max-stale=600`: 최대 600초까지 오래된 응답 허용
+
+##### 7.2.3 min-fresh
+
+```
+Cache-Control: min-fresh=<초>
+```
+
+클라이언트가 최소 지정된 초 동안 신선한 응답을 원한다는 의미
+
+예: `Cache-Control: min-fresh=600` → 응답이 지금부터 최소 10분(600초) 동안 신선해야 함을 의미
+
+##### 7.2.4 no-cache
+
+```
+Cache-Control: no-cache
+```
+
+`no-cache`는 저장을 금지하는 지시어가 아니다. 응답은 저장할 수 있지만, 사용하기 전에 반드시 원본 서버에서 재검증해야 한다. 민감한 정보처럼 응답 자체를 저장하지 않아야 한다면 다음 절의 `no-store`를 사용한다.
+
+##### 7.2.5 no-store
+
+```
+Cache-Control: no-store
+```
+
+캐시가 요청 또는 응답의 어떤 부분도 저장해서는 안 됨을 나타냄
+
+##### 7.2.6 no-transform
+
+```
+Cache-Control: no-transform
+```
+
+중개자가 페이로드를 변환해서는 안 됨을 나타냄
+
+##### 7.2.7 only-if-cached
+
+```
+Cache-Control: only-if-cached
+```
+
+클라이언트가 저장된 응답만 얻기를 원한다는 의미 → 캐시된 응답이 없으면 `504 Gateway Timeout` 반환
+
+#### 7.3 응답 캐시 지시어 (Response Cache-Control Directives)
+
+##### 7.3.1 must-revalidate
+
+```
+Cache-Control: must-revalidate
+```
+
+응답이 만료되면 원본 서버에서 성공적으로 재검증하기 전까지 후속 요청에 그 응답을 사용할 수 없다는 뜻이다.
+
+효과:
+- 응답이 신선함 → 직접 제공 가능
+- 응답이 오래됨 → 반드시 원본 서버에서 재검증(서버 연결 불가 시 504 반환)
+- `max-stale` 요청 지시어를 무시하도록 함
+
+##### 7.3.2 no-cache
+
+```
+Cache-Control: no-cache
+Cache-Control: no-cache="헤더필드명"
+```
+
+응답을 저장할 수 있지만, 재사용 전에 원본 서버에서 검증해야 함을 나타냄
+
+- `no-cache`: 전체 응답에 적용
+- `no-cache="Set-Cookie"`: 지정된 헤더 필드만 캐시에서 제거 후 제공 가능
+
+##### 7.3.3 no-store
+
+```
+Cache-Control: no-store
+```
+
+캐시가 요청 또는 응답의 어떤 부분도 저장해서는 안 됨(MUST NOT)을 나타냄
+
+##### 7.3.4 no-transform
+
+```
+Cache-Control: no-transform
+```
+
+중개자가 응답 페이로드를 변환해서는 안 됨을 나타냄
+
+##### 7.3.5 public
+
+```
+Cache-Control: public
+```
+
+어떤 캐시든 응답을 저장 가능함을 나타냄 → 일반적으로 캐시 불가능하거나 개인 캐시에서만 캐시 가능한 응답도 저장 가능하게 함
+
+예: Authorization 헤더가 있는 요청에 대한 응답을 공유 캐시에 저장하려면 `public` 지시어 필요
+
+##### 7.3.6 private
+
+```
+Cache-Control: private
+Cache-Control: private="헤더필드명"
+```
+
+응답 메시지가 단일 사용자를 위한 것이며 공유 캐시에 저장되어서는 안 됨(MUST NOT)을 나타냄
+
+- `private`: 전체 응답이 개인 전용
+- `private="Set-Cookie"`: 지정된 헤더만 개인 전용, 나머지는 공유 가능
+
+##### 7.3.7 proxy-revalidate
+
+```
+Cache-Control: proxy-revalidate
+```
+
+`must-revalidate`와 동일하지만 공유 캐시에만 적용
+
+##### 7.3.8 max-age
+
+```
+Cache-Control: max-age=<초>
+```
+
+응답이 생성된 후 지정된 초 동안 신선함을 나타냄
+
+예: `Cache-Control: max-age=31536000` → 응답이 1년(31536000초) 동안 신선함 → 이 기간 동안 캐시가 재검증 없이 응답 제공 가능
+
+- max-age는 응답이 생성된 이후의 시간 기준(응답을 수신한 이후 시간이 아님)
+- Expires 헤더보다 우선순위 높음
+
+##### 7.3.9 s-maxage
+
+```
+Cache-Control: s-maxage=<초>
+```
+
+공유 캐시에서 응답이 지정된 초 동안 신선함을 나타냄
+
+- 적용 대상: 공유 캐시만(개인 캐시는 무시)
+- 우선순위: max-age 및 Expires보다 높음
+- 추가 효과: proxy-revalidate 의미 포함
+
+#### 7.4 Cache-Control 지시어 요약
+
+요청 지시어(Request):
+- `max-age=<초>`: 최대 허용 나이
+- `max-stale[=<초>]`: 오래된 응답 허용
+- `min-fresh=<초>`: 최소 신선도 요구
+- `no-cache`: 재검증 필수 요구
+- `no-store`: 저장 금지 요구
+- `no-transform`: 변환 금지 요구
+- `only-if-cached`: 캐시된 응답만 요구
+
+응답 지시어(Response):
+- `must-revalidate`: 만료되면 재검증 필수
+- `no-cache`: 사용 전 재검증 필수
+- `no-store`: 저장 금지
+- `no-transform`: 변환 금지
+- `public`: 모든 캐시 저장 허용
+- `private`: 개인 캐시만 저장 허용
+- `proxy-revalidate`: 공유 캐시 재검증 필수
+- `max-age=<초>`: 신선도 수명 지정
+- `s-maxage=<초>`: 공유 캐시 신선도 수명
+
+#### 7.5 확장 지시어
+
+RFC 5861에서 추가로 등록된 지시어:
+
+- `stale-while-revalidate=<초>`: 백그라운드에서 재검증하는 동안 오래된 응답 제공 허용
+- `stale-if-error=<초>`: 오류 발생 시 오래된 응답 제공 허용
+
+---
+
+### 8. Expires 헤더 필드
+
+#### 8.1 정의
+
+```
+Expires = HTTP-date
+```
+
+`Expires` 헤더 필드: 응답이 오래된 것으로 간주되는 날짜/시간을 제공
+
+예: `Expires: Thu, 01 Dec 2024 16:00:00 GMT`
+
+#### 8.2 처리 규칙
+
+- Cache-Control에 max-age 있음: Expires 무시
+- 잘못된 날짜 형식: 과거로 해석(이미 만료)
+- 날짜가 과거: 응답이 이미 오래됨
+
+Expires vs max-age 우선순위 예시:
+- 응답: `Cache-Control: max-age=3600` + `Expires: Thu, 01 Dec 2024 16:00:00 GMT`
+- 결과: `max-age=3600`이 사용되고 Expires는 무시됨
+- max-age는 상대 시간, Expires는 절대 시간
+- max-age가 더 정확하고 시계 동기화 문제 없음
+
+---
+
+### 9. Age 헤더 필드
+
+#### 9.1 정의
+
+```
+Age = delta-seconds
+```
+
+`Age` 헤더 필드: 응답이 원본 서버에서 생성되거나 성공적으로 검증된 이후 경과한 발신자의 추정 시간(초)을 전달
+
+예: `Age: 600` → 응답이 약 10분(600초) 전에 생성됨
+
+#### 9.2 Age 값 생성
+
+캐시가 검증 없이 저장된 응답을 사용해 요청에 응답하는 경우 → 캐시는 저장된 응답의 `current_age`와 동일한 값을 가진 `Age` 헤더 필드를 생성해야 함(MUST)
+
+#### 9.3 Age 값 제한
+
+Age 값이 `2147483648`(2^31)을 초과하면 `2147483648`으로 설정
+
+---
+
+### 10. Warning 헤더 필드
+
+#### 10.1 정의
+
+`Warning` 헤더 필드: 응답 상태 코드에 반영되지 않은 추가 정보를 전달
+
+```
+Warning = 1#warning-value
+warning-value = warn-code SP warn-agent SP warn-text
+                [ SP warn-date ]
+warn-code = 3DIGIT
+warn-agent = ( uri-host [ ":" port ] ) / pseudonym
+warn-text = quoted-string
+warn-date = DQUOTE HTTP-date DQUOTE
+```
+
+#### 10.2 Warning 코드
+
+- 110 (Response is Stale): 응답이 오래됨
+- 111 (Revalidation Failed): 재검증 실패
+- 112 (Disconnected Operation): 연결 끊김 작동
+- 113 (Heuristic Expiration): 휴리스틱 만료
+- 199 (Miscellaneous Warning): 기타 경고
+- 214 (Transformation Applied): 변환 적용됨
+- 299 (Miscellaneous Persistent Warning): 기타 지속 경고
+
+#### 10.3 Warning 코드 상세 설명
+
+##### 10.3.1 Warning 110 - "Response is Stale"
+
+캐시가 오래된 응답을 전송할 때 생성해야 함(SHOULD)
+
+예: `Warning: 110 - "Response is Stale"`
+
+##### 10.3.2 Warning 111 - "Revalidation Failed"
+
+원본 서버에 도달할 수 없어 응답을 검증하지 못하고 오래된 응답을 전송할 때 생성해야 함(SHOULD)
+
+예: `Warning: 111 - "Revalidation Failed"`
+
+##### 10.3.3 Warning 112 - "Disconnected Operation"
+
+캐시가 네트워크의 나머지 부분과 의도적으로 연결이 끊긴 기간 동안 생성해야 함(SHOULD)
+
+##### 10.3.4 Warning 113 - "Heuristic Expiration"
+
+휴리스틱으로 신선도 수명을 선택했고 `current_age`가 24시간을 초과하는 경우 생성해야 함(SHOULD)
+
+예: `Warning: 113 - "Heuristic Expiration"` → 명시적 만료 정보 없이 휴리스틱으로 캐시되었으며 응답 나이가 24시간 초과
+
+##### 10.3.5 Warning 199 - "Miscellaneous Warning"
+
+사용자에게 제시하거나 로깅할 임의 정보를 포함 가능
+
+##### 10.3.6 Warning 214 - "Transformation Applied"
+
+프록시가 응답 콘텐츠에 변환(예: 이미지 압축)을 적용한 경우 추가해야 함(MUST)
+
+예: `Warning: 214 - "Transformation Applied"` → 중개자가 이미지 압축 등 변환을 적용했음
+
+##### 10.3.7 Warning 299 - "Miscellaneous Persistent Warning"
+
+199와 유사하지만 캐시된 응답에서 지속됨
+
+#### 10.4 Warning 처리
+
+- 1xx 코드: 응답이 캐시 항목을 갱신하면 삭제
+- 2xx 코드: 캐시 항목 갱신 후에도 유지
+
+---
+
+### 11. Pragma 헤더 필드
+
+#### 11.1 정의
+
+```
+Pragma = 1#pragma-directive
+pragma-directive = "no-cache" / extension-pragma
+extension-pragma = token [ "=" ( token / quoted-string ) ]
+```
+
+#### 11.2 목적
+
+`Pragma` 헤더 필드: HTTP/1.0 캐시와의 하위 호환성을 위해 존재
+
+- HTTP/1.0 캐시: `Pragma: no-cache` 이해
+- HTTP/1.1 캐시: `Cache-Control: no-cache` 이해
+
+권장 사용법:
+- 요청에서 HTTP/1.0 캐시 고려 시: `Pragma: no-cache` + `Cache-Control: no-cache` 함께 전송
+- 응답에서는 Pragma 사용하지 않음(Cache-Control만 사용)
+
+#### 11.3 처리 규칙
+
+- `Cache-Control` 헤더가 있으면 `Pragma: no-cache`는 무시
+- `Cache-Control` 헤더가 없으면 `Pragma: no-cache`를 `Cache-Control: no-cache`처럼 처리
+
+---
+
+### 12. 실용적인 캐싱 전략
+
+#### 12.1 정적 리소스 캐싱
+
+```http
+# 이미지, CSS, JS 등 변경되지 않는 리소스
+Cache-Control: public, max-age=31536000, immutable
+```
+
+#### 12.2 동적 콘텐츠 캐싱
+
+```http
+# 사용자별 콘텐츠
+Cache-Control: private, max-age=0, must-revalidate
+
+# API 응답
+Cache-Control: no-cache
+ETag: "abc123"
+```
+
+#### 12.3 민감한 정보
+
+```http
+# 인증 정보, 개인 데이터 등
+Cache-Control: no-store
+```
+
+#### 12.4 CDN 캐싱 전략
+
+```http
+# CDN에서 1시간, 브라우저에서 5분
+Cache-Control: public, s-maxage=3600, max-age=300
+
+# CDN에서 재검증 중에도 오래된 응답 제공
+Cache-Control: public, max-age=600, stale-while-revalidate=30
+```
+
+#### 12.5 리소스 유형별 캐싱 전략
+
+- 버전 있는 정적 파일(app.v2.js): `max-age=31536000, immutable`
+- 버전 없는 정적 파일(logo.png): `max-age=86400, must-revalidate`
+- HTML 페이지: `no-cache` 또는 `max-age=0, must-revalidate`
+- API 응답: `private, no-cache`
+- 사용자 데이터: `private, no-store`
+- 공개 API 응답: `public, max-age=60, s-maxage=300`
+
+---
+
+### 13. 보안 고려사항
+
+#### 13.1 캐시 보안 위험
+
+캐시에 저장된 응답은 여러 요청에 재사용된다. 따라서 악성 콘텐츠가 저장되거나 개인 응답이 잘못 공유되면 그 영향도 여러 요청으로 이어질 수 있다.
+
+- 캐시 포이즈닝(Cache Poisoning)
+  - 공격자가 악성 콘텐츠를 캐시에 저장
+  - 다른 사용자가 악성 콘텐츠 수신
+- 민감한 정보 유출
+  - 부적절한 캐싱으로 개인 정보 노출
+  - 공유 캐시에 개인 응답 저장
+- 서비스 거부(DoS)
+  - 캐시 무효화 악용
+  - 캐시 용량 고갈 공격
+
+#### 13.2 보안 권장사항
+
+- 민감한 데이터 캐싱: `Cache-Control: no-store` 또는 `private` 사용
+- 호스트 간 무효화: 다른 호스트의 URI 무효화 금지
+- 캐시 키 조작: Vary 헤더 적절히 사용
+- HTTPS 콘텐츠: 적절한 캐시 지시어로 보호
+
+---
+
+### 14. IANA 등록
+
+#### 14.1 헤더 필드 등록
+
+- Age (http, standard)
+- Cache-Control (http, standard)
+- Expires (http, standard)
+- Pragma (http, standard)
+- Warning (http, standard)
+
+#### 14.2 Cache-Control 지시어 레지스트리
+
+- 요청 지시어: max-age, max-stale, min-fresh, no-cache, no-store, no-transform, only-if-cached
+- 응답 지시어: must-revalidate, no-cache, no-store, no-transform, public, private, proxy-revalidate, max-age, s-maxage
+
+#### 14.3 Warning 코드 레지스트리
+
+- 110 Response is Stale (Section 5.5.1)
+- 111 Revalidation Failed (Section 5.5.2)
+- 112 Disconnected Operation (Section 5.5.3)
+- 113 Heuristic Expiration (Section 5.5.4)
+- 199 Miscellaneous Warning (Section 5.5.5)
+- 214 Transformation Applied (Section 5.5.6)
+- 299 Miscellaneous Persistent Warning (Section 5.5.7)
+
+---
+
+### 15. RFC 9111과의 차이점
+
+RFC 9111은 2022년 6월에 RFC 7234를 대체했다. 앞에서 살펴본 RFC 7234와 비교하면 다음 항목이 달라졌다.
+
+- Warning 헤더: RFC 7234에서 정의됨 → RFC 9111에서 더 이상 사용되지 않음(Deprecated)
+- Location/Content-Location 무효화: RFC 7234는 필수 → RFC 9111은 선택 사항
+- 무효화 호스트 검사: RFC 7234는 호스트 부분 확인 → RFC 9111은 출처(origin) 확인
+- Pragma 헤더: RFC 7234에서 정의됨 → RFC 9111에서 더 이상 사용되지 않음
+
+---
+
+### 참고 자료
+
+- [RFC 7234 원문 (IETF)](https://datatracker.ietf.org/doc/html/rfc7234)
+- [RFC 7234 (HTTP Working Group)](https://httpwg.org/specs/rfc7234.html)
+- [RFC 9111 - HTTP Caching (현재 표준)](https://www.rfc-editor.org/rfc/rfc9111.html)
+- [MDN - Cache-Control](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Cache-Control)
+
+---
+
+### 관련 RFC
+
+- RFC 7230 - HTTP/1.1: Message Syntax and Routing: HTTP 메시지 구문
+- RFC 7231 - HTTP/1.1: Semantics and Content: HTTP 의미론
+- RFC 7232 - HTTP/1.1: Conditional Requests: 조건부 요청(ETag, If-None-Match)
+- RFC 7233 - HTTP/1.1: Range Requests: 범위 요청
+- RFC 7235 - HTTP/1.1: Authentication: HTTP 인증
+- RFC 5861 - HTTP Cache-Control Extensions: stale-while-revalidate, stale-if-error
+- RFC 9111 - HTTP Caching: RFC 7234 대체(현재 표준)

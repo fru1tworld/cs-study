@@ -1,0 +1,1024 @@
+# Alloy 클러스터링, 모듈과 마이그레이션
+
+## Alloy 클러스터링과 모듈
+
+> 원본: https://grafana.com/docs/alloy/latest/concepts/clustering/
+
+<a id="클러스터링-개요"></a>
+### 클러스터링 개요
+
+#### 목적
+
+스크래핑할 타겟이 많아지면 여러 Alloy 인스턴스에 작업을 나눌 수 있다. 인스턴스를 클러스터로 묶으면 타겟 분배와 장애 시 재할당을 자동으로 처리한다.
+
+- 자동 워크로드 분산: 스크래핑 타겟 자동 분배
+- 고가용성: 인스턴스 장애 시 다른 인스턴스가 처리
+- 수평 확장: 인스턴스 추가로 처리량 증가
+
+#### 작동 원리
+
+- 1\. 모든 노드가 가십(gossip)으로 클러스터 구성
+- 2\. 일관된 해싱(consistent hashing) 링 생성
+- 3\. 각 작업(타겟 스크래핑 등)이 해시에 따라 특정 노드에 할당
+- 4\. 노드는 자기 몫만 처리
+
+#### 적합한 컴포넌트
+
+- 스크래핑 컴포넌트(`prometheus.scrape`, `pyroscope.scrape` 등)
+- 디스커버리 결과 분배가 의미 있는 워크로드
+
+#### 부적합한 컴포넌트
+
+- Receiver 컴포넌트 → 모든 노드가 받아야 함
+- File 기반 → 각 노드의 파일이 다름
+
+<a id="클러스터링-활성화"></a>
+
+### 클러스터링 활성화
+
+#### 명령줄 플래그
+
+```bash
+alloy run \
+  --cluster.enabled=true \
+  --cluster.join-addresses=alloy-0:12345,alloy-1:12345 \
+  --cluster.advertise-address=$(hostname -i):12345 \
+  --cluster.name=prod-cluster \
+  config.alloy
+```
+
+#### 환경변수 (systemd)
+
+- `/etc/default/alloy`:
+
+```bash
+CUSTOM_ARGS="--cluster.enabled=true \
+             --cluster.join-addresses=alloy-0:12345,alloy-1:12345"
+```
+
+#### 주요 플래그
+
+- `--cluster.enabled`: 클러스터링 활성화
+- `--cluster.name`: 클러스터 이름, 다른 클러스터와 격리 용도
+- `--cluster.join-addresses`: 가입할 노드 주소들
+- `--cluster.advertise-address`: 다른 노드에 알릴 주소
+- `--cluster.advertise-interfaces`: 자동으로 광고 주소 결정할 NIC
+- `--cluster.discover-peers`: 자동 피어 디스커버리
+- `--cluster.rejoin-interval`: 재가입 시도 주기
+- `--cluster.max-join-peers`: 한 번에 가입 시도할 피어 수
+- `--cluster.tls-*`: gossip TLS
+
+<a id="피어-디스커버리"></a>
+
+### 피어 디스커버리
+
+#### 정적 목록
+
+```bash
+--cluster.join-addresses=alloy-0:12345,alloy-1:12345,alloy-2:12345
+```
+
+#### Kubernetes Headless Service
+
+```bash
+--cluster.discover-peers="provider=k8s,namespace=alloy,label_selector=app=alloy,port=12345"
+```
+
+- 또는 Helm values:
+
+```yaml
+alloy:
+  clustering:
+    enabled: true
+
+controller:
+  type: deployment
+  replicas: 3
+```
+
+- Helm 차트가 Headless Service 생성과 피어 발견 설정을 자동으로 처리함
+
+#### DNS
+
+```bash
+--cluster.discover-peers="provider=dns,name=alloy.example.com,port=12345"
+```
+
+- DNS A 레코드의 모든 IP를 피어로 등록함
+
+#### 다중 디스커버리
+
+```bash
+--cluster.discover-peers="provider=k8s,namespace=alloy,label_selector=app=alloy,port=12345 provider=dns,name=external.example.com,port=12345"
+```
+
+<a id="클러스터링-사용-컴포넌트"></a>
+
+### 클러스터링 사용 컴포넌트
+
+#### prometheus.scrape
+
+```alloy
+prometheus.scrape "kubernetes" {
+  targets    = discovery.kubernetes.pods.targets
+  forward_to = [prometheus.remote_write.mimir.receiver]
+  
+  clustering {
+    enabled = true
+  }
+}
+```
+
+각 타겟은 일관된 해싱으로 단일 노드에만 할당된다. 노드가 N개라면 각 노드가 전체 타겟의 약 1/N을 처리한다.
+
+#### pyroscope.scrape
+
+```alloy
+pyroscope.scrape "default" {
+  targets    = discovery.kubernetes.pods.targets
+  forward_to = [pyroscope.write.default.receiver]
+  
+  clustering {
+    enabled = true
+  }
+}
+```
+
+#### loki.source.kubernetes
+
+```alloy
+loki.source.kubernetes "pods" {
+  targets    = discovery.kubernetes.pods.targets
+  forward_to = [loki.write.default.receiver]
+  
+  clustering {
+    enabled = true
+  }
+}
+```
+
+#### loki.source.kubernetes_events
+
+```alloy
+loki.source.kubernetes_events "events" {
+  forward_to = [loki.write.default.receiver]
+  
+  // 이벤트는 단일 노드만 수집해야 (중복 방지)
+  clustering {
+    enabled = true
+  }
+}
+```
+
+<a id="실전-예시-k8s에서-alloy-클러스터"></a>
+
+### 실전 예시: K8s에서 Alloy 클러스터
+
+#### Helm Values
+
+```yaml
+alloy:
+  configMap:
+    create: true
+    content: |
+      logging {
+        level = "info"
+      }
+      
+      // Kubernetes 디스커버리
+      discovery.kubernetes "pods" {
+        role = "pod"
+      }
+      
+      discovery.relabel "pods" {
+        targets = discovery.kubernetes.pods.targets
+        
+        rule {
+          source_labels = ["__meta_kubernetes_pod_annotation_prometheus_io_scrape"]
+          regex         = "true"
+          action        = "keep"
+        }
+        
+        rule {
+          source_labels = ["__meta_kubernetes_pod_annotation_prometheus_io_port"]
+          target_label  = "__address__"
+          regex         = "(.+)"
+          replacement   = "$1"
+        }
+      }
+      
+      // 클러스터링된 스크래핑
+      prometheus.scrape "kubernetes_pods" {
+        targets    = discovery.relabel.pods.output
+        forward_to = [prometheus.remote_write.mimir.receiver]
+        
+        clustering {
+          enabled = true
+        }
+      }
+      
+      prometheus.remote_write "mimir" {
+        endpoint {
+          url = "http://mimir:9009/api/v1/push"
+        }
+      }
+  
+  clustering:
+    enabled: true
+  
+  resources:
+    requests:
+      cpu: 200m
+      memory: 256Mi
+    limits:
+      memory: 1Gi
+
+controller:
+  type: deployment
+  replicas: 3
+
+rbac:
+  create: true
+
+serviceAccount:
+  create: true
+```
+
+#### 동작
+
+위 설정은 Deployment Pod 3개를 실행하고, Headless Service를 통해 서로를 피어로 발견하도록 한다. Kubernetes API에서 받은 전체 Pod 목록은 일관된 해싱으로 3개 Alloy 인스턴스에 분배된다. 따라서 각 인스턴스는 전체 Pod의 약 1/3만 스크래핑한다.
+
+#### 모니터링
+
+```promql
+# 클러스터 노드 수
+alloy_cluster_node_peers
+
+# 노드별 스크래핑 타겟 수
+sum by (instance) (prometheus_sd_discovered_targets)
+```
+
+<a id="모듈-시스템"></a>
+
+### 모듈 시스템
+
+#### 모듈이란?
+
+클러스터링이 실행할 작업을 여러 인스턴스에 나누는 기능이라면, 모듈은 반복되는 구성을 재사용하는 단위다. 매개변수와 출력을 정의해 두면 같은 파이프라인을 다른 설정으로 여러 곳에서 사용할 수 있다.
+
+#### 모듈 구조
+
+```alloy
+// 모듈은 다음 블록을 가질 수 있음:
+
+argument "param_name" {
+  optional = false      // 또는 true
+  default  = "default"  // optional=true일 때
+  comment  = "설명"
+}
+
+declare "name" {
+  // 내부 컴포넌트 정의
+}
+
+export "exported_value" {
+  value = ...
+}
+```
+
+#### 모듈 사용 흐름
+
+- 1\. 모듈 파일 작성
+- 2\. `import.*`로 모듈 임포트
+- 3\. 인자(arguments) 전달하여 인스턴스 생성
+- 4\. 출력(exports) 사용
+
+<a id="모듈-작성-가이드"></a>
+
+### 모듈 작성 가이드
+
+#### 단순 예시: 로그 파이프라인 모듈
+
+다음 `modules/loki_pipeline.alloy`는 로그에서 `level`과 `message`를 추출하고, `level`을 라벨로 붙여 Loki로 보낸다. 전송 주소와 테넌트, 외부 라벨은 인자로 받고, 로그를 받을 `receiver`를 출력으로 공개한다.
+
+```alloy
+argument "endpoint" {
+  comment = "Loki push endpoint"
+}
+
+argument "tenant_id" {
+  optional = true
+  default  = "default"
+}
+
+argument "external_labels" {
+  optional = true
+  default  = {}
+}
+
+loki.write "default" {
+  endpoint {
+    url = argument.endpoint.value
+    headers = {
+      "X-Scope-OrgID" = argument.tenant_id.value,
+    }
+  }
+  
+  external_labels = argument.external_labels.value
+}
+
+loki.process "main" {
+  forward_to = [loki.write.default.receiver]
+  
+  stage.json {
+    expressions = {
+      level = "level",
+      msg   = "message",
+    }
+  }
+  
+  stage.labels {
+    values = {
+      level = "",
+    }
+  }
+}
+
+export "receiver" {
+  value = loki.process.main.receiver
+}
+```
+
+#### 메인 구성에서 사용
+
+메인 구성에서는 파일을 임포트하고 전송 주소와 라벨을 지정한다. 이어서 파일 로그 소스의 `forward_to`를 모듈이 공개한 `receiver`에 연결한다.
+
+```alloy
+import.file "loki_pipeline" {
+  filename = "modules/loki_pipeline.alloy"
+}
+
+loki_pipeline "default" {
+  endpoint  = "http://loki:3100/loki/api/v1/push"
+  tenant_id = "tenant-1"
+  
+  external_labels = {
+    cluster = sys.env("CLUSTER"),
+    region  = sys.env("REGION"),
+  }
+}
+
+loki.source.file "app" {
+  targets    = [{__path__ = "/var/log/app.log"}]
+  forward_to = [loki_pipeline.default.receiver]
+}
+```
+
+#### `declare` 블록 사용
+
+- 같은 파일 안에서 모듈을 정의할 수 있음
+
+```alloy
+declare "log_to_loki" {
+  argument "url" { }
+  
+  loki.write "internal" {
+    endpoint {
+      url = argument.url.value
+    }
+  }
+  
+  export "receiver" {
+    value = loki.write.internal.receiver
+  }
+}
+
+// 사용
+log_to_loki "default" {
+  url = "http://loki:3100/loki/api/v1/push"
+}
+
+loki.source.file "app" {
+  targets    = [{...}]
+  forward_to = [log_to_loki.default.receiver]
+}
+```
+
+<a id="공식-모듈-활용"></a>
+
+### 공식 모듈 활용
+
+#### Modules 저장소
+
+- [grafana/alloy-modules](https://github.com/grafana/alloy-modules) 에서 다양한 공식 모듈 제공
+
+- `kubernetes/logs`: K8s Pod 로그 수집 표준 파이프라인
+- `kubernetes/metrics`: K8s 메트릭 수집
+- `kubernetes/events`: K8s 이벤트 수집
+- `node-exporter`: Node Exporter 통합
+- `cadvisor`: cAdvisor 통합
+
+#### Git 임포트로 사용
+
+```alloy
+import.git "modules" {
+  repository     = "https://github.com/grafana/alloy-modules.git"
+  revision       = "main"
+  pull_frequency = "5m"
+}
+
+// 사용
+modules.kubernetes.logs.pods "default" {
+  forward_to = [loki.write.default.receiver]
+}
+```
+
+#### 디렉토리 임포트
+
+- 여러 모듈을 한 번에 임포트함
+
+```alloy
+import.git "k8s_modules" {
+  repository     = "https://github.com/grafana/alloy-modules.git"
+  revision       = "main"
+  path           = "modules/kubernetes"
+}
+```
+
+### 클러스터링 + 모듈 조합 예시
+
+```alloy
+// 외부 모듈
+import.git "k8s" {
+  repository = "https://github.com/grafana/alloy-modules.git"
+  revision   = "main"
+  path       = "modules/kubernetes"
+}
+
+// 로그 파이프라인 모듈 사용
+k8s.logs.pods "default" {
+  forward_to = [loki.write.default.receiver]
+  
+  // 클러스터링 활성화
+  clustering = true
+}
+
+k8s.metrics.kubelet "default" {
+  forward_to = [prometheus.remote_write.mimir.receiver]
+  
+  clustering = true
+}
+
+// 백엔드 전송
+loki.write "default" {
+  endpoint {
+    url = "http://loki:3100/loki/api/v1/push"
+  }
+  external_labels = {
+    cluster = sys.env("CLUSTER"),
+  }
+}
+
+prometheus.remote_write "mimir" {
+  endpoint {
+    url = "http://mimir:9009/api/v1/push"
+  }
+  external_labels = {
+    cluster = sys.env("CLUSTER"),
+  }
+}
+```
+
+이 구성에서는 모듈로 코드를 재사용하고 클러스터링으로 워크로드를 분산한다. 공통 구성을 모듈에 두므로 메인 구성 파일도 간결하게 유지할 수 있다.
+
+## Alloy 마이그레이션 가이드
+
+> 원본: https://grafana.com/docs/alloy/latest/set-up/migrate/
+
+<a id="개요"></a>
+### 개요
+
+- Grafana는 다음 도구들에서 Alloy로의 마이그레이션을 권장함
+
+- Promtail
+  - 마이그레이션 대상: Loki 로그 수집
+  - 자동 변환 도구: `alloy convert --source-format=promtail`
+- Prometheus
+  - 마이그레이션 대상: 메트릭 수집
+  - 자동 변환 도구: `alloy convert --source-format=prometheus`
+- Grafana Agent Static
+  - 마이그레이션 대상: 통합 수집(Deprecated)
+  - 자동 변환 도구: `alloy convert --source-format=static`
+- Grafana Agent Flow
+  - 마이그레이션 대상: 통합 수집(Deprecated)
+  - 자동 변환 도구: 수동 마이그레이션(구문 호환)
+- Grafana Agent Operator
+  - 마이그레이션 대상: K8s CR 기반
+  - 자동 변환 도구: 수동 마이그레이션
+- OpenTelemetry Collector
+  - 마이그레이션 대상: OTel 표준
+  - 자동 변환 도구: `alloy convert --source-format=otelcol`
+
+#### 자동 변환 명령어 기본 형식
+
+```bash
+alloy convert \
+  --source-format=<format> \
+  -o alloy-config.alloy \
+  source-config.yaml
+```
+
+- 옵션:
+- `-o, --output`: 출력 파일
+- `-r, --report`: 변환 보고서 파일
+- `-b, --bypass-errors`: 에러 무시
+- `--extra-args`: 추가 매개변수
+
+<a id="promtail에서-마이그레이션"></a>
+
+### Promtail에서 마이그레이션
+
+#### Promtail 구성 예시
+
+```yaml
+# promtail.yaml
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+
+positions:
+  filename: /tmp/positions.yaml
+
+clients:
+  - url: http://loki:3100/loki/api/v1/push
+
+scrape_configs:
+  - job_name: system
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: varlogs
+          __path__: /var/log/*.log
+    
+    pipeline_stages:
+      - regex:
+          expression: '^(?P<level>\S+) (?P<msg>.*)$'
+      - labels:
+          level:
+```
+
+#### 자동 변환
+
+```bash
+alloy convert \
+  --source-format=promtail \
+  -o alloy-config.alloy \
+  promtail.yaml
+```
+
+#### 변환 결과
+
+```alloy
+local.file_match "system" {
+  path_targets = [{
+    __path__ = "/var/log/*.log",
+    job      = "varlogs",
+  }]
+}
+
+loki.source.file "system" {
+  targets    = local.file_match.system.targets
+  forward_to = [loki.process.system.receiver]
+}
+
+loki.process "system" {
+  forward_to = [loki.write.default.receiver]
+  
+  stage.regex {
+    expression = "^(?P<level>\\S+) (?P<msg>.*)$"
+  }
+  
+  stage.labels {
+    values = {
+      level = null,
+    }
+  }
+}
+
+loki.write "default" {
+  endpoint {
+    url = "http://loki:3100/loki/api/v1/push"
+  }
+}
+```
+
+#### 주요 차이점
+
+- `scrape_configs.static_configs` → `local.file_match`
+- `pipeline_stages` → `loki.process` 내부 `stage.*`
+- `clients` → `loki.write`
+- `positions` → 자동 (storage path)
+
+<a id="prometheus에서-마이그레이션"></a>
+
+### Prometheus에서 마이그레이션
+
+#### Prometheus 구성 예시
+
+```yaml
+# prometheus.yml
+global:
+  scrape_interval: 15s
+  external_labels:
+    cluster: prod
+
+scrape_configs:
+  - job_name: prometheus
+    static_configs:
+      - targets: ['localhost:9090']
+  
+  - job_name: node
+    static_configs:
+      - targets: ['node1:9100', 'node2:9100']
+    
+    relabel_configs:
+      - source_labels: [__address__]
+        regex: '(.+):.*'
+        target_label: instance
+
+remote_write:
+  - url: http://mimir:9009/api/v1/push
+    headers:
+      X-Scope-OrgID: tenant-1
+```
+
+#### 자동 변환
+
+```bash
+alloy convert \
+  --source-format=prometheus \
+  -o alloy-config.alloy \
+  prometheus.yml
+```
+
+#### 변환 결과
+
+```alloy
+discovery.relabel "node" {
+  targets = [
+    {__address__ = "node1:9100"},
+    {__address__ = "node2:9100"},
+  ]
+  
+  rule {
+    source_labels = ["__address__"]
+    regex         = "(.+):.*"
+    target_label  = "instance"
+  }
+}
+
+prometheus.scrape "prometheus" {
+  targets = [{__address__ = "localhost:9090"}]
+  forward_to = [prometheus.remote_write.default.receiver]
+  job_name = "prometheus"
+  scrape_interval = "15s"
+}
+
+prometheus.scrape "node" {
+  targets = discovery.relabel.node.output
+  forward_to = [prometheus.remote_write.default.receiver]
+  job_name = "node"
+  scrape_interval = "15s"
+}
+
+prometheus.remote_write "default" {
+  endpoint {
+    url = "http://mimir:9009/api/v1/push"
+    headers = {
+      "X-Scope-OrgID" = "tenant-1",
+    }
+  }
+  
+  external_labels = {
+    cluster = "prod",
+  }
+}
+```
+
+#### 주요 차이점
+
+- `scrape_configs` → 각각 `prometheus.scrape` 컴포넌트
+- `relabel_configs` → `discovery.relabel`
+- `remote_write` → `prometheus.remote_write`
+- `global.external_labels` → `prometheus.remote_write.external_labels`
+
+#### 주의사항
+
+- Service Discovery(`kubernetes_sd_configs`, `consul_sd_configs` 등) → `discovery.kubernetes`, `discovery.consul` 등으로 자동 변환됨
+- Recording Rules / Alerting Rules는 별도 처리 필요(Mimir Ruler에 등록).
+
+<a id="grafana-agent-static에서-마이그레이션"></a>
+
+### Grafana Agent Static에서 마이그레이션
+
+#### Static Agent 구성 예시
+
+```yaml
+server:
+  http_listen_port: 12345
+  log_level: info
+
+metrics:
+  global:
+    scrape_interval: 15s
+    remote_write:
+      - url: http://mimir:9009/api/v1/push
+  configs:
+    - name: integrations
+      scrape_configs:
+        - job_name: node
+          static_configs:
+            - targets: ['localhost:9100']
+
+logs:
+  configs:
+    - name: default
+      clients:
+        - url: http://loki:3100/loki/api/v1/push
+      scrape_configs:
+        - job_name: system
+          static_configs:
+            - targets:
+                - localhost
+              labels:
+                job: varlogs
+                __path__: /var/log/*.log
+
+integrations:
+  node_exporter:
+    enabled: true
+  prometheus_remote_write:
+    - url: http://mimir:9009/api/v1/push
+```
+
+#### 자동 변환
+
+```bash
+alloy convert \
+  --source-format=static \
+  -o alloy-config.alloy \
+  agent-static.yaml
+```
+
+#### 결과
+
+- `metrics`, `logs`, `integrations` 섹션이 각각 Alloy 컴포넌트로 변환됨
+
+<a id="grafana-agent-flow에서-마이그레이션"></a>
+
+### Grafana Agent Flow에서 마이그레이션
+
+#### Flow는 Alloy의 전신
+
+- Grafana Agent Flow의 River 구문은 Alloy 구문과 거의 동일함
+
+#### Flow 구성 예시 (River)
+
+```river
+prometheus.scrape "default" {
+  targets    = [{__address__ = "localhost:9090"}]
+  forward_to = [prometheus.remote_write.mimir.receiver]
+}
+
+prometheus.remote_write "mimir" {
+  endpoint {
+    url = "http://mimir:9009/api/v1/push"
+  }
+}
+```
+
+#### 마이그레이션 방법
+
+Flow에서 Alloy로 전환할 때는 자동 변환 도구(`alloy convert`)를 지원하지 않는다. 공식 가이드는 다음 절차에 따른 수동 마이그레이션을 권장한다.
+
+- 1\. 지원이 중단된 컴포넌트를 대체 컴포넌트로 교체
+- 2\. 기본 구성으로 Alloy 배포
+- 3\. 데이터 디렉터리 복사
+- 4\. 파이프라인 재구성
+
+#### 차이점
+
+- 대부분 동일하지만:
+
+- 일부 컴포넌트 이름 변경 (예: `prometheus.exporter.unix` → 거의 동일)
+- 일부 deprecated 컴포넌트 제거
+- 클래식 모듈(`module.file`, `module.git`, `module.http`, `module.string`) → `import.*` 블록으로 대체
+
+#### 수동 변경 사항
+
+```diff
+- prometheus.scrape "default" {
++ prometheus.scrape "default" {
+    targets    = [...]
+    forward_to = [...]
+  }
+```
+
+- 코드 자체는 대부분 그대로 동작함
+
+<a id="grafana-agent-operator에서-마이그레이션"></a>
+
+### Grafana Agent Operator에서 마이그레이션
+
+#### Agent Operator 패턴
+
+- Kubernetes Custom Resources를 사용:
+
+- `GrafanaAgent`
+- `MetricsInstance`
+- `LogsInstance`
+- `Integration`
+
+#### 마이그레이션 방법
+
+- 공식 권장 방식은 `grafana/alloy` Helm Chart를 사용한 직접 배포
+  - Alloy Operator는 별도로 제공되지 않음
+
+```bash
+helm install alloy grafana/alloy \
+  --namespace monitoring \
+  --values values.yaml
+```
+
+- `values.yaml` 또는 ConfigMap에 Alloy 구성을 작성함
+
+#### CR → Alloy 매핑
+
+- `GrafanaAgent`(메트릭) → `prometheus.scrape` + `prometheus.remote_write`
+- `MetricsInstance` → `prometheus.scrape` 인스턴스
+- `LogsInstance` → `loki.source.*` + `loki.write`
+- `PodMonitor` / `ServiceMonitor` → `discovery.kubernetes` + `discovery.relabel`
+- `Probe`(Blackbox) → `prometheus.exporter.blackbox`
+
+<a id="opentelemetry-collector에서-마이그레이션"></a>
+
+### OpenTelemetry Collector에서 마이그레이션
+
+#### OTel Collector 구성 예시
+
+```yaml
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+
+processors:
+  batch:
+    timeout: 5s
+    send_batch_size: 1000
+
+exporters:
+  otlp:
+    endpoint: tempo:4317
+    tls:
+      insecure: true
+
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [otlp]
+```
+
+#### 자동 변환
+
+```bash
+alloy convert \
+  --source-format=otelcol \
+  -o alloy-config.alloy \
+  otel-collector.yaml
+```
+
+#### 변환 결과
+
+```alloy
+otelcol.receiver.otlp "default" {
+  grpc {
+    endpoint = "0.0.0.0:4317"
+  }
+  
+  output {
+    traces = [otelcol.processor.batch.default.input]
+  }
+}
+
+otelcol.processor.batch "default" {
+  timeout         = "5s"
+  send_batch_size = 1000
+  
+  output {
+    traces = [otelcol.exporter.otlp.default.input]
+  }
+}
+
+otelcol.exporter.otlp "default" {
+  client {
+    endpoint = "tempo:4317"
+    tls {
+      insecure = true
+    }
+  }
+}
+```
+
+#### 매핑 규칙
+
+- `receivers.<type>` → `otelcol.receiver.<type>`
+- `processors.<type>` → `otelcol.processor.<type>`
+- `exporters.<type>` → `otelcol.exporter.<type>`
+- `extensions.<type>` → `otelcol.extension.<type>`
+- `connectors.<type>` → `otelcol.connector.<type>`
+- `service.pipelines` → 컴포넌트 간 `output` / `input` 연결
+
+#### 주의사항
+
+- 일부 OTel 컴포넌트는 Alloy에서 다른 이름 사용
+- 변환 후 반드시 검증 필요
+- 커스텀 프로세서는 수동 변환 필요
+
+<a id="수동-마이그레이션-팁"></a>
+
+### 수동 마이그레이션 팁
+
+#### 1. 점진적 마이그레이션
+
+```
+[기존 Promtail/Agent] (운영 중)
+        +
+[새 Alloy] (병렬 실행, 동일 데이터 전송)
+        |
+        v (비교 검증)
+[Alloy로 완전 전환]
+        |
+        v
+[기존 도구 제거]
+```
+
+#### 2. 변환 보고서 활용
+
+```bash
+alloy convert \
+  --source-format=prometheus \
+  -o alloy-config.alloy \
+  -r conversion-report.txt \
+  prometheus.yml
+```
+
+변환이 끝나면 `conversion-report.txt`에서 변환되지 않은 항목과 주의사항을 확인한다. 자동 변환으로 옮기지 못한 설정을 처리한 뒤 구문과 실제 수집 결과를 검증한다.
+
+#### 3. 검증
+
+```bash
+# 구문 검증
+alloy validate alloy-config.alloy
+
+# 포맷 정리
+alloy fmt -w alloy-config.alloy
+
+# 드라이런
+alloy run --server.http.listen-addr=:0 alloy-config.alloy
+```
+
+#### 4. 메트릭/로그 비교
+
+- 마이그레이션 전후에 동일한 메트릭/로그가 수집되는지 확인함
+
+```promql
+# 메트릭 누락 확인
+count(up{job=~".*"}) - count(up{job=~".*", instance=~"alloy.*"})
+
+# 라벨 일치 확인
+group(metric_name) by (instance, job) == group(metric_name) by (instance, job)
+```
+
+#### 5. Helm Chart 사용
+
+- 새로 시작하는 경우, 공식 Helm Chart의 `values.yaml` 예시를 참고하여 처음부터 Alloy 모범 사례 적용 가능
+
+#### 6. 모듈 활용
+
+- [grafana/alloy-modules](https://github.com/grafana/alloy-modules)의 표준 모듈을 활용하면 구성 단순화 가능
+
+```alloy
+import.git "modules" {
+  repository = "https://github.com/grafana/alloy-modules.git"
+  revision   = "main"
+}
+
+modules.kubernetes.logs.pods "default" {
+  forward_to = [loki.write.default.receiver]
+}
+```

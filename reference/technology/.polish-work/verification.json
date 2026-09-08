@@ -1,0 +1,3092 @@
+{
+  "date": "2026-09-08",
+  "scope": "작업 시작 시 reference/technology 아래에 있던 Markdown 333개",
+  "summary": {
+    "documentsEdited": 333,
+    "filesRenamed": 278,
+    "originalLines": 359815,
+    "finalLines": 368812,
+    "originalFencedCodeBlocks": 16174,
+    "finalFencedCodeBlocks": 16176,
+    "markdownTablesBefore": 0,
+    "markdownTablesAfter": 0,
+    "committed": false,
+    "pushed": false
+  },
+  "checks": {
+    "allOriginalFencedCodeContentsPreserved": true,
+    "fenceBalance": true,
+    "allOriginalNumberOccurrencesPreservedPerDocument": true,
+    "allOriginalExternalUrlOccurrencesPreservedPerDocument": true,
+    "mdvAnsiRendering": true,
+    "mdvHtmlRendering": true,
+    "renderedCodeContentsMatch": true,
+    "literalBoldMarkersOutsideCode": 0,
+    "headingsDeeperThanLevel4OrMarkdownTables": 0,
+    "localMarkdownFileAndAnchorErrors": [],
+    "gitDiffCheck": "통과"
+  },
+  "method": [
+    "Git HEAD 대신 작업 시작 시 실제 파일을 baseline.json에 보존하고 비교함. 시작 전에 존재하던 pl/ 이동 작업과 다른 폴더의 작업을 유지함.",
+    "코드 펜스의 목록 들여쓰기를 제외한 원래 코드 내용과 언어 표지를 순서대로 정확히 비교함.",
+    "본문과 코드의 숫자는 링크 주소와 추가 앵커를 제외하고 문서별 출현 횟수를 대조함.",
+    "기존 외부 URL은 문서별 출현 횟수를 대조함. 원문 사이트의 상대 링크를 절대 URL로 바꾸고, 합쳐진 PostgreSQL 문서의 과거 목차 링크를 실제 절에 연결함.",
+    "구조 변환 전후에는 문장 부호, Markdown 표지, 공백을 정규화해 본문 순서를 비교하고, 별도 표현 교정은 문맥을 검토함.",
+    "각 최종 파일을 mdv --no-config --cols 100 및 mdv --no-config --html로 렌더링함.",
+    "mdv가 표시 과정에서 추가하는 빈 줄과 탭 너비 4의 확장은 정규화하여 코드 내용을 대조함. 파일에 저장된 코드의 공백은 별도로 보존 확인함."
+  ],
+  "specificRepairs": [
+    {
+      "path": "db/cassandra/01_getting_started_architecture_modeling.md",
+      "change": "가상 노드 추가, 제거, 장애 시 데이터와 부하를 받는 주체가 불명확한 번역을 교정함.",
+      "source": "https://cassandra.apache.org/doc/latest/cassandra/architecture/dynamo.html"
+    },
+    {
+      "path": "pl/typescript/typescript-language/03_functions_objects_classes.md",
+      "change": "HTML 접기 영역을 제목과 목록으로 바꾸고, 숫자 및 문자열 인덱서의 반환 타입 관계를 유지함."
+    },
+    {
+      "path": "pl/typescript/typescript-language/04_type_manipulation_and_modules.md",
+      "change": "HTML pre 영역의 TypeScript 예제를 동일한 코드의 펜스 블록으로 바꿈."
+    },
+    {
+      "path": "pl/lean/lean-language/04_terms_and_runtime.md",
+      "change": "여러 줄에 걸친 by 예제를 펜스 블록으로 바꿈."
+    },
+    {
+      "path": "pl/rust/rust-language/08_smart_pointers_concurrency_async.md",
+      "change": "내부 백틱을 포함하는 컴파일러 오류 문자열의 인라인 코드 구분자를 교정함."
+    },
+    {
+      "paths": [
+        "db/postgresql/03_server_administration.md",
+        "kafka/07_security.md"
+      ],
+      "change": "깊은 목록에서 mdv가 여러 줄 명령의 역슬래시와 옵션을 본문으로 해석하는 문제를 제목과 코드 배치 조정으로 해결함."
+    }
+  ],
+  "concurrentWorkPreserved": {
+    "paths": [
+      "pl/kotlin/arrow/03_validation_and_wrapper_types.md",
+      "pl/kotlin/arrow/02_typed_errors.md",
+      "pl/kotlin/arrow/04_coroutines_and_concurrency.md",
+      "pl/kotlin/arrow/05_resources_and_suspendapp.md",
+      "pl/kotlin/arrow/01_introduction_and_setup.md",
+      "pl/kotlin/arrow/08_collections_and_functions.md",
+      "pl/kotlin/arrow/06_resilience.md",
+      "pl/kotlin/arrow/07_immutable_data_and_optics.md",
+      "pl/kotlin/arrow/09_design_integrations_and_migration.md"
+    ],
+    "action": "작업 도중 별도 작업에서 생성된 Arrow 문서 9개는 수정하지 않음."
+  },
+  "pendingOutsideWorkspace": {
+    "reason": "자동 승인 검토가 프로젝트 밖의 파일 수정을 거부함. 사용자 승인을 다시 요구하지 않고 적용할 패치를 준비함.",
+    "patch": ".polish-work/outside-links.patch",
+    "files": [
+      "../standard/w3c/webmcp.md",
+      "../standard/w3c/csp3.md",
+      "../standard/mcp/specification.md"
+    ],
+    "links": 3
+  },
+  "baseline": ".polish-work/baseline.json",
+  "files": [
+    {
+      "before": "ai/README.md",
+      "after": "ai/README.md",
+      "linesBefore": 23,
+      "linesAfter": 23,
+      "codeBlocksBefore": 0,
+      "codeBlocksAfter": 0,
+      "verified": true
+    },
+    {
+      "before": "ai/anthropic/computer-use.md",
+      "after": "ai/anthropic/01_computer-use.md",
+      "linesBefore": 64,
+      "linesAfter": 56,
+      "codeBlocksBefore": 1,
+      "codeBlocksAfter": 1,
+      "verified": true
+    },
+    {
+      "before": "ai/anthropic/models-overview.md",
+      "after": "ai/anthropic/03_models-overview.md",
+      "linesBefore": 67,
+      "linesAfter": 57,
+      "codeBlocksBefore": 0,
+      "codeBlocksAfter": 0,
+      "verified": true
+    },
+    {
+      "before": "ai/anthropic/tool-use.md",
+      "after": "ai/anthropic/02_tool-use.md",
+      "linesBefore": 113,
+      "linesAfter": 101,
+      "codeBlocksBefore": 4,
+      "codeBlocksAfter": 4,
+      "verified": true
+    },
+    {
+      "before": "ai/gemini/computer-use.md",
+      "after": "ai/gemini/01_computer-use.md",
+      "linesBefore": 53,
+      "linesAfter": 46,
+      "codeBlocksBefore": 1,
+      "codeBlocksAfter": 1,
+      "verified": true
+    },
+    {
+      "before": "ai/openai/computer-use-preview.md",
+      "after": "ai/openai/01_computer-use-preview.md",
+      "linesBefore": 75,
+      "linesAfter": 65,
+      "codeBlocksBefore": 1,
+      "codeBlocksAfter": 1,
+      "verified": true
+    },
+    {
+      "before": "build/gradle/1_gradle_basics.md",
+      "after": "build/gradle/01_gradle_basics.md",
+      "linesBefore": 342,
+      "linesAfter": 373,
+      "codeBlocksBefore": 13,
+      "codeBlocksAfter": 13,
+      "verified": true
+    },
+    {
+      "before": "build/gradle/2_gradle_dependencies_cli_performance.md",
+      "after": "build/gradle/02_gradle_dependencies_cli_performance.md",
+      "linesBefore": 404,
+      "linesAfter": 438,
+      "codeBlocksBefore": 19,
+      "codeBlocksAfter": 19,
+      "verified": true
+    },
+    {
+      "before": "build/gradle/3_gradle_build_logic.md",
+      "after": "build/gradle/03_gradle_build_logic.md",
+      "linesBefore": 433,
+      "linesAfter": 458,
+      "codeBlocksBefore": 17,
+      "codeBlocksAfter": 17,
+      "verified": true
+    },
+    {
+      "before": "build/gradle/4_gradle_plugins_and_structure.md",
+      "after": "build/gradle/04_gradle_plugins_and_structure.md",
+      "linesBefore": 468,
+      "linesAfter": 463,
+      "codeBlocksBefore": 21,
+      "codeBlocksAfter": 21,
+      "verified": true
+    },
+    {
+      "before": "build/gradle/5_gradle_developing_plugins.md",
+      "after": "build/gradle/05_gradle_developing_plugins.md",
+      "linesBefore": 531,
+      "linesAfter": 598,
+      "codeBlocksBefore": 26,
+      "codeBlocksAfter": 26,
+      "verified": true
+    },
+    {
+      "before": "build/gradle/6_gradle_best_practices.md",
+      "after": "build/gradle/06_gradle_best_practices.md",
+      "linesBefore": 993,
+      "linesAfter": 1021,
+      "codeBlocksBefore": 42,
+      "codeBlocksAfter": 42,
+      "verified": true
+    },
+    {
+      "before": "build/gradle/7_gradle_tutorial_beginner.md",
+      "after": "build/gradle/07_gradle_tutorial_beginner.md",
+      "linesBefore": 577,
+      "linesAfter": 613,
+      "codeBlocksBefore": 23,
+      "codeBlocksAfter": 23,
+      "verified": true
+    },
+    {
+      "before": "build/gradle/8_gradle_tutorial_intermediate.md",
+      "after": "build/gradle/08_gradle_tutorial_intermediate.md",
+      "linesBefore": 639,
+      "linesAfter": 675,
+      "codeBlocksBefore": 24,
+      "codeBlocksAfter": 24,
+      "verified": true
+    },
+    {
+      "before": "build/gradle/9_gradle_tutorial_advanced.md",
+      "after": "build/gradle/09_gradle_tutorial_advanced.md",
+      "linesBefore": 793,
+      "linesAfter": 809,
+      "codeBlocksBefore": 30,
+      "codeBlocksAfter": 30,
+      "verified": true
+    },
+    {
+      "before": "build/mill/1_overview_and_java_intro.md",
+      "after": "build/mill/01_overview_and_java_intro.md",
+      "linesBefore": 786,
+      "linesAfter": 822,
+      "codeBlocksBefore": 32,
+      "codeBlocksAfter": 32,
+      "verified": true
+    },
+    {
+      "before": "build/mill/2_fundamentals.md",
+      "after": "build/mill/02_fundamentals.md",
+      "linesBefore": 1044,
+      "linesAfter": 1116,
+      "codeBlocksBefore": 73,
+      "codeBlocksAfter": 73,
+      "verified": true
+    },
+    {
+      "before": "build/mill/3_cli.md",
+      "after": "build/mill/03_cli.md",
+      "linesBefore": 771,
+      "linesAfter": 817,
+      "codeBlocksBefore": 55,
+      "codeBlocksAfter": 55,
+      "verified": true
+    },
+    {
+      "before": "build/mill/4_large_builds_and_extending.md",
+      "after": "build/mill/04_large_builds_and_extending.md",
+      "linesBefore": 1126,
+      "linesAfter": 1152,
+      "codeBlocksBefore": 57,
+      "codeBlocksAfter": 57,
+      "verified": true
+    },
+    {
+      "before": "build/mill/5_internals_comparisons_migrating.md",
+      "after": "build/mill/05_internals_comparisons_migrating.md",
+      "linesBefore": 1026,
+      "linesAfter": 1091,
+      "codeBlocksBefore": 43,
+      "codeBlocksAfter": 43,
+      "verified": true
+    },
+    {
+      "before": "build/mill/6_scalalib_setup_and_testing.md",
+      "after": "build/mill/06_scalalib_setup_and_testing.md",
+      "linesBefore": 1178,
+      "linesAfter": 1229,
+      "codeBlocksBefore": 81,
+      "codeBlocksAfter": 81,
+      "verified": true
+    },
+    {
+      "before": "build/mill/7_scalalib_publishing_and_examples.md",
+      "after": "build/mill/07_scalalib_publishing_and_examples.md",
+      "linesBefore": 2171,
+      "linesAfter": 2206,
+      "codeBlocksBefore": 104,
+      "codeBlocksAfter": 104,
+      "verified": true
+    },
+    {
+      "before": "build/sbt/1_getting_started_setup_and_run.md",
+      "after": "build/sbt/01_getting_started_setup_and_run.md",
+      "linesBefore": 752,
+      "linesAfter": 811,
+      "codeBlocksBefore": 59,
+      "codeBlocksAfter": 59,
+      "verified": true
+    },
+    {
+      "before": "build/sbt/2_getting_started_tasks_deps_plugins.md",
+      "after": "build/sbt/02_getting_started_tasks_deps_plugins.md",
+      "linesBefore": 1094,
+      "linesAfter": 1145,
+      "codeBlocksBefore": 79,
+      "codeBlocksAfter": 79,
+      "verified": true
+    },
+    {
+      "before": "build/sbt/3_using_sbt.md",
+      "after": "build/sbt/03_using_sbt.md",
+      "linesBefore": 1053,
+      "linesAfter": 1085,
+      "codeBlocksBefore": 67,
+      "codeBlocksAfter": 67,
+      "verified": true
+    },
+    {
+      "before": "build/sbt/4_configuration_classpaths_and_scala.md",
+      "after": "build/sbt/04_configuration_classpaths_and_scala.md",
+      "linesBefore": 1068,
+      "linesAfter": 1098,
+      "codeBlocksBefore": 81,
+      "codeBlocksAfter": 81,
+      "verified": true
+    },
+    {
+      "before": "build/sbt/5_configuration_running_testing_caching.md",
+      "after": "build/sbt/05_configuration_running_testing_caching.md",
+      "linesBefore": 697,
+      "linesAfter": 783,
+      "codeBlocksBefore": 55,
+      "codeBlocksAfter": 55,
+      "verified": true
+    },
+    {
+      "before": "build/sbt/6_dependency_management_and_tasks.md",
+      "after": "build/sbt/06_dependency_management_and_tasks.md",
+      "linesBefore": 968,
+      "linesAfter": 1026,
+      "codeBlocksBefore": 66,
+      "codeBlocksAfter": 66,
+      "verified": true
+    },
+    {
+      "before": "build/sbt/7_plugins_best_practices.md",
+      "after": "build/sbt/07_plugins_best_practices.md",
+      "linesBefore": 1058,
+      "linesAfter": 1056,
+      "codeBlocksBefore": 62,
+      "codeBlocksAfter": 62,
+      "verified": true
+    },
+    {
+      "before": "build/sbt/8_howto_classpaths_interactive_commands.md",
+      "after": "build/sbt/08_howto_classpaths_interactive_commands.md",
+      "linesBefore": 954,
+      "linesAfter": 984,
+      "codeBlocksBefore": 75,
+      "codeBlocksAfter": 75,
+      "verified": true
+    },
+    {
+      "before": "build/sbt/9_howto_tracking_sequencing_examples.md",
+      "after": "build/sbt/09_howto_tracking_sequencing_examples.md",
+      "linesBefore": 1329,
+      "linesAfter": 1344,
+      "codeBlocksBefore": 49,
+      "codeBlocksAfter": 49,
+      "verified": true
+    },
+    {
+      "before": "db/cassandra/1_getting_started_architecture_modeling.md",
+      "after": "db/cassandra/01_getting_started_architecture_modeling.md",
+      "linesBefore": 1086,
+      "linesAfter": 1169,
+      "codeBlocksBefore": 23,
+      "codeBlocksAfter": 23,
+      "verified": true
+    },
+    {
+      "before": "db/cassandra/2_cql_definitions_and_ddl.md",
+      "after": "db/cassandra/02_cql_definitions_and_ddl.md",
+      "linesBefore": 1191,
+      "linesAfter": 1344,
+      "codeBlocksBefore": 63,
+      "codeBlocksAfter": 63,
+      "verified": true
+    },
+    {
+      "before": "db/cassandra/3_cql_dml_indexes_views.md",
+      "after": "db/cassandra/03_cql_dml_indexes_views.md",
+      "linesBefore": 995,
+      "linesAfter": 1069,
+      "codeBlocksBefore": 43,
+      "codeBlocksAfter": 43,
+      "verified": true
+    },
+    {
+      "before": "db/cassandra/4_cql_functions_json_triggers.md",
+      "after": "db/cassandra/04_cql_functions_json_triggers.md",
+      "linesBefore": 1256,
+      "linesAfter": 1277,
+      "codeBlocksBefore": 73,
+      "codeBlocksAfter": 73,
+      "verified": true
+    },
+    {
+      "before": "db/cassandra/5_configuration.md",
+      "after": "db/cassandra/05_configuration.md",
+      "linesBefore": 1184,
+      "linesAfter": 1188,
+      "codeBlocksBefore": 4,
+      "codeBlocksAfter": 4,
+      "verified": true
+    },
+    {
+      "before": "db/cassandra/6_operating_and_compaction.md",
+      "after": "db/cassandra/06_operating_and_compaction.md",
+      "linesBefore": 1174,
+      "linesAfter": 1461,
+      "codeBlocksBefore": 27,
+      "codeBlocksAfter": 27,
+      "verified": true
+    },
+    {
+      "before": "db/cassandra/7_backups_bulkloading_cdc.md",
+      "after": "db/cassandra/07_backups_bulkloading_cdc.md",
+      "linesBefore": 831,
+      "linesAfter": 888,
+      "codeBlocksBefore": 43,
+      "codeBlocksAfter": 43,
+      "verified": true
+    },
+    {
+      "before": "db/cassandra/8_security_and_monitoring.md",
+      "after": "db/cassandra/08_security_and_monitoring.md",
+      "linesBefore": 1617,
+      "linesAfter": 1643,
+      "codeBlocksBefore": 37,
+      "codeBlocksAfter": 37,
+      "verified": true
+    },
+    {
+      "before": "db/cassandra/9_tools_and_troubleshooting.md",
+      "after": "db/cassandra/09_tools_and_troubleshooting.md",
+      "linesBefore": 1599,
+      "linesAfter": 1758,
+      "codeBlocksBefore": 61,
+      "codeBlocksAfter": 61,
+      "verified": true
+    },
+    {
+      "before": "db/druid/1_getting_started_and_architecture.md",
+      "after": "db/druid/01_getting_started_and_architecture.md",
+      "linesBefore": 1250,
+      "linesAfter": 1356,
+      "codeBlocksBefore": 38,
+      "codeBlocksAfter": 38,
+      "verified": true
+    },
+    {
+      "before": "db/druid/2_ingestion_overview_and_streaming.md",
+      "after": "db/druid/02_ingestion_overview_and_streaming.md",
+      "linesBefore": 1339,
+      "linesAfter": 1457,
+      "codeBlocksBefore": 29,
+      "codeBlocksAfter": 29,
+      "verified": true
+    },
+    {
+      "before": "db/druid/3_batch_ingestion_and_data_management.md",
+      "after": "db/druid/03_batch_ingestion_and_data_management.md",
+      "linesBefore": 1671,
+      "linesAfter": 1785,
+      "codeBlocksBefore": 35,
+      "codeBlocksAfter": 35,
+      "verified": true
+    },
+    {
+      "before": "db/druid/4_querying.md",
+      "after": "db/druid/04_querying.md",
+      "linesBefore": 2230,
+      "linesAfter": 2351,
+      "codeBlocksBefore": 88,
+      "codeBlocksAfter": 88,
+      "verified": true
+    },
+    {
+      "before": "db/druid/5_configuration_and_operations.md",
+      "after": "db/druid/05_configuration_and_operations.md",
+      "linesBefore": 942,
+      "linesAfter": 989,
+      "codeBlocksBefore": 20,
+      "codeBlocksAfter": 20,
+      "verified": true
+    },
+    {
+      "before": "db/druid/6_security_and_api_reference.md",
+      "after": "db/druid/06_security_and_api_reference.md",
+      "linesBefore": 1100,
+      "linesAfter": 1169,
+      "codeBlocksBefore": 60,
+      "codeBlocksAfter": 60,
+      "verified": true
+    },
+    {
+      "before": "db/elasticsearch/1_getting_started_and_setup.md",
+      "after": "db/elasticsearch/01_getting_started_and_setup.md",
+      "linesBefore": 2288,
+      "linesAfter": 2382,
+      "codeBlocksBefore": 140,
+      "codeBlocksAfter": 140,
+      "verified": true
+    },
+    {
+      "before": "db/elasticsearch/2_index_modules_and_templates.md",
+      "after": "db/elasticsearch/02_index_modules_and_templates.md",
+      "linesBefore": 1813,
+      "linesAfter": 1820,
+      "codeBlocksBefore": 91,
+      "codeBlocksAfter": 91,
+      "verified": true
+    },
+    {
+      "before": "db/elasticsearch/3_mapping.md",
+      "after": "db/elasticsearch/03_mapping.md",
+      "linesBefore": 2231,
+      "linesAfter": 2341,
+      "codeBlocksBefore": 96,
+      "codeBlocksAfter": 96,
+      "verified": true
+    },
+    {
+      "before": "db/elasticsearch/4_text_analysis.md",
+      "after": "db/elasticsearch/04_text_analysis.md",
+      "linesBefore": 2220,
+      "linesAfter": 2245,
+      "codeBlocksBefore": 85,
+      "codeBlocksAfter": 85,
+      "verified": true
+    },
+    {
+      "before": "db/elasticsearch/5_query_dsl_and_aggregations.md",
+      "after": "db/elasticsearch/05_query_dsl_and_aggregations.md",
+      "linesBefore": 2168,
+      "linesAfter": 2213,
+      "codeBlocksBefore": 80,
+      "codeBlocksAfter": 80,
+      "verified": true
+    },
+    {
+      "before": "db/elasticsearch/6_search.md",
+      "after": "db/elasticsearch/06_search.md",
+      "linesBefore": 1510,
+      "linesAfter": 1569,
+      "codeBlocksBefore": 54,
+      "codeBlocksAfter": 54,
+      "verified": true
+    },
+    {
+      "before": "db/elasticsearch/7_scripting_and_esql.md",
+      "after": "db/elasticsearch/07_scripting_and_esql.md",
+      "linesBefore": 2727,
+      "linesAfter": 2777,
+      "codeBlocksBefore": 129,
+      "codeBlocksAfter": 129,
+      "verified": true
+    },
+    {
+      "before": "db/elasticsearch/8_vector_search_and_sql.md",
+      "after": "db/elasticsearch/08_vector_search_and_sql.md",
+      "linesBefore": 2271,
+      "linesAfter": 2276,
+      "codeBlocksBefore": 89,
+      "codeBlocksAfter": 89,
+      "verified": true
+    },
+    {
+      "before": "db/elasticsearch/9_ingest_and_data_streams.md",
+      "after": "db/elasticsearch/09_ingest_and_data_streams.md",
+      "linesBefore": 2404,
+      "linesAfter": 2394,
+      "codeBlocksBefore": 111,
+      "codeBlocksAfter": 111,
+      "verified": true
+    },
+    {
+      "before": "db/postgresql/1_tutorial_and_sql_language.md",
+      "after": "db/postgresql/01_tutorial_and_sql_language.md",
+      "linesBefore": 9119,
+      "linesAfter": 9780,
+      "codeBlocksBefore": 542,
+      "codeBlocksAfter": 542,
+      "verified": true
+    },
+    {
+      "before": "db/postgresql/2_indexes_concurrency_performance.md",
+      "after": "db/postgresql/02_indexes_concurrency_performance.md",
+      "linesBefore": 5492,
+      "linesAfter": 5856,
+      "codeBlocksBefore": 285,
+      "codeBlocksAfter": 285,
+      "verified": true
+    },
+    {
+      "before": "db/postgresql/3_server_administration.md",
+      "after": "db/postgresql/03_server_administration.md",
+      "linesBefore": 10816,
+      "linesAfter": 11805,
+      "codeBlocksBefore": 432,
+      "codeBlocksAfter": 432,
+      "verified": true
+    },
+    {
+      "before": "db/postgresql/4_client_interfaces.md",
+      "after": "db/postgresql/04_client_interfaces.md",
+      "linesBefore": 5079,
+      "linesAfter": 5153,
+      "codeBlocksBefore": 254,
+      "codeBlocksAfter": 254,
+      "verified": true
+    },
+    {
+      "before": "db/postgresql/5_server_programming_extending_and_languages.md",
+      "after": "db/postgresql/05_server_programming_extending_and_languages.md",
+      "linesBefore": 8142,
+      "linesAfter": 8291,
+      "codeBlocksBefore": 371,
+      "codeBlocksAfter": 371,
+      "verified": true
+    },
+    {
+      "before": "db/postgresql/6_server_programming_spi_and_replication_hooks.md",
+      "after": "db/postgresql/06_server_programming_spi_and_replication_hooks.md",
+      "linesBefore": 3868,
+      "linesAfter": 3902,
+      "codeBlocksBefore": 138,
+      "codeBlocksAfter": 138,
+      "verified": true
+    },
+    {
+      "before": "db/postgresql/7_internals_extension_interfaces_and_index_am.md",
+      "after": "db/postgresql/07_internals_extension_interfaces_and_index_am.md",
+      "linesBefore": 8069,
+      "linesAfter": 8103,
+      "codeBlocksBefore": 312,
+      "codeBlocksAfter": 312,
+      "verified": true
+    },
+    {
+      "before": "db/postgresql/8_internals_storage_catalogs_protocol_planner.md",
+      "after": "db/postgresql/08_internals_storage_catalogs_protocol_planner.md",
+      "linesBefore": 8663,
+      "linesAfter": 8728,
+      "codeBlocksBefore": 356,
+      "codeBlocksAfter": 356,
+      "verified": true
+    },
+    {
+      "before": "db/postgresql/9_reference_and_appendix.md",
+      "after": "db/postgresql/09_reference_and_appendix.md",
+      "linesBefore": 9963,
+      "linesAfter": 10033,
+      "codeBlocksBefore": 522,
+      "codeBlocksAfter": 522,
+      "verified": true
+    },
+    {
+      "before": "devops/kubernetes/argo-workflows/01_overview_and_architecture.md",
+      "after": "devops/kubernetes/argo-workflows/01_overview_and_architecture.md",
+      "linesBefore": 138,
+      "linesAfter": 138,
+      "codeBlocksBefore": 3,
+      "codeBlocksAfter": 3,
+      "verified": true
+    },
+    {
+      "before": "devops/kubernetes/argo-workflows/02_workflow_spec_and_templates.md",
+      "after": "devops/kubernetes/argo-workflows/02_workflow_spec_and_templates.md",
+      "linesBefore": 201,
+      "linesAfter": 201,
+      "codeBlocksBefore": 7,
+      "codeBlocksAfter": 7,
+      "verified": true
+    },
+    {
+      "before": "devops/kubernetes/argo-workflows/03_steps_and_dag.md",
+      "after": "devops/kubernetes/argo-workflows/03_steps_and_dag.md",
+      "linesBefore": 212,
+      "linesAfter": 212,
+      "codeBlocksBefore": 8,
+      "codeBlocksAfter": 8,
+      "verified": true
+    },
+    {
+      "before": "devops/kubernetes/argo-workflows/04_parameters_variables_and_control_flow.md",
+      "after": "devops/kubernetes/argo-workflows/04_parameters_variables_and_control_flow.md",
+      "linesBefore": 221,
+      "linesAfter": 222,
+      "codeBlocksBefore": 11,
+      "codeBlocksAfter": 11,
+      "verified": true
+    },
+    {
+      "before": "devops/kubernetes/argo-workflows/05_artifacts_and_data_flow.md",
+      "after": "devops/kubernetes/argo-workflows/05_artifacts_and_data_flow.md",
+      "linesBefore": 205,
+      "linesAfter": 205,
+      "codeBlocksBefore": 9,
+      "codeBlocksAfter": 9,
+      "verified": true
+    },
+    {
+      "before": "devops/kubernetes/argo-workflows/06_retries_lifecycle_hooks_and_synchronization.md",
+      "after": "devops/kubernetes/argo-workflows/06_retries_lifecycle_hooks_and_synchronization.md",
+      "linesBefore": 199,
+      "linesAfter": 201,
+      "codeBlocksBefore": 9,
+      "codeBlocksAfter": 9,
+      "verified": true
+    },
+    {
+      "before": "devops/kubernetes/argo-workflows/07_workflow_templates_and_operations.md",
+      "after": "devops/kubernetes/argo-workflows/07_workflow_templates_and_operations.md",
+      "linesBefore": 209,
+      "linesAfter": 209,
+      "codeBlocksBefore": 9,
+      "codeBlocksAfter": 9,
+      "verified": true
+    },
+    {
+      "before": "devops/kubernetes/argo-workflows/08_cronworkflow_scheduling_and_policies.md",
+      "after": "devops/kubernetes/argo-workflows/08_cronworkflow_scheduling_and_policies.md",
+      "linesBefore": 237,
+      "linesAfter": 238,
+      "codeBlocksBefore": 13,
+      "codeBlocksAfter": 13,
+      "verified": true
+    },
+    {
+      "before": "devops/kubernetes/argo-workflows/09_field_reference_and_operational_practices.md",
+      "after": "devops/kubernetes/argo-workflows/09_field_reference_and_operational_practices.md",
+      "linesBefore": 226,
+      "linesAfter": 227,
+      "codeBlocksBefore": 3,
+      "codeBlocksAfter": 3,
+      "verified": true
+    },
+    {
+      "before": "devops/linux/directory/README.md",
+      "after": "devops/linux/directory/README.md",
+      "linesBefore": 43,
+      "linesAfter": 44,
+      "codeBlocksBefore": 0,
+      "codeBlocksAfter": 0,
+      "verified": true
+    },
+    {
+      "before": "devops/linux/directory/cgroups.md",
+      "after": "devops/linux/directory/06_cgroups.md",
+      "linesBefore": 299,
+      "linesAfter": 311,
+      "codeBlocksBefore": 5,
+      "codeBlocksAfter": 5,
+      "verified": true
+    },
+    {
+      "before": "devops/linux/directory/dev.md",
+      "after": "devops/linux/directory/01_dev.md",
+      "linesBefore": 112,
+      "linesAfter": 118,
+      "codeBlocksBefore": 2,
+      "codeBlocksAfter": 2,
+      "verified": true
+    },
+    {
+      "before": "devops/linux/directory/namespaces.md",
+      "after": "devops/linux/directory/07_namespaces.md",
+      "linesBefore": 322,
+      "linesAfter": 334,
+      "codeBlocksBefore": 13,
+      "codeBlocksAfter": 13,
+      "verified": true
+    },
+    {
+      "before": "devops/linux/directory/proc.md",
+      "after": "devops/linux/directory/02_proc.md",
+      "linesBefore": 166,
+      "linesAfter": 170,
+      "codeBlocksBefore": 4,
+      "codeBlocksAfter": 4,
+      "verified": true
+    },
+    {
+      "before": "devops/linux/directory/run.md",
+      "after": "devops/linux/directory/04_run.md",
+      "linesBefore": 117,
+      "linesAfter": 121,
+      "codeBlocksBefore": 6,
+      "codeBlocksAfter": 6,
+      "verified": true
+    },
+    {
+      "before": "devops/linux/directory/sys.md",
+      "after": "devops/linux/directory/03_sys.md",
+      "linesBefore": 233,
+      "linesAfter": 237,
+      "codeBlocksBefore": 10,
+      "codeBlocksAfter": 10,
+      "verified": true
+    },
+    {
+      "before": "devops/linux/directory/tmp.md",
+      "after": "devops/linux/directory/05_tmp.md",
+      "linesBefore": 126,
+      "linesAfter": 128,
+      "codeBlocksBefore": 3,
+      "codeBlocksAfter": 3,
+      "verified": true
+    },
+    {
+      "before": "devops/linux/ebpf/1_architecture_and_program_types.md",
+      "after": "devops/linux/ebpf/01_architecture_and_program_types.md",
+      "linesBefore": 586,
+      "linesAfter": 591,
+      "codeBlocksBefore": 23,
+      "codeBlocksAfter": 23,
+      "verified": true
+    },
+    {
+      "before": "devops/linux/ebpf/2_maps_and_helpers.md",
+      "after": "devops/linux/ebpf/02_maps_and_helpers.md",
+      "linesBefore": 698,
+      "linesAfter": 746,
+      "codeBlocksBefore": 43,
+      "codeBlocksAfter": 43,
+      "verified": true
+    },
+    {
+      "before": "devops/linux/ebpf/3_libbpf_and_bpftool.md",
+      "after": "devops/linux/ebpf/03_libbpf_and_bpftool.md",
+      "linesBefore": 765,
+      "linesAfter": 763,
+      "codeBlocksBefore": 62,
+      "codeBlocksAfter": 62,
+      "verified": true
+    },
+    {
+      "before": "devops/linux/ebpf/4_bcc_and_bpftrace.md",
+      "after": "devops/linux/ebpf/04_bcc_and_bpftrace.md",
+      "linesBefore": 849,
+      "linesAfter": 843,
+      "codeBlocksBefore": 52,
+      "codeBlocksAfter": 52,
+      "verified": true
+    },
+    {
+      "before": "devops/linux/ebpf/5_tracing_and_networking.md",
+      "after": "devops/linux/ebpf/05_tracing_and_networking.md",
+      "linesBefore": 735,
+      "linesAfter": 735,
+      "codeBlocksBefore": 35,
+      "codeBlocksAfter": 35,
+      "verified": true
+    },
+    {
+      "before": "devops/linux/journald/01_overview.md",
+      "after": "devops/linux/journald/01_overview.md",
+      "linesBefore": 266,
+      "linesAfter": 271,
+      "codeBlocksBefore": 10,
+      "codeBlocksAfter": 10,
+      "verified": true
+    },
+    {
+      "before": "devops/linux/journald/02_journalctl.md",
+      "after": "devops/linux/journald/02_journalctl.md",
+      "linesBefore": 346,
+      "linesAfter": 345,
+      "codeBlocksBefore": 31,
+      "codeBlocksAfter": 31,
+      "verified": true
+    },
+    {
+      "before": "devops/linux/journald/03_journald_conf.md",
+      "after": "devops/linux/journald/03_journald_conf.md",
+      "linesBefore": 361,
+      "linesAfter": 362,
+      "codeBlocksBefore": 27,
+      "codeBlocksAfter": 27,
+      "verified": true
+    },
+    {
+      "before": "devops/linux/journald/04_journal_fields.md",
+      "after": "devops/linux/journald/04_journal_fields.md",
+      "linesBefore": 289,
+      "linesAfter": 296,
+      "codeBlocksBefore": 14,
+      "codeBlocksAfter": 14,
+      "verified": true
+    },
+    {
+      "before": "devops/linux/journald/05_filtering_queries.md",
+      "after": "devops/linux/journald/05_filtering_queries.md",
+      "linesBefore": 317,
+      "linesAfter": 317,
+      "codeBlocksBefore": 30,
+      "codeBlocksAfter": 30,
+      "verified": true
+    },
+    {
+      "before": "devops/linux/journald/06_persistent_storage_rotation.md",
+      "after": "devops/linux/journald/06_persistent_storage_rotation.md",
+      "linesBefore": 350,
+      "linesAfter": 354,
+      "codeBlocksBefore": 26,
+      "codeBlocksAfter": 26,
+      "verified": true
+    },
+    {
+      "before": "devops/linux/journald/07_forwarding_remote.md",
+      "after": "devops/linux/journald/07_forwarding_remote.md",
+      "linesBefore": 326,
+      "linesAfter": 330,
+      "codeBlocksBefore": 22,
+      "codeBlocksAfter": 22,
+      "verified": true
+    },
+    {
+      "before": "devops/linux/journald/08_namespaces_security.md",
+      "after": "devops/linux/journald/08_namespaces_security.md",
+      "linesBefore": 291,
+      "linesAfter": 295,
+      "codeBlocksBefore": 21,
+      "codeBlocksAfter": 21,
+      "verified": true
+    },
+    {
+      "before": "devops/linux/systemd/1_introduction_and_unit_files.md",
+      "after": "devops/linux/systemd/01_introduction_and_unit_files.md",
+      "linesBefore": 431,
+      "linesAfter": 441,
+      "codeBlocksBefore": 7,
+      "codeBlocksAfter": 7,
+      "verified": true
+    },
+    {
+      "before": "devops/linux/systemd/2_service_units_and_sandboxing.md",
+      "after": "devops/linux/systemd/02_service_units_and_sandboxing.md",
+      "linesBefore": 1077,
+      "linesAfter": 1107,
+      "codeBlocksBefore": 64,
+      "codeBlocksAfter": 64,
+      "verified": true
+    },
+    {
+      "before": "devops/linux/systemd/3_timer_socket_path_units.md",
+      "after": "devops/linux/systemd/03_timer_socket_path_units.md",
+      "linesBefore": 967,
+      "linesAfter": 954,
+      "codeBlocksBefore": 69,
+      "codeBlocksAfter": 69,
+      "verified": true
+    },
+    {
+      "before": "devops/linux/systemd/4_mount_targets_and_boot.md",
+      "after": "devops/linux/systemd/04_mount_targets_and_boot.md",
+      "linesBefore": 505,
+      "linesAfter": 500,
+      "codeBlocksBefore": 23,
+      "codeBlocksAfter": 23,
+      "verified": true
+    },
+    {
+      "before": "devops/linux/systemd/5_systemctl_and_analyze.md",
+      "after": "devops/linux/systemd/05_systemctl_and_analyze.md",
+      "linesBefore": 638,
+      "linesAfter": 642,
+      "codeBlocksBefore": 52,
+      "codeBlocksAfter": 52,
+      "verified": true
+    },
+    {
+      "before": "devops/linux/systemd/6_user_units_generators_dropins.md",
+      "after": "devops/linux/systemd/06_user_units_generators_dropins.md",
+      "linesBefore": 679,
+      "linesAfter": 682,
+      "codeBlocksBefore": 43,
+      "codeBlocksAfter": 43,
+      "verified": true
+    },
+    {
+      "before": "devops/linux/systemd/7_networkd_and_resolved.md",
+      "after": "devops/linux/systemd/07_networkd_and_resolved.md",
+      "linesBefore": 409,
+      "linesAfter": 407,
+      "codeBlocksBefore": 23,
+      "codeBlocksAfter": 23,
+      "verified": true
+    },
+    {
+      "before": "devops/observability/grafana/grafana_alloy/1_overview_and_concepts.md",
+      "after": "devops/observability/grafana/grafana_alloy/01_overview_and_concepts.md",
+      "linesBefore": 808,
+      "linesAfter": 822,
+      "codeBlocksBefore": 26,
+      "codeBlocksAfter": 26,
+      "verified": true
+    },
+    {
+      "before": "devops/observability/grafana/grafana_alloy/2_install_and_run.md",
+      "after": "devops/observability/grafana/grafana_alloy/02_install_and_run.md",
+      "linesBefore": 888,
+      "linesAfter": 883,
+      "codeBlocksBefore": 53,
+      "codeBlocksAfter": 53,
+      "verified": true
+    },
+    {
+      "before": "devops/observability/grafana/grafana_alloy/3_configuration.md",
+      "after": "devops/observability/grafana/grafana_alloy/03_configuration.md",
+      "linesBefore": 1202,
+      "linesAfter": 1194,
+      "codeBlocksBefore": 47,
+      "codeBlocksAfter": 47,
+      "verified": true
+    },
+    {
+      "before": "devops/observability/grafana/grafana_alloy/4_collect_data.md",
+      "after": "devops/observability/grafana/grafana_alloy/04_collect_data.md",
+      "linesBefore": 1457,
+      "linesAfter": 1451,
+      "codeBlocksBefore": 52,
+      "codeBlocksAfter": 52,
+      "verified": true
+    },
+    {
+      "before": "devops/observability/grafana/grafana_alloy/5_components_and_stdlib.md",
+      "after": "devops/observability/grafana/grafana_alloy/05_components_and_stdlib.md",
+      "linesBefore": 1264,
+      "linesAfter": 1261,
+      "codeBlocksBefore": 71,
+      "codeBlocksAfter": 71,
+      "verified": true
+    },
+    {
+      "before": "devops/observability/grafana/grafana_alloy/6_clustering_and_migration.md",
+      "after": "devops/observability/grafana/grafana_alloy/06_clustering_and_migration.md",
+      "linesBefore": 1060,
+      "linesAfter": 1055,
+      "codeBlocksBefore": 40,
+      "codeBlocksAfter": 40,
+      "verified": true
+    },
+    {
+      "before": "devops/observability/grafana/grafana_alloy/7_cli_and_http_endpoints.md",
+      "after": "devops/observability/grafana/grafana_alloy/07_cli_and_http_endpoints.md",
+      "linesBefore": 986,
+      "linesAfter": 979,
+      "codeBlocksBefore": 54,
+      "codeBlocksAfter": 54,
+      "verified": true
+    },
+    {
+      "before": "devops/observability/grafana/grafana_loki/1_overview_components_deployment.md",
+      "after": "devops/observability/grafana/grafana_loki/01_overview_components_deployment.md",
+      "linesBefore": 664,
+      "linesAfter": 671,
+      "codeBlocksBefore": 6,
+      "codeBlocksAfter": 6,
+      "verified": true
+    },
+    {
+      "before": "devops/observability/grafana/grafana_loki/2_logql.md",
+      "after": "devops/observability/grafana/grafana_loki/02_logql.md",
+      "linesBefore": 408,
+      "linesAfter": 407,
+      "codeBlocksBefore": 28,
+      "codeBlocksAfter": 28,
+      "verified": true
+    },
+    {
+      "before": "devops/observability/grafana/grafana_loki/3_install_configure_send_logs.md",
+      "after": "devops/observability/grafana/grafana_loki/03_install_configure_send_logs.md",
+      "linesBefore": 1533,
+      "linesAfter": 1532,
+      "codeBlocksBefore": 68,
+      "codeBlocksAfter": 68,
+      "verified": true
+    },
+    {
+      "before": "devops/observability/grafana/grafana_loki/4_manage_and_alerting.md",
+      "after": "devops/observability/grafana/grafana_loki/04_manage_and_alerting.md",
+      "linesBefore": 980,
+      "linesAfter": 974,
+      "codeBlocksBefore": 56,
+      "codeBlocksAfter": 56,
+      "verified": true
+    },
+    {
+      "before": "devops/observability/grafana/grafana_loki/5_canary_advanced_best_practices.md",
+      "after": "devops/observability/grafana/grafana_loki/05_canary_advanced_best_practices.md",
+      "linesBefore": 1371,
+      "linesAfter": 1365,
+      "codeBlocksBefore": 65,
+      "codeBlocksAfter": 65,
+      "verified": true
+    },
+    {
+      "before": "devops/observability/grafana/grafana_loki/6_http_api.md",
+      "after": "devops/observability/grafana/grafana_loki/06_http_api.md",
+      "linesBefore": 599,
+      "linesAfter": 608,
+      "codeBlocksBefore": 37,
+      "codeBlocksAfter": 37,
+      "verified": true
+    },
+    {
+      "before": "devops/observability/grafana/grafana_loki/7_migration_and_visualization.md",
+      "after": "devops/observability/grafana/grafana_loki/07_migration_and_visualization.md",
+      "linesBefore": 920,
+      "linesAfter": 921,
+      "codeBlocksBefore": 42,
+      "codeBlocksAfter": 42,
+      "verified": true
+    },
+    {
+      "before": "devops/observability/grafana/grafana_mimir/1_overview_architecture_get_started.md",
+      "after": "devops/observability/grafana/grafana_mimir/01_overview_architecture_get_started.md",
+      "linesBefore": 1061,
+      "linesAfter": 1061,
+      "codeBlocksBefore": 27,
+      "codeBlocksAfter": 27,
+      "verified": true
+    },
+    {
+      "before": "devops/observability/grafana/grafana_mimir/2_send_metrics_and_promql.md",
+      "after": "devops/observability/grafana/grafana_mimir/02_send_metrics_and_promql.md",
+      "linesBefore": 941,
+      "linesAfter": 935,
+      "codeBlocksBefore": 52,
+      "codeBlocksAfter": 52,
+      "verified": true
+    },
+    {
+      "before": "devops/observability/grafana/grafana_mimir/3_alertmanager.md",
+      "after": "devops/observability/grafana/grafana_mimir/03_alertmanager.md",
+      "linesBefore": 556,
+      "linesAfter": 552,
+      "codeBlocksBefore": 29,
+      "codeBlocksAfter": 29,
+      "verified": true
+    },
+    {
+      "before": "devops/observability/grafana/grafana_mimir/4_manage_and_configure.md",
+      "after": "devops/observability/grafana/grafana_mimir/04_manage_and_configure.md",
+      "linesBefore": 1155,
+      "linesAfter": 1147,
+      "codeBlocksBefore": 52,
+      "codeBlocksAfter": 52,
+      "verified": true
+    },
+    {
+      "before": "devops/observability/grafana/grafana_mimir/5_tools_and_visualization.md",
+      "after": "devops/observability/grafana/grafana_mimir/05_tools_and_visualization.md",
+      "linesBefore": 1107,
+      "linesAfter": 1096,
+      "codeBlocksBefore": 68,
+      "codeBlocksAfter": 68,
+      "verified": true
+    },
+    {
+      "before": "devops/observability/grafana/grafana_mimir/6_secure_and_production.md",
+      "after": "devops/observability/grafana/grafana_mimir/06_secure_and_production.md",
+      "linesBefore": 1369,
+      "linesAfter": 1376,
+      "codeBlocksBefore": 69,
+      "codeBlocksAfter": 69,
+      "verified": true
+    },
+    {
+      "before": "devops/observability/grafana/grafana_mimir/7_http_api.md",
+      "after": "devops/observability/grafana/grafana_mimir/07_http_api.md",
+      "linesBefore": 590,
+      "linesAfter": 592,
+      "codeBlocksBefore": 38,
+      "codeBlocksAfter": 38,
+      "verified": true
+    },
+    {
+      "before": "devops/observability/grafana/grafana_pyroscope/1_overview_architecture_deployment.md",
+      "after": "devops/observability/grafana/grafana_pyroscope/01_overview_architecture_deployment.md",
+      "linesBefore": 710,
+      "linesAfter": 703,
+      "codeBlocksBefore": 10,
+      "codeBlocksAfter": 10,
+      "verified": true
+    },
+    {
+      "before": "devops/observability/grafana/grafana_pyroscope/2_profile_types_and_flamegraphs.md",
+      "after": "devops/observability/grafana/grafana_pyroscope/02_profile_types_and_flamegraphs.md",
+      "linesBefore": 428,
+      "linesAfter": 425,
+      "codeBlocksBefore": 6,
+      "codeBlocksAfter": 6,
+      "verified": true
+    },
+    {
+      "before": "devops/observability/grafana/grafana_pyroscope/3_instrumentation.md",
+      "after": "devops/observability/grafana/grafana_pyroscope/03_instrumentation.md",
+      "linesBefore": 353,
+      "linesAfter": 349,
+      "codeBlocksBefore": 18,
+      "codeBlocksAfter": 18,
+      "verified": true
+    },
+    {
+      "before": "devops/observability/grafana/grafana_pyroscope/4_manage_use_cases_configuration.md",
+      "after": "devops/observability/grafana/grafana_pyroscope/04_manage_use_cases_configuration.md",
+      "linesBefore": 885,
+      "linesAfter": 879,
+      "codeBlocksBefore": 29,
+      "codeBlocksAfter": 29,
+      "verified": true
+    },
+    {
+      "before": "devops/observability/grafana/grafana_pyroscope/5_cli_api_visualization.md",
+      "after": "devops/observability/grafana/grafana_pyroscope/05_cli_api_visualization.md",
+      "linesBefore": 801,
+      "linesAfter": 786,
+      "codeBlocksBefore": 47,
+      "codeBlocksAfter": 47,
+      "verified": true
+    },
+    {
+      "before": "devops/observability/grafana/grafana_tempo/1_architecture_and_deployment.md",
+      "after": "devops/observability/grafana/grafana_tempo/01_architecture_and_deployment.md",
+      "linesBefore": 713,
+      "linesAfter": 709,
+      "codeBlocksBefore": 20,
+      "codeBlocksAfter": 20,
+      "verified": true
+    },
+    {
+      "before": "devops/observability/grafana/grafana_tempo/2_traceql_and_metrics_generator.md",
+      "after": "devops/observability/grafana/grafana_tempo/02_traceql_and_metrics_generator.md",
+      "linesBefore": 826,
+      "linesAfter": 817,
+      "codeBlocksBefore": 49,
+      "codeBlocksAfter": 49,
+      "verified": true
+    },
+    {
+      "before": "devops/observability/grafana/grafana_tempo/3_instrumentation.md",
+      "after": "devops/observability/grafana/grafana_tempo/03_instrumentation.md",
+      "linesBefore": 555,
+      "linesAfter": 554,
+      "codeBlocksBefore": 25,
+      "codeBlocksAfter": 25,
+      "verified": true
+    },
+    {
+      "before": "devops/observability/grafana/grafana_tempo/4_manage_and_use_cases.md",
+      "after": "devops/observability/grafana/grafana_tempo/04_manage_and_use_cases.md",
+      "linesBefore": 857,
+      "linesAfter": 859,
+      "codeBlocksBefore": 51,
+      "codeBlocksAfter": 51,
+      "verified": true
+    },
+    {
+      "before": "devops/observability/grafana/grafana_tempo/5_configuration.md",
+      "after": "devops/observability/grafana/grafana_tempo/05_configuration.md",
+      "linesBefore": 682,
+      "linesAfter": 679,
+      "codeBlocksBefore": 16,
+      "codeBlocksAfter": 16,
+      "verified": true
+    },
+    {
+      "before": "devops/observability/grafana/grafana_tempo/6_cli_api_visualization.md",
+      "after": "devops/observability/grafana/grafana_tempo/06_cli_api_visualization.md",
+      "linesBefore": 1508,
+      "linesAfter": 1505,
+      "codeBlocksBefore": 93,
+      "codeBlocksAfter": 93,
+      "verified": true
+    },
+    {
+      "before": "devops/observability/opentelemetry/01_introduction.md",
+      "after": "devops/observability/opentelemetry/01_introduction.md",
+      "linesBefore": 249,
+      "linesAfter": 260,
+      "codeBlocksBefore": 1,
+      "codeBlocksAfter": 1,
+      "verified": true
+    },
+    {
+      "before": "devops/observability/opentelemetry/02_signals.md",
+      "after": "devops/observability/opentelemetry/02_signals.md",
+      "linesBefore": 283,
+      "linesAfter": 284,
+      "codeBlocksBefore": 8,
+      "codeBlocksAfter": 8,
+      "verified": true
+    },
+    {
+      "before": "devops/observability/opentelemetry/03_traces.md",
+      "after": "devops/observability/opentelemetry/03_traces.md",
+      "linesBefore": 403,
+      "linesAfter": 415,
+      "codeBlocksBefore": 18,
+      "codeBlocksAfter": 18,
+      "verified": true
+    },
+    {
+      "before": "devops/observability/opentelemetry/04_metrics.md",
+      "after": "devops/observability/opentelemetry/04_metrics.md",
+      "linesBefore": 377,
+      "linesAfter": 375,
+      "codeBlocksBefore": 18,
+      "codeBlocksAfter": 18,
+      "verified": true
+    },
+    {
+      "before": "devops/observability/opentelemetry/05_collector.md",
+      "after": "devops/observability/opentelemetry/05_collector.md",
+      "linesBefore": 658,
+      "linesAfter": 662,
+      "codeBlocksBefore": 32,
+      "codeBlocksAfter": 32,
+      "verified": true
+    },
+    {
+      "before": "devops/observability/opentelemetry/06_otlp.md",
+      "after": "devops/observability/opentelemetry/06_otlp.md",
+      "linesBefore": 497,
+      "linesAfter": 500,
+      "codeBlocksBefore": 20,
+      "codeBlocksAfter": 20,
+      "verified": true
+    },
+    {
+      "before": "devops/observability/vector/1_getting_started_and_installation.md",
+      "after": "devops/observability/vector/01_getting_started_and_installation.md",
+      "linesBefore": 1495,
+      "linesAfter": 1555,
+      "codeBlocksBefore": 91,
+      "codeBlocksAfter": 91,
+      "verified": true
+    },
+    {
+      "before": "devops/observability/vector/2_configuration.md",
+      "after": "devops/observability/vector/02_configuration.md",
+      "linesBefore": 1534,
+      "linesAfter": 1586,
+      "codeBlocksBefore": 70,
+      "codeBlocksAfter": 70,
+      "verified": true
+    },
+    {
+      "before": "devops/observability/vector/3_sources.md",
+      "after": "devops/observability/vector/03_sources.md",
+      "linesBefore": 2844,
+      "linesAfter": 2907,
+      "codeBlocksBefore": 140,
+      "codeBlocksAfter": 140,
+      "verified": true
+    },
+    {
+      "before": "devops/observability/vector/4_transforms_and_sinks.md",
+      "after": "devops/observability/vector/04_transforms_and_sinks.md",
+      "linesBefore": 3096,
+      "linesAfter": 3096,
+      "codeBlocksBefore": 143,
+      "codeBlocksAfter": 143,
+      "verified": true
+    },
+    {
+      "before": "devops/observability/vector/5_vrl.md",
+      "after": "devops/observability/vector/05_vrl.md",
+      "linesBefore": 1746,
+      "linesAfter": 1758,
+      "codeBlocksBefore": 128,
+      "codeBlocksAfter": 128,
+      "verified": true
+    },
+    {
+      "before": "devops/observability/vector/6_administration_deployment_production.md",
+      "after": "devops/observability/vector/06_administration_deployment_production.md",
+      "linesBefore": 2421,
+      "linesAfter": 2491,
+      "codeBlocksBefore": 99,
+      "codeBlocksAfter": 99,
+      "verified": true
+    },
+    {
+      "before": "devops/observability/vector/7_architecture_and_data_model.md",
+      "after": "devops/observability/vector/07_architecture_and_data_model.md",
+      "linesBefore": 912,
+      "linesAfter": 977,
+      "codeBlocksBefore": 22,
+      "codeBlocksAfter": 22,
+      "verified": true
+    },
+    {
+      "before": "frontend/biome/1_guide.md",
+      "after": "frontend/biome/01_guide.md",
+      "linesBefore": 384,
+      "linesAfter": 393,
+      "codeBlocksBefore": 20,
+      "codeBlocksAfter": 20,
+      "verified": true
+    },
+    {
+      "before": "frontend/biome/2_formatter_linter.md",
+      "after": "frontend/biome/02_formatter_linter.md",
+      "linesBefore": 226,
+      "linesAfter": 233,
+      "codeBlocksBefore": 13,
+      "codeBlocksAfter": 13,
+      "verified": true
+    },
+    {
+      "before": "frontend/biome/3_cli_internals.md",
+      "after": "frontend/biome/03_cli_internals.md",
+      "linesBefore": 222,
+      "linesAfter": 226,
+      "codeBlocksBefore": 1,
+      "codeBlocksAfter": 1,
+      "verified": true
+    },
+    {
+      "before": "frontend/browser/automation-internals/README.md",
+      "after": "frontend/browser/automation-internals/README.md",
+      "linesBefore": 17,
+      "linesAfter": 18,
+      "codeBlocksBefore": 0,
+      "codeBlocksAfter": 0,
+      "verified": true
+    },
+    {
+      "before": "frontend/browser/automation-internals/blink-coordinate-spaces.md",
+      "after": "frontend/browser/automation-internals/03_blink-coordinate-spaces.md",
+      "linesBefore": 74,
+      "linesAfter": 68,
+      "codeBlocksBefore": 2,
+      "codeBlocksAfter": 2,
+      "verified": true
+    },
+    {
+      "before": "frontend/browser/automation-internals/chrome-debugger-and-keepalive.md",
+      "after": "frontend/browser/automation-internals/01_chrome-debugger-and-keepalive.md",
+      "linesBefore": 64,
+      "linesAfter": 58,
+      "codeBlocksBefore": 1,
+      "codeBlocksAfter": 1,
+      "verified": true
+    },
+    {
+      "before": "frontend/browser/automation-internals/chrome-devtools-mcp.md",
+      "after": "frontend/browser/automation-internals/06_chrome-devtools-mcp.md",
+      "linesBefore": 88,
+      "linesAfter": 81,
+      "codeBlocksBefore": 2,
+      "codeBlocksAfter": 2,
+      "verified": true
+    },
+    {
+      "before": "frontend/browser/automation-internals/chrome-permissions-list.md",
+      "after": "frontend/browser/automation-internals/02_chrome-permissions-list.md",
+      "linesBefore": 71,
+      "linesAfter": 60,
+      "codeBlocksBefore": 1,
+      "codeBlocksAfter": 1,
+      "verified": true
+    },
+    {
+      "before": "frontend/browser/automation-internals/mdn-input-events-reference.md",
+      "after": "frontend/browser/automation-internals/07_mdn-input-events-reference.md",
+      "linesBefore": 76,
+      "linesAfter": 69,
+      "codeBlocksBefore": 3,
+      "codeBlocksAfter": 3,
+      "verified": true
+    },
+    {
+      "before": "frontend/browser/automation-internals/oopif-site-isolation.md",
+      "after": "frontend/browser/automation-internals/04_oopif-site-isolation.md",
+      "linesBefore": 73,
+      "linesAfter": 66,
+      "codeBlocksBefore": 1,
+      "codeBlocksAfter": 1,
+      "verified": true
+    },
+    {
+      "before": "frontend/browser/automation-internals/trusted-input-implementations.md",
+      "after": "frontend/browser/automation-internals/08_trusted-input-implementations.md",
+      "linesBefore": 98,
+      "linesAfter": 94,
+      "codeBlocksBefore": 2,
+      "codeBlocksAfter": 2,
+      "verified": true
+    },
+    {
+      "before": "frontend/browser/automation-internals/user-activation.md",
+      "after": "frontend/browser/automation-internals/05_user-activation.md",
+      "linesBefore": 74,
+      "linesAfter": 66,
+      "codeBlocksBefore": 2,
+      "codeBlocksAfter": 2,
+      "verified": true
+    },
+    {
+      "before": "frontend/browser/cdp/README.md",
+      "after": "frontend/browser/cdp/README.md",
+      "linesBefore": 16,
+      "linesAfter": 17,
+      "codeBlocksBefore": 0,
+      "codeBlocksAfter": 0,
+      "verified": true
+    },
+    {
+      "before": "frontend/browser/cdp/accessibility.md",
+      "after": "frontend/browser/cdp/06_accessibility.md",
+      "linesBefore": 91,
+      "linesAfter": 81,
+      "codeBlocksBefore": 3,
+      "codeBlocksAfter": 3,
+      "verified": true
+    },
+    {
+      "before": "frontend/browser/cdp/dom.md",
+      "after": "frontend/browser/cdp/04_dom.md",
+      "linesBefore": 81,
+      "linesAfter": 71,
+      "codeBlocksBefore": 1,
+      "codeBlocksAfter": 1,
+      "verified": true
+    },
+    {
+      "before": "frontend/browser/cdp/getting-started-flat-mode.md",
+      "after": "frontend/browser/cdp/01_getting-started-flat-mode.md",
+      "linesBefore": 122,
+      "linesAfter": 109,
+      "codeBlocksBefore": 6,
+      "codeBlocksAfter": 6,
+      "verified": true
+    },
+    {
+      "before": "frontend/browser/cdp/input.md",
+      "after": "frontend/browser/cdp/05_input.md",
+      "linesBefore": 103,
+      "linesAfter": 95,
+      "codeBlocksBefore": 3,
+      "codeBlocksAfter": 3,
+      "verified": true
+    },
+    {
+      "before": "frontend/browser/cdp/page.md",
+      "after": "frontend/browser/cdp/03_page.md",
+      "linesBefore": 112,
+      "linesAfter": 101,
+      "codeBlocksBefore": 5,
+      "codeBlocksAfter": 5,
+      "verified": true
+    },
+    {
+      "before": "frontend/browser/cdp/target.md",
+      "after": "frontend/browser/cdp/02_target.md",
+      "linesBefore": 103,
+      "linesAfter": 94,
+      "codeBlocksBefore": 4,
+      "codeBlocksAfter": 4,
+      "verified": true
+    },
+    {
+      "before": "frontend/browser/chrome-extension/1_scripting_and_service_worker.md",
+      "after": "frontend/browser/chrome-extension/01_scripting_and_service_worker.md",
+      "linesBefore": 335,
+      "linesAfter": 293,
+      "codeBlocksBefore": 10,
+      "codeBlocksAfter": 10,
+      "verified": true
+    },
+    {
+      "before": "frontend/browser/chrome-extension/2_debugger_and_network.md",
+      "after": "frontend/browser/chrome-extension/02_debugger_and_network.md",
+      "linesBefore": 200,
+      "linesAfter": 177,
+      "codeBlocksBefore": 4,
+      "codeBlocksAfter": 4,
+      "verified": true
+    },
+    {
+      "before": "frontend/browser/chrome-extension/3_side_panel_and_webmcp.md",
+      "after": "frontend/browser/chrome-extension/03_side_panel_and_webmcp.md",
+      "linesBefore": 151,
+      "linesAfter": 132,
+      "codeBlocksBefore": 4,
+      "codeBlocksAfter": 4,
+      "verified": true
+    },
+    {
+      "before": "frontend/browser/chrome-extension/4_security_and_policy.md",
+      "after": "frontend/browser/chrome-extension/04_security_and_policy.md",
+      "linesBefore": 189,
+      "linesAfter": 163,
+      "codeBlocksBefore": 4,
+      "codeBlocksAfter": 4,
+      "verified": true
+    },
+    {
+      "before": "frontend/browser/chrome-extension/README.md",
+      "after": "frontend/browser/chrome-extension/README.md",
+      "linesBefore": 14,
+      "linesAfter": 14,
+      "codeBlocksBefore": 0,
+      "codeBlocksAfter": 0,
+      "verified": true
+    },
+    {
+      "before": "frontend/react/1_quick_start.md",
+      "after": "frontend/react/01_quick_start.md",
+      "linesBefore": 329,
+      "linesAfter": 360,
+      "codeBlocksBefore": 20,
+      "codeBlocksAfter": 20,
+      "verified": true
+    },
+    {
+      "before": "frontend/react/2_describing_the_ui.md",
+      "after": "frontend/react/02_describing_the_ui.md",
+      "linesBefore": 1712,
+      "linesAfter": 1762,
+      "codeBlocksBefore": 73,
+      "codeBlocksAfter": 73,
+      "verified": true
+    },
+    {
+      "before": "frontend/react/3_adding_interactivity.md",
+      "after": "frontend/react/03_adding_interactivity.md",
+      "linesBefore": 2453,
+      "linesAfter": 2457,
+      "codeBlocksBefore": 77,
+      "codeBlocksAfter": 77,
+      "verified": true
+    },
+    {
+      "before": "frontend/react/4_managing_state.md",
+      "after": "frontend/react/04_managing_state.md",
+      "linesBefore": 1602,
+      "linesAfter": 1613,
+      "codeBlocksBefore": 45,
+      "codeBlocksAfter": 45,
+      "verified": true
+    },
+    {
+      "before": "frontend/react/5_escape_hatches.md",
+      "after": "frontend/react/05_escape_hatches.md",
+      "linesBefore": 2506,
+      "linesAfter": 2541,
+      "codeBlocksBefore": 90,
+      "codeBlocksAfter": 90,
+      "verified": true
+    },
+    {
+      "before": "frontend/react/6_hooks_reference.md",
+      "after": "frontend/react/06_hooks_reference.md",
+      "linesBefore": 2010,
+      "linesAfter": 2091,
+      "codeBlocksBefore": 98,
+      "codeBlocksAfter": 98,
+      "verified": true
+    },
+    {
+      "before": "frontend/react/7_components_and_apis.md",
+      "after": "frontend/react/07_components_and_apis.md",
+      "linesBefore": 2966,
+      "linesAfter": 3018,
+      "codeBlocksBefore": 106,
+      "codeBlocksAfter": 106,
+      "verified": true
+    },
+    {
+      "before": "frontend/react/8_react_dom_apis.md",
+      "after": "frontend/react/08_react_dom_apis.md",
+      "linesBefore": 2324,
+      "linesAfter": 2392,
+      "codeBlocksBefore": 116,
+      "codeBlocksAfter": 116,
+      "verified": true
+    },
+    {
+      "before": "frontend/react/9_server_components_rules_legacy.md",
+      "after": "frontend/react/09_server_components_rules_legacy.md",
+      "linesBefore": 2307,
+      "linesAfter": 2296,
+      "codeBlocksBefore": 103,
+      "codeBlocksAfter": 103,
+      "verified": true
+    },
+    {
+      "before": "frontend/vite/1_guide.md",
+      "after": "frontend/vite/01_guide.md",
+      "linesBefore": 1627,
+      "linesAfter": 1655,
+      "codeBlocksBefore": 59,
+      "codeBlocksAfter": 59,
+      "verified": true
+    },
+    {
+      "before": "frontend/vite/2_apis.md",
+      "after": "frontend/vite/02_apis.md",
+      "linesBefore": 1824,
+      "linesAfter": 1813,
+      "codeBlocksBefore": 69,
+      "codeBlocksAfter": 69,
+      "verified": true
+    },
+    {
+      "before": "frontend/vite/3_config.md",
+      "after": "frontend/vite/03_config.md",
+      "linesBefore": 1445,
+      "linesAfter": 1434,
+      "codeBlocksBefore": 44,
+      "codeBlocksAfter": 44,
+      "verified": true
+    },
+    {
+      "before": "grpc/buf/01_overview_install.md",
+      "after": "grpc/buf/01_overview_install.md",
+      "linesBefore": 142,
+      "linesAfter": 142,
+      "codeBlocksBefore": 8,
+      "codeBlocksAfter": 8,
+      "verified": true
+    },
+    {
+      "before": "grpc/buf/02_modules_workspaces.md",
+      "after": "grpc/buf/02_modules_workspaces.md",
+      "linesBefore": 195,
+      "linesAfter": 199,
+      "codeBlocksBefore": 5,
+      "codeBlocksAfter": 5,
+      "verified": true
+    },
+    {
+      "before": "grpc/buf/03_generate.md",
+      "after": "grpc/buf/03_generate.md",
+      "linesBefore": 183,
+      "linesAfter": 192,
+      "codeBlocksBefore": 6,
+      "codeBlocksAfter": 6,
+      "verified": true
+    },
+    {
+      "before": "grpc/buf/04_lint.md",
+      "after": "grpc/buf/04_lint.md",
+      "linesBefore": 148,
+      "linesAfter": 149,
+      "codeBlocksBefore": 4,
+      "codeBlocksAfter": 4,
+      "verified": true
+    },
+    {
+      "before": "grpc/buf/05_breaking.md",
+      "after": "grpc/buf/05_breaking.md",
+      "linesBefore": 113,
+      "linesAfter": 113,
+      "codeBlocksBefore": 5,
+      "codeBlocksAfter": 5,
+      "verified": true
+    },
+    {
+      "before": "grpc/buf/06_bsr.md",
+      "after": "grpc/buf/06_bsr.md",
+      "linesBefore": 127,
+      "linesAfter": 127,
+      "codeBlocksBefore": 7,
+      "codeBlocksAfter": 7,
+      "verified": true
+    },
+    {
+      "before": "grpc/buf/07_cli_reference.md",
+      "after": "grpc/buf/07_cli_reference.md",
+      "linesBefore": 172,
+      "linesAfter": 171,
+      "codeBlocksBefore": 11,
+      "codeBlocksAfter": 11,
+      "verified": true
+    },
+    {
+      "before": "grpc/grpc/1_overview_and_core_concepts.md",
+      "after": "grpc/grpc/01_overview_and_core_concepts.md",
+      "linesBefore": 297,
+      "linesAfter": 315,
+      "codeBlocksBefore": 7,
+      "codeBlocksAfter": 7,
+      "verified": true
+    },
+    {
+      "before": "grpc/grpc/2_go_quickstart_server_client.md",
+      "after": "grpc/grpc/02_go_quickstart_server_client.md",
+      "linesBefore": 467,
+      "linesAfter": 457,
+      "codeBlocksBefore": 26,
+      "codeBlocksAfter": 26,
+      "verified": true
+    },
+    {
+      "before": "grpc/grpc/3_streaming_metadata_interceptors.md",
+      "after": "grpc/grpc/03_streaming_metadata_interceptors.md",
+      "linesBefore": 463,
+      "linesAfter": 463,
+      "codeBlocksBefore": 18,
+      "codeBlocksAfter": 18,
+      "verified": true
+    },
+    {
+      "before": "grpc/grpc/4_auth_errors_deadlines.md",
+      "after": "grpc/grpc/04_auth_errors_deadlines.md",
+      "linesBefore": 522,
+      "linesAfter": 539,
+      "codeBlocksBefore": 20,
+      "codeBlocksAfter": 20,
+      "verified": true
+    },
+    {
+      "before": "grpc/grpcurl/01_grpcurl.md",
+      "after": "grpc/grpcurl/01_grpcurl.md",
+      "linesBefore": 496,
+      "linesAfter": 500,
+      "codeBlocksBefore": 40,
+      "codeBlocksAfter": 40,
+      "verified": true
+    },
+    {
+      "before": "grpc/protobuf/01_overview.md",
+      "after": "grpc/protobuf/01_overview.md",
+      "linesBefore": 151,
+      "linesAfter": 150,
+      "codeBlocksBefore": 3,
+      "codeBlocksAfter": 3,
+      "verified": true
+    },
+    {
+      "before": "grpc/protobuf/02_proto3_language.md",
+      "after": "grpc/protobuf/02_proto3_language.md",
+      "linesBefore": 205,
+      "linesAfter": 208,
+      "codeBlocksBefore": 8,
+      "codeBlocksAfter": 8,
+      "verified": true
+    },
+    {
+      "before": "grpc/protobuf/03_messages_advanced.md",
+      "after": "grpc/protobuf/03_messages_advanced.md",
+      "linesBefore": 237,
+      "linesAfter": 238,
+      "codeBlocksBefore": 12,
+      "codeBlocksAfter": 12,
+      "verified": true
+    },
+    {
+      "before": "grpc/protobuf/04_editions.md",
+      "after": "grpc/protobuf/04_editions.md",
+      "linesBefore": 136,
+      "linesAfter": 145,
+      "codeBlocksBefore": 4,
+      "codeBlocksAfter": 4,
+      "verified": true
+    },
+    {
+      "before": "grpc/protobuf/05_encoding.md",
+      "after": "grpc/protobuf/05_encoding.md",
+      "linesBefore": 151,
+      "linesAfter": 156,
+      "codeBlocksBefore": 9,
+      "codeBlocksAfter": 9,
+      "verified": true
+    },
+    {
+      "before": "grpc/protobuf/06_go_generated_code.md",
+      "after": "grpc/protobuf/06_go_generated_code.md",
+      "linesBefore": 296,
+      "linesAfter": 302,
+      "codeBlocksBefore": 27,
+      "codeBlocksAfter": 27,
+      "verified": true
+    },
+    {
+      "before": "grpc/protobuf/07_style_best_practices.md",
+      "after": "grpc/protobuf/07_style_best_practices.md",
+      "linesBefore": 131,
+      "linesAfter": 130,
+      "codeBlocksBefore": 5,
+      "codeBlocksAfter": 5,
+      "verified": true
+    },
+    {
+      "before": "kafka/1_introduction_and_apis.md",
+      "after": "kafka/01_introduction_and_apis.md",
+      "linesBefore": 1041,
+      "linesAfter": 1029,
+      "codeBlocksBefore": 28,
+      "codeBlocksAfter": 28,
+      "verified": true
+    },
+    {
+      "before": "kafka/2_broker_and_topic_configs.md",
+      "after": "kafka/02_broker_and_topic_configs.md",
+      "linesBefore": 1680,
+      "linesAfter": 1652,
+      "codeBlocksBefore": 46,
+      "codeBlocksAfter": 46,
+      "verified": true
+    },
+    {
+      "before": "kafka/3_producer_and_consumer_configs.md",
+      "after": "kafka/03_producer_and_consumer_configs.md",
+      "linesBefore": 2234,
+      "linesAfter": 2120,
+      "codeBlocksBefore": 4,
+      "codeBlocksAfter": 4,
+      "verified": true
+    },
+    {
+      "before": "kafka/4_connect_streams_admin_configs.md",
+      "after": "kafka/04_connect_streams_admin_configs.md",
+      "linesBefore": 2330,
+      "linesAfter": 2439,
+      "codeBlocksBefore": 16,
+      "codeBlocksAfter": 16,
+      "verified": true
+    },
+    {
+      "before": "kafka/5_design_and_implementation.md",
+      "after": "kafka/05_design_and_implementation.md",
+      "linesBefore": 742,
+      "linesAfter": 970,
+      "codeBlocksBefore": 10,
+      "codeBlocksAfter": 10,
+      "verified": true
+    },
+    {
+      "before": "kafka/6_operations_upgrade_kraft_docker.md",
+      "after": "kafka/06_operations_upgrade_kraft_docker.md",
+      "linesBefore": 2321,
+      "linesAfter": 2290,
+      "codeBlocksBefore": 126,
+      "codeBlocksAfter": 126,
+      "verified": true
+    },
+    {
+      "before": "kafka/7_security.md",
+      "after": "kafka/07_security.md",
+      "linesBefore": 1450,
+      "linesAfter": 1586,
+      "codeBlocksBefore": 96,
+      "codeBlocksAfter": 96,
+      "verified": true
+    },
+    {
+      "before": "kafka/8_connect_and_streams.md",
+      "after": "kafka/08_connect_and_streams.md",
+      "linesBefore": 1238,
+      "linesAfter": 1252,
+      "codeBlocksBefore": 36,
+      "codeBlocksAfter": 36,
+      "verified": true
+    },
+    {
+      "before": "pl/coq/coq-language/1_introduction_and_syntax.md",
+      "after": "pl/coq/coq-language/01_introduction_and_syntax.md",
+      "linesBefore": 200,
+      "linesAfter": 202,
+      "codeBlocksBefore": 6,
+      "codeBlocksAfter": 6,
+      "verified": true
+    },
+    {
+      "before": "pl/coq/coq-language/2_core_type_system.md",
+      "after": "pl/coq/coq-language/02_core_type_system.md",
+      "linesBefore": 210,
+      "linesAfter": 218,
+      "codeBlocksBefore": 8,
+      "codeBlocksAfter": 8,
+      "verified": true
+    },
+    {
+      "before": "pl/coq/coq-language/3_inductive_types_and_recursion.md",
+      "after": "pl/coq/coq-language/03_inductive_types_and_recursion.md",
+      "linesBefore": 226,
+      "linesAfter": 232,
+      "codeBlocksBefore": 10,
+      "codeBlocksAfter": 10,
+      "verified": true
+    },
+    {
+      "before": "pl/coq/coq-language/4_modules_universes_and_rewrite_rules.md",
+      "after": "pl/coq/coq-language/04_modules_universes_and_rewrite_rules.md",
+      "linesBefore": 197,
+      "linesAfter": 207,
+      "codeBlocksBefore": 5,
+      "codeBlocksAfter": 5,
+      "verified": true
+    },
+    {
+      "before": "pl/coq/coq-language/5_language_extensions.md",
+      "after": "pl/coq/coq-language/05_language_extensions.md",
+      "linesBefore": 241,
+      "linesAfter": 251,
+      "codeBlocksBefore": 8,
+      "codeBlocksAfter": 8,
+      "verified": true
+    },
+    {
+      "before": "pl/coq/coq-language/6_proof_mode_and_tactics.md",
+      "after": "pl/coq/coq-language/06_proof_mode_and_tactics.md",
+      "linesBefore": 248,
+      "linesAfter": 256,
+      "codeBlocksBefore": 2,
+      "codeBlocksAfter": 2,
+      "verified": true
+    },
+    {
+      "before": "pl/coq/coq-language/7_automation_and_tactic_languages.md",
+      "after": "pl/coq/coq-language/07_automation_and_tactic_languages.md",
+      "linesBefore": 265,
+      "linesAfter": 275,
+      "codeBlocksBefore": 5,
+      "codeBlocksAfter": 5,
+      "verified": true
+    },
+    {
+      "before": "pl/coq/coq-language/8_libraries_plugins_and_extraction.md",
+      "after": "pl/coq/coq-language/08_libraries_plugins_and_extraction.md",
+      "linesBefore": 212,
+      "linesAfter": 218,
+      "codeBlocksBefore": 2,
+      "codeBlocksAfter": 2,
+      "verified": true
+    },
+    {
+      "before": "pl/coq/coq-language/9_tooling_build_and_changes.md",
+      "after": "pl/coq/coq-language/09_tooling_build_and_changes.md",
+      "linesBefore": 240,
+      "linesAfter": 250,
+      "codeBlocksBefore": 7,
+      "codeBlocksAfter": 7,
+      "verified": true
+    },
+    {
+      "before": "pl/go/go-language/1_setup_and_tutorials.md",
+      "after": "pl/go/go-language/01_setup_and_tutorials.md",
+      "linesBefore": 1474,
+      "linesAfter": 1535,
+      "codeBlocksBefore": 87,
+      "codeBlocksAfter": 87,
+      "verified": true
+    },
+    {
+      "before": "pl/go/go-language/2_database_access_and_modules.md",
+      "after": "pl/go/go-language/02_database_access_and_modules.md",
+      "linesBefore": 2652,
+      "linesAfter": 2718,
+      "codeBlocksBefore": 129,
+      "codeBlocksAfter": 129,
+      "verified": true
+    },
+    {
+      "before": "pl/go/go-language/3_diagnostics_memory_model_faq.md",
+      "after": "pl/go/go-language/03_diagnostics_memory_model_faq.md",
+      "linesBefore": 2456,
+      "linesAfter": 2402,
+      "codeBlocksBefore": 88,
+      "codeBlocksAfter": 88,
+      "verified": true
+    },
+    {
+      "before": "pl/go/go-language/4_strings_formatting_regexp.md",
+      "after": "pl/go/go-language/04_strings_formatting_regexp.md",
+      "linesBefore": 876,
+      "linesAfter": 889,
+      "codeBlocksBefore": 45,
+      "codeBlocksAfter": 45,
+      "verified": true
+    },
+    {
+      "before": "pl/go/go-language/5_time_context_concurrency.md",
+      "after": "pl/go/go-language/05_time_context_concurrency.md",
+      "linesBefore": 766,
+      "linesAfter": 735,
+      "codeBlocksBefore": 39,
+      "codeBlocksAfter": 39,
+      "verified": true
+    },
+    {
+      "before": "pl/go/go-language/6_networking_and_encoding.md",
+      "after": "pl/go/go-language/06_networking_and_encoding.md",
+      "linesBefore": 921,
+      "linesAfter": 930,
+      "codeBlocksBefore": 68,
+      "codeBlocksAfter": 68,
+      "verified": true
+    },
+    {
+      "before": "pl/go/go-language/7_collections_math_containers.md",
+      "after": "pl/go/go-language/07_collections_math_containers.md",
+      "linesBefore": 879,
+      "linesAfter": 878,
+      "codeBlocksBefore": 51,
+      "codeBlocksAfter": 51,
+      "verified": true
+    },
+    {
+      "before": "pl/go/go-language/8_io_and_filesystem.md",
+      "after": "pl/go/go-language/08_io_and_filesystem.md",
+      "linesBefore": 731,
+      "linesAfter": 740,
+      "codeBlocksBefore": 38,
+      "codeBlocksAfter": 38,
+      "verified": true
+    },
+    {
+      "before": "pl/go/go-language/9_errors_reflect_testing_crypto.md",
+      "after": "pl/go/go-language/09_errors_reflect_testing_crypto.md",
+      "linesBefore": 1257,
+      "linesAfter": 1251,
+      "codeBlocksBefore": 78,
+      "codeBlocksAfter": 78,
+      "verified": true
+    },
+    {
+      "before": "pl/java/netty/1_introduction_and_setup.md",
+      "after": "pl/java/netty/01_introduction_and_setup.md",
+      "linesBefore": 284,
+      "linesAfter": 304,
+      "codeBlocksBefore": 8,
+      "codeBlocksAfter": 8,
+      "verified": true
+    },
+    {
+      "before": "pl/java/netty/2_user_guide_4x.md",
+      "after": "pl/java/netty/02_user_guide_4x.md",
+      "linesBefore": 642,
+      "linesAfter": 788,
+      "codeBlocksBefore": 21,
+      "codeBlocksAfter": 21,
+      "verified": true
+    },
+    {
+      "before": "pl/java/netty/3_thread_model_and_memory.md",
+      "after": "pl/java/netty/03_thread_model_and_memory.md",
+      "linesBefore": 501,
+      "linesAfter": 521,
+      "codeBlocksBefore": 18,
+      "codeBlocksAfter": 18,
+      "verified": true
+    },
+    {
+      "before": "pl/java/netty/4_native_transports_and_tls.md",
+      "after": "pl/java/netty/04_native_transports_and_tls.md",
+      "linesBefore": 603,
+      "linesAfter": 627,
+      "codeBlocksBefore": 22,
+      "codeBlocksAfter": 22,
+      "verified": true
+    },
+    {
+      "before": "pl/java/netty/5_benchmarks_library_usage_security.md",
+      "after": "pl/java/netty/05_benchmarks_library_usage_security.md",
+      "linesBefore": 593,
+      "linesAfter": 645,
+      "codeBlocksBefore": 15,
+      "codeBlocksAfter": 15,
+      "verified": true
+    },
+    {
+      "before": "pl/java/netty/6_release_notes_4x.md",
+      "after": "pl/java/netty/06_release_notes_4x.md",
+      "linesBefore": 892,
+      "linesAfter": 1033,
+      "codeBlocksBefore": 19,
+      "codeBlocksAfter": 19,
+      "verified": true
+    },
+    {
+      "before": "pl/java/netty/7_netty_5.md",
+      "after": "pl/java/netty/07_netty_5.md",
+      "linesBefore": 894,
+      "linesAfter": 938,
+      "codeBlocksBefore": 19,
+      "codeBlocksAfter": 19,
+      "verified": true
+    },
+    {
+      "before": "pl/java/netty/8_related_articles_and_projects.md",
+      "after": "pl/java/netty/08_related_articles_and_projects.md",
+      "linesBefore": 282,
+      "linesAfter": 285,
+      "codeBlocksBefore": 0,
+      "codeBlocksAfter": 0,
+      "verified": true
+    },
+    {
+      "before": "pl/kotlin/grpc-kotlin/1_client.md",
+      "after": "pl/kotlin/grpc-kotlin/01_client.md",
+      "linesBefore": 265,
+      "linesAfter": 263,
+      "codeBlocksBefore": 13,
+      "codeBlocksAfter": 13,
+      "verified": true
+    },
+    {
+      "before": "pl/kotlin/kotlin-language/1_get_started_and_tour.md",
+      "after": "pl/kotlin/kotlin-language/01_get_started_and_tour.md",
+      "linesBefore": 2066,
+      "linesAfter": 1947,
+      "codeBlocksBefore": 136,
+      "codeBlocksAfter": 136,
+      "verified": true
+    },
+    {
+      "before": "pl/kotlin/kotlin-language/2_basic_types_and_control_flow.md",
+      "after": "pl/kotlin/kotlin-language/02_basic_types_and_control_flow.md",
+      "linesBefore": 2152,
+      "linesAfter": 2062,
+      "codeBlocksBefore": 120,
+      "codeBlocksAfter": 120,
+      "verified": true
+    },
+    {
+      "before": "pl/kotlin/kotlin-language/3_classes_and_objects.md",
+      "after": "pl/kotlin/kotlin-language/03_classes_and_objects.md",
+      "linesBefore": 4610,
+      "linesAfter": 4642,
+      "codeBlocksBefore": 263,
+      "codeBlocksAfter": 263,
+      "verified": true
+    },
+    {
+      "before": "pl/kotlin/kotlin-language/4_functions_lambdas_null_safety.md",
+      "after": "pl/kotlin/kotlin-language/04_functions_lambdas_null_safety.md",
+      "linesBefore": 1397,
+      "linesAfter": 1443,
+      "codeBlocksBefore": 90,
+      "codeBlocksAfter": 90,
+      "verified": true
+    },
+    {
+      "before": "pl/kotlin/kotlin-language/5_collections.md",
+      "after": "pl/kotlin/kotlin-language/05_collections.md",
+      "linesBefore": 2757,
+      "linesAfter": 2735,
+      "codeBlocksBefore": 147,
+      "codeBlocksAfter": 147,
+      "verified": true
+    },
+    {
+      "before": "pl/kotlin/kotlin-language/6_coroutines_and_concurrency.md",
+      "after": "pl/kotlin/kotlin-language/06_coroutines_and_concurrency.md",
+      "linesBefore": 3142,
+      "linesAfter": 3164,
+      "codeBlocksBefore": 152,
+      "codeBlocksAfter": 152,
+      "verified": true
+    },
+    {
+      "before": "pl/kotlin/kotlin-language/7_multiplatform_and_interop.md",
+      "after": "pl/kotlin/kotlin-language/07_multiplatform_and_interop.md",
+      "linesBefore": 3483,
+      "linesAfter": 3451,
+      "codeBlocksBefore": 196,
+      "codeBlocksAfter": 196,
+      "verified": true
+    },
+    {
+      "before": "pl/kotlin/kotlin-language/8_stdlib_text_and_regex.md",
+      "after": "pl/kotlin/kotlin-language/08_stdlib_text_and_regex.md",
+      "linesBefore": 605,
+      "linesAfter": 591,
+      "codeBlocksBefore": 32,
+      "codeBlocksAfter": 32,
+      "verified": true
+    },
+    {
+      "before": "pl/kotlin/kotlin-language/9_stdlib_math_time_random_io.md",
+      "after": "pl/kotlin/kotlin-language/09_stdlib_math_time_random_io.md",
+      "linesBefore": 934,
+      "linesAfter": 953,
+      "codeBlocksBefore": 66,
+      "codeBlocksAfter": 66,
+      "verified": true
+    },
+    {
+      "before": "pl/kotlin/ktor/1_introduction_and_project.md",
+      "after": "pl/kotlin/ktor/01_introduction_and_project.md",
+      "linesBefore": 213,
+      "linesAfter": 192,
+      "codeBlocksBefore": 9,
+      "codeBlocksAfter": 9,
+      "verified": true
+    },
+    {
+      "before": "pl/kotlin/ktor/2_engines_configuration_modules.md",
+      "after": "pl/kotlin/ktor/02_engines_configuration_modules.md",
+      "linesBefore": 441,
+      "linesAfter": 416,
+      "codeBlocksBefore": 21,
+      "codeBlocksAfter": 21,
+      "verified": true
+    },
+    {
+      "before": "pl/kotlin/ktor/3_routing_requests_responses.md",
+      "after": "pl/kotlin/ktor/03_routing_requests_responses.md",
+      "linesBefore": 308,
+      "linesAfter": 286,
+      "codeBlocksBefore": 17,
+      "codeBlocksAfter": 17,
+      "verified": true
+    },
+    {
+      "before": "pl/kotlin/ktor/4_plugins_and_content_negotiation.md",
+      "after": "pl/kotlin/ktor/04_plugins_and_content_negotiation.md",
+      "linesBefore": 294,
+      "linesAfter": 270,
+      "codeBlocksBefore": 11,
+      "codeBlocksAfter": 11,
+      "verified": true
+    },
+    {
+      "before": "pl/kotlin/ktor/5_authentication_and_sessions.md",
+      "after": "pl/kotlin/ktor/05_authentication_and_sessions.md",
+      "linesBefore": 455,
+      "linesAfter": 432,
+      "codeBlocksBefore": 24,
+      "codeBlocksAfter": 24,
+      "verified": true
+    },
+    {
+      "before": "pl/kotlin/ktor/6_websockets_and_static_content.md",
+      "after": "pl/kotlin/ktor/06_websockets_and_static_content.md",
+      "linesBefore": 266,
+      "linesAfter": 241,
+      "codeBlocksBefore": 13,
+      "codeBlocksAfter": 13,
+      "verified": true
+    },
+    {
+      "before": "pl/kotlin/ktor/7_status_pages_testing_deployment.md",
+      "after": "pl/kotlin/ktor/07_status_pages_testing_deployment.md",
+      "linesBefore": 455,
+      "linesAfter": 415,
+      "codeBlocksBefore": 19,
+      "codeBlocksAfter": 19,
+      "verified": true
+    },
+    {
+      "before": "pl/lean/lean-language/1_introduction_elaboration_and_interaction.md",
+      "after": "pl/lean/lean-language/01_introduction_elaboration_and_interaction.md",
+      "linesBefore": 252,
+      "linesAfter": 257,
+      "codeBlocksBefore": 4,
+      "codeBlocksAfter": 4,
+      "verified": true
+    },
+    {
+      "before": "pl/lean/lean-language/2_type_system_modules_and_namespaces.md",
+      "after": "pl/lean/lean-language/02_type_system_modules_and_namespaces.md",
+      "linesBefore": 242,
+      "linesAfter": 245,
+      "codeBlocksBefore": 8,
+      "codeBlocksAfter": 8,
+      "verified": true
+    },
+    {
+      "before": "pl/lean/lean-language/3_definitions_typeclasses_and_coercions.md",
+      "after": "pl/lean/lean-language/03_definitions_typeclasses_and_coercions.md",
+      "linesBefore": 240,
+      "linesAfter": 248,
+      "codeBlocksBefore": 8,
+      "codeBlocksAfter": 8,
+      "verified": true
+    },
+    {
+      "before": "pl/lean/lean-language/4_terms_and_runtime.md",
+      "after": "pl/lean/lean-language/04_terms_and_runtime.md",
+      "linesBefore": 253,
+      "linesAfter": 258,
+      "codeBlocksBefore": 7,
+      "codeBlocksAfter": 8,
+      "verified": true
+    },
+    {
+      "before": "pl/lean/lean-language/5_proofs_tactics_and_automation.md",
+      "after": "pl/lean/lean-language/05_proofs_tactics_and_automation.md",
+      "linesBefore": 258,
+      "linesAfter": 263,
+      "codeBlocksBefore": 5,
+      "codeBlocksAfter": 5,
+      "verified": true
+    },
+    {
+      "before": "pl/lean/lean-language/6_monads_and_propositions.md",
+      "after": "pl/lean/lean-language/06_monads_and_propositions.md",
+      "linesBefore": 220,
+      "linesAfter": 222,
+      "codeBlocksBefore": 5,
+      "codeBlocksAfter": 5,
+      "verified": true
+    },
+    {
+      "before": "pl/lean/lean-language/7_basic_types_and_collections.md",
+      "after": "pl/lean/lean-language/07_basic_types_and_collections.md",
+      "linesBefore": 260,
+      "linesAfter": 260,
+      "codeBlocksBefore": 11,
+      "codeBlocksAfter": 11,
+      "verified": true
+    },
+    {
+      "before": "pl/lean/lean-language/8_io_and_iterators.md",
+      "after": "pl/lean/lean-language/08_io_and_iterators.md",
+      "linesBefore": 228,
+      "linesAfter": 230,
+      "codeBlocksBefore": 5,
+      "codeBlocksAfter": 5,
+      "verified": true
+    },
+    {
+      "before": "pl/lean/lean-language/9_macros_build_and_tooling.md",
+      "after": "pl/lean/lean-language/09_macros_build_and_tooling.md",
+      "linesBefore": 260,
+      "linesAfter": 268,
+      "codeBlocksBefore": 4,
+      "codeBlocksAfter": 4,
+      "verified": true
+    },
+    {
+      "before": "pl/rust/rust-language/1_getting_started.md",
+      "after": "pl/rust/rust-language/01_getting_started.md",
+      "linesBefore": 762,
+      "linesAfter": 762,
+      "codeBlocksBefore": 41,
+      "codeBlocksAfter": 41,
+      "verified": true
+    },
+    {
+      "before": "pl/rust/rust-language/2_concepts_and_ownership.md",
+      "after": "pl/rust/rust-language/02_concepts_and_ownership.md",
+      "linesBefore": 1786,
+      "linesAfter": 1857,
+      "codeBlocksBefore": 96,
+      "codeBlocksAfter": 96,
+      "verified": true
+    },
+    {
+      "before": "pl/rust/rust-language/3_structs_enums_pattern_matching.md",
+      "after": "pl/rust/rust-language/03_structs_enums_pattern_matching.md",
+      "linesBefore": 1416,
+      "linesAfter": 1424,
+      "codeBlocksBefore": 56,
+      "codeBlocksAfter": 56,
+      "verified": true
+    },
+    {
+      "before": "pl/rust/rust-language/4_modules_and_collections.md",
+      "after": "pl/rust/rust-language/04_modules_and_collections.md",
+      "linesBefore": 1489,
+      "linesAfter": 1546,
+      "codeBlocksBefore": 75,
+      "codeBlocksAfter": 75,
+      "verified": true
+    },
+    {
+      "before": "pl/rust/rust-language/5_error_handling_generics_traits.md",
+      "after": "pl/rust/rust-language/05_error_handling_generics_traits.md",
+      "linesBefore": 1866,
+      "linesAfter": 1847,
+      "codeBlocksBefore": 84,
+      "codeBlocksAfter": 84,
+      "verified": true
+    },
+    {
+      "before": "pl/rust/rust-language/6_testing_and_io_project.md",
+      "after": "pl/rust/rust-language/06_testing_and_io_project.md",
+      "linesBefore": 1244,
+      "linesAfter": 1213,
+      "codeBlocksBefore": 52,
+      "codeBlocksAfter": 52,
+      "verified": true
+    },
+    {
+      "before": "pl/rust/rust-language/7_functional_features_and_cargo.md",
+      "after": "pl/rust/rust-language/07_functional_features_and_cargo.md",
+      "linesBefore": 1691,
+      "linesAfter": 1674,
+      "codeBlocksBefore": 72,
+      "codeBlocksAfter": 72,
+      "verified": true
+    },
+    {
+      "before": "pl/rust/rust-language/8_smart_pointers_concurrency_async.md",
+      "after": "pl/rust/rust-language/08_smart_pointers_concurrency_async.md",
+      "linesBefore": 3234,
+      "linesAfter": 3698,
+      "codeBlocksBefore": 123,
+      "codeBlocksAfter": 123,
+      "verified": true
+    },
+    {
+      "before": "pl/rust/rust-language/9_oop_patterns_unsafe.md",
+      "after": "pl/rust/rust-language/09_oop_patterns_unsafe.md",
+      "linesBefore": 1938,
+      "linesAfter": 1906,
+      "codeBlocksBefore": 79,
+      "codeBlocksAfter": 79,
+      "verified": true
+    },
+    {
+      "before": "pl/rust/rust-language/book/ch12-03-improving-error-handling-and-modularity.md",
+      "after": "pl/rust/rust-language/book/01_ch12-03-improving-error-handling-and-modularity.md",
+      "linesBefore": 364,
+      "linesAfter": 358,
+      "codeBlocksBefore": 14,
+      "codeBlocksAfter": 14,
+      "verified": true
+    },
+    {
+      "before": "pl/scala/akka/1_getting_started_and_tutorial.md",
+      "after": "pl/scala/akka/01_getting_started_and_tutorial.md",
+      "linesBefore": 2382,
+      "linesAfter": 2555,
+      "codeBlocksBefore": 39,
+      "codeBlocksAfter": 39,
+      "verified": true
+    },
+    {
+      "before": "pl/scala/akka/2_actors.md",
+      "after": "pl/scala/akka/02_actors.md",
+      "linesBefore": 1801,
+      "linesAfter": 2013,
+      "codeBlocksBefore": 42,
+      "codeBlocksAfter": 42,
+      "verified": true
+    },
+    {
+      "before": "pl/scala/akka/3_cluster.md",
+      "after": "pl/scala/akka/03_cluster.md",
+      "linesBefore": 1321,
+      "linesAfter": 1417,
+      "codeBlocksBefore": 18,
+      "codeBlocksAfter": 18,
+      "verified": true
+    },
+    {
+      "before": "pl/scala/akka/4_remoting_and_serialization.md",
+      "after": "pl/scala/akka/04_remoting_and_serialization.md",
+      "linesBefore": 1694,
+      "linesAfter": 1769,
+      "codeBlocksBefore": 86,
+      "codeBlocksAfter": 86,
+      "verified": true
+    },
+    {
+      "before": "pl/scala/akka/5_persistence.md",
+      "after": "pl/scala/akka/05_persistence.md",
+      "linesBefore": 3648,
+      "linesAfter": 3736,
+      "codeBlocksBefore": 105,
+      "codeBlocksAfter": 105,
+      "verified": true
+    },
+    {
+      "before": "pl/scala/akka/6_streams.md",
+      "after": "pl/scala/akka/06_streams.md",
+      "linesBefore": 1752,
+      "linesAfter": 1961,
+      "codeBlocksBefore": 27,
+      "codeBlocksAfter": 27,
+      "verified": true
+    },
+    {
+      "before": "pl/scala/akka/7_discovery_and_utilities.md",
+      "after": "pl/scala/akka/07_discovery_and_utilities.md",
+      "linesBefore": 1517,
+      "linesAfter": 1519,
+      "codeBlocksBefore": 64,
+      "codeBlocksAfter": 64,
+      "verified": true
+    },
+    {
+      "before": "pl/scala/akka/8_packaging_deploy_project_info.md",
+      "after": "pl/scala/akka/08_packaging_deploy_project_info.md",
+      "linesBefore": 769,
+      "linesAfter": 775,
+      "codeBlocksBefore": 8,
+      "codeBlocksAfter": 8,
+      "verified": true
+    },
+    {
+      "before": "pl/scala/scala-language/1_type_hierarchy_and_collections_overview.md",
+      "after": "pl/scala/scala-language/01_type_hierarchy_and_collections_overview.md",
+      "linesBefore": 526,
+      "linesAfter": 533,
+      "codeBlocksBefore": 24,
+      "codeBlocksAfter": 24,
+      "verified": true
+    },
+    {
+      "before": "pl/scala/scala-language/2_sequences_sets_maps.md",
+      "after": "pl/scala/scala-language/02_sequences_sets_maps.md",
+      "linesBefore": 514,
+      "linesAfter": 545,
+      "codeBlocksBefore": 22,
+      "codeBlocksAfter": 22,
+      "verified": true
+    },
+    {
+      "before": "pl/scala/scala-language/3_collection_operations.md",
+      "after": "pl/scala/scala-language/03_collection_operations.md",
+      "linesBefore": 456,
+      "linesAfter": 449,
+      "codeBlocksBefore": 20,
+      "codeBlocksAfter": 20,
+      "verified": true
+    },
+    {
+      "before": "pl/scala/scala-language/4_iterators_views_equality.md",
+      "after": "pl/scala/scala-language/04_iterators_views_equality.md",
+      "linesBefore": 477,
+      "linesAfter": 536,
+      "codeBlocksBefore": 17,
+      "codeBlocksAfter": 17,
+      "verified": true
+    },
+    {
+      "before": "pl/scala/scala-language/5_strings_and_regex.md",
+      "after": "pl/scala/scala-language/05_strings_and_regex.md",
+      "linesBefore": 370,
+      "linesAfter": 375,
+      "codeBlocksBefore": 15,
+      "codeBlocksAfter": 15,
+      "verified": true
+    },
+    {
+      "before": "pl/scala/scala-language/6_pattern_matching_and_error_handling.md",
+      "after": "pl/scala/scala-language/06_pattern_matching_and_error_handling.md",
+      "linesBefore": 838,
+      "linesAfter": 827,
+      "codeBlocksBefore": 37,
+      "codeBlocksAfter": 37,
+      "verified": true
+    },
+    {
+      "before": "pl/scala/scala-language/7_java_interop_and_custom_collections.md",
+      "after": "pl/scala/scala-language/07_java_interop_and_custom_collections.md",
+      "linesBefore": 462,
+      "linesAfter": 476,
+      "codeBlocksBefore": 16,
+      "codeBlocksAfter": 16,
+      "verified": true
+    },
+    {
+      "before": "pl/scala/scala-language/collection/1_introduction_and_mutability.md",
+      "after": "pl/scala/scala-language/collection/01_introduction_and_mutability.md",
+      "linesBefore": 208,
+      "linesAfter": 229,
+      "codeBlocksBefore": 6,
+      "codeBlocksAfter": 6,
+      "verified": true
+    },
+    {
+      "before": "pl/scala/scala-language/collection/2_iterable_and_sequences.md",
+      "after": "pl/scala/scala-language/collection/02_iterable_and_sequences.md",
+      "linesBefore": 339,
+      "linesAfter": 376,
+      "codeBlocksBefore": 2,
+      "codeBlocksAfter": 2,
+      "verified": true
+    },
+    {
+      "before": "pl/scala/scala-language/collection/3_sets_and_maps.md",
+      "after": "pl/scala/scala-language/collection/03_sets_and_maps.md",
+      "linesBefore": 378,
+      "linesAfter": 392,
+      "codeBlocksBefore": 14,
+      "codeBlocksAfter": 14,
+      "verified": true
+    },
+    {
+      "before": "pl/scala/scala-language/collection/4_concrete_collection_classes.md",
+      "after": "pl/scala/scala-language/collection/04_concrete_collection_classes.md",
+      "linesBefore": 600,
+      "linesAfter": 606,
+      "codeBlocksBefore": 27,
+      "codeBlocksAfter": 27,
+      "verified": true
+    },
+    {
+      "before": "pl/scala/scala-language/collection/5_arrays_and_strings.md",
+      "after": "pl/scala/scala-language/collection/05_arrays_and_strings.md",
+      "linesBefore": 325,
+      "linesAfter": 323,
+      "codeBlocksBefore": 18,
+      "codeBlocksAfter": 18,
+      "verified": true
+    },
+    {
+      "before": "pl/scala/scala-language/collection/6_performance_and_equality.md",
+      "after": "pl/scala/scala-language/collection/06_performance_and_equality.md",
+      "linesBefore": 143,
+      "linesAfter": 142,
+      "codeBlocksBefore": 1,
+      "codeBlocksAfter": 1,
+      "verified": true
+    },
+    {
+      "before": "pl/scala/scala-language/collection/7_views_and_iterators.md",
+      "after": "pl/scala/scala-language/collection/07_views_and_iterators.md",
+      "linesBefore": 570,
+      "linesAfter": 583,
+      "codeBlocksBefore": 33,
+      "codeBlocksAfter": 33,
+      "verified": true
+    },
+    {
+      "before": "pl/scala/scala-language/collection/8_creating_and_converting.md",
+      "after": "pl/scala/scala-language/collection/08_creating_and_converting.md",
+      "linesBefore": 202,
+      "linesAfter": 200,
+      "codeBlocksBefore": 10,
+      "codeBlocksAfter": 10,
+      "verified": true
+    },
+    {
+      "before": "pl/scala/scala-language/collection/README.md",
+      "after": "pl/scala/scala-language/collection/README.md",
+      "linesBefore": 15,
+      "linesAfter": 15,
+      "codeBlocksBefore": 0,
+      "codeBlocksAfter": 0,
+      "verified": true
+    },
+    {
+      "before": "pl/scala/scala-language/syntax/1_prerequisites_and_overview.md",
+      "after": "pl/scala/scala-language/syntax/01_prerequisites_and_overview.md",
+      "linesBefore": 525,
+      "linesAfter": 518,
+      "codeBlocksBefore": 11,
+      "codeBlocksAfter": 11,
+      "verified": true
+    },
+    {
+      "before": "pl/scala/scala-language/syntax/2_contextual_abstractions.md",
+      "after": "pl/scala/scala-language/syntax/02_contextual_abstractions.md",
+      "linesBefore": 1810,
+      "linesAfter": 2084,
+      "codeBlocksBefore": 90,
+      "codeBlocksAfter": 90,
+      "verified": true
+    },
+    {
+      "before": "pl/scala/scala-language/syntax/3_new_types_enums_adts.md",
+      "after": "pl/scala/scala-language/syntax/03_new_types_enums_adts.md",
+      "linesBefore": 1353,
+      "linesAfter": 1498,
+      "codeBlocksBefore": 59,
+      "codeBlocksAfter": 59,
+      "verified": true
+    },
+    {
+      "before": "pl/scala/scala-language/syntax/4_other_new_features.md",
+      "after": "pl/scala/scala-language/syntax/04_other_new_features.md",
+      "linesBefore": 1706,
+      "linesAfter": 1706,
+      "codeBlocksBefore": 62,
+      "codeBlocksAfter": 62,
+      "verified": true
+    },
+    {
+      "before": "pl/scala/scala-language/syntax/5_metaprogramming.md",
+      "after": "pl/scala/scala-language/syntax/05_metaprogramming.md",
+      "linesBefore": 2018,
+      "linesAfter": 2187,
+      "codeBlocksBefore": 111,
+      "codeBlocksAfter": 111,
+      "verified": true
+    },
+    {
+      "before": "pl/scala/scala-language/syntax/6_changed_and_dropped_features.md",
+      "after": "pl/scala/scala-language/syntax/06_changed_and_dropped_features.md",
+      "linesBefore": 1483,
+      "linesAfter": 1490,
+      "codeBlocksBefore": 59,
+      "codeBlocksAfter": 59,
+      "verified": true
+    },
+    {
+      "before": "pl/scala/scala-language/syntax/7_migration.md",
+      "after": "pl/scala/scala-language/syntax/07_migration.md",
+      "linesBefore": 627,
+      "linesAfter": 688,
+      "codeBlocksBefore": 8,
+      "codeBlocksAfter": 8,
+      "verified": true
+    },
+    {
+      "before": "pl/scala/scalapb/1_client.md",
+      "after": "pl/scala/scalapb/01_client.md",
+      "linesBefore": 274,
+      "linesAfter": 271,
+      "codeBlocksBefore": 12,
+      "codeBlocksAfter": 12,
+      "verified": true
+    },
+    {
+      "before": "pl/scala/shardcake/01_getting_started.md",
+      "after": "pl/scala/shardcake/01_getting_started.md",
+      "linesBefore": 292,
+      "linesAfter": 342,
+      "codeBlocksBefore": 12,
+      "codeBlocksAfter": 12,
+      "verified": true
+    },
+    {
+      "before": "pl/scala/shardcake/02_architecture.md",
+      "after": "pl/scala/shardcake/02_architecture.md",
+      "linesBefore": 117,
+      "linesAfter": 142,
+      "codeBlocksBefore": 0,
+      "codeBlocksAfter": 0,
+      "verified": true
+    },
+    {
+      "before": "pl/scala/shardcake/03_configuration.md",
+      "after": "pl/scala/shardcake/03_configuration.md",
+      "linesBefore": 84,
+      "linesAfter": 102,
+      "codeBlocksBefore": 0,
+      "codeBlocksAfter": 0,
+      "verified": true
+    },
+    {
+      "before": "pl/scala/shardcake/04_customization.md",
+      "after": "pl/scala/shardcake/04_customization.md",
+      "linesBefore": 180,
+      "linesAfter": 196,
+      "codeBlocksBefore": 9,
+      "codeBlocksAfter": 9,
+      "verified": true
+    },
+    {
+      "before": "pl/scala/shardcake/05_metrics.md",
+      "after": "pl/scala/shardcake/05_metrics.md",
+      "linesBefore": 44,
+      "linesAfter": 43,
+      "codeBlocksBefore": 0,
+      "codeBlocksAfter": 0,
+      "verified": true
+    },
+    {
+      "before": "pl/scala/shardcake/06_faq.md",
+      "after": "pl/scala/shardcake/06_faq.md",
+      "linesBefore": 41,
+      "linesAfter": 46,
+      "codeBlocksBefore": 0,
+      "codeBlocksAfter": 0,
+      "verified": true
+    },
+    {
+      "before": "pl/scala/shardcake/07_about.md",
+      "after": "pl/scala/shardcake/07_about.md",
+      "linesBefore": 13,
+      "linesAfter": 13,
+      "codeBlocksBefore": 0,
+      "codeBlocksAfter": 0,
+      "verified": true
+    },
+    {
+      "before": "pl/scala/zio/1_introduction_and_effects.md",
+      "after": "pl/scala/zio/01_introduction_and_effects.md",
+      "linesBefore": 944,
+      "linesAfter": 970,
+      "codeBlocksBefore": 47,
+      "codeBlocksAfter": 47,
+      "verified": true
+    },
+    {
+      "before": "pl/scala/zio/2_error_and_resource_management.md",
+      "after": "pl/scala/zio/02_error_and_resource_management.md",
+      "linesBefore": 2047,
+      "linesAfter": 2113,
+      "codeBlocksBefore": 123,
+      "codeBlocksAfter": 123,
+      "verified": true
+    },
+    {
+      "before": "pl/scala/zio/3_core_data_types.md",
+      "after": "pl/scala/zio/03_core_data_types.md",
+      "linesBefore": 1249,
+      "linesAfter": 1255,
+      "codeBlocksBefore": 62,
+      "codeBlocksAfter": 62,
+      "verified": true
+    },
+    {
+      "before": "pl/scala/zio/4_dependency_injection.md",
+      "after": "pl/scala/zio/04_dependency_injection.md",
+      "linesBefore": 1521,
+      "linesAfter": 1540,
+      "codeBlocksBefore": 78,
+      "codeBlocksAfter": 78,
+      "verified": true
+    },
+    {
+      "before": "pl/scala/zio/5_state_management.md",
+      "after": "pl/scala/zio/05_state_management.md",
+      "linesBefore": 1908,
+      "linesAfter": 1906,
+      "codeBlocksBefore": 89,
+      "codeBlocksAfter": 89,
+      "verified": true
+    },
+    {
+      "before": "pl/scala/zio/6_concurrency.md",
+      "after": "pl/scala/zio/06_concurrency.md",
+      "linesBefore": 1529,
+      "linesAfter": 1560,
+      "codeBlocksBefore": 59,
+      "codeBlocksAfter": 59,
+      "verified": true
+    },
+    {
+      "before": "pl/scala/zio/7_stm_and_scheduling.md",
+      "after": "pl/scala/zio/07_stm_and_scheduling.md",
+      "linesBefore": 1429,
+      "linesAfter": 1468,
+      "codeBlocksBefore": 103,
+      "codeBlocksAfter": 103,
+      "verified": true
+    },
+    {
+      "before": "pl/scala/zio/8_streaming.md",
+      "after": "pl/scala/zio/08_streaming.md",
+      "linesBefore": 1863,
+      "linesAfter": 1901,
+      "codeBlocksBefore": 111,
+      "codeBlocksAfter": 111,
+      "verified": true
+    },
+    {
+      "before": "pl/scala/zio/9_testing_and_metrics.md",
+      "after": "pl/scala/zio/09_testing_and_metrics.md",
+      "linesBefore": 2045,
+      "linesAfter": 2096,
+      "codeBlocksBefore": 95,
+      "codeBlocksAfter": 95,
+      "verified": true
+    },
+    {
+      "before": "pl/typescript/grpc-js/1_client.md",
+      "after": "pl/typescript/grpc-js/01_client.md",
+      "linesBefore": 264,
+      "linesAfter": 260,
+      "codeBlocksBefore": 14,
+      "codeBlocksAfter": 14,
+      "verified": true
+    },
+    {
+      "before": "pl/typescript/typescript-language/1_get_started.md",
+      "after": "pl/typescript/typescript-language/01_get_started.md",
+      "linesBefore": 1123,
+      "linesAfter": 1115,
+      "codeBlocksBefore": 61,
+      "codeBlocksAfter": 61,
+      "verified": true
+    },
+    {
+      "before": "pl/typescript/typescript-language/2_basics_everyday_types_narrowing.md",
+      "after": "pl/typescript/typescript-language/02_basics_everyday_types_narrowing.md",
+      "linesBefore": 1744,
+      "linesAfter": 1749,
+      "codeBlocksBefore": 94,
+      "codeBlocksAfter": 94,
+      "verified": true
+    },
+    {
+      "before": "pl/typescript/typescript-language/3_functions_objects_classes.md",
+      "after": "pl/typescript/typescript-language/03_functions_objects_classes.md",
+      "linesBefore": 3293,
+      "linesAfter": 3303,
+      "codeBlocksBefore": 187,
+      "codeBlocksAfter": 187,
+      "verified": true
+    },
+    {
+      "before": "pl/typescript/typescript-language/4_type_manipulation_and_modules.md",
+      "after": "pl/typescript/typescript-language/04_type_manipulation_and_modules.md",
+      "linesBefore": 2903,
+      "linesAfter": 2926,
+      "codeBlocksBefore": 158,
+      "codeBlocksAfter": 159,
+      "verified": true
+    },
+    {
+      "before": "pl/typescript/typescript-language/5_declaration_files_and_type_system.md",
+      "after": "pl/typescript/typescript-language/05_declaration_files_and_type_system.md",
+      "linesBefore": 2761,
+      "linesAfter": 2765,
+      "codeBlocksBefore": 143,
+      "codeBlocksAfter": 143,
+      "verified": true
+    },
+    {
+      "before": "pl/typescript/typescript-language/6_language_reference.md",
+      "after": "pl/typescript/typescript-language/06_language_reference.md",
+      "linesBefore": 1571,
+      "linesAfter": 1572,
+      "codeBlocksBefore": 98,
+      "codeBlocksAfter": 98,
+      "verified": true
+    },
+    {
+      "before": "pl/typescript/typescript-language/7_jsx_decorators_and_javascript.md",
+      "after": "pl/typescript/typescript-language/07_jsx_decorators_and_javascript.md",
+      "linesBefore": 2393,
+      "linesAfter": 2453,
+      "codeBlocksBefore": 122,
+      "codeBlocksAfter": 122,
+      "verified": true
+    },
+    {
+      "before": "pl/typescript/typescript-language/8_stdlib_types_async_collections.md",
+      "after": "pl/typescript/typescript-language/08_stdlib_types_async_collections.md",
+      "linesBefore": 633,
+      "linesAfter": 617,
+      "codeBlocksBefore": 34,
+      "codeBlocksAfter": 34,
+      "verified": true
+    },
+    {
+      "before": "pl/typescript/typescript-language/9_stdlib_types_array_string_dom.md",
+      "after": "pl/typescript/typescript-language/09_stdlib_types_array_string_dom.md",
+      "linesBefore": 657,
+      "linesAfter": 651,
+      "codeBlocksBefore": 35,
+      "codeBlocksAfter": 35,
+      "verified": true
+    },
+    {
+      "before": "security/encryption/00_aead.md",
+      "after": "security/encryption/00_aead.md",
+      "linesBefore": 145,
+      "linesAfter": 146,
+      "codeBlocksBefore": 1,
+      "codeBlocksAfter": 1,
+      "verified": true
+    },
+    {
+      "before": "security/encryption/01_galois_counter_mode.md",
+      "after": "security/encryption/01_galois_counter_mode.md",
+      "linesBefore": 255,
+      "linesAfter": 255,
+      "codeBlocksBefore": 1,
+      "codeBlocksAfter": 1,
+      "verified": true
+    },
+    {
+      "before": "security/encryption/02_chacha20_poly1305.md",
+      "after": "security/encryption/02_chacha20_poly1305.md",
+      "linesBefore": 248,
+      "linesAfter": 248,
+      "codeBlocksBefore": 3,
+      "codeBlocksAfter": 3,
+      "verified": true
+    },
+    {
+      "before": "security/encryption/03_ml_kem.md",
+      "after": "security/encryption/03_ml_kem.md",
+      "linesBefore": 210,
+      "linesAfter": 210,
+      "codeBlocksBefore": 0,
+      "codeBlocksAfter": 0,
+      "verified": true
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+<select v-model="flightType">
+  <option value="one-way flight">편도 항공권</option>
+  <option value="return flight">왕복 항공권</option>
+</select>
+
+<input type="date" v-model="departureDate">
+<input type="date" v-model="returnDate" :disabled="!isReturn">
+
+<button :disabled="!canBook" @click="book">예약하기</button>
+
+<p>{{ canBook ? '' : '귀국 날짜는 출발 날짜 이후여야 합니다.' }}</p>

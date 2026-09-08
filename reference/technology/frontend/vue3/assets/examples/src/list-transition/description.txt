@@ -1,0 +1,2 @@
+내장된 <TransitionGroup>로 FLIP 리스트 전환하기.
+https://aerotwist.com/blog/flip-your-animations/

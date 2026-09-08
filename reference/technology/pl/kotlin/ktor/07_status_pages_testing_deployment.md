@@ -1,0 +1,412 @@
+# Ktor StatusPages, 테스트, 배포
+
+<a id="13-statuspages--예외와-상태-코드-처리"></a>
+
+## 13. StatusPages: 예외와 상태 코드 처리
+
+> 출처: https://ktor.io/docs/server-status-pages.html
+
+### 개요
+
+`StatusPages`는 예외와 상태 코드에 따른 응답을 한 곳에서 정의하는 플러그인이다. 핸들러는 도메인 예외를 던지고, 플러그인은 이를 클라이언트에 보낼 응답으로 바꾼다.
+
+- 1\. 핸들러에서 던져진 예외를 상태 코드/본문으로 매핑
+- 2\. 특정 HTTP 상태 코드(예: 404)가 만들어졌을 때 응답 본문을 일관되게 교체
+
+이렇게 예외 처리와 상태 코드별 응답 구성을 모으면 핸들러마다 같은 변환 코드를 반복하지 않아도 된다.
+
+### 의존성과 설치
+
+```kotlin
+implementation("io.ktor:ktor-server-status-pages:$ktor_version")
+```
+
+```kotlin
+fun Application.configureStatusPages() {
+    install(StatusPages) {
+        // 1) 예외 매핑
+        exception<NotFoundException> { call, _ ->
+            call.respond(HttpStatusCode.NotFound, ErrorBody("not_found"))
+        }
+        exception<IllegalArgumentException> { call, cause ->
+            call.respond(HttpStatusCode.BadRequest, ErrorBody(cause.message ?: "bad request"))
+        }
+        exception<Throwable> { call, cause ->
+            application.log.error("unhandled", cause)
+            call.respond(HttpStatusCode.InternalServerError, ErrorBody("internal_error"))
+        }
+
+        // 2) 상태 코드 핸들러
+        status(HttpStatusCode.NotFound) { call, status ->
+            call.respondText("404 — ${call.request.uri}", status = status)
+        }
+    }
+}
+```
+
+- `exception<T>`는 가장 구체적인 타입부터 매칭됨
+  - 마지막에 `Throwable` 폴백을 두면 모든 미처리 예외를 잡아낼 수 있음
+
+### 정적 HTML로 에러 페이지 제공
+
+`statusFile`은 파일명 패턴에서 `#`을 상태 코드로 바꿔 해당 HTML을 제공한다. 상태 코드마다 별도의 에러 페이지를 두고 싶을 때 사용한다.
+
+```kotlin
+install(StatusPages) {
+    statusFile(
+        HttpStatusCode.NotFound,
+        HttpStatusCode.Unauthorized,
+        filePattern = "error#.html"
+    )
+}
+```
+
+- 위 예시는 404 → `error404.html`, 401 → `error401.html`을 응답함 (둘 다 정적 리소스에 있어야 함).
+
+### 도메인 예외와 묶기
+
+도메인 예외를 계층으로 정의하면 각 예외에 맞는 응답을 `StatusPages`에서 함께 관리할 수 있다.
+
+```kotlin
+sealed class AppException(msg: String) : RuntimeException(msg) {
+    class NotFound(what: String)        : AppException("$what not found")
+    class Forbidden(reason: String)     : AppException(reason)
+    class Validation(val field: String) : AppException("invalid: $field")
+}
+
+install(StatusPages) {
+    exception<AppException.NotFound>   { call, e -> call.respond(HttpStatusCode.NotFound, ErrorBody(e.message!!)) }
+    exception<AppException.Forbidden>  { call, e -> call.respond(HttpStatusCode.Forbidden, ErrorBody(e.message!!)) }
+    exception<AppException.Validation> { call, e -> call.respond(HttpStatusCode.UnprocessableEntity, ValidationError(e.field)) }
+}
+```
+
+이렇게 매핑해 두면 비즈니스 로직에서는 `throw AppException.NotFound("user")`로 실패를 알리고, HTTP 응답 구성은 플러그인에 맡길 수 있다.
+
+### 주의할 점
+
+- `StatusPages`에서 응답을 보낸 후 같은 호출에 다시 응답을 시도하면 예외가 발생함
+- `status()` 핸들러는 상태 코드가 명시적으로 설정된 경우에만 동작함 → 라우트 매칭이 실패해서 발생한 `404`도 처리하려면 `status(HttpStatusCode.NotFound)`를 등록해둘 것
+- `CallLogging`을 함께 사용하는 경우, 예외가 잡혀도 로그가 유실되지 않도록 `exception<Throwable>`에서 명시적으로 로그를 남기는 것이 안전함
+
+<a id="14-테스트-testapplication"></a>
+
+## 14. 테스트 (testApplication)
+
+> 출처: https://ktor.io/docs/server-testing.html
+
+### 핵심 아이디어
+
+`testApplication { ... }`은 테스트 엔진에 모듈을 올리고 in-memory `HttpClient`로 요청을 보낸다. 실제 TCP 소켓을 열지 않으므로 테스트가 빠르고, 병렬 실행에서도 포트 충돌이 생기지 않는다.
+
+### 의존성
+
+```kotlin
+testImplementation("io.ktor:ktor-server-test-host:$ktor_version")
+testImplementation(kotlin("test"))
+```
+
+### 기본 구조
+
+```kotlin
+class RootTest {
+    @Test
+    fun `GET root returns OK`() = testApplication {
+        application { module() }                 // 실제 모듈을 그대로 부팅
+        val res = client.get("/")
+        assertEquals(HttpStatusCode.OK, res.status)
+        assertEquals("Hello, World!", res.bodyAsText())
+    }
+}
+```
+
+- `application { ... }`: 모듈을 정의하는 자리, 보통 운영 코드의 `Application.module()`을 그대로 호출함
+- `client`: in-memory 클라이언트, `get`, `post`, `setBody`, `headers { ... }` 등을 제공함
+
+### 설정 오버라이드
+
+- 테스트 전용 설정으로 띄우고 싶을 때:
+
+```kotlin
+@Test
+fun `custom config`() = testApplication {
+    environment {
+        config = MapApplicationConfig(
+            "ktor.deployment.port" to "0",
+            "jwt.secret" to "test-secret",
+        )
+    }
+    application { module() }
+    // ...
+}
+```
+
+- `application.conf` / `application.yaml` 자체를 교체하려면 `ApplicationConfig`를 만들어서 넣어주면 됨
+
+### 클라이언트 커스터마이즈
+
+- `HttpClient` 기능이 필요하면 `createClient`로 별도 클라이언트를 만들 수 있음
+
+```kotlin
+@Test
+fun `posts JSON`() = testApplication {
+    application { module() }
+
+    val json = createClient {
+        install(ContentNegotiation) { json() }
+    }
+
+    val res = json.post("/users") {
+        contentType(ContentType.Application.Json)
+        setBody(CreateUser(name = "ada"))
+    }
+    assertEquals(HttpStatusCode.Created, res.status)
+}
+```
+
+- 쿠키 기반 세션을 다룰 때는 `HttpCookies`를 설치한 클라이언트로 로그인 → 인증이 필요한 엔드포인트 호출까지 이어지는 흐름을 그대로 테스트함
+
+```kotlin
+@Test
+fun `session cookie is preserved across requests`() = testApplication {
+    application { module() }
+
+    val client = createClient {
+        install(HttpCookies)
+    }
+
+    val loginResponse = client.get("/login")
+    assertEquals(HttpStatusCode.OK, loginResponse.status)
+
+    val response1 = client.get("/user")
+    assertEquals("Session ID is 123abc. Reload count is 1.", response1.bodyAsText())
+
+    val response2 = client.get("/user")
+    assertEquals("Session ID is 123abc. Reload count is 2.", response2.bodyAsText())
+}
+```
+
+`HttpCookies`는 `/login` 응답의 `Set-Cookie`를 저장하고 이후 `/user` 요청에 같은 쿠키를 실어 보낸다. 따라서 위 테스트에서는 서버의 세션 카운터가 요청마다 증가하는지 확인해 쿠키가 유지되는지 판단한다.
+
+### 외부 서비스 모킹
+
+- `externalServices { hosts(...) { ... } }`로 외부 호스트로의 요청을 가짜 라우팅으로 가로챌 수 있음
+
+```kotlin
+testApplication {
+    externalServices {
+        hosts("https://issuer.example") {
+            routing {
+                get("/.well-known/jwks.json") {
+                    call.respondText("""{"keys":[]}""")
+                }
+            }
+        }
+    }
+    application { module() }
+}
+```
+
+### WebSocket 테스트
+
+```kotlin
+@Test
+fun `ws echo`() = testApplication {
+    application { module() }
+    val ws = createClient { install(WebSockets) }
+
+    ws.webSocket("/echo") {
+        send("hello")
+        val reply = (incoming.receive() as Frame.Text).readText()
+        assertEquals("ECHO: hello", reply)
+    }
+}
+```
+
+### HTTPS 엔드포인트 테스트
+
+- `testApplication`의 in-memory 클라이언트로도 요청 프로토콜을 `URLBuilder.protocol`로 지정하면 보안 커넥터로 라우팅된 핸들러를 그대로 검증할 수 있음
+
+```kotlin
+@Test
+fun `responds over https`() = testApplication {
+    application { module() }
+
+    val response = client.get("/") {
+        url { protocol = URLProtocol.HTTPS }
+    }
+    assertEquals("Hello, world!", response.bodyAsText())
+}
+```
+
+- 실제 TLS 핸드셰이크 없이도 `call.request.local.scheme`이 `https`인 경우의 분기 로직(리다이렉트, `Secure` 쿠키 등)을 검증할 수 있음
+
+### HttpClient를 이용한 End-to-End 테스트
+
+`testApplication`은 실제 소켓을 열지 않는다. 네트워크 계층까지 검증해야 한다면 `embeddedServer`로 서버를 기동한 뒤 일반 `HttpClient`로 요청을 보낸다.
+
+```kotlin
+abstract class TestServer {
+    private lateinit var server: EmbeddedServer<*, *>
+
+    @BeforeTest
+    fun startServer() {
+        server = embeddedServer(Netty, port = 8080, module = Application::module)
+            .start(wait = false)
+    }
+
+    @AfterTest
+    fun stopServer() {
+        server.stop(1000, 2000)
+    }
+}
+
+class EmbeddedServerTest : TestServer() {
+    @Test
+    fun rootRouteRespondsWithHelloWorldString(): Unit = runBlocking {
+        val response: String = HttpClient().get("http://localhost:8080/").body()
+        assertEquals("Hello, world!", response)
+    }
+}
+```
+
+- `testApplication`보다 느리고 포트 충돌 가능성이 있으므로, 배포 전 스모크 테스트나 실제 엔진 동작(연결 타임아웃, 압축 등)을 확인해야 할 때만 제한적으로 사용함
+
+### 패턴 메모
+
+- 단위 테스트는 핸들러를 직접 호출하기 어려움 → 보통 `testApplication`을 사용한 경량 통합 테스트로 라우트 단위 검증함
+- 도메인 로직은 별도 모듈로 빼서 일반 Kotlin 단위 테스트로 검증하는 편이 빠름
+- 테스트마다 모듈 부팅 비용이 작지만 0은 아님 → 한 클래스 안에서 같은 `testApplication { }` 블록을 공유하는 헬퍼를 만들어 쓰는 패턴도 흔함
+
+## 15. 배포
+
+> 출처:
+
+> - https://ktor.io/docs/server-fatjar.html
+
+> - 일반적인 컨테이너/네이티브 배포 패턴
+
+### 배포 옵션 한눈에
+
+- Fat JAR
+  - 사용 시점: 가장 단순한 JVM 실행
+  - 산출물: `app-all.jar`
+- Docker 이미지
+  - 사용 시점: 컨테이너 오케스트레이션
+  - 산출물: OCI 이미지
+- Application 플러그인 tar/zip
+  - 사용 시점: 시스템 서비스로 설치
+  - 산출물: `bin/` + `lib/` 트리
+- WAR (Servlet)
+  - 사용 시점: 외부 서블릿 컨테이너 사용
+  - 산출물: `app.war`
+- GraalVM Native Image
+  - 사용 시점: 빠른 부팅, 낮은 메모리
+  - 산출물: 네이티브 바이너리
+
+### Fat JAR: Ktor Gradle 플러그인
+
+- 가장 빠른 길은 Ktor Gradle 플러그인이 제공하는 `buildFatJar` 태스크임
+
+```kotlin
+// build.gradle.kts
+plugins {
+    kotlin("jvm") version "2.0.0"
+    id("io.ktor.plugin") version "3.5.0"
+    application
+}
+
+application {
+    mainClass.set("com.example.ApplicationKt")
+}
+
+ktor {
+    fatJar {
+        archiveFileName.set("app.jar")
+    }
+}
+```
+
+- 빌드 & 실행:
+
+```bash
+./gradlew buildFatJar
+java -jar build/libs/app.jar
+```
+
+- `runFatJar` 태스크는 빌드 직후 바로 실행해줌
+
+> Kotlin Multiplatform 플러그인과 함께 사용하면 fatJar가 비활성화됨. JVM 전용 모듈을 별도로 두고 MPP 모듈을 의존성으로 추가하는 것이 정석임.
+
+### Shadow 플러그인 (수동 설정)
+
+- Ktor 플러그인 없이 직접 fat JAR을 만들고 싶다면 Shadow 플러그인을 사용함
+
+```kotlin
+plugins {
+    kotlin("jvm") version "2.0.0"
+    id("com.github.johnrengelman.shadow") version "8.1.1"
+    application
+}
+
+application { mainClass.set("com.example.ApplicationKt") }
+
+tasks.shadowJar {
+    archiveBaseName.set("app")
+    archiveClassifier.set("")
+    archiveVersion.set("")
+}
+```
+
+```bash
+./gradlew shadowJar
+java -jar build/libs/app.jar
+```
+
+### Docker
+
+- 흔한 멀티 스테이지 패턴:
+
+```dockerfile
+# ---- build ----
+FROM gradle:8.10-jdk21 AS build
+WORKDIR /src
+COPY . .
+RUN ./gradlew buildFatJar --no-daemon
+
+# ---- runtime ----
+FROM eclipse-temurin:21-jre
+WORKDIR /app
+COPY --from=build /src/build/libs/app.jar /app/app.jar
+EXPOSE 8080
+ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+```
+
+- 환경변수로 설정을 주입하려면 `application.conf`에 `${?PORT}`처럼 선택적 보간 키를 미리 선언해두는 것이 깔끔함 (`-Dconfig.override.X` 또는 `-P:ktor.deployment.X=...`도 가능).
+- 헬스체크 엔드포인트(`get("/healthz") { call.respond(HttpStatusCode.OK) }`)는 거의 항상 둠
+
+### Application 플러그인 (tar/zip)
+
+- Gradle 표준 `application` 플러그인이 만드는 `distZip` / `distTar`는 systemd / nssm 같은 시스템 서비스 매니저로 띄울 때 깔끔함
+
+```bash
+./gradlew installDist
+./build/install/<project>/bin/<project>
+```
+
+### 서블릿 컨테이너 (WAR)
+
+Tomcat이나 Jetty 같은 외부 서블릿 컨테이너에 배포해야 한다면 `ServletApplicationEngine`과 `war` 플러그인을 사용한다. 이 조합으로 컨테이너에 배포할 WAR를 생성할 수 있다.
+
+### GraalVM Native Image
+
+- 엔진을 CIO로 두고 `org.graalvm.buildtools.native` 플러그인을 적용하면 단일 바이너리로 빌드할 수 있음 → 시작 시간과 메모리가 크게 줄어들지만, 리플렉션을 쓰는 라이브러리(Jackson 등)는 별도 설정 필요
+
+### 운영 체크리스트
+
+- `application.conf`의 secret/host 같은 값은 환경변수로 분리
+- `CallLogging` 또는 별도 액세스 로그를 켜둘 것
+- `StatusPages`에서 `Throwable` 폴백을 등록해 5xx 본문을 일관되게 유지
+- 그레이스풀 셧다운(`shutdownGracePeriod`, `shutdownTimeout`)을 컨테이너 종료 신호와 맞춰서 설정
+- 프록시 뒤라면 `ForwardedHeaders` 또는 `XForwardedHeaders` 설치
+- 메트릭은 `MicrometerMetrics`로 Prometheus 등에 노출

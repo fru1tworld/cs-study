@@ -1,0 +1,1228 @@
+# ZIO 핵심 데이터 타입
+
+## ZIO 핵심 데이터 타입
+
+> 원본: https://zio.dev/reference/core/
+
+<a id="1-zior-e-a-데이터-타입the-zio-data-type"></a>
+### 1. ZIO[R, E, A] 데이터 타입(The ZIO Data Type)
+
+`ZIO[R, E, A]`는 실패하거나 성공할 수 있는 프로그램(effectful program)을 모델링하는 ZIO의 핵심 타입이다. 이 값은 불변이며 지연 평가되는 계산을 기술하므로, 값을 만들었다고 프로그램이 바로 실행되지는 않는다. 이 단계에서는 동시성 프로그램을 어떻게 실행할지 기술한 데이터 구조, 즉 청사진(blueprint)을 만든다.
+
+#### 1.1 세 가지 타입 파라미터(Three Type Parameters)
+
+- `ZIO[R, E, A]`의 세 타입 파라미터가 의미하는 바:
+
+- R (환경, Environment): 효과가 실행되기 위해 필요한 환경(environment) 요구 사항
+  - `Any` 지정 시 요구 사항 없음을 의미
+- E (실패, Failure): 효과가 실패할 때의 오류 타입(error type). `Nothing` 지정 시 그 효과는 실패 불가(cannot fail)를 의미
+- A (성공, Success): 효과가 성공했을 때의 결과 값 타입(success value type). `Unit`은 유용한 출력 없음을 의미, `Nothing`은 무한히 실행됨(infinite execution)을 의미
+
+#### 1.2 함수로서의 직관(Intuition as a Function)
+
+- 공식 문서 설명:
+
+> "`ZIO[R, E, A]` 타입의 값은 다음 함수 타입의 효과적인 버전(effectful version)과 같다: `R => Either[E, A]`"
+
+이 비유에서 `ZIO` 값은 환경 `R`을 받아 실패 `E` 또는 성공 `A`를 `Either[E, A]`로 반환하는 함수에 해당한다. 여기에 부수 효과, 비동기성, 동시성, 리소스 안전성까지 담는다는 점을 함께 고려하면 된다.
+
+#### 1.3 변성(Variance)
+
+- `ZIO`의 타입 시그니처는 다음과 같은 변성(variance) 주석을 가짐
+
+```scala
+trait ZIO[-R, +E, +A] {
+  def tap[R1 <: R, E1 >: E](f: A => ZIO[R1, E1, Any]): ZIO[R1, E1, A]
+  def tapSome[R1 <: R, E1 >: E](f: PartialFunction[A, ZIO[R1, E1, Any]]): ZIO[R1, E1, A]
+}
+```
+
+- 환경 `R`은 반공변(contravariant, `-R`)
+- 오류 `E`와 성공 `A`는 공변(covariant, `+E`, `+A`)
+
+<a id="2-타입-별칭type-aliases"></a>
+
+### 2. 타입 별칭(Type Aliases)
+
+- `ZIO`는 자주 쓰이는 타입 파라미터 조합을 위해 편리한 타입 별칭(type alias)들을 제공
+
+```scala
+type UIO[A]     = ZIO[Any, Nothing, A]      // 환경 없음, 실패 불가
+type URIO[R, A] = ZIO[R, Nothing, A]        // 환경 있음, 실패 불가
+type Task[A]    = ZIO[Any, Throwable, A]    // 환경 없음, Throwable 오류
+type RIO[R, A]  = ZIO[R, Throwable, A]      // 환경 있음, Throwable 오류
+type IO[E, A]   = ZIO[Any, E, A]            // 환경 없음, 커스텀 오류
+```
+
+- 각 별칭의 의미:
+
+- UIO[A]: `ZIO[Any, Nothing, A]`
+  - 특정 환경을 요구하지 않고, 실패 불가(cannot fail)하며, 타입 `A`의 값으로 성공하는 효과
+  - 문서는 이를 예외 없는 효과(unexceptional effect)라고 지칭
+  - Scala에서 `Nothing`은 거주 불가능한 타입(uninhabitable type) → `UIO[A]` 값은 "오류를 낼 수 없는(infallible)" 효과로 간주
+  - `A`를 산출할 수는 있어도 절대 실패하지 않음
+- URIO[R, A]: `ZIO[R, Nothing, A]`. 환경 `R`을 요구하지만 실패 불가한 효과
+- Task[A]: `ZIO[Any, Throwable, A]`. 환경을 요구하지 않으며, 오류 타입이 `Throwable`로 고정된 효과
+- RIO[R, A]: `ZIO[R, Throwable, A]`. 환경 `R`을 요구하고, 오류 타입이 `Throwable`로 고정된 효과
+- IO[E, A]: `ZIO[Any, E, A]`. 환경을 요구하지 않으며, 커스텀 오류 타입 `E`를 가지는 효과
+
+- `Task`와 `RIO`: 오류 파라미터가 `Throwable`로 고정된 예외적 효과(exceptional effect)
+- `UIO`와 `URIO`: 오류 파라미터가 `Nothing`으로 고정되어 실패 불가함을 나타내는 예외 없는 효과(unexceptional effect)
+
+#### 2.1 UIO 예제(Fibonacci)
+
+- `UIO`를 사용하는 피보나치(Fibonacci) 구현 예제
+  - 절대 실패하지 않으므로 오류 타입이 `Nothing`인 `UIO`로 표현
+
+```scala
+import zio.{UIO, ZIO}
+
+def fib(n: Int): UIO[Int] =
+  if (n <= 1) {
+    ZIO.succeed(1)
+  } else {
+    for {
+      fiber1 <- fib(n - 2).fork
+      fiber2 <- fib(n - 1).fork
+      v2     <- fiber2.join
+      v1     <- fiber1.join
+    } yield v1 + v2
+  }
+```
+
+#### 2.2 설계 철학: 최소 권한의 원칙(Principle of Least Power)
+
+문서는 최소 권한의 원칙(Principle of Least Power)에 따라 필요한 기능에 맞는 타입 별칭을 권장한다. 더 약한 효과 타입으로 충분하다면 범용 `ZIO` 대신 그 타입을 쓰는 것이다. 예를 들어 실패하지 않는 효과를 `UIO`로 선언하면 `Task`나 `ZIO`로 선언할 때보다 타입에서 더 많은 정보를 읽을 수 있다.
+
+<a id="3-효과-생성creating-effects"></a>
+
+### 3. 효과 생성(Creating Effects)
+
+#### 3.1 성공과 실패(Success and Failure)
+
+```scala
+val s1 = ZIO.succeed(42)
+val f1 = ZIO.fail("Uh oh!")
+val f2 = ZIO.fail(new Exception("Uh oh!"))
+```
+
+#### 3.2 Option으로부터 생성(From Option)
+
+```scala
+val zoption: IO[Option[Nothing], Int] = ZIO.fromOption(Some(2))
+val zoption2: IO[String, Int] = zoption.mapError(_ => "It wasn't there!")
+
+val someInt: ZIO[Any, Nothing, Option[Int]] = ZIO.some(3)
+val noneInt: ZIO[Any, Nothing, Option[Nothing]] = ZIO.none
+
+val r1: ZIO[Any, Throwable, Int] = ZIO.getOrFail(parseInt("1.2"))
+val r2: ZIO[Any, Unit, Int] = ZIO.getOrFailUnit(parseInt("1.2"))
+val r3: ZIO[Any, NumberFormatException, Int] = 
+  ZIO.getOrFailWith(new NumberFormatException("invalid input"))(parseInt("1.2"))
+
+val optionalValue: Option[String] = ???
+val r1: ZIO[Any, String, Unit] = ZIO.noneOrFail(optionalValue)
+val r2: ZIO[Any, NumberFormatException, Unit] = 
+  ZIO.noneOrFailWith(optionalValue)(e => new NumberFormatException(e))
+```
+
+#### 3.3 Either, Try, Future로부터 생성(From Either, Try, Future)
+
+```scala
+val zeither = ZIO.fromEither(Right("Success!"))
+val left: UIO[Either[A, Nothing]] = ZIO.left(value)
+val right: UIO[Either[Nothing, A]] = ZIO.right(value)
+
+import scala.util.Try
+val ztry = ZIO.fromTry(Try(42 / 0))
+
+import scala.concurrent.Future
+lazy val future = Future.successful("Hello!")
+val zfuture: Task[String] = ZIO.fromFuture { implicit ec =>
+  future.map(_ => "Goodbye!")
+}
+
+import scala.concurrent.Promise
+val func: String => String = s => s.toUpperCase
+for {
+  promise <- ZIO.succeed(scala.concurrent.Promise[String]())
+  _ <- ZIO.attempt {
+    Try(func("hello world from future")) match {
+      case Success(value) => promise.success(value)
+      case Failure(exception) => promise.failure(exception)
+    }
+  }.fork
+  value <- ZIO.fromPromiseScala(promise)
+  _ <- Console.printLine(s"Hello World in UpperCase: $value")
+} yield ()
+```
+
+#### 3.4 Fiber로부터 생성(From Fiber)
+
+```scala
+val io: IO[Nothing, String] = ZIO.fromFiber(Fiber.succeed("Hello from Fiber!"))
+```
+
+#### 3.5 동기 부수 효과(Synchronous Side-Effects)
+
+- `ZIO.attempt`: 예외를 던질 수 있는 동기 코드를 안전하게 효과로 감쌈(오류 타입은 `Throwable`)
+- 절대 실패하지 않는 부수 효과는 `ZIO.succeed`로 감쌈
+- `refineToOrDie`로 오류 타입을 더 구체적인 타입으로 좁힘 가능
+
+```scala
+import scala.io.StdIn
+val getLine: Task[String] = ZIO.attempt(StdIn.readLine())
+
+def printLine(line: String): UIO[Unit] = ZIO.succeed(println(line))
+val succeedTask: UIO[Long] = ZIO.succeed(java.lang.System.nanoTime())
+
+import java.io.IOException
+val printLine2: IO[IOException, String] =
+  ZIO.attempt(scala.io.StdIn.readLine()).refineToOrDie[IOException]
+```
+
+#### 3.6 블로킹 연산(Blocking Operations)
+
+블로킹 작업은 전용 블로킹 스레드 풀에서 실행해야 한다. 이를 위해 `ZIO.attemptBlocking`, `ZIO.blocking`, `ZIO.attemptBlockingCancelable`을 사용한다. 아래 예제에서는 반복 작업과 URL 다운로드, 소켓 연결 대기를 각각 감싼다.
+
+```scala
+def blockingTask(n: Int) = ZIO.attemptBlocking {
+  do {
+    println(s"Running blocking task number $n on dedicated blocking thread pool")
+    Thread.sleep(3000)
+  } while (true)
+}
+
+import scala.io.{ Codec, Source }
+def download(url: String) =
+  ZIO.attempt {
+    Source.fromURL(url)(Codec.UTF8).mkString
+  }
+def safeDownload(url: String) =
+  ZIO.blocking(download(url))
+
+import java.net.ServerSocket
+def accept(l: ServerSocket) =
+  ZIO.attemptBlockingCancelable(l.accept())(ZIO.succeed(l.close()))
+```
+
+#### 3.7 비동기 부수 효과(Asynchronous Side-Effects)
+
+콜백 기반(callback-based)의 레거시 비동기 API는 `ZIO.async`로 효과에 연결한다. 아래에서는 로그인 성공 콜백의 `User`를 성공 값으로, 실패 콜백의 `AuthError`를 오류 값으로 전달한다.
+
+```scala
+object legacy {
+  def login(
+    onSuccess: User => Unit,
+    onFailure: AuthError => Unit): Unit = ???
+}
+
+val login: IO[AuthError, User] =
+  ZIO.async[Any, AuthError, User] { callback =>
+    legacy.login(
+      user => callback(ZIO.succeed(user)),
+      err  => callback(ZIO.fail(err))
+    )
+  }
+```
+
+#### 3.8 지연된 효과(Suspended Effects)
+
+- `ZIO.suspend`는 효과 생성 자체를 지연
+
+```scala
+import java.io.IOException
+val suspendedEffect: ZIO[Any, Throwable, Unit] =
+  ZIO.suspend(ZIO.attempt(Console.printLine("Suspended Hello World!")))
+```
+
+<a id="4-변환과-합성transformations-and-composition"></a>
+
+### 4. 변환과 합성(Transformations and Composition)
+
+#### 4.1 매핑(Mapping)
+
+```scala
+val mappedValue: UIO[Int] = ZIO.succeed(21).map(_ * 2)
+```
+
+#### 4.2 탭핑(Tapping)
+
+`tap`은 효과의 성공 값으로 부수 효과를 수행하면서 원래 값을 그대로 전달한다. 일부 값에만 적용하려면 부분 함수를 받는 `tapSome`을 쓴다. 아래 소수 찾기 예제에서는 `tap`으로 검사한 난수를 기록한 뒤, 그 난수를 `repeatUntil`의 소수 판정에 그대로 넘긴다.
+
+```scala
+trait ZIO[-R, +E, +A] {
+  def tap[R1 <: R, E1 >: E](f: A => ZIO[R1, E1, Any]): ZIO[R1, E1, A]
+  def tapSome[R1 <: R, E1 >: E](f: PartialFunction[A, ZIO[R1, E1, Any]]): ZIO[R1, E1, A]
+}
+
+import java.io.IOException
+object MainApp extends ZIOAppDefault {
+  def isPrime(n: Int): Boolean =
+    if (n <= 1) false else (2 until n).forall(i => n % i != 0)
+  
+  val myApp: ZIO[Any, IOException, Unit] =
+    for {
+      ref <- Ref.make(List.empty[Int])
+      prime <-
+        Random
+          .nextIntBetween(0, Int.MaxValue)
+          .tap(random => ref.update(_ :+ random))
+          .repeatUntil(isPrime)
+      _ <- Console.printLine(s"found a prime number: $prime")
+      tested <- ref.get
+      _ <- Console.printLine(
+        s"list of tested numbers: ${tested.mkString(", ")}"
+      )
+    } yield ()
+  
+  def run = myApp
+}
+```
+
+#### 4.3 연쇄(Chaining)
+
+`flatMap`은 앞 효과의 결과를 받아 다음 효과를 순차적으로 연결한다. 여러 효과를 이어야 한다면 for-comprehension으로 표현할 수 있다. 아래 프로그램은 이름을 묻고 입력을 받은 뒤, 그 이름을 넣어 인사한다.
+
+```scala
+val chainedActionsValue: UIO[List[Int]] = ZIO.succeed(List(1, 2, 3)).flatMap { list =>
+  ZIO.succeed(list.map(_ + 1))
+}
+
+val program =
+  for {
+    _    <- Console.printLine("Hello! What is your name?")
+    name <- Console.readLine
+    _    <- Console.printLine(s"Hello, ${name}, welcome to ZIO!")
+  } yield ()
+```
+
+#### 4.4 지핑(Zipping)
+
+- `zip`: 두 효과의 결과를 튜플로 결합
+- `zipRight`(또는 `*>`): 왼쪽 효과의 결과를 버리고 오른쪽 결과만 취함
+
+```scala
+val zipped: UIO[(String, Int)] =
+  ZIO.succeed("4").zip(ZIO.succeed(2))
+
+val zipRight1 =
+  Console.printLine("What is your name?").zipRight(Console.readLine)
+
+val zipRight2 =
+  Console.printLine("What is your name?") *>
+  Console.readLine
+```
+
+#### 4.5 병렬 처리와 경쟁(Parallelism and Racing)
+
+- `race`는 두 효과를 동시에 실행 → 먼저 완료되는 쪽의 결과를 취함
+
+```scala
+for {
+  winner <- ZIO.succeed("Hello").race(ZIO.succeed("Goodbye"))
+} yield winner
+```
+
+#### 4.6 타임아웃(Timeout)
+
+```scala
+ZIO.succeed("Hello").timeout(10.seconds)
+```
+
+#### 4.7 ZIO 애스펙트(ZIO Aspect)
+
+- `@@` 연산자로 횡단 관심사(cross-cutting concern)를 효과에 적용 가능(디버깅, 재시도, 로깅 등).
+
+```scala
+val myApp: ZIO[Any, Throwable, String] =
+  ZIO.attempt("Hello!") @@ ZIOAspect.debug
+
+def download(url: String): ZIO[Any, Throwable, Chunk[Byte]] = ZIO.succeed(???)
+ZIO.foreachPar(List("zio.dev", "google.com")) { url =>
+  download(url) @@
+    ZIOAspect.retry(Schedule.fibonacci(1.seconds)) @@
+    ZIOAspect.loggedWith[Chunk[Byte]](file => s"Downloaded $url file with size of ${file.length} bytes")
+}
+```
+
+<a id="5-오류-관리error-management"></a>
+
+### 5. 오류 관리(Error Management)
+
+#### 5.1 Either로의 변환(Either)
+
+- `either`: 오류를 성공 채널의 `Either`로 노출
+- `absolve`: 그 역방향 변환을 수행
+
+```scala
+val zeither: UIO[Either[String, Int]] =
+  ZIO.fail("Uh oh!").either
+
+def sqrt(io: UIO[Double]): IO[String, Double] =
+  ZIO.absolve(
+    io.map(value =>
+      if (value < 0.0) Left("Value must be >= 0.0")
+      else Right(Math.sqrt(value))
+    )
+  )
+```
+
+#### 5.2 오류 잡기(Catching)
+
+- `catchAll`: 모든 오류를 잡아 복구
+- `catchSome`: 일부 오류만 잡아 복구
+
+```scala
+val z: IO[IOException, Array[Byte]] =
+  readFile("primary.json").catchAll(_ =>
+    readFile("backup.json"))
+
+val data: IO[IOException, Array[Byte]] =
+  readFile("primary.data").catchSome {
+    case _ : FileNotFoundException =>
+      readFile("backup.data")
+  }
+```
+
+#### 5.3 폴백(Fallback)
+
+- `orElse`는 첫 효과가 실패하면 대안 효과를 시도
+
+```scala
+val primaryOrBackupData: IO[IOException, Array[Byte]] =
+  readFile("primary.data").orElse(readFile("backup.data"))
+```
+
+#### 5.4 폴딩(Folding)
+
+- `fold`/`foldZIO`는 실패와 성공 두 경우를 모두 처리(`foldZIO`는 각 경우에 또 다른 효과를 반환).
+
+```scala
+lazy val DefaultData: Array[Byte] = Array(0, 0)
+val primaryOrDefaultData: UIO[Array[Byte]] =
+  readFile("primary.data").fold(
+    _    => DefaultData,
+    data => data)
+
+val primaryOrSecondaryData: IO[IOException, Array[Byte]] =
+  readFile("primary.data").foldZIO(
+    _    => readFile("secondary.data"),
+    data => ZIO.succeed(data))
+
+val urls: UIO[Content] =
+  readUrls("urls.json").foldZIO(
+    error   => ZIO.succeed(NoContent(error)),
+    success => fetchContent(success)
+  )
+```
+
+#### 5.5 재시도(Retrying)
+
+- `retry`: 스케줄(Schedule)에 따라 실패한 효과를 재시도
+- `retryOrElse`: 재시도 소진 시 폴백을 제공
+
+```scala
+val retriedOpenFile: ZIO[Any, IOException, Array[Byte]] =
+  readFile("primary.data").retry(Schedule.recurs(5))
+
+readFile("primary.data").retryOrElse(
+  Schedule.recurs(5),
+  (_, _:Long) => ZIO.succeed(DefaultData))
+```
+
+<a id="6-리소스-관리와-캐싱resource-management-and-caching"></a>
+
+### 6. 리소스 관리와 캐싱(Resource Management and Caching)
+
+#### 6.1 종료자(Finalizing)
+
+- `ensuring`은 효과의 성공/실패와 무관하게 항상 실행되는 종료 로직(finalizer)을 부착
+
+```scala
+val finalizer =
+  ZIO.succeed(println("Finalizing!"))
+val finalized: IO[String, Unit] =
+  ZIO.fail("Failed!").ensuring(finalizer)
+
+var i: Int = 0
+val action: Task[String] =
+  ZIO.succeed(i += 1) *>
+    ZIO.fail(new Throwable("Boom!"))
+val cleanupAction: UIO[Unit] = ZIO.succeed(i -= 1)
+val composite = action.ensuring(cleanupAction)
+```
+
+#### 6.2 획득과 해제(Acquire Release)
+
+- `acquireReleaseWith`는 리소스를 안전하게 획득(acquire)하고, 사용(use) 후 반드시 해제(release)하도록 보장
+
+```scala
+val groupedFileData: IO[IOException, Unit] = ZIO.acquireReleaseWith(openFile("data.json"))(closeFile(_)) { file =>
+  for {
+    data    <- decodeData(file)
+    grouped <- groupData(data)
+  } yield grouped
+}
+
+import java.io.{ File, FileInputStream }
+import java.nio.charset.StandardCharsets
+object Main extends ZIOAppDefault {
+  def run = myAcquireRelease
+  
+  def closeStream(is: FileInputStream) =
+    ZIO.succeed(is.close())
+  
+  def convertBytes(is: FileInputStream, len: Long) =
+    ZIO.attempt {
+      val buffer = new Array[Byte](len.toInt)
+      is.read(buffer)
+      println(new String(buffer, StandardCharsets.UTF_8))
+    }
+  
+  val myAcquireRelease: Task[Unit] = for {
+    file   <- ZIO.attempt(new File("/tmp/hello"))
+    len    = file.length
+    string <- ZIO.acquireReleaseWith(ZIO.attempt(new FileInputStream(file)))(closeStream)(convertBytes(_, len))
+  } yield string
+}
+```
+
+#### 6.3 효과 메모이제이션(Memoizing Effects)
+
+`memoize`는 효과를 처음 한 번 실행한 결과를 캐싱하는 새 효과를 반환한다. 아래에서 `computeValue.memoize`로 얻은 효과를 세 번 실행해도 계산은 한 번만 이루어지므로 `Computing...`도 한 번만 출력된다.
+
+```scala
+val expensiveComputation: ZIO[Any, Nothing, Int] = ZIO.succeed(42)
+val memoized: ZIO[Any, Nothing, ZIO[Any, Nothing, Int]] =
+  expensiveComputation.memoize
+
+def computeValue: ZIO[Any, Nothing, Int] = {
+  ZIO.succeed {
+    println("Computing...")
+    42
+  }
+}
+object Example extends ZIOAppDefault {
+  def run =
+    for {
+      memoized <- computeValue.memoize
+      _        <- memoized  // prints "Computing..."
+      _        <- memoized  // returns cached result, no print
+      _        <- memoized  // returns cached result, no print
+    } yield ()
+}
+```
+
+#### 6.4 함수 메모이제이션(Memoizing Functions)
+
+효과를 반환하는 함수에 `ZIO.memoize`를 적용하면 입력별로 결과를 캐싱한다. 아래에서는 두 번째 `hello` 호출이 기존 결과를 재사용하고, 입력이 다른 `world` 호출은 새로 계산한다.
+
+```scala
+val expensiveLookup: String => ZIO[Any, Nothing, Int] = key => ZIO.succeed(key.length)
+for {
+  memoized <- ZIO.memoize(expensiveLookup)
+  result1  <- memoized("hello")   // computes and caches
+  result2  <- memoized("hello")   // returns cached result
+  result3  <- memoized("world")   // different input, computes anew
+} yield (result1, result2, result3)
+```
+
+#### 6.5 시간 제한 캐싱(Time-Limited Caching)
+
+캐시를 일정 시간만 유지하려면 TTL(time-to-live)을 받는 `cached`를 사용한다. TTL이 끝나기 전에 직접 비워야 한다면 무효화 핸들도 제공하는 `cachedInvalidate`를 쓴다. 다음 예제들은 캐시 재사용, TTL 만료, 수동 무효화, 여러 파이버의 동시 접근을 차례로 보여 준다.
+
+```scala
+val expensiveData: ZIO[Any, Nothing, String] = ZIO.succeed("data")
+for {
+  cachedIO <- expensiveData.cached(5.minutes)
+  result1  <- cachedIO  // runs computation and caches result
+  result2  <- cachedIO  // returns cached result (within 5 minutes)
+} yield (result1, result2)
+
+def fetchUserData: ZIO[Any, Nothing, String] = ZIO.succeed("user-data")
+for {
+  cached <- fetchUserData.cached(5.minutes)
+  _      <- cached                      // runs and caches
+  _      <- ZIO.sleep(6.minutes)
+  result <- cached                      // TTL expired, recomputes
+} yield result
+
+def freshData: ZIO[Any, Nothing, String] = ZIO.succeed("data")
+for {
+  pair              <- freshData.cachedInvalidate(1.hour)
+  (cached, invalidate) = pair
+  result1 <- cached      // runs and caches
+  result2 <- cached      // returns cached result
+  _       <- invalidate  // manually clear cache before TTL expires
+  result3 <- cached      // recomputes since cache was invalidated
+} yield (result1, result2, result3)
+
+def expensiveComputation: ZIO[Any, Nothing, Int] = ZIO.succeed {
+  println("Computing...")
+  42
+}
+for {
+  cached <- expensiveComputation.cached(5.minutes)
+  fiber1 <- cached.fork
+  fiber2 <- cached.fork
+  fiber3 <- cached.fork
+  result1 <- fiber1.join  // one executes the computation
+  result2 <- fiber2.join  // others wait for the same result
+  result3 <- fiber3.join  // all get 42, but computed only once
+} yield (result1, result2, result3)
+```
+
+<a id="7-exit-데이터-타입the-exit-data-type"></a>
+
+### 7. Exit 데이터 타입(The Exit Data Type)
+
+#### 7.1 개요(Overview)
+
+`Exit[E, A]`는 `IO`를 실행한 파이버가 어떻게 종료되었는지 나타낸다. 종료 결과는 다음 두 가지로 나뉜다.
+
+- `Exit.Success`: 타입 `A`의 성공 값을 담는다.
+- `Exit.Failure`: 타입 `E`의 실패 원인(`Cause`)을 담는다.
+
+#### 7.2 데이터 타입 정의(Data Type Definition)
+
+```scala
+sealed abstract class Exit[+E, +A] extends Product with Serializable { self =>
+  // Exit operators
+}
+
+object Exit {
+  final case class Success[+A](value: A)
+        extends Exit[Nothing, A]
+  final case class Failure[+E](cause: Cause[E]) extends Exit[E, Nothing]
+}
+```
+
+여기서 `Failure`는 단순한 `E` 대신 `Cause[E]`를 담는다. 기대된 오류뿐 아니라 결함(defect), 인터럽트 등 실패의 전체 정보를 보존하기 위해서다. `Cause`의 구조는 8장에서 살펴본다.
+
+#### 7.3 사용 예제(Usage Example)
+
+- 효과에 `ZIO#exit`를 호출하면 파이버의 성공 또는 실패 여부를 검사 가능
+
+```scala
+import zio._
+import zio.Console._
+import java.io.IOException
+
+val result: ZIO[Any, IOException, Unit] =
+  for {
+    successExit <- ZIO.succeed(1).exit
+    _ <- successExit match {
+      case Exit.Success(value) =>
+        printLine(s"exited with success value: ${value}")
+      case Exit.Failure(cause) =>
+        printLine(s"exited with failure state: $cause")
+    }
+  } yield ()
+```
+
+#### 7.4 미리 만들어진 Exit 값(Pre-constructed Exit Values)
+
+ZIO는 자주 쓰는 `Exit` 값을 미리 정의해 두므로 다음 값들은 직접 생성할 필요가 없다.
+
+- `Exit.unit`: `Unit`을 담는 성공 exit
+- `Exit.none`: `None`을 담는 성공 exit (타입: `Exit[Nothing, Option[Nothing]]`)
+
+```scala
+import zio._
+
+val unitExit: Exit[String, Unit] = Exit.unit
+val noneExit: Exit[String, Option[Nothing]] = Exit.none
+```
+
+<a id="8-cause-데이터-타입-개요the-cause-data-type-overview"></a>
+
+### 8. Cause 데이터 타입 개요(The Cause Data Type Overview)
+
+> 참고: Cause에 대한 심층적인 오류 관리 논의는 오류 관리(03) 문서에서 다루므로, 여기서는 개요만 정리.
+
+#### 8.1 Cause란 무엇인가(What is Cause?)
+
+- `Cause` 데이터 타입은 ZIO의 내부 오류 표현 메커니즘(underlying error representation mechanism). 공식 문서 설명:
+
+> "ZIO는 실패의 전체 이야기(full story of failure)를 저장하기 위해 `Cause[E]`를 사용하므로, 그 오류 모델은 **무손실**(lossless)이다."
+
+`ZIO[R, E, A]`의 오류 타입 `E`만으로는 예기치 않은 오류, 스택 트레이스, 실행 추적, 파이버 인터럽트 원인을 모두 담을 수 없다. `Cause`는 임의의 오류 타입만으로 표현하기 어려운 이런 세부 정보까지 보존한다.
+
+#### 8.2 설계: 세미링 구조(Semiring Structure)
+
+- ZIO는 `Cause`를 함수형 프로그래밍의 세미링(semiring) 데이터 구조로 구현
+- 이 설계는 "오류 타입을 나타내는 기본 타입 `E`를 취한 다음, 오류들의 순차적(sequential) 합성과 병렬(parallel) 합성을 완전히 무손실 방식으로 포착할 수 있게" 함
+
+```scala
+sealed abstract class Cause[+E] extends Product with Serializable { self =>
+  import Cause._
+  def trace: Trace = ???
+  final def ++[E1 >: E](that: Cause[E1]): Cause[E1] = Then(self, that)
+  final def &&[E1 >: E](that: Cause[E1]): Cause[E1] = Both(self, that)
+}
+```
+
+#### 8.3 Cause의 종류(Cause Variations)
+
+- Empty: 오류가 없음을 나타냄
+  - `Cause.empty`로 생성하며, 실패의 부재(absence of failure)를 표현
+
+- Fail: 타입 `E`의 기대된 오류(expected errors)를 나타냄
+  - `Cause.fail(value)`로 생성
+
+```scala
+ZIO.failCause(Cause.fail("Oh uh!")).cause.debug
+// Fail(Oh uh!,Trace(...))
+```
+
+- Die: 예기치 않은 결함(unexpected defects, `Throwable`)을 나타냄
+  - `Cause.die(throwable)`로 생성
+
+```scala
+ZIO.succeed(5 / 0).cause.debug
+// Die(java.lang.ArithmeticException: / by zero,...)
+```
+
+- Interrupt: 파이버 인터럽트(fiber interruption)를 나타내며, 파이버 ID와 스택 트레이스 정보를 담음
+
+```scala
+ZIO.interrupt.cause.debug
+// Interrupt(Runtime(2,1646471715),Trace(...))
+```
+
+- Stackless: 출력에서 스택 트레이스의 상세도(verbosity)를 제어하는 불리언 플래그로 원인을 감쌈
+  - `ZIO.dieMessage`가 트레이스 출력을 제한하기 위해 사용
+
+```scala
+ZIO.dieMessage("Boom!").cause.debug
+// Stackless(Die(java.lang.RuntimeException: Boom!,...),true)
+```
+
+- Both: 여러 동시 파이버가 동시에 실패할 때 오류들의 병렬 합성(parallel composition)을 인코딩
+
+```scala
+(ZIO.fail("Oh uh!") <&> ZIO.dieMessage("Boom!")).cause.debug
+// Both(Fail(...), Stackless(Die(...),true))
+```
+
+- Then: 오류들의 순차적 합성(sequential composition)을 인코딩
+  - 특히 try-finally 패턴에서 두 블록이 모두 실패하는 경우에 사용
+
+```scala
+ZIO.fail("first").ensuring(ZIO.die(new Exception("second"))).cause.debug
+// Then(Fail(first,...), Die(java.lang.Exception: second,...))
+```
+
+<a id="9-runtime-데이터-타입the-runtime-data-type"></a>
+
+### 9. Runtime 데이터 타입(The Runtime Data Type)
+
+#### 9.1 Runtime이란 무엇인가(What is a Runtime?)
+
+- `Runtime[R]`은 환경 `R` 안에서 작업(task)을 실행할 수 있는 객체
+- 공식 문서: "Runtime은 효과를 실행할 수 있으며(capable of executing effects)", "런타임은 스레드 풀(thread pool)을 효과가 필요로 하는 환경(environment)과 함께 묶는다(bundle)"
+
+#### 9.2 런타임 시스템 설명(Runtime System Explained)
+
+- ZIO 런타임 시스템(Runtime System)은 효과 청사진(effect blueprint)의 실행자(executor)로 동작
+- ZIO 코드 작성 시 동시성 프로그램의 실행을 기술하는 데이터 구조를 만드는 것 → 직접 실행하는 것이 아님
+- 런타임은 이 청사진의 명령어(instructions)를 한 단계씩 해석(interpret)하여 `Either[E, A]` 값으로 결과를 산출
+
+#### 9.3 핵심 책임(Core Responsibilities)
+
+- 런타임 시스템이 다루는 일곱 가지 핵심 책임:
+
+- 1\. 청사진 단계 실행(Execute blueprint steps): 완료될 때까지 모든 명령어를 반복적으로 처리
+- 2\. 오류 처리(Handle errors): 기대된 실패와 예기치 않은 실패를 모두 관리
+- 3\. 동시 파이버 스폰(Spawn concurrent fibers): `fork`가 호출되면 새 파이버를 생성
+- 4\. 협력적 양보(Yield cooperatively): 파이버들 사이에 CPU 리소스를 공정하게 분배
+- 5\. 트레이스 포착(Capture traces): 상세한 진단을 위해 실행 진행 상황을 추적
+- 6\. 종료자 실행 보장(Ensure finalizers run): 적절한 생명 주기 시점에 정리 로직을 실행
+- 7\. 비동기 콜백 처리(Handle async callbacks): 비동기 연산을 투명하게 관리
+
+#### 9.4 ZIO 효과 실행하기(Running ZIO Effects)
+
+- `unsafe.run` 사용
+
+  - 고급 사용 사례나 레거시 코드와의 통합을 위해 `Runtime.default.unsafe.run()` 사용
+
+  ```scala
+  import zio._
+
+  object RunZIOEffectUsingUnsafeRun extends scala.App {
+    val myAppLogic = for {
+      _ <- Console.printLine("Hello! What is your name?")
+      n <- Console.readLine
+      _ <- Console.printLine("Hello, " + n + ", good to meet you!")
+    } yield ()
+
+    Unsafe.unsafe { implicit unsafe =>
+      zio.Runtime.default.unsafe.run(
+        myAppLogic
+      ).getOrThrowFiberFailure()
+    }
+  }
+  ```
+
+- 기본 런타임(Default Runtime)
+
+  - ZIO는 일반적인 애플리케이션을 위해 `Runtime.default`를 제공
+
+  ```scala
+  object Runtime {
+    val default: Runtime[Any] =
+      Runtime(ZEnvironment.empty, FiberRefs.empty, RuntimeFlags.default)
+  }
+  ```
+
+  - 직접 접근하는 방법:
+
+  ```scala
+  object MainApp extends scala.App {
+    val myAppLogic = ZIO.succeed(???)
+    val runtime = Runtime.default
+    
+    Unsafe.unsafe { implicit unsafe =>
+      runtime.unsafe.run(myAppLogic).getOrThrowFiberFailure()
+    }
+  }
+  ```
+
+#### 9.5 런타임 설정 유형(Runtime Configuration Types)
+
+- 지역 범위 설정(Locally Scoped Configuration)
+
+  - 특정 코드 영역에만 적용되고 그 이후에는 원래대로 되돌아가는 설정 변경
+  - `ZIO#provideXYZ` 연산자 사용
+
+  - 설정 레이어(configuration layers)를 통한 방법:
+
+  ```scala
+  import zio._
+
+  object MainApp extends ZIOAppDefault {
+    val addSimpleLogger: ZLayer[Any, Nothing, Unit] =
+      Runtime.addLogger((_, _, _, message: () => Any, _, _, _, _) => println(message()))
+
+    def run = {
+      for {
+        _ <- ZIO.log("Application started!")
+        _ <- ZIO.log("Application is about to exit!")
+      } yield ()
+    }.provide(Runtime.removeDefaultLoggers ++ addSimpleLogger)
+  }
+  ```
+
+  - 특정 영역에만 범위를 한정한 경우:
+
+  ```scala
+  import zio._
+
+  object MainApp extends ZIOAppDefault {
+    val addSimpleLogger: ZLayer[Any, Nothing, Unit] =
+      Runtime.addLogger((_, _, _, message: () => Any, _, _, _, _) => println(message()))
+
+    def run =
+      for {
+        _ <- ZIO.log("Application started!")
+        _ <- {
+          for {
+            _ <- ZIO.log("I'm not going to be logged!")
+            _ <- ZIO.log("I will be logged by the simple logger.").provide(addSimpleLogger)
+            _ <- ZIO.log("Reset back to the previous configuration, so I won't be logged.")
+          } yield ()
+        }.provide(Runtime.removeDefaultLoggers)
+        _ <- ZIO.log("Application is about to exit!")
+      } yield ()
+  }
+  ```
+
+- 부트스트랩 레이어 설정(Bootstrap Layer Configuration)
+
+  - `ZIOApp`의 `bootstrap` 레이어를 오버라이드하면 애플리케이션 전역에 설정 적용 가능
+
+  ```scala
+  import zio._
+
+  object MainApp extends ZIOAppDefault {
+    val addSimpleLogger: ZLayer[Any, Nothing, Unit] =
+      Runtime.addLogger((_, _, _, message: () => Any, _, _, _, _) => println(message()))
+
+    override val bootstrap: ZLayer[Any, Nothing, Unit] =
+      Runtime.removeDefaultLoggers ++ addSimpleLogger
+
+    def run =
+      for {
+        _ <- ZIO.log("Application started!")
+        _ <- ZIO.log("Application is about to exit!")
+      } yield ()
+  }
+  ```
+
+  - 효과적인(effectful) 설정의 경우:
+
+  ```scala
+  import zio._
+
+  object MainApp extends ZIOAppDefault {
+    val addSimpleLogger: ZLayer[Any, Nothing, Unit] =
+      Runtime.addLogger((_, _, _, message: () => Any, _, _, _, _) => println(message()))
+
+    val effectfulConfiguration: ZLayer[Any, Nothing, Unit] =
+      ZLayer.fromZIO(ZIO.log("Started effectful workflow to customize runtime configuration"))
+
+    override val bootstrap: ZLayer[Any, Nothing, Unit] =
+      Runtime.removeDefaultLoggers ++ addSimpleLogger ++ effectfulConfiguration
+
+    def run =
+      for {
+        _ <- ZIO.log("Application started!")
+        _ <- ZIO.log("Application is about to exit!")
+      } yield ()
+  }
+  ```
+
+- 가상 스레드 지원(Virtual Threads Support)
+
+  - JDK 21 이상에서는 런타임을 가상 스레드(virtual threads)를 사용하도록 설정 가능
+
+  - 메인 실행기(main executor):
+
+  ```scala
+  import zio._
+
+  object MainApp extends ZIOAppDefault {
+    override val bootstrap =
+      Runtime.enableLoomBasedExecutor
+
+    override def run = ZIO.attempt {
+      println(s"Task running on a virtual-thread: ${Thread.currentThread().getName()}")
+    }
+  }
+  ```
+
+  - 블로킹 실행기(blocking executor):
+
+  ```scala
+  import zio._
+
+  object MainApp extends ZIOAppDefault {
+    override val bootstrap =
+      Runtime.enableLoomBasedBlockingExecutor
+
+    override def run = ZIO.attemptBlocking {
+      println(s"Blocking task running on a virtual-thread: ${Thread.currentThread().getName()}")
+    }
+  }
+  ```
+
+- 최상위 런타임 설정(Top-Level Runtime Configuration)
+
+  - 초기화 시점부터 애플리케이션 전체의 런타임을 커스터마이징하려면 `Runtime.unsafe.fromLayer` 사용
+
+  ```scala
+  val runtime: Runtime[Any] =
+    Unsafe.unsafe { implicit unsafe =>
+      Runtime.unsafe.fromLayer(layer)
+    }
+  ```
+
+  - 전체 예제:
+
+  ```scala
+  import zio._
+
+  object MainApp extends ZIOAppDefault {
+    val addSimpleLogger: ZLayer[Any, Nothing, Unit] =
+      Runtime.addLogger((_, _, _, message: () => Any, _, _, _, _) => println(message()))
+
+    val layer: ZLayer[Any, Nothing, Unit] =
+      Runtime.removeDefaultLoggers ++ addSimpleLogger
+
+    override val runtime: Runtime[Any] =
+      Unsafe.unsafe { implicit unsafe =>
+        Runtime.unsafe.fromLayer(layer)
+      }
+
+    def run = ZIO.log("Application started!")
+  }
+  ```
+
+  - 레거시 애플리케이션과의 통합:
+
+  ```scala
+  import zio._
+
+  object MainApp {
+    val sl4jlogger: ZLogger[String, Any] = ???
+    def legacyApplication(input: Int): Unit = ???
+    val zioWorkflow: ZIO[Any, Nothing, Int] = ???
+
+    val runtime: Runtime[Unit] =
+      Unsafe.unsafe { implicit unsafe =>
+        Runtime.unsafe
+          .fromLayer(
+            Runtime.removeDefaultLoggers ++ Runtime.addLogger(sl4jlogger)
+          )
+      }
+
+    def zioApplication(): Int =
+      Unsafe.unsafe { implicit unsafe =>
+        runtime.unsafe
+          .run(zioWorkflow)
+          .getOrThrowFiberFailure()
+      }
+
+    def main(args: Array[String]): Unit = {
+      val result = zioApplication()
+      legacyApplication(result)
+    }
+  }
+  ```
+
+#### 9.6 런타임에 환경 제공하기(Providing Environment to Runtime)
+
+- 미리 구성된 서비스(pre-configured services)가 포함된 커스텀 런타임을 만들면 매번 환경을 제공하는 수고를 덜 수 있음
+
+```scala
+trait LoggingService {
+  def log(line: String): UIO[Unit]
+}
+
+object LoggingService {
+  def log(line: String): URIO[LoggingService, Unit] =
+    ZIO.serviceWithZIO[LoggingService](_.log(line))
+}
+
+trait EmailService {
+  def send(user: String, content: String): Task[Unit]
+}
+
+object EmailService {
+  def send(user: String, content: String): ZIO[EmailService, Throwable, Unit] =
+    ZIO.serviceWithZIO[EmailService](_.send(user, content))
+}
+```
+
+위 서비스의 구현체는 다음과 같다.
+
+```scala
+case class LoggingServiceLive() extends LoggingService {
+  override def log(line: String): UIO[Unit] =
+    ZIO.succeed(print(line))
+}
+
+case class EmailServiceFake() extends EmailService {
+  override def send(user: String, content: String): Task[Unit] =
+    ZIO.attempt(println(s"sending email to $user"))
+}
+```
+
+이 구현체들을 환경에 넣어 커스텀 런타임을 만든다.
+
+```scala
+val testableRuntime = Runtime(
+  ZEnvironment[LoggingService, EmailService](LoggingServiceLive(), EmailServiceFake()),
+  FiberRefs.empty,
+  RuntimeFlags.default)
+```
+
+같은 환경을 `Runtime.default.withEnvironment`에 전달해 기본 런타임의 환경을 바꾸는 방법도 있다.
+
+```scala
+val testableRuntime: Runtime[LoggingService with EmailService] =
+  Runtime.default.withEnvironment {
+    ZEnvironment[LoggingService, EmailService](LoggingServiceLive(), EmailServiceFake())
+  }
+```
+
+이제 구성한 런타임에서 두 서비스를 사용하는 효과를 실행한다.
+
+```scala
+Unsafe.unsafe { implicit unsafe =>
+  testableRuntime.unsafe.run(
+    for {
+      _ <- LoggingService.log("sending newsletter")
+      _ <- EmailService.send("David", "Hi! Here is today's newsletter.")
+    } yield ()
+  ).getOrThrowFiberFailure()
+}
+```
+
+<a id="10-zioapp과-zioappdefaultapplication-entry-points"></a>
+
+### 10. ZIOApp과 ZIOAppDefault(Application Entry Points)
+
+#### 10.1 개요(Overview)
+
+- 공식 문서: "`ZIOApp` 트레이트는 애플리케이션 간에 레이어(layers)를 공유할 수 있게 해 주는 ZIO 애플리케이션의 진입점(entry point)"
+- 여러 ZIO 애플리케이션을 서로 합성(compose)할 수 있게 함
+- `ZIOAppDefault`는 기본 ZIO 환경(default ZIO environment, ZEnv)을 사용하는 더 간단한 대안
+
+#### 10.2 ZIO 효과 실행하기(Running a ZIO Effect)
+
+- JVM에서 ZIO 애플리케이션을 실행하는 진입점은 `run` 함수
+
+```scala
+import zio._
+
+object MyApp extends ZIOAppDefault {
+  def run = for {
+    _ <- Console.printLine("Hello! What is your name?")
+    n <- Console.readLine
+    _ <- Console.printLine("Hello, " + n + ", good to meet you!")
+  } yield ()
+}
+```
+
+#### 10.3 명령줄 인자 접근(Accessing Command-line Arguments)
+
+- ZIO는 명령줄 인자(command-line arguments)에 접근하기 위한 내장 서비스 `ZIOAppArgs`를 제공
+
+```scala
+import zio._
+
+object HelloApp extends ZIOAppDefault {
+  def run = for {
+    args <- getArgs
+    _ <-
+      if (args.isEmpty)
+        Console.printLine("Please provide your name as an argument")
+      else
+        Console.printLine(s"Hello, ${args.head}!")
+  } yield ()
+}
+```
+
+#### 10.4 커스터마이징된 런타임 (부트스트랩 레이어)(Customized Runtime / Bootstrap Layers)
+
+- `bootstrap` 값을 오버라이드하여 개인화된 실행기(executor)를 가진 커스텀 런타임 설정 가능
+
+```scala
+import zio._
+import zio.Executor
+import java.util.concurrent.{LinkedBlockingQueue, ThreadPoolExecutor, TimeUnit}
+
+object CustomizedRuntimeZIOApp extends ZIOAppDefault {
+  override val bootstrap = Runtime.setExecutor(
+    Executor.fromThreadPoolExecutor(
+      new ThreadPoolExecutor(
+        5,
+        10,
+        5000,
+        TimeUnit.MILLISECONDS,
+        new LinkedBlockingQueue[Runnable]()
+      )
+    )
+  )
+  def run = myAppLogic
+}
+```
+
+#### 10.5 저수준 기능 설치하기(Installing Low-level Functionalities)
+
+로깅이나 프로파일링처럼 애플리케이션의 기반이 되는 기능은 ZIO 런타임에 훅을 걸어 구성할 수 있다. 이때 `bootstrap` 레이어를 오버라이드하며, 아래 예제에서는 기본 로거를 새 로거로 교체한다. 설정 범위에 관한 설명은 9.5절의 부트스트랩 레이어 설정 부분을 참고한다.
+
+```scala
+import zio._
+
+object MainApp extends ZIOAppDefault {
+  val addSimpleLogger: ZLayer[Any, Nothing, Unit] =
+    Runtime.addLogger((_, _, _, message: () => Any, _, _, _, _) => println(message()))
+
+  override val bootstrap: ZLayer[Any, Nothing, Unit] =
+    Runtime.removeDefaultLoggers ++ addSimpleLogger
+
+  def run =
+    for {
+      _ <- ZIO.log("Application started!")
+      _ <- ZIO.log("Application is about to exit!")
+    } yield ()
+}
+```
+
+- 이 방식으로 애플리케이션 전역에 걸쳐 로깅 백엔드 교체, 프로파일러 연결 같은 저수준 관심사를 진입점 한 곳에서 일괄 구성 가능
+
+#### 10.6 여러 ZIO 애플리케이션 합성하기(Composing Multiple ZIO Applications)
+
+- `<>` 연산자를 사용하여 애플리케이션을 결합
+
+```scala
+import zio._
+
+object MyApp1 extends ZIOAppDefault {
+  def run = ZIO.succeed(???)
+}
+
+object MyApp2 extends ZIOAppDefault {
+  override val bootstrap: ZLayer[Any, Any, Any] =
+    asyncProfiler ++ slf4j ++ loggly ++ newRelic
+  def run = ZIO.succeed(???)
+}
+
+object Main extends ZIOApp.Proxy(MyApp1 <> MyApp2)
+```
+
+- 문서 설명: "`<>` 연산자가 두 애플리케이션의 레이어를 결합한 다음, 두 애플리케이션을 병렬로(in parallel) 실행한다."
+
+#### 10.7 정상 종료 타임아웃(Graceful Shutdown Timeout)
+
+인터럽트 신호(예: Ctrl+C로 인한 SIGINT)를 받으면 "런타임은 종료 전에 모든 종료자(finalizers, 정리 로직)를 실행하려고 시도"한다. 기본적으로는 시간 제한 없이 기다리며, 대기 시간을 제한하려면 `gracefulShutdownTimeout`을 오버라이드한다.
+
+- 예제 1: 종료자가 타임아웃 내에 완료되는 경우
+
+  ```scala
+  import zio._
+
+  object MyApp extends ZIOAppDefault {
+    override def gracefulShutdownTimeout: Duration = 30.seconds
+
+    val run: ZIO[ZIOAppArgs with Scope, Any, Any] =
+      ZIO.acquireReleaseWith(
+        acquire = ZIO.logInfo("Acquiring resource...").as("MyResource")
+      )(release =
+        _ =>
+          ZIO.logInfo("Releasing resource (3s) ...") *> ZIO.sleep(3.seconds) *>
+            ZIO.logInfo("Cleanup done")
+      ) { resource =>
+        ZIO.logInfo(s"Running with $resource, press Ctrl+C to interrupt") *> ZIO.never
+      }
+  }
+  ```
+
+- 예제 2: 종료자가 타임아웃을 초과하는 경우
+
+  ```scala
+  import zio._
+
+  object MyAppTimeout extends ZIOAppDefault {
+    override def gracefulShutdownTimeout: Duration = 5.seconds
+
+    val run: ZIO[ZIOAppArgs with Scope, Any, Any] =
+      ZIO.acquireReleaseWith(
+        acquire = ZIO.logInfo("Acquiring resource...").as("MyResource")
+      )(release =
+        _ =>
+          ZIO.logInfo("Releasing resource (20s) ...") *> ZIO.sleep(20.seconds) *>
+            ZIO.logInfo("Cleanup done")
+      ) { resource =>
+        ZIO.logInfo(s"Running with $resource, press Ctrl+C to interrupt") *> ZIO.never
+      }
+  }
+  ```
+
+  - 타임아웃을 초과하면 애플리케이션은 경고(warning)를 출력하고 즉시 종료(exits immediately).
+
+<a id="11-참고-자료"></a>
+
+### 11. 참고 자료
+
+- [Core Data Types | ZIO](https://zio.dev/reference/core/)
+- [ZIO[R, E, A] | ZIO](https://zio.dev/reference/core/zio)
+- [UIO | ZIO](https://zio.dev/reference/core/zio/uio/)
+- [Exit | ZIO](https://zio.dev/reference/core/exit)
+- [Cause | ZIO](https://zio.dev/reference/core/cause)
+- [Runtime | ZIO](https://zio.dev/reference/core/runtime)
+- [ZIOApp | ZIO](https://zio.dev/reference/core/zioapp)
+- [Exceptional and Unexceptional Effects | ZIO](https://zio.dev/reference/error-management/exceptional-and-unexceptional-effects/)

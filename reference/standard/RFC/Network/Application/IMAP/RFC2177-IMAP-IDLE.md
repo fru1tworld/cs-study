@@ -1,0 +1,92 @@
+# RFC 2177 - IMAP4 IDLE command
+
+> 발행일: 1997년 6월
+> 상태: Proposed Standard
+
+## 1. 개요
+
+IMAP 클라이언트는 새 메일이 왔는지 확인하려고 `NOOP`이나 `SELECT`를 반복 호출하는 폴링 방식을 사용했다. IDLE 확장에서는 클라이언트가 대기를 요청하면 서버가 메일함의 변화를 알린다. 주기적으로 확인할 필요가 없어 푸시 메일 구현에 널리 쓰인다.
+
+---
+
+## 2. 동작 방식
+
+```
+C: a002 SELECT INBOX
+S: ...
+S: a002 OK [READ-WRITE] SELECT completed
+
+C: a003 IDLE
+S: + idling                     ← 서버가 대기 모드 진입을 알림
+
+   (새 메일 도착)
+
+S: * 4 EXISTS                   ← 상태 변화를 비동기로 통지
+S: * 1 RECENT
+
+   (클라이언트가 종료를 원할 때)
+
+C: DONE
+S: a003 OK IDLE terminated
+```
+
+- 단계별 흐름
+  - `IDLE` 전송: 클라이언트가 유휴 모니터링 시작을 요청
+  - `+ idling`: 서버가 계속 응답(continuation)으로 대기 모드 진입 확인
+  - 비동기 알림: 메일함 변경 시 `* n EXISTS`, `* n EXPUNGE`, `* n FETCH` 등 통지
+  - `DONE` 전송: 클라이언트가 IDLE 종료를 요청(한 줄에 `DONE`만 전송)
+  - 태그 있는 OK: 서버가 IDLE 명령 자체의 종료를 확인
+
+---
+
+## 3. 제약과 운영 고려사항
+
+- 타임아웃
+  - 서버는 IDLE 상태를 무한정 유지하지 않음
+  - 보통 29분 전후로 연결을 끊거나 응답 없음 처리 → 클라이언트는 주기적으로 `DONE` → 재`IDLE`을 반복 필요
+- 단일 명령 제약
+  - IDLE 중에는 다른 IMAP 명령 전송 불가
+  - 다른 명령이 필요하면 먼저 `DONE`으로 종료 필요
+- 연결 유지
+  - TCP 연결 자체는 계속 열려 있어야 함
+  - 프록시와 방화벽의 유휴 연결 타임아웃 설정에 영향받음
+- CAPABILITY 확인
+  - 서버가 IDLE을 지원하는지는 `CAPABILITY` 응답에 `IDLE`이 포함되는지로 확인
+
+---
+
+## 4. 폴링과의 비교
+
+- 폴링(`NOOP` 반복)
+  - 지연 시간: 폴링 주기만큼 지연
+  - 서버 부하: 요청 수에 비례해 증가
+  - 배터리/네트워크 비용: 높음(모바일에서 특히)
+- IDLE
+  - 지연 시간: 즉시(사실상 실시간)
+  - 서버 부하: 연결 유지 비용만 발생
+  - 배터리/네트워크 비용: 낮음
+
+---
+
+## 5. 대안/보완 기술
+
+- IMAP NOTIFY(RFC 5465): IDLE보다 세밀한 이벤트 필터링을 제공하는 후속 확장
+- Push IMAP과 EAS(Exchange ActiveSync): 벤더별 대안 푸시 메커니즘
+- Webhook 기반 알림: 서버 측에서 IMAP과 별개로 애플리케이션에 직접 통지하는 아키텍처 대안
+
+---
+
+## 6. 요약
+
+- IDLE: IMAP 클라이언트가 폴링 없이 실시간에 가까운 메일함 변경 알림을 받게 해주는 확장
+- `IDLE` → `+ idling` → 비동기 알림 → `DONE` 흐름으로 동작
+- 서버 타임아웃(보통 29분 내외)으로 인해 클라이언트는 주기적으로 IDLE 재시작 필요
+- [RFC 9051 IMAP4rev2](./RFC9051-IMAP4rev2.md)에도 그대로 포함되어 계속 사용됨
+
+---
+
+## 참고 자료
+
+- [RFC 2177 원문](https://www.rfc-editor.org/rfc/rfc2177)
+- [RFC 9051 IMAP4rev2](./RFC9051-IMAP4rev2.md)
+- [RFC 5465 IMAP NOTIFY](https://www.rfc-editor.org/rfc/rfc5465)

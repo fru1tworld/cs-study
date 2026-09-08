@@ -1,0 +1,134 @@
+# RFC 9051 - IMAP4rev2 (Internet Message Access Protocol)
+
+> 발행일: 2021년 8월
+> 상태: Proposed Standard (RFC 3501을 대체)
+
+## 1. 개요
+
+IMAP(Internet Message Access Protocol)은 메일 서버의 메시지를 원격에서 조회하고 검색하거나 변경하는 프로토콜이다. POP3의 다운로드 후 삭제 방식과 달리 서버에 메일을 둔 채 웹메일, 데스크톱, 모바일 클라이언트가 같은 메일함 상태를 공유하도록 설계되었다.
+
+IMAP4rev2(RFC 9051)는 1996년에 나온 [IMAP4rev1](./RFC3501-IMAP-Obsolete.md)을 대체하며, 별도의 확장으로 나뉘어 있던 기능을 본문에 통합했다.
+
+### 1.1 IMAP4rev1과 IMAP4rev2 비교
+
+- 상태
+  - IMAP4rev1(RFC 3501): Obsolete
+  - IMAP4rev2(RFC 9051): 현재 표준
+- UTF-8
+  - IMAP4rev1: 확장(IMAP4rev1 + UTF8=ACCEPT) 필요
+  - IMAP4rev2: 기본 내장
+- 네임스페이스
+  - IMAP4rev1: 확장 필요
+  - IMAP4rev2: 기본 내장
+- ID 명령
+  - IMAP4rev1: 확장 필요
+  - IMAP4rev2: 기본 내장
+- ESEARCH/CONDSTORE 등
+  - IMAP4rev1: 별도 RFC 확장
+  - IMAP4rev2: 다수 통합
+- LOGIN 평문
+  - IMAP4rev1: 허용
+  - IMAP4rev2: 기본 비활성(암호화 채널 전제)
+
+---
+
+## 2. 연결과 상태 모델
+
+- IMAP 연결은 4가지 상태를 오감
+
+```
+[연결 수립]
+     │
+     ▼
+Not Authenticated ──LOGIN/AUTHENTICATE──▶ Authenticated
+                                              │
+                                          SELECT/EXAMINE
+                                              │
+                                              ▼
+                                           Selected
+                                              │
+                                            LOGOUT
+                                              ▼
+                                            Logout
+```
+
+- 상태별 정의
+  - Not Authenticated: 연결은 됐지만 인증 전
+  - Authenticated: 인증 완료, 특정 메일함 미선택
+  - Selected: 특정 메일함(mailbox)을 선택해 메시지 조작 가능
+  - Logout: 연결 종료 절차 중
+
+---
+
+## 3. 명령어 구조
+
+- IMAP 명령: 클라이언트가 붙이는 태그(tag)로 요청-응답을 짝지음
+
+```
+C: a001 LOGIN alice password
+S: a001 OK LOGIN completed
+
+C: a002 SELECT INBOX
+S: * 172 EXISTS
+S: * 1 RECENT
+S: * OK [UNSEEN 12] Message 12 is first unseen
+S: * OK [UIDVALIDITY 3857529045] UIDs valid
+S: * FLAGS (\Answered \Flagged \Deleted \Seen \Draft)
+S: a002 OK [READ-WRITE] SELECT completed
+```
+
+- 응답 종류
+  - 태그 있는 응답: `a001 OK ...` → 해당 명령의 최종 결과
+  - 상태 응답: `* OK`, `* NO`, `* BAD` → 서버가 임의 시점에 보내는 상태 정보
+  - 데이터 응답: `* 172 EXISTS` → 메일함 상태 변경 통지
+
+### 3.1 주요 명령어
+
+- `LOGIN` / `AUTHENTICATE`: 인증
+- `SELECT` / `EXAMINE`: 메일함 열기(쓰기/읽기 전용)
+- `FETCH`: 메시지 본문, 헤더, 플래그 조회
+- `STORE`: 플래그(읽음, 삭제 표시 등) 변경
+- `SEARCH`: 조건 검색
+- `COPY` / `MOVE`: 메시지 이동/복사
+- `EXPUNGE`: `\Deleted` 플래그가 붙은 메시지 영구 삭제
+- `NAMESPACE`: 개인/공유/기타 사용자 네임스페이스 조회
+- `IDLE`: 실시간 변경 통지 대기 ([RFC 2177](./RFC2177-IMAP-IDLE.md))
+
+---
+
+## 4. IMAP4rev2에서 통합된 주요 확장
+
+- UTF-8 지원: RFC 6855 확장 → IMAP4rev2에서 기본
+- NAMESPACE: RFC 2342 확장 → IMAP4rev2에서 기본
+- ID: RFC 2971 확장 → IMAP4rev2에서 기본
+- ESEARCH(확장 검색): RFC 4731 → IMAP4rev2에서 기본
+- SEARCHRES: RFC 5182 → IMAP4rev2에서 기본
+- ENABLE: RFC 5161 → IMAP4rev2에서 기본
+- LIST-EXTENDED: RFC 5258 → IMAP4rev2에서 기본
+- SPECIAL-USE 메일함(\Sent, \Trash 등): RFC 6154 → IMAP4rev2에서 기본
+- MOVE 명령: RFC 6851 → IMAP4rev2에서 기본
+- STATUS=SIZE: RFC 8438 → IMAP4rev2에서 기본
+- LIST-STATUS: RFC 5819 → IMAP4rev2에서 기본
+
+---
+
+## 5. UID와 메시지 시퀀스 번호
+
+Sequence Number는 메일함 안의 순번으로, `EXPUNGE`가 발생하면 다시 배치된다. 반면 UID(Unique Identifier)는 메일함 안에서 유지되는 고유 번호이며 `UIDVALIDITY`가 바뀌지 않는 한 재사용되지 않는다. 로컬 캐시를 서버와 동기화할 때는 순번 변화의 영향을 받지 않도록 UID와 UIDVALIDITY를 함께 사용해야 한다.
+
+---
+
+## 6. 요약
+
+- IMAP4rev2: 그간 파편화된 확장들을 표준 본문에 통합한 현행 IMAP 표준
+- 상태 기반(Not Authenticated → Authenticated → Selected) 프로토콜 → 태그로 요청-응답을 매칭
+- 실시간 알림: [RFC 2177 IDLE](./RFC2177-IMAP-IDLE.md) 확장 사용
+- 구형 클라이언트/서버는 여전히 [RFC 3501 IMAP4rev1](./RFC3501-IMAP-Obsolete.md) 기반으로 동작하는 경우 다수
+
+---
+
+## 참고 자료
+
+- [RFC 9051 원문](https://datatracker.ietf.org/doc/rfc9051/)
+- [RFC 3501 IMAP4rev1 (Obsolete)](./RFC3501-IMAP-Obsolete.md)
+- [RFC 2177 IMAP IDLE](./RFC2177-IMAP-IDLE.md)

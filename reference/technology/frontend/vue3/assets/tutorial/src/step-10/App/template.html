@@ -1,0 +1,4 @@
+<p>할 일 id: {{ todoId }}</p>
+<button @click="todoId++" :disabled="!todoData">다음 할 일 가져오기</button>
+<p v-if="!todoData">로딩...</p>
+<pre v-else>{{ todoData }}</pre>

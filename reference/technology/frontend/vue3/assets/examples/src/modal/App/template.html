@@ -1,0 +1,10 @@
+<button id="show-modal" @click="showModal = true">모달 표시</button>
+
+<Teleport to="body">
+  <!-- 모달 컴포넌트를 사용하고, prop을 전달합니다 -->
+  <modal :show="showModal" @close="showModal = false">
+    <template #header>
+      <h3>커스텀 헤더</h3>
+    </template>
+  </modal>
+</Teleport>
